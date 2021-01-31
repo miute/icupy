@@ -139,7 +139,10 @@ void init_ubidi(py::module &m) {
       "ubidi_get_logical_map",
       [](_UBiDiPtr &bidi) {
         UErrorCode error_code = U_ZERO_ERROR;
-        std::vector<int32_t> result(ubidi_getProcessedLength(bidi));
+        const int32_t length = ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_INSERT_MARKS
+                                   ? ubidi_getResultLength(bidi)
+                                   : ubidi_getProcessedLength(bidi);
+        std::vector<int32_t> result(length);
         ubidi_getLogicalMap(bidi, result.data(), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
@@ -213,7 +216,10 @@ void init_ubidi(py::module &m) {
       "ubidi_get_visual_map",
       [](_UBiDiPtr &bidi) {
         UErrorCode error_code = U_ZERO_ERROR;
-        std::vector<int32_t> result(ubidi_getResultLength(bidi));
+        const int32_t length = ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_REMOVE_CONTROLS
+                                   ? ubidi_getProcessedLength(bidi)
+                                   : ubidi_getResultLength(bidi);
+        std::vector<int32_t> result(length);
         ubidi_getVisualMap(bidi, result.data(), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
