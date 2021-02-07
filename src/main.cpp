@@ -9,6 +9,7 @@
 using namespace icu;
 
 void init_char16ptr(py::module &m);
+void init_coleitr(py::module &m);
 void init_idna(py::module &);
 void init_locid(py::module &);
 void init_normalizer2(py::module &m);
@@ -17,7 +18,9 @@ void init_parsepos(py::module &);
 void init_rbbi(py::module &);
 void init_resbund(py::module &);
 void init_schriter(py::module &);
+void init_sortkey(py::module &);
 void init_strenum(py::module &);
+void init_tblcoll(py::module &m);
 void init_translit(py::module &m);
 void init_ubidi(py::module &);
 void init_ubrk(py::module &);
@@ -25,6 +28,7 @@ void init_uchar(py::module &);
 void init_ucnv(py::module &);
 void init_ucnv_cb(py::module &);
 void init_ucnv_err(py::module &);
+void init_ucol(py::module &);
 void init_ucpmap(py::module &);
 void init_uidna(py::module &);
 void init_uloc(py::module &);
@@ -72,6 +76,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   });
 
   init_char16ptr(m);
+  init_coleitr(m);
   init_idna(m);
   init_locid(m);
   init_normalizer2(m);
@@ -80,7 +85,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_rbbi(m);
   init_resbund(m);
   init_schriter(m);
+  init_sortkey(m);
   init_strenum(m);
+  init_tblcoll(m);
   init_translit(m);
   init_ubidi(m);
   init_ubrk(m);
@@ -88,6 +95,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_ucnv(m);
   init_ucnv_cb(m);
   init_ucnv_err(m);
+  init_ucol(m);
   init_ucpmap(m);
   init_uidna(m);
   init_uloc(m);

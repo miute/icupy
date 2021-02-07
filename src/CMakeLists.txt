@@ -13,6 +13,7 @@ find_package(ICU REQUIRED COMPONENTS dt i18n io uc)
 pybind11_add_module(
     ${PROJECT_NAME}
     char16ptr.cpp
+    coleitr.cpp
     idna.cpp
     locid.cpp
     main.cpp
@@ -22,7 +23,9 @@ pybind11_add_module(
     rbbi.cpp
     resbund.cpp
     schriter.cpp
+    sortkey.cpp
     strenum.cpp
+    tblcoll.cpp
     translit.cpp
     ubidi.cpp
     ubrk.cpp
@@ -30,6 +33,7 @@ pybind11_add_module(
     ucnv.cpp
     ucnv_cb.cpp
     ucnv_err.cpp
+    ucol.cpp
     ucpmap.cpp
     uidna.cpp
     uloc.cpp
