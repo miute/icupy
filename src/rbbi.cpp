@@ -93,18 +93,7 @@ void init_rbbi(py::module &m) {
         return it;
       },
       py::arg("where"));
-  bi.def_static(
-      "get_available_locales",
-      []() {
-        int32_t count = 0;
-        auto p = BreakIterator::getAvailableLocales(count);
-        std::vector<const Locale *> result(count);
-        for (int32_t i = 0; i < count; ++i) {
-          result[i] = p + i;
-        }
-        return result;
-      },
-      py::return_value_policy::reference);
+  bi.def_static("get_available_locales", py::overload_cast<>(&BreakIterator::getAvailableLocales));
   bi.def_static("get_display_name",
                 py::overload_cast<const Locale &, const Locale &, UnicodeString &>(&BreakIterator::getDisplayName),
                 py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))

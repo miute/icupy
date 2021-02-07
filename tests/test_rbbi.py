@@ -2,8 +2,8 @@ import copy
 
 from icupy import (
     BreakIterator, CharacterIterator, Locale, RuleBasedBreakIterator,
-    StringCharacterIterator, ULocDataLocaleType, UnicodeString, UParseError,
-    UWordBreak,
+    StringCharacterIterator, StringEnumeration, ULocDataLocaleType,
+    UnicodeString, UParseError, UWordBreak,
 )
 
 
@@ -130,14 +130,14 @@ def test_following():
 
 
 def test_get_available_locales():
-    # [1]
-    # static const Locale* getAvailableLocales(int32_t &count)
-    result = BreakIterator.get_available_locales()
-    assert isinstance(result, list)
-    assert len(result) > 0
-    assert all(isinstance(x, Locale) for x in result)
-    assert Locale.get_default() in result
-    assert Locale.get_root() not in result
+    # [2]
+    # static StringEnumeration* BreakIterator::getAvailableLocales()
+    it = BreakIterator.get_available_locales()
+    assert isinstance(it, StringEnumeration)
+    assert len(it) > 0
+    assert all(isinstance(x, str) for x in it)
+    assert "ja" in it
+    assert "und" not in it
 
 
 def test_get_display_name():
