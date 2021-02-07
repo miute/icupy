@@ -15,7 +15,13 @@ Python bindings for ICU4C.
 
 1. If on Windows or ICU is located in a non-regular place, set the `ICU_ROOT` environment variable to the root of the ICU installation.
 
-1. Cloning the repository and using pip to install.
+1. Installing from PyPI:
+
+    ```bash
+    pip install icupy
+    ```
+
+    Alternatively, installing from the git repository:
 
     ```bash
     git clone --recursive https://github.com/miute/icupy.git
@@ -54,7 +60,7 @@ Python bindings for ICU4C.
     'xn--fa-hia.example'
     ```
 
-- See also [tests](https://github.com/miute/icupy/blob/main/tests) directory.
+- See also [tests](https://github.com/miute/icupy/tree/main/tests) directory.
 
 ## License
 
