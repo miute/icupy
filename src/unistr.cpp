@@ -11,11 +11,14 @@
 #include <unicode/locid.h>
 #include <unicode/uchar.h>
 #include <unicode/uchriter.h>
-#include <unicode/unistr.h>
 
 using namespace icu;
 
 void init_unistr(py::module &m) {
+  // _UnicodeStringVector
+  py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
+      .def(py::init<size_t>(), py::arg("n"));
+
   // Replaceable
   py::class_<Replaceable>(m, "Replaceable")
       .def("char32_at", &Replaceable::char32At, py::arg("offset"))

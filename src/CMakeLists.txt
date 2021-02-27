@@ -21,6 +21,7 @@ pybind11_add_module(
     parseerr.cpp
     parsepos.cpp
     rbbi.cpp
+    regex.cpp
     resbund.cpp
     schriter.cpp
     sortkey.cpp
@@ -40,6 +41,7 @@ pybind11_add_module(
     uniset.cpp
     unistr.cpp
     unorm2.cpp
+    uregex.cpp
     ures.cpp
     uscript.cpp
     uset.cpp

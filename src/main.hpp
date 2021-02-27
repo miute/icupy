@@ -7,11 +7,17 @@
 
 #include <list>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl_bind.h>
 #include <unicode/unistr.h>
+#include <vector>
 
 namespace py = pybind11;
 
 using _UnicodeStringList = std::list<icu::UnicodeString>;
+using _UnicodeStringVector = std::vector<icu::UnicodeString>;
+
+PYBIND11_MAKE_OPAQUE(_UnicodeStringVector);
+
 class ICUException : public std::exception {
 public:
   explicit ICUException(UErrorCode error_code, const char *message = "");

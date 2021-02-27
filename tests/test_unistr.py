@@ -1,11 +1,12 @@
 import copy
 
 import pytest
-
 from icupy import (
     ICUException, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM, UErrorCode,
-    UnicodeString, US_INV, u_unescape, ucnv_close, ucnv_open,
+    UnicodeString, UnicodeStringVector, US_INV, u_unescape, ucnv_close,
+    ucnv_open,
 )
+
 from . import gc
 
 
@@ -1563,3 +1564,25 @@ def test_unicode_string():
     assert not test27.is_bogus()
     assert not test27.is_empty()
     assert test27 == "bar"
+
+
+def test_unicode_string_vector():
+    t = UnicodeStringVector(3)
+    assert len(t) == 3
+    assert isinstance(t[0], UnicodeString)
+    assert isinstance(t[1], UnicodeString)
+    assert isinstance(t[2], UnicodeString)
+
+    t[0].append("foo", -1)
+    t[1].append("bar", -1)
+    t[2].append("baz", -1)
+    assert t[0] == "foo"
+    assert t[1] == "bar"
+    assert t[2] == "baz"
+
+    s = [UnicodeString("foo"), UnicodeString("bar"), UnicodeString("baz")]
+    t = UnicodeStringVector(s)
+    assert len(t) == 3
+    assert t[0] == s[0]
+    assert t[1] == s[1]
+    assert t[2] == s[2]
