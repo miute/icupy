@@ -6,7 +6,7 @@ _UConverterPtr::~_UConverterPtr() {}
 UConverter *_UConverterPtr::get() const { return p_; }
 
 _UConverterFromUCallbackPtr::_UConverterFromUCallbackPtr(UConverterFromUCallback action) : action_(action) {}
-_UConverterFromUCallbackPtr::_UConverterFromUCallbackPtr(py::function action) : action_(action) {}
+_UConverterFromUCallbackPtr::_UConverterFromUCallbackPtr(const py::function &action) : action_(action) {}
 _UConverterFromUCallbackPtr::~_UConverterFromUCallbackPtr() {}
 
 void _UConverterFromUCallbackPtr::callback(const void *context, UConverterFromUnicodeArgs *args,
@@ -17,12 +17,12 @@ void _UConverterFromUCallbackPtr::callback(const void *context, UConverterFromUn
   }
   auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
   auto python_context = cp->to_object();
-  auto action = cp->get_action();
+  auto &action = cp->get_action();
   *error_code = action(python_context, args, code_units, length, code_point, reason, *error_code).cast<UErrorCode>();
 }
 
 _UConverterToUCallbackPtr::_UConverterToUCallbackPtr(UConverterToUCallback action) : action_(action) {}
-_UConverterToUCallbackPtr::_UConverterToUCallbackPtr(py::function action) : action_(action) {}
+_UConverterToUCallbackPtr::_UConverterToUCallbackPtr(const py::function &action) : action_(action) {}
 _UConverterToUCallbackPtr::~_UConverterToUCallbackPtr() {}
 
 void _UConverterToUCallbackPtr::callback(const void *context, UConverterToUnicodeArgs *args, const char *code_units,
@@ -32,7 +32,7 @@ void _UConverterToUCallbackPtr::callback(const void *context, UConverterToUnicod
   }
   auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
   auto python_context = cp->to_object();
-  auto action = cp->get_action();
+  auto &action = cp->get_action();
   *error_code =
       action(python_context, args, py::bytes(code_units, length), length, reason, *error_code).cast<UErrorCode>();
 }

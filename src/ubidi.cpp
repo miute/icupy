@@ -13,7 +13,7 @@ UBiDiLevel *_UBiDiPtr::get_embedding_levels() const {
   return embedding_levels_.has_value() ? (UBiDiLevel *)embedding_levels_->data() : nullptr;
 }
 
-void _UBiDiPtr::set_embedding_levels(std::optional<std::vector<UBiDiLevel>> embedding_levels) {
+void _UBiDiPtr::set_embedding_levels(std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
   embedding_levels_ = embedding_levels;
 }
 
@@ -31,13 +31,13 @@ void _UBiDiPtr::set_text(const UChar *text, int32_t length) {
 
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(std::nullptr_t action) : action_(action) {}
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(UBiDiClassCallback *action) : action_(action) {}
-_UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(py::function action) : action_(action) {}
+_UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(const py::function &action) : action_(action) {}
 _UBiDiClassCallbackPtr::~_UBiDiClassCallbackPtr() {}
 
 UCharDirection _UBiDiClassCallbackPtr::callback(const void *context, UChar32 c) {
   auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
   auto python_context = cp->to_object();
-  auto action = cp->get_action();
+  auto &action = cp->get_action();
   return (UCharDirection)action(python_context, c).cast<int32_t>();
 }
 

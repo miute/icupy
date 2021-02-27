@@ -27,7 +27,7 @@ private:
 class _UConverterFromUCallbackPtr {
 public:
   _UConverterFromUCallbackPtr(UConverterFromUCallback action);
-  _UConverterFromUCallbackPtr(py::function action);
+  _UConverterFromUCallbackPtr(const py::function &action);
   ~_UConverterFromUCallbackPtr();
 
   static void callback(const void *context, UConverterFromUnicodeArgs *args, const UChar *code_units, int32_t length,
@@ -47,7 +47,7 @@ private:
 class _UConverterToUCallbackPtr {
 public:
   _UConverterToUCallbackPtr(UConverterToUCallback action);
-  _UConverterToUCallbackPtr(py::function action);
+  _UConverterToUCallbackPtr(const py::function &action);
   ~_UConverterToUCallbackPtr();
 
   static void callback(const void *context, UConverterToUnicodeArgs *args, const char *code_units, int32_t length,

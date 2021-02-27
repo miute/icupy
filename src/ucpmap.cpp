@@ -11,13 +11,13 @@ _ConstUCPMapPtr::~_ConstUCPMapPtr() {}
 const UCPMap *_ConstUCPMapPtr::get() const { return p_; }
 
 _UCPMapValueFilterPtr::_UCPMapValueFilterPtr(std::nullptr_t filter) : action_(filter) {}
-_UCPMapValueFilterPtr::_UCPMapValueFilterPtr(py::function filter) : action_(filter) {}
+_UCPMapValueFilterPtr::_UCPMapValueFilterPtr(const py::function &filter) : action_(filter) {}
 _UCPMapValueFilterPtr::~_UCPMapValueFilterPtr() {}
 
 uint32_t _UCPMapValueFilterPtr::filter(const void *context, uint32_t value) {
   auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
   auto python_context = cp->to_object();
-  auto action = cp->get_action();
+  auto &action = cp->get_action();
   return action(python_context, value).cast<uint32_t>();
 }
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)

@@ -2,7 +2,7 @@
 
 _ConstVoidPtr::_ConstVoidPtr(std::nullptr_t) {}
 _ConstVoidPtr::_ConstVoidPtr(const char *value) { context_ = std::shared_ptr<char[]>(strdup(value)); }
-_ConstVoidPtr::_ConstVoidPtr(py::object value) : context_(value) {}
+_ConstVoidPtr::_ConstVoidPtr(const py::object &value) : context_(value) {}
 _ConstVoidPtr::_ConstVoidPtr(const void *value) : context_(value) {}
 // template <typename T> _ConstVoidPtr::_ConstVoidPtr(T value) : context_(value) {}
 _ConstVoidPtr::~_ConstVoidPtr() {}

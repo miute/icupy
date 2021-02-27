@@ -22,7 +22,7 @@ private:
 class _UCPMapValueFilterPtr {
 public:
   _UCPMapValueFilterPtr(std::nullptr_t filter);
-  _UCPMapValueFilterPtr(py::function filter);
+  _UCPMapValueFilterPtr(const py::function &filter);
   ~_UCPMapValueFilterPtr();
 
   static uint32_t filter(const void *context, uint32_t value);

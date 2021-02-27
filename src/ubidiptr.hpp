@@ -22,7 +22,7 @@ public:
 
   const UChar *get_text() const { return text_.c_str(); }
 
-  void set_embedding_levels(std::optional<std::vector<UBiDiLevel>> embedding_levels);
+  void set_embedding_levels(std::optional<std::vector<UBiDiLevel>> &embedding_levels);
 
   void set_epilogue(const UChar *epilogue, int32_t length);
 
@@ -43,7 +43,7 @@ class _UBiDiClassCallbackPtr {
 public:
   _UBiDiClassCallbackPtr(std::nullptr_t action);
   _UBiDiClassCallbackPtr(UBiDiClassCallback *action);
-  _UBiDiClassCallbackPtr(py::function action);
+  _UBiDiClassCallbackPtr(const py::function &action);
   ~_UBiDiClassCallbackPtr();
 
   static UCharDirection callback(const void *context, UChar32 c);
