@@ -283,7 +283,7 @@ void init_ucnv(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UConverterPtr>(new _UConverterPtr(p));
+        return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("converter_name"));
   m.def(
@@ -294,7 +294,7 @@ void init_ucnv(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UConverterPtr>(new _UConverterPtr(p));
+        return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("codepage"), py::arg("platform"));
   m.def(
@@ -305,7 +305,7 @@ void init_ucnv(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UConverterPtr>(new _UConverterPtr(p));
+        return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("package_name"), py::arg("converter_name"));
 

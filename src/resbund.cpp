@@ -9,7 +9,7 @@ void init_resbund(py::module &m) {
   py::class_<ResourceBundle> res(m, "ResourceBundle");
   res.def(py::init([](const UnicodeString &package_name, const Locale &locale) {
             UErrorCode error_code = U_ZERO_ERROR;
-            std::unique_ptr<ResourceBundle> result(new ResourceBundle(package_name, locale, error_code));
+            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUException(error_code);
             }
@@ -18,7 +18,7 @@ void init_resbund(py::module &m) {
           py::arg("package_name"), py::arg("locale"))
       .def(py::init([](const UnicodeString &package_name) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<ResourceBundle> result(new ResourceBundle(package_name, error_code));
+             auto result = std::make_unique<ResourceBundle>(package_name, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -27,7 +27,7 @@ void init_resbund(py::module &m) {
            py::arg("package_name"))
       .def(py::init([]() {
         UErrorCode error_code = U_ZERO_ERROR;
-        std::unique_ptr<ResourceBundle> result(new ResourceBundle(error_code));
+        auto result = std::make_unique<ResourceBundle>(error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
@@ -35,7 +35,7 @@ void init_resbund(py::module &m) {
       }))
       .def(py::init([](const char *package_name, const Locale &locale) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<ResourceBundle> result(new ResourceBundle(package_name, locale, error_code));
+             auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -45,7 +45,7 @@ void init_resbund(py::module &m) {
       .def(py::init<const ResourceBundle &>(), py::arg("original"))
       .def(py::init([](_UResourceBundlePtr &res) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<ResourceBundle> result(new ResourceBundle(res, error_code));
+             auto result = std::make_unique<ResourceBundle>(res, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }

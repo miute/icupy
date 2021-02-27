@@ -56,7 +56,7 @@ void init_unistr(py::module &m) {
            py::arg("codepage"))
       .def(py::init([](const char *src, int32_t src_length, _UConverterPtr &cnv) {
              UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::unique_ptr<UnicodeString>(new UnicodeString(src, src_length, cnv, error_code));
+             auto result = std::make_unique<UnicodeString>(src, src_length, cnv, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -418,7 +418,7 @@ void init_unistr(py::module &m) {
         if (p == 0) {
           return std::nullopt;
         }
-        return std::unique_ptr<_ConstChar16Ptr>(new _ConstChar16Ptr(p));
+        return std::make_unique<_ConstChar16Ptr>(p);
       },
       py::return_value_policy::reference);
   us.def("get_capacity", &UnicodeString::getCapacity);
@@ -431,7 +431,7 @@ void init_unistr(py::module &m) {
         if (p == 0) {
           return std::nullopt;
         }
-        return std::unique_ptr<_ConstChar16Ptr>(new _ConstChar16Ptr(p));
+        return std::make_unique<_ConstChar16Ptr>(p);
       },
       py::return_value_policy::reference);
   us.def("hash_code", &UnicodeString::hashCode);

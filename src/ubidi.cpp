@@ -251,7 +251,7 @@ void init_ubidi(py::module &m) {
       py::arg("bidi"));
   m.def("ubidi_open", []() {
     auto bidi = ubidi_open();
-    return std::unique_ptr<_UBiDiPtr>(new _UBiDiPtr(bidi));
+    return std::make_unique<_UBiDiPtr>(bidi);
   });
   m.def(
       "ubidi_open_sized",
@@ -261,7 +261,7 @@ void init_ubidi(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UBiDiPtr>(new _UBiDiPtr(bidi));
+        return std::make_unique<_UBiDiPtr>(bidi);
       },
       py::arg("max_length"), py::arg("max_run_count"));
   m.def(

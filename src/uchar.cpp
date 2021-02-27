@@ -15,7 +15,7 @@ void init_uchar(py::module &m) {
       .value("U_BPT_CLOSE", U_BPT_CLOSE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_BPT_COUNT", U_BPT_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UBidiPairedBracketType>
 #endif  // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
@@ -350,7 +350,7 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 66)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UBlockCode>
 
   py::enum_<UCharCategory>(m, "UCharCategory", py::arithmetic())
@@ -413,7 +413,7 @@ void init_uchar(py::module &m) {
       .value("U_POP_DIRECTIONAL_ISOLATE", U_POP_DIRECTIONAL_ISOLATE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UCharDirection>
 
   py::enum_<UCharNameChoice>(m, "UCharNameChoice", py::arithmetic())
@@ -425,7 +425,7 @@ void init_uchar(py::module &m) {
       .value("U_CHAR_NAME_ALIAS", U_CHAR_NAME_ALIAS)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UCharNameChoice>
 
   py::enum_<UDecompositionType>(m, "UDecompositionType", py::arithmetic())
@@ -449,7 +449,7 @@ void init_uchar(py::module &m) {
       .value("U_DT_WIDE", U_DT_WIDE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_DT_COUNT", U_DT_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UDecompositionType>
 
   py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic())
@@ -461,7 +461,7 @@ void init_uchar(py::module &m) {
       .value("U_EA_WIDE", U_EA_WIDE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_EA_COUNT", U_EA_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UEastAsianWidth>
 
   py::enum_<UGraphemeClusterBreak>(m, "UGraphemeClusterBreak", py::arithmetic())
@@ -489,7 +489,7 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_GCB_COUNT", U_GCB_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UGraphemeClusterBreak>
 
   py::enum_<UHangulSyllableType>(m, "UHangulSyllableType", py::arithmetic())
@@ -501,7 +501,7 @@ void init_uchar(py::module &m) {
       .value("U_HST_LVT_SYLLABLE", U_HST_LVT_SYLLABLE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_HST_COUNT", U_HST_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UHangulSyllableType>
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -523,7 +523,7 @@ void init_uchar(py::module &m) {
       .value("U_INPC_VISUAL_ORDER_LEFT", U_INPC_VISUAL_ORDER_LEFT)
 #if (U_ICU_VERSION_MAJOR_NUM >= 66)
       .value("U_INPC_TOP_AND_BOTTOM_AND_LEFT", U_INPC_TOP_AND_BOTTOM_AND_LEFT)
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 66)
+#endif  // (U_ICU_VERSION_MAJOR_NUM >= 66)
       ; // <UIndicPositionalCategory>
 #endif  // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
@@ -684,7 +684,7 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UJoiningGroup>
 
   py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic())
@@ -696,7 +696,7 @@ void init_uchar(py::module &m) {
       .value("U_JT_TRANSPARENT", U_JT_TRANSPARENT)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JT_COUNT", U_JT_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UJoiningType>
 
   py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic())
@@ -752,7 +752,7 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_LB_COUNT", U_LB_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <ULineBreak>
 
   py::enum_<UNumericType>(m, "UNumericType", py::arithmetic())
@@ -762,7 +762,7 @@ void init_uchar(py::module &m) {
       .value("U_NT_NUMERIC", U_NT_NUMERIC)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_NT_COUNT", U_NT_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UNumericType>
 
   py::enum_<UProperty>(m, "UProperty", py::arithmetic())
@@ -918,7 +918,7 @@ void init_uchar(py::module &m) {
       .value("U_LONG_PROPERTY_NAME", U_LONG_PROPERTY_NAME)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_PROPERTY_NAME_CHOICE_COUNT", U_PROPERTY_NAME_CHOICE_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UProperty>
 
   py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic())
@@ -939,7 +939,7 @@ void init_uchar(py::module &m) {
       .value("U_SB_SCONTINUE", U_SB_SCONTINUE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_SB_COUNT", U_SB_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <USentenceBreak>
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -985,7 +985,7 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_WB_COUNT", U_WB_COUNT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UWordBreakValues>
 
   m.def(
@@ -1046,7 +1046,7 @@ void init_uchar(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_ConstUSetPtr>(new _ConstUSetPtr(uset));
+        return std::make_unique<_ConstUSetPtr>(uset);
       },
       py::arg("property_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -1074,7 +1074,7 @@ void init_uchar(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_ConstUCPMapPtr>(new _ConstUCPMapPtr(map));
+        return std::make_unique<_ConstUCPMapPtr>(map);
       },
       py::return_value_policy::reference, py::arg("property_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)

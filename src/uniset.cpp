@@ -40,7 +40,7 @@ void init_uniset(py::module &m) {
       .def(py::init<UChar32, UChar32>(), py::arg("start"), py::arg("end"))
       .def(py::init([](const UnicodeString &pattern) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<UnicodeSet> result(new UnicodeSet(pattern, error_code));
+             auto result = std::make_unique<UnicodeSet>(pattern, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -50,8 +50,7 @@ void init_uniset(py::module &m) {
       .def(py::init([](const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
                        std::optional<const SymbolTable *> symbols) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<UnicodeSet> result(
-                 new UnicodeSet(pattern, pos, options, symbols.value_or(nullptr), error_code));
+             auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -69,8 +68,8 @@ void init_uniset(py::module &m) {
       .def("__copy__", &UnicodeSet::clone)
       .def("__deepcopy__", [](const UnicodeSet &self, py::dict) { return self.clone(); })
       .def(
-          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &item) { return self.toUSet() == item; }, py::is_operator(),
-          py::arg("item"))
+          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &item) { return self.toUSet() == item; },
+          py::is_operator(), py::arg("item"))
       .def(
           "__eq__", [](const UnicodeSet &self, _USetPtr &item) { return self.toUSet() == item; }, py::is_operator(),
           py::arg("item"))
@@ -253,10 +252,10 @@ void init_uniset(py::module &m) {
   us.def("to_pattern", &UnicodeSet::toPattern, py::arg("result"), py::arg("escape_unprintable") = false);
   us.def("to_uset", [](UnicodeSet &self) {
       auto uset = self.toUSet();
-      return std::unique_ptr<_USetPtr>(new _USetPtr(uset));
+      return std::make_unique<_USetPtr>(uset);
     }).def("to_uset", [](const UnicodeSet &self) {
     auto uset = self.toUSet();
-    return std::unique_ptr<_ConstUSetPtr>(new _ConstUSetPtr(uset));
+    return std::make_unique<_ConstUSetPtr>(uset);
   });
 
   us.def_property_readonly_static("IGNORE_SPACE", [](py::object) -> int32_t { return USET_IGNORE_SPACE; });

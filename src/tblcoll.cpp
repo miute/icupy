@@ -141,7 +141,7 @@ void init_tblcoll(py::module &m) {
   rbc.def(py::self == py::self);
   rbc.def(py::init([](const UnicodeString &rules) {
             UErrorCode error_code = U_ZERO_ERROR;
-            std::unique_ptr<RuleBasedCollator> result(new RuleBasedCollator(rules, error_code));
+            auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUException(error_code);
             }
@@ -150,7 +150,7 @@ void init_tblcoll(py::module &m) {
           py::arg("rules"))
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedCollator> result(new RuleBasedCollator(rules, collation_strength, error_code));
+             auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -159,7 +159,7 @@ void init_tblcoll(py::module &m) {
            py::arg("rules"), py::arg("collation_strength"))
       .def(py::init([](const UnicodeString &rules, UColAttributeValue decomposition_mode) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedCollator> result(new RuleBasedCollator(rules, decomposition_mode, error_code));
+             auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -169,8 +169,8 @@ void init_tblcoll(py::module &m) {
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength,
                        UColAttributeValue decomposition_mode) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedCollator> result(
-                 new RuleBasedCollator(rules, collation_strength, decomposition_mode, error_code));
+             auto result =
+                 std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -183,7 +183,7 @@ void init_tblcoll(py::module &m) {
       /*
       .def(py::init([](const std::vector<uint8_t> &bin, int32_t length, const RuleBasedCollator *base) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedCollator> result(new RuleBasedCollator(bin.data(), length, base, error_code));
+             auto result = std::make_unique<RuleBasedCollator>(bin.data(), length, base, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }

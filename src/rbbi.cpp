@@ -135,7 +135,7 @@ void init_rbbi(py::module &m) {
   rbbi.def(py::init<const RuleBasedBreakIterator &>(), py::arg("that"))
       .def(py::init([](const UnicodeString &rules, UParseError &parse_error) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedBreakIterator> result(new RuleBasedBreakIterator(rules, parse_error, error_code));
+             auto result = std::make_unique<RuleBasedBreakIterator>(rules, parse_error, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }
@@ -144,8 +144,7 @@ void init_rbbi(py::module &m) {
            py::arg("rules"), py::arg("parse_error"))
       .def(py::init([](const std::vector<uint8_t> &compiled_rules, uint32_t rule_length) {
              UErrorCode error_code = U_ZERO_ERROR;
-             std::unique_ptr<RuleBasedBreakIterator> result(
-                 new RuleBasedBreakIterator(compiled_rules.data(), rule_length, error_code));
+             auto result = std::make_unique<RuleBasedBreakIterator>(compiled_rules.data(), rule_length, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUException(error_code);
              }

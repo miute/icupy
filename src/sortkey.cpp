@@ -10,8 +10,7 @@ void init_sortkey(py::module &m) {
   py::class_<CollationKey> ck(m, "CollationKey");
   ck.def(py::init<>())
       .def(py::init([](const std::vector<uint8_t> &values, int32_t count) {
-             std::unique_ptr<CollationKey> result(new CollationKey(values.data(), count));
-             return result;
+             return std::make_unique<CollationKey>(values.data(), count);
            }),
            py::arg("values"), py::arg("count"))
       .def(py::init<CollationKey &>(), py::arg("other"))

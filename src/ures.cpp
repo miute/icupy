@@ -27,7 +27,7 @@ void init_ures(py::module &m) {
       .value("RES_INT_VECTOR", RES_INT_VECTOR)
       .value("RES_RESERVED", RES_RESERVED)
       .value("URES_LIMIT", URES_LIMIT)
-#endif // U_HIDE_DEPRECATED_API
+#endif  // U_HIDE_DEPRECATED_API
       ; // <UResType>
 
   py::class_<_UResourceBundlePtr>(m, "_UResourceBundlePtr");
@@ -43,7 +43,7 @@ void init_ures(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UResourceBundlePtr>(new _UResourceBundlePtr(resource_bundle));
+        return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
       py::arg("package_name"), py::arg("locale"));
   m.def(
@@ -54,7 +54,7 @@ void init_ures(py::module &m) {
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
-        return std::unique_ptr<_UResourceBundlePtr>(new _UResourceBundlePtr(resource_bundle));
+        return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
       py::arg("package_name"), py::arg("locale"));
 }
