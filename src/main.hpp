@@ -5,11 +5,13 @@
 #pragma warning(disable : 4819)
 #endif // _MSC_VER
 
+#include <list>
 #include <pybind11/pybind11.h>
-#include <unicode/utypes.h>
+#include <unicode/unistr.h>
 
 namespace py = pybind11;
 
+using _UnicodeStringList = std::list<icu::UnicodeString>;
 class ICUException : public std::exception {
 public:
   explicit ICUException(UErrorCode error_code, const char *message = "");

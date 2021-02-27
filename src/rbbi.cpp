@@ -1,5 +1,7 @@
 #include "main.hpp"
+#include "utextptr.hpp"
 #include <memory>
+#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/rbbi.h>
@@ -168,7 +170,17 @@ void init_rbbi(py::module &m) {
   });
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules);
   rbbi.def("get_text", &RuleBasedBreakIterator::getText, py::return_value_policy::reference);
-  // TODO: Implement "UText* getUText(UText *fillIn, UErrorCode &status)".
+  rbbi.def(
+      "get_utext",
+      [](const RuleBasedBreakIterator &self, std::optional<_UTextPtr> &fill_in) {
+        UErrorCode error_code = U_ZERO_ERROR;
+        auto p = self.getUText(fill_in.value_or(nullptr), error_code);
+        if (U_FAILURE(error_code)) {
+          throw ICUException(error_code);
+        }
+        return std::make_unique<_UTextPtr>(p);
+      },
+      py::arg("fill_in"));
   rbbi.def("hash_code", &RuleBasedBreakIterator::hashCode);
   rbbi.def("is_boundary", &RuleBasedBreakIterator::isBoundary, py::arg("offset"));
   rbbi.def("last", &RuleBasedBreakIterator::last);
@@ -176,7 +188,16 @@ void init_rbbi(py::module &m) {
       .def("next", py::overload_cast<>(&RuleBasedBreakIterator::next));
   rbbi.def("preceding", &RuleBasedBreakIterator::preceding, py::arg("offset"));
   rbbi.def("previous", &RuleBasedBreakIterator::previous);
-  // TODO: Implement "BreakIterator& refreshInputText(UText *input, UErrorCode &status)".
-  // TODO: Implement "void setText(UText *text, UErrorCode &status)".
-  rbbi.def("set_text", py::overload_cast<const UnicodeString &>(&RuleBasedBreakIterator::setText), py::arg("text"));
+  // FIXME: Implement "BreakIterator& refreshInputText(UText *input, UErrorCode &status)".
+  rbbi.def("set_text", py::overload_cast<const UnicodeString &>(&RuleBasedBreakIterator::setText), py::arg("text"))
+      .def(
+          "set_text",
+          [](RuleBasedBreakIterator &self, _UTextPtr &text) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.setText(text, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+          },
+          py::arg("text"));
 }

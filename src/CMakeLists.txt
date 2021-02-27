@@ -44,6 +44,7 @@ pybind11_add_module(
     uscript.cpp
     uset.cpp
     ustring.cpp
+    utext.cpp
     utrans.cpp
     utypes.cpp
     uversion.cpp

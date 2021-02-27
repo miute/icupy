@@ -39,6 +39,7 @@ void init_ures(py::module &m);
 void init_uscript(py::module &m);
 void init_uset(py::module &m);
 void init_ustring(py::module &);
+void init_utext(py::module &);
 void init_utrans(py::module &m);
 void init_utypes(py::module &);
 void init_uversion(py::module &);
@@ -106,6 +107,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uscript(m);
   init_uset(m);
   init_ustring(m);
+  init_utext(m);
   init_utrans(m);
   init_utypes(m);
   init_uversion(m);

@@ -4,6 +4,8 @@ from icupy import (
     BreakIterator, CharacterIterator, Locale, RuleBasedBreakIterator,
     StringCharacterIterator, StringEnumeration, ULocDataLocaleType,
     UnicodeString, UParseError, UWordBreak,
+    utext_close, utext_extract, utext_native_length,
+    utext_open_const_unicode_string,
 )
 
 
@@ -273,6 +275,27 @@ def test_get_text():
     assert dest == src
 
 
+def test_get_utext():
+    bi = BreakIterator.create_word_instance(Locale.get_us())
+
+    ut1 = bi.get_utext(None)
+    dest = utext_extract(ut1, 0, utext_native_length(ut1))
+    assert len(dest) == 0
+    utext_close(ut1)
+
+    src1 = UnicodeString("ABC")
+    bi.set_text(src1)
+    ut1 = bi.get_utext(None)
+    assert utext_extract(ut1, 0, utext_native_length(ut1)) == "ABC"
+
+    src2 = UnicodeString("abc")
+    bi.set_text(src2)
+    ut2 = bi.get_utext(ut1)
+    assert ut2 == ut1
+    assert utext_extract(ut1, 0, utext_native_length(ut1)) == "abc"
+    utext_close(ut1)
+
+
 def test_hash_code():
     bi1 = BreakIterator.create_character_instance(Locale.get_us())
     bi2 = BreakIterator.create_word_instance(Locale.get_us())
@@ -450,13 +473,30 @@ def test_rule_based_break_iterator():
 
 def test_set_text():
     bi = BreakIterator.create_word_instance(Locale.get_us())
-    src = UnicodeString("foo bar baz.")
+    src1 = UnicodeString("foo bar baz.")
+    src2 = UnicodeString("lorem ipsum")
 
     # [1]
-    # void setText(const UnicodeString &newText)
-    bi.set_text(src)
+    # void BreakIterator::setText(const UnicodeString &newText)
+    bi.set_text(src1)
     assert bi.current() == 0
     assert bi.next() == 3
 
-    bi.set_text(src)
+    bi.set_text(src2)
     assert bi.current() == 0
+    assert bi.next() == 5
+
+    # [2]
+    # void BreakIterator::setText(UText *text,
+    #                             UErrorCode &status
+    # )
+    ut = utext_open_const_unicode_string(None, src1)
+    bi.set_text(ut)
+    assert bi.current() == 0
+    assert bi.next() == 3
+
+    utext_open_const_unicode_string(ut, src2)
+    bi.set_text(ut)
+    assert bi.current() == 0
+    assert bi.next() == 5
+    utext_close(ut)
