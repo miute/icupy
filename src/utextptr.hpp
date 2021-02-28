@@ -20,8 +20,6 @@ public:
 
   const std::shared_ptr<void> &get_source() const;
 
-  void set_source(std::shared_ptr<void> &source);
-
 private:
   UText *p_;
   std::shared_ptr<void> source_;

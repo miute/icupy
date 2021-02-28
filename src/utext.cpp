@@ -17,8 +17,6 @@ UText *_UTextPtr::get() const { return p_; }
 
 const std::shared_ptr<void> &_UTextPtr::get_source() const { return source_; }
 
-void _UTextPtr::set_source(std::shared_ptr<void> &source) { source_ = source; }
-
 _UTextVector::_UTextVector(size_t n) {
   values_ = std::vector<_UTextPtr>(n);
   sources_ = std::vector<UnicodeString>(n);

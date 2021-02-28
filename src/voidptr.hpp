@@ -14,8 +14,6 @@ public:
   // template <typename T> _ConstVoidPtr(T value);
   ~_ConstVoidPtr();
 
-  std::any &get() { return context_; }
-
   py::function &get_action() { return action_; }
 
   bool has_value() const { return context_.has_value(); }
@@ -25,8 +23,6 @@ public:
   const char *to_c_str() const;
 
   py::object to_object() const;
-
-  template <typename T> auto value() const { return std::any_cast<T>(context_); }
 
 private:
   _ConstVoidPtr() = delete;
