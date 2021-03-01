@@ -31,6 +31,7 @@ void init_ucnv_cb(py::module &);
 void init_ucnv_err(py::module &);
 void init_ucol(py::module &);
 void init_ucpmap(py::module &);
+void init_uenum(py::module &m);
 void init_uidna(py::module &);
 void init_uloc(py::module &);
 void init_uniset(py::module &m);
@@ -101,6 +102,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_ucnv_err(m);
   init_ucol(m);
   init_ucpmap(m);
+  init_uenum(m);
   init_uidna(m);
   init_uloc(m);
   init_uniset(m);

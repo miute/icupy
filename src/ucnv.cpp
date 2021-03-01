@@ -1,4 +1,5 @@
 #include "ucnv_err.hpp"
+#include "uenumptr.hpp"
 #include "usetptr.hpp"
 #include "voidptr.hpp"
 #include <memory>
@@ -286,6 +287,14 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("converter_name"));
+  m.def("ucnv_open_all_names", []() {
+    UErrorCode error_code = U_ZERO_ERROR;
+    auto p = ucnv_openAllNames(&error_code);
+    if (U_FAILURE(error_code)) {
+      throw ICUException(error_code);
+    }
+    return std::make_unique<_UEnumerationPtr>(p);
+  });
   m.def(
       "ucnv_open_ccsid",
       [](int32_t codepage, UConverterPlatform platform) {
@@ -308,7 +317,17 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("package_name"), py::arg("converter_name"));
-
+  m.def(
+      "ucnv_open_standard_names",
+      [](const char *conv_name, const char *standard) {
+        UErrorCode error_code = U_ZERO_ERROR;
+        auto p = ucnv_openStandardNames(conv_name, standard, &error_code);
+        if (U_FAILURE(error_code)) {
+          throw ICUException(error_code);
+        }
+        return std::make_unique<_UEnumerationPtr>(p);
+      },
+      py::arg("conv_name"), py::arg("standard"));
   m.def(
       "ucnv_reset", [](_UConverterPtr &converter) { ucnv_reset(converter); }, py::arg("converter"));
   m.def(

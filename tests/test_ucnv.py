@@ -1,7 +1,7 @@
+from functools import partial
 from pathlib import Path
 
 import pytest
-
 from icupy import (
     ConstVoidPtr, ICUException, Locale, UErrorCode, UnicodeSet, UnicodeString,
     u_strlen,
@@ -18,7 +18,8 @@ from icupy import (
     ucnv_get_subst_chars, ucnv_get_to_u_call_back, ucnv_get_type,
     ucnv_get_unicode_set,
     ucnv_is_ambiguous, ucnv_is_fixed_width,
-    ucnv_open, ucnv_open_ccsid, ucnv_open_package, ucnv_reset,
+    ucnv_open, ucnv_open_all_names, ucnv_open_ccsid, ucnv_open_package,
+    ucnv_open_standard_names, ucnv_reset,
     ucnv_reset_from_unicode, ucnv_reset_to_unicode,
     ucnv_set_fallback, ucnv_set_from_u_call_back, ucnv_set_subst_chars,
     ucnv_set_subst_string, ucnv_set_to_u_call_back, ucnv_uses_fallback,
@@ -31,7 +32,10 @@ from icupy import (
     # ucnv_cb
     ucnv_cb_from_u_write_bytes, ucnv_cb_from_u_write_sub,
     ucnv_cb_to_u_write_sub, ucnv_cb_to_u_write_uchars,
+    # uenum
+    uenum_close, uenum_count, uenum_next,
 )
+
 from . import gc
 
 
@@ -157,6 +161,18 @@ def test_api():
         ucnv_reset(cnv)
         ucnv_reset_from_unicode(cnv)
         ucnv_reset_to_unicode(cnv)
+
+    en = ucnv_open_all_names()
+    assert uenum_count(en) > 0
+    names = iter(partial(uenum_next, en), None)
+    assert encoding in names
+    uenum_close(en)
+
+    en = ucnv_open_standard_names("ibm-943_P15A-2003", "IANA")
+    assert uenum_count(en) > 0
+    standards = iter(partial(uenum_next, en), None)
+    assert "Shift_JIS" in standards
+    uenum_close(en)
 
     with gc(ucnv_open_ccsid(943, UConverterPlatform.UCNV_IBM),
             ucnv_close) as cnv:
