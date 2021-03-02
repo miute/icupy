@@ -36,6 +36,7 @@ pybind11_add_module(
     ucnv_err.cpp
     ucol.cpp
     ucpmap.cpp
+    ucsdet.cpp
     uenum.cpp
     uidna.cpp
     uloc.cpp
