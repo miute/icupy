@@ -1,5 +1,4 @@
 import pytest
-
 from icupy import (
     ConstVoidPtr,
     ICUException, UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
@@ -173,7 +172,7 @@ def test_u_char_age():
 
 
 def test_u_get_binary_property_set():
-    # const USet* u_getBinaryPropertySet(UProperty property,
+    # const USet *u_getBinaryPropertySet(UProperty property,
     #                                    UErrorCode *pErrorCode
     # )
     uset = u_get_binary_property_set(UProperty.UCHAR_POSIX_BLANK)
@@ -185,7 +184,7 @@ def test_u_get_binary_property_set():
 
 
 def test_u_get_int_property_map():
-    # UCPMap* u_getIntPropertyMap(UProperty property,
+    # UCPMap *u_getIntPropertyMap(UProperty property,
     #                             UErrorCode *pErrorCode
     # )
     ucpmap = u_get_int_property_map(UProperty.UCHAR_EAST_ASIAN_WIDTH)

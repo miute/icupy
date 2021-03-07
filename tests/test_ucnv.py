@@ -66,7 +66,7 @@ def test_api():
     standards = [ucnv_get_standard(n) for n in range(count)]
     assert "IANA" in standards
 
-    # const char* ucnv_detectUnicodeSignature(const char *source,
+    # const char *ucnv_detectUnicodeSignature(const char *source,
     #                                         int32_t sourceLength,
     #                                         int32_t *signatureLength,
     #                                         UErrorCode *pErrorCode
@@ -93,10 +93,10 @@ def test_api():
         result = ucnv_get_display_name(cnv, Locale.ENGLISH)
         assert result == "ibm-943_P130-1999"
 
-        # UnicodeString(const char *src,
-        #               int32_t srcLength,
-        #               UConverter *cnv,
-        #               UErrorCode &errorCode
+        # UnicodeString::UnicodeString(const char *src,
+        #                              int32_t srcLength,
+        #                              UConverter *cnv,
+        #                              UErrorCode &errorCode
         # )
         sjis = b"\x61\x5B\x5C\xB1\x87\x54"
         utf8 = sjis.decode("cp932")

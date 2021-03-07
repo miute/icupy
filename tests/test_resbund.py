@@ -2,7 +2,6 @@ import copy
 from pathlib import Path
 
 import pytest
-
 from icupy import (
     ICUException, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
     UnicodeString, UResType,
@@ -237,9 +236,9 @@ def test_resource_bundle():
     assert default_locale != res_locale
 
     # [1]
-    # ResourceBundle(const UnicodeString &packageName,
-    #                const Locale &locale,
-    #                UErrorCode &err
+    # ResourceBundle::ResourceBundle(const UnicodeString &packageName,
+    #                                const Locale &locale,
+    #                                UErrorCode &err
     # )
     test1 = ResourceBundle(UnicodeString(), res_locale)
     assert test1.get_type() == UResType.URES_TABLE
@@ -252,8 +251,8 @@ def test_resource_bundle():
     assert test1.get_name() == res_locale.get_name()
 
     # [2]
-    # ResourceBundle(const UnicodeString &packageName,
-    #                UErrorCode &err
+    # ResourceBundle::ResourceBundle(const UnicodeString &packageName,
+    #                                UErrorCode &err
     # )
     test2 = ResourceBundle(UnicodeString())
     assert test2.get_type() == UResType.URES_TABLE
@@ -266,7 +265,7 @@ def test_resource_bundle():
     assert test2.get_name() == default_locale.get_name()
 
     # [3]
-    # ResourceBundle(UErrorCode &err)
+    # ResourceBundle::ResourceBundle(UErrorCode &err)
     test3 = ResourceBundle()
     assert test3.get_type() == UResType.URES_TABLE
     assert test3.get_size() >= 0
@@ -278,9 +277,9 @@ def test_resource_bundle():
     assert test3.get_name() == default_locale.get_name()
 
     # [4]
-    # ResourceBundle(const char *packageName,
-    #                const Locale &locale,
-    #                UErrorCode &err
+    # ResourceBundle::ResourceBundle(const char *packageName,
+    #                                const Locale &locale,
+    #                                UErrorCode &err
     # )
     test4 = ResourceBundle(None, res_locale)
     assert test4.get_type() == UResType.URES_TABLE
@@ -293,7 +292,7 @@ def test_resource_bundle():
     assert test4.get_name() == res_locale.get_name()
 
     # [5]
-    # ResourceBundle(const ResourceBundle &original)
+    # ResourceBundle::ResourceBundle(const ResourceBundle &original)
     test5 = ResourceBundle(test1)
     assert test5.get_type() == UResType.URES_TABLE
     assert test5.get_size() >= 0
@@ -305,8 +304,8 @@ def test_resource_bundle():
     assert test5.get_name() == res_locale.get_name()
 
     # [6]
-    # ResourceBundle(UResourceBundle *res,
-    #                UErrorCode &status
+    # ResourceBundle::ResourceBundle(UResourceBundle *res,
+    #                                UErrorCode &status
     # )
     rb = ures_open(None, str(res_locale))
     test6 = ResourceBundle(rb)

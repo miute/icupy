@@ -21,16 +21,17 @@ from icupy import (
     ubidi_set_line, ubidi_set_para, ubidi_set_reordering_mode,
     ubidi_set_reordering_options, ubidi_write_reordered, ubidi_write_reverse,
 )
+
 from . import gc
 
 
 def test_api():
     text = "bahrain \u0645\u0635\u0631 kuwait"
 
-    # UBiDi* ubidi_open(void)
+    # UBiDi *ubidi_open(void)
     # void ubidi_close(UBiDi *pBiDi)
     with gc(ubidi_open(), ubidi_close) as bidi:
-        # const UChar* ubidi_getText(const UBiDi *pBiDi)
+        # const UChar *ubidi_getText(const UBiDi *pBiDi)
         result = ubidi_get_text(bidi)
         assert result is None
 
@@ -75,7 +76,7 @@ def test_api():
         # ...
         assert ubidi_get_level_at(bidi, 17) == 0
 
-        # const UBiDiLevel* ubidi_getLevels(UBiDi *pBiDi,
+        # const UBiDiLevel *ubidi_getLevels(UBiDi *pBiDi,
         #                                   UErrorCode *pErrorCode
         # )
         levels = ubidi_get_levels(bidi)
@@ -162,7 +163,7 @@ def test_api():
         # int32_t ubidi_getResultLength(const UBiDi *pBiDi)
         assert ubidi_get_result_length(bidi) == 18
 
-        # const UChar* ubidi_getText(const UBiDi *pBiDi)
+        # const UChar *ubidi_getText(const UBiDi *pBiDi)
         result = ubidi_get_text(bidi)
         assert result == text
 
@@ -328,7 +329,9 @@ def test_set_class_callback():
         result = ubidi_get_customized_class(bidi, 0x39)
         assert result == UCharDirection.U_ARABIC_NUMBER
 
-        old_fn3, old_context3 = ubidi_set_class_callback(bidi, old_fn1, old_context1)
+        old_fn3, old_context3 = ubidi_set_class_callback(bidi,
+                                                         old_fn1,
+                                                         old_context1)
         result = ubidi_get_customized_class(bidi, 0x52)
         assert result == UCharDirection.U_LEFT_TO_RIGHT
         result = ubidi_get_customized_class(bidi, 0x39)
@@ -381,7 +384,7 @@ def test_set_line():
     text = "bahrain \u0645\u0635\u0631 kuwait"
     length = u_strlen(text)
 
-    # UBiDi* ubidi_openSized(int32_t maxLength,
+    # UBiDi *ubidi_openSized(int32_t maxLength,
     #                        int32_t maxRunCount,
     #                        UErrorCode *pErrorCode
     # )

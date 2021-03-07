@@ -12,21 +12,21 @@ from . import gc
 
 def test_append():
     # [1]
-    # UnicodeString & append(char16_t srcChar)
+    # UnicodeString &UnicodeString::append(char16_t srcChar)
     test1 = UnicodeString()
     test1.append(0x61).append(0x62).append(0x63)
     assert test1 == "abc"
 
     # [2]
-    # UnicodeString & append(const char16_t *srcChars,
-    #                        int32_t srcStart,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::append(const char16_t *srcChars,
+    #                                      int32_t srcStart,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test1.append("abc", 0, 1).append("abc", 1, 1).append("abc", 2, 1)
     assert test1 == "abc"
 
     # [3]
-    # UnicodeString & append(const UnicodeString &srcText)
+    # UnicodeString &UnicodeString::append(const UnicodeString &srcText)
     test1 = UnicodeString("foo ", -1, US_INV)
     test1.append(test1).append(test1).append(test1)
     # "foo " + "foo "
@@ -35,16 +35,16 @@ def test_append():
     assert test1 == "foo foo foo foo foo foo foo foo "
 
     # [4]
-    # UnicodeString & append(const UnicodeString &srcText,
-    #                        int32_t srcStart,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::append(const UnicodeString &srcText,
+    #                                      int32_t srcStart,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test2 = UnicodeString("foo bar baz", -1, US_INV)
     test1.append(test2, 0, 4).append(test2, 4, 4).append(test2, 8, 3)
     assert test1 == "foo bar baz"
 
     # [6]
-    # UnicodeString & append(UChar32 srcChar)
+    # UnicodeString &UnicodeString::append(UChar32 srcChar)
     test1 = UnicodeString()
     test1.append(0x1f338)
     expected = UnicodeString("\\uD83C\\uDF38", -1, US_INV).unescape()
@@ -57,8 +57,8 @@ def test_append():
     assert len(test1) == 3
 
     # [5]
-    # UnicodeString & append(ConstChar16Ptr srcChars,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::append(ConstChar16Ptr srcChars,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test1.append("foo bar", 4).append("bar baz", 4).append("baz qux", 3)
     assert test1 == "foo bar baz"
@@ -70,23 +70,23 @@ def test_case_compare():
     test2 = UnicodeString(s)
 
     # [1]
-    # int8_t caseCompare(const UnicodeString &text,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(const UnicodeString &text,
+    #                                   uint32_t options)
     assert test1.case_compare(test2, UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [2]
-    # int8_t caseCompare(ConstChar16Ptr srcChars,
-    #                    int32_t srcLength,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(ConstChar16Ptr srcChars,
+    #                                   int32_t srcLength,
+    #                                   uint32_t options)
     assert test1.case_compare(s, -1, UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [3]
-    # int8_t caseCompare(int32_t start,
-    #                    int32_t length,
-    #                    const char16_t *srcChars,
-    #                    int32_t srcStart,
-    #                    int32_t srcLength,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(int32_t start,
+    #                                   int32_t length,
+    #                                   const char16_t *srcChars,
+    #                                   int32_t srcStart,
+    #                                   int32_t srcLength,
+    #                                   uint32_t options)
     assert test1.case_compare(0,
                               len(s),
                               s,
@@ -95,22 +95,22 @@ def test_case_compare():
                               UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [4]
-    # int8_t caseCompare(int32_t start,
-    #                    int32_t length,
-    #                    const char16_t *srcChars,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(int32_t start,
+    #                                   int32_t length,
+    #                                   const char16_t *srcChars,
+    #                                   uint32_t options)
     assert test1.case_compare(0,
                               len(s),
                               s,
                               UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [5]
-    # int8_t caseCompare(int32_t start,
-    #                    int32_t length,
-    #                    const UnicodeString &srcText,
-    #                    int32_t srcStart,
-    #                    int32_t srcLength,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(int32_t start,
+    #                                   int32_t length,
+    #                                   const UnicodeString &srcText,
+    #                                   int32_t srcStart,
+    #                                   int32_t srcLength,
+    #                                   uint32_t options)
     assert test1.case_compare(0,
                               -1,
                               test2,
@@ -119,21 +119,21 @@ def test_case_compare():
                               UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [6]
-    # int8_t caseCompare(int32_t start,
-    #                    int32_t length,
-    #                    const UnicodeString &srcText,
-    #                    uint32_t options)
+    # int8_t UnicodeString::caseCompare(int32_t start,
+    #                                   int32_t length,
+    #                                   const UnicodeString &srcText,
+    #                                   uint32_t options)
     assert test1.case_compare(0,
                               len(test2),
                               test2,
                               UnicodeString.FOLD_CASE_DEFAULT) == 0
 
-    # int8_t caseCompareBetween(int32_t start,
-    #                           int32_t limit,
-    #                           const UnicodeString &srcText,
-    #                           int32_t srcStart,
-    #                           int32_t srcLimit,
-    #                           uint32_t options)
+    # int8_t UnicodeString::caseCompareBetween(int32_t start,
+    #                                          int32_t limit,
+    #                                          const UnicodeString &srcText,
+    #                                          int32_t srcStart,
+    #                                          int32_t srcLimit,
+    #                                          uint32_t options)
     assert test1.case_compare_between(0,
                                       len(test2),
                                       test2,
@@ -204,53 +204,53 @@ def test_compare():
     s3 = "foo bar baz"
 
     # [1]
-    # int8_t compare(const UnicodeString &text)
+    # int8_t UnicodeString::compare(const UnicodeString &text)
     assert test1.compare(test2) == 0
     assert test1.compare(test3) < 0
 
     # [2]
-    # int8_t compare(ConstChar16Ptr srcChars,
-    #                int32_t srcLength)
+    # int8_t UnicodeString::compare(ConstChar16Ptr srcChars,
+    #                               int32_t srcLength)
     assert test1.compare(s2, len(s2)) == 0
     assert test1.compare(s3, len(s3)) < 0
 
     # [3]
-    # int8_t compare(int32_t start,
-    #                int32_t length,
-    #                const char16_t *srcChars)
+    # int8_t UnicodeString::compare(int32_t start,
+    #                               int32_t length,
+    #                               const char16_t *srcChars)
     assert test1.compare(0, len(test1), s2) == 0
     assert test1.compare(0, len(test1), s3) == 0
 
     # [4]
-    # int8_t compare(int32_t start,
-    #                int32_t length,
-    #                const char16_t *srcChars,
-    #                int32_t srcStart,
-    #                int32_t srcLength)
+    # int8_t UnicodeString::compare(int32_t start,
+    #                               int32_t length,
+    #                               const char16_t *srcChars,
+    #                               int32_t srcStart,
+    #                               int32_t srcLength)
     assert test1.compare(0, len(test1), s2, 0, -1) == 0
     assert test1.compare(0, len(test1), s3, 0, -1) < 0
 
     # [5]
-    # int8_t compare(int32_t start,
-    #                int32_t length,
-    #                const UnicodeString &srcText,
-    #                int32_t srcStart,
-    #                int32_t srcLength)
+    # int8_t UnicodeString::compare(int32_t start,
+    #                               int32_t length,
+    #                               const UnicodeString &srcText,
+    #                               int32_t srcStart,
+    #                               int32_t srcLength)
     assert test1.compare(0, len(test1), test2, 0, len(test2)) == 0
     assert test1.compare(0, len(test1), test3, 0, len(test3)) < 0
 
     # [6]
-    # int8_t compare(int32_t start,
-    #                int32_t length,
-    #                const UnicodeString &text)
+    # int8_t UnicodeString::compare(int32_t start,
+    #                               int32_t length,
+    #                               const UnicodeString &text)
     assert test1.compare(0, len(test1), test2) == 0
     assert test1.compare(0, len(test1), test3) < 0
 
-    # int8_t compareBetween(int32_t start,
-    #                       int32_t limit,
-    #                       const UnicodeString &srcText,
-    #                       int32_t srcStart,
-    #                       int32_t srcLimit)
+    # int8_t UnicodeString::compareBetween(int32_t start,
+    #                                      int32_t limit,
+    #                                      const UnicodeString &srcText,
+    #                                      int32_t srcStart,
+    #                                      int32_t srcLimit)
     assert test1.compare_between(0, len(test1), test2, 0, len(test2)) == 0
     assert test1.compare_between(0, len(test1), test3, 0, len(test3)) < 0
 
@@ -261,51 +261,53 @@ def test_compare_code_point_order():
     test2 = UnicodeString(s)
 
     # [1]
-    # int8_t compareCodePointOrder(const UnicodeString &text)
+    # int8_t UnicodeString::compareCodePointOrder(const UnicodeString &text)
     assert test1.compare_code_point_order(test2) == 0
 
     # [2]
-    # int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
-    #                              int32_t srcLength)
+    # int8_t UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
+    #                                             int32_t srcLength)
     assert test1.compare_code_point_order(s, -1) == 0
 
     # [3]
-    # int8_t compareCodePointOrder(int32_t start,
-    #                              int32_t length,
-    #                              const char16_t *srcChars)
+    # int8_t UnicodeString::compareCodePointOrder(int32_t start,
+    #                                             int32_t length,
+    #                                             const char16_t *srcChars)
     assert test1.compare_code_point_order(0, len(test1), s) == 0
 
     # [4]
-    # int8_t compareCodePointOrder(int32_t start,
-    #                              int32_t length,
-    #                              const char16_t *srcChars,
-    #                              int32_t srcStart,
-    #                              int32_t srcLength)
+    # int8_t UnicodeString::compareCodePointOrder(int32_t start,
+    #                                             int32_t length,
+    #                                             const char16_t *srcChars,
+    #                                             int32_t srcStart,
+    #                                             int32_t srcLength)
     assert test1.compare_code_point_order(0, len(test1), s, 0, -1) == 0
 
     # [5]
-    # int8_t compareCodePointOrder(int32_t start,
-    #                              int32_t length,
-    #                              const UnicodeString &srcText)
+    # int8_t UnicodeString::compareCodePointOrder(int32_t start,
+    #                                             int32_t length,
+    #                                             const UnicodeString &srcText)
     assert test1.compare_code_point_order(0, len(test1), test2) == 0
 
     # [6]
-    # int8_t compareCodePointOrder(int32_t start,
-    #                              int32_t length,
-    #                              const UnicodeString &srcText,
-    #                              int32_t srcStart,
-    #                              int32_t srcLength)
+    # int8_t UnicodeString::compareCodePointOrder(int32_t start,
+    #                                             int32_t length,
+    #                                             const UnicodeString &srcText,
+    #                                             int32_t srcStart,
+    #                                             int32_t srcLength)
     assert test1.compare_code_point_order(0,
                                           len(test2),
                                           test2,
                                           0,
                                           len(test1)) == 0
 
-    # int8_t compareCodePointOrderBetween(int32_t start,
-    #                                     int32_t limit,
-    #                                     const UnicodeString &srcText,
-    #                                     int32_t srcStart,
-    #                                     int32_t srcLimit)
+    # int8_t UnicodeString::compareCodePointOrderBetween(
+    #       int32_t start,
+    #       int32_t limit,
+    #       const UnicodeString &srcText,
+    #       int32_t srcStart,
+    #       int32_t srcLimit
+    # )
     assert test1.compare_code_point_order_between(0,
                                                   len(test2),
                                                   test2,
@@ -327,38 +329,37 @@ def test_ends_with():
     s3 = "bar"
 
     # [1]
-    # UBool endsWith(const char16_t *srcChars,
-    #                int32_t srcStart,
-    #                int32_t srcLength)
+    # UBool UnicodeString::endsWith(const char16_t *srcChars,
+    #                               int32_t srcStart,
+    #                               int32_t srcLength)
     assert not test1.ends_with(s2, 0, -1)
     assert test1.ends_with(s3, 0, -1)
 
     # [2]
-    # UBool endsWith(const UnicodeString &srcText,
-    #                int32_t srcStart,
-    #                int32_t srcLength)
+    # UBool UnicodeString::endsWith(const UnicodeString &srcText,
+    #                               int32_t srcStart,
+    #                               int32_t srcLength)
     assert not test1.ends_with(test2, 0, len(test2))
     assert test1.ends_with(test3, 0, len(test3))
 
     # [3]
-    # UBool endsWith(const UnicodeString &text)
+    # UBool UnicodeString::endsWith(const UnicodeString &text)
     assert not test1.ends_with(test2)
     assert test1.ends_with(test3)
 
     # [4]
-    # UBool endsWith(ConstChar16Ptr srcChars,
-    #                int32_t srcLength)
+    # UBool UnicodeString::endsWith(ConstChar16Ptr srcChars,
+    #                               int32_t srcLength)
     assert not test1.ends_with(s2, -1)
     assert test1.ends_with(s3, -1)
 
 
 def test_extract():
     # [1]
-    # int32_t extract(char *dest,
-    #                 int32_t destCapacity,
-    #                 UConverter *cnv,
-    #                 UErrorCode &errorCode
-    # )
+    # int32_t UnicodeString::extract(char *dest,
+    #                                int32_t destCapacity,
+    #                                UConverter *cnv,
+    #                                UErrorCode &errorCode)
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
         utf8 = "a[\x5C\uFF71\u2160"
         sjis = b"\x61\x5B\x5C\xB1\x87\x54"  # utf8.encode("cp932")
@@ -374,9 +375,9 @@ def test_extract():
     test3.set_to_bogus()
 
     # [2]
-    # int32_t extract(Char16Ptr dest,
-    #                 int32_t destCapacity,
-    #                 UErrorCode &errorCode)
+    # int32_t UnicodeString::extract(Char16Ptr dest,
+    #                                int32_t destCapacity,
+    #                                UErrorCode &errorCode)
     dest = test2.extract()
     assert isinstance(dest, str)
     assert dest == expected
@@ -386,16 +387,16 @@ def test_extract():
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     # [3]
-    # void extract(int32_t start,
-    #              int32_t length,
-    #              Char16Ptr dst,
-    #              int32_t dstStart = 0)
+    # void UnicodeString::extract(int32_t start,
+    #                             int32_t length,
+    #                             Char16Ptr dst,
+    #                             int32_t dstStart = 0)
     pass  # Same as [7]
 
     # [4]
-    # void extract(int32_t start,
-    #              int32_t length,
-    #              UnicodeString &target)
+    # void UnicodeString::extract(int32_t start,
+    #                             int32_t length,
+    #                             UnicodeString &target)
     target = UnicodeString("foo")
     test2.extract(3, 3, target)
     assert len(target) == 3
@@ -409,17 +410,17 @@ def test_extract():
     assert len(target) == 0
 
     # [5]
-    # int32_t extract(int32_t start,
-    #                 int32_t startLength,
-    #                 char *target,
-    #                 const char *codepage = 0)
+    # int32_t UnicodeString::extract(int32_t start,
+    #                                int32_t startLength,
+    #                                char *target,
+    #                                const char *codepage = 0)
     #
     # [8]
-    # int32_t extract(int32_t start,
-    #                 int32_t startLength,
-    #                 char *target,
-    #                 uint32_t targetLength,
-    #                 const char *codepage)
+    # int32_t UnicodeString::extract(int32_t start,
+    #                                int32_t startLength,
+    #                                char *target,
+    #                                uint32_t targetLength,
+    #                                const char *codepage)
     dest = test2.extract(3, 3, "utf-32-be")
     assert isinstance(dest, bytes)
     assert dest == b"\x00\x00\x00\x62\x00\x00\x00\x00\x00\x00\x00\x63"
@@ -435,11 +436,11 @@ def test_extract():
     assert len(dest) == 0
 
     # [6]
-    # int32_t extract(int32_t start,
-    #                 int32_t startLength,
-    #                 char *target,
-    #                 int32_t targetCapacity,
-    #                 enum EInvariant inv)
+    # int32_t UnicodeString::extract(int32_t start,
+    #                                int32_t startLength,
+    #                                char *target,
+    #                                int32_t targetCapacity,
+    #                                enum EInvariant inv)
     dest = test2.extract(3, 3, US_INV)
     assert isinstance(dest, bytes)
     assert dest == b"b\x00c"
@@ -453,10 +454,10 @@ def test_extract():
     assert len(dest) == 0
 
     # [7]
-    # int32_t extract(int32_t start,
-    #                 int32_t startLength,
-    #                 char *target,
-    #                 uint32_t targetLength)
+    # int32_t UnicodeString::extract(int32_t start,
+    #                                int32_t startLength,
+    #                                char *target,
+    #                                uint32_t targetLength)
     dest = test2.extract(3, 3)
     assert isinstance(dest, bytes)
     assert dest == b"b\x00c"
@@ -476,10 +477,10 @@ def test_extract_between():
     test2.set_to_bogus()
 
     # [1]
-    # void extractBetween(int32_t start,
-    #                     int32_t limit,
-    #                     char16_t *dst,
-    #                     int32_t dstStart = 0)
+    # void UnicodeString::extractBetween(int32_t start,
+    #                                    int32_t limit,
+    #                                    char16_t *dst,
+    #                                    int32_t dstStart = 0)
     dest = test1.extract_between(3, 6)
     assert isinstance(dest, str)
     assert dest == "b\x00c"
@@ -492,9 +493,9 @@ def test_extract_between():
     assert len(dest) == 0
 
     # [2]
-    # void extractBetween(int32_t start,
-    #                     int32_t limit,
-    #                     UnicodeString &target)
+    # void UnicodeString::extractBetween(int32_t start,
+    #                                    int32_t limit,
+    #                                    UnicodeString &target)
     target = UnicodeString("foo")
     test1.extract_between(3, 6, target)
     assert len(target) == 3
@@ -518,8 +519,10 @@ def test_fast_copy_from():
 
 def test_find_and_replace():
     # [1]
-    # UnicodeString & findAndReplace(const UnicodeString &oldText,
-    #                                const UnicodeString &newText)
+    # UnicodeString &UnicodeString::findAndReplace(
+    #       const UnicodeString &oldText,
+    #       const UnicodeString &newText
+    # )
     test1 = UnicodeString("abc")
     test1.find_and_replace(
         UnicodeString("b"), UnicodeString("B")).find_and_replace(
@@ -529,10 +532,12 @@ def test_find_and_replace():
     assert test1 == "ABC"
 
     # [2]
-    # UnicodeString & findAndReplace(int32_t start,
-    #                                int32_t length,
-    #                                const UnicodeString &oldText,
-    #                                const UnicodeString &newText)
+    # UnicodeString &UnicodeString::findAndReplace(
+    #       int32_t start,
+    #       int32_t length,
+    #       const UnicodeString &oldText,
+    #       const UnicodeString &newText
+    # )
     test2 = UnicodeString("foo bar baz")
     test2.find_and_replace(
         0, 3, UnicodeString("bar"), UnicodeString("BAR")).find_and_replace(
@@ -542,14 +547,16 @@ def test_find_and_replace():
     assert test2 == "FOO bar BAZ"
 
     # [3]
-    # UnicodeString& findAndReplace(int32_t start,
-    #                               int32_t length,
-    #                               const UnicodeString &oldText,
-    #                               int32_t oldStart,
-    #                               int32_t oldLength,
-    #                               const UnicodeString &newText,
-    #                               int32_t newStart,
-    #                               int32_t newLength)
+    # UnicodeString &UnicodeString::findAndReplace(
+    #       int32_t start,
+    #       int32_t length,
+    #       const UnicodeString &oldText,
+    #       int32_t oldStart,
+    #       int32_t oldLength,
+    #       const UnicodeString &newText,
+    #       int32_t newStart,
+    #       int32_t newLength
+    # )
     test3 = UnicodeString("foo bar baz")
     test3.find_and_replace(
         0, 3, UnicodeString("bar"), 0, 1, UnicodeString("BAR"), 0, 1
@@ -619,7 +626,7 @@ def test_from_utf8():
 
 def test_get_buffer():
     # [1]
-    # const char16_t * getBuffer()
+    # const char16_t *UnicodeString::getBuffer()
     test1 = UnicodeString("abc", -1, US_INV)
     test1.append(UnicodeString("\\uD83C \\uDF38").unescape())
 
@@ -670,83 +677,83 @@ def test_index_of():
         "\\udc02\\ud841\\u0073\\u0000").unescape()
 
     # [1]
-    # int32_t indexOf(char16_t c)
+    # int32_t UnicodeString::indexOf(char16_t c)
     assert test1.index_of(ord('o')) == 1
 
     # [2]
-    # int32_t indexOf(char16_t c,
-    #                 int32_t start)
+    # int32_t UnicodeString::indexOf(char16_t c,
+    #                                int32_t start)
     assert test1.index_of(ord('o'), 10) == 13
 
     # [3]
-    # int32_t indexOf(char16_t c,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(char16_t c,
+    #                                int32_t start,
+    #                                int32_t length)
     assert test1.index_of(ord('o'), 10, 3) == -1
     assert test1.index_of(ord('o'), 10, 4) == 13
 
     # [4]
-    # int32_t indexOf(const char16_t *srcChars,
-    #                 int32_t srcLength,
-    #                 int32_t start)
+    # int32_t UnicodeString::indexOf(const char16_t *srcChars,
+    #                                int32_t srcLength,
+    #                                int32_t start)
     assert test1.index_of("ipsum", 2, 10) == 42
 
     # [5]
-    # int32_t indexOf(const char16_t *srcChars,
-    #                 int32_t srcStart,
-    #                 int32_t srcLength,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(const char16_t *srcChars,
+    #                                int32_t srcStart,
+    #                                int32_t srcLength,
+    #                                int32_t start,
+    #                                int32_t length)
     assert test1.index_of("ipsum", 0, 2, 30, 13) == -1
     assert test1.index_of("ipsum", 0, 2, 30, 14) == 42
 
     # [6]
-    # int32_t indexOf(const UnicodeString &srcText,
-    #                 int32_t srcStart,
-    #                 int32_t srcLength,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(const UnicodeString &srcText,
+    #                                int32_t srcStart,
+    #                                int32_t srcLength,
+    #                                int32_t start,
+    #                                int32_t length)
     assert test1.index_of(test2, 0, 2, 30, 13) == -1
     assert test1.index_of(test2, 0, 2, 30, 14) == 42
 
     # [7]
-    # int32_t indexOf(const UnicodeString &text)
+    # int32_t UnicodeString::indexOf(const UnicodeString &text)
     assert test1.index_of(test2) == 6
 
     # [8]
-    # int32_t indexOf(const UnicodeString &text,
-    #                 int32_t start)
+    # int32_t UnicodeString::indexOf(const UnicodeString &text,
+    #                                int32_t start)
     assert test1.index_of(test2, 6) == 6
     assert test1.index_of(test2, 7) == -1
 
     # [9]
-    # int32_t indexOf(const UnicodeString &text,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(const UnicodeString &text,
+    #                                int32_t start,
+    #                                int32_t length)
     assert test1.index_of(test2, 0, 11) == 6
     assert test1.index_of(test2, 0, 10) == -1
 
     # [10]
-    # int32_t indexOf(ConstChar16Ptr srcChars,
-    #                 int32_t srcLength,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(ConstChar16Ptr srcChars,
+    #                                int32_t srcLength,
+    #                                int32_t start,
+    #                                int32_t length)
     assert test1.index_of("ipsum", 2, 30, 14) == 42
 
     # [11]
-    # int32_t indexOf(UChar32 c)
+    # int32_t UnicodeString::indexOf(UChar32 c)
     assert test3.index_of(0xd841) == 4
     assert test3.index_of(0xdc02) == 3
 
     # [12]
-    # int32_t indexOf(UChar32 c,
-    #                 int32_t start)
+    # int32_t UnicodeString::indexOf(UChar32 c,
+    #                                int32_t start)
     assert test3.index_of(0xd841, 10) == 17
 
     # [13]
-    # int32_t indexOf(UChar32 c,
-    #                 int32_t start,
-    #                 int32_t length)
+    # int32_t UnicodeString::indexOf(UChar32 c,
+    #                                int32_t start,
+    #                                int32_t length)
     if U_ICU_VERSION_MAJOR_NUM >= 68:
         assert test3.index_of(0xd841, 10, 4) == 13
     else:  # U_ICU_VERSION_MAJOR_NUM <= 67
@@ -760,24 +767,24 @@ def test_index_of():
 
 def test_insert():
     # [1]
-    # UnicodeString & insert(int32_t start,
-    #                        char16_t srcChar)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      char16_t srcChar)
     test1 = UnicodeString()
     test1.insert(0, 0x63).insert(0, 0x61).insert(1, 0x62)
     assert test1 == "abc"
 
     # [2]
-    # UnicodeString & insert(int32_t start,
-    #                        const char16_t *srcChars,
-    #                        int32_t srcStart,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      const char16_t *srcChars,
+    #                                      int32_t srcStart,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test1.insert(0, "abc", 2, 1).insert(0, "abc", 0, 1).insert(1, "abc", 1, 1)
     assert test1 == "abc"
 
     # [3]
-    # UnicodeString & insert(int32_t start,
-    #                        const UnicodeString &srcText)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      const UnicodeString &srcText)
     test1 = UnicodeString()
     test1.insert(
         0, UnicodeString("baz")).insert(
@@ -787,18 +794,18 @@ def test_insert():
     assert test1 == "foo bar baz"
 
     # [4]
-    # UnicodeString & insert(int32_t start,
-    #                        const UnicodeString &srcText,
-    #                        int32_t srcStart,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      const UnicodeString &srcText,
+    #                                      int32_t srcStart,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test2 = UnicodeString("foo bar baz", -1, US_INV)
     test1.insert(0, test2, 8, 3).insert(0, test2, 0, 4).insert(4, test2, 4, 4)
     assert test1 == "foo bar baz"
 
     # [6]
-    # UnicodeString & insert(int32_t start,
-    #                        UChar32 srcChar)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      UChar32 srcChar)
     test1 = UnicodeString()
     test1.insert(0, 0x20402).insert(0, 0x20100).insert(2, 0x0074)
     expected = UnicodeString("\\uD840\\uDD00t\\uD841\\uDC02",
@@ -808,9 +815,9 @@ def test_insert():
     assert len(test1) == 5
 
     # [5]
-    # UnicodeString & insert(int32_t start,
-    #                        ConstChar16Ptr srcChars,
-    #                        int32_t srcLength)
+    # UnicodeString &UnicodeString::insert(int32_t start,
+    #                                      ConstChar16Ptr srcChars,
+    #                                      int32_t srcLength)
     test1 = UnicodeString()
     test1.insert(
         0, "baz qux", 3).insert(
@@ -831,83 +838,83 @@ def test_last_index_of():
         "\\udc02\\ud841\\u0073\\u0000").unescape()
 
     # [1]
-    # int32_t lastIndexOf(char16_t c)
+    # int32_t UnicodeString::lastIndexOf(char16_t c)
     assert test1.last_index_of(ord('o')) == 106
 
     # [2]
-    # int32_t lastIndexOf(char16_t c,
-    #                     int32_t start)
+    # int32_t UnicodeString::lastIndexOf(char16_t c,
+    #                                    int32_t start)
     assert test1.last_index_of(ord('o'), 10) == 106
 
     # [3]
-    # int32_t lastIndexOf(char16_t c,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(char16_t c,
+    #                                    int32_t start,
+    #                                    int32_t length)
     assert test1.last_index_of(ord('o'), 10, 3) == -1
     assert test1.last_index_of(ord('o'), 10, 4) == 13
 
     # [4]
-    # int32_t lastIndexOf(const char16_t *srcChars,
-    #                     int32_t srcLength,
-    #                     int32_t start)
+    # int32_t UnicodeString::lastIndexOf(const char16_t *srcChars,
+    #                                    int32_t srcLength,
+    #                                    int32_t start)
     assert test1.last_index_of("ipsum", 2, 10) == 42
 
     # [5]
-    # int32_t lastIndexOf(const char16_t *srcChars,
-    #                     int32_t srcStart,
-    #                     int32_t srcLength,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(const char16_t *srcChars,
+    #                                    int32_t srcStart,
+    #                                    int32_t srcLength,
+    #                                    int32_t start,
+    #                                    int32_t length)
     assert test1.last_index_of("ipsum", 0, 2, 30, 13) == -1
     assert test1.last_index_of("ipsum", 0, 2, 30, 14) == 42
 
     # [6]
-    # int32_t lastIndexOf(const UnicodeString &srcText,
-    #                     int32_t srcStart,
-    #                     int32_t srcLength,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(const UnicodeString &srcText,
+    #                                    int32_t srcStart,
+    #                                    int32_t srcLength,
+    #                                    int32_t start,
+    #                                    int32_t length)
     assert test1.last_index_of(test2, 0, 2, 30, 13) == -1
     assert test1.last_index_of(test2, 0, 2, 30, 14) == 42
 
     # [7]
-    # int32_t lastIndexOf(const UnicodeString &text)
+    # int32_t UnicodeString::lastIndexOf(const UnicodeString &text)
     assert test1.last_index_of(test2) == 6
 
     # [8]
-    # int32_t lastIndexOf(const UnicodeString &text,
-    #                     int32_t start)
+    # int32_t UnicodeString::lastIndexOf(const UnicodeString &text,
+    #                                    int32_t start)
     assert test1.last_index_of(test2, 6) == 6
     assert test1.last_index_of(test2, 7) == -1
 
     # [9]
-    # int32_t lastIndexOf(const UnicodeString &text,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(const UnicodeString &text,
+    #                                    int32_t start,
+    #                                    int32_t length)
     assert test1.last_index_of(test2, 0, 11) == 6
     assert test1.last_index_of(test2, 0, 10) == -1
 
     # [10]
-    # int32_t lastIndexOf(ConstChar16Ptr srcChars,
-    #                     int32_t srcLength,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
+    #                                    int32_t srcLength,
+    #                                    int32_t start,
+    #                                    int32_t length)
     assert test1.last_index_of("ipsum", 2, 30, 14) == 42
 
     # [11]
-    # int32_t lastIndexOf(UChar32 c)
+    # int32_t UnicodeString::lastIndexOf(UChar32 c)
     assert test3.last_index_of(0xd841) == 17
     assert test3.last_index_of(0xdc02) == 16
 
     # [12]
-    # int32_t lastIndexOf(UChar32 c,
-    #                     int32_t start)
+    # int32_t UnicodeString::lastIndexOf(UChar32 c,
+    #                                    int32_t start)
     assert test3.last_index_of(0xd841, 10) == 17
 
     # [13]
-    # int32_t lastIndexOf(UChar32 c,
-    #                     int32_t start,
-    #                     int32_t length)
+    # int32_t UnicodeString::lastIndexOf(UChar32 c,
+    #                                    int32_t start,
+    #                                    int32_t length)
     if U_ICU_VERSION_MAJOR_NUM >= 68:
         assert test3.last_index_of(0xd841, 10, 4) == 13
     else:  # U_ICU_VERSION_MAJOR_NUM <= 67
@@ -927,49 +934,49 @@ def test_operator():
     test2 = UnicodeString("foo bar baz")
     test3 = UnicodeString("foo bar")
 
-    # operator!=()
+    # UnicodeString::operator!=()
     assert not (test1 != test2)
     assert test1 != test3
 
     assert not (test1 != "foo bar baz")
     assert test1 != "foo bar"
 
-    # operator<()
+    # UnicodeString::operator<()
     assert not (test1 < test2)
     assert not (test1 < test3)
 
     assert not (test1 < "foo bar baz")
     assert not (test1 < "foo bar")
 
-    # operator<=()
+    # UnicodeString::operator<=()
     assert test1 <= test2
     assert not (test1 <= test3)
 
     assert test1 <= "foo bar baz"
     assert not (test1 <= "foo bar")
 
-    # operator==()
+    # UnicodeString::operator==()
     assert test1 == test2
     assert not (test1 == test3)
 
     assert test1 == "foo bar baz"
     assert not (test1 == "foo bar")
 
-    # operator>()
+    # UnicodeString::operator>()
     assert not (test1 > test2)
     assert test1 > test3
 
     assert not (test1 > "foo bar baz")
     assert test1 > "foo bar"
 
-    # operator>=()
+    # UnicodeString::operator>=()
     assert test1 >= test2
     assert test1 >= test3
 
     assert test1 >= "foo bar baz"
     assert test1 >= "foo bar"
 
-    # operator[]()
+    # UnicodeString::operator[]()
     assert test1[0] == "f"
     assert test1[1] == "o"
     assert test1[2] == "o"
@@ -995,14 +1002,14 @@ def test_operator():
     with pytest.raises(ValueError):  # ValueError: slice step cannot be zero
         _ = test1[::0]
 
-    # operator+=(const UnicodeString &srcText)
+    # UnicodeString::operator+=(const UnicodeString &srcText)
     test3 += UnicodeString(" baz")
     assert test3 == test1
 
     test4 = UnicodeString("foo bar") + UnicodeString(" baz")
     assert test4 == test1
 
-    # operator+=(const char16_t *srcChars)
+    # UnicodeString::operator+=(const char16_t *srcChars)
     test5 = UnicodeString("foo bar")
     test5 += " baz"
     assert test5 == test1
@@ -1010,7 +1017,7 @@ def test_operator():
     test6 = UnicodeString("foo bar") + " baz"
     assert test6 == test1
 
-    # operator+=(UChar32 ch)
+    # UnicodeString::operator+=(UChar32 ch)
     test7 = UnicodeString("a")
     test7 += 0x20402
     test7 += 0x62
@@ -1042,8 +1049,8 @@ def test_remove():
     test1 = UnicodeString("foo bar baz")
 
     # [2]
-    # UnicodeString & remove(int32_t start,
-    #                        int32_t length = (int32_t)INT32_MAX)
+    # UnicodeString &UnicodeString::remove(int32_t start,
+    #                                      int32_t length = (int32_t)INT32_MAX)
     test1.remove(3, 4)
     assert test1 == "foo baz"
 
@@ -1051,13 +1058,15 @@ def test_remove():
     assert test1 == "foo"
 
     # [1]
-    # UnicodeString & remove()
+    # UnicodeString &UnicodeString::remove()
     test1.remove()
     assert test1.length() == 0
     assert len(test1) == 0
 
-    # UnicodeString & removeBetween(int32_t start,
-    #                               int32_t limit = (int32_t)INT32_MAX)
+    # UnicodeString &UnicodeString::removeBetween(
+    #       int32_t start,
+    #       int32_t limit = (int32_t)INT32_MAX
+    # )
     test1 = UnicodeString("foo bar baz")
     test1.remove_between(3, 7)
     assert test1 == "foo baz"
@@ -1068,9 +1077,9 @@ def test_remove():
 
 def test_replace():
     # [1]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         char16_t srcChar)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       char16_t srcChar)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
         4, 1, ord("B")).replace(
@@ -1079,11 +1088,11 @@ def test_replace():
     assert test1 == "Foo Bar Baz"
 
     # [2]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         const char16_t *srcChars,
-    #                         int32_t srcStart,
-    #                         int32_t srcLength)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       const char16_t *srcChars,
+    #                                       int32_t srcStart,
+    #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
         4, 3, "BAR", 0, -1).replace(
@@ -1092,9 +1101,9 @@ def test_replace():
     assert test1 == "FOO BAR BAZ"
 
     # [3]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         const UnicodeString &srcText)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       const UnicodeString &srcText)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
         4, 3, UnicodeString("BAR")).replace(
@@ -1103,11 +1112,11 @@ def test_replace():
     assert test1 == "FOO BAR BAZ"
 
     # [4]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         const UnicodeString &srcText,
-    #                         int32_t srcStart,
-    #                         int32_t srcLength)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       const UnicodeString &srcText,
+    #                                       int32_t srcStart,
+    #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
         4, 3, UnicodeString("BAR"), 0, 3).replace(
@@ -1116,10 +1125,10 @@ def test_replace():
     assert test1 == "FOO BAR BAZ"
 
     # [5]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         ConstChar16Ptr srcChars,
-    #                         int32_t srcLength)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       ConstChar16Ptr srcChars,
+    #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
         4, 3, "BAR", -1).replace(
@@ -1128,9 +1137,9 @@ def test_replace():
     assert test1 == "FOO BAR BAZ"
 
     # [6]
-    # UnicodeString & replace(int32_t start,
-    #                         int32_t length,
-    #                         UChar32 srcChar)
+    # UnicodeString &UnicodeString::replace(int32_t start,
+    #                                       int32_t length,
+    #                                       UChar32 srcChar)
     test1 = UnicodeString("a\\uD83C\\uDF38b", -1, US_INV).unescape()
     test1.replace(1, 2, 0x1f30f).replace(0, 1, 0x1f30d).replace(4, 1, 0x1f30e)
     assert test1 == "\U0001f30d\U0001f30f\U0001f30e"
@@ -1138,9 +1147,11 @@ def test_replace():
 
 def test_replace_between():
     # [1]
-    # UnicodeString & replaceBetween(int32_t start,
-    #                                int32_t limit,
-    #                                const UnicodeString &srcText)
+    # UnicodeString &UnicodeString::replaceBetween(
+    #       int32_t start,
+    #       int32_t limit,
+    #       const UnicodeString &srcText
+    # )
     test1 = UnicodeString("foo bar baz")
     test1.replace_between(
         4, 7, UnicodeString("BAR")).replace_between(
@@ -1149,11 +1160,13 @@ def test_replace_between():
     assert test1 == "FOO BAR BAZ"
 
     # [2]
-    # UnicodeString & replaceBetween(int32_t start,
-    #                                int32_t limit,
-    #                                const UnicodeString &srcText,
-    #                                int32_t srcStart,
-    #                                int32_t srcLimit)
+    # UnicodeString &UnicodeString::replaceBetween(
+    #       int32_t start,
+    #       int32_t limit,
+    #       const UnicodeString &srcText,
+    #       int32_t srcStart,
+    #       int32_t srcLimit
+    # )
     test1 = UnicodeString("foo bar baz")
     test1.replace_between(
         4, 7, UnicodeString("BAR"), 0, 3).replace_between(
@@ -1174,14 +1187,14 @@ def test_retain_between():
 
 def test_reverse():
     # [1]
-    # UnicodeString & reverse(int32_t start,
-    #                         int32_t length)
+    # UnicodeString &UnicodeString::reverse(int32_t start,
+    #                                       int32_t length)
     test1 = UnicodeString("0123-456-789")
     test1.reverse(5, 3)
     assert test1 == "0123-654-789"
 
     # [2]
-    # UnicodeString & reverse(void)
+    # UnicodeString &UnicodeString::reverse(void)
     test1 = UnicodeString("0123456789")
     test1.reverse()
     assert test1 == "9876543210"
@@ -1189,44 +1202,44 @@ def test_reverse():
 
 def test_set_to():
     # [2]
-    # UnicodeString & setTo(char16_t srcChar)
+    # UnicodeString &UnicodeString::setTo(char16_t srcChar)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test1.set_to(0x61)
     assert test1 == "a"
 
     # [3]
-    # UnicodeString & setTo(const char16_t *srcChars,
-    #                       int32_t srcLength)
+    # UnicodeString &UnicodeString::setTo(const char16_t *srcChars,
+    #                                     int32_t srcLength)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test1.set_to("foo bar baz", 4)
     assert test1 == "foo "
 
     # [4]
-    # UnicodeString & setTo(const UnicodeString &srcText)
+    # UnicodeString &UnicodeString::setTo(const UnicodeString &srcText)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test2 = UnicodeString("foo bar baz")
     test1.set_to(test2)
     assert test1 == "foo bar baz"
 
     # [5]
-    # UnicodeString & setTo(const UnicodeString &srcText,
-    #                       int32_t srcStart)
+    # UnicodeString &UnicodeString::setTo(const UnicodeString &srcText,
+    #                                     int32_t srcStart)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test2 = UnicodeString("foo bar baz")
     test1.set_to(test2, 4)
     assert test1 == "bar baz"
 
     # [6]
-    # UnicodeString & setTo(const UnicodeString &srcText,
-    #                       int32_t srcStart,
-    #                       int32_t srcLength)
+    # UnicodeString &UnicodeString::setTo(const UnicodeString &srcText,
+    #                                     int32_t srcStart,
+    #                                     int32_t srcLength)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test2 = UnicodeString("foo bar baz")
     test1.set_to(test2, 4, 4)
     assert test1 == "bar "
 
     # [8]
-    # UnicodeString & setTo(UChar32 srcChar)
+    # UnicodeString &UnicodeString::setTo(UChar32 srcChar)
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test1.set_to(0x1f338)
     assert test1 == "\U0001f338"
@@ -1240,27 +1253,27 @@ def test_starts_with():
     s3 = "bar"
 
     # [1]
-    # UBool startsWith(const char16_t *srcChars,
-    #                  int32_t srcStart,
-    #                  int32_t srcLength)
+    # UBool UnicodeString::startsWith(const char16_t *srcChars,
+    #                                 int32_t srcStart,
+    #                                 int32_t srcLength)
     assert test1.starts_with(s2, 0, -1)
     assert not test1.starts_with(s3, 0, -1)
 
     # [2]
-    # UBool startsWith(const UnicodeString &srcText,
-    #                  int32_t srcStart,
-    #                  int32_t srcLength)
+    # UBool UnicodeString::startsWith(const UnicodeString &srcText,
+    #                                 int32_t srcStart,
+    #                                 int32_t srcLength)
     assert test1.starts_with(test2, 0, len(test2))
     assert not test1.starts_with(test3, 0, len(test3))
 
     # [3]
-    # UBool startsWith(const UnicodeString &text)
+    # UBool UnicodeString::startsWith(const UnicodeString &text)
     assert test1.starts_with(test2)
     assert not test1.starts_with(test3)
 
     # [4]
-    # UBool startsWith(ConstChar16Ptr srcChars,
-    #                  int32_t srcLength)
+    # UBool UnicodeString::startsWith(ConstChar16Ptr srcChars,
+    #                                 int32_t srcLength)
     assert test1.starts_with(s2, -1)
     assert not test1.starts_with(s3, -1)
 
@@ -1293,7 +1306,7 @@ def test_to_lower():
         default_locale = Locale.get_default()
 
         # [1]
-        # UnicodeString& toLower(const Locale &locale)
+        # UnicodeString &UnicodeString::toLower(const Locale &locale)
         loc = Locale("en", "US")
         test1 = UnicodeString("\x49")  # U+0049: Latin Capital Letter I
         test1.to_lower(loc)
@@ -1305,7 +1318,7 @@ def test_to_lower():
         assert test1 == '\u0131'  # U+0131: Latin Small Letter Dotless I
 
         # [2]
-        # UnicodeString& toLower(void)
+        # UnicodeString &UnicodeString::toLower(void)
         Locale.set_default(Locale("en", "US"))
         test1 = UnicodeString("\x49")  # U+0049: Latin Capital Letter I
         test1.to_lower()
@@ -1317,14 +1330,14 @@ def test_to_lower():
 
 def test_to_title():
     # [1]
-    # UnicodeString& toTitle(BreakIterator *titleIter)
+    # UnicodeString &UnicodeString::toTitle(BreakIterator *titleIter)
     test1 = UnicodeString("sTrA\\u00dfE", -1, US_INV).unescape()
     test1.to_title(None)
     assert test1 == UnicodeString("Stra\\u00dfe", -1, US_INV).unescape()
 
     # [2]
-    # UnicodeString& toTitle(BreakIterator *titleIter,
-    #                        const Locale &locale)
+    # UnicodeString &UnicodeString::toTitle(BreakIterator *titleIter,
+    #                                       const Locale &locale)
     src = "«ijs»"
     test1 = UnicodeString(src)
     test1.to_title(None, Locale("nl-BE"))
@@ -1335,9 +1348,9 @@ def test_to_title():
     assert test1 == UnicodeString("«İjs»")
 
     # [3]
-    # UnicodeString& toTitle(BreakIterator *titleIter,
-    #                        const Locale &locale,
-    #                        uint32_t options)
+    # UnicodeString &UnicodeString::toTitle(BreakIterator *titleIter,
+    #                                       const Locale &locale,
+    #                                       uint32_t options)
     src = " john. Smith"
     test1 = UnicodeString(src)
     test1.to_title(None,
@@ -1360,7 +1373,7 @@ def test_to_upper():
         default_locale = Locale.get_default()
 
         # [1]
-        # UnicodeString& toUpper(const Locale &locale)
+        # UnicodeString &UnicodeString::toUpper(const Locale &locale)
         loc = Locale("en", "US")
         test1 = UnicodeString("\x69")  # U+0069: Latin Small Letter I
         test1.to_upper(loc)
@@ -1380,7 +1393,7 @@ def test_to_upper():
         assert test1 == '\x49'  # U+0049: Latin Capital Letter I
 
         # [2]
-        # UnicodeString& toUpper(void)
+        # UnicodeString &UnicodeString::toUpper(void)
         Locale.set_default(Locale("en", "US"))
         test1 = UnicodeString("\x69")  # U+0069: Latin Small Letter I
         test1.to_upper()
@@ -1433,68 +1446,68 @@ def test_unescape():
 
 def test_unicode_string():
     # [1]
-    # UnicodeString()
+    # UnicodeString::UnicodeString()
     test1 = UnicodeString()
     assert not test1.is_bogus()
     assert test1.is_empty()
     assert len(test1) == 0
 
     # [2]
-    # UnicodeString(int32_t capacity,
-    #               UChar32 c,
-    #               int32_t count)
+    # UnicodeString::UnicodeString(int32_t capacity,
+    #                              UChar32 c,
+    #                              int32_t count)
     test2 = UnicodeString(20, 0x41, 10)
     assert not test2.is_bogus()
     assert not test2.is_empty()
     assert test2 == "A" * 10
 
     # [3]
-    # UnicodeString(char16_t ch)
+    # UnicodeString::UnicodeString(char16_t ch)
     test3 = UnicodeString(0x41)
     assert not test3.is_bogus()
     assert not test3.is_empty()
     assert test3 == "A"
 
     # [4]
-    # UnicodeString(UChar32 ch)
+    # UnicodeString::UnicodeString(UChar32 ch)
     test4 = UnicodeString(0x1f338)
     assert not test4.is_bogus()
     assert not test4.is_empty()
     assert test4 == "\U0001F338"
 
     # [5]
-    # UnicodeString(const char16_t *text)
+    # UnicodeString::UnicodeString(const char16_t *text)
     test5 = UnicodeString("foo bar baz")
     assert not test5.is_bogus()
     assert not test5.is_empty()
     assert test5 == "foo bar baz"
 
     # [8]
-    # UnicodeString(const std::nullptr_t text)
+    # UnicodeString::UnicodeString(const std::nullptr_t text)
     test8 = UnicodeString(None)
     assert not test8.is_bogus()
     assert test8.is_empty()
     assert len(test8) == 0
 
     # [9]
-    # UnicodeString(const char16_t *text,
-    #               int32_t textLength)
+    # UnicodeString::UnicodeString(const char16_t *text,
+    #                              int32_t textLength)
     test9 = UnicodeString("foo bar baz", 4)
     assert not test9.is_bogus()
     assert not test9.is_empty()
     assert test9 == "foo "
 
     # [12]
-    # UnicodeString(const std::nullptr_t text,
-    #               int32_t textLength)
+    # UnicodeString::UnicodeString(const std::nullptr_t text,
+    #                              int32_t textLength)
     test12 = UnicodeString(None, 10)
     assert not test12.is_bogus()
     assert test12.is_empty()
     assert len(test12) == 0
 
     # [20]
-    # UnicodeString(const char *codepageData,
-    #               const char *codepage)
+    # UnicodeString::UnicodeString(const char *codepageData,
+    #                              const char *codepage)
     sjis = b"\x61\x5b\x5c\xb1\x87\x54"
     utf8 = sjis.decode("cp932")
     test20 = UnicodeString(sjis, "ibm-943c")
@@ -1503,9 +1516,9 @@ def test_unicode_string():
     assert test20 == utf8
 
     # [21]
-    # UnicodeString(const char *codepageData,
-    #               int32_t dataLength,
-    #               const char *codepage)
+    # UnicodeString::UnicodeString(const char *codepageData,
+    #                              int32_t dataLength,
+    #                              const char *codepage)
     utf16be = b"\x00\x62\x00\x61\x00\x72"
     test21 = UnicodeString(utf16be, len(utf16be), "utf-16-be")
     assert not test21.is_bogus()
@@ -1520,11 +1533,10 @@ def test_unicode_string():
     assert test21a == utf8
 
     # [22]
-    # UnicodeString(const char *src,
-    #               int32_t srcLength,
-    #               UConverter *cnv,
-    #               UErrorCode &errorCode
-    # )
+    # UnicodeString::UnicodeString(const char *src,
+    #                              int32_t srcLength,
+    #                              UConverter *cnv,
+    #                              UErrorCode &errorCode)
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
         utf8 = sjis.decode("cp932")
         test22 = UnicodeString(sjis, len(sjis), cnv)
@@ -1533,33 +1545,33 @@ def test_unicode_string():
         assert test22 == utf8
 
     # [23]
-    # UnicodeString(const char *src,
-    #               int32_t textLength,
-    #               enum EInvariant inv)
+    # UnicodeString::UnicodeString(const char *src,
+    #                              int32_t textLength,
+    #                              enum EInvariant inv)
     test23 = UnicodeString("foo bar baz", -1, US_INV)
     assert not test23.is_bogus()
     assert not test23.is_empty()
     assert test23 == "foo bar baz"
 
     # [24]
-    # UnicodeString(const UnicodeString &that)
+    # UnicodeString::UnicodeString(const UnicodeString &that)
     test24 = UnicodeString(test5)
     assert not test24.is_bogus()
     assert not test24.is_empty()
     assert test24 == "foo bar baz"
 
     # [26]
-    # UnicodeString(const UnicodeString &src,
-    #               int32_t srcStart)
+    # UnicodeString::UnicodeString(const UnicodeString &src,
+    #                              int32_t srcStart)
     test26 = UnicodeString(test5, 4)
     assert not test26.is_bogus()
     assert not test26.is_empty()
     assert test26 == "bar baz"
 
     # [27]
-    # UnicodeString(const UnicodeString &src,
-    #               int32_t srcStart,
-    #               int32_t srcLength)
+    # UnicodeString::UnicodeString(const UnicodeString &src,
+    #                              int32_t srcStart,
+    #                              int32_t srcLength)
     test27 = UnicodeString(test5, 4, 3)
     assert not test27.is_bogus()
     assert not test27.is_empty()

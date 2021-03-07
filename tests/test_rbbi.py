@@ -133,7 +133,7 @@ def test_following():
 
 def test_get_available_locales():
     # [2]
-    # static StringEnumeration* BreakIterator::getAvailableLocales()
+    # static StringEnumeration *BreakIterator::getAvailableLocales()
     it = BreakIterator.get_available_locales()
     assert isinstance(it, StringEnumeration)
     assert len(it) > 0
@@ -151,9 +151,10 @@ def test_get_display_name():
         dest = UnicodeString()
 
         # [1]
-        # static UnicodeString& getDisplayName(const Locale &objectLocale,
-        #                                      const Locale &displayLocale,
-        #                                      UnicodeString &name
+        # static UnicodeString &BreakIterator::getDisplayName(
+        #       const Locale &objectLocale,
+        #       const Locale &displayLocale,
+        #       UnicodeString &name
         # )
         result = BreakIterator.get_display_name(
             Locale.get_france(),
@@ -163,8 +164,9 @@ def test_get_display_name():
         assert dest == "French (France)"
 
         # [2]
-        # static UnicodeString& getDisplayName(const Locale &objectLocale,
-        #                                      UnicodeString &name
+        # static UnicodeString &BreakIterator::getDisplayName(
+        #       const Locale &objectLocale,
+        #       UnicodeString &name
         # )
         result = BreakIterator.get_display_name(us_locale, dest)
         assert id(result) == id(dest)
@@ -412,13 +414,14 @@ def test_rule_based_break_iterator():
     src = UnicodeString("foo.")
 
     # [1]
-    # RuleBasedBreakIterator()
+    # RuleBasedBreakIterator::RuleBasedBreakIterator()
     pass  # NotImplemented
 
     # [3]
-    # RuleBasedBreakIterator(const UnicodeString &rules,
-    #                        UParseError &parseError,
-    #                        UErrorCode &status
+    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    #       const UnicodeString &rules,
+    #       UParseError &parseError,
+    #       UErrorCode &status
     # )
     rules = UnicodeString("$dictionary = [a-z]; \n"
                           "!!forward; \n"
@@ -436,9 +439,10 @@ def test_rule_based_break_iterator():
     assert bi3.current() == 4
 
     # [4]
-    # RuleBasedBreakIterator(const uint8_t *compiledRules,
-    #                        uint32_t ruleLength,
-    #                        UErrorCode &status
+    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    #       const uint8_t *compiledRules,
+    #       uint32_t ruleLength,
+    #       UErrorCode &status
     # )
     binary_rules = bi3.get_binary_rules()
     assert isinstance(binary_rules, list)
@@ -453,7 +457,9 @@ def test_rule_based_break_iterator():
     assert bi4.current() == 4
 
     # [2]
-    # RuleBasedBreakIterator(const RuleBasedBreakIterator &that)
+    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    #       const RuleBasedBreakIterator &that
+    # )
     bi2 = RuleBasedBreakIterator(bi3)
     assert bi3.current() == 4
     assert bi2.current() == 4
@@ -465,8 +471,9 @@ def test_rule_based_break_iterator():
     assert bi2.current() == 4
 
     # [5]
-    # RuleBasedBreakIterator(UDataMemory *image,
-    #                        UErrorCode &status
+    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    #       UDataMemory *image,
+    #       UErrorCode &status
     # )
     pass  # NotImplemented
 

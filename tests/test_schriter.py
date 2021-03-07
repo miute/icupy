@@ -198,7 +198,9 @@ def test_string_character_iterator():
     dest = UnicodeString()
 
     # [1]
-    # StringCharacterIterator(const UnicodeString &textStr)
+    # StringCharacterIterator::StringCharacterIterator(
+    #       const UnicodeString &textStr
+    # )
     it1 = StringCharacterIterator(src)
     assert it1.get_length() == 4
     assert len(it1) == 4
@@ -207,8 +209,9 @@ def test_string_character_iterator():
     assert dest == expected
 
     # [2]
-    # StringCharacterIterator(const UnicodeString &textStr,
-    #                         int32_t textPos
+    # StringCharacterIterator::StringCharacterIterator(
+    #       const UnicodeString &textStr,
+    #       int32_t textPos
     # )
     it2 = StringCharacterIterator(src, 2)
     assert it2.get_length() == 4
@@ -219,10 +222,11 @@ def test_string_character_iterator():
     assert it2.current() == 0xdf38
 
     # [3]
-    # StringCharacterIterator(const UnicodeString &textStr,
-    #                         int32_t textBegin,
-    #                         int32_t textEnd,
-    #                         int32_t textPos
+    # StringCharacterIterator::StringCharacterIterator(
+    #       const UnicodeString &textStr,
+    #       int32_t textBegin,
+    #       int32_t textEnd,
+    #       int32_t textPos
     # )
     it3 = StringCharacterIterator(src, 1, 3, 0)
     assert it3.get_length() == 4
@@ -239,7 +243,9 @@ def test_string_character_iterator():
     assert c == 0xd83c
 
     # [4]
-    # StringCharacterIterator(const StringCharacterIterator &that)
+    # StringCharacterIterator::StringCharacterIterator(
+    #       const StringCharacterIterator &that
+    # )
     it1.set_index(2)
     it4 = StringCharacterIterator(it1)
     assert it4.get_length() == 4

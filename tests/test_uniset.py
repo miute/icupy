@@ -1,7 +1,6 @@
 import copy
 
 import pytest
-
 from icupy import (
     ICUException, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
     UnicodeSet, UnicodeString, UProperty, USET_IGNORE_SPACE,
@@ -14,13 +13,13 @@ def test_add():
     assert test1.size() == 0
 
     # [1]
-    # UnicodeSet& add(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::add(const UnicodeString &s)
     #
     # [2]
-    # UnicodeSet& add(UChar32 c)
+    # UnicodeSet &UnicodeSet::add(UChar32 c)
     #
     # [3]
-    # UnicodeSet& add(UChar32 start, UChar32 end)
+    # UnicodeSet &UnicodeSet::add(UChar32 start, UChar32 end)
     test1.add(UnicodeString("ab")).add(0xdf).add(0x30, 0x39)
     assert test1.size() == 12  # [0-9\u00DF{ab}]
 
@@ -32,10 +31,10 @@ def test_add_all():
     assert test2.size() == 2
 
     # [1]
-    # UnicodeSet& addAll(const UnicodeSet &c)
+    # UnicodeSet &UnicodeSet::addAll(const UnicodeSet &c)
     #
     # [2]
-    # UnicodeSet& addAll(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::addAll(const UnicodeString &s)
     test1.add_all(test2).add_all(UnicodeString("0123456789"))
     assert test1.size() == 2 + 10  # [0-9\u00DF{ab}]
 
@@ -115,9 +114,9 @@ def test_apply_int_property_value():
     test1 = UnicodeSet()
     assert test1.size() == 0
 
-    # UnicodeSet& applyIntPropertyValue(UProperty prop,
-    #                                   int32_t value,
-    #                                   UErrorCode &ec
+    # UnicodeSet &UnicodeSet::applyIntPropertyValue(UProperty prop,
+    #                                               int32_t value,
+    #                                               UErrorCode &ec
     # )
     test1.apply_int_property_value(
         UProperty.UCHAR_CANONICAL_COMBINING_CLASS,
@@ -133,11 +132,11 @@ def test_apply_int_property_value():
 
 def test_apply_pattern():
     # [1]
-    # UnicodeSet& applyPattern(const UnicodeString &pattern,
-    #                          ParsePosition &pos,
-    #                          uint32_t options,
-    #                          const SymbolTable *symbols,
-    #                          UErrorCode &status
+    # UnicodeSet &UnicodeSet::applyPattern(const UnicodeString &pattern,
+    #                                      ParsePosition &pos,
+    #                                      uint32_t options,
+    #                                      const SymbolTable *symbols,
+    #                                      UErrorCode &status
     # )
     test1 = UnicodeSet()
     pattern = UnicodeString("[a-z{ab}]")
@@ -154,8 +153,8 @@ def test_apply_pattern():
     assert exc_info.value.args[0] == UErrorCode.U_MALFORMED_SET
 
     # [2]
-    # UnicodeSet& applyPattern(const UnicodeString &pattern,
-    #                          UErrorCode &status
+    # UnicodeSet &UnicodeSet::applyPattern(const UnicodeString &pattern,
+    #                                      UErrorCode &status
     # )
     test2 = UnicodeSet()
     test2.apply_pattern(pattern)
@@ -170,9 +169,9 @@ def test_apply_pattern():
 def test_apply_property_alias():
     test1 = UnicodeSet()
 
-    # UnicodeSet& applyPropertyAlias(const UnicodeString &prop,
-    #                                const UnicodeString &value,
-    #                                UErrorCode &ec
+    # UnicodeSet &UnicodeSet::applyPropertyAlias(const UnicodeString &prop,
+    #                                            const UnicodeString &value,
+    #                                            UErrorCode &ec
     # )
     test1.apply_property_alias(UnicodeString("Canonical_Combining_Class"),
                                UnicodeString("Kana_Voicing"))
@@ -254,16 +253,16 @@ def test_complement():
     test1 = UnicodeSet(UnicodeSet.MIN_VALUE, UnicodeSet.MAX_VALUE)
 
     # [1]
-    # UnicodeSet& complement(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::complement(const UnicodeString &s)
     #
     # [2]
-    # UnicodeSet& complement(UChar32 c)
+    # UnicodeSet &UnicodeSet::complement(UChar32 c)
     #
     # [3]
-    # UnicodeSet& complement(UChar32 start, UChar32 end)
+    # UnicodeSet &UnicodeSet::complement(UChar32 start, UChar32 end)
     #
     # [4]
-    # UnicodeSet& complement()
+    # UnicodeSet &UnicodeSet::complement()
     test1.complement(
         UnicodeString("ab")
     ).complement(
@@ -284,10 +283,10 @@ def test_complement_all():
     assert test2.size() == 10
 
     # [1]
-    # UnicodeSet& complementAll(const UnicodeSet &c)
+    # UnicodeSet &UnicodeSet::complementAll(const UnicodeSet &c)
     #
     # [2]
-    # UnicodeSet& complementAll(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::complementAll(const UnicodeString &s)
     test1.complement_all(test2).complement_all(UnicodeString("ab"))
     assert test1.size() == 12 - 10 + 2  # [ab]
     assert test1.contains(0x61, 0x62)
@@ -297,7 +296,7 @@ def test_contains():
     test1 = UnicodeSet(0x30, 0x39)
 
     # [1]
-    # UBool contains(const UnicodeString &s)
+    # UBool UnicodeSet::contains(const UnicodeString &s)
     assert test1.contains(UnicodeString("0"))
     assert not test1.contains(UnicodeString("01"))
 
@@ -305,7 +304,7 @@ def test_contains():
     assert UnicodeString("01") not in test1
 
     # [2]
-    # UBool contains(UChar32 c)
+    # UBool UnicodeSet::contains(UChar32 c)
     assert test1.contains(0x30)
     assert not test1.contains(0x61)
 
@@ -313,7 +312,7 @@ def test_contains():
     assert 0x61 not in test1
 
     # [3]
-    # UBool contains(UChar32 start, UChar32 end)
+    # UBool UnicodeSet::contains(UChar32 start, UChar32 end)
     assert test1.contains(0x30, 0x39)
     assert not test1.contains(0x61, 0x61)
 
@@ -322,12 +321,12 @@ def test_contains_all():
     test1 = UnicodeSet(0x30, 0x39)
 
     # [1]
-    # UBool containsAll(const UnicodeSet &c)
+    # UBool UnicodeSet::containsAll(const UnicodeSet &c)
     assert test1.contains_all(UnicodeSet(0x30, 0x39))
     assert not test1.contains_all(UnicodeSet(0x2f, 0x3a))
 
     # [2]
-    # UBool containsAll(const UnicodeString &s)
+    # UBool UnicodeSet::containsAll(const UnicodeString &s)
     assert test1.contains_all(UnicodeString("0123456789"))
     assert not test1.contains_all(UnicodeString("/0123456789:"))
 
@@ -336,17 +335,17 @@ def test_contains_none():
     test1 = UnicodeSet(0x30, 0x39)
 
     # [1]
-    # UBool containsNone(const UnicodeSet &c)
+    # UBool UnicodeSet::containsNone(const UnicodeSet &c)
     assert not test1.contains_none(UnicodeSet(0x2f, 0x3a))
     assert test1.contains_none(UnicodeSet(0x2f, 0x2f))
 
     # [2]
-    # UBool containsNone(const UnicodeString &s)
+    # UBool UnicodeSet::containsNone(const UnicodeString &s)
     assert not test1.contains_none(UnicodeString("/0123456789:"))
     assert test1.contains_none(UnicodeString("/"))
 
     # [3]
-    # UBool containsNone(UChar32 start, UChar32 end)
+    # UBool UnicodeSet::containsNone(UChar32 start, UChar32 end)
     assert not test1.contains_none(0x2f, 0x3a)
     assert test1.contains_none(0x2f, 0x2f)
 
@@ -355,17 +354,17 @@ def test_contains_some():
     test1 = UnicodeSet(0x30, 0x39)
 
     # [1]
-    # UBool containsSome(const UnicodeSet &s)
+    # UBool UnicodeSet::containsSome(const UnicodeSet &s)
     assert test1.contains_some(UnicodeSet(UnicodeString("[0-9{ab}]")))
     assert not test1.contains_some(UnicodeSet(UnicodeString("[a-z{ab}]")))
 
     # [2]
-    # UBool containsSome(const UnicodeString &s)
+    # UBool UnicodeSet::containsSome(const UnicodeString &s)
     assert test1.contains_some(UnicodeString("ab0123456789"))
     assert not test1.contains_some(UnicodeString("ab"))
 
     # [3]
-    # UBool containsSome(UChar32 start, UChar32 end)
+    # UBool UnicodeSet::containsSome(UChar32 start, UChar32 end)
     assert test1.contains_some(0x2f, 0x3a)
     assert not test1.contains_some(0x2f, 0x2f)
 
@@ -386,7 +385,7 @@ def test_create_from_all():
 
 def test_from_uset():
     # [1]
-    # const UnicodeSet * fromUSet(const USet *uset)
+    # const UnicodeSet *UnicodeSet::fromUSet(const USet *uset)
     uset1 = u_get_binary_property_set(UProperty.UCHAR_POSIX_BLANK)
     test1 = UnicodeSet.from_uset(uset1)
     assert isinstance(test1, UnicodeSet)
@@ -394,7 +393,7 @@ def test_from_uset():
     assert test1.contains(0x20)  # U+0020: Space (SP)
 
     # [2]
-    # UnicodeSet * fromUSet(USet *uset)
+    # UnicodeSet *UnicodeSet::fromUSet(USet *uset)
     uset2 = test1.to_uset()
     test2 = UnicodeSet.from_uset(uset2)
     assert isinstance(test2, UnicodeSet)
@@ -415,10 +414,10 @@ def test_matches():
     test1 = UnicodeSet(UnicodeString("[0-9{abc}]"))
     text = UnicodeString("abcd 789")
 
-    # UMatchDegree matches(const Replaceable &text,
-    #                      int32_t &offset,
-    #                      int32_t limit,
-    #                      UBool incremental
+    # UMatchDegree UnicodeSet::matches(const Replaceable &text,
+    #                                  int32_t &offset,
+    #                                  int32_t limit,
+    #                                  UBool incremental
     # )
     offset = 0
     result, offset = test1.matches(text, offset, text.length(), True)
@@ -440,12 +439,12 @@ def test_operator():
     test2 = UnicodeSet(UnicodeString("[0-9]"))
     test3 = UnicodeSet(UnicodeString("[0-9{ab}]"))
 
-    # operator!=()
+    # UnicodeSet::operator!=()
     assert not (test1 != test2)
     assert test1 != test3
     assert test2 != test3
 
-    # operator==()
+    # UnicodeSet::operator==()
     assert test1 == test2
     assert not (test1 == test3)
     assert not (test2 == test3)
@@ -456,13 +455,13 @@ def test_remove():
     assert test1.size() == 12
 
     # [1]
-    # UnicodeSet& remove(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::remove(const UnicodeString &s)
     #
     # [2]
-    # UnicodeSet& remove(UChar32 c)
+    # UnicodeSet &UnicodeSet::remove(UChar32 c)
     #
     # [3]
-    # UnicodeSet& remove(UChar32 start, UChar32 end)
+    # UnicodeSet &UnicodeSet::remove(UChar32 start, UChar32 end)
     test1.remove(UnicodeString("ab")).remove(0xdf).remove(0x30, 0x39)
     assert test1.size() == 0
 
@@ -473,10 +472,10 @@ def test_remove_all():
     test2 = UnicodeSet(0x30, 0x39)
 
     # [1]
-    # UnicodeSet& removeAll(const UnicodeSet &c)
+    # UnicodeSet &UnicodeSet::removeAll(const UnicodeSet &c)
     #
     # [2]
-    # UnicodeSet& removeAll(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::removeAll(const UnicodeString &s)
     test1.remove_all(test2).remove_all(UnicodeString("ab"))
     assert test1.size() == 12 - 10  # [\u00DF{ab}]
     assert test1.contains(0xdf)
@@ -500,13 +499,13 @@ def test_retain():
     assert test1.size() == 12
 
     # [1]
-    # UnicodeSet& retain(UChar32 c)
+    # UnicodeSet &UnicodeSet::retain(UChar32 c)
     test2.retain(0xdf)
     assert test2.size() == 1 + 1  # [\u00DF{ab}]
     assert test1.contains(0xdf)
 
     # [2]
-    # UnicodeSet& retain(UChar32 start, UChar32 end)
+    # UnicodeSet &UnicodeSet::retain(UChar32 start, UChar32 end)
     test3.retain(0x30, 0x39)
     assert test3.size() == 10 + 1  # [0-9{ab}]
     assert test1.contains(0x30, 0x39)
@@ -520,21 +519,21 @@ def test_retain_all():
     assert test1.size() == 12
 
     # [1]
-    # UnicodeSet& retainAll(const UnicodeSet &c)
+    # UnicodeSet &UnicodeSet::retainAll(const UnicodeSet &c)
     test2.retain_all(UnicodeSet(0xdf, 0xdf))
     assert test2.size() == 1  # [\u00DF]
     assert test2.contains(0xdf)
 
     # [2]
-    # UnicodeSet& retainAll(const UnicodeString &s)
+    # UnicodeSet &UnicodeSet::retainAll(const UnicodeString &s)
     test3.retain_all(UnicodeString("ab"))
     assert test3.size() == 0
 
 
 def test_serialize():
-    # int32_t serialize(uint16_t *dest,
-    #                   int32_t destCapacity,
-    #                   UErrorCode &ec
+    # int32_t UnicodeSet::serialize(uint16_t *dest,
+    #                               int32_t destCapacity,
+    #                               UErrorCode &ec
     # )
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
     result = test1.serialize()
@@ -560,18 +559,18 @@ def test_span():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
 
     # [1]
-    # int32_t span(const char16_t *s,
-    #              int32_t length,
-    #              USetSpanCondition spanCondition
+    # int32_t UnicodeSet::span(const char16_t *s,
+    #                          int32_t length,
+    #                          USetSpanCondition spanCondition
     # )
     assert test1.span("abcde",
                       -1,
                       USetSpanCondition.USET_SPAN_CONTAINED) == 2
 
     # [2]
-    # int32_t span(const UnicodeString &s,
-    #              int32_t start,
-    #              USetSpanCondition spanCondition
+    # int32_t UnicodeSet::span(const UnicodeString &s,
+    #                          int32_t start,
+    #                          USetSpanCondition spanCondition
     # )
     assert test1.span(UnicodeString("abcde"),
                       0,
@@ -582,18 +581,18 @@ def test_span_back():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
 
     # [1]
-    # int32_t spanBack(const char16_t *s,
-    #                  int32_t length,
-    #                  USetSpanCondition spanCondition
+    # int32_t UnicodeSet::spanBack(const char16_t *s,
+    #                              int32_t length,
+    #                              USetSpanCondition spanCondition
     # )
     assert test1.span_back("aaaab",
                            -1,
                            USetSpanCondition.USET_SPAN_CONTAINED) == 3
 
     # [2]
-    # int32_t spanBack(const UnicodeString &s,
-    #                  int32_t limit,
-    #                  USetSpanCondition spanCondition
+    # int32_t UnicodeSet::spanBack(const UnicodeString &s,
+    #                              int32_t limit,
+    #                              USetSpanCondition spanCondition
     # )
     assert test1.span_back(UnicodeString("aaaab"),
                            INT32_MAX,
@@ -610,28 +609,28 @@ def test_to_uset():
 
 def test_unicode_set():
     # [1]
-    # UnicodeSet()
+    # UnicodeSet::UnicodeSet()
     test1 = UnicodeSet()
     assert test1.size() == 0
 
     # [2]
-    # UnicodeSet(UChar32 start, UChar32 end)
+    # UnicodeSet::UnicodeSet(UChar32 start, UChar32 end)
     test2 = UnicodeSet(0x30, 0x39)
     assert test2.size() == 10
 
     # [4]
-    # UnicodeSet(const UnicodeString &pattern,
-    #            UErrorCode &status
+    # UnicodeSet::UnicodeSet(const UnicodeString &pattern,
+    #                        UErrorCode &status
     # )
     test4 = UnicodeSet(UnicodeString("[0-9]"))
     assert test4.size() == 10
 
     # [6]
-    # UnicodeSet(const UnicodeString &pattern,
-    #            ParsePosition &pos,
-    #            uint32_t options,
-    #            const SymbolTable *symbols,
-    #            UErrorCode &status
+    # UnicodeSet::UnicodeSet(const UnicodeString &pattern,
+    #                        ParsePosition &pos,
+    #                        uint32_t options,
+    #                        const SymbolTable *symbols,
+    #                        UErrorCode &status
     # )
     pattern = UnicodeString("foo [ 0-9 ]")
     pos = ParsePosition()
@@ -642,6 +641,6 @@ def test_unicode_set():
     assert test6.size() == 10
 
     # [7]
-    # UnicodeSet(const UnicodeSet &o)
+    # UnicodeSet::UnicodeSet(const UnicodeSet &o)
     test7 = UnicodeSet(test2)
     assert test7.size() == 10

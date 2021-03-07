@@ -14,12 +14,12 @@ def test_api():
     coll.get_collation_key(source, key)
 
     # [1]
-    # CollationKey()
+    # CollationKey::CollationKey()
     key1 = CollationKey()
 
     # [2]
-    # CollationKey(const uint8_t *values,
-    #              int32_t count
+    # CollationKey::CollationKey(const uint8_t *values,
+    #                            int32_t count
     # )
     values = key.get_byte_array()
     assert isinstance(values, list)
@@ -28,7 +28,7 @@ def test_api():
     key2 = CollationKey(values, len(values))
 
     # [3]
-    # CollationKey(const CollationKey &other)
+    # CollationKey::CollationKey(const CollationKey &other)
     key3 = CollationKey(key)
 
     assert key.compare_to(key1) == UCollationResult.UCOL_GREATER

@@ -7,9 +7,9 @@ from icupy import (
 def test_api():
     n2 = Normalizer2.get_nfc_instance()
 
-    # UnicodeString& append(UnicodeString &first,
-    #                       const UnicodeString &second,
-    #                       UErrorCode &errorCode
+    # UnicodeString &Normalizer2::append(UnicodeString &first,
+    #                                    const UnicodeString &second,
+    #                                    UErrorCode &errorCode
     # )
     first = UnicodeString("A", -1, US_INV)
     second = UnicodeString("\\u030A", -1, US_INV).unescape()
@@ -46,16 +46,16 @@ def test_api():
     assert not n2.is_inert(0x304b)
     assert not n2.is_inert(0x3099)
 
-    # UBool isNormalized(const UnicodeString &s,
-    #                    UErrorCode &errorCode
+    # UBool Normalizer2::isNormalized(const UnicodeString &s,
+    #                                 UErrorCode &errorCode
     # )
     assert n2.is_normalized(UnicodeString(0x304c))
     assert not n2.is_normalized(
         UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
 
     # [1]
-    # UnicodeString normalize(const UnicodeString &src,
-    #                         UErrorCode &errorCode
+    # UnicodeString Normalizer2::normalize(const UnicodeString &src,
+    #                                      UErrorCode &errorCode
     # )
     src = UnicodeString("a\\u0306", -1, US_INV).unescape()
     result = n2.normalize(src)
@@ -63,16 +63,16 @@ def test_api():
     assert result == "\u0103"
 
     # [2]
-    # UnicodeString& normalize(const UnicodeString &src,
-    #                          UnicodeString &dest,
-    #                          UErrorCode &errorCode
+    # UnicodeString &Normalizer2::normalize(const UnicodeString &src,
+    #                                       UnicodeString &dest,
+    #                                       UErrorCode &errorCode
     # )
     dest = UnicodeString()
     result = n2.normalize(src, dest)
     assert src != result
     assert result == dest == "\u0103"
 
-    # UnicodeString& normalizeSecondAndAppend(
+    # UnicodeString &Normalizer2::normalizeSecondAndAppend(
     #       UnicodeString &first,
     #       const UnicodeString &second,
     #       UErrorCode &errorCode
@@ -83,7 +83,7 @@ def test_api():
     result = n2.normalize_second_and_append(first, second).append(third)
     assert result == first == "A\u0103b"
 
-    # UNormalizationCheckResult quickCheck(
+    # UNormalizationCheckResult Normalizer2::quickCheck(
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
@@ -93,8 +93,8 @@ def test_api():
         UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
     assert result == UNormalizationCheckResult.UNORM_MAYBE
 
-    # int32_t spanQuickCheckYes(const UnicodeString &s,
-    #                           UErrorCode &errorCode
+    # int32_t Normalizer2::spanQuickCheckYes(const UnicodeString &s,
+    #                                        UErrorCode &errorCode
     # )
     assert n2.span_quick_check_yes(UnicodeString(0x304c))
     assert not n2.span_quick_check_yes(
@@ -103,8 +103,8 @@ def test_api():
 
 def test_filtered_normalizer2():
     n2 = Normalizer2.get_nfc_instance()
-    filter = UnicodeSet(UnicodeString("[^\\u00a0-\\u00ff]", -1, US_INV))
-    fn2 = FilteredNormalizer2(n2, filter)
+    filter_ = UnicodeSet(UnicodeString("[^\\u00a0-\\u00ff]", -1, US_INV))
+    fn2 = FilteredNormalizer2(n2, filter_)
     decomposition = UnicodeString()
 
     assert n2.get_decomposition(0xe4, decomposition)

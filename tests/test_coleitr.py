@@ -46,8 +46,8 @@ def test_api():
     assert not (it1 != it2)
 
     # [1]
-    # void setText(CharacterIterator &str,
-    #              UErrorCode &status
+    # void CollationElementIterator::setText(CharacterIterator &str,
+    #                                        UErrorCode &status
     # )
     source = StringCharacterIterator(UnicodeString("ca"))
     it2.set_text(source)
@@ -61,8 +61,8 @@ def test_api():
     assert not (it1 != it2)
 
     # [2]
-    # void setText(const UnicodeString &str,
-    #              UErrorCode &status
+    # void CollationElementIterator::setText(const UnicodeString &str,
+    #                                        UErrorCode &status
     # )
     source = UnicodeString("cha")
     it2.set_text(source)

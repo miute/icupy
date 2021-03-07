@@ -28,7 +28,7 @@ def test_compile():
     s = "\\w+"
 
     # [1]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       const UnicodeString &regex,
     #       uint32_t flags,
     #       UErrorCode &status
@@ -40,7 +40,7 @@ def test_compile():
     assert test1.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     # [2]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       const UnicodeString &regex,
     #       uint32_t flags,
     #       UParseError &pe,
@@ -56,7 +56,7 @@ def test_compile():
     assert test2.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     # [3]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       const UnicodeString &regex,
     #       UParseError &pe,
     #       UErrorCode &status
@@ -69,7 +69,7 @@ def test_compile():
     assert test3.flags() == 0
 
     # [4]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       UText *regex,
     #       uint32_t flags,
     #       UErrorCode &status
@@ -82,7 +82,7 @@ def test_compile():
     utext_close(regex4)
 
     # [5]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       UText *regex,
     #       uint32_t flags,
     #       UParseError &pe,
@@ -99,7 +99,7 @@ def test_compile():
     utext_close(regex5)
 
     # [6]
-    # static RegexPattern* RegexPattern::compile(
+    # static RegexPattern *RegexPattern::compile(
     #       UText *regex,
     #       UParseError &pe,
     #       UErrorCode &status
@@ -143,7 +143,7 @@ def test_matcher():
     pattern = RegexPattern.compile(regex, 0)
 
     # [1]
-    # RegexMatcher* RegexPattern::matcher(const UnicodeString &input,
+    # RegexMatcher *RegexPattern::matcher(const UnicodeString &input,
     #                                     UErrorCode &status
     # )
     src1 = UnicodeString("foo bar baz")
@@ -153,7 +153,7 @@ def test_matcher():
     assert matcher1.input() == src1
 
     # [2]
-    # RegexMatcher* RegexPattern::matcher(UErrorCode &status)
+    # RegexMatcher *RegexPattern::matcher(UErrorCode &status)
     matcher2 = pattern.matcher()
     assert isinstance(matcher2, RegexMatcher)
     assert matcher2.pattern().pattern() == regex
@@ -181,7 +181,7 @@ def test_matches():
     # static UBool RegexPattern::matches(UText *regex,
     #                                    UText *input,
     #                                    UParseError &pe,
-    #                                    UErrorCode & 	status
+    #                                    UErrorCode &status
     # )
     regex2 = utext_open_const_unicode_string(None, regex1)
     src2a = utext_open_const_unicode_string(None, src1a)

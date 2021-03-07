@@ -1,7 +1,6 @@
 import copy
 
 import pytest
-
 from icupy import (
     ICUException, Locale, StringEnumeration, U_ICU_VERSION_MAJOR_NUM,
     UErrorCode, UnicodeString
@@ -166,7 +165,7 @@ def test_create_from_name():
 
 
 def test_create_keywords():
-    # StringEnumeration* createKeywords(UErrorCode &status)
+    # StringEnumeration *Locale::createKeywords(UErrorCode &status)
     loc = Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.create_keywords()
     assert isinstance(result, StringEnumeration)
@@ -185,7 +184,7 @@ def test_create_keywords():
 
 
 def test_create_unicode_keywords():
-    # StringEnumeration* createUnicodeKeywords(UErrorCode &status)
+    # StringEnumeration *Locale::createUnicodeKeywords(UErrorCode &status)
     loc = Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.create_unicode_keywords()
     assert isinstance(result, StringEnumeration)
@@ -244,15 +243,18 @@ def test_get_display_country():
         dest = UnicodeString()
 
         # [1]
-        # UnicodeString& getDisplayCountry(const Locale &displayLocale,
-        #                                  UnicodeString &dispCountry
+        # UnicodeString &Locale::getDisplayCountry(
+        #       const Locale &displayLocale,
+        #       UnicodeString &dispCountry
         # )
         result = loc.get_display_country(display_locale, dest)
         assert dest == UnicodeString("\\u00C9tats-Unis").unescape()
         assert id(result) == id(dest)
 
         # [2]
-        # UnicodeString& getDisplayCountry(UnicodeString &dispCountry)
+        # UnicodeString &Locale::getDisplayCountry(
+        #       UnicodeString &dispCountry
+        # )
         dest.remove()
         result = loc.get_display_country(dest)
         assert dest == "United States"
@@ -272,15 +274,16 @@ def test_get_display_language():
         dest = UnicodeString()
 
         # [1]
-        # UnicodeString& getDisplayLanguage(const Locale &displayLocale,
-        #                                   UnicodeString &dispLang
+        # UnicodeString &Locale::getDisplayLanguage(
+        #       const Locale &displayLocale,
+        #       UnicodeString &dispLang
         # )
         result = loc.get_display_language(display_locale, dest)
         assert dest == "anglais"
         assert id(result) == id(dest)
 
         # [2]
-        # UnicodeString& getDisplayLanguage(UnicodeString &dispLang)
+        # UnicodeString &Locale::getDisplayLanguage(UnicodeString &dispLang)
         dest.remove()
         result = loc.get_display_language(dest)
         assert dest == "English"
@@ -300,15 +303,16 @@ def test_get_display_name():
         dest = UnicodeString()
 
         # [1]
-        # UnicodeString& getDisplayName(const Locale &displayLocale,
-        #                               UnicodeString &name
+        # UnicodeString &Locale::getDisplayName(
+        #       const Locale &displayLocale,
+        #       UnicodeString &name
         # )
         result = loc.get_display_name(display_locale, dest)
         assert dest == UnicodeString("anglais (\\u00C9tats-Unis)").unescape()
         assert id(result) == id(dest)
 
         # [2]
-        # UnicodeString& getDisplayName(UnicodeString &name)
+        # UnicodeString &Locale::getDisplayName(UnicodeString &name)
         dest.remove()
         result = loc.get_display_name(dest)
         assert dest == "English (United States)"
@@ -329,15 +333,16 @@ def test_get_display_script():
         dest = UnicodeString()
 
         # [1]
-        # UnicodeString& getDisplayScript(const Locale &displayLocale,
-        #                                 UnicodeString &dispScript
+        # UnicodeString &Locale::getDisplayScript(
+        #       const Locale &displayLocale,
+        #       UnicodeString &dispScript
         # )
         result = loc.get_display_script(display_locale, dest)
         assert dest == UnicodeString("sinogrammes simplifi\\u00E9s").unescape()
         assert id(result) == id(dest)
 
         # [2]
-        # UnicodeString& getDisplayScript(UnicodeString &dispScript)
+        # UnicodeString &Locale::getDisplayScript(UnicodeString &dispScript)
         dest.remove()
         result = loc.get_display_script(dest)
         assert dest == "Simplified Han"
@@ -358,15 +363,16 @@ def test_get_display_variant():
         dest = UnicodeString()
 
         # [1]
-        # UnicodeString& getDisplayVariant(const Locale &displayLocale,
-        #                                  UnicodeString &dispVar
+        # UnicodeString &Locale::getDisplayVariant(
+        #       const Locale &displayLocale,
+        #       UnicodeString &dispVar
         # )
         result = loc.get_display_variant(display_locale, dest)
         assert dest == "NY"
         assert id(result) == id(dest)
 
         # [2]
-        # UnicodeString& getDisplayVariant(UnicodeString &dispVar)
+        # UnicodeString &Locale::getDisplayVariant(UnicodeString &dispVar)
         dest.remove()
         result = loc.get_display_variant(dest)
         assert dest == "NY"
@@ -420,8 +426,8 @@ def test_get_keyword_value():
 
 
 def test_get_keywords():
-    # void getKeywords(OutputIterator iterator,
-    #                  UErrorCode &status
+    # void Locale::getKeywords(OutputIterator iterator,
+    #                          UErrorCode &status
     # )
     loc = Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.get_keywords()
@@ -483,8 +489,8 @@ def test_get_unicode_keyword_value():
 
 
 def test_get_unicode_keywords():
-    # void getUnicodeKeywords(OutputIterator iterator,
-    #                         UErrorCode &status
+    # void Locale::getUnicodeKeywords(OutputIterator iterator,
+    #                                 UErrorCode &status
     # )
     loc = Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.get_unicode_keywords()
@@ -545,15 +551,15 @@ def test_is_right_to_left():
 
 def test_locale():
     # [1]
-    # Locale()
+    # Locale::Locale()
     test1 = Locale()
     assert test1 == Locale.get_default()
 
     # [2]
-    # Locale(const char *language,
-    #        const char *country=0,
-    #        const char *variant=0,
-    #        const char *keywordsAndValues=0
+    # Locale::Locale(const char *language,
+    #                const char *country=0,
+    #                const char *variant=0,
+    #                const char *keywordsAndValues=0
     # )
     test20 = Locale(None)
     assert test20 == test1
@@ -577,7 +583,7 @@ def test_locale():
     assert test26.get_name() == "no_NO_NY@currency=NOK"
 
     # [3]
-    # Locale(const Locale &other)
+    # Locale::Locale(const Locale &other)
     test3 = Locale(test26)
     assert test3.get_name() == test26.get_name()
 
@@ -593,11 +599,11 @@ def test_operator():
     test2 = Locale("en", "US")
     test3 = Locale("en", "GB")
 
-    # operator!=()
+    # Locale::operator!=()
     assert not (test1 != test2)
     assert test1 != test3
 
-    # operator==()
+    # Locale::operator==()
     assert test1 == test2
     assert not (test1 == test3)
 

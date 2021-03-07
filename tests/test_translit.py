@@ -1,7 +1,6 @@
 import copy
 
 import pytest
-
 from icupy import (
     ICUException, Locale, StringEnumeration, Transliterator, UErrorCode,
     UnicodeSet, UnicodeString, UParseError, UTransDirection, UTransPosition,
@@ -57,7 +56,7 @@ def test_clone():
 
 
 def test_create_instance():
-    # static Transliterator* createFromRules(
+    # static Transliterator *Transliterator::createFromRules(
     #       const UnicodeString &ID,
     #       const UnicodeString &rules,
     #       UTransDirection dir,
@@ -113,7 +112,7 @@ def test_create_instance():
     assert text == "prbetaxyz preBETApost"
 
     # [1]
-    # static Transliterator* createInstance(
+    # static Transliterator *Transliterator::createInstance(
     #       const UnicodeString &ID,
     #       UTransDirection dir,
     #       UErrorCode &status
@@ -140,7 +139,7 @@ def test_create_instance():
     assert test12.get_id() == "Latin-Greek"
 
     # [2]
-    # static Transliterator* createInstance(
+    # static Transliterator *Transliterator::createInstance(
     #       const UnicodeString &ID,
     #       UTransDirection dir,
     #       UParseError &parseError,
@@ -153,7 +152,7 @@ def test_create_instance():
         parse_error)
     assert test2.get_id() == id1
 
-    # Transliterator* createInverse(UErrorCode &status)
+    # Transliterator *Transliterator::createInverse(UErrorCode &status)
     id4 = UnicodeString("Hiragana-Katakana", -1)
     test4 = Transliterator.create_instance(
         id4,
@@ -203,7 +202,7 @@ def test_get_available_variant():
 
 def test_get_display_name():
     # [1]
-    # static UnicodeString& getDisplayName(
+    # static UnicodeString &Transliterator::getDisplayName(
     #       const UnicodeString &ID,
     #       const Locale &inLocale,
     #       UnicodeString &result
@@ -217,7 +216,7 @@ def test_get_display_name():
     assert result == "Hiragana to Katakana"
 
     # [2]
-    # static UnicodeString& getDisplayName(
+    # static UnicodeString &Transliterator::getDisplayName(
     #       const UnicodeString &ID,
     #       UnicodeString &result
     # )
@@ -278,15 +277,15 @@ def test_transliterate():
     src = UnicodeString("\u3042\u3044\u3046\u3048\u304A", -1)
 
     # [1]
-    # void transliterate(Replaceable &text)
+    # void Transliterator::transliterate(Replaceable &text)
     text = src.clone()
     test4.transliterate(text)
     assert text == "\u30A2\u30A4\u30A6\u30A8\u30AA"
 
     # [2]
-    # int32_t transliterate(Replaceable &text,
-    #                       int32_t start,
-    #                       int32_t limit
+    # int32_t Transliterator::transliterate(Replaceable &text,
+    #                                       int32_t start,
+    #                                       int32_t limit
     # )
     text = src.clone()
     result = test4.transliterate(text, 1, 3)
@@ -294,10 +293,10 @@ def test_transliterate():
     assert result == 3
 
     # [3]
-    # void transliterate(Replaceable &text,
-    #                    UTransPosition &index,
-    #                    const UnicodeString &insertion,
-    #                    UErrorCode &status
+    # void Transliterator::transliterate(Replaceable &text,
+    #                                    UTransPosition &index,
+    #                                    const UnicodeString &insertion,
+    #                                    UErrorCode &status
     # )
     text = src.clone()
     index = UTransPosition()
@@ -314,10 +313,10 @@ def test_transliterate():
     assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
 
     # [4]
-    # void transliterate(Replaceable &text,
-    #                    UTransPosition &index,
-    #                    UChar32 insertion,
-    #                    UErrorCode &status
+    # void Transliterator::transliterate(Replaceable &text,
+    #                                    UTransPosition &index,
+    #                                    UChar32 insertion,
+    #                                    UErrorCode &status
     # )
     text = src.clone()
     index = UTransPosition(0, 5, 1, 4)
@@ -334,9 +333,9 @@ def test_transliterate():
     assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
 
     # [5]
-    # void transliterate(Replaceable &text,
-    #                    UTransPosition &index,
-    #                    UErrorCode &status
+    # void Transliterator::transliterate(Replaceable &text,
+    #                                    UTransPosition &index,
+    #                                    UErrorCode &status
     # )
     text = src.clone()
     # UTransPosition(context_start, start, limit, context_limit)
