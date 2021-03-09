@@ -26,6 +26,7 @@ pybind11_add_module(
     schriter.cpp
     sortkey.cpp
     strenum.cpp
+    stsearch.cpp
     tblcoll.cpp
     translit.cpp
     ubidi.cpp
@@ -46,6 +47,7 @@ pybind11_add_module(
     uregex.cpp
     ures.cpp
     uscript.cpp
+    usearch.cpp
     uset.cpp
     ustring.cpp
     utext.cpp
