@@ -1,7 +1,6 @@
 #include "main.hpp"
 #include "ubidiptr.hpp"
 #include "voidptr.hpp"
-#include <memory>
 #include <pybind11/stl.h>
 #include <unicode/ustring.h>
 
@@ -9,25 +8,15 @@ _UBiDiPtr::_UBiDiPtr(UBiDi *p) : p_(p) {}
 _UBiDiPtr::~_UBiDiPtr() {}
 UBiDi *_UBiDiPtr::get() const { return p_; }
 
-UBiDiLevel *_UBiDiPtr::get_embedding_levels() const {
-  return embedding_levels_.has_value() ? (UBiDiLevel *)embedding_levels_->data() : nullptr;
-}
-
-void _UBiDiPtr::set_embedding_levels(std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
+void _UBiDiPtr::set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedding_levels) {
   embedding_levels_ = embedding_levels;
 }
 
-void _UBiDiPtr::set_epilogue(const UChar *epilogue, int32_t length) {
-  epilogue_ = std::u16string(epilogue, epilogue && length < 0 ? u_strlen(epilogue) : std::max(0, length));
-}
+void _UBiDiPtr::set_epilogue(const std::shared_ptr<UChar[]> &epilogue) { epilogue_ = epilogue; }
 
-void _UBiDiPtr::set_prologue(const UChar *prologue, int32_t length) {
-  prologue_ = std::u16string(prologue, prologue && length < 0 ? u_strlen(prologue) : std::max(0, length));
-}
+void _UBiDiPtr::set_prologue(const std::shared_ptr<UChar[]> &prologue) { prologue_ = prologue; }
 
-void _UBiDiPtr::set_text(const UChar *text, int32_t length) {
-  text_ = std::u16string(text, text && length < 0 ? u_strlen(text) : std::max(0, length));
-}
+void _UBiDiPtr::set_text(const std::shared_ptr<UChar[]> &text) { text_ = text; }
 
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(std::nullptr_t action) : action_(action) {}
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(UBiDiClassCallback *action) : action_(action) {}
@@ -321,12 +310,28 @@ void init_ubidi(py::module &m) {
       "ubidi_set_context",
       [](_UBiDiPtr &bidi, const UChar *prologue, int32_t pro_length, const UChar *epilogue, int32_t epi_length) {
         UErrorCode error_code = U_ZERO_ERROR;
-        bidi.set_prologue(prologue, pro_length);
-        bidi.set_epilogue(epilogue, epi_length);
-        ubidi_setContext(bidi, bidi.get_prologue(), pro_length, bidi.get_epilogue(), epi_length, &error_code);
+        std::shared_ptr<UChar[]> prologue_ptr;
+        if (prologue) {
+          int32_t n = pro_length == -1 ? u_strlen(prologue) : std::max(0, pro_length);
+          prologue_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
+          auto dest = prologue_ptr.get();
+          u_memset(dest, 0, n + 1);
+          u_strncpy(dest, prologue, n);
+        }
+        std::shared_ptr<UChar[]> epilogue_ptr;
+        if (epilogue) {
+          int32_t n = epi_length == -1 ? u_strlen(epilogue) : std::max(0, epi_length);
+          epilogue_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
+          auto dest = epilogue_ptr.get();
+          u_memset(dest, 0, n + 1);
+          u_strncpy(dest, epilogue, n);
+        }
+        ubidi_setContext(bidi, prologue_ptr.get(), pro_length, epilogue_ptr.get(), epi_length, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
+        bidi.set_prologue(prologue_ptr);
+        bidi.set_epilogue(epilogue_ptr);
       },
       py::arg("bidi"), py::arg("prologue"), py::arg("pro_length"), py::arg("epilogue"), py::arg("epi_length"));
   m.def(
@@ -347,12 +352,25 @@ void init_ubidi(py::module &m) {
       [](_UBiDiPtr &bidi, const UChar *text, int32_t length, UBiDiLevel para_level,
          std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
         UErrorCode error_code = U_ZERO_ERROR;
-        bidi.set_text(text, length);
-        bidi.set_embedding_levels(embedding_levels);
-        ubidi_setPara(bidi, bidi.get_text(), length, para_level, bidi.get_embedding_levels(), &error_code);
+        std::shared_ptr<UChar[]> text_ptr;
+        if (text) {
+          int32_t n = length == -1 ? u_strlen(text) : std::max(0, length);
+          text_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
+          auto dest = text_ptr.get();
+          u_memset(dest, 0, n + 1);
+          u_strncpy(dest, text, n);
+        }
+        std::shared_ptr<UBiDiLevel[]> embedding_levels_ptr;
+        if (embedding_levels.has_value()) {
+          embedding_levels_ptr = std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels->size()]);
+          std::copy(embedding_levels->begin(), embedding_levels->end(), embedding_levels_ptr.get());
+        }
+        ubidi_setPara(bidi, text_ptr.get(), length, para_level, embedding_levels_ptr.get(), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }
+        bidi.set_text(text_ptr);
+        bidi.set_embedding_levels(embedding_levels_ptr);
       },
       py::arg("bidi"), py::arg("text").none(false), py::arg("length"), py::arg("para_level"),
       py::arg("embedding_levels") = std::nullopt);

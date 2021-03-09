@@ -1,7 +1,7 @@
 #ifndef ICUPY_UBIDIPTR_HPP
 #define ICUPY_UBIDIPTR_HPP
 
-#include <optional>
+#include <memory>
 #include <pybind11/functional.h>
 #include <unicode/ubidi.h>
 #include <variant>
@@ -14,29 +14,21 @@ public:
   UBiDi *get() const;
   operator UBiDi *() const { return get(); }
 
-  UBiDiLevel *get_embedding_levels() const;
+  void set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedding_levels);
 
-  const UChar *get_epilogue() const { return epilogue_.size() == 0 ? nullptr : epilogue_.c_str(); }
+  void set_epilogue(const std::shared_ptr<UChar[]> &epilogue);
 
-  const UChar *get_prologue() const { return prologue_.size() == 0 ? nullptr : prologue_.c_str(); }
+  void set_prologue(const std::shared_ptr<UChar[]> &prologue);
 
-  const UChar *get_text() const { return text_.c_str(); }
-
-  void set_embedding_levels(std::optional<std::vector<UBiDiLevel>> &embedding_levels);
-
-  void set_epilogue(const UChar *epilogue, int32_t length);
-
-  void set_prologue(const UChar *prologue, int32_t length);
-
-  void set_text(const UChar *text, int32_t length);
+  void set_text(const std::shared_ptr<UChar[]> &text);
 
 private:
   _UBiDiPtr() = delete;
   UBiDi *p_;
-  std::u16string text_;
-  std::u16string prologue_;
-  std::u16string epilogue_;
-  std::optional<std::vector<UBiDiLevel>> embedding_levels_;
+  std::shared_ptr<UChar[]> text_;
+  std::shared_ptr<UChar[]> prologue_;
+  std::shared_ptr<UChar[]> epilogue_;
+  std::shared_ptr<UBiDiLevel[]> embedding_levels_;
 };
 
 class _UBiDiClassCallbackPtr {
