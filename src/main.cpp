@@ -11,6 +11,7 @@ using namespace icu;
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_idna(py::module &);
+void init_localebuilder(py::module &m);
 void init_locid(py::module &);
 void init_normalizer2(py::module &m);
 void init_parseerr(py::module &m);
@@ -85,6 +86,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_char16ptr(m);
   init_coleitr(m);
   init_idna(m);
+  init_localebuilder(m);
   init_locid(m);
   init_normalizer2(m);
   init_parseerr(m);

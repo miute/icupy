@@ -15,6 +15,7 @@ pybind11_add_module(
     char16ptr.cpp
     coleitr.cpp
     idna.cpp
+    localebuilder.cpp
     locid.cpp
     main.cpp
     normalizer2.cpp
