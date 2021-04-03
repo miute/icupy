@@ -15,6 +15,7 @@ pybind11_add_module(
     char16ptr.cpp
     coleitr.cpp
     dtrule.cpp
+    gregocal.cpp
     idna.cpp
     localebuilder.cpp
     localematcher.cpp
@@ -31,6 +32,7 @@ pybind11_add_module(
     strenum.cpp
     stsearch.cpp
     tblcoll.cpp
+    timezone.cpp
     translit.cpp
     tzrule.cpp
     tztrans.cpp
