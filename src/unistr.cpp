@@ -31,7 +31,8 @@ void init_unistr(py::module &m) {
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
 
   py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic())
-      .value("INVARIANT", UnicodeString::kInvariant);
+      .value("INVARIANT", UnicodeString::kInvariant)
+      .export_values();
 
   us.def(py::init<>())
       .def(py::init<int32_t, UChar32, int32_t>(), py::arg("capacity"), py::arg("c"), py::arg("count"))
