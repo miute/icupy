@@ -30,7 +30,7 @@ public:
 
 void init_stsearch(py::module &m) {
   // icu::SearchIterator
-  py::class_<SearchIterator, PySearchIterator> si(m, "SearchIterator");
+  py::class_<SearchIterator, UObject, PySearchIterator> si(m, "SearchIterator");
   si.def("__iter__",
          [](SearchIterator &self) -> SearchIterator & {
            self.reset();

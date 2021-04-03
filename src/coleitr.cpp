@@ -6,7 +6,7 @@
 using namespace icu;
 
 void init_coleitr(py::module &m) {
-  py::class_<CollationElementIterator> cei(m, "CollationElementIterator");
+  py::class_<CollationElementIterator, UObject> cei(m, "CollationElementIterator");
 
   py::enum_<decltype(CollationElementIterator::NULLORDER)>(cei, "CollationElementIterator", py::arithmetic())
       .value("NULLORDER", CollationElementIterator::NULLORDER)

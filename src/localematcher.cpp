@@ -27,7 +27,7 @@ void init_localematcher(py::module &m) {
       .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT);
 
   // icu::LocaleMatcher
-  py::class_<LocaleMatcher> lm(m, "LocaleMatcher");
+  py::class_<LocaleMatcher, UMemory> lm(m, "LocaleMatcher");
   lm.def(
         "get_best_match",
         [](const LocaleMatcher &self, const Locale &desired_locale) {
@@ -105,7 +105,7 @@ void init_localematcher(py::module &m) {
 #endif // U_HIDE_DRAFT_API
 
   // icu::LocaleMatcher::Builder
-  py::class_<Builder> lmb(lm, "Builder");
+  py::class_<Builder, UMemory> lmb(lm, "Builder");
   lmb.def(py::init<>());
   lmb.def("add_supported_locale", &Builder::addSupportedLocale, py::arg("locale"));
   lmb.def("build", [](const Builder &self) {
@@ -156,7 +156,7 @@ void init_localematcher(py::module &m) {
       py::arg("locales"));
 
   // icu::LocaleMatcher::Result
-  py::class_<Result> lmr(lm, "Result");
+  py::class_<Result, UMemory> lmr(lm, "Result");
   lmr.def("get_desired_index", &Result::getDesiredIndex);
   lmr.def("get_desired_locale", &Result::getDesiredLocale, py::return_value_policy::reference);
   lmr.def("get_supported_index", &Result::getSupportedIndex);

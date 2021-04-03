@@ -9,8 +9,8 @@
 using namespace icu;
 
 void init_rbbi(py::module &m) {
-  // BreakIterator
-  py::class_<BreakIterator> bi(m, "BreakIterator");
+  // icu::BreakIterator
+  py::class_<BreakIterator, UObject> bi(m, "BreakIterator");
 
   py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator", py::arithmetic())
       .value("DONE", BreakIterator::DONE)
@@ -130,7 +130,7 @@ void init_rbbi(py::module &m) {
   // UBreakIteratorType kind,	UErrorCode &status)".
   // TODO: Implement "static UBool unregister(URegistryKey key, UErrorCode &status)".
 
-  // RuleBasedBreakIterator
+  // icu::RuleBasedBreakIterator
   py::class_<RuleBasedBreakIterator, BreakIterator> rbbi(m, "RuleBasedBreakIterator");
   rbbi.def(py::init<const RuleBasedBreakIterator &>(), py::arg("that"))
       .def(py::init([](const UnicodeString &rules, UParseError &parse_error) {

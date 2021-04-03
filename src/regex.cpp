@@ -13,7 +13,7 @@ using namespace icu;
 
 void init_regex(py::module &m) {
   // icu::RegexMatcher
-  py::class_<RegexMatcher> rm(m, "RegexMatcher");
+  py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher");
   rm.def(py::init([](const UnicodeString &regexp, uint32_t flags) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
@@ -505,7 +505,7 @@ void init_regex(py::module &m) {
   rm.def("use_transparent_bounds", &RegexMatcher::useTransparentBounds, py::arg("b"));
 
   // icu::RegexPattern
-  py::class_<RegexPattern> rp(m, "RegexPattern");
+  py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
   rp.def(py::init<>())
       .def(py::init<const RegexPattern &>(), py::arg("source"))
       .def(py::self != py::self)

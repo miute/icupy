@@ -17,7 +17,7 @@ protected:
 };
 
 void init_strenum(py::module &m) {
-  py::class_<StringEnumeration, PyStringEnumeration> se(m, "StringEnumeration");
+  py::class_<StringEnumeration, UObject, PyStringEnumeration> se(m, "StringEnumeration");
   // se.def(py::self != py::self).def(py::self == py::self);
   se.def("__copy__", &StringEnumeration::clone)
       .def("__deepcopy__", [](const StringEnumeration &self, py::dict) { return self.clone(); })

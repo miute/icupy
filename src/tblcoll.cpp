@@ -10,7 +10,7 @@ using namespace icu;
 
 void init_tblcoll(py::module &m) {
   // icu::Collator
-  py::class_<Collator> coll(m, "Collator");
+  py::class_<Collator, UObject> coll(m, "Collator");
 
   py::enum_<Collator::ECollationStrength>(coll, "ECollationStrength", py::arithmetic())
       .value("PRIMARY", Collator::PRIMARY)

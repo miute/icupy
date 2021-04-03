@@ -5,7 +5,7 @@
 using namespace icu;
 
 void init_parsepos(py::module &m) {
-  py::class_<ParsePosition> pp(m, "ParsePosition");
+  py::class_<ParsePosition, UObject> pp(m, "ParsePosition");
   pp.def(py::init<>())
       .def(py::init<int32_t>(), py::arg("new_index"))
       .def(py::init<const ParsePosition &>(), py::arg("copy"))

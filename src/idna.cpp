@@ -4,13 +4,13 @@
 using namespace icu;
 
 void init_idna(py::module &m) {
-  py::class_<IDNAInfo>(m, "IDNAInfo")
+  py::class_<IDNAInfo, UMemory>(m, "IDNAInfo")
       .def(py::init<>())
       .def("get_errors", &IDNAInfo::getErrors)
       .def("has_errors", &IDNAInfo::hasErrors)
       .def("is_transitional_different", &IDNAInfo::isTransitionalDifferent);
 
-  py::class_<IDNA> idna(m, "IDNA");
+  py::class_<IDNA, UObject> idna(m, "IDNA");
 
   py::enum_<decltype(UIDNA_DEFAULT)>(idna, "IDNA", py::arithmetic())
       .value("DEFAULT", UIDNA_DEFAULT)

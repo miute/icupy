@@ -7,7 +7,7 @@
 using namespace icu;
 
 void init_sortkey(py::module &m) {
-  py::class_<CollationKey> ck(m, "CollationKey");
+  py::class_<CollationKey, UObject> ck(m, "CollationKey");
   ck.def(py::init<>())
       .def(py::init([](const std::vector<uint8_t> &values, int32_t count) {
              return std::make_unique<CollationKey>(values.data(), count);

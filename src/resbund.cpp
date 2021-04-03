@@ -6,7 +6,7 @@
 using namespace icu;
 
 void init_resbund(py::module &m) {
-  py::class_<ResourceBundle> res(m, "ResourceBundle");
+  py::class_<ResourceBundle, UObject> res(m, "ResourceBundle");
   res.def(py::init([](const UnicodeString &package_name, const Locale &locale) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);

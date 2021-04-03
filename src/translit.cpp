@@ -6,7 +6,7 @@
 using namespace icu;
 
 void init_translit(py::module &m) {
-  py::class_<Transliterator> tl(m, "Transliterator");
+  py::class_<Transliterator, UObject> tl(m, "Transliterator");
 
   py::class_<Transliterator::Token>(tl, "Token");
 

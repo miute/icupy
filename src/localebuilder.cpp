@@ -8,7 +8,7 @@ using namespace icu;
 void init_localebuilder(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   // icu::LocaleBuilder
-  py::class_<LocaleBuilder> lb(m, "LocaleBuilder");
+  py::class_<LocaleBuilder, UObject> lb(m, "LocaleBuilder");
   lb.def(py::init<>());
   lb.def(
       "add_unicode_locale_attribute",

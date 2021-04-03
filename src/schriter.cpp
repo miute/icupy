@@ -6,14 +6,14 @@
 using namespace icu;
 
 void init_schriter(py::module &m) {
-  // ForwardCharacterIterator
-  py::class_<ForwardCharacterIterator> fci(m, "ForwardCharacterIterator");
+  // icu::ForwardCharacterIterator
+  py::class_<ForwardCharacterIterator, UObject> fci(m, "ForwardCharacterIterator");
 
   py::enum_<decltype(ForwardCharacterIterator::DONE)>(fci, "ForwardCharacterIterator", py::arithmetic())
       .value("DONE", ForwardCharacterIterator::DONE)
       .export_values();
 
-  // CharacterIterator
+  // icu::CharacterIterator
   py::class_<CharacterIterator, ForwardCharacterIterator> ci(m, "CharacterIterator");
 
   py::enum_<CharacterIterator::EOrigin>(ci, "EOrigin", py::arithmetic())
@@ -41,7 +41,7 @@ void init_schriter(py::module &m) {
   ci.def("set_to_start", &CharacterIterator::setToStart);
   ci.def("start_index", &CharacterIterator::startIndex);
 
-  // UCharCharacterIterator
+  // icu::UCharCharacterIterator
   py::class_<UCharCharacterIterator, CharacterIterator> uci(m, "UCharCharacterIterator");
   /*
   uci.def(py::init<ConstChar16Ptr, int32_t>(), py::arg("text_ptr"), py::arg("length"))
@@ -76,7 +76,7 @@ void init_schriter(py::module &m) {
       py::arg("position"));
   uci.def("set_index32", &UCharCharacterIterator::setIndex32, py::arg("position"));
 
-  // StringCharacterIterator
+  // icu::StringCharacterIterator
   py::class_<StringCharacterIterator, UCharCharacterIterator> sci(m, "StringCharacterIterator");
   sci.def(py::init<const UnicodeString &>(), py::arg("text_str"))
       .def(py::init<const UnicodeString &, int32_t>(), py::arg("text_str"), py::arg("text_pos"))

@@ -13,22 +13,22 @@
 using namespace icu;
 
 void init_uniset(py::module &m) {
-  // UMatchDegree
+  // icu::UMatchDegree
   py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic())
       .value("U_MISMATCH", U_MISMATCH)
       .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH)
       .value("U_MATCH", U_MATCH);
 
-  // UnicodeFunctor
-  py::class_<UnicodeFunctor>(m, "UnicodeFunctor");
+  // icu::UnicodeFunctor
+  py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor");
 
-  // UnicodeMatcher
+  // icu::UnicodeMatcher
   py::class_<UnicodeMatcher>(m, "UnicodeMatcher");
 
-  // UnicodeFilter
+  // icu::UnicodeFilter
   py::class_<UnicodeFilter, UnicodeFunctor, UnicodeMatcher>(m, "UnicodeFilter");
 
-  // UnicodeSet
+  // icu::UnicodeSet
   py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet");
 
   py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())

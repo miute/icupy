@@ -19,15 +19,15 @@ void init_unistr(py::module &m) {
   py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
       .def(py::init<size_t>(), py::arg("n"));
 
-  // Replaceable
-  py::class_<Replaceable>(m, "Replaceable")
+  // icu::Replaceable
+  py::class_<Replaceable, UObject>(m, "Replaceable")
       .def("char32_at", &Replaceable::char32At, py::arg("offset"))
       .def(
           "char_at", [](const Replaceable &self, int32_t offset) -> uint16_t { return self.charAt(offset); },
           py::arg("offset"))
       .def("length", &Replaceable::length);
 
-  // UnicodeString
+  // icu::UnicodeString
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
 
   py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic())

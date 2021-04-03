@@ -4,7 +4,7 @@
 using namespace icu;
 
 void init_normalizer2(py::module &m) {
-  py::class_<Normalizer2> n2(m, "Normalizer2");
+  py::class_<Normalizer2, UObject> n2(m, "Normalizer2");
   n2.def(
       "append",
       [](const Normalizer2 &self, UnicodeString &first, const UnicodeString &second) -> UnicodeString & {
