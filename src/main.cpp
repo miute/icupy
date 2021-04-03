@@ -10,6 +10,7 @@ using namespace icu;
 
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
+void init_dtrule(py::module &m);
 void init_idna(py::module &);
 void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
@@ -26,8 +27,11 @@ void init_strenum(py::module &);
 void init_stsearch(py::module &m);
 void init_tblcoll(py::module &m);
 void init_translit(py::module &m);
+void init_tzrule(py::module &m);
+void init_tztrans(py::module &m);
 void init_ubidi(py::module &);
 void init_ubrk(py::module &);
+void init_ucal(py::module &m);
 void init_uchar(py::module &);
 void init_ucnv(py::module &);
 void init_ucnv_cb(py::module &);
@@ -84,8 +88,13 @@ PYBIND11_MODULE(MODULE_NAME, m) {
     }
   });
 
+  py::class_<UMemory>(m, "UMemory");
+
+  py::class_<UObject, UMemory>(m, "UObject");
+
   init_char16ptr(m);
   init_coleitr(m);
+  init_dtrule(m);
   init_idna(m);
   init_localebuilder(m);
   init_localematcher(m);
@@ -102,8 +111,11 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_stsearch(m);
   init_tblcoll(m);
   init_translit(m);
+  init_tzrule(m);
+  init_tztrans(m);
   init_ubidi(m);
   init_ubrk(m);
+  init_ucal(m);
   init_uchar(m);
   init_ucnv(m);
   init_ucnv_cb(m);

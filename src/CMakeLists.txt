@@ -14,6 +14,7 @@ pybind11_add_module(
     ${PROJECT_NAME}
     char16ptr.cpp
     coleitr.cpp
+    dtrule.cpp
     idna.cpp
     localebuilder.cpp
     localematcher.cpp
@@ -31,8 +32,11 @@ pybind11_add_module(
     stsearch.cpp
     tblcoll.cpp
     translit.cpp
+    tzrule.cpp
+    tztrans.cpp
     ubidi.cpp
     ubrk.cpp
+    ucal.cpp
     uchar.cpp
     ucnv.cpp
     ucnv_cb.cpp
