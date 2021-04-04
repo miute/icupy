@@ -17,7 +17,8 @@ void init_rbbi(py::module &m) {
       .export_values();
 
   bi.def("__copy__", &BreakIterator::clone)
-      .def("__deepcopy__", [](const BreakIterator &self, py::dict) { return self.clone(); })
+      .def(
+          "__deepcopy__", [](const BreakIterator &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def("__iter__",
            [](BreakIterator &self) -> BreakIterator & {
              self.first();
@@ -151,8 +152,8 @@ void init_rbbi(py::module &m) {
              return result;
            }),
            py::arg("compiled_rules"), py::arg("rule_length"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
   rbbi.def(
       "adopt_text",
       [](RuleBasedBreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : NULL); },

@@ -14,10 +14,11 @@ void init_locid(py::module &m) {
       .def(py::init<const char *, const char *, const char *, const char *>(), py::arg("language"),
            py::arg("country") = nullptr, py::arg("variant") = nullptr, py::arg("keywords_and_values") = nullptr)
       .def(py::init<const Locale &>(), py::arg("other"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
   loc.def("__copy__", [](const Locale &self) { return self.clone(); })
-      .def("__deepcopy__", [](const Locale &self, py::dict) { return self.clone(); })
+      .def(
+          "__deepcopy__", [](const Locale &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def("__repr__",
            [](const Locale &self) {
              std::stringstream ss;

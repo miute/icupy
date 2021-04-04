@@ -57,7 +57,7 @@ void _UTextVector::clear() {
 void init_utext(py::module &m) {
   // _UTextPtr
   py::class_<_UTextPtr> utp(m, "_UTextPtr");
-  utp.def(py::self != py::self).def(py::self == py::self);
+  utp.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
   utp.def("__repr__", [](const _UTextPtr &self) {
     std::stringstream ss;
     ss << "_UTextPtr(UText(";

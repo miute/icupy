@@ -18,12 +18,12 @@ protected:
 
 void init_strenum(py::module &m) {
   py::class_<StringEnumeration, UObject, PyStringEnumeration> se(m, "StringEnumeration");
-  // se.def(py::self != py::self).def(py::self == py::self);
   se.def("__copy__", &StringEnumeration::clone)
-      .def("__deepcopy__", [](const StringEnumeration &self, py::dict) { return self.clone(); })
       .def(
-          "__eq__", [](const StringEnumeration &self, const StringEnumeration &item) { return self == item; },
-          py::is_operator(), py::arg("item"))
+          "__deepcopy__", [](const StringEnumeration &self, py::dict) { return self.clone(); }, py::arg("memo"))
+      .def(
+          "__eq__", [](const StringEnumeration &self, const StringEnumeration &other) { return self == other; },
+          py::is_operator(), py::arg("other"))
       .def("__iter__",
            [](StringEnumeration &self) -> StringEnumeration & {
              UErrorCode error_code = U_ZERO_ERROR;
@@ -43,8 +43,8 @@ void init_strenum(py::module &m) {
              return result;
            })
       .def(
-          "__ne__", [](const StringEnumeration &self, const StringEnumeration &item) { return self != item; },
-          py::is_operator(), py::arg("item"))
+          "__ne__", [](const StringEnumeration &self, const StringEnumeration &other) { return self != other; },
+          py::is_operator(), py::arg("other"))
       .def("__next__", [](StringEnumeration &self) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.next(NULL, error_code);

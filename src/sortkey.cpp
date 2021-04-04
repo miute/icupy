@@ -14,8 +14,8 @@ void init_sortkey(py::module &m) {
            }),
            py::arg("values"), py::arg("count"))
       .def(py::init<CollationKey &>(), py::arg("other"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
   ck.def(
       "compare_to",
       [](const CollationKey &self, const CollationKey &target) {

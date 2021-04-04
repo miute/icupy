@@ -58,21 +58,22 @@ void init_uniset(py::module &m) {
            }),
            py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(py::init<const UnicodeSet &>(), py::arg("o"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
   us.def(
         "__contains__", [](const UnicodeSet &self, const UnicodeString &item) { return self.contains(item); },
         py::arg("item"))
       .def(
           "__contains__", [](const UnicodeSet &self, UChar32 item) { return self.contains(item); }, py::arg("item"))
       .def("__copy__", &UnicodeSet::clone)
-      .def("__deepcopy__", [](const UnicodeSet &self, py::dict) { return self.clone(); })
       .def(
-          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &item) { return self.toUSet() == item; },
-          py::is_operator(), py::arg("item"))
+          "__deepcopy__", [](const UnicodeSet &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def(
-          "__eq__", [](const UnicodeSet &self, _USetPtr &item) { return self.toUSet() == item; }, py::is_operator(),
-          py::arg("item"))
+          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return self.toUSet() == other; },
+          py::is_operator(), py::arg("other"))
+      .def(
+          "__eq__", [](const UnicodeSet &self, _USetPtr &other) { return self.toUSet() == other; }, py::is_operator(),
+          py::arg("other"))
       .def(
           "__getitem__",
           [](const UnicodeSet &self, int32_t index) {

@@ -182,11 +182,11 @@ void init_stsearch(py::module &m) {
            }),
            py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
       .def(py::init<const StringSearch &>(), py::arg("that"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
-  ss.def("__copy__", &StringSearch::clone).def("__deepcopy__", [](const StringSearch &self, py::dict) {
-    return self.clone();
-  });
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
+  ss.def("__copy__", &StringSearch::clone)
+      .def(
+          "__deepcopy__", [](const StringSearch &self, py::dict) { return self.clone(); }, py::arg("memo"));
   ss.def("clone", &StringSearch::clone);
   ss.def("get_collator", &StringSearch::getCollator, py::return_value_policy::reference);
   ss.def("get_offset", &StringSearch::getOffset);

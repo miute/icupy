@@ -28,9 +28,9 @@ void init_tblcoll(py::module &m) {
       .export_values();
 #endif // U_FORCE_HIDE_DEPRECATED_API
 
-  coll.def("__copy__", &Collator::clone).def("__deepcopy__", [](const Collator &self, py::dict) {
-    return self.clone();
-  });
+  coll.def("__copy__", &Collator::clone)
+      .def(
+          "__deepcopy__", [](const Collator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   coll.def_static(
           "create_instance",
           [](const Locale &loc) {
@@ -138,7 +138,6 @@ void init_tblcoll(py::module &m) {
 
   // icu::RuleBasedCollator
   py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator");
-  rbc.def(py::self == py::self);
   rbc.def(py::init([](const UnicodeString &rules) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
@@ -191,7 +190,11 @@ void init_tblcoll(py::module &m) {
            }),
            py::arg("bin"), py::arg("length"), py::arg("base"));
       */
-      ;
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
+  rbc.def("__copy__", &RuleBasedCollator::clone)
+      .def(
+          "__deepcopy__", [](const RuleBasedCollator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   rbc.def("clone", &RuleBasedCollator::clone);
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
     UErrorCode error_code = U_ZERO_ERROR;

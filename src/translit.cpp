@@ -10,9 +10,9 @@ void init_translit(py::module &m) {
 
   py::class_<Transliterator::Token>(tl, "Token");
 
-  tl.def("__copy__", &Transliterator::clone).def("__deepcopy__", [](const Transliterator &self, py::dict) {
-    return self.clone();
-  });
+  tl.def("__copy__", &Transliterator::clone)
+      .def(
+          "__deepcopy__", [](const Transliterator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   tl.def(
       "adopt_filter",
       [](Transliterator &self, UnicodeFilter *adopted_filter) {

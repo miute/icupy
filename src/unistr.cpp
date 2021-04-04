@@ -70,17 +70,17 @@ void init_unistr(py::module &m) {
       .def(py::init<const UnicodeString &, int32_t>(), py::arg("src"), py::arg("src_start"))
       .def(py::init<const UnicodeString &, int32_t, int32_t>(), py::arg("src"), py::arg("src_start"),
            py::arg("src_length"))
-      .def(py::self != py::self)
-      .def(py::self < py::self)
-      .def(py::self <= py::self)
-      .def(py::self == py::self)
-      .def(py::self > py::self)
-      .def(py::self >= py::self)
-      .def(py::self += py::self)
-      .def(py::self + py::self);
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self < py::self, py::arg("other"))
+      .def(py::self <= py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"))
+      .def(py::self > py::self, py::arg("other"))
+      .def(py::self >= py::self, py::arg("other"))
+      .def(py::self += py::self, py::arg("other"))
+      .def(py::self + py::self, py::arg("other"));
   us.def(
-        "__add__", [](UnicodeString &self, const char16_t *item) { return self + item; }, py::is_operator(),
-        py::arg("item"))
+        "__add__", [](UnicodeString &self, const char16_t *other) { return self + other; }, py::is_operator(),
+        py::arg("other"))
       .def(
           "__contains__",
           [](const UnicodeString &self, const char16_t *item) { return self.indexOf(item, u_strlen(item), 0) >= 0; },
@@ -89,13 +89,14 @@ void init_unistr(py::module &m) {
           "__contains__", [](const UnicodeString &self, const UnicodeString &item) { return self.indexOf(item) >= 0; },
           py::arg("item"))
       .def("__copy__", &UnicodeString::clone)
-      .def("__deepcopy__", [](const UnicodeString &self, py::dict) { return self.clone(); })
       .def(
-          "__eq__", [](const UnicodeString &self, const char16_t *item) { return self == item; }, py::is_operator(),
-          py::arg("item"))
+          "__deepcopy__", [](const UnicodeString &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def(
-          "__ge__", [](const UnicodeString &self, const char16_t *item) { return self >= item; }, py::is_operator(),
-          py::arg("item"))
+          "__eq__", [](const UnicodeString &self, const char16_t *other) { return self == other; }, py::is_operator(),
+          py::arg("other"))
+      .def(
+          "__ge__", [](const UnicodeString &self, const char16_t *other) { return self >= other; }, py::is_operator(),
+          py::arg("other"))
       .def(
           "__getitem__",
           [](const UnicodeString &self, int32_t index) {
@@ -124,24 +125,24 @@ void init_unistr(py::module &m) {
           },
           py::arg("slice"))
       .def(
-          "__gt__", [](const UnicodeString &self, const char16_t *item) { return self > item; }, py::is_operator(),
-          py::arg("item"))
+          "__gt__", [](const UnicodeString &self, const char16_t *other) { return self > other; }, py::is_operator(),
+          py::arg("other"))
       .def(
-          "__iadd__", [](UnicodeString &self, const char16_t *item) { return self += item; }, py::is_operator(),
-          py::arg("item"))
+          "__iadd__", [](UnicodeString &self, const char16_t *other) { return self += other; }, py::is_operator(),
+          py::arg("other"))
       .def(
-          "__iadd__", [](UnicodeString &self, UChar32 item) { return self += item; }, py::is_operator(),
-          py::arg("item"))
+          "__iadd__", [](UnicodeString &self, UChar32 other) { return self += other; }, py::is_operator(),
+          py::arg("other"))
       .def(
-          "__le__", [](const UnicodeString &self, const char16_t *item) { return self <= item; }, py::is_operator(),
-          py::arg("item"))
+          "__le__", [](const UnicodeString &self, const char16_t *other) { return self <= other; }, py::is_operator(),
+          py::arg("other"))
       .def("__len__", [](const UnicodeString &self) { return self.length(); })
       .def(
-          "__lt__", [](const UnicodeString &self, const char16_t *item) { return self < item; }, py::is_operator(),
-          py::arg("item"))
+          "__lt__", [](const UnicodeString &self, const char16_t *other) { return self < other; }, py::is_operator(),
+          py::arg("other"))
       .def(
-          "__ne__", [](const UnicodeString &self, const char16_t *item) { return self != item; }, py::is_operator(),
-          py::arg("item"))
+          "__ne__", [](const UnicodeString &self, const char16_t *other) { return self != other; }, py::is_operator(),
+          py::arg("other"))
       .def("__repr__",
            [](const UnicodeString &self) {
              std::stringstream ss;

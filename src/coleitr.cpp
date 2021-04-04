@@ -12,7 +12,9 @@ void init_coleitr(py::module &m) {
       .value("NULLORDER", CollationElementIterator::NULLORDER)
       .export_values();
 
-  cei.def(py::init<CollationElementIterator &>(), py::arg("other")).def(py::self != py::self).def(py::self == py::self);
+  cei.def(py::init<CollationElementIterator &>(), py::arg("other"))
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
   cei.def("__iter__",
           [](CollationElementIterator &self) -> CollationElementIterator & {
             self.reset();

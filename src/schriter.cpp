@@ -23,7 +23,8 @@ void init_schriter(py::module &m) {
       .export_values();
 
   ci.def("__copy__", &CharacterIterator::clone)
-      .def("__deepcopy__", [](const CharacterIterator &self, py::dict) { return self.clone(); })
+      .def(
+          "__deepcopy__", [](const CharacterIterator &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def("__len__", &CharacterIterator::getLength)
       .def("__str__", [](CharacterIterator &self) {
         UnicodeString dest;
@@ -51,7 +52,10 @@ void init_schriter(py::module &m) {
       .def(py::init<const UCharCharacterIterator &>(), py::arg("that"));
   uci.def("set_text", &UCharCharacterIterator::setText, py::arg("new_text"), py::arg("new_text_length"));
   */
-  uci.def(py::self != py::self).def(py::self == py::self);
+  uci.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+  uci.def("__copy__", &UCharCharacterIterator::clone)
+      .def(
+          "__deepcopy__", [](const UCharCharacterIterator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   uci.def("clone", &UCharCharacterIterator::clone);
   uci.def("current", [](const UCharCharacterIterator &self) -> uint16_t { return self.current(); });
   uci.def("current32", &UCharCharacterIterator::current32);
@@ -83,13 +87,16 @@ void init_schriter(py::module &m) {
       .def(py::init<const UnicodeString &, int32_t, int32_t, int32_t>(), py::arg("text_str"), py::arg("text_begin"),
            py::arg("text_end"), py::arg("text_pos"))
       .def(py::init<const StringCharacterIterator &>(), py::arg("that"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
-  sci.def("__iter__",
-          [](StringCharacterIterator &self) -> StringCharacterIterator & {
-            self.first32();
-            return self;
-          })
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
+  sci.def("__copy__", &StringCharacterIterator::clone)
+      .def(
+          "__deepcopy__", [](const StringCharacterIterator &self, py::dict) { return self.clone(); }, py::arg("memo"))
+      .def("__iter__",
+           [](StringCharacterIterator &self) -> StringCharacterIterator & {
+             self.first32();
+             return self;
+           })
       .def("__next__",
            [](StringCharacterIterator &self) {
              if (self.getIndex() == self.endIndex()) {

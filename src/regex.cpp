@@ -508,11 +508,11 @@ void init_regex(py::module &m) {
   py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
   rp.def(py::init<>())
       .def(py::init<const RegexPattern &>(), py::arg("source"))
-      .def(py::self != py::self)
-      .def(py::self == py::self);
-  rp.def("__copy__", &RegexPattern::clone).def("__deepcopy__", [](const RegexPattern &self, py::dict) {
-    return self.clone();
-  });
+      .def(py::self != py::self, py::arg("other"))
+      .def(py::self == py::self, py::arg("other"));
+  rp.def("__copy__", &RegexPattern::clone)
+      .def(
+          "__deepcopy__", [](const RegexPattern &self, py::dict) { return self.clone(); }, py::arg("memo"));
   rp.def("clone", &RegexPattern::clone);
   rp.def_static(
         "compile",
