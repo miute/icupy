@@ -39,7 +39,8 @@ void init_timezone(py::module &m) {
   tz.def("clone", &TimeZone::clone);
   tz.def_static("count_equivalent_ids", &TimeZone::countEquivalentIDs, py::arg("id_"))
       .def_static(
-          "count_equivalent_ids", [](const char *id) { return TimeZone::countEquivalentIDs(id); }, py::arg("id_"));
+          // const char16_t *id -> const UnicodeString &id
+          "count_equivalent_ids", [](const char16_t *id) { return TimeZone::countEquivalentIDs(id); }, py::arg("id_"));
   tz.def_static("create_default", &TimeZone::createDefault);
   tz.def_static("create_enumeration", py::overload_cast<>(&TimeZone::createEnumeration))
       .def_static("create_enumeration", py::overload_cast<const char *>(&TimeZone::createEnumeration),
@@ -48,7 +49,8 @@ void init_timezone(py::module &m) {
                   py::arg("raw_offset"));
   tz.def_static("create_time_zone", &TimeZone::createTimeZone, py::arg("id_"))
       .def_static(
-          "create_time_zone", [](const char *id) { return TimeZone::createTimeZone(id); }, py::arg("id_"));
+          // const char16_t *id -> const UnicodeString &id
+          "create_time_zone", [](const char16_t *id) { return TimeZone::createTimeZone(id); }, py::arg("id_"));
   tz.def_static(
       "create_time_zone_id_enumeration",
       [](USystemTimeZoneType zone_type, const char *region, const std::optional<int32_t> &raw_offset) {
@@ -77,8 +79,9 @@ void init_timezone(py::module &m) {
         },
         py::arg("id_"), py::arg("canonical_id"))
       .def_static(
+          // const char16_t *id -> const UnicodeString &id
           "get_canonical_id",
-          [](const char *id, UnicodeString &canonical_id) {
+          [](const char16_t *id, UnicodeString &canonical_id) {
             UErrorCode error_code = U_ZERO_ERROR;
             UBool is_system_id;
             auto &result = TimeZone::getCanonicalID(id, canonical_id, is_system_id, error_code);
@@ -91,6 +94,7 @@ void init_timezone(py::module &m) {
   tz.def("get_display_name", py::overload_cast<const Locale &, UnicodeString &>(&TimeZone::getDisplayName, py::const_),
          py::arg("locale"), py::arg("result"))
       .def(
+          // const char *locale -> const Locale &locale
           "get_display_name",
           [](const TimeZone &self, const char *locale, UnicodeString &result) {
             return self.getDisplayName(locale, result);
@@ -101,6 +105,7 @@ void init_timezone(py::module &m) {
                                                                                              py::const_),
            py::arg("in_daylight"), py::arg("style"), py::arg("locale"), py::arg("result"))
       .def(
+          // const char *locale -> const Locale &locale
           "get_display_name",
           [](const TimeZone &self, UBool in_daylight, TimeZone::EDisplayType style, const char *locale,
              UnicodeString &result) { return self.getDisplayName(in_daylight, style, locale, result); },
@@ -113,7 +118,8 @@ void init_timezone(py::module &m) {
   tz.def("get_dst_savings", &TimeZone::getDSTSavings);
   tz.def_static("get_equivalent_id", &TimeZone::getEquivalentID, py::arg("id_"), py::arg("index"))
       .def_static(
-          "get_equivalent_id", [](const char *id, int32_t index) { return TimeZone::getEquivalentID(id, index); },
+          // const char16_t *id -> const UnicodeString &id
+          "get_equivalent_id", [](const char16_t *id, int32_t index) { return TimeZone::getEquivalentID(id, index); },
           py::arg("id_"), py::arg("index"));
   tz.def_static("get_gmt", &TimeZone::getGMT, py::return_value_policy::reference);
   tz.def("get_id", &TimeZone::getID, py::arg("id_"));
@@ -130,8 +136,9 @@ void init_timezone(py::module &m) {
         },
         py::arg("winid"), py::arg("region"), py::arg("id_"))
       .def_static(
+          // const char16_t *winid -> const UnicodeString &winid
           "get_id_for_windows_id",
-          [](const char *winid, const char *region, UnicodeString &id) -> UnicodeString & {
+          [](const char16_t *winid, const char *region, UnicodeString &id) -> UnicodeString & {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = TimeZone::getIDForWindowsID(winid, region, id, error_code);
             if (U_FAILURE(error_code)) {
@@ -168,8 +175,9 @@ void init_timezone(py::module &m) {
         },
         py::arg("id_"))
       .def_static(
+          // const char16_t *id -> const UnicodeString &id
           "get_region",
-          [](const char *id) {
+          [](const char16_t *id) {
             UErrorCode error_code = U_ZERO_ERROR;
             std::string result(8, '\0');
             auto length = TimeZone::getRegion(id, result.data(), (int32_t)result.size(), error_code);
@@ -204,8 +212,9 @@ void init_timezone(py::module &m) {
         },
         py::arg("id_"), py::arg("winid"))
       .def_static(
+          // const char16_t *id -> const UnicodeString &id
           "get_windows_id",
-          [](const char *id, UnicodeString &winid) -> UnicodeString & {
+          [](const char16_t *id, UnicodeString &winid) -> UnicodeString & {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = TimeZone::getWindowsID(id, winid, error_code);
             if (U_FAILURE(error_code)) {
@@ -219,7 +228,8 @@ void init_timezone(py::module &m) {
   tz.def_static("set_default", &TimeZone::setDefault, py::arg("zone"));
   tz.def("set_id", &TimeZone::setID, py::arg("id_"))
       .def(
-          "set_id", [](TimeZone &self, const char *id) { self.setID(id); }, py::arg("id_"));
+          // const char16_t *id -> const UnicodeString &id
+          "set_id", [](TimeZone &self, const char16_t *id) { self.setID(id); }, py::arg("id_"));
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
   tz.def("use_daylight_time", &TimeZone::useDaylightTime);
 
