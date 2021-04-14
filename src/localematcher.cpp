@@ -40,6 +40,18 @@ void init_localematcher(py::module &m) {
         },
         py::return_value_policy::reference, py::arg("desired_locale"))
       .def(
+          // const char *desired_locale -> const Locale &desired_locale
+          "get_best_match",
+          [](const LocaleMatcher &self, const char *desired_locale) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = self.getBestMatch(desired_locale, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::return_value_policy::reference, py::arg("desired_locale"))
+      .def(
           "get_best_match",
           [](const LocaleMatcher &self, const std::vector<Locale> &desired_locales) {
             UErrorCode error_code = U_ZERO_ERROR;
@@ -91,23 +103,65 @@ void init_localematcher(py::module &m) {
 #ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lm.def(
-      "is_match",
-      [](const LocaleMatcher &self, const Locale &desired, const Locale &supported) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = self.isMatch(desired, supported, error_code);
-        if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
-        }
-        return result;
-      },
-      py::arg("desired"), py::arg("supported"));
+        "is_match",
+        [](const LocaleMatcher &self, const Locale &desired, const Locale &supported) {
+          UErrorCode error_code = U_ZERO_ERROR;
+          auto result = self.isMatch(desired, supported, error_code);
+          if (U_FAILURE(error_code)) {
+            throw ICUException(error_code);
+          }
+          return result;
+        },
+        py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *desired -> const Locale &desired
+          "is_match",
+          [](const LocaleMatcher &self, const char *desired, const Locale &supported) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = self.isMatch(desired, supported, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *supported -> const Locale &supported
+          "is_match",
+          [](const LocaleMatcher &self, const Locale &desired, const char *supported) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = self.isMatch(desired, supported, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *desired -> const Locale &desired
+          // const char *supported -> const Locale &supported
+          "is_match",
+          [](const LocaleMatcher &self, const char *desired, const char *supported) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = self.isMatch(desired, supported, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("desired"), py::arg("supported"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 #endif // U_HIDE_DRAFT_API
 
   // icu::LocaleMatcher::Builder
   py::class_<Builder, UMemory> lmb(lm, "Builder");
   lmb.def(py::init<>());
-  lmb.def("add_supported_locale", &Builder::addSupportedLocale, py::arg("locale"));
+  lmb.def("add_supported_locale", &Builder::addSupportedLocale, py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "add_supported_locale",
+          [](Builder &self, const char *locale) -> Builder & { return self.addSupportedLocale(locale); },
+          py::arg("locale"));
   lmb.def("build", [](const Builder &self) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.build(error_code);
@@ -137,7 +191,29 @@ void init_localematcher(py::module &m) {
 
 #ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
-  lmb.def("set_max_distance", &Builder::setMaxDistance, py::arg("desired"), py::arg("supported"));
+  lmb.def("set_max_distance", &Builder::setMaxDistance, py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *desired -> const Locale &desired
+          "set_max_distance",
+          [](Builder &self, const char *desired, const Locale &supported) -> Builder & {
+            return self.setMaxDistance(desired, supported);
+          },
+          py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *supported -> const Locale &supported
+          "set_max_distance",
+          [](Builder &self, const Locale &desired, const char *supported) -> Builder & {
+            return self.setMaxDistance(desired, supported);
+          },
+          py::arg("desired"), py::arg("supported"))
+      .def(
+          // const char *desired -> const Locale &desired
+          // const char *supported -> const Locale &supported
+          "set_max_distance",
+          [](Builder &self, const char *desired, const char *supported) -> Builder & {
+            return self.setMaxDistance(desired, supported);
+          },
+          py::arg("desired"), py::arg("supported"));
   lmb.def("set_no_default_locale", &Builder::setNoDefaultLocale);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 #endif // U_HIDE_DRAFT_API

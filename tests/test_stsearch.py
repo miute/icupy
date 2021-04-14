@@ -85,6 +85,9 @@ def test_api():
     it.set_pattern(pattern2)
     assert it.get_pattern() == pattern2
 
+    it.set_pattern("abc")
+    assert it.get_pattern() == "abc"
+
     result = it.get_text()
     assert isinstance(result, UnicodeString)
     assert result == text
@@ -186,6 +189,24 @@ def test_string_search():
     assert test1b.get_pattern() == pattern
     assert test1b.get_text() == text1
 
+    test1c = StringSearch("fox", text1, Locale.get_us(), breakiter)
+    assert test1c.get_break_iterator() == breakiter
+    assert test1c.get_collator()
+    assert test1c.get_pattern() == pattern
+    assert test1c.get_text() == text1
+
+    test1d = StringSearch(pattern, text1, "en_US", breakiter)
+    assert test1d.get_break_iterator() == breakiter
+    assert test1d.get_collator()
+    assert test1d.get_pattern() == pattern
+    assert test1d.get_text() == text1
+
+    test1e = StringSearch("fox", text1, "en_US", breakiter)
+    assert test1e.get_break_iterator() == breakiter
+    assert test1e.get_collator()
+    assert test1e.get_pattern() == pattern
+    assert test1e.get_text() == text1
+
     # [2]
     # StringSearch::StringSearch(const UnicodeString &pattern,
     #                            const UnicodeString &text,
@@ -203,6 +224,12 @@ def test_string_search():
     assert test2b.get_collator() == coll
     assert test2b.get_pattern() == pattern
     assert test2b.get_text() == text1
+
+    test2c = StringSearch("fox", text1, coll, breakiter)
+    assert test2c.get_break_iterator() == breakiter
+    assert test2c.get_collator() == coll
+    assert test2c.get_pattern() == pattern
+    assert test2c.get_text() == text1
 
     # [3]
     # StringSearch::StringSearch(const UnicodeString &pattern,
@@ -222,6 +249,24 @@ def test_string_search():
     assert test3b.get_pattern() == pattern
     assert test3b.get_text() == text1
 
+    test3c = StringSearch("fox", text2, Locale.get_us(), breakiter)
+    assert test3c.get_break_iterator() == breakiter
+    assert test3c.get_collator()
+    assert test3c.get_pattern() == pattern
+    assert test3c.get_text() == text1
+
+    test3d = StringSearch(pattern, text2, "en_US", breakiter)
+    assert test3d.get_break_iterator() == breakiter
+    assert test3d.get_collator()
+    assert test3d.get_pattern() == pattern
+    assert test3d.get_text() == text1
+
+    test3e = StringSearch("fox", text2, "en_US", breakiter)
+    assert test3e.get_break_iterator() == breakiter
+    assert test3e.get_collator()
+    assert test3e.get_pattern() == pattern
+    assert test3e.get_text() == text1
+
     # [4]
     # StringSearch::StringSearch(const UnicodeString &pattern,
     #                            CharacterIterator &text,
@@ -239,6 +284,12 @@ def test_string_search():
     assert test4b.get_collator() == coll
     assert test4b.get_pattern() == pattern
     assert test4b.get_text() == text1
+
+    test4c = StringSearch("fox", text2, coll, breakiter)
+    assert test4c.get_break_iterator() == breakiter
+    assert test4c.get_collator() == coll
+    assert test4c.get_pattern() == pattern
+    assert test4c.get_text() == text1
 
     # [5]
     # StringSearch::StringSearch(const StringSearch &that)

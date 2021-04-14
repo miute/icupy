@@ -14,7 +14,7 @@ def test_builder():
 
     matcher = (LocaleMatcher.Builder()
                .add_supported_locale(locales[0])
-               .add_supported_locale(locales[1])
+               .add_supported_locale("en_GB")
                .add_supported_locale(locales[2])
                .build())
     assert isinstance(matcher, LocaleMatcher)
@@ -25,6 +25,7 @@ def test_builder():
     #       UErrorCode &errorCode
     # )
     assert matcher.get_best_match(Locale("en_US")) == Locale("en")
+    assert matcher.get_best_match("en_US") == Locale("en")
 
     # [2]
     # Builder &LocaleMatcher::Builder::setSupportedLocales(
@@ -35,6 +36,7 @@ def test_builder():
                .set_default_locale(Locale.get_german())
                .build())
     assert matcher.get_best_match(Locale("ja_JP")) == Locale("de")
+    assert matcher.get_best_match("ja_JP") == Locale("de")
 
     supported = [Locale("fr"), Locale("de-CH"), Locale("it")]
     desired = [Locale("fr-CH"), Locale("de-CH"), Locale("it")]
@@ -56,6 +58,7 @@ def test_builder():
                .set_favor_subtag(ULocMatchFavorSubtag.ULOCMATCH_FAVOR_SCRIPT)
                .build())
     assert matcher.get_best_match(Locale("ja")) == Locale("fr")
+    assert matcher.get_best_match("ja") == Locale("fr")
 
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales_from_list_string(
@@ -96,6 +99,21 @@ def test_builder_set_max_distance():
     assert not matcher.is_match(Locale.get_chinese(),
                                 Locale.get_traditional_chinese())
 
+    matcher = (LocaleMatcher.Builder()
+               .set_max_distance("de-AT", Locale("de"))
+               .build())
+    assert not matcher.is_match("da", Locale("no"))
+
+    matcher = (LocaleMatcher.Builder()
+               .set_max_distance(Locale("de-AT"), "de")
+               .build())
+    assert matcher.is_match(Locale("de-LU"), "de")
+
+    matcher = (LocaleMatcher.Builder()
+               .set_max_distance("de-AT", "de")
+               .build())
+    assert not matcher.is_match("zh", "zh_TW")
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_builder_set_no_default_locale():
@@ -105,7 +123,9 @@ def test_builder_set_no_default_locale():
                .set_no_default_locale()
                .build())
     assert matcher.get_best_match(Locale("en_GB")) == Locale("en_GB")
+    assert matcher.get_best_match("en_GB") == Locale("en_GB")
     assert matcher.get_best_match(Locale("ja_JP")) is None
+    assert matcher.get_best_match("ja_JP") is None
 
 
 def test_result():

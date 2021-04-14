@@ -101,6 +101,16 @@ def test_append_replacement():
     assert matcher.find()
     assert matcher.find()
 
+    dest1.remove()
+    result = matcher.append_replacement(dest1, "abc")
+    assert isinstance(result, RegexMatcher)
+    assert result == matcher
+    assert dest1 == "foo abc"
+
+    matcher.reset()
+    assert matcher.find()
+    assert matcher.find()
+
     # [2]
     # RegexMatcher &RegexMatcher::appendReplacement(
     #       UText *dest,
@@ -337,6 +347,9 @@ def test_regex_matcher():
     pattern1 = test1.pattern()
     assert pattern1.pattern() == s
 
+    test1a = RegexMatcher(s, URegexpFlag.UREGEX_CASE_INSENSITIVE)
+    assert test1a.pattern().pattern() == s
+
     # [2]
     # RegexMatcher::RegexMatcher(UText *regexp,
     #                            uint32_t flags,
@@ -360,6 +373,13 @@ def test_regex_matcher():
     pattern3 = test3.pattern()
     assert pattern3.pattern() == s
     assert test3.input() == "foo bar baz"
+
+    test3a = RegexMatcher(
+        s,
+        src3,
+        URegexpFlag.UREGEX_CASE_INSENSITIVE)
+    assert test3a.pattern().pattern() == s
+    assert test3a.input() == "foo bar baz"
 
     # [4]
     # RegexMatcher::RegexMatcher(UText *regexp,
@@ -436,6 +456,10 @@ def test_replace_all():
     assert isinstance(result, UnicodeString)
     assert result == ".xyz..xyz.."
 
+    result = matcher.replace_all("xyz")
+    assert isinstance(result, UnicodeString)
+    assert result == ".xyz..xyz.."
+
     # [2]
     # UText *RegexMatcher::replaceAll(UText *replacement,
     #                                 UText *dest,
@@ -465,6 +489,10 @@ def test_replace_first():
     #       UErrorCode &status
     # )
     result = matcher.replace_first(UnicodeString("xyz"))
+    assert isinstance(result, UnicodeString)
+    assert result == ".xyz..abc.."
+
+    result = matcher.replace_first("xyz")
     assert isinstance(result, UnicodeString)
     assert result == ".xyz..abc.."
 

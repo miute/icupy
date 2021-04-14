@@ -34,6 +34,10 @@ def test_append():
     # "foo foo foo foo " + "foo foo foo foo "
     assert test1 == "foo foo foo foo foo foo foo foo "
 
+    test1 = UnicodeString()
+    test1.append("a").append("\U0001f338").append("a\U0001f338b")
+    assert test1 == "a\U0001f338a\U0001f338b"
+
     # [4]
     # UnicodeString &UnicodeString::append(const UnicodeString &srcText,
     #                                      int32_t srcStart,
@@ -73,6 +77,7 @@ def test_case_compare():
     # int8_t UnicodeString::caseCompare(const UnicodeString &text,
     #                                   uint32_t options)
     assert test1.case_compare(test2, UnicodeString.FOLD_CASE_DEFAULT) == 0
+    assert test1.case_compare(s, UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [2]
     # int8_t UnicodeString::caseCompare(ConstChar16Ptr srcChars,
@@ -112,10 +117,10 @@ def test_case_compare():
     #                                   int32_t srcLength,
     #                                   uint32_t options)
     assert test1.case_compare(0,
-                              -1,
+                              len(test1),
                               test2,
                               0,
-                              -1,
+                              len(test2),
                               UnicodeString.FOLD_CASE_DEFAULT) == 0
 
     # [6]
@@ -137,6 +142,12 @@ def test_case_compare():
     assert test1.case_compare_between(0,
                                       len(test2),
                                       test2,
+                                      0,
+                                      len(test1),
+                                      UnicodeString.FOLD_CASE_DEFAULT) == 0
+    assert test1.case_compare_between(0,
+                                      len(test2),
+                                      str(test2),
                                       0,
                                       len(test1),
                                       UnicodeString.FOLD_CASE_DEFAULT) == 0
@@ -175,10 +186,14 @@ def test_char_at():
     assert not test1.has_more_char32_than(0, INT32_MAX, 3)
 
     test1.set_char_at(
-        0, ord("A")).set_char_at(
-        3, ord("B")).set_char_at(
-        1, 0xd83c).set_char_at(
-        2, 0xdf63)
+        0, ord("A")
+    ).set_char_at(
+        3, ord("B")
+    ).set_char_at(
+        1, 0xd83c
+    ).set_char_at(
+        2, 0xdf63
+    )
     assert test1 == "A\U0001f363B"
 
 
@@ -207,6 +222,8 @@ def test_compare():
     # int8_t UnicodeString::compare(const UnicodeString &text)
     assert test1.compare(test2) == 0
     assert test1.compare(test3) < 0
+    assert test1.compare("foo bar") == 0
+    assert test1.compare("foo bar baz") < 0
 
     # [2]
     # int8_t UnicodeString::compare(ConstChar16Ptr srcChars,
@@ -253,6 +270,8 @@ def test_compare():
     #                                      int32_t srcLimit)
     assert test1.compare_between(0, len(test1), test2, 0, len(test2)) == 0
     assert test1.compare_between(0, len(test1), test3, 0, len(test3)) < 0
+    assert test1.compare_between(0, len(test1), str(test2), 0, len(test2)) == 0
+    assert test1.compare_between(0, len(test1), str(test3), 0, len(test3)) < 0
 
 
 def test_compare_code_point_order():
@@ -263,6 +282,7 @@ def test_compare_code_point_order():
     # [1]
     # int8_t UnicodeString::compareCodePointOrder(const UnicodeString &text)
     assert test1.compare_code_point_order(test2) == 0
+    assert test1.compare_code_point_order(s) == 0
 
     # [2]
     # int8_t UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
@@ -313,6 +333,11 @@ def test_compare_code_point_order():
                                                   test2,
                                                   0,
                                                   len(test1)) == 0
+    assert test1.compare_code_point_order_between(0,
+                                                  len(test2),
+                                                  str(test2),
+                                                  0,
+                                                  len(test1)) == 0
 
 
 def test_copy():
@@ -346,6 +371,8 @@ def test_ends_with():
     # UBool UnicodeString::endsWith(const UnicodeString &text)
     assert not test1.ends_with(test2)
     assert test1.ends_with(test3)
+    assert not test1.ends_with("foo")
+    assert test1.ends_with("bar")
 
     # [4]
     # UBool UnicodeString::endsWith(ConstChar16Ptr srcChars,
@@ -525,9 +552,21 @@ def test_find_and_replace():
     # )
     test1 = UnicodeString("abc")
     test1.find_and_replace(
-        UnicodeString("b"), UnicodeString("B")).find_and_replace(
-        UnicodeString("c"), UnicodeString("C")).find_and_replace(
+        UnicodeString("b"), UnicodeString("B")
+    ).find_and_replace(
+        UnicodeString("c"), UnicodeString("C")
+    ).find_and_replace(
         UnicodeString("a"), UnicodeString("A")
+    )
+    assert test1 == "ABC"
+
+    test1 = UnicodeString("abc")
+    test1.find_and_replace(
+        "b", UnicodeString("B")
+    ).find_and_replace(
+        UnicodeString("c"), "C"
+    ).find_and_replace(
+        "a", "A"
     )
     assert test1 == "ABC"
 
@@ -540,9 +579,21 @@ def test_find_and_replace():
     # )
     test2 = UnicodeString("foo bar baz")
     test2.find_and_replace(
-        0, 3, UnicodeString("bar"), UnicodeString("BAR")).find_and_replace(
-        8, 11, UnicodeString("baz"), UnicodeString("BAZ")).find_and_replace(
+        0, 3, UnicodeString("bar"), UnicodeString("BAR")
+    ).find_and_replace(
+        8, 11, UnicodeString("baz"), UnicodeString("BAZ")
+    ).find_and_replace(
         0, 3, UnicodeString("foo"), UnicodeString("FOO")
+    )
+    assert test2 == "FOO bar BAZ"
+
+    test2 = UnicodeString("foo bar baz")
+    test2.find_and_replace(
+        0, 3, "bar", UnicodeString("BAR")
+    ).find_and_replace(
+        8, 11, UnicodeString("baz"), "BAZ"
+    ).find_and_replace(
+        0, 3, "foo", "FOO"
     )
     assert test2 == "FOO bar BAZ"
 
@@ -564,6 +615,16 @@ def test_find_and_replace():
         8, 11, UnicodeString("baz"), 0, 1, UnicodeString("BAZ"), 0, 1
     ).find_and_replace(
         0, 3, UnicodeString("foo"), 0, 1, UnicodeString("FOO"), 0, 1
+    )
+    assert test3 == "Foo bar Baz"
+
+    test3 = UnicodeString("foo bar baz")
+    test3.find_and_replace(
+        0, 3, "bar", 0, 1, UnicodeString("BAR"), 0, 1
+    ).find_and_replace(
+        8, 11, UnicodeString("baz"), 0, 1, "BAZ", 0, 1
+    ).find_and_replace(
+        0, 3, "foo", 0, 1, "FOO", 0, 1
     )
     assert test3 == "Foo bar Baz"
 
@@ -719,12 +780,15 @@ def test_index_of():
     # [7]
     # int32_t UnicodeString::indexOf(const UnicodeString &text)
     assert test1.index_of(test2) == 6
+    assert test1.index_of("ipsum") == 6
 
     # [8]
     # int32_t UnicodeString::indexOf(const UnicodeString &text,
     #                                int32_t start)
     assert test1.index_of(test2, 6) == 6
     assert test1.index_of(test2, 7) == -1
+    assert test1.index_of("ipsum", 6) == 6
+    assert test1.index_of("ipsum", 7) == -1
 
     # [9]
     # int32_t UnicodeString::indexOf(const UnicodeString &text,
@@ -787,9 +851,21 @@ def test_insert():
     #                                      const UnicodeString &srcText)
     test1 = UnicodeString()
     test1.insert(
-        0, UnicodeString("baz")).insert(
-        0, UnicodeString("foo")).insert(
+        0, UnicodeString("baz")
+    ).insert(
+        0, UnicodeString("foo")
+    ).insert(
         3, UnicodeString(" bar ")
+    )
+    assert test1 == "foo bar baz"
+
+    test1 = UnicodeString()
+    test1.insert(
+        0, "baz"
+    ).insert(
+        0, "foo"
+    ).insert(
+        3, " bar "
     )
     assert test1 == "foo bar baz"
 
@@ -820,9 +896,12 @@ def test_insert():
     #                                      int32_t srcLength)
     test1 = UnicodeString()
     test1.insert(
-        0, "baz qux", 3).insert(
-        0, "foo bar", 4).insert(
-        4, "bar baz", 4)
+        0, "baz qux", 3
+    ).insert(
+        0, "foo bar", 4
+    ).insert(
+        4, "bar baz", 4
+    )
     assert test1 == "foo bar baz"
 
 
@@ -880,12 +959,15 @@ def test_last_index_of():
     # [7]
     # int32_t UnicodeString::lastIndexOf(const UnicodeString &text)
     assert test1.last_index_of(test2) == 6
+    assert test1.last_index_of("ipsum") == 6
 
     # [8]
     # int32_t UnicodeString::lastIndexOf(const UnicodeString &text,
     #                                    int32_t start)
     assert test1.last_index_of(test2, 6) == 6
     assert test1.last_index_of(test2, 7) == -1
+    assert test1.last_index_of("ipsum", 6) == 6
+    assert test1.last_index_of("ipsum", 7) == -1
 
     # [9]
     # int32_t UnicodeString::lastIndexOf(const UnicodeString &text,
@@ -1082,9 +1164,12 @@ def test_replace():
     #                                       char16_t srcChar)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
-        4, 1, ord("B")).replace(
-        8, 1, ord("B")).replace(
-        0, 1, ord("F"))
+        4, 1, ord("B")
+    ).replace(
+        8, 1, ord("B")
+    ).replace(
+        0, 1, ord("F")
+    )
     assert test1 == "Foo Bar Baz"
 
     # [2]
@@ -1095,9 +1180,12 @@ def test_replace():
     #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
-        4, 3, "BAR", 0, -1).replace(
-        8, 3, "BAZ", 0, -1).replace(
-        0, 3, "FOO", 0, -1)
+        4, 3, "BAR", 0, -1
+    ).replace(
+        8, 3, "BAZ", 0, -1
+    ).replace(
+        0, 3, "FOO", 0, -1
+    )
     assert test1 == "FOO BAR BAZ"
 
     # [3]
@@ -1106,9 +1194,22 @@ def test_replace():
     #                                       const UnicodeString &srcText)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
-        4, 3, UnicodeString("BAR")).replace(
-        8, 3, UnicodeString("BAZ")).replace(
-        0, 3, UnicodeString("FOO"))
+        4, 3, UnicodeString("BAR")
+    ).replace(
+        8, 3, UnicodeString("BAZ")
+    ).replace(
+        0, 3, UnicodeString("FOO")
+    )
+    assert test1 == "FOO BAR BAZ"
+
+    test1 = UnicodeString("foo bar baz")
+    test1.replace(
+        4, 3, "BAR"
+    ).replace(
+        8, 3, "BAZ"
+    ).replace(
+        0, 3, "FOO"
+    )
     assert test1 == "FOO BAR BAZ"
 
     # [4]
@@ -1119,9 +1220,12 @@ def test_replace():
     #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
-        4, 3, UnicodeString("BAR"), 0, 3).replace(
-        8, 3, UnicodeString("BAZ"), 0, 3).replace(
-        0, 3, UnicodeString("FOO"), 0, 3)
+        4, 3, UnicodeString("BAR"), 0, 3
+    ).replace(
+        8, 3, UnicodeString("BAZ"), 0, 3
+    ).replace(
+        0, 3, UnicodeString("FOO"), 0, 3
+    )
     assert test1 == "FOO BAR BAZ"
 
     # [5]
@@ -1131,9 +1235,12 @@ def test_replace():
     #                                       int32_t srcLength)
     test1 = UnicodeString("foo bar baz")
     test1.replace(
-        4, 3, "BAR", -1).replace(
-        8, 3, "BAZ", -1).replace(
-        0, 3, "FOO", -1)
+        4, 3, "BAR", -1
+    ).replace(
+        8, 3, "BAZ", -1
+    ).replace(
+        0, 3, "FOO", -1
+    )
     assert test1 == "FOO BAR BAZ"
 
     # [6]
@@ -1154,9 +1261,22 @@ def test_replace_between():
     # )
     test1 = UnicodeString("foo bar baz")
     test1.replace_between(
-        4, 7, UnicodeString("BAR")).replace_between(
-        8, 11, UnicodeString("BAZ")).replace_between(
-        0, 3, UnicodeString("FOO"))
+        4, 7, UnicodeString("BAR")
+    ).replace_between(
+        8, 11, UnicodeString("BAZ")
+    ).replace_between(
+        0, 3, UnicodeString("FOO")
+    )
+    assert test1 == "FOO BAR BAZ"
+
+    test1 = UnicodeString("foo bar baz")
+    test1.replace_between(
+        4, 7, "BAR"
+    ).replace_between(
+        8, 11, "BAZ"
+    ).replace_between(
+        0, 3, "FOO"
+    )
     assert test1 == "FOO BAR BAZ"
 
     # [2]
@@ -1169,9 +1289,22 @@ def test_replace_between():
     # )
     test1 = UnicodeString("foo bar baz")
     test1.replace_between(
-        4, 7, UnicodeString("BAR"), 0, 3).replace_between(
-        8, 11, UnicodeString("BAZ"), 0, 3).replace_between(
-        0, 3, UnicodeString("FOO"), 0, 3)
+        4, 7, UnicodeString("BAR"), 0, 3
+    ).replace_between(
+        8, 11, UnicodeString("BAZ"), 0, 3
+    ).replace_between(
+        0, 3, UnicodeString("FOO"), 0, 3
+    )
+    assert test1 == "FOO BAR BAZ"
+
+    test1 = UnicodeString("foo bar baz")
+    test1.replace_between(
+        4, 7, "BAR", 0, 3
+    ).replace_between(
+        8, 11, "BAZ", 0, 3
+    ).replace_between(
+        0, 3, "FOO", 0, 3
+    )
     assert test1 == "FOO BAR BAZ"
 
 
@@ -1219,6 +1352,10 @@ def test_set_to():
     test1 = UnicodeString("a\U0001f338b", -1, US_INV)
     test2 = UnicodeString("foo bar baz")
     test1.set_to(test2)
+    assert test1 == "foo bar baz"
+
+    test1 = UnicodeString("a\U0001f338b", -1, US_INV)
+    test1.set_to("foo bar baz")
     assert test1 == "foo bar baz"
 
     # [5]
@@ -1270,6 +1407,8 @@ def test_starts_with():
     # UBool UnicodeString::startsWith(const UnicodeString &text)
     assert test1.starts_with(test2)
     assert not test1.starts_with(test3)
+    assert test1.starts_with("foo")
+    assert not test1.starts_with("bar")
 
     # [4]
     # UBool UnicodeString::startsWith(ConstChar16Ptr srcChars,
@@ -1312,9 +1451,17 @@ def test_to_lower():
         test1.to_lower(loc)
         assert test1 == '\x69'  # U+0069: Latin Small Letter I
 
+        test1 = UnicodeString("\x49")  # U+0049: Latin Capital Letter I
+        test1.to_lower("en_US")
+        assert test1 == '\x69'  # U+0069: Latin Small Letter I
+
         loc = Locale("tr")
         test1 = UnicodeString("\x49")  # U+0049: Latin Capital Letter I
         test1.to_lower(loc)
+        assert test1 == '\u0131'  # U+0131: Latin Small Letter Dotless I
+
+        test1 = UnicodeString("\x49")  # U+0049: Latin Capital Letter I
+        test1.to_lower("tr")
         assert test1 == '\u0131'  # U+0131: Latin Small Letter Dotless I
 
         # [2]
@@ -1344,7 +1491,15 @@ def test_to_title():
     assert test1 == UnicodeString("«IJs»")
 
     test1 = UnicodeString(src)
+    test1.to_title(None, "nl-BE")
+    assert test1 == UnicodeString("«IJs»")
+
+    test1 = UnicodeString(src)
     test1.to_title(None, Locale("tr-DE"))
+    assert test1 == UnicodeString("«İjs»")
+
+    test1 = UnicodeString(src)
+    test1.to_title(None, "tr-DE")
     assert test1 == UnicodeString("«İjs»")
 
     # [3]
@@ -1361,7 +1516,21 @@ def test_to_title():
 
     test1 = UnicodeString(src)
     test1.to_title(None,
+                   "",
+                   UnicodeString.TITLECASE_WHOLE_STRING |
+                   UnicodeString.TITLECASE_NO_LOWERCASE)
+    assert test1 == UnicodeString(" John. Smith")
+
+    test1 = UnicodeString(src)
+    test1.to_title(None,
                    Locale(""),
+                   UnicodeString.TITLECASE_WHOLE_STRING |
+                   UnicodeString.TITLECASE_NO_BREAK_ADJUSTMENT)
+    assert test1 == UnicodeString(" john. smith")
+
+    test1 = UnicodeString(src)
+    test1.to_title(None,
+                   "",
                    UnicodeString.TITLECASE_WHOLE_STRING |
                    UnicodeString.TITLECASE_NO_BREAK_ADJUSTMENT)
     assert test1 == UnicodeString(" john. smith")
@@ -1379,8 +1548,16 @@ def test_to_upper():
         test1.to_upper(loc)
         assert test1 == '\x49'  # U+0049: Latin Capital Letter I
 
+        test1 = UnicodeString("\x69")  # U+0069: Latin Small Letter I
+        test1.to_upper("en_US")
+        assert test1 == '\x49'  # U+0049: Latin Capital Letter I
+
         test1 = UnicodeString("\u0131")  # U+0131: Latin Small Letter Dotless I
         test1.to_upper(loc)
+        assert test1 == '\x49'  # U+0049: Latin Capital Letter I
+
+        test1 = UnicodeString("\u0131")  # U+0131: Latin Small Letter Dotless I
+        test1.to_upper("en_US")
         assert test1 == '\x49'  # U+0049: Latin Capital Letter I
 
         loc = Locale("tr")
@@ -1388,8 +1565,16 @@ def test_to_upper():
         test1.to_upper(loc)
         assert test1 == '\u0130'  # U+0130: Latin Capital Letter I with Dot Above
 
+        test1 = UnicodeString("\x69")  # U+0069: Latin Small Letter I
+        test1.to_upper("tr")
+        assert test1 == '\u0130'  # U+0130: Latin Capital Letter I with Dot Above
+
         test1 = UnicodeString("\u0131")  # U+0131: Latin Small Letter Dotless I
         test1.to_upper(loc)
+        assert test1 == '\x49'  # U+0049: Latin Capital Letter I
+
+        test1 = UnicodeString("\u0131")  # U+0131: Latin Small Letter Dotless I
+        test1.to_upper("tr")
         assert test1 == '\x49'  # U+0049: Latin Capital Letter I
 
         # [2]

@@ -56,6 +56,9 @@ def test_api():
     loc2 = LocaleBuilder().set_locale(loc).build()
     assert loc2 == loc
 
+    loc2 = LocaleBuilder().set_locale("de_DE@collation=phonebook").build()
+    assert loc2 == loc
+
     loc = bld.clear_extensions().build()
     assert loc.to_language_tag() == "de-DE"
 

@@ -23,6 +23,9 @@ def test_add():
     test1.add(UnicodeString("ab")).add(0xdf).add(0x30, 0x39)
     assert test1.size() == 12  # [0-9\u00DF{ab}]
 
+    test1.add("cd").add("ef")
+    assert test1.size() == 14  # [0-9ab\u00DF{ab}{cd}{ef}]
+
 
 def test_add_all():
     test1 = UnicodeSet()
@@ -37,6 +40,9 @@ def test_add_all():
     # UnicodeSet &UnicodeSet::addAll(const UnicodeString &s)
     test1.add_all(test2).add_all(UnicodeString("0123456789"))
     assert test1.size() == 2 + 10  # [0-9\u00DF{ab}]
+
+    test1.add_all("cd").add_all("ef")
+    assert test1.size() == 2 + 10 + 4  # [0-9c-f\u00DF{ab}]
 
 
 def test_add_match_set_to():
@@ -88,6 +94,9 @@ def test_api():
     pattern = UnicodeString("[0-9\u00DF{ab}]")
     assert UnicodeSet.resembles_pattern(pattern, 0)
     assert not UnicodeSet.resembles_pattern(pattern, 1)
+
+    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 0)
+    assert not UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 1)
 
     test2 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
     assert not test2.is_bogus()
@@ -183,6 +192,18 @@ def test_apply_property_alias():
         test1.apply_property_alias(UnicodeString("ccc"),
                                    UnicodeString("-"))
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
+    test1.apply_property_alias("ccc", UnicodeString("10"))
+    assert test1.size() == 1
+    assert test1.contains(0x05B0)
+
+    test1.apply_property_alias(UnicodeString("ccc"), "11")
+    assert test1.size() == 1
+    assert test1.contains(0x05B1)
+
+    test1.apply_property_alias("ccc", "12")
+    assert test1.size() == 1
+    assert test1.contains(0x05B2)
 
 
 def test_char_at():
@@ -300,8 +321,14 @@ def test_contains():
     assert test1.contains(UnicodeString("0"))
     assert not test1.contains(UnicodeString("01"))
 
+    assert test1.contains("0")
+    assert not test1.contains("01")
+
     assert UnicodeString("0") in test1
     assert UnicodeString("01") not in test1
+
+    assert "0" in test1
+    assert "01" not in test1
 
     # [2]
     # UBool UnicodeSet::contains(UChar32 c)
@@ -330,6 +357,9 @@ def test_contains_all():
     assert test1.contains_all(UnicodeString("0123456789"))
     assert not test1.contains_all(UnicodeString("/0123456789:"))
 
+    assert test1.contains_all("0123456789")
+    assert not test1.contains_all("/0123456789:")
+
 
 def test_contains_none():
     test1 = UnicodeSet(0x30, 0x39)
@@ -343,6 +373,9 @@ def test_contains_none():
     # UBool UnicodeSet::containsNone(const UnicodeString &s)
     assert not test1.contains_none(UnicodeString("/0123456789:"))
     assert test1.contains_none(UnicodeString("/"))
+
+    assert not test1.contains_none("/0123456789:")
+    assert test1.contains_none("/")
 
     # [3]
     # UBool UnicodeSet::containsNone(UChar32 start, UChar32 end)
@@ -363,6 +396,9 @@ def test_contains_some():
     assert test1.contains_some(UnicodeString("ab0123456789"))
     assert not test1.contains_some(UnicodeString("ab"))
 
+    assert test1.contains_some("ab0123456789")
+    assert not test1.contains_some("ab")
+
     # [3]
     # UBool UnicodeSet::containsSome(UChar32 start, UChar32 end)
     assert test1.contains_some(0x2f, 0x3a)
@@ -375,9 +411,19 @@ def test_create_from():
     assert test1.size() == 1  # [{ab}]
     assert test1.contains(UnicodeString("ab"))
 
+    test1a = UnicodeSet.create_from("ab")
+    assert isinstance(test1a, UnicodeSet)
+    assert test1a.size() == 1  # [{ab}]
+    assert test1a.contains(UnicodeString("ab"))
+
 
 def test_create_from_all():
     test1 = UnicodeSet.create_from_all(UnicodeString("ab"))
+    assert isinstance(test1, UnicodeSet)
+    assert test1.size() == 2  # [ab]
+    assert test1.contains(0x61, 0x62)
+
+    test1 = UnicodeSet.create_from_all("ab")
     assert isinstance(test1, UnicodeSet)
     assert test1.size() == 2  # [ab]
     assert test1.contains(0x61, 0x62)
@@ -465,6 +511,10 @@ def test_remove():
     test1.remove(UnicodeString("ab")).remove(0xdf).remove(0x30, 0x39)
     assert test1.size() == 0
 
+    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1.remove("ab").remove(0xdf).remove(0x30, 0x39)
+    assert test1.size() == 0
+
 
 def test_remove_all():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
@@ -477,6 +527,12 @@ def test_remove_all():
     # [2]
     # UnicodeSet &UnicodeSet::removeAll(const UnicodeString &s)
     test1.remove_all(test2).remove_all(UnicodeString("ab"))
+    assert test1.size() == 12 - 10  # [\u00DF{ab}]
+    assert test1.contains(0xdf)
+    assert test1.contains(UnicodeString("ab"))
+
+    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1.remove_all("ab").remove_all(test2)
     assert test1.size() == 12 - 10  # [\u00DF{ab}]
     assert test1.contains(0xdf)
     assert test1.contains(UnicodeString("ab"))
@@ -527,6 +583,10 @@ def test_retain_all():
     # [2]
     # UnicodeSet &UnicodeSet::retainAll(const UnicodeString &s)
     test3.retain_all(UnicodeString("ab"))
+    assert test3.size() == 0
+
+    test3 = test1.clone()
+    test3.retain_all("ab")
     assert test3.size() == 0
 
 

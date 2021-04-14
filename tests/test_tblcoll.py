@@ -50,6 +50,9 @@ def test_compare():
     #                                    UErrorCode &status
     # )
     assert coll.compare(source, target, 3) == UCollationResult.UCOL_GREATER
+    assert coll.compare("ABC", target, 3) == UCollationResult.UCOL_GREATER
+    assert coll.compare(source, "abc", 3) == UCollationResult.UCOL_GREATER
+    assert coll.compare("ABC", "abc", 3) == UCollationResult.UCOL_GREATER
 
     # [6]
     # UCollationResult Collator::compare(const UnicodeString &source,
@@ -57,6 +60,9 @@ def test_compare():
     #                                    UErrorCode &status
     # )
     assert coll.compare(source, target) == UCollationResult.UCOL_GREATER
+    assert coll.compare("ABC", target) == UCollationResult.UCOL_GREATER
+    assert coll.compare(source, "abc") == UCollationResult.UCOL_GREATER
+    assert coll.compare("ABC", "abc") == UCollationResult.UCOL_GREATER
 
     coll.set_attribute(UColAttribute.UCOL_STRENGTH,
                        UColAttributeValue.UCOL_PRIMARY)
@@ -143,10 +149,16 @@ def test_equals():
     target = UnicodeString("abc")
 
     assert not coll.equals(source, target)
+    assert not coll.equals("ABC", target)
+    assert not coll.equals(source, "abc")
+    assert not coll.equals("ABC", "abc")
 
     coll.set_attribute(UColAttribute.UCOL_STRENGTH,
                        UColAttributeValue.UCOL_PRIMARY)
     assert coll.equals(source, target)
+    assert coll.equals("ABC", target)
+    assert coll.equals(source, "abc")
+    assert coll.equals("ABC", "abc")
 
 
 def test_get_attribute():
@@ -234,6 +246,9 @@ def test_get_collation_key():
     key2 = CollationKey()
     result2 = coll.get_collation_key(UnicodeString("abc"), key2)
     assert isinstance(result2, CollationKey)
+    assert result2 == key2
+
+    result2 = coll.get_collation_key("abc", key2)
     assert result2 == key2
 
     assert key1.compare_to(key2) == UCollationResult.UCOL_GREATER
@@ -408,6 +423,9 @@ def test_get_sort_key():
     assert len(result2) > 0
     assert all(isinstance(x, int) for x in result2)
 
+    result2a = coll.get_sort_key("abc")
+    assert result2a == result2
+
     assert result1 > result2
 
 
@@ -437,10 +455,16 @@ def test_greater():
     target = UnicodeString("abc")
 
     assert coll.greater(source, target)
+    assert coll.greater("ABC", target)
+    assert coll.greater(source, "abc")
+    assert coll.greater("ABC", "abc")
 
     coll.set_attribute(UColAttribute.UCOL_STRENGTH,
                        UColAttributeValue.UCOL_PRIMARY)
     assert not coll.greater(source, target)
+    assert not coll.greater("ABC", target)
+    assert not coll.greater(source, "abc")
+    assert not coll.greater("ABC", "abc")
 
 
 def test_greater_or_equal():
@@ -449,10 +473,16 @@ def test_greater_or_equal():
     target = UnicodeString("abc")
 
     assert coll.greater_or_equal(source, target)
+    assert coll.greater_or_equal("ABC", target)
+    assert coll.greater_or_equal(source, "abc")
+    assert coll.greater_or_equal("ABC", "abc")
 
     coll.set_attribute(UColAttribute.UCOL_STRENGTH,
                        UColAttributeValue.UCOL_PRIMARY)
     assert coll.greater_or_equal(source, target)
+    assert coll.greater_or_equal("ABC", target)
+    assert coll.greater_or_equal(source, "abc")
+    assert coll.greater_or_equal("ABC", "abc")
 
 
 def test_hash_code():

@@ -422,6 +422,11 @@ def test_api():
     assert not info.has_errors()
     assert result == expected
 
+    result.remove()
+    _trans.name_to_ascii("www.eXample.cOm", result, info)
+    assert not info.has_errors()
+    assert result == expected
+
     src.set_to_bogus()
     result = UnicodeString("quatsch")
     with pytest.raises(ICUException) as exc_info:
@@ -436,12 +441,24 @@ def test_api():
                                   IDNA.ERROR_INVALID_ACE_LABEL))
     assert result == expected
 
+    result.remove()
+    _nontrans.label_to_ascii("xn--bcher.de-65a", result, info)
+    assert (info.get_errors() == (IDNA.ERROR_LABEL_HAS_DOT |
+                                  IDNA.ERROR_INVALID_ACE_LABEL))
+    assert result == expected
+
+    result.remove()
+    _trans.label_to_unicode("\x61\u00df", result, info)
+    assert info.get_errors() == 0
+    assert result == "\x61\x73\x73"
+
 
 def test_not_std3():
     not3 = IDNA.create_uts46_instance(IDNA.CHECK_BIDI)
 
     # '\x00A_2+2=4\n.eßen.net'
     src = UnicodeString("\\u0000A_2+2=4\\u000A.e\\u00DFen.net").unescape()
+    expected = UnicodeString("\\u0000a_2+2=4\\u000A.essen.net").unescape()
     dest = UnicodeString()
     info = IDNAInfo()
 
@@ -451,8 +468,7 @@ def test_not_std3():
     assert result == dest
     assert not info.has_errors()
     assert len(result) == 19
-    assert (result
-            == UnicodeString("\\u0000a_2+2=4\\u000A.essen.net").unescape())
+    assert result == expected
 
     src = UnicodeString("a z.xn--4db.edu")
     not3.name_to_ascii(src, result, info)
@@ -461,6 +477,11 @@ def test_not_std3():
 
     src = UnicodeString("a\\u2260b\\u226Ec\\u226Fd").unescape()
     not3.name_to_unicode(src, result, info)
+    assert result == src
+    assert not info.has_errors()
+
+    result.remove()
+    not3.name_to_unicode("a\u2260b\u226Ec\u226Fd", result, info)
     assert result == src
     assert not info.has_errors()
 

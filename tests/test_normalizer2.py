@@ -17,6 +17,10 @@ def test_api():
     result = n2.append(first, second).append(third)
     assert result == first == "\xC5B"
 
+    first = UnicodeString("A", -1, US_INV)
+    result = n2.append(first, "\u030A").append(third)
+    assert result == first == "\xC5B"
+
     assert n2.compose_pair(ord("A"), 0x030a) == 0xc5
 
     assert n2.get_combining_class(0x3099) == 8
@@ -53,6 +57,9 @@ def test_api():
     assert not n2.is_normalized(
         UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
 
+    assert n2.is_normalized("\u304c")
+    assert not n2.is_normalized("\u304B\u3099")
+
     # [1]
     # UnicodeString Normalizer2::normalize(const UnicodeString &src,
     #                                      UErrorCode &errorCode
@@ -60,6 +67,9 @@ def test_api():
     src = UnicodeString("a\\u0306", -1, US_INV).unescape()
     result = n2.normalize(src)
     assert src != result
+    assert result == "\u0103"
+
+    result = n2.normalize("a\u0306")
     assert result == "\u0103"
 
     # [2]
@@ -70,6 +80,10 @@ def test_api():
     dest = UnicodeString()
     result = n2.normalize(src, dest)
     assert src != result
+    assert result == dest == "\u0103"
+
+    dest.remove()
+    result = n2.normalize("a\u0306", dest)
     assert result == dest == "\u0103"
 
     # UnicodeString &Normalizer2::normalizeSecondAndAppend(
@@ -83,6 +97,10 @@ def test_api():
     result = n2.normalize_second_and_append(first, second).append(third)
     assert result == first == "A\u0103b"
 
+    first = UnicodeString("A", -1, US_INV)
+    result = n2.normalize_second_and_append(first, "a\u0306").append(third)
+    assert result == first == "A\u0103b"
+
     # UNormalizationCheckResult Normalizer2::quickCheck(
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
@@ -93,12 +111,20 @@ def test_api():
         UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
     assert result == UNormalizationCheckResult.UNORM_MAYBE
 
+    result = n2.quick_check("\u304c")
+    assert result == UNormalizationCheckResult.UNORM_YES
+    result = n2.quick_check("\u304B\u3099")
+    assert result == UNormalizationCheckResult.UNORM_MAYBE
+
     # int32_t Normalizer2::spanQuickCheckYes(const UnicodeString &s,
     #                                        UErrorCode &errorCode
     # )
     assert n2.span_quick_check_yes(UnicodeString(0x304c))
     assert not n2.span_quick_check_yes(
         UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
+
+    assert n2.span_quick_check_yes("\u304c")
+    assert not n2.span_quick_check_yes("\u304B\u3099")
 
 
 def test_filtered_normalizer2():

@@ -69,6 +69,14 @@ def test_create_character_instance():
     assert list(bi) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     assert reversed(bi) == [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
+    bi = BreakIterator.create_character_instance("en_US")
+    bi.set_text(src)
+    assert list(bi) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    assert reversed(bi) == [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+
+    loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert loc.get_name() == "en_US"
+
 
 def test_create_line_instance():
     bi = BreakIterator.create_line_instance(Locale.get_us())
@@ -84,6 +92,14 @@ def test_create_line_instance():
     assert list(bi) == [4, 8, 12]
     assert reversed(bi) == [12, 8, 4]
 
+    bi = BreakIterator.create_line_instance("en_US")
+    bi.set_text(src)
+    assert list(bi) == [4, 8, 12]
+    assert reversed(bi) == [12, 8, 4]
+
+    loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert loc.get_name() == "en_US"
+
 
 def test_create_sentence_instance():
     bi = BreakIterator.create_sentence_instance(Locale.get_us())
@@ -96,6 +112,14 @@ def test_create_sentence_instance():
 
     assert list(bi) == [12]
     assert reversed(bi) == [12]
+
+    bi = BreakIterator.create_sentence_instance("en_US")
+    bi.set_text(src)
+    assert list(bi) == [12]
+    assert reversed(bi) == [12]
+
+    loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert loc.get_name() == "en_US"
 
 
 def test_create_word_instance():
@@ -114,6 +138,14 @@ def test_create_word_instance():
 
     assert list(bi) == [3, 4, 7, 8, 11, 12]
     assert reversed(bi) == [12, 11, 8, 7, 4, 3]
+
+    bi = BreakIterator.create_word_instance("en_US")
+    bi.set_text(src)
+    assert list(bi) == [3, 4, 7, 8, 11, 12]
+    assert reversed(bi) == [12, 11, 8, 7, 4, 3]
+
+    loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert loc.get_name() == "en_US"
 
 
 def test_following():
@@ -163,12 +195,39 @@ def test_get_display_name():
         assert id(result) == id(dest)
         assert dest == "French (France)"
 
+        dest.remove()
+        result = BreakIterator.get_display_name(
+            "fr_FR",
+            Locale("en_US"),
+            dest)
+        assert id(result) == id(dest)
+        assert dest == "French (France)"
+
+        dest.remove()
+        result = BreakIterator.get_display_name(
+            Locale("fr_FR"),
+            "en_US",
+            dest)
+        assert id(result) == id(dest)
+        assert dest == "French (France)"
+
+        dest.remove()
+        result = BreakIterator.get_display_name("fr_FR", "en_US", dest)
+        assert id(result) == id(dest)
+        assert dest == "French (France)"
+
         # [2]
         # static UnicodeString &BreakIterator::getDisplayName(
         #       const Locale &objectLocale,
         #       UnicodeString &name
         # )
+        dest.remove()
         result = BreakIterator.get_display_name(us_locale, dest)
+        assert id(result) == id(dest)
+        assert dest == "English (United States)"
+
+        dest.remove()
+        result = BreakIterator.get_display_name("en_US", dest)
         assert id(result) == id(dest)
         assert dest == "English (United States)"
     finally:
@@ -437,6 +496,22 @@ def test_rule_based_break_iterator():
     assert bi3.next() == 4
     assert bi3.next() == BreakIterator.DONE
     assert bi3.current() == 4
+
+    bi3a = RuleBasedBreakIterator(
+        "$dictionary = [a-z]; \n"
+        "!!forward; \n"
+        "$dictionary $dictionary; \n"
+        "!!reverse; \n"
+        "$dictionary $dictionary; \n",
+        parse_error)
+    bi3a.set_text(src)
+    assert bi3a.first() == 0
+    assert bi3a.next() == 2
+    assert bi3a.next() == 3
+    assert bi3a.next() == 4
+    assert bi3a.next() == BreakIterator.DONE
+    assert bi3a.current() == 4
+    assert bi3 == bi3a
 
     # [4]
     # RuleBasedBreakIterator::RuleBasedBreakIterator(

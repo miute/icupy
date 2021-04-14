@@ -80,7 +80,18 @@ def test_create_instance():
     assert test3.get_id() == id3
     assert test3.get_maximum_context_length() == 3
 
+    test3a = Transliterator.create_from_rules(
+        id3,
+        str(rules3),
+        UTransDirection.UTRANS_FORWARD,
+        parse_error)
+    assert test3a.count_elements() == 0
+    assert test3a.get_filter() is None
+    assert test3a.get_id() == id3
+    assert test3a.get_maximum_context_length() == 3
+
     test30 = test3.get_element(0)
+    assert isinstance(test30, Transliterator)
     assert test30.get_id() == test3.get_id()
 
     with pytest.raises(ICUException) as exc_info:
@@ -178,17 +189,35 @@ def test_get_available_variant():
     target = UnicodeString()
     variant = UnicodeString()
     count = 0
+
     for i in range(Transliterator.count_available_sources()):
         result = Transliterator.get_available_source(i, source)
         assert result == source
         assert len(source) > 0
-        for j in range(Transliterator.count_available_targets(source)):
+
+        targets = Transliterator.count_available_targets(source)
+        assert targets == Transliterator.count_available_targets(str(source))
+        for j in range(targets):
             result = Transliterator.get_available_target(j, source, target)
             assert result == target
             assert len(target) > 0
-            for k in range(Transliterator.count_available_variants(
-                    source,
-                    target)):
+
+            assert result == Transliterator.get_available_target(
+                j, str(source), target)
+
+            variants = Transliterator.count_available_variants(
+                source,
+                target)
+            assert variants == Transliterator.count_available_variants(
+                str(source),
+                target)
+            assert variants == Transliterator.count_available_variants(
+                source,
+                str(target))
+            assert variants == Transliterator.count_available_variants(
+                str(source),
+                str(target))
+            for k in range(variants):
                 result = Transliterator.get_available_variant(
                     k,
                     source,
@@ -196,6 +225,22 @@ def test_get_available_variant():
                     variant)
                 assert result == variant
                 assert len(variant) >= 0
+
+                assert result == Transliterator.get_available_variant(
+                    k,
+                    str(source),
+                    target,
+                    variant)
+                assert result == Transliterator.get_available_variant(
+                    k,
+                    source,
+                    str(target),
+                    variant)
+                assert result == Transliterator.get_available_variant(
+                    k,
+                    str(source),
+                    str(target),
+                    variant)
                 count += 1
     assert count > 0
 
@@ -215,6 +260,30 @@ def test_get_display_name():
     assert result == display_name
     assert result == "Hiragana to Katakana"
 
+    display_name.remove()
+    result = Transliterator.get_display_name(
+        "Hiragana-Katakana",
+        Locale.get_us(),
+        display_name)
+    assert result == display_name
+    assert result == "Hiragana to Katakana"
+
+    display_name.remove()
+    result = Transliterator.get_display_name(
+        UnicodeString("Hiragana-Katakana", -1),
+        "en_US",
+        display_name)
+    assert result == display_name
+    assert result == "Hiragana to Katakana"
+
+    display_name.remove()
+    result = Transliterator.get_display_name(
+        "Hiragana-Katakana",
+        "en_US",
+        display_name)
+    assert result == display_name
+    assert result == "Hiragana to Katakana"
+
     # [2]
     # static UnicodeString &Transliterator::getDisplayName(
     #       const UnicodeString &ID,
@@ -222,6 +291,13 @@ def test_get_display_name():
     # )
     result = Transliterator.get_display_name(
         UnicodeString("Hiragana-Katakana", -1),
+        display_name)
+    assert result == display_name
+    assert len(result) > 0
+
+    display_name.remove()
+    result = Transliterator.get_display_name(
+        "Hiragana-Katakana",
         display_name)
     assert result == display_name
     assert len(result) > 0
@@ -268,6 +344,15 @@ def test_register_instance():
     assert str(id3) not in ids
     assert str(id3a) not in ids
 
+    Transliterator.register_instance(test3)
+    Transliterator.register_alias("Any-MyRule1", id3)
+    Transliterator.register_alias(UnicodeString("Any-MyRule2"), str(id3))
+    Transliterator.register_alias("Any-MyRule3", str(id3))
+    ids = Transliterator.get_available_ids()
+    assert "Any-MyRule1" in ids
+    assert "Any-MyRule2" in ids
+    assert "Any-MyRule3" in ids
+
 
 def test_transliterate():
     id4 = UnicodeString("Hiragana-Katakana", -1)
@@ -306,6 +391,15 @@ def test_transliterate():
     index.limit = 4
     insertion = UnicodeString("_", -1)
     test4.transliterate(text, index, insertion)
+    assert index.context_start == 0
+    assert index.context_limit == 6
+    assert index.start == 5
+    assert index.limit == 5
+    assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
+
+    text = src.clone()
+    index = UTransPosition(0, 5, 1, 4)
+    test4.transliterate(text, index, "_")
     assert index.context_start == 0
     assert index.context_limit == 6
     assert index.start == 5

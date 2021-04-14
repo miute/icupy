@@ -179,7 +179,12 @@ void init_unistr(py::module &m) {
         self.toUTF8String(result);
         return result;
       });
-  us.def("append", py::overload_cast<char16_t>(&UnicodeString::append), py::arg("src_char"))
+  us.def(
+        // const char16_t *src_text -> const UnicodeString &src_text
+        "append",
+        [](UnicodeString &self, const char16_t *src_text) -> UnicodeString & { return self.append(src_text); },
+        py::arg("src_text"))
+      .def("append", py::overload_cast<char16_t>(&UnicodeString::append), py::arg("src_char"))
       .def("append", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::append),
            py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def("append", py::overload_cast<const UnicodeString &>(&UnicodeString::append), py::arg("src_text"))
@@ -199,6 +204,13 @@ void init_unistr(py::module &m) {
       .def("append", py::overload_cast<UChar32>(&UnicodeString::append), py::arg("src_char"));
   us.def("case_compare", py::overload_cast<const UnicodeString &, uint32_t>(&UnicodeString::caseCompare, py::const_),
          py::arg("text"), py::arg("options"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "case_compare",
+          [](const UnicodeString &self, const char16_t *text, uint32_t options) {
+            return self.caseCompare(text, options);
+          },
+          py::arg("text"), py::arg("options"))
       /*
       .def("case_compare",
            py::overload_cast<ConstChar16Ptr, int32_t, uint32_t>(&UnicodeString::caseCompare, py::const_),
@@ -229,9 +241,22 @@ void init_unistr(py::module &m) {
           py::overload_cast<int32_t, int32_t, const UnicodeString &, uint32_t>(&UnicodeString::caseCompare, py::const_),
           py::arg("start"), py::arg("length"), py::arg("src_text"), py::arg("options"))
       .def("case_compare_between", &UnicodeString::caseCompareBetween, py::arg("start"), py::arg("limit"),
-           py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"), py::arg("options"));
+           py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"), py::arg("options"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "case_compare_between",
+          [](const UnicodeString &self, int32_t start, int32_t limit, const char16_t *src_text, int32_t src_start,
+             int32_t src_limit, uint32_t options) {
+            return self.caseCompareBetween(start, limit, src_text, src_start, src_limit, options);
+          },
+          py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"),
+          py::arg("options"));
   us.def("clone", &UnicodeString::clone);
   us.def("compare", py::overload_cast<const UnicodeString &>(&UnicodeString::compare, py::const_), py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "compare", [](const UnicodeString &self, const char16_t *text) { return self.compare(text); },
+          py::arg("text"))
       /*
       .def("compare", py::overload_cast<ConstChar16Ptr, int32_t>(&UnicodeString::compare, py::const_),
            py::arg("src_chars"), py::arg("src_length"))
@@ -254,10 +279,21 @@ void init_unistr(py::module &m) {
            py::arg("start"), py::arg("length"), py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def("compare", py::overload_cast<int32_t, int32_t, const UnicodeString &>(&UnicodeString::compare, py::const_),
            py::arg("start"), py::arg("length"), py::arg("text"))
-      .def("compare_between", &UnicodeString::compareBetween, "", py::arg("start"), py::arg("limit"),
-           py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
+      .def("compare_between", &UnicodeString::compareBetween, py::arg("start"), py::arg("limit"), py::arg("src_text"),
+           py::arg("src_start"), py::arg("src_limit"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "compare_between",
+          [](const UnicodeString &self, int32_t start, int32_t limit, const char16_t *src_text, int32_t src_start,
+             int32_t src_limit) { return self.compareBetween(start, limit, src_text, src_start, src_limit); },
+          py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
   us.def("compare_code_point_order",
          py::overload_cast<const UnicodeString &>(&UnicodeString::compareCodePointOrder, py::const_), py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "compare_code_point_order",
+          [](const UnicodeString &self, const char16_t *text) { return self.compareCodePointOrder(text); },
+          py::arg("text"))
       /*
       .def("compare_code_point_order",
            py::overload_cast<ConstChar16Ptr, int32_t>(&UnicodeString::compareCodePointOrder, py::const_),
@@ -286,7 +322,15 @@ void init_unistr(py::module &m) {
                &UnicodeString::compareCodePointOrder, py::const_),
            py::arg("start"), py::arg("length"), py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def("compare_code_point_order_between", &UnicodeString::compareCodePointOrderBetween, py::arg("start"),
-           py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
+           py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "compare_code_point_order_between",
+          [](const UnicodeString &self, int32_t start, int32_t limit, const char16_t *src_text, int32_t src_start,
+             int32_t src_limit) {
+            return self.compareCodePointOrderBetween(start, limit, src_text, src_start, src_limit);
+          },
+          py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
   us.def("copy", &UnicodeString::copy, py::arg("start"), py::arg("limit"), py::arg("dest"));
   us.def("count_char32", &UnicodeString::countChar32, py::arg("start ") = 0, py::arg("length") = INT32_MAX);
   us.def("ends_with", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::endsWith, py::const_),
@@ -296,6 +340,10 @@ void init_unistr(py::module &m) {
            py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def("ends_with", py::overload_cast<const UnicodeString &>(&UnicodeString::endsWith, py::const_),
            py::arg("src_text"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "ends_with", [](const UnicodeString &self, const char16_t *src_text) { return self.endsWith(src_text); },
+          py::arg("src_text"))
       /*
       .def("ends_with", py::overload_cast<ConstChar16Ptr, int32_t>(&UnicodeString::endsWith, py::const_),
            py::arg("src_chars"), py::arg("src_length"))
@@ -394,15 +442,89 @@ void init_unistr(py::module &m) {
   us.def("find_and_replace",
          py::overload_cast<const UnicodeString &, const UnicodeString &>(&UnicodeString::findAndReplace),
          py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          "find_and_replace",
+          [](UnicodeString &self, const char16_t *old_text, const UnicodeString &new_text) -> UnicodeString & {
+            return self.findAndReplace(old_text, new_text);
+          },
+          py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, const UnicodeString &old_text, const char16_t *new_text) -> UnicodeString & {
+            return self.findAndReplace(old_text, new_text);
+          },
+          py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, const char16_t *old_text, const char16_t *new_text) -> UnicodeString & {
+            return self.findAndReplace(old_text, new_text);
+          },
+          py::arg("old_text"), py::arg("new_text"))
       .def("find_and_replace",
            py::overload_cast<int32_t, int32_t, const UnicodeString &, const UnicodeString &>(
                &UnicodeString::findAndReplace),
            py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *old_text,
+             const UnicodeString &new_text) -> UnicodeString & {
+            return self.findAndReplace(start, length, old_text, new_text);
+          },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const UnicodeString &old_text,
+             const char16_t *new_text) -> UnicodeString & {
+            return self.findAndReplace(start, length, old_text, new_text);
+          },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("new_text"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *old_text, const char16_t *new_text)
+              -> UnicodeString & { return self.findAndReplace(start, length, old_text, new_text); },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("new_text"))
       .def("find_and_replace",
            py::overload_cast<int32_t, int32_t, const UnicodeString &, int32_t, int32_t, const UnicodeString &, int32_t,
                              int32_t>(&UnicodeString::findAndReplace),
            py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("old_start"), py::arg("old_length"),
-           py::arg("new_text"), py::arg("new_start"), py::arg("new_length"));
+           py::arg("new_text"), py::arg("new_start"), py::arg("new_length"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *old_text, int32_t old_start,
+             int32_t old_length, const UnicodeString &new_text, int32_t new_start,
+             int32_t new_length) -> UnicodeString & {
+            return self.findAndReplace(start, length, old_text, old_start, old_length, new_text, new_start, new_length);
+          },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("old_start"), py::arg("old_length"),
+          py::arg("new_text"), py::arg("new_start"), py::arg("new_length"))
+      .def(
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const UnicodeString &old_text, int32_t old_start,
+             int32_t old_length, const char16_t *new_text, int32_t new_start, int32_t new_length) -> UnicodeString & {
+            return self.findAndReplace(start, length, old_text, old_start, old_length, new_text, new_start, new_length);
+          },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("old_start"), py::arg("old_length"),
+          py::arg("new_text"), py::arg("new_start"), py::arg("new_length"))
+      .def(
+          // const char16_t *old_text -> const UnicodeString &old_text
+          // const char16_t *new_text -> const UnicodeString &new_text
+          "find_and_replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *old_text, int32_t old_start,
+             int32_t old_length, const char16_t *new_text, int32_t new_start, int32_t new_length) -> UnicodeString & {
+            return self.findAndReplace(start, length, old_text, old_start, old_length, new_text, new_start, new_length);
+          },
+          py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("old_start"), py::arg("old_length"),
+          py::arg("new_text"), py::arg("new_start"), py::arg("new_length"));
   us.def("fold_case", &UnicodeString::foldCase, py::arg("options") = 0);
   us.def_static(
       "from_utf32",
@@ -449,8 +571,17 @@ void init_unistr(py::module &m) {
                                                                                         py::const_),
            py::arg("src_text"), py::arg("src_start"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def("index_of", py::overload_cast<const UnicodeString &>(&UnicodeString::indexOf, py::const_), py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "index_of", [](const UnicodeString &self, const char16_t *text) { return self.indexOf(text); },
+          py::arg("text"))
       .def("index_of", py::overload_cast<const UnicodeString &, int32_t>(&UnicodeString::indexOf, py::const_),
            py::arg("text"), py::arg("start"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "index_of",
+          [](const UnicodeString &self, const char16_t *text, int32_t start) { return self.indexOf(text, start); },
+          py::arg("text"), py::arg("start"))
       .def("index_of", py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::indexOf, py::const_),
            py::arg("text"), py::arg("start"), py::arg("length"))
       /*
@@ -470,7 +601,15 @@ void init_unistr(py::module &m) {
            py::arg("start"))
       .def("index_of", py::overload_cast<UChar32, int32_t, int32_t>(&UnicodeString::indexOf, py::const_), py::arg("c"),
            py::arg("start"), py::arg("length"));
-  us.def("insert", py::overload_cast<int32_t, char16_t>(&UnicodeString::insert), py::arg("start"), py::arg("src_char"))
+  us.def(
+        // const char16_t *src_text -> const UnicodeString &src_text
+        "insert",
+        [](UnicodeString &self, int32_t start, const char16_t *src_text) -> UnicodeString & {
+          return self.insert(start, src_text);
+        },
+        py::arg("start"), py::arg("src_text"))
+      .def("insert", py::overload_cast<int32_t, char16_t>(&UnicodeString::insert), py::arg("start"),
+           py::arg("src_char"))
       .def("insert", py::overload_cast<int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::insert),
            py::arg("start"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def("insert", py::overload_cast<int32_t, const UnicodeString &>(&UnicodeString::insert), py::arg("start"),
@@ -505,8 +644,17 @@ void init_unistr(py::module &m) {
            py::arg("src_text"), py::arg("src_start"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def("last_index_of", py::overload_cast<const UnicodeString &>(&UnicodeString::lastIndexOf, py::const_),
            py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "last_index_of", [](const UnicodeString &self, const char16_t *text) { return self.lastIndexOf(text); },
+          py::arg("text"))
       .def("last_index_of", py::overload_cast<const UnicodeString &, int32_t>(&UnicodeString::lastIndexOf, py::const_),
            py::arg("text"), py::arg("start"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "last_index_of",
+          [](const UnicodeString &self, const char16_t *text, int32_t start) { return self.lastIndexOf(text, start); },
+          py::arg("text"), py::arg("start"))
       .def("last_index_of",
            py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::lastIndexOf, py::const_),
            py::arg("text"), py::arg("start"), py::arg("length"))
@@ -538,6 +686,13 @@ void init_unistr(py::module &m) {
          py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def("replace", py::overload_cast<int32_t, int32_t, const UnicodeString &>(&UnicodeString::replace),
            py::arg("start"), py::arg("length"), py::arg("src_text"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "replace",
+          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *src_text) -> UnicodeString & {
+            return self.replace(start, length, src_text);
+          },
+          py::arg("start"), py::arg("length"), py::arg("src_text"))
       .def("replace",
            py::overload_cast<int32_t, int32_t, const UnicodeString &, int32_t, int32_t>(&UnicodeString::replace),
            py::arg("start"), py::arg("length"), py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
@@ -556,9 +711,24 @@ void init_unistr(py::module &m) {
       .def("replace_between",
            py::overload_cast<int32_t, int32_t, const UnicodeString &>(&UnicodeString::replaceBetween), py::arg("start"),
            py::arg("limit"), py::arg("src_text"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "replace_between",
+          [](UnicodeString &self, int32_t start, int32_t limit, const char16_t *src_text) -> UnicodeString & {
+            return self.replaceBetween(start, limit, src_text);
+          },
+          py::arg("start"), py::arg("limit"), py::arg("src_text"))
       .def("replace_between",
            py::overload_cast<int32_t, int32_t, const UnicodeString &, int32_t, int32_t>(&UnicodeString::replaceBetween),
-           py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
+           py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "replace_between",
+          [](UnicodeString &self, int32_t start, int32_t limit, const char16_t *src_text, int32_t src_start,
+             int32_t src_limit) -> UnicodeString & {
+            return self.replaceBetween(start, limit, src_text, src_start, src_limit);
+          },
+          py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
   us.def("retain_between", &UnicodeString::retainBetween, py::arg("start"), py::arg("limit") = INT32_MAX);
   us.def("reverse", py::overload_cast<int32_t, int32_t>(&UnicodeString::reverse), py::arg("start"), py::arg("length"))
       .def("reverse", py::overload_cast<>(&UnicodeString::reverse));
@@ -569,6 +739,11 @@ void init_unistr(py::module &m) {
   us.def("set_to", py::overload_cast<const char16_t *, int32_t>(&UnicodeString::setTo), py::arg("src_chars"),
          py::arg("src_length"))
       .def("set_to", py::overload_cast<const UnicodeString &>(&UnicodeString::setTo), py::arg("src_text"))
+      .def(
+          // const char16_t *src_text -> const UnicodeString &src_text
+          "set_to",
+          [](UnicodeString &self, const char16_t *src_text) -> UnicodeString & { return self.setTo(src_text); },
+          py::arg("src_text"))
       .def("set_to", py::overload_cast<const UnicodeString &, int32_t>(&UnicodeString::setTo), py::arg("src_text"),
            py::arg("src_start"))
       .def("set_to", py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::setTo),
@@ -592,6 +767,10 @@ void init_unistr(py::module &m) {
            py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def("starts_with", py::overload_cast<const UnicodeString &>(&UnicodeString::startsWith, py::const_),
            py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "starts_with", [](const UnicodeString &self, const char16_t *text) { return self.startsWith(text); },
+          py::arg("text"))
       /*
       .def("starts_with", py::overload_cast<ConstChar16Ptr, int32_t>(&UnicodeString::startsWith, py::const_),
            py::arg("src_chars"), py::arg("src_length"))
@@ -610,13 +789,35 @@ void init_unistr(py::module &m) {
       .def("temp_sub_string_between", &UnicodeString::tempSubStringBetween, py::arg("start") = 0,
            py::arg("limit") = INT32_MAX);
   us.def("to_lower", py::overload_cast<const Locale &>(&UnicodeString::toLower), py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "to_lower", [](UnicodeString &self, const char *locale) -> UnicodeString & { return self.toLower(locale); },
+          py::arg("locale"))
       .def("to_lower", py::overload_cast<>(&UnicodeString::toLower));
   us.def("to_title", py::overload_cast<BreakIterator *>(&UnicodeString::toTitle), py::arg("title_iter"))
       .def("to_title", py::overload_cast<BreakIterator *, const Locale &>(&UnicodeString::toTitle),
            py::arg("title_iter"), py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "to_title",
+          [](UnicodeString &self, BreakIterator *title_iter, const char *locale) -> UnicodeString & {
+            return self.toTitle(title_iter, locale);
+          },
+          py::arg("title_iter"), py::arg("locale"))
       .def("to_title", py::overload_cast<BreakIterator *, const Locale &, uint32_t>(&UnicodeString::toTitle),
-           py::arg("title_iter"), py::arg("locale"), py::arg("options"));
+           py::arg("title_iter"), py::arg("locale"), py::arg("options"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "to_title",
+          [](UnicodeString &self, BreakIterator *title_iter, const char *locale, uint32_t options) -> UnicodeString & {
+            return self.toTitle(title_iter, locale, options);
+          },
+          py::arg("title_iter"), py::arg("locale"), py::arg("options"));
   us.def("to_upper", py::overload_cast<const Locale &>(&UnicodeString::toUpper), py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "to_upper", [](UnicodeString &self, const char *locale) -> UnicodeString & { return self.toUpper(locale); },
+          py::arg("locale"))
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper));
   us.def("to_utf32", [](const UnicodeString &self) {
     UErrorCode error_code = U_ZERO_ERROR;

@@ -39,6 +39,11 @@ def test_compile():
     assert test1.pattern() == s
     assert test1.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
+    test1a = RegexPattern.compile(s, URegexpFlag.UREGEX_CASE_INSENSITIVE)
+    assert isinstance(test1a, RegexPattern)
+    assert test1a.pattern() == s
+    assert test1a.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
+
     # [2]
     # static RegexPattern *RegexPattern::compile(
     #       const UnicodeString &regex,
@@ -55,6 +60,14 @@ def test_compile():
     assert test2.pattern() == s
     assert test2.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
+    pe = UParseError()
+    test2a = RegexPattern.compile(s,
+                                  URegexpFlag.UREGEX_CASE_INSENSITIVE,
+                                  pe)
+    assert isinstance(test2a, RegexPattern)
+    assert test2a.pattern() == s
+    assert test2a.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
+
     # [3]
     # static RegexPattern *RegexPattern::compile(
     #       const UnicodeString &regex,
@@ -67,6 +80,12 @@ def test_compile():
     assert isinstance(test3, RegexPattern)
     assert test3.pattern() == s
     assert test3.flags() == 0
+
+    pe = UParseError()
+    test3a = RegexPattern.compile(s, pe)
+    assert isinstance(test3a, RegexPattern)
+    assert test3a.pattern() == s
+    assert test3a.flags() == 0
 
     # [4]
     # static RegexPattern *RegexPattern::compile(
@@ -137,6 +156,10 @@ def test_group_number_from_name():
     assert pattern.group_number_from_name(UnicodeString("B")) == 2
     assert pattern.group_number_from_name(UnicodeString("C")) == 3
 
+    assert pattern.group_number_from_name("A") == 1
+    assert pattern.group_number_from_name("B") == 2
+    assert pattern.group_number_from_name("C") == 3
+
 
 def test_matcher():
     regex = UnicodeString("\\w+")
@@ -176,6 +199,12 @@ def test_matches():
 
     pe = UParseError()
     assert not RegexPattern.matches(regex1, src1b, pe)
+
+    pe = UParseError()
+    assert RegexPattern.matches("[A-Za-z]+", src1a, pe)
+
+    pe = UParseError()
+    assert not RegexPattern.matches("[A-Za-z]+", src1b, pe)
 
     # [2]
     # static UBool RegexPattern::matches(UText *regex,

@@ -7,7 +7,20 @@ using namespace icu;
 
 void init_resbund(py::module &m) {
   py::class_<ResourceBundle, UObject> res(m, "ResourceBundle");
-  res.def(py::init([](const UnicodeString &package_name, const Locale &locale) {
+  res.def(
+         // [1] ResourceBundle::ResourceBundle
+         py::init([](const UnicodeString &package_name, const Locale &locale) {
+           UErrorCode error_code = U_ZERO_ERROR;
+           auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
+           if (U_FAILURE(error_code)) {
+             throw ICUException(error_code);
+           }
+           return result;
+         }),
+         py::arg("package_name"), py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          py::init([](const UnicodeString &package_name, const char *locale) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
             if (U_FAILURE(error_code)) {
@@ -16,42 +29,74 @@ void init_resbund(py::module &m) {
             return result;
           }),
           py::arg("package_name"), py::arg("locale"))
-      .def(py::init([](const UnicodeString &package_name) {
-             UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::make_unique<ResourceBundle>(package_name, error_code);
-             if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
-             }
-             return result;
-           }),
-           py::arg("package_name"))
-      .def(py::init([]() {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = std::make_unique<ResourceBundle>(error_code);
-        if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
-        }
-        return result;
-      }))
-      .def(py::init([](const char *package_name, const Locale &locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
-             if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
-             }
-             return result;
-           }),
-           py::arg("package_name"), py::arg("locale"))
-      .def(py::init<const ResourceBundle &>(), py::arg("original"))
-      .def(py::init([](_UResourceBundlePtr &res) {
-             UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::make_unique<ResourceBundle>(res, error_code);
-             if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
-             }
-             return result;
-           }),
-           py::arg("res"));
+      .def(
+          // [2] ResourceBundle::ResourceBundle
+          py::init([](const UnicodeString &package_name) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(package_name, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("package_name"))
+      .def(
+          // const char16_t *package_name -> const UnicodeString &package_name
+          py::init([](const char16_t *package_name) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(package_name, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("package_name"))
+      .def(
+          // [3] ResourceBundle::ResourceBundle
+          py::init([]() {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }))
+      .def(
+          // [4] ResourceBundle::ResourceBundle
+          py::init([](const char *package_name, const Locale &locale) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("package_name"), py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          py::init([](const char *package_name, const char *locale) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("package_name"), py::arg("locale"))
+      .def(
+          // [5] ResourceBundle::ResourceBundle
+          py::init<const ResourceBundle &>(), py::arg("original"))
+      .def(
+          // [6] ResourceBundle::ResourceBundle
+          py::init([](_UResourceBundlePtr &res) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<ResourceBundle>(res, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("res"));
   res.def("__copy__", &ResourceBundle::clone)
       .def(
           "__deepcopy__", [](const ResourceBundle &self, py::dict) { return self.clone(); }, py::arg("memo"))

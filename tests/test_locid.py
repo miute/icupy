@@ -251,6 +251,11 @@ def test_get_display_country():
         assert dest == UnicodeString("\\u00C9tats-Unis").unescape()
         assert id(result) == id(dest)
 
+        dest.remove()
+        result = loc.get_display_country("fr", dest)
+        assert dest == UnicodeString("\\u00C9tats-Unis").unescape()
+        assert id(result) == id(dest)
+
         # [2]
         # UnicodeString &Locale::getDisplayCountry(
         #       UnicodeString &dispCountry
@@ -282,6 +287,11 @@ def test_get_display_language():
         assert dest == "anglais"
         assert id(result) == id(dest)
 
+        dest.remove()
+        result = loc.get_display_language("fr", dest)
+        assert dest == "anglais"
+        assert id(result) == id(dest)
+
         # [2]
         # UnicodeString &Locale::getDisplayLanguage(UnicodeString &dispLang)
         dest.remove()
@@ -308,6 +318,11 @@ def test_get_display_name():
         #       UnicodeString &name
         # )
         result = loc.get_display_name(display_locale, dest)
+        assert dest == UnicodeString("anglais (\\u00C9tats-Unis)").unescape()
+        assert id(result) == id(dest)
+
+        dest.remove()
+        result = loc.get_display_name("fr", dest)
         assert dest == UnicodeString("anglais (\\u00C9tats-Unis)").unescape()
         assert id(result) == id(dest)
 
@@ -341,6 +356,11 @@ def test_get_display_script():
         assert dest == UnicodeString("sinogrammes simplifi\\u00E9s").unescape()
         assert id(result) == id(dest)
 
+        dest.remove()
+        result = loc.get_display_script("fr", dest)
+        assert dest == UnicodeString("sinogrammes simplifi\\u00E9s").unescape()
+        assert id(result) == id(dest)
+
         # [2]
         # UnicodeString &Locale::getDisplayScript(UnicodeString &dispScript)
         dest.remove()
@@ -368,6 +388,11 @@ def test_get_display_variant():
         #       UnicodeString &dispVar
         # )
         result = loc.get_display_variant(display_locale, dest)
+        assert dest == "NY"
+        assert id(result) == id(dest)
+
+        dest.remove()
+        result = loc.get_display_variant("fr", dest)
         assert dest == "NY"
         assert id(result) == id(dest)
 

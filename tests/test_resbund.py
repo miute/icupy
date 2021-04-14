@@ -250,6 +250,16 @@ def test_resource_bundle():
             == res_locale)
     assert test1.get_name() == res_locale.get_name()
 
+    test1b = ResourceBundle(UnicodeString(), str(res_locale))
+    assert test1b.get_type() == UResType.URES_TABLE
+    assert test1b.get_size() >= 0
+    assert test1b.get_key() is None
+    assert (test1b.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+            == res_locale)
+    assert (test1b.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+            == res_locale)
+    assert test1b.get_name() == res_locale.get_name()
+
     # [2]
     # ResourceBundle::ResourceBundle(const UnicodeString &packageName,
     #                                UErrorCode &err
@@ -263,6 +273,16 @@ def test_resource_bundle():
     assert (test2.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
             == default_locale)
     assert test2.get_name() == default_locale.get_name()
+
+    test2a = ResourceBundle("")
+    assert test2a.get_type() == UResType.URES_TABLE
+    assert test2a.get_size() >= 0
+    assert test2a.get_key() is None
+    assert (test2a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+            == default_locale)
+    assert (test2a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+            == default_locale)
+    assert test2a.get_name() == default_locale.get_name()
 
     # [3]
     # ResourceBundle::ResourceBundle(UErrorCode &err)
@@ -290,6 +310,16 @@ def test_resource_bundle():
     assert (test4.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
             == res_locale)
     assert test4.get_name() == res_locale.get_name()
+
+    test4a = ResourceBundle(None, str(res_locale))
+    assert test4a.get_type() == UResType.URES_TABLE
+    assert test4a.get_size() >= 0
+    assert test4a.get_key() is None
+    assert (test4a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+            == res_locale)
+    assert (test4a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+            == res_locale)
+    assert test4a.get_name() == res_locale.get_name()
 
     # [5]
     # ResourceBundle::ResourceBundle(const ResourceBundle &original)

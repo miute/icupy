@@ -51,8 +51,14 @@ void init_localebuilder(py::module &m) {
       "set_language_tag",
       [](LocaleBuilder &self, const char *tag) -> LocaleBuilder & { return self.setLanguageTag(tag); }, py::arg("tag"));
   lb.def(
-      "set_locale", [](LocaleBuilder &self, const Locale &locale) -> LocaleBuilder & { return self.setLocale(locale); },
-      py::arg("locale"));
+        "set_locale",
+        [](LocaleBuilder &self, const Locale &locale) -> LocaleBuilder & { return self.setLocale(locale); },
+        py::arg("locale"))
+      .def(
+          // const char *locale -> const Locale &locale
+          "set_locale",
+          [](LocaleBuilder &self, const char *locale) -> LocaleBuilder & { return self.setLocale(locale); },
+          py::arg("locale"));
   lb.def(
       "set_region", [](LocaleBuilder &self, const char *region) -> LocaleBuilder & { return self.setRegion(region); },
       py::arg("region"));
