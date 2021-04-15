@@ -12,52 +12,52 @@ void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_dtrule(py::module &m);
 void init_gregocal(py::module &m);
-void init_idna(py::module &);
+void init_idna(py::module &m);
 void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
-void init_locid(py::module &);
+void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
 void init_normalizer2(py::module &m);
 void init_parseerr(py::module &m);
-void init_parsepos(py::module &);
-void init_rbbi(py::module &);
-void init_regex(py::module &);
-void init_resbund(py::module &);
-void init_schriter(py::module &);
-void init_sortkey(py::module &);
-void init_strenum(py::module &);
+void init_parsepos(py::module &m);
+void init_rbbi(py::module &m);
+void init_regex(py::module &m);
+void init_resbund(py::module &m);
+void init_schriter(py::module &m);
+void init_sortkey(py::module &m);
+void init_strenum(py::module &m);
 void init_stsearch(py::module &m);
 void init_tblcoll(py::module &m);
 void init_timezone(py::module &m);
 void init_translit(py::module &m);
 void init_tzrule(py::module &m);
 void init_tztrans(py::module &m);
-void init_ubidi(py::module &);
-void init_ubrk(py::module &);
+void init_ubidi(py::module &m);
+void init_ubrk(py::module &m);
 void init_ucal(py::module &m);
-void init_uchar(py::module &);
-void init_ucnv(py::module &);
-void init_ucnv_cb(py::module &);
-void init_ucnv_err(py::module &);
-void init_ucol(py::module &);
-void init_ucpmap(py::module &);
+void init_uchar(py::module &m);
+void init_ucnv(py::module &m);
+void init_ucnv_cb(py::module &m);
+void init_ucnv_err(py::module &m);
+void init_ucol(py::module &m);
+void init_ucpmap(py::module &m);
 void init_ucsdet(py::module &m);
 void init_uenum(py::module &m);
-void init_uidna(py::module &);
-void init_uloc(py::module &);
+void init_uidna(py::module &m);
+void init_uloc(py::module &m);
 void init_uniset(py::module &m);
-void init_unistr(py::module &);
+void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unorm2(py::module &m);
 void init_uregex(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
 void init_usearch(py::module &m);
 void init_uset(py::module &m);
-void init_ustring(py::module &);
-void init_utext(py::module &);
+void init_ustring(py::module &m);
+void init_utext(py::module &m);
 void init_utrans(py::module &m);
-void init_utypes(py::module &);
-void init_uversion(py::module &);
-void init_voidptr(py::module &);
+void init_utypes(py::module &m);
+void init_uversion(py::module &m);
+void init_voidptr(py::module &m);
 
 ICUException::ICUException(UErrorCode error_code, const char *message) {
   error_code_ = error_code;
@@ -94,29 +94,47 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   py::class_<UObject, UMemory>(m, "UObject");
 
+  py::class_<Locale, UObject> loc(m, "Locale");
+
+  py::class_<Replaceable, UObject> rep(m, "Replaceable");
+
+  py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
+
+  py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
+      .def(py::init<size_t>(), py::arg("n"));
+
   init_char16ptr(m);
-  init_coleitr(m);
+  init_parseerr(m);
+  init_parsepos(m);
+  init_strenum(m);
+  init_voidptr(m);
+
   init_dtrule(m);
+  init_tzrule(m);
+  init_tztrans(m);
+  init_timezone(m);
+
+  init_schriter(m);
+  init_coleitr(m);
+
   init_gregocal(m);
   init_idna(m);
   init_localebuilder(m);
   init_localematcher(m);
-  init_locid(m);
-  init_normalizer2(m);
-  init_parseerr(m);
-  init_parsepos(m);
+  init_locid(m, loc);
   init_rbbi(m);
   init_regex(m);
   init_resbund(m);
-  init_schriter(m);
   init_sortkey(m);
-  init_strenum(m);
-  init_stsearch(m);
+
+  init_uniset(m);
+  init_normalizer2(m);
   init_tblcoll(m);
-  init_timezone(m);
+  init_stsearch(m);
   init_translit(m);
-  init_tzrule(m);
-  init_tztrans(m);
+
+  init_unistr(m, rep, us);
+
   init_ubidi(m);
   init_ubrk(m);
   init_ucal(m);
@@ -130,8 +148,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uenum(m);
   init_uidna(m);
   init_uloc(m);
-  init_uniset(m);
-  init_unistr(m);
   init_unorm2(m);
   init_uregex(m);
   init_ures(m);
@@ -143,7 +159,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utrans(m);
   init_utypes(m);
   init_uversion(m);
-  init_voidptr(m);
 
 #ifdef VERSION_INFO
   m.attr("LIB_VERSION") = VERSION_INFO;

@@ -8,8 +8,8 @@
 
 using namespace icu;
 
-void init_locid(py::module &m) {
-  py::class_<Locale, UObject> loc(m, "Locale");
+void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
+  // icu::Locale
   loc.def(py::init<>())
       .def(py::init<const char *, const char *, const char *, const char *>(), py::arg("language"),
            py::arg("country") = nullptr, py::arg("variant") = nullptr, py::arg("keywords_and_values") = nullptr)

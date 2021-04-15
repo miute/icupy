@@ -14,6 +14,11 @@ using namespace icu;
 void init_regex(py::module &m) {
   // icu::RegexMatcher
   py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher");
+
+  // icu::RegexPattern
+  py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
+
+  // icu::RegexMatcher
   rm.def(
         // [1] RegexMatcher::RegexMatcher
         py::init([](const UnicodeString &regexp, uint32_t flags) {
@@ -571,7 +576,6 @@ void init_regex(py::module &m) {
   rm.def("use_transparent_bounds", &RegexMatcher::useTransparentBounds, py::arg("b"));
 
   // icu::RegexPattern
-  py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
   rp.def(py::init<>())
       .def(py::init<const RegexPattern &>(), py::arg("source"))
       .def(py::self != py::self, py::arg("other"))

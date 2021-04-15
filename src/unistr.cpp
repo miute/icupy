@@ -14,22 +14,15 @@
 
 using namespace icu;
 
-void init_unistr(py::module &m) {
-  // _UnicodeStringVector
-  py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
-      .def(py::init<size_t>(), py::arg("n"));
-
+void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us) {
   // icu::Replaceable
-  py::class_<Replaceable, UObject>(m, "Replaceable")
-      .def("char32_at", &Replaceable::char32At, py::arg("offset"))
-      .def(
-          "char_at", [](const Replaceable &self, int32_t offset) -> uint16_t { return self.charAt(offset); },
-          py::arg("offset"))
-      .def("length", &Replaceable::length);
+  rep.def("char32_at", &Replaceable::char32At, py::arg("offset"));
+  rep.def(
+      "char_at", [](const Replaceable &self, int32_t offset) -> uint16_t { return self.charAt(offset); },
+      py::arg("offset"));
+  rep.def("length", &Replaceable::length);
 
   // icu::UnicodeString
-  py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
-
   py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic())
       .value("INVARIANT", UnicodeString::kInvariant)
       .export_values();
