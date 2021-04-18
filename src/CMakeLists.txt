@@ -15,6 +15,7 @@ pybind11_add_module(
     char16ptr.cpp
     coleitr.cpp
     dtrule.cpp
+    fmtable.cpp
     gregocal.cpp
     idna.cpp
     localebuilder.cpp

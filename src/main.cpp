@@ -11,6 +11,7 @@ using namespace icu;
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_dtrule(py::module &m);
+void init_fmtable(py::module &m);
 void init_gregocal(py::module &m);
 void init_idna(py::module &m);
 void init_localebuilder(py::module &m);
@@ -113,6 +114,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_tzrule(m);
   init_tztrans(m);
   init_timezone(m);
+
+  init_fmtable(m);
 
   init_schriter(m);
   init_coleitr(m);
