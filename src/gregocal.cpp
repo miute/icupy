@@ -1,10 +1,10 @@
 #include "main.hpp"
-#include <iomanip>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
 #include <unicode/gregocal.h>
 #include <unicode/locid.h>
+#include <unicode/smpdtfmt.h>
 
 using namespace icu;
 
@@ -23,14 +23,13 @@ void init_gregocal(py::module &m) {
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
         UErrorCode error_code = U_ZERO_ERROR;
-        ss << "Calendar(";
-        ss << std::setw(4) << std::setfill('0') << self.get(UCAL_YEAR, error_code);
-        ss << "-" << std::setw(2) << std::setfill('0') << self.get(UCAL_MONTH, error_code) + 1;
-        ss << "-" << std::setw(2) << std::setfill('0') << self.get(UCAL_DATE, error_code);
-        ss << "T" << std::setw(2) << std::setfill('0') << self.get(UCAL_HOUR_OF_DAY, error_code);
-        ss << ":" << std::setw(2) << std::setfill('0') << self.get(UCAL_MINUTE, error_code);
-        ss << ":" << std::setw(2) << std::setfill('0') << self.get(UCAL_SECOND, error_code);
-        ss << "Z)";
+        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ssXXXXX", error_code);
+        fmt.setCalendar(self);
+        UnicodeString dest;
+        fmt.format(self.getTime(error_code), dest);
+        std::string s;
+        dest.toUTF8String(s);
+        ss << "Calendar(" << s << ")";
         return ss.str();
       });
   cal.def(
@@ -444,14 +443,13 @@ void init_gregocal(py::module &m) {
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
         UErrorCode error_code = U_ZERO_ERROR;
-        ss << "GregorianCalendar(";
-        ss << std::setw(4) << std::setfill('0') << self.get(UCAL_YEAR, error_code);
-        ss << "-" << std::setw(2) << std::setfill('0') << self.get(UCAL_MONTH, error_code) + 1;
-        ss << "-" << std::setw(2) << std::setfill('0') << self.get(UCAL_DATE, error_code);
-        ss << "T" << std::setw(2) << std::setfill('0') << self.get(UCAL_HOUR_OF_DAY, error_code);
-        ss << ":" << std::setw(2) << std::setfill('0') << self.get(UCAL_MINUTE, error_code);
-        ss << ":" << std::setw(2) << std::setfill('0') << self.get(UCAL_SECOND, error_code);
-        ss << "Z)";
+        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ssXXXXX", error_code);
+        fmt.setCalendar(self);
+        UnicodeString dest;
+        fmt.format(self.getTime(error_code), dest);
+        std::string s;
+        dest.toUTF8String(s);
+        ss << "GregorianCalendar(" << s << ")";
         return ss.str();
       });
   gc.def("clone", &GregorianCalendar::clone);
