@@ -10,8 +10,12 @@ using namespace icu;
 
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
+void init_datefmt(py::module &m);
 void init_dtrule(py::module &m);
+void init_fieldpos(py::module &m);
 void init_fmtable(py::module &m);
+void init_format(py::module &m);
+void init_fpositer(py::module &m);
 void init_gregocal(py::module &m);
 void init_idna(py::module &m);
 void init_localebuilder(py::module &m);
@@ -42,6 +46,8 @@ void init_ucnv_err(py::module &m);
 void init_ucol(py::module &m);
 void init_ucpmap(py::module &m);
 void init_ucsdet(py::module &m);
+void init_udat(py::module &m);
+void init_udisplaycontext(py::module &m);
 void init_uenum(py::module &m);
 void init_uidna(py::module &m);
 void init_uloc(py::module &m);
@@ -115,12 +121,17 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_tztrans(m);
   init_timezone(m);
 
+  init_gregocal(m);
+
+  init_fieldpos(m);
+  init_fpositer(m);
   init_fmtable(m);
+  init_format(m);
+  init_datefmt(m);
 
   init_schriter(m);
   init_coleitr(m);
 
-  init_gregocal(m);
   init_idna(m);
   init_localebuilder(m);
   init_localematcher(m);
@@ -148,6 +159,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_ucol(m);
   init_ucpmap(m);
   init_ucsdet(m);
+  init_udat(m);
+  init_udisplaycontext(m);
   init_uenum(m);
   init_uidna(m);
   init_uloc(m);

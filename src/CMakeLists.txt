@@ -14,8 +14,12 @@ pybind11_add_module(
     ${PROJECT_NAME}
     char16ptr.cpp
     coleitr.cpp
+    datefmt.cpp
     dtrule.cpp
+    fieldpos.cpp
     fmtable.cpp
+    format.cpp
+    fpositer.cpp
     gregocal.cpp
     idna.cpp
     localebuilder.cpp
@@ -47,6 +51,8 @@ pybind11_add_module(
     ucol.cpp
     ucpmap.cpp
     ucsdet.cpp
+    udat.cpp
+    udisplaycontext.cpp
     uenum.cpp
     uidna.cpp
     uloc.cpp
