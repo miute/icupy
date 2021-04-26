@@ -15,6 +15,7 @@ pybind11_add_module(
     char16ptr.cpp
     coleitr.cpp
     datefmt.cpp
+    dtfmtsym.cpp
     dtrule.cpp
     fieldpos.cpp
     fmtable.cpp

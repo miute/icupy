@@ -11,6 +11,7 @@ using namespace icu;
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_datefmt(py::module &m);
+void init_dtfmtsym(py::module &m);
 void init_dtrule(py::module &m);
 void init_fieldpos(py::module &m);
 void init_fmtable(py::module &m);
@@ -128,6 +129,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_fmtable(m);
   init_format(m);
   init_datefmt(m);
+  init_dtfmtsym(m);
 
   init_schriter(m);
   init_coleitr(m);
