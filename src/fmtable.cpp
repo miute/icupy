@@ -2,7 +2,12 @@
 #include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include <unicode/calendar.h>
+#include <unicode/curramt.h>
+#include <unicode/dtintrv.h>
 #include <unicode/fmtable.h>
+#include <unicode/timezone.h>
+#include <unicode/tmutamt.h>
 
 using namespace icu;
 
@@ -132,7 +137,36 @@ void init_fmtable(py::module &m) {
     }
     return result;
   });
-  fmt.def("get_object", &Formattable::getObject);
+  fmt.def(
+      "get_object",
+      [](const Formattable &self) -> std::variant<const Calendar *, const CurrencyAmount *, const DateInterval *,
+                                                  const TimeUnitAmount *, const TimeZone *, const UObject *> {
+        auto obj = self.getObject();
+        if (obj) {
+          auto cal = dynamic_cast<const Calendar *>(obj);
+          if (cal) {
+            return cal;
+          }
+          auto camt = dynamic_cast<const CurrencyAmount *>(obj);
+          if (camt) {
+            return camt;
+          }
+          auto dtitv = dynamic_cast<const DateInterval *>(obj);
+          if (dtitv) {
+            return dtitv;
+          }
+          auto tuamt = dynamic_cast<const TimeUnitAmount *>(obj);
+          if (tuamt) {
+            return tuamt;
+          }
+          auto tz = dynamic_cast<const TimeZone *>(obj);
+          if (tz) {
+            return tz;
+          }
+        }
+        return obj;
+      },
+      py::return_value_policy::reference);
   fmt.def("get_string",
           [](const Formattable &self) -> const UnicodeString & {
             UErrorCode error_code = U_ZERO_ERROR;
