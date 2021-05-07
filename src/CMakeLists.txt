@@ -40,6 +40,7 @@ pybind11_add_module(
     tblcoll.cpp
     timezone.cpp
     translit.cpp
+    tzfmt.cpp
     tznames.cpp
     tzrule.cpp
     tztrans.cpp

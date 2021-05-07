@@ -35,6 +35,7 @@ void init_stsearch(py::module &m);
 void init_tblcoll(py::module &m);
 void init_timezone(py::module &m);
 void init_translit(py::module &m);
+void init_tzfmt(py::module &m);
 void init_tznames(py::module &m);
 void init_tzrule(py::module &m);
 void init_tztrans(py::module &m);
@@ -132,6 +133,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_datefmt(m);
   init_dtfmtsym(m);
   init_tznames(m);
+  init_tzfmt(m);
 
   init_schriter(m);
   init_coleitr(m);
