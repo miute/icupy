@@ -34,6 +34,7 @@ pybind11_add_module(
     regex.cpp
     resbund.cpp
     schriter.cpp
+    smpdtfmt.cpp
     sortkey.cpp
     strenum.cpp
     stsearch.cpp

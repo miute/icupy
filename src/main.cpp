@@ -29,6 +29,7 @@ void init_rbbi(py::module &m);
 void init_regex(py::module &m);
 void init_resbund(py::module &m);
 void init_schriter(py::module &m);
+void init_smpdtfmt(py::module &m);
 void init_sortkey(py::module &m);
 void init_strenum(py::module &m);
 void init_stsearch(py::module &m);
@@ -134,6 +135,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_dtfmtsym(m);
   init_tznames(m);
   init_tzfmt(m);
+  init_smpdtfmt(m);
 
   init_schriter(m);
   init_coleitr(m);
