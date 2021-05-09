@@ -3,13 +3,15 @@ import copy
 import pytest
 from icupy import (
     Calendar, DateFormat, FieldPosition, FieldPositionIterator,
-    Formattable, GregorianCalendar, ICUException, Locale, ParsePosition,
-    TimeZone, UDateFormatField, UErrorCode, ULocDataLocaleType,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    Format, Formattable, GregorianCalendar, ICUException, Locale,
+    ParsePosition, TimeZone, UDateFormatField, UErrorCode,
+    ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
 
 
 def test_api():
+    assert issubclass(DateFormat, Format)
+
     # static const Locale *DateFormat::getAvailableLocales(int32_t &count)
     locales = DateFormat.get_available_locales()
     assert isinstance(locales, list)
@@ -17,154 +19,77 @@ def test_api():
     assert all(isinstance(x, Locale) for x in locales)
 
     zone = TimeZone.create_default()
-    df = DateFormat.create_date_time_instance(
+    fmt = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT,
         Locale.get_english())
-    assert isinstance(df, DateFormat)
-
-    cal = df.get_calendar()
-    assert isinstance(cal, Calendar)
-    assert cal.get_time_zone() == zone
-
-    loc = df.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-    assert isinstance(loc, Locale)
-    assert loc == Locale("en")
-
-    zone2 = df.get_time_zone()
-    assert isinstance(zone2, TimeZone)
-    assert zone2 == zone
-
-    assert df.is_lenient()
-
-    # DateFormat::operator==()
-    df2 = DateFormat.create_date_time_instance(
+    fmt2 = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT,
         Locale.get_english())
-    df3 = DateFormat.create_date_time_instance(
+    fmt3 = DateFormat.create_date_time_instance(
         DateFormat.SHORT,
         DateFormat.LONG,
         Locale.get_english())
-    assert df == df2
-    assert not (df == df3)
 
     # Format::operator!=()
-    assert not (df != df2)
-    assert df != df3
+    assert not (fmt != fmt2)
+    assert fmt != fmt3
+    assert fmt2 != fmt3
 
-    # [1]
-    # void DateFormat::parse(const UnicodeString &text,
-    #                        Calendar &cal,
-    #                        ParsePosition &pos)
-    zone2 = TimeZone.create_time_zone("PDT")
-    cal2 = GregorianCalendar(zone2)
-    cal2.clear()
-    pos = ParsePosition(0)
-    df3.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), cal2, pos)
-    assert pos.get_error_index() == -1
-    assert cal2.get_time() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # DateFormat::operator==()
+    assert fmt == fmt2
+    assert not (fmt == fmt3)
+    assert not (fmt2 == fmt3)
 
-    cal2.clear()
-    pos = ParsePosition(0)
-    df3.parse("07/10/96 4:5:0 PM PDT", cal2, pos)
-    assert pos.get_error_index() == -1
-    assert cal2.get_time() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # const Calendar *DateFormat::getCalendar(void)
+    cal = fmt2.get_calendar()
+    assert isinstance(cal, Calendar)
+    assert cal.get_time_zone() == zone
 
-    # [2]
-    # UDate DateFormat::parse(const UnicodeString &text,
-    #                         ParsePosition &pos)
-    pos = ParsePosition(0)
-    result = df3.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), pos)
-    assert pos.get_error_index() == -1
-    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # void DateFormat::setCalendar(const Calendar &newCalendar)
+    zone2 = TimeZone.create_time_zone("JST")
+    assert zone2 != zone
+    new_calendar = GregorianCalendar(zone2, Locale.get_japanese())
+    fmt2.set_calendar(new_calendar)
+    assert fmt2.get_calendar() == new_calendar
 
-    pos = ParsePosition(0)
-    result = df3.parse("07/10/96 4:5:0 PM PDT", pos)
-    assert pos.get_error_index() == -1
-    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # Locale Format::getLocale(ULocDataLocaleType type, UErrorCode &status)
+    loc = fmt.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
+    assert loc == Locale("en")
 
-    # [3]
-    # UDate DateFormat::parse(const UnicodeString &text,
-    #                         UErrorCode &status)
-    result = df3.parse(UnicodeString("07/10/96 4:5:0 PM PDT"))
-    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # const TimeZone &DateFormat::getTimeZone(void)
+    zone3 = fmt2.get_time_zone()
+    assert isinstance(zone3, TimeZone)
+    assert zone3 == zone2
 
-    result = df3.parse("07/10/96 4:5:0 PM PDT")
-    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+    # void DateFormat::setTimeZone(const TimeZone &zone)
+    zone4 = TimeZone.create_time_zone("PST")
+    assert zone4 != zone3
+    fmt2.set_time_zone(zone4)
+    assert fmt2.get_time_zone() == zone4
 
-    with pytest.raises(ICUException) as exc_info:
-        _ = df3.parse("07/10/96 4:5:0 PM, PDT")
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    # UBool DateFormat::isLenient(void)
+    assert fmt2.is_lenient()
 
-    # void DateFormat::parseObject(
-    #       const UnicodeString &source,
-    #       Formattable &result,
-    #       ParsePosition &parse_pos
-    # )
-    result = Formattable()
-    parse_pos = ParsePosition(0)
-    df3.parse_object(UnicodeString("07/10/96 4:5:0 PM PDT"),
-                     result,
-                     parse_pos)
-    assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DATE
-    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
-
-    result = Formattable()
-    parse_pos = ParsePosition(0)
-    df3.parse_object("07/10/96 4:5:0 PM PDT",
-                     result,
-                     parse_pos)
-    assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DATE
-    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
-
-    # void Format::parseObject(
-    #       const UnicodeString &source,
-    #       Formattable &result,
-    #       UErrorCode &status
-    # )
-    result = Formattable()
-    df3.parse_object(UnicodeString("07/10/96 4:5:0 PM PDT"), result)
-    assert result.get_type() == Formattable.DATE
-    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
-
-    result = Formattable()
-    df3.parse_object("07/10/96 4:5:0 PM PDT", result)
-    assert result.get_type() == Formattable.DATE
-    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
-
-    result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
-        df3.parse_object("07/10/96 4:5:0 PM, PDT", result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
-
-    zone3 = TimeZone.create_time_zone("JST")
-    cal3 = GregorianCalendar(zone3, Locale.get_japanese())
-    df.set_calendar(cal3)
-    assert df.get_calendar() == cal3
-
-    df.set_lenient(False)
-    assert not df.is_lenient()
-
-    assert df.get_time_zone() == zone3
-    df.set_time_zone(zone2)
-    assert df.get_time_zone() == zone2
+    # void DateFormat::setLenient(UBool lenient)
+    fmt2.set_lenient(False)
+    assert not fmt2.is_lenient()
 
 
 def test_clone():
-    df = DateFormat.create_instance()
+    fmt1 = DateFormat.create_instance()
 
-    test1 = df.clone()
-    assert isinstance(test1, DateFormat)
-    assert test1 == df
+    fmt2 = fmt1.clone()
+    assert isinstance(fmt2, DateFormat)
+    assert fmt2 == fmt1
 
-    test2 = copy.copy(df)
-    assert test2 == df
+    fmt3 = copy.copy(fmt1)
+    assert fmt3 == fmt1
 
-    test3 = copy.deepcopy(df)
-    assert test3 == df
+    fmt4 = copy.deepcopy(fmt1)
+    assert fmt4 == fmt1
 
 
 def test_create_instance():
@@ -172,55 +97,55 @@ def test_create_instance():
     #       EStyle style = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
     # )
-    df10 = DateFormat.create_date_instance()
-    assert isinstance(df10, DateFormat)
+    fmt1 = DateFormat.create_date_instance()
+    assert isinstance(fmt1, DateFormat)
 
-    df11 = DateFormat.create_date_instance(DateFormat.DEFAULT)
-    df12 = DateFormat.create_date_instance(
+    fmt1a = DateFormat.create_date_instance(DateFormat.DEFAULT)
+    fmt1b = DateFormat.create_date_instance(
         DateFormat.DEFAULT,
         Locale.get_default())
-    assert df10 == df11 == df12
+    assert fmt1 == fmt1a == fmt1b
 
     # static DateFormat *DateFormat::createDateTimeInstance(
     #       EStyle dateStyle = kDefault,
     #       EStyle timeStyle = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
     # )
-    df20 = DateFormat.create_date_time_instance()
-    assert isinstance(df20, DateFormat)
+    fmt2 = DateFormat.create_date_time_instance()
+    assert isinstance(fmt2, DateFormat)
 
-    df21 = DateFormat.create_date_time_instance(DateFormat.DEFAULT)
-    df22 = DateFormat.create_date_time_instance(
+    fmt2a = DateFormat.create_date_time_instance(DateFormat.DEFAULT)
+    fmt2b = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT)
-    df23 = DateFormat.create_date_time_instance(
+    fmt2c = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT,
         Locale.get_default())
-    assert df20 == df21 == df22 == df23
+    assert fmt2 == fmt2a == fmt2b == fmt2c
 
     # static DateFormat *DateFormat::createInstance(void)
-    df30 = DateFormat.create_instance()
-    assert isinstance(df30, DateFormat)
+    fmt3 = DateFormat.create_instance()
+    assert isinstance(fmt3, DateFormat)
 
-    df24 = DateFormat.create_date_time_instance(
+    fmt2d = DateFormat.create_date_time_instance(
         DateFormat.SHORT,
         DateFormat.SHORT,
         Locale.get_default())
-    assert df30 == df24
+    assert fmt3 == fmt2d
 
     # static DateFormat *DateFormat::createTimeInstance(
     #       EStyle style = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
     # )
-    df40 = DateFormat.create_time_instance()
-    assert isinstance(df40, DateFormat)
+    fmt4 = DateFormat.create_time_instance()
+    assert isinstance(fmt4, DateFormat)
 
-    df41 = DateFormat.create_time_instance(DateFormat.DEFAULT)
-    df42 = DateFormat.create_time_instance(
+    fmt4a = DateFormat.create_time_instance(DateFormat.DEFAULT)
+    fmt4b = DateFormat.create_time_instance(
         DateFormat.DEFAULT,
         Locale.get_default())
-    assert df40 == df41 == df42
+    assert fmt4 == fmt4a == fmt4b
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
@@ -231,26 +156,26 @@ def test_create_instance_for_skeleton():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    df20 = DateFormat.create_instance_for_skeleton(
+    fmt2 = DateFormat.create_instance_for_skeleton(
         UnicodeString("yMMMMd"),
         Locale.get_english())
-    assert isinstance(df20, DateFormat)
+    assert isinstance(fmt2, DateFormat)
 
-    df21 = DateFormat.create_instance_for_skeleton(
+    fmt2a = DateFormat.create_instance_for_skeleton(
         "yMMMMd",
         Locale.get_english())
-    assert df20 == df21
+    assert fmt2 == fmt2a
 
     # [3]
     # static DateFormat *DateFormat::createInstanceForSkeleton(
     #       const UnicodeString &skeleton,
     #       UErrorCode &status
     # )
-    df30 = DateFormat.create_instance_for_skeleton(UnicodeString("yMMMMd"))
-    assert isinstance(df30, DateFormat)
+    fmt3 = DateFormat.create_instance_for_skeleton(UnicodeString("yMMMMd"))
+    assert isinstance(fmt3, DateFormat)
 
-    df31 = DateFormat.create_instance_for_skeleton("yMMMMd")
-    assert df30 == df31
+    fmt3a = DateFormat.create_instance_for_skeleton("yMMMMd")
+    assert fmt3 == fmt3a
 
 
 def test_format():
@@ -258,11 +183,11 @@ def test_format():
     zone = TimeZone.get_gmt()
     cal = GregorianCalendar(zone)
     cal.set_time(date)
-    df = DateFormat.create_date_time_instance(
+    fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
         DateFormat.SHORT,
         Locale.get_english())
-    df.set_time_zone(zone)
+    fmt.set_time_zone(zone)
 
     # [1]
     # UnicodeString &DateFormat::format(
@@ -271,8 +196,8 @@ def test_format():
     #       FieldPosition &fieldPosition
     # )
     append_to = UnicodeString()
-    field_pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = df.format(cal, append_to, field_pos)
+    field_position = FieldPosition(FieldPosition.DONT_CARE)
+    result = fmt.format(cal, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -286,7 +211,7 @@ def test_format():
     # )
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
-    result = df.format(cal, append_to, pos_iter)
+    result = fmt.format(cal, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -314,8 +239,8 @@ def test_format():
 
     assert not pos_iter.next(fp)
 
-    append_to = UnicodeString()
-    result = df.format(cal, append_to, None)
+    append_to.remove()
+    result = fmt.format(cal, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -330,7 +255,7 @@ def test_format():
     obj = Formattable(date, Formattable.IS_DATE)
     append_to = UnicodeString()
     pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = df.format(obj, append_to, pos)
+    result = fmt.format(obj, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -345,7 +270,7 @@ def test_format():
     obj = Formattable(date, Formattable.IS_DATE)
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
-    result = df.format(obj, append_to, pos_iter)
+    result = fmt.format(obj, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -356,8 +281,8 @@ def test_format():
     assert fp.get_begin_index() == 0
     assert fp.get_end_index() == 3
 
-    append_to = UnicodeString()
-    result = df.format(obj, append_to, None)
+    append_to.remove()
+    result = fmt.format(obj, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -368,7 +293,7 @@ def test_format():
     #       UnicodeString &appendTo
     # )
     append_to = UnicodeString()
-    result = df.format(date, append_to)
+    result = fmt.format(date, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -381,7 +306,7 @@ def test_format():
     # )
     append_to = UnicodeString()
     field_position = FieldPosition(FieldPosition.DONT_CARE)
-    result = df.format(date, append_to, field_position)
+    result = fmt.format(date, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -395,7 +320,7 @@ def test_format():
     # )
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
-    result = df.format(date, append_to, pos_iter)
+    result = fmt.format(date, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -406,8 +331,8 @@ def test_format():
     assert fp.get_begin_index() == 0
     assert fp.get_end_index() == 3
 
-    append_to = UnicodeString()
-    result = df.format(date, append_to, None)
+    append_to.remove()
+    result = fmt.format(date, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -420,7 +345,7 @@ def test_format():
     # )
     obj = Formattable(date, Formattable.IS_DATE)
     append_to = UnicodeString()
-    result = df.format(obj, append_to)
+    result = fmt.format(obj, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Jul 5, 2008, 11:00 PM"
@@ -430,18 +355,29 @@ def test_format():
 def test_get_boolean_attribute():
     from icupy import UDateFormatBooleanAttribute
 
-    df = DateFormat.create_date_time_instance(
+    fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
         DateFormat.SHORT,
         Locale.get_english())
 
-    assert df.get_boolean_attribute(
+    # UBool DateFormat::getBooleanAttribute(
+    #       UDateFormatBooleanAttribute attr,
+    #       UErrorCode &status
+    # )
+    assert fmt.get_boolean_attribute(
         UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE)
 
-    df.set_boolean_attribute(
+    # DateFormat &DateFormat::setBooleanAttribute(
+    #       UDateFormatBooleanAttribute attr,
+    #       UBool newvalue,
+    #       UErrorCode &status
+    # )
+    result = fmt.set_boolean_attribute(
         UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE,
         False)
-    assert not df.get_boolean_attribute(
+    assert isinstance(result, DateFormat)
+    assert id(result) == id(fmt)
+    assert not fmt.get_boolean_attribute(
         UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE)
 
 
@@ -449,32 +385,143 @@ def test_get_boolean_attribute():
 def test_get_context():
     from icupy import UDisplayContext, UDisplayContextType
 
-    df = DateFormat.create_date_time_instance(
+    fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
         DateFormat.SHORT,
         Locale.get_english())
 
-    assert (df.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+    # UDisplayContext DateFormat::getContext(
+    #       UDisplayContextType type,
+    #       UErrorCode &status
+    # )
+    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
             == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
 
-    df.set_context(
+    # void DateFormat::setContext(
+    #       UDisplayContext value,
+    #       UErrorCode &status
+    # )
+    fmt.set_context(
         UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
-    assert (df.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
             == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_is_calendar_lenient():
-    df = DateFormat.create_date_time_instance(
+    fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
         DateFormat.SHORT,
         Locale.get_english())
 
-    assert df.is_calendar_lenient()
-    cal = df.get_calendar()
+    # UBool DateFormat::isCalendarLenient(void)
+    assert fmt.is_calendar_lenient()
+
+    cal = fmt.get_calendar()
     assert cal.is_lenient()
 
-    cal2 = GregorianCalendar()
-    cal2.set_lenient(False)
-    df.set_calendar(cal2)
-    assert not df.is_calendar_lenient()
+    # void DateFormat::setCalendarLenient(UBool lenient)
+    fmt.set_calendar_lenient(False)
+    assert not fmt.is_calendar_lenient()
+    assert not cal.is_lenient()
+
+
+def test_parse():
+    fmt = DateFormat.create_date_time_instance(
+        DateFormat.SHORT,
+        DateFormat.LONG,
+        Locale.get_english())
+
+    # [1]
+    # void DateFormat::parse(const UnicodeString &text,
+    #                        Calendar &cal,
+    #                        ParsePosition &pos)
+    zone = TimeZone.create_time_zone("PST")
+    cal = GregorianCalendar(zone)
+    cal.clear()
+    pos = ParsePosition(0)
+    fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), cal, pos)
+    assert pos.get_error_index() == -1
+    assert cal.get_time() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    cal.clear()
+    pos = ParsePosition(0)
+    fmt.parse("07/10/96 4:5:0 PM PDT", cal, pos)
+    assert pos.get_error_index() == -1
+    assert cal.get_time() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    # [2]
+    # UDate DateFormat::parse(const UnicodeString &text,
+    #                         ParsePosition &pos)
+    pos = ParsePosition(0)
+    result = fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), pos)
+    assert pos.get_error_index() == -1
+    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    pos = ParsePosition(0)
+    result = fmt.parse("07/10/96 4:5:0 PM PDT", pos)
+    assert pos.get_error_index() == -1
+    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    # [3]
+    # UDate DateFormat::parse(const UnicodeString &text,
+    #                         UErrorCode &status)
+    result = fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"))
+    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    result = fmt.parse("07/10/96 4:5:0 PM PDT")
+    assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    with pytest.raises(ICUException) as exc_info:
+        _ = fmt.parse("07/10/96 4:5:0 PM, PDT")
+    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
+
+def test_parse_object():
+    fmt = DateFormat.create_date_time_instance(
+        DateFormat.SHORT,
+        DateFormat.LONG,
+        Locale.get_english())
+
+    # void DateFormat::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       ParsePosition &parse_pos
+    # )
+    result = Formattable()
+    parse_pos = ParsePosition(0)
+    fmt.parse_object(UnicodeString("07/10/96 4:5:0 PM PDT"),
+                     result,
+                     parse_pos)
+    assert parse_pos.get_error_index() == -1
+    assert result.get_type() == Formattable.DATE
+    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    result = Formattable()
+    parse_pos = ParsePosition(0)
+    fmt.parse_object("07/10/96 4:5:0 PM PDT",
+                     result,
+                     parse_pos)
+    assert parse_pos.get_error_index() == -1
+    assert result.get_type() == Formattable.DATE
+    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    # void Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       UErrorCode &status
+    # )
+    result = Formattable()
+    fmt.parse_object(UnicodeString("07/10/96 4:5:0 PM PDT"), result)
+    assert result.get_type() == Formattable.DATE
+    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    result = Formattable()
+    fmt.parse_object("07/10/96 4:5:0 PM PDT", result)
+    assert result.get_type() == Formattable.DATE
+    assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
+
+    result = Formattable()
+    with pytest.raises(ICUException) as exc_info:
+        fmt.parse_object("07/10/96 4:5:0 PM, PDT", result)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
