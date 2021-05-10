@@ -37,16 +37,9 @@ def test_api():
     when3 = 1215097200000.0  # 2008-07-04T00:00:00Z
     zone = TimeZone.get_gmt()
     zone2 = TimeZone.create_default()
-    zone3 = TimeZone.create_time_zone("PST")
     cal = Calendar.create_instance("en")
     assert isinstance(cal, GregorianCalendar)
     assert cal.get_time_zone() == zone2
-
-    cal.adopt_time_zone(zone3.clone())
-    assert cal.get_time_zone() == zone3
-
-    cal.adopt_time_zone(None)  # Nothing to do
-    assert cal.get_time_zone() == zone3
 
     cal.set_time_zone(zone)
     assert cal.get_time_zone() == zone
