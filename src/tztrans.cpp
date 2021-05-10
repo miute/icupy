@@ -17,12 +17,16 @@ void init_tztrans(py::module &m) {
   tzt.def("__copy__", &TimeZoneTransition::clone)
       .def(
           "__deepcopy__", [](const TimeZoneTransition &self, py::dict) { return self.clone(); }, py::arg("memo"));
+  // FIXME: Implement "void icu::TimeZoneTransition::adoptFrom(TimeZoneRule *from)".
+  // FIXME: Implement "void icu::TimeZoneTransition::adoptTo(TimeZoneRule *to)".
+  /*
   tzt.def(
       "adopt_from", [](TimeZoneTransition &self, TimeZoneRule *from) { self.adoptFrom(from ? from->clone() : NULL); },
       py::arg("from"));
   tzt.def(
       "adopt_to", [](TimeZoneTransition &self, TimeZoneRule *to) { self.adoptTo(to ? to->clone() : NULL); },
       py::arg("to"));
+  */
   tzt.def("clone", &TimeZoneTransition::clone);
   tzt.def("get_from", &TimeZoneTransition::getFrom, py::return_value_policy::reference);
   tzt.def("get_time", &TimeZoneTransition::getTime);

@@ -488,8 +488,8 @@ def test_time_zone_transition():
     assert not (tzt2 == tzt4)
     assert not (tzt3 == tzt4)
 
-    tzt2.adopt_from(from_)  # Same as TimeZoneTransition.set_from
-    tzt2.adopt_to(to)  # Same as TimeZoneTransition.set_to
+    tzt2.set_from(from_)
+    tzt2.set_to(to)
     tzt2.set_time(time)
     assert tzt1 == tzt2
 
