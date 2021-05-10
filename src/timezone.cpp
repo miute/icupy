@@ -34,8 +34,11 @@ void init_timezone(py::module &m) {
       .def(
           "__ne__", [](const TimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
           py::arg("other"));
+  // FIXME: Implement "static void icu::TimeZone::adoptDefault(TimeZone *zone)".
+  /*
   tz.def_static(
       "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : NULL); }, py::arg("zone"));
+  */
   tz.def("clone", &TimeZone::clone);
   tz.def_static("count_equivalent_ids", &TimeZone::countEquivalentIDs, py::arg("id_"))
       .def_static(

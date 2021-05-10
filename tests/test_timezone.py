@@ -985,7 +985,6 @@ def test_time_zone():
     zone4 = TimeZone.get_gmt()
     assert isinstance(zone4, TimeZone)
 
-    TimeZone.adopt_default(zone1)
     TimeZone.set_default(zone1)
 
     n = TimeZone.count_equivalent_ids(id_)
