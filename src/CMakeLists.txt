@@ -16,6 +16,7 @@ pybind11_add_module(
     coleitr.cpp
     datefmt.cpp
     dtfmtsym.cpp
+    dtptngen.cpp
     dtrule.cpp
     fieldpos.cpp
     fmtable.cpp
@@ -56,6 +57,7 @@ pybind11_add_module(
     ucpmap.cpp
     ucsdet.cpp
     udat.cpp
+    udatpg.cpp
     udisplaycontext.cpp
     uenum.cpp
     uidna.cpp
