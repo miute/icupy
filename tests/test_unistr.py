@@ -2,9 +2,9 @@ import copy
 
 import pytest
 from icupy import (
-    ICUException, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM, UErrorCode,
-    UnicodeString, UnicodeStringVector, US_INV, u_unescape, ucnv_close,
-    ucnv_open,
+    Appendable, ICUException, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM,
+    UErrorCode, UnicodeString, UnicodeStringAppendable, UnicodeStringVector,
+    US_INV, u_unescape, ucnv_close, ucnv_open,
 )
 
 from . import gc
@@ -1761,6 +1761,29 @@ def test_unicode_string():
     assert not test27.is_bogus()
     assert not test27.is_empty()
     assert test27 == "bar"
+
+
+def test_unicode_string_appendable():
+    assert issubclass(UnicodeStringAppendable, Appendable)
+
+    dest = UnicodeString()
+    app = UnicodeStringAppendable(dest)
+
+    # UBool UnicodeStringAppendable::appendCodePoint(UChar32 c)
+    assert app.append_code_point(0x61)
+    assert app.append_code_point(0x1f338)
+
+    # UBool UnicodeStringAppendable::appendCodeUnit(char16_t c)
+    assert app.append_code_unit(0x62)
+
+    # UBool UnicodeStringAppendable::appendString(
+    #       const char16_t *s,
+    #       int32_t length
+    # )
+    assert app.append_string("\U0001f338c", -1)
+    assert app.append_string("defghijklm", 3)
+
+    assert dest == "a\U0001f338b\U0001f338cdef"
 
 
 def test_unicode_string_vector():

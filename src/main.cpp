@@ -8,6 +8,7 @@
 
 using namespace icu;
 
+void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_datefmt(py::module &m);
@@ -116,6 +117,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
       .def(py::init<size_t>(), py::arg("n"));
 
+  init_appendable(m);
   init_char16ptr(m);
   init_parseerr(m);
   init_parsepos(m);
