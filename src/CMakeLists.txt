@@ -17,11 +17,15 @@ pybind11_add_module(
     coleitr.cpp
     datefmt.cpp
     dtfmtsym.cpp
+    dtintrv.cpp
+    dtitvfmt.cpp
+    dtitvinf.cpp
     dtptngen.cpp
     dtrule.cpp
     fieldpos.cpp
     fmtable.cpp
     format.cpp
+    formattedvalue.cpp
     fpositer.cpp
     gregocal.cpp
     idna.cpp
@@ -61,6 +65,7 @@ pybind11_add_module(
     udatpg.cpp
     udisplaycontext.cpp
     uenum.cpp
+    uformattedvalue.cpp
     uidna.cpp
     uloc.cpp
     uniset.cpp

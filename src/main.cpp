@@ -13,11 +13,15 @@ void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_datefmt(py::module &m);
 void init_dtfmtsym(py::module &m);
+void init_dtintrv(py::module &m);
+void init_dtitvfmt(py::module &m);
+void init_dtitvinf(py::module &m);
 void init_dtptngen(py::module &m);
 void init_dtrule(py::module &m);
 void init_fieldpos(py::module &m);
 void init_fmtable(py::module &m);
 void init_format(py::module &m);
+void init_formattedvalue(py::module &m);
 void init_fpositer(py::module &m);
 void init_gregocal(py::module &m);
 void init_idna(py::module &m);
@@ -56,6 +60,7 @@ void init_udat(py::module &m);
 void init_udatpg(py::module &m);
 void init_udisplaycontext(py::module &m);
 void init_uenum(py::module &m);
+void init_uformattedvalue(py::module &m);
 void init_uidna(py::module &m);
 void init_uloc(py::module &m);
 void init_uniset(py::module &m);
@@ -119,6 +124,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_appendable(m);
   init_char16ptr(m);
+  init_formattedvalue(m);
   init_parseerr(m);
   init_parsepos(m);
   init_strenum(m);
@@ -131,12 +137,15 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_gregocal(m);
 
+  init_dtintrv(m);
+  init_dtitvinf(m);
   init_fieldpos(m);
   init_fpositer(m);
   init_fmtable(m);
   init_format(m);
   init_datefmt(m);
   init_dtfmtsym(m);
+  init_dtitvfmt(m);
   init_tznames(m);
   init_tzfmt(m);
   init_smpdtfmt(m);
@@ -176,6 +185,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_udatpg(m);
   init_udisplaycontext(m);
   init_uenum(m);
+  init_uformattedvalue(m);
   init_uidna(m);
   init_uloc(m);
   init_unorm2(m);
