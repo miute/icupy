@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+#include <sstream>
 #include <unicode/formattedvalue.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -10,6 +11,16 @@ void init_formattedvalue(py::module &m) {
   // icu::ConstrainedFieldPosition
   py::class_<ConstrainedFieldPosition, UMemory> cfp(m, "ConstrainedFieldPosition");
   cfp.def(py::init<>());
+  cfp.def("__repr__", [](const ConstrainedFieldPosition &self) {
+    std::stringstream ss;
+    ss << "ConstrainedFieldPosition(";
+    ss << "category=" << self.getCategory();
+    ss << ", field=" << self.getField();
+    ss << ", start=" << self.getStart();
+    ss << ", limit=" << self.getLimit();
+    ss << ")";
+    return ss.str();
+  });
   cfp.def("constrain_category", &ConstrainedFieldPosition::constrainCategory, py::arg("category"));
   cfp.def("constrain_field", &ConstrainedFieldPosition::constrainField, py::arg("category"), py::arg("field"));
   cfp.def("get_category", &ConstrainedFieldPosition::getCategory);
