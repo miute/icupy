@@ -16,6 +16,7 @@ pybind11_add_module(
     char16ptr.cpp
     coleitr.cpp
     datefmt.cpp
+    dcfmtsym.cpp
     dtfmtsym.cpp
     dtintrv.cpp
     dtitvfmt.cpp
@@ -34,6 +35,7 @@ pybind11_add_module(
     locid.cpp
     main.cpp
     normalizer2.cpp
+    numsys.cpp
     parseerr.cpp
     parsepos.cpp
     rbbi.cpp
@@ -71,6 +73,7 @@ pybind11_add_module(
     uniset.cpp
     unistr.cpp
     unorm2.cpp
+    unum.cpp
     uregex.cpp
     ures.cpp
     uscript.cpp

@@ -12,6 +12,7 @@ void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_datefmt(py::module &m);
+void init_dcfmtsym(py::module &m);
 void init_dtfmtsym(py::module &m);
 void init_dtintrv(py::module &m);
 void init_dtitvfmt(py::module &m);
@@ -29,6 +30,7 @@ void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
 void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
 void init_normalizer2(py::module &m);
+void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
 void init_rbbi(py::module &m);
@@ -66,6 +68,7 @@ void init_uloc(py::module &m);
 void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unorm2(py::module &m);
+void init_unum(py::module &m);
 void init_uregex(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
@@ -150,6 +153,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_tzfmt(m);
   init_smpdtfmt(m);
 
+  init_numsys(m);          // icu::NumberingSystem
+  init_dcfmtsym(m);        // icu::DecimalFormatSymbols
+
   init_schriter(m);
   init_coleitr(m);
 
@@ -189,6 +195,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uidna(m);
   init_uloc(m);
   init_unorm2(m);
+  init_unum(m);
   init_uregex(m);
   init_ures(m);
   init_uscript(m);
