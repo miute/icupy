@@ -11,10 +11,8 @@
 
 using namespace icu;
 
-void init_fmtable(py::module &m) {
+void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   // icu::Formattable
-  py::class_<Formattable, UObject> fmt(m, "Formattable");
-
   py::enum_<Formattable::ISDATE>(fmt, "ISDATE", py::arithmetic())
       .value("IS_DATE", Formattable::ISDATE::kIsDate)
       .export_values();

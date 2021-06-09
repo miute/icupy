@@ -15,6 +15,7 @@ pybind11_add_module(
     appendable.cpp
     char16ptr.cpp
     coleitr.cpp
+    currunit.cpp
     datefmt.cpp
     dcfmtsym.cpp
     dtfmtsym.cpp
@@ -34,7 +35,10 @@ pybind11_add_module(
     localematcher.cpp
     locid.cpp
     main.cpp
+    measunit.cpp
     normalizer2.cpp
+    nounit.cpp
+    numberformatter.cpp
     numsys.cpp
     parseerr.cpp
     parsepos.cpp
@@ -48,6 +52,7 @@ pybind11_add_module(
     stsearch.cpp
     tblcoll.cpp
     timezone.cpp
+    tmunit.cpp
     translit.cpp
     tzfmt.cpp
     tznames.cpp
@@ -63,6 +68,7 @@ pybind11_add_module(
     ucol.cpp
     ucpmap.cpp
     ucsdet.cpp
+    ucurr.cpp
     udat.cpp
     udatpg.cpp
     udisplaycontext.cpp
@@ -74,6 +80,7 @@ pybind11_add_module(
     unistr.cpp
     unorm2.cpp
     unum.cpp
+    unumberformatter.cpp
     uregex.cpp
     ures.cpp
     uscript.cpp

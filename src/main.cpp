@@ -11,6 +11,7 @@ using namespace icu;
 void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
+void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
 void init_dcfmtsym(py::module &m);
 void init_dtfmtsym(py::module &m);
@@ -20,7 +21,7 @@ void init_dtitvinf(py::module &m);
 void init_dtptngen(py::module &m);
 void init_dtrule(py::module &m);
 void init_fieldpos(py::module &m);
-void init_fmtable(py::module &m);
+void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt);
 void init_format(py::module &m);
 void init_formattedvalue(py::module &m);
 void init_fpositer(py::module &m);
@@ -29,7 +30,10 @@ void init_idna(py::module &m);
 void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
 void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
+void init_measunit(py::module &m);
 void init_normalizer2(py::module &m);
+void init_nounit(py::module &m);
+void init_numberformatter(py::module &m);
 void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
@@ -43,6 +47,7 @@ void init_strenum(py::module &m);
 void init_stsearch(py::module &m);
 void init_tblcoll(py::module &m);
 void init_timezone(py::module &m);
+void init_tmunit(py::module &m);
 void init_translit(py::module &m);
 void init_tzfmt(py::module &m);
 void init_tznames(py::module &m);
@@ -58,6 +63,7 @@ void init_ucnv_err(py::module &m);
 void init_ucol(py::module &m);
 void init_ucpmap(py::module &m);
 void init_ucsdet(py::module &m);
+void init_ucurr(py::module &m);
 void init_udat(py::module &m);
 void init_udatpg(py::module &m);
 void init_udisplaycontext(py::module &m);
@@ -69,6 +75,7 @@ void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unorm2(py::module &m);
 void init_unum(py::module &m);
+void init_unumberformatter(py::module &m);
 void init_uregex(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
@@ -122,60 +129,68 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
 
+  py::class_<Formattable, UObject> fmt(m, "Formattable");
+
   py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
       .def(py::init<size_t>(), py::arg("n"));
 
-  init_appendable(m);
-  init_char16ptr(m);
-  init_formattedvalue(m);
-  init_parseerr(m);
-  init_parsepos(m);
-  init_strenum(m);
-  init_voidptr(m);
+  init_appendable(m);     // icu::Appendable
+  init_char16ptr(m);      // icu::Char16Ptr, icu::ConstChar16Ptr
+  init_formattedvalue(m); // icu::FormattedValue
+  init_parseerr(m);       // UParseError
+  init_parsepos(m);       // icu::ParsePosition
+  init_strenum(m);        // icu::StringEnumeration
+  init_voidptr(m);        // _ConstVoidPtr
 
-  init_dtrule(m);
-  init_tzrule(m);
-  init_tztrans(m);
-  init_timezone(m);
+  init_dtrule(m);   // icu::DateTimeRule
+  init_tzrule(m);   // icu::TimeZoneRule
+  init_tztrans(m);  // icu::TimeZoneTransition
+  init_timezone(m); // icu::TimeZone
 
-  init_gregocal(m);
+  init_gregocal(m); // icu::Calendar, icu::GregorianCalendar
 
-  init_dtintrv(m);
-  init_dtitvinf(m);
-  init_fieldpos(m);
-  init_fpositer(m);
-  init_fmtable(m);
-  init_format(m);
-  init_datefmt(m);
-  init_dtfmtsym(m);
-  init_dtitvfmt(m);
-  init_tznames(m);
-  init_tzfmt(m);
-  init_smpdtfmt(m);
+  init_measunit(m); // icu::MeasureUnit
+  init_currunit(m); // icu::CurrencyUnit
+  init_tmunit(m);   // icu::TimeUnit
+  init_nounit(m);   // icu::NoUnit
+
+  init_dtintrv(m);      // icu::DateInterval
+  init_dtitvinf(m);     // icu::DateIntervalInfo
+  init_fieldpos(m);     // icu::FieldPosition
+  init_fpositer(m);     // icu::FieldPositionIterator
+  init_fmtable(m, fmt); // icu::Formattable
+  init_format(m);       // icu::Format
+  init_datefmt(m);      // icu::DateFormat
+  init_dtfmtsym(m);     // icu::DateFormatSymbols
+  init_dtitvfmt(m);     // icu::DateIntervalFormat
+  init_tznames(m);      // icu::TimeZoneNames
+  init_tzfmt(m);        // icu::TimeZoneFormat
+  init_smpdtfmt(m);     // icu::SimpleDateFormat
 
   init_numsys(m);          // icu::NumberingSystem
   init_dcfmtsym(m);        // icu::DecimalFormatSymbols
+  init_numberformatter(m); // icu::number::NumberFormatter
 
-  init_schriter(m);
-  init_coleitr(m);
+  init_schriter(m); // icu::StringCharacterIterator
+  init_coleitr(m);  // icu::CollationElementIterator
 
-  init_dtptngen(m);
-  init_idna(m);
-  init_localebuilder(m);
-  init_localematcher(m);
-  init_locid(m, loc);
-  init_rbbi(m);
-  init_regex(m);
-  init_resbund(m);
-  init_sortkey(m);
+  init_dtptngen(m);      // icu::DateTimePatternGenerator
+  init_idna(m);          // icu::IDNA
+  init_localebuilder(m); // icu::LocaleBuilder
+  init_localematcher(m); // icu::LocaleMatcher
+  init_locid(m, loc);    // icu::Locale
+  init_rbbi(m);          // icu::RuleBasedBreakIterator
+  init_regex(m);         // icu::RegexPattern, icu::RegexMatcher
+  init_resbund(m);       // icu::ResourceBundle
+  init_sortkey(m);       // icu::CollationKey
 
-  init_uniset(m);
-  init_normalizer2(m);
-  init_tblcoll(m);
-  init_stsearch(m);
-  init_translit(m);
+  init_uniset(m);      // icu::UnicodeSet
+  init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
+  init_tblcoll(m);     // icu::RuleBasedCollator
+  init_stsearch(m);    // icu::StringSearch
+  init_translit(m);    // icu::Transliterator
 
-  init_unistr(m, rep, us);
+  init_unistr(m, rep, us); // icu::UnicodeString
 
   init_ubidi(m);
   init_ubrk(m);
@@ -187,6 +202,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_ucol(m);
   init_ucpmap(m);
   init_ucsdet(m);
+  init_ucurr(m);
   init_udat(m);
   init_udatpg(m);
   init_udisplaycontext(m);
@@ -196,6 +212,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uloc(m);
   init_unorm2(m);
   init_unum(m);
+  init_unumberformatter(m);
   init_uregex(m);
   init_ures(m);
   init_uscript(m);
