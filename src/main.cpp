@@ -1,6 +1,6 @@
 #include "main.hpp"
-#include <unicode/simpletz.h>
-#include <unicode/smpdtfmt.h>
+#include <unicode/fmtable.h>
+#include <unicode/locid.h>
 
 #ifndef MODULE_NAME
 #define MODULE_NAME icu
@@ -224,23 +224,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utypes(m);
   init_uversion(m);
 
-#ifdef VERSION_INFO
-  m.attr("LIB_VERSION") = VERSION_INFO;
-#else
-  UErrorCode error_code = U_ZERO_ERROR;
-  LocalPointer<DateFormat> ifmt(
-      DateFormat::createInstanceForSkeleton("MMM dd yyyy HH:mm:ss", Locale::getUS(), error_code));
-  auto pos = ParsePosition();
-  auto date = ifmt->parse(__DATE__ " " __TIME__, pos); // "MMM dd yyyy" "HH:mm:ss"
-  error_code = U_ZERO_ERROR;
-  auto ofmt = SimpleDateFormat(u"yyyy.M.d.'dev'Hmm", error_code);
-  ofmt.setTimeZone(SimpleTimeZone(0, "UTC"));
-  UnicodeString dest;
-  ofmt.format(date, dest);
-  std::string result;
-  dest.toUTF8String(result);
-  m.attr("LIB_VERSION") = result;
-#endif // VERSION_INFO
+  m.attr("VERSION_INFO") = VERSION_INFO; // VERSION_INFO is defined by _build.py or CMakeLists.txt
 
   // <unicode/umachine.h>
   m.attr("INT16_MAX") = INT16_MAX;

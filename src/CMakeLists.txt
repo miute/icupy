@@ -94,6 +94,35 @@ pybind11_add_module(
     voidptr.cpp
 )
 
+if(NOT VERSION_INFO)
+    set(IS_SETUP_METADATA FALSE)
+    file(STRINGS ${PROJECT_SOURCE_DIR}/../setup.cfg SETUP_CFG)
+    foreach(BUF ${SETUP_CFG})
+        string(STRIP ${BUF} BUF)
+        string(REGEX REPLACE " *#.*$" "" BUF ${BUF})
+        string(REGEX MATCH "^\\[[^]]+\\]" SETUP_COMMAND ${BUF})
+        if(SETUP_COMMAND)
+            if(${SETUP_COMMAND} STREQUAL "[metadata]")
+                set(IS_SETUP_METADATA TRUE)
+            else()
+                set(IS_SETUP_METADATA FALSE)
+            endif()
+        elseif(${IS_SETUP_METADATA})
+            if(${BUF} MATCHES "^([^ =]+) *= *(.+)")
+                string(STRIP ${CMAKE_MATCH_1} SETUP_OPTION)
+                string(STRIP ${CMAKE_MATCH_2} SETUP_VALUE)
+                if(${SETUP_OPTION} STREQUAL "version")
+                    set(VERSION_INFO "\"${SETUP_VALUE}\"")
+                endif()
+            endif()
+        endif()
+    endforeach()
+    if(NOT VERSION_INFO)
+        message(FATAL_ERROR "Could not detect version of the \"${PROJECT_NAME}\".")
+    endif()
+    message("-- Project \"${PROJECT_NAME}\" ${VERSION_INFO}")
+endif()
+
 target_compile_features(
     ${PROJECT_NAME}
     PRIVATE
@@ -104,6 +133,7 @@ target_compile_definitions(
     ${PROJECT_NAME}
     PRIVATE
     MODULE_NAME=${PROJECT_NAME}
+    VERSION_INFO=${VERSION_INFO}
 )
 
 target_link_libraries(
