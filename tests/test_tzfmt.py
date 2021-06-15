@@ -6,9 +6,9 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 from icupy import (
-    FieldPosition,  # FieldPositionIterator,
-    Format, Formattable, Locale, ParsePosition, TimeZone, TimeZoneFormat,
-    TimeZoneNames, UTimeZoneFormatGMTOffsetPatternType,
+    FieldPosition, FieldPositionIterator, Format, Formattable, ICUException,
+    Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames,
+    UErrorCode, UTimeZoneFormatGMTOffsetPatternType,
     UTimeZoneFormatParseOption, UTimeZoneFormatStyle, UTimeZoneFormatTimeType,
     U_MILLIS_PER_HOUR as HOUR, UnicodeString,
 )
@@ -197,15 +197,10 @@ def test_clone():
 
 def test_format():
     fmt = TimeZoneFormat.create_instance("en")
-    obj = Formattable()
-    parse_pos = ParsePosition(0)
-    fmt.parse_object("Asia/Tokyo", obj, parse_pos)
-    assert parse_pos.get_error_index() == -1
-    assert obj.get_type() == Formattable.OBJECT
-    zone = obj.get_object()
-    assert isinstance(zone, TimeZone)
+    zone = TimeZone.create_time_zone("Asia/Tokyo")
     assert zone.get_raw_offset() == 9 * HOUR
     assert zone.get_dst_savings() == 0
+    obj = Formattable(zone)
     tz = TimeZone.create_time_zone("America/Los_Angeles")
     date = 1358208000000.0  # 2013-01-15T00:00:00Z
 
@@ -230,13 +225,11 @@ def test_format():
     #       FieldPositionIterator *posIter,
     #       UErrorCode &status
     # )
-    # FIXME: icu::TimeZoneFormat::format(const Formattable &, UnicodeString &, FieldPositionIterator *, UErrorCode &) is not implemented (ICU 69).
-    # append_to.remove()
-    # pos_iter = FieldPositionIterator()
-    # result = fmt.format(obj, append_to, pos_iter)
-    # assert isinstance(result, UnicodeString)
-    # assert id(result) == id(append_to)
-    # assert result == "GMT+09:00"
+    append_to.remove()
+    pos_iter = FieldPositionIterator()
+    with pytest.raises(ICUException) as exc_info:
+        _ = fmt.format(obj, append_to, pos_iter)
+    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
     # UnicodeString &TimeZoneFormat::format(

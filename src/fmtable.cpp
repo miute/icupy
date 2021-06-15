@@ -50,9 +50,19 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
            }),
            py::arg("array_to_copy"), py::arg("count") = std::nullopt)
       // FIXME: Implement "icu::Formattable::Formattable(UObject *objectToAdopt)".
-      /*
-      .def(py::init<UObject *>(), py::keep_alive<2, 1>(), py::keep_alive<1, 2>(), py::arg("object_to_adopt"))
-      */
+      .def(py::init(
+               [](const Calendar &object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt.clone()); }),
+           py::arg("object_to_adopt"))
+      .def(py::init([](const DateInterval &object_to_adopt) {
+             return std::make_unique<Formattable>(object_to_adopt.clone());
+           }),
+           py::arg("object_to_adopt"))
+      .def(py::init(
+               [](const Measure &object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt.clone()); }),
+           py::arg("object_to_adopt"))
+      .def(py::init(
+               [](const TimeZone &object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt.clone()); }),
+           py::arg("object_to_adopt"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
   fmt.def("__copy__", &Formattable::clone)

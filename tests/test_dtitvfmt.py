@@ -3,7 +3,8 @@ import copy
 import pytest
 from icupy import (
     Calendar, DateFormat, DateInterval, DateIntervalFormat, DateIntervalInfo,
-    FieldPosition, Format, Locale, TimeZone, UCalendarDateFields,
+    FieldPosition, FieldPositionIterator, Format, Formattable, ICUException,
+    Locale, TimeZone, UCalendarDateFields, UErrorCode,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
 
@@ -343,6 +344,53 @@ def test_format():
     append_to = UnicodeString()
     field_position = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt.format(dt_interval, append_to, field_position)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "Apr 26 \u2013 28, 2013"
+
+    # [3]
+    # UnicodeString &icu::DateIntervalFormat::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPosition &fieldPosition,
+    #       UErrorCode &status
+    # )
+    append_to = UnicodeString()
+    field_position = FieldPosition(FieldPosition.DONT_CARE)
+    result = fmt.format(
+        Formattable(DateInterval(from_date, to_date)),
+        append_to,
+        field_position)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "Apr 26 \u2013 28, 2013"
+
+    # [5]
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPositionIterator *posIter,
+    #       UErrorCode &status
+    # )
+    append_to = UnicodeString()
+    pos_iter = FieldPositionIterator()
+    with pytest.raises(ICUException) as exc_info:
+        _ = fmt.format(
+            Formattable(DateInterval(from_date, to_date)),
+            append_to,
+            pos_iter)
+    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+
+    # [6]
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       UErrorCode &status
+    # )
+    append_to = UnicodeString()
+    result = fmt.format(
+        Formattable(DateInterval(from_date, to_date)),
+        append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Apr 26 \u2013 28, 2013"
