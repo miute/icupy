@@ -35,7 +35,9 @@ pybind11_add_module(
     localematcher.cpp
     locid.cpp
     main.cpp
+    measfmt.cpp
     measunit.cpp
+    measure.cpp
     normalizer2.cpp
     nounit.cpp
     numberformatter.cpp

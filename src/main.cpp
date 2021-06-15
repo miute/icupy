@@ -30,7 +30,9 @@ void init_idna(py::module &m);
 void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
 void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
+void init_measfmt(py::module &m);
 void init_measunit(py::module &m);
+void init_measure(py::module &m);
 void init_normalizer2(py::module &m);
 void init_nounit(py::module &m);
 void init_numberformatter(py::module &m);
@@ -153,6 +155,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_currunit(m); // icu::CurrencyUnit
   init_tmunit(m);   // icu::TimeUnit
   init_nounit(m);   // icu::NoUnit
+  init_measure(m);  // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
 
   init_dtintrv(m);      // icu::DateInterval
   init_dtitvinf(m);     // icu::DateIntervalInfo
@@ -166,6 +169,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_tznames(m);      // icu::TimeZoneNames
   init_tzfmt(m);        // icu::TimeZoneFormat
   init_smpdtfmt(m);     // icu::SimpleDateFormat
+
+  init_measfmt(m); // icu::MeasureFormat
 
   init_numsys(m);          // icu::NumberingSystem
   init_dcfmtsym(m);        // icu::DecimalFormatSymbols
