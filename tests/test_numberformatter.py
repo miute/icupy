@@ -4,8 +4,8 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 if U_ICU_VERSION_MAJOR_NUM < 60:
     pytest.skip("ICU4C<60", allow_module_level=True)
 from icupy import (
-    ConstrainedFieldPosition, CurrencyUnit, DecimalFormatSymbols, Format,
-    Formattable, FormattedValue, INT32_MAX, Locale, MeasureUnit,
+    ConstrainedFieldPosition, CurrencyUnit, DecimalFormatSymbols, ErrorCode,
+    Format, Formattable, FormattedValue, INT32_MAX, Locale, MeasureUnit,
     UCurrencyUsage, UErrorCode, UNumberDecimalSeparatorDisplay,
     UNumberFormatRoundingMode, UNumberSignDisplay, UNumberUnitWidth,
     UParseError, UnicodeString, UnicodeStringAppendable,
@@ -163,8 +163,9 @@ def test_localized_number_formatter_60():
     # UBool icu::number::NumberFormatterSettings<Derived>::copyErrorTo(
     #       UErrorCode &outErrorCode
     # )
-    result, out_error_code = fmt2.copy_error_to()
-    assert (result, out_error_code) == (False, UErrorCode.U_ZERO_ERROR)
+    out_error_code = ErrorCode()
+    assert not fmt2.copy_error_to(out_error_code)
+    assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
     # template<typename Derived>
     # Derived icu::number::NumberFormatterSettings<Derived>::decimal(
@@ -504,8 +505,9 @@ def test_unlocalized_number_formatter_60():
     # UBool icu::number::NumberFormatterSettings<Derived>::copyErrorTo(
     #       UErrorCode &outErrorCode
     # )
-    result, out_error_code = fmt2.copy_error_to()
-    assert (result, out_error_code) == (False, UErrorCode.U_ZERO_ERROR)
+    out_error_code = ErrorCode()
+    assert not fmt2.copy_error_to(out_error_code)
+    assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
     # template<typename Derived>
     # Derived icu::number::NumberFormatterSettings<Derived>::decimal(

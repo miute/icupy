@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
+#include <unicode/errorcode.h>
 #include <unicode/numberformatter.h>
 
 using namespace icu;
@@ -271,11 +272,12 @@ void init_numberformatter(py::module &, py::module &m2) {
     return std::unique_ptr<LocalizedNumberFormatter>(self.clone());
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-  nfs_lnf.def("copy_error_to", [](const _LocalizedNumberFormatterSettings &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.copyErrorTo(error_code);
-    return py::make_tuple(result, error_code);
-  });
+  nfs_lnf.def(
+      "copy_error_to",
+      [](const _LocalizedNumberFormatterSettings &self, ErrorCode &out_error_code) {
+        return self.copyErrorTo(out_error_code);
+      },
+      py::arg("out_error_code"));
   nfs_lnf.def(
       "decimal",
       [](const _LocalizedNumberFormatterSettings &self, UNumberDecimalSeparatorDisplay style) {
@@ -371,11 +373,12 @@ void init_numberformatter(py::module &, py::module &m2) {
     return std::unique_ptr<UnlocalizedNumberFormatter>(self.clone());
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-  nfs_unf.def("copy_error_to", [](const _UnlocalizedNumberFormatterSettings &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.copyErrorTo(error_code);
-    return py::make_tuple(result, error_code);
-  });
+  nfs_unf.def(
+      "copy_error_to",
+      [](const _UnlocalizedNumberFormatterSettings &self, ErrorCode &out_error_code) {
+        return self.copyErrorTo(out_error_code);
+      },
+      py::arg("out_error_code"));
   nfs_unf.def(
       "decimal",
       [](const _UnlocalizedNumberFormatterSettings &self, UNumberDecimalSeparatorDisplay style) {
