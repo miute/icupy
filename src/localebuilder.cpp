@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+#include <unicode/errorcode.h>
 #include <unicode/localebuilder.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -27,11 +28,10 @@ void init_localebuilder(py::module &m) {
   lb.def("clear", &LocaleBuilder::clear);
   lb.def("clear_extensions", &LocaleBuilder::clearExtensions);
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
-  lb.def("copy_error_to", [](const LocaleBuilder &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.copyErrorTo(error_code);
-    return py::make_tuple(result, error_code);
-  });
+  lb.def(
+      "copy_error_to",
+      [](const LocaleBuilder &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      py::arg("out_error_code"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
   lb.def(
       "remove_unicode_locale_attribute",
