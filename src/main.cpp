@@ -20,6 +20,7 @@ void init_dtitvfmt(py::module &m);
 void init_dtitvinf(py::module &m);
 void init_dtptngen(py::module &m);
 void init_dtrule(py::module &m);
+void init_errorcode(py::module &m);
 void init_fieldpos(py::module &m);
 void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt);
 void init_format(py::module &m);
@@ -35,7 +36,8 @@ void init_measunit(py::module &m);
 void init_measure(py::module &m);
 void init_normalizer2(py::module &m);
 void init_nounit(py::module &m);
-void init_numberformatter(py::module &m);
+void init_numberformatter(py::module &m, py::module &m2);
+void init_numberrangeformatter(py::module &m, py::module &m2);
 void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
@@ -78,6 +80,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 void init_unorm2(py::module &m);
 void init_unum(py::module &m);
 void init_unumberformatter(py::module &m);
+void init_unumberrangeformatter(py::module &m);
 void init_uregex(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
@@ -121,6 +124,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
     }
   });
 
+  // icu::number
+  auto number = m.def_submodule("number");
+
   py::class_<UMemory>(m, "UMemory");
 
   py::class_<UObject, UMemory>(m, "UObject");
@@ -138,6 +144,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_appendable(m);     // icu::Appendable
   init_char16ptr(m);      // icu::Char16Ptr, icu::ConstChar16Ptr
+  init_errorcode(m);      // icu::ErrorCode
   init_formattedvalue(m); // icu::FormattedValue
   init_parseerr(m);       // UParseError
   init_parsepos(m);       // icu::ParsePosition
@@ -172,9 +179,10 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_measfmt(m); // icu::MeasureFormat
 
-  init_numsys(m);          // icu::NumberingSystem
-  init_dcfmtsym(m);        // icu::DecimalFormatSymbols
-  init_numberformatter(m); // icu::number::NumberFormatter
+  init_numsys(m);                       // icu::NumberingSystem
+  init_dcfmtsym(m);                     // icu::DecimalFormatSymbols
+  init_numberformatter(m, number);      // icu::number::NumberFormatter
+  init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
@@ -218,6 +226,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_unorm2(m);
   init_unum(m);
   init_unumberformatter(m);
+  init_unumberrangeformatter(m);
   init_uregex(m);
   init_ures(m);
   init_uscript(m);

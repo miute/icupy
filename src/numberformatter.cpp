@@ -9,11 +9,8 @@ using _LocalizedNumberFormatterSettings = NumberFormatterSettings<LocalizedNumbe
 using _UnlocalizedNumberFormatterSettings = NumberFormatterSettings<UnlocalizedNumberFormatter>;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
-void init_numberformatter(py::module &m) {
+void init_numberformatter(py::module &, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
-  // icu::number
-  auto m2 = m.def_submodule("number");
-
   // icu::number::NumberFormatter
   py::class_<NumberFormatter> nf(m2, "NumberFormatter");
 

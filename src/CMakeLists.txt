@@ -24,6 +24,7 @@ pybind11_add_module(
     dtitvinf.cpp
     dtptngen.cpp
     dtrule.cpp
+    errorcode.cpp
     fieldpos.cpp
     fmtable.cpp
     format.cpp
@@ -41,6 +42,7 @@ pybind11_add_module(
     normalizer2.cpp
     nounit.cpp
     numberformatter.cpp
+    numberrangeformatter.cpp
     numsys.cpp
     parseerr.cpp
     parsepos.cpp
@@ -83,6 +85,7 @@ pybind11_add_module(
     unorm2.cpp
     unum.cpp
     unumberformatter.cpp
+    unumberrangeformatter.cpp
     uregex.cpp
     ures.cpp
     uscript.cpp
