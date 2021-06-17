@@ -4,7 +4,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 if U_ICU_VERSION_MAJOR_NUM < 65:
     pytest.skip("ICU4C<65", allow_module_level=True)
 from icupy import (
-    Locale, LocaleMatcher, UErrorCode, ULocMatchDemotion,
+    ErrorCode, Locale, LocaleMatcher, UErrorCode, ULocMatchDemotion,
     ULocMatchFavorSubtag,
 )
 
@@ -71,14 +71,15 @@ def test_builder():
     # UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode)
     bld = LocaleMatcher.Builder().set_supported_locales(locales)
     bld.build()
-    result, out_error_code = bld.copy_error_to()
-    assert ((result, out_error_code)
-            == (False, UErrorCode.U_ZERO_ERROR))
+    out_error_code = ErrorCode()
+    assert not bld.copy_error_to(out_error_code)
+    assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_builder_set_direction():
     from icupy import ULocMatchDirection
+
     supported = [Locale("ar"), Locale("nn")]
     desired = [Locale("arz-EG"), Locale("nb-DK")]
     matcher = (LocaleMatcher.Builder()

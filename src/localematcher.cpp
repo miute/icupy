@@ -1,6 +1,7 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
 #include <pybind11/stl.h>
+#include <unicode/errorcode.h>
 #include <unicode/localematcher.h>
 
 using namespace icu;
@@ -177,14 +178,9 @@ void init_localematcher(py::module &m) {
     }
     return result;
   });
-  lmb.def("copy_error_to", [](Builder &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.copyErrorTo(error_code);
-    if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
-    }
-    return py::make_tuple(result, error_code);
-  });
+  lmb.def(
+      "copy_error_to", [](const Builder &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      py::arg("out_error_code"));
   lmb.def("set_default_locale", &Builder::setDefaultLocale, py::arg("default_locale"));
   lmb.def("set_demotion_per_desired_locale", &Builder::setDemotionPerDesiredLocale, py::arg("demotion"));
 
