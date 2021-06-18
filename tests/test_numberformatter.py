@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 from icupy import U_ICU_VERSION_MAJOR_NUM
 
@@ -294,14 +296,23 @@ def test_localized_number_formatter_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_localized_number_formatter_64():
-    fmt = NumberFormatter.with_locale(Locale.get_us())
+    fmt = (NumberFormatter.with_locale(Locale.get_us())
+           .notation(Notation.engineering()))
     assert isinstance(fmt, LocalizedNumberFormatter)
+    assert fmt.format_double(0.8765).to_string() == "876.5E-3"
 
     # template<typename Derived>
     # LocalPointer<Derived>
     # icu::number::NumberFormatterSettings<Derived>::clone()
     fmt2 = fmt.clone()
     assert isinstance(fmt2, LocalizedNumberFormatter)
+    assert fmt2.format_double(0.8765).to_string() == "876.5E-3"
+
+    fmt3 = copy.copy(fmt)
+    assert fmt3.format_double(0.8765).to_string() == "876.5E-3"
+
+    fmt4 = copy.deepcopy(fmt)
+    assert fmt4.format_double(0.8765).to_string() == "876.5E-3"
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
@@ -623,14 +634,22 @@ def test_unlocalized_number_formatter_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_unlocalized_number_formatter_64():
-    fmt = NumberFormatter.with_()
+    fmt = NumberFormatter.with_().notation(Notation.engineering())
     assert isinstance(fmt, UnlocalizedNumberFormatter)
+    assert fmt.locale("en-US").format_double(0.8765).to_string() == "876.5E-3"
 
     # template<typename Derived>
     # LocalPointer<Derived>
     # icu::number::NumberFormatterSettings<Derived>::clone()
     fmt2 = fmt.clone()
     assert isinstance(fmt2, UnlocalizedNumberFormatter)
+    assert fmt2.locale("en-US").format_double(0.8765).to_string() == "876.5E-3"
+
+    fmt3 = copy.copy(fmt)
+    assert fmt3.locale("en-US").format_double(0.8765).to_string() == "876.5E-3"
+
+    fmt4 = copy.deepcopy(fmt)
+    assert fmt4.locale("en-US").format_double(0.8765).to_string() == "876.5E-3"
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
