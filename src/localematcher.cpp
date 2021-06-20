@@ -15,13 +15,11 @@ void init_localematcher(py::module &m) {
       .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE)
       .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION);
 
-#ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   py::enum_<ULocMatchDirection>(m, "ULocMatchDirection", py::arithmetic())
       .value("ULOCMATCH_DIRECTION_WITH_ONE_WAY", ULOCMATCH_DIRECTION_WITH_ONE_WAY)
       .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY", ULOCMATCH_DIRECTION_ONLY_TWO_WAY);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
-#endif // U_HIDE_DRAFT_API
 
   py::enum_<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag", py::arithmetic())
       .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE)
@@ -108,8 +106,6 @@ void init_localematcher(py::module &m) {
             return result;
           },
           py::arg("desired_locales"));
-
-#ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lm.def(
         "is_match",
@@ -160,7 +156,6 @@ void init_localematcher(py::module &m) {
           },
           py::arg("desired"), py::arg("supported"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
-#endif // U_HIDE_DRAFT_API
 
   // icu::LocaleMatcher::Builder
   lmb.def(py::init<>());
@@ -183,16 +178,10 @@ void init_localematcher(py::module &m) {
       py::arg("out_error_code"));
   lmb.def("set_default_locale", &Builder::setDefaultLocale, py::arg("default_locale"));
   lmb.def("set_demotion_per_desired_locale", &Builder::setDemotionPerDesiredLocale, py::arg("demotion"));
-
-#ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   lmb.def("set_direction", &Builder::setDirection, py::arg("direction"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
-#endif // U_HIDE_DRAFT_API
-
   lmb.def("set_favor_subtag", &Builder::setFavorSubtag, py::arg("subtag"));
-
-#ifndef U_HIDE_DRAFT_API
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lmb.def("set_max_distance", &Builder::setMaxDistance, py::arg("desired"), py::arg("supported"))
       .def(
@@ -219,8 +208,6 @@ void init_localematcher(py::module &m) {
           py::arg("desired"), py::arg("supported"));
   lmb.def("set_no_default_locale", &Builder::setNoDefaultLocale);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
-#endif // U_HIDE_DRAFT_API
-
   lmb.def(
       "set_supported_locales",
       [](Builder &self, const std::vector<Locale> &locales) -> Builder & {

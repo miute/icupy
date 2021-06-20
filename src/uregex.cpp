@@ -31,9 +31,7 @@ UBool _URegexMatchCallbackPtr::callback(const void *context, int32_t steps) {
 
 void init_uregex(py::module &m) {
   py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic())
-#ifndef U_HIDE_DRAFT_API
       .value("UREGEX_CANON_EQ", UREGEX_CANON_EQ)
-#endif // U_HIDE_DRAFT_API
       .value("UREGEX_CASE_INSENSITIVE", UREGEX_CASE_INSENSITIVE)
       .value("UREGEX_COMMENTS", UREGEX_COMMENTS)
       .value("UREGEX_DOTALL", UREGEX_DOTALL)
