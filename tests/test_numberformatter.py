@@ -6,11 +6,11 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 if U_ICU_VERSION_MAJOR_NUM < 60:
     pytest.skip("ICU4C<60", allow_module_level=True)
 from icupy import (
-    ConstrainedFieldPosition, CurrencyUnit, DecimalFormatSymbols, ErrorCode,
-    Format, Formattable, FormattedValue, INT32_MAX, Locale, MeasureUnit,
-    UCurrencyUsage, UErrorCode, UNumberDecimalSeparatorDisplay,
-    UNumberFormatRoundingMode, UNumberSignDisplay, UNumberUnitWidth,
-    UParseError, UnicodeString, UnicodeStringAppendable,
+    CurrencyUnit, DecimalFormatSymbols, ErrorCode, Format, Formattable,
+    INT32_MAX, Locale, MeasureUnit, UCurrencyUsage, UErrorCode,
+    UNumberDecimalSeparatorDisplay, UNumberFormatRoundingMode,
+    UNumberSignDisplay, UNumberUnitWidth, UParseError, UnicodeString,
+    UnicodeStringAppendable,
 )
 from icupy.number import (
     CurrencyPrecision, FormattedNumber, FractionPrecision, IncrementPrecision,
@@ -47,7 +47,10 @@ def test_formatted_number_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_64():
-    from icupy import UFieldCategory, UNumberFormatFields
+    from icupy import (
+        ConstrainedFieldPosition, FormattedValue, UFieldCategory,
+        UNumberFormatFields,
+    )
 
     assert issubclass(FormattedNumber, FormattedValue)
 
