@@ -407,6 +407,22 @@ def test_get_context():
             == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
 
 
+def test_get_time_zone_upcasting():
+    from icupy import BasicTimeZone, SimpleTimeZone
+
+    fmt = DateFormat.create_date_time_instance()
+
+    fmt.set_time_zone(TimeZone.get_gmt())
+    zone = fmt.get_time_zone()
+    assert isinstance(zone, SimpleTimeZone)
+
+    # TimeZone -> BasicTimeZone
+    fmt.set_time_zone(TimeZone.create_time_zone("JST"))
+    zone = fmt.get_time_zone()
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_is_calendar_lenient():
     fmt = DateFormat.create_date_time_instance(

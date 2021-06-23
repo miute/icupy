@@ -496,6 +496,58 @@ def test_parse():
     assert tz is None
 
 
+def test_parse_upcasting():
+    from icupy import BasicTimeZone, SimpleTimeZone
+
+    fmt = TimeZoneFormat.create_instance("en")
+
+    pos = ParsePosition(0)
+    zone = fmt.parse(
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
+        "GMT+900",
+        pos,
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
+    assert pos.get_index() != 0
+    assert isinstance(zone, SimpleTimeZone)
+
+    pos = ParsePosition(0)
+    zone = fmt.parse(
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
+        "GMT+900",
+        pos)
+    assert pos.get_index() != 0
+    assert isinstance(zone, SimpleTimeZone)
+
+    # TimeZone -> BasicTimeZone
+    pos = ParsePosition(0)
+    zone = fmt.parse(
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
+        "GMT",
+        pos,
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
+    assert pos.get_index() != 0
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)
+
+    pos = ParsePosition(0)
+    zone = fmt.parse(
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
+        "GMT",
+        pos)
+    assert pos.get_index() != 0
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)
+
+    # NULL
+    pos = ParsePosition(0)
+    zone = fmt.parse(
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
+        "EST",
+        pos)
+    assert pos.get_index() == 0
+    assert zone is None
+
+
 def test_parse_object():
     fmt = TimeZoneFormat.create_instance("en")
 

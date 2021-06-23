@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/stl.h>
+#include <unicode/basictz.h>
 #include <unicode/datefmt.h>
 
 using namespace icu;
@@ -234,7 +235,17 @@ void init_datefmt(py::module &m) {
       py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   // TODO: Implement "const NumberFormat *icu::DateFormat::getNumberFormat(void)".
-  df.def("get_time_zone", &DateFormat::getTimeZone, py::return_value_policy::reference);
+  df.def(
+      "get_time_zone",
+      [](const DateFormat &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
+        auto tz = &self.getTimeZone();
+        auto btz = dynamic_cast<const BasicTimeZone *>(tz);
+        if (btz) {
+          return btz;
+        }
+        return tz;
+      },
+      py::return_value_policy::reference);
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("is_calendar_lenient", &DateFormat::isCalendarLenient);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)

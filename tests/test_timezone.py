@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 from icupy import (
     AnnualTimeZoneRule, BasicTimeZone, DateTimeRule, GregorianCalendar,
@@ -6,6 +8,127 @@ from icupy import (
     UCalendarMonths, USystemTimeZoneType, U_ICU_VERSION_MAJOR_NUM,
     U_MILLIS_PER_HOUR as HOUR, UnicodeString, VTimeZone,
 )
+
+
+def test_basic_time_zone():
+    assert issubclass(BasicTimeZone, TimeZone)
+
+    zone1 = TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone1, BasicTimeZone)  # OlsonTimeZone
+    assert not isinstance(zone1, RuleBasedTimeZone)
+    assert not isinstance(zone1, SimpleTimeZone)
+    assert not isinstance(zone1, VTimeZone)
+
+    # BasicTimeZone *icu::BasicTimeZone::clone()
+    zone1a = zone1.clone()
+    assert isinstance(zone1a, BasicTimeZone)
+    assert zone1a == zone1
+
+    zone1b = copy.copy(zone1)
+    assert zone1b == zone1
+
+    zone1c = copy.deepcopy(zone1)
+    assert zone1c == zone1
+
+    # int32_t icu::BasicTimeZone::countTransitionRules(UErrorCode &status)
+    assert zone1.count_transition_rules() == 4
+
+    # UBool icu::BasicTimeZone::getNextTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
+    base = 1230681600000.0  # 2008-12-31T00:00:00Z
+    result = TimeZoneTransition()
+    assert zone1.get_next_transition(base, False, result)
+    assert result.get_time() == 1236506400000.0  # 2009-03-08T10:00:00Z
+
+    # UBool icu::BasicTimeZone::getPreviousTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
+    assert zone1.get_previous_transition(base, False, result)
+    assert result.get_time() == 1225616400000.0  # 2008-11-02T09:00:00Z
+
+    # void icu::BasicTimeZone::getSimpleRulesNear(
+    #       UDate date,
+    #       InitialTimeZoneRule *&initial,
+    #       AnnualTimeZoneRule *&std,
+    #       AnnualTimeZoneRule *&dst,
+    #       UErrorCode &status
+    # )
+    initial, std, dst = zone1.get_simple_rules_near(0)
+    assert isinstance(initial, InitialTimeZoneRule)
+    assert initial.get_raw_offset() == -8 * HOUR
+    assert initial.get_dst_savings() == 1 * HOUR
+    assert isinstance(std, AnnualTimeZoneRule)
+    assert std.get_raw_offset() == -8 * HOUR
+    assert std.get_dst_savings() == 0
+    dr = std.get_rule()
+    assert dr.get_rule_month() == UCalendarMonths.UCAL_OCTOBER
+    assert dr.get_rule_day_of_month() == 0
+    assert isinstance(dst, AnnualTimeZoneRule)
+    assert dst.get_raw_offset() == -8 * HOUR
+    assert dst.get_dst_savings() == 1 * HOUR
+    dr = dst.get_rule()
+    assert dr.get_rule_month() == UCalendarMonths.UCAL_APRIL
+    assert dr.get_rule_day_of_month() == 0
+
+    # void icu::BasicTimeZone::getTimeZoneRules(
+    #       const InitialTimeZoneRule *&initial,
+    #       const TimeZoneRule *trsrules[],
+    #       int32_t &trscount,
+    #       UErrorCode &status
+    # )
+    initial, trsrules = zone1.get_time_zone_rules()
+    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 4
+    assert any(isinstance(x, AnnualTimeZoneRule) for x in trsrules)
+
+    # UBool icu::BasicTimeZone::hasEquivalentTransitions(
+    #       const BasicTimeZone &tz,
+    #       UDate start,
+    #       UDate end,
+    #       UBool ignoreDstAmount,
+    #       UErrorCode &ec
+    # )
+    # From icu/source/test/intltest/tzrulets.cpp:
+    # TimeZoneRuleTest::TestHasEquivalentTransitions()
+    zone5 = TimeZone.create_time_zone("America/New_York")
+    zone6 = TimeZone.create_time_zone("America/Indiana/Indianapolis")
+    start = 1104537600000.0  # 2005-01-01T00:00:00Z
+    end = 1262304000000.0  # 2010-01-01T00:00:00Z
+    assert not zone5.has_equivalent_transitions(zone6, start, end, True)
+    start = 1136073600000.0  # 2006-01-01T00:00:00Z
+    assert zone5.has_equivalent_transitions(zone6, start, end, True)
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_basic_time_zone_get_offset_from_local():
+    from icupy import UTimeZoneLocalOption
+
+    # From icu/source/test/intltest/tzoffloc.cpp:
+    # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
+    zone = TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone, BasicTimeZone)
+
+    # void icu::BasicTimeZone::getOffsetFromLocal(
+    #       UDate date,
+    #       UTimeZoneLocalOption nonExistingTimeOpt,
+    #       UTimeZoneLocalOption duplicatedTimeOpt,
+    #       int32_t &rawOffset,
+    #       int32_t &dstOffset,
+    #       UErrorCode &status
+    # )
+    date = 1143941400000  # 2006-04-02T01:30:00Z
+    raw_offset, dst_offset = zone.get_offset_from_local(
+        date,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+    assert raw_offset == -8 * HOUR
+    assert dst_offset == 0
 
 
 def test_rule_based_time_zone():
@@ -300,6 +423,67 @@ def test_rule_based_time_zone_get_offset():
         6,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0) == 8.5 * HOUR
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_rule_based_time_zone_get_offset_from_local():
+    from icupy import UTimeZoneLocalOption
+
+    # From icu/source/test/intltest/tzoffloc.cpp:
+    # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
+    zone = RuleBasedTimeZone(
+        "Rule based Pacific Time",
+        InitialTimeZoneRule("Pacific Standard Time", -8 * HOUR, 0)
+    )
+    zone.add_transition_rule(
+        AnnualTimeZoneRule(
+            "Pacific Daylight Time",
+            -8 * HOUR,
+            1 * HOUR,
+            DateTimeRule(
+                UCalendarMonths.UCAL_APRIL,
+                1,
+                UCalendarDaysOfWeek.UCAL_SUNDAY,
+                2 * HOUR,
+                DateTimeRule.WALL_TIME
+            ),
+            2000,
+            AnnualTimeZoneRule.MAX_YEAR
+        )
+    )
+    zone.add_transition_rule(
+        AnnualTimeZoneRule(
+            "Pacific Standard Time",
+            -8 * HOUR,
+            0,
+            DateTimeRule(
+                UCalendarMonths.UCAL_OCTOBER,
+                -1,
+                UCalendarDaysOfWeek.UCAL_SUNDAY,
+                2 * HOUR,
+                DateTimeRule.WALL_TIME
+            ),
+            2000,
+            AnnualTimeZoneRule.MAX_YEAR
+        )
+    )
+    zone.complete()
+
+    # void icu::RuleBasedTimeZone::getOffsetFromLocal(
+    #       UDate date,
+    #       UTimeZoneLocalOption nonExistingTimeOpt,
+    #       UTimeZoneLocalOption duplicatedTimeOpt,
+    #       int32_t &rawOffset,
+    #       int32_t &dstOffset,
+    #       UErrorCode &status
+    # )
+    date = 1143941400000  # 2006-04-02T01:30:00Z
+    raw_offset, dst_offset = zone.get_offset_from_local(
+        date,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+    assert raw_offset == -8 * HOUR
+    assert dst_offset == 0
 
 
 def test_simple_time_zone():
@@ -644,6 +828,41 @@ def test_simple_time_zone_get_offset():
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
         28) == 8.5 * HOUR
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_simple_time_zone_get_offset_from_local():
+    from icupy import UTimeZoneLocalOption
+
+    # From icu/source/test/intltest/tzoffloc.cpp:
+    # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
+    zone = SimpleTimeZone(
+        -8 * HOUR,
+        "Simple Pacific Time",
+        UCalendarMonths.UCAL_APRIL,
+        1,
+        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        2 * HOUR,
+        UCalendarMonths.UCAL_OCTOBER,
+        -1,
+        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        2 * HOUR)
+
+    # void icu::SimpleTimeZone::getOffsetFromLocal(
+    #       UDate date,
+    #       UTimeZoneLocalOption nonExistingTimeOpt,
+    #       UTimeZoneLocalOption duplicatedTimeOpt,
+    #       int32_t &rawOffset,
+    #       int32_t &dstOffset,
+    #       UErrorCode &status
+    # )
+    date = 1143941400000  # 2006-04-02T01:30:00Z
+    raw_offset, dst_offset = zone.get_offset_from_local(
+        date,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+    assert raw_offset == -8 * HOUR
+    assert dst_offset == 0
 
 
 def test_simple_time_zone_set_end_rule():
@@ -1474,3 +1693,28 @@ def test_vtime_zone_get_offset():
         6,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0) == 8.5 * HOUR
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_vtime_zone_get_offset_from_local():
+    from icupy import UTimeZoneLocalOption
+
+    # From icu/source/test/intltest/tzoffloc.cpp:
+    # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
+    zone = VTimeZone.create_vtime_zone_by_id("America/Los_Angeles")
+
+    # void icu::VTimeZone::getOffsetFromLocal(
+    #       UDate date,
+    #       UTimeZoneLocalOption nonExistingTimeOpt,
+    #       UTimeZoneLocalOption duplicatedTimeOpt,
+    #       int32_t &rawOffset,
+    #       int32_t &dstOffset,
+    #       UErrorCode &status
+    # )
+    date = 1143941400000  # 2006-04-02T01:30:00Z
+    raw_offset, dst_offset = zone.get_offset_from_local(
+        date,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+    assert raw_offset == -8 * HOUR
+    assert dst_offset == 0

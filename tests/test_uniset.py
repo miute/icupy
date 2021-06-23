@@ -3,8 +3,9 @@ import copy
 import pytest
 from icupy import (
     ICUException, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
-    UnicodeSet, UnicodeString, UProperty, USET_IGNORE_SPACE,
-    USetSpanCondition, u_get_binary_property_set,
+    UProperty, USET_IGNORE_SPACE, USetSpanCondition, U_ICU_VERSION_MAJOR_NUM,
+    UnicodeSet, UnicodeString,
+    u_get_binary_property_set,
 )
 
 
@@ -566,6 +567,29 @@ def test_retain():
     assert test3.size() == 10 + 1  # [0-9{ab}]
     assert test1.contains(0x30, 0x39)
     assert test1.contains(UnicodeString("ab"))
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_retain_69():
+    test1 = UnicodeSet("[0-9\u00DF{ab}]")
+    test2 = test1.clone()
+    test3 = test1.clone()
+    assert test1.size() == 12
+
+    # [1]
+    # UnicodeSet &icu::UnicodeSet::retain(const UnicodeString &s)
+    result = test2.retain(UnicodeString("\xdf"))
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test2)
+    assert test2.size() == 1 + 1  # [\u00DF{ab}]
+    assert test2.contains(0xdf)
+    assert test2.contains("ab")
+
+    result = test3.retain("ab")
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test3)
+    assert test3.size() == 1  # [{ab}]
+    assert test3.contains("ab")
 
 
 def test_retain_all():

@@ -1,5 +1,7 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
+#include <unicode/basictz.h>
 #include <unicode/dtitvfmt.h>
 
 using namespace icu;
@@ -309,7 +311,17 @@ void init_dtitvfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
   fmt.def("get_date_format", &DateIntervalFormat::getDateFormat, py::return_value_policy::reference);
   fmt.def("get_date_interval_info", &DateIntervalFormat::getDateIntervalInfo, py::return_value_policy::reference);
-  fmt.def("get_time_zone", &DateIntervalFormat::getTimeZone, py::return_value_policy::reference);
+  fmt.def(
+      "get_time_zone",
+      [](const DateIntervalFormat &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
+        auto tz = &self.getTimeZone();
+        auto btz = dynamic_cast<const BasicTimeZone *>(tz);
+        if (btz) {
+          return btz;
+        }
+        return tz;
+      },
+      py::return_value_policy::reference);
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fmt.def(
       "set_context",

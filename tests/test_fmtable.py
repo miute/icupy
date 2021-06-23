@@ -2,7 +2,8 @@ import copy
 
 import pytest
 from icupy import (
-    Formattable, ICUException, INT32_MAX, UErrorCode, UnicodeString,
+    Calendar, CurrencyAmount, DateInterval, Formattable, ICUException,
+    INT32_MAX, TimeUnit, TimeUnitAmount, TimeZone, UErrorCode, UnicodeString,
 )
 
 
@@ -255,14 +256,43 @@ def test_formattable():
     assert fmt10a[0].get_array() == array
 
     # [11]
-    # Formattable::Formattable(UObject *objectToAdopt)
-    # obj = Locale("en-US")
-    # fmt11 = Formattable(obj)
-    # assert fmt11.get_type() == Formattable.OBJECT
-    # assert fmt11.get_object() == obj
+    # icu::Formattable::Formattable(UObject *objectToAdopt)
+    fmt11a = Formattable(Calendar.create_instance("en"))
+    assert fmt11a.get_type() == Formattable.OBJECT
+    assert isinstance(fmt11a.get_object(), Calendar)
+
+    fmt11b = Formattable(CurrencyAmount(1, "JPY"))
+    assert fmt11b.get_type() == Formattable.OBJECT
+    assert isinstance(fmt11b.get_object(), CurrencyAmount)
+
+    fmt11c = Formattable(DateInterval(0, 1))
+    assert fmt11c.get_type() == Formattable.OBJECT
+    assert isinstance(fmt11c.get_object(), DateInterval)
+
+    fmt11d = Formattable(TimeUnitAmount(1, TimeUnit.UTIMEUNIT_DAY))
+    assert fmt11d.get_type() == Formattable.OBJECT
+    assert isinstance(fmt11d.get_object(), TimeUnitAmount)
+
+    fmt11e = Formattable(TimeZone.create_time_zone("JST"))
+    assert fmt11e.get_type() == Formattable.OBJECT
+    assert isinstance(fmt11e.get_object(), TimeZone)
 
     # [12]
     # Formattable::Formattable(const Formattable &)
     fmt12 = Formattable(fmt10)
     assert fmt12.get_type() == Formattable.ARRAY
     assert fmt12.get_array() == array
+
+
+def test_get_object_upcasting():
+    from icupy import BasicTimeZone, SimpleTimeZone
+
+    fmt = Formattable(TimeZone.get_gmt())
+    zone = fmt.get_object()
+    assert isinstance(zone, SimpleTimeZone)
+
+    # TimeZone -> BasicTimeZone
+    fmt = Formattable(TimeZone.create_time_zone("JST"))
+    zone = fmt.get_object()
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)

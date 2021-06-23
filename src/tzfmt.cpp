@@ -1,6 +1,8 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
+#include <unicode/basictz.h>
 #include <unicode/tzfmt.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
@@ -192,26 +194,55 @@ void init_tzfmt(py::module &m) {
   tzf.def("get_gmt_pattern", &TimeZoneFormat::getGMTPattern, py::arg("pattern"));
   tzf.def("get_gmt_zero_format", &TimeZoneFormat::getGMTZeroFormat, py::arg("gmt_zero_format"));
   tzf.def("get_time_zone_names", &TimeZoneFormat::getTimeZoneNames, py::return_value_policy::reference);
-  tzf.def("parse",
-          py::overload_cast<UTimeZoneFormatStyle, const UnicodeString &, ParsePosition &, int32_t,
-                            UTimeZoneFormatTimeType *>(&TimeZoneFormat::parse, py::const_),
-          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
+  tzf.def(
+         "parse",
+         [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const UnicodeString &text, ParsePosition &pos,
+            int32_t parse_options, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+           auto tz = self.parse(style, text, pos, parse_options, time_type);
+           auto btz = dynamic_cast<BasicTimeZone *>(tz);
+           if (btz) {
+             return btz;
+           }
+           return tz;
+         },
+         py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
       .def(
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const char16_t *text, ParsePosition &pos,
-             int32_t parse_options,
-             UTimeZoneFormatTimeType *time_type) { return self.parse(style, text, pos, parse_options, time_type); },
+             int32_t parse_options, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.parse(style, text, pos, parse_options, time_type);
+            auto btz = dynamic_cast<BasicTimeZone *>(tz);
+            if (btz) {
+              return btz;
+            }
+            return tz;
+          },
           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
-      .def("parse",
-           py::overload_cast<UTimeZoneFormatStyle, const UnicodeString &, ParsePosition &, UTimeZoneFormatTimeType *>(
-               &TimeZoneFormat::parse, py::const_),
-           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr)
+      .def(
+          "parse",
+          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const UnicodeString &text, ParsePosition &pos,
+             UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.parse(style, text, pos, time_type);
+            auto btz = dynamic_cast<BasicTimeZone *>(tz);
+            if (btz) {
+              return btz;
+            }
+            return tz;
+          },
+          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr)
       .def(
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const char16_t *text, ParsePosition &pos,
-             UTimeZoneFormatTimeType *time_type) { return self.parse(style, text, pos, time_type); },
+             UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.parse(style, text, pos, time_type);
+            auto btz = dynamic_cast<BasicTimeZone *>(tz);
+            if (btz) {
+              return btz;
+            }
+            return tz;
+          },
           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr);
   tzf.def("parse_object",
           py::overload_cast<const UnicodeString &, Formattable &, ParsePosition &>(&TimeZoneFormat::parseObject,

@@ -526,3 +526,19 @@ def test_get_context():
         UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
     assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
             == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
+
+
+def test_get_time_zone_upcasting():
+    from icupy import BasicTimeZone, SimpleTimeZone
+
+    fmt = DateIntervalFormat.create_instance("yMMMd")
+
+    fmt.set_time_zone(TimeZone.get_gmt())
+    zone = fmt.get_time_zone()
+    assert isinstance(zone, SimpleTimeZone)
+
+    # TimeZone -> BasicTimeZone
+    fmt.set_time_zone(TimeZone.create_time_zone("JST"))
+    zone = fmt.get_time_zone()
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)

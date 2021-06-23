@@ -274,6 +274,29 @@ def test_get_skipped_wall_time_option():
             == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
 
 
+def test_get_time_zone_upcasting():
+    from icupy import BasicTimeZone
+
+    cal = Calendar.create_instance()
+
+    cal.set_time_zone(TimeZone.get_gmt())
+    zone = cal.get_time_zone()
+    assert isinstance(zone, SimpleTimeZone)
+
+    zone = cal.orphan_time_zone()
+    assert isinstance(zone, SimpleTimeZone)
+
+    # TimeZone -> BasicTimeZone
+    cal.set_time_zone(TimeZone.create_time_zone("JST"))
+    zone = cal.get_time_zone()
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)
+
+    zone = cal.orphan_time_zone()
+    assert not isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, BasicTimeZone)
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_get_type():
     cal1 = Calendar.create_instance("ja")

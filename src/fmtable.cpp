@@ -2,11 +2,11 @@
 #include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include <unicode/basictz.h>
 #include <unicode/calendar.h>
 #include <unicode/curramt.h>
 #include <unicode/dtintrv.h>
 #include <unicode/fmtable.h>
-#include <unicode/timezone.h>
 #include <unicode/tmutamt.h>
 
 using namespace icu;
@@ -147,8 +147,9 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   });
   fmt.def(
       "get_object",
-      [](const Formattable &self) -> std::variant<const Calendar *, const CurrencyAmount *, const DateInterval *,
-                                                  const TimeUnitAmount *, const TimeZone *, const UObject *> {
+      [](const Formattable &self)
+          -> std::variant<const BasicTimeZone *, const Calendar *, const CurrencyAmount *, const DateInterval *,
+                          const TimeUnitAmount *, const TimeZone *, const UObject *> {
         auto obj = self.getObject();
         if (obj) {
           auto cal = dynamic_cast<const Calendar *>(obj);
@@ -166,6 +167,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           auto tuamt = dynamic_cast<const TimeUnitAmount *>(obj);
           if (tuamt) {
             return tuamt;
+          }
+          auto btz = dynamic_cast<const BasicTimeZone *>(obj);
+          if (btz) {
+            return btz;
           }
           auto tz = dynamic_cast<const TimeZone *>(obj);
           if (tz) {

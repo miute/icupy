@@ -2,6 +2,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
+#include <unicode/basictz.h>
 #include <unicode/gregocal.h>
 #include <unicode/locid.h>
 #include <unicode/smpdtfmt.h>
@@ -275,7 +276,17 @@ void init_gregocal(py::module &m) {
     }
     return result;
   });
-  cal.def("get_time_zone", &Calendar::getTimeZone, py::return_value_policy::reference);
+  cal.def(
+      "get_time_zone",
+      [](const Calendar &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
+        auto tz = &self.getTimeZone();
+        auto btz = dynamic_cast<const BasicTimeZone *>(tz);
+        if (btz) {
+          return btz;
+        }
+        return tz;
+      },
+      py::return_value_policy::reference);
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   cal.def("get_type", &Calendar::getType);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
@@ -313,7 +324,14 @@ void init_gregocal(py::module &m) {
          },
          py::arg("date"))
       .def("is_weekend", py::overload_cast<>(&Calendar::isWeekend, py::const_));
-  cal.def("orphan_time_zone", &Calendar::orphanTimeZone);
+  cal.def("orphan_time_zone", [](Calendar &self) -> std::variant<BasicTimeZone *, TimeZone *> {
+    auto tz = self.orphanTimeZone();
+    auto btz = dynamic_cast<BasicTimeZone *>(tz);
+    if (btz) {
+      return btz;
+    }
+    return tz;
+  });
   cal.def(
       "roll",
       [](Calendar &self, UCalendarDateFields field, int32_t amount) {

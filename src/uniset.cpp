@@ -296,6 +296,11 @@ void init_uniset(py::module &m) {
           "resembles_pattern",
           [](const char16_t *pattern, int32_t pos) { return UnicodeSet::resemblesPattern(pattern, pos); },
           py::arg("pattern"), py::arg("pos"));
+#if (U_ICU_VERSION_MAJOR_NUM >= 69)
+  us.def("retain", py::overload_cast<const UnicodeString &>(&UnicodeSet::retain), py::arg("s"))
+      .def(
+          "retain", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.retain(s); }, py::arg("s"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
   us.def("retain", py::overload_cast<UChar32>(&UnicodeSet::retain), py::arg("c"))
       .def("retain", py::overload_cast<UChar32, UChar32>(&UnicodeSet::retain), py::arg("start"), py::arg("end"));
   us.def("retain_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::retainAll), py::arg("c"))
