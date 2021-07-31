@@ -1122,12 +1122,16 @@ def test_pad_leading():
 
 
 def test_pad_trailing():
+    # UBool icu::UnicodeString::padTrailing(
+    #       int32_t targetLength,
+    #       char16_t padChar = 0x0020
+    # )
     test1 = UnicodeString("foo")
     assert test1.pad_trailing(10)
     assert test1 == "foo       "
 
     test1 = UnicodeString("foo")
-    assert test1.pad_trailing(10, ".")
+    assert test1.pad_trailing(10, ord("."))
     assert test1 == "foo......."
 
 

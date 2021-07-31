@@ -669,11 +669,16 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def("last_index_of", py::overload_cast<UChar32, int32_t, int32_t>(&UnicodeString::lastIndexOf, py::const_),
            py::arg("c"), py::arg("start"), py::arg("length"));
   us.def("move_index32", &UnicodeString::moveIndex32, py::arg("index"), py::arg("delta"));
-  us.def("pad_trailing", &UnicodeString::padTrailing, py::arg("target_length"), py::arg("pad_char") = "\x20");
   us.def(
       "pad_leading",
       [](UnicodeString &self, int32_t target_length, uint16_t pad_char) {
         return self.padLeading(target_length, pad_char);
+      },
+      py::arg("target_length"), py::arg("pad_char") = 0x20);
+  us.def(
+      "pad_trailing",
+      [](UnicodeString &self, int32_t target_length, uint16_t pad_char) {
+        return self.padTrailing(target_length, pad_char);
       },
       py::arg("target_length"), py::arg("pad_char") = 0x20);
   us.def("remove", py::overload_cast<>(&UnicodeString::remove))
