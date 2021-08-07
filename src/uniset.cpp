@@ -64,7 +64,8 @@ void init_uniset(py::module &m) {
         "__contains__", [](const UnicodeSet &self, const UnicodeString &item) { return self.contains(item); },
         py::arg("item"))
       .def(
-          "__contains__", [](const UnicodeSet &self, char16_t *item) { return self.contains(item); }, py::arg("item"))
+          "__contains__", [](const UnicodeSet &self, const char16_t *item) { return self.contains(item); },
+          py::arg("item"))
       .def(
           "__contains__", [](const UnicodeSet &self, UChar32 item) { return self.contains(item); }, py::arg("item"))
       .def("__copy__", &UnicodeSet::clone)

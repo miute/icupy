@@ -7,7 +7,9 @@ void init_errorcode(py::module &m) {
   // icu::ErrorCode
   py::class_<ErrorCode, UMemory> ec(m, "ErrorCode");
   ec.def(py::init<>());
-  ec.def("__eq__", [](const ErrorCode &self, UErrorCode error_code) { return self.get() == error_code; });
+  ec.def("__eq__", [](const ErrorCode &self, UErrorCode error_code) {
+      return self.get() == error_code;
+    }).def("__repr__", &ErrorCode::errorName);
   ec.def_property_readonly("error_name", &ErrorCode::errorName);
   ec.def("get", &ErrorCode::get);
   ec.def("is_failure", &ErrorCode::isFailure);

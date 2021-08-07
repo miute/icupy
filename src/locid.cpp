@@ -223,9 +223,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "get_keyword_value",
       [](const Locale &self, const char *keyword_name) {
         UErrorCode error_code = U_ZERO_ERROR;
-        std::string result;
-        auto sink = StringByteSink(&result);
-        self.getKeywordValue(keyword_name, sink, error_code);
+        std::string result = self.getKeywordValue<std::string>(keyword_name, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUException(error_code);
         }

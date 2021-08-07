@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <unicode/errorcode.h>
 #include <unicode/fmtable.h>
 #include <unicode/locid.h>
 
@@ -111,7 +112,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
         std::rethrow_exception(p);
       }
     } catch (const ICUException &e) {
-      auto error_code = e.get_error_code();
+      ErrorCode error_code;
+      error_code.set(e.get_error_code());
       auto message = e.get_message();
       if (message == nullptr || strlen(message) == 0) {
         PyErr_SetObject(ex.ptr(), py::cast(error_code).ptr());
