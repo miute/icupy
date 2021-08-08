@@ -12,7 +12,7 @@ from icupy import (
 def test_api():
     assert issubclass(DateFormat, Format)
 
-    # static const Locale *DateFormat::getAvailableLocales(int32_t &count)
+    # static const Locale *icu::DateFormat::getAvailableLocales(int32_t &count)
     locales = DateFormat.get_available_locales()
     assert isinstance(locales, list)
     assert len(locales) > 0
@@ -32,48 +32,51 @@ def test_api():
         DateFormat.LONG,
         Locale.get_english())
 
-    # Format::operator!=()
+    # UBool icu::Format::operator!=(const Format &)
     assert not (fmt != fmt2)
     assert fmt != fmt3
     assert fmt2 != fmt3
 
-    # DateFormat::operator==()
+    # UBool icu::DateFormat::operator==(const Format &)
     assert fmt == fmt2
     assert not (fmt == fmt3)
     assert not (fmt2 == fmt3)
 
-    # const Calendar *DateFormat::getCalendar(void)
+    # const Calendar *icu::DateFormat::getCalendar(void)
     cal = fmt2.get_calendar()
     assert isinstance(cal, Calendar)
     assert cal.get_time_zone() == zone
 
-    # void DateFormat::setCalendar(const Calendar &newCalendar)
+    # void icu::DateFormat::setCalendar(const Calendar &newCalendar)
     zone2 = TimeZone.create_time_zone("JST")
     assert zone2 != zone
     new_calendar = GregorianCalendar(zone2, Locale.get_japanese())
     fmt2.set_calendar(new_calendar)
     assert fmt2.get_calendar() == new_calendar
 
-    # Locale Format::getLocale(ULocDataLocaleType type, UErrorCode &status)
+    # Locale icu::Format::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
     loc = fmt.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
     assert isinstance(loc, Locale)
     assert loc == Locale("en")
 
-    # const TimeZone &DateFormat::getTimeZone(void)
+    # const TimeZone &icu::DateFormat::getTimeZone(void)
     zone3 = fmt2.get_time_zone()
     assert isinstance(zone3, TimeZone)
     assert zone3 == zone2
 
-    # void DateFormat::setTimeZone(const TimeZone &zone)
+    # void icu::DateFormat::setTimeZone(const TimeZone &zone)
     zone4 = TimeZone.create_time_zone("PST")
     assert zone4 != zone3
     fmt2.set_time_zone(zone4)
     assert fmt2.get_time_zone() == zone4
 
-    # UBool DateFormat::isLenient(void)
+    # UBool icu::DateFormat::isLenient(void)
     assert fmt2.is_lenient()
 
-    # void DateFormat::setLenient(UBool lenient)
+    # void icu::DateFormat::setLenient(UBool lenient)
     fmt2.set_lenient(False)
     assert not fmt2.is_lenient()
 
@@ -81,6 +84,7 @@ def test_api():
 def test_clone():
     fmt1 = DateFormat.create_instance()
 
+    # DateFormat *icu::DateFormat::clone()
     fmt2 = fmt1.clone()
     assert isinstance(fmt2, DateFormat)
     assert fmt2 == fmt1
@@ -93,7 +97,7 @@ def test_clone():
 
 
 def test_create_instance():
-    # static DateFormat *DateFormat::createDateInstance(
+    # static DateFormat *icu::DateFormat::createDateInstance(
     #       EStyle style = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
     # )
@@ -101,12 +105,15 @@ def test_create_instance():
     assert isinstance(fmt1, DateFormat)
 
     fmt1a = DateFormat.create_date_instance(DateFormat.DEFAULT)
+    assert isinstance(fmt1a, DateFormat)
+
     fmt1b = DateFormat.create_date_instance(
         DateFormat.DEFAULT,
         Locale.get_default())
+    assert isinstance(fmt1b, DateFormat)
     assert fmt1 == fmt1a == fmt1b
 
-    # static DateFormat *DateFormat::createDateTimeInstance(
+    # static DateFormat *icu::DateFormat::createDateTimeInstance(
     #       EStyle dateStyle = kDefault,
     #       EStyle timeStyle = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
@@ -115,16 +122,21 @@ def test_create_instance():
     assert isinstance(fmt2, DateFormat)
 
     fmt2a = DateFormat.create_date_time_instance(DateFormat.DEFAULT)
+    assert isinstance(fmt2a, DateFormat)
+
     fmt2b = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT)
+    assert isinstance(fmt2b, DateFormat)
+
     fmt2c = DateFormat.create_date_time_instance(
         DateFormat.DEFAULT,
         DateFormat.DEFAULT,
         Locale.get_default())
+    assert isinstance(fmt2c, DateFormat)
     assert fmt2 == fmt2a == fmt2b == fmt2c
 
-    # static DateFormat *DateFormat::createInstance(void)
+    # static DateFormat *icu::DateFormat::createInstance(void)
     fmt3 = DateFormat.create_instance()
     assert isinstance(fmt3, DateFormat)
 
@@ -132,9 +144,10 @@ def test_create_instance():
         DateFormat.SHORT,
         DateFormat.SHORT,
         Locale.get_default())
+    assert isinstance(fmt2d, DateFormat)
     assert fmt3 == fmt2d
 
-    # static DateFormat *DateFormat::createTimeInstance(
+    # static DateFormat *icu::DateFormat::createTimeInstance(
     #       EStyle style = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
     # )
@@ -142,16 +155,19 @@ def test_create_instance():
     assert isinstance(fmt4, DateFormat)
 
     fmt4a = DateFormat.create_time_instance(DateFormat.DEFAULT)
+    assert isinstance(fmt4a, DateFormat)
+
     fmt4b = DateFormat.create_time_instance(
         DateFormat.DEFAULT,
         Locale.get_default())
+    assert isinstance(fmt4b, DateFormat)
     assert fmt4 == fmt4a == fmt4b
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
 def test_create_instance_for_skeleton():
     # [2]
-    # static DateFormat *DateFormat::createInstanceForSkeleton(
+    # static DateFormat *icu::DateFormat::createInstanceForSkeleton(
     #       const UnicodeString &skeleton,
     #       const Locale &locale,
     #       UErrorCode &status
@@ -164,10 +180,11 @@ def test_create_instance_for_skeleton():
     fmt2a = DateFormat.create_instance_for_skeleton(
         "yMMMMd",
         Locale.get_english())
+    assert isinstance(fmt2a, DateFormat)
     assert fmt2 == fmt2a
 
     # [3]
-    # static DateFormat *DateFormat::createInstanceForSkeleton(
+    # static DateFormat *icu::DateFormat::createInstanceForSkeleton(
     #       const UnicodeString &skeleton,
     #       UErrorCode &status
     # )
@@ -175,6 +192,7 @@ def test_create_instance_for_skeleton():
     assert isinstance(fmt3, DateFormat)
 
     fmt3a = DateFormat.create_instance_for_skeleton("yMMMMd")
+    assert isinstance(fmt3a, DateFormat)
     assert fmt3 == fmt3a
 
 
@@ -190,7 +208,7 @@ def test_format():
     fmt.set_time_zone(zone)
 
     # [1]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       Calendar &cal,
     #       UnicodeString &appendTo,
     #       FieldPosition &fieldPosition
@@ -203,7 +221,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [2]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       Calendar &cal,
     #       UnicodeString &appendTo,
     #       FieldPositionIterator *posIter,
@@ -246,7 +264,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [3]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       FieldPosition &pos,
@@ -261,7 +279,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [6]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       FieldPositionIterator *posIter,
@@ -288,7 +306,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [8]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       UDate date,
     #       UnicodeString &appendTo
     # )
@@ -299,7 +317,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [9]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       UDate date,
     #       UnicodeString &appendTo,
     #       FieldPosition &fieldPosition
@@ -312,7 +330,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [10]
-    # UnicodeString &DateFormat::format(
+    # UnicodeString &icu::DateFormat::format(
     #       UDate date,
     #       UnicodeString &appendTo,
     #       FieldPositionIterator *posIter,
@@ -338,7 +356,7 @@ def test_format():
     assert result == "Jul 5, 2008, 11:00 PM"
 
     # [3]
-    # UnicodeString &Format::format(
+    # UnicodeString &icu::Format::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       UErrorCode &status
@@ -360,14 +378,14 @@ def test_get_boolean_attribute():
         DateFormat.SHORT,
         Locale.get_english())
 
-    # UBool DateFormat::getBooleanAttribute(
+    # UBool icu::DateFormat::getBooleanAttribute(
     #       UDateFormatBooleanAttribute attr,
     #       UErrorCode &status
     # )
     assert fmt.get_boolean_attribute(
         UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE)
 
-    # DateFormat &DateFormat::setBooleanAttribute(
+    # DateFormat &icu::DateFormat::setBooleanAttribute(
     #       UDateFormatBooleanAttribute attr,
     #       UBool newvalue,
     #       UErrorCode &status
@@ -390,14 +408,14 @@ def test_get_context():
         DateFormat.SHORT,
         Locale.get_english())
 
-    # UDisplayContext DateFormat::getContext(
+    # UDisplayContext icu::DateFormat::getContext(
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
     assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
             == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
 
-    # void DateFormat::setContext(
+    # void icu::DateFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )
@@ -430,13 +448,13 @@ def test_is_calendar_lenient():
         DateFormat.SHORT,
         Locale.get_english())
 
-    # UBool DateFormat::isCalendarLenient(void)
+    # UBool icu::DateFormat::isCalendarLenient(void)
     assert fmt.is_calendar_lenient()
 
     cal = fmt.get_calendar()
     assert cal.is_lenient()
 
-    # void DateFormat::setCalendarLenient(UBool lenient)
+    # void icu::DateFormat::setCalendarLenient(UBool lenient)
     fmt.set_calendar_lenient(False)
     assert not fmt.is_calendar_lenient()
     assert not cal.is_lenient()
@@ -449,9 +467,11 @@ def test_parse():
         Locale.get_english())
 
     # [1]
-    # void DateFormat::parse(const UnicodeString &text,
-    #                        Calendar &cal,
-    #                        ParsePosition &pos)
+    # void icu::DateFormat::parse(
+    #       const UnicodeString &text,
+    #       Calendar &cal,
+    #       ParsePosition &pos
+    # )
     zone = TimeZone.create_time_zone("PST")
     cal = GregorianCalendar(zone)
     cal.clear()
@@ -467,25 +487,33 @@ def test_parse():
     assert cal.get_time() == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     # [2]
-    # UDate DateFormat::parse(const UnicodeString &text,
-    #                         ParsePosition &pos)
+    # UDate icu::DateFormat::parse(
+    #       const UnicodeString &text,
+    #       ParsePosition &pos
+    # )
     pos = ParsePosition(0)
     result = fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), pos)
     assert pos.get_error_index() == -1
+    assert isinstance(result, float)
     assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     pos = ParsePosition(0)
     result = fmt.parse("07/10/96 4:5:0 PM PDT", pos)
     assert pos.get_error_index() == -1
+    assert isinstance(result, float)
     assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     # [3]
-    # UDate DateFormat::parse(const UnicodeString &text,
-    #                         UErrorCode &status)
+    # UDate icu::DateFormat::parse(
+    #       const UnicodeString &text,
+    #       UErrorCode &status
+    # )
     result = fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"))
+    assert isinstance(result, float)
     assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     result = fmt.parse("07/10/96 4:5:0 PM PDT")
+    assert isinstance(result, float)
     assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     with pytest.raises(ICUException) as exc_info:
@@ -499,7 +527,7 @@ def test_parse_object():
         DateFormat.LONG,
         Locale.get_english())
 
-    # void DateFormat::parseObject(
+    # void icu::DateFormat::parseObject(
     #       const UnicodeString &source,
     #       Formattable &result,
     #       ParsePosition &parse_pos
@@ -522,7 +550,7 @@ def test_parse_object():
     assert result.get_type() == Formattable.DATE
     assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
-    # void Format::parseObject(
+    # void icu::Format::parseObject(
     #       const UnicodeString &source,
     #       Formattable &result,
     #       UErrorCode &status

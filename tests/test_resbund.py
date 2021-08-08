@@ -14,17 +14,35 @@ def _int28_to_uint28(n: int) -> int:
 
 
 def test_api():
+    # UResourceBundle *ures_openDirect(
+    #       const char *packageName,
+    #       const char *locale,
+    #       UErrorCode *status
+    # )
     rb = ures_open_direct(None, "metadata")
     test1 = ResourceBundle(rb)
     ures_close(rb)
 
+    # UResType icu::ResourceBundle::getType(void)
     assert test1.get_type() == UResType.URES_TABLE
+
+    # int32_t icu::ResourceBundle::getSize(void)
     assert test1.get_size() > 0
     assert len(test1) == test1.get_size()
+
+    # const char *icu::ResourceBundle::getKey(void)
     assert test1.get_key() is None
+
+    # const char *icu::ResourceBundle::getName(void)
     assert test1.get_name() == "metadata"
 
+    # [1]
+    # ResourceBundle icu::ResourceBundle::get(
+    #       const char *key,
+    #       UErrorCode &status
+    # )
     test2 = test1.get("alias")
+    assert isinstance(test2, ResourceBundle)
     assert test2.get_type() == UResType.URES_TABLE
     assert test2.get_size() > 0
     assert len(test2) == test2.get_size()
@@ -32,6 +50,7 @@ def test_api():
     assert test2.get_name() == "metadata"
 
     test3 = test2.get("language")
+    assert isinstance(test3, ResourceBundle)
     assert test3.get_type() == UResType.URES_TABLE
     assert test3.get_size() > 0
     assert len(test3) == test3.get_size()
@@ -39,12 +58,18 @@ def test_api():
     assert test3.get_name() == "metadata"
 
     test4 = test3.get("sh")
+    assert isinstance(test4, ResourceBundle)
     assert test4.get_type() == UResType.URES_TABLE
     assert test4.get_size() >= 2
     assert len(test4) == test4.get_size()
     assert test4.get_key() == "sh"
     assert test4.get_name() == "metadata"
 
+    # [1]
+    # UnicodeString icu::ResourceBundle::getStringEx(
+    #       const char *key,
+    #       UErrorCode &status
+    # )
     result = test4.get_string_ex("replacement")
     assert isinstance(result, UnicodeString)
     assert result == "sr_Latn"
@@ -53,6 +78,11 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "legacy"
 
+    # [2]
+    # UnicodeString icu::ResourceBundle::getStringEx(
+    #       int32_t index,
+    #       UErrorCode &status
+    # )
     result1 = test4.get_string_ex(0)
     assert isinstance(result1, UnicodeString)
     result2 = test4.get_string_ex(1)
@@ -63,7 +93,7 @@ def test_api():
 
 
 def test_api2():
-    path = Path(__file__).joinpath("..", "testdata").resolve()
+    path = Path(__file__).resolve().parent / "testdata"
     rb = None
     try:
         rb = ures_open_direct(str(path), "testtypes")
@@ -84,7 +114,10 @@ def test_api2():
     assert test1.get_name() == "testtypes"
 
     resources = list()
+
+    # UBool icu::ResourceBundle::hasNext(void)
     while test1.has_next():
+        # ResourceBundle icu::ResourceBundle::getNext(UErrorCode &status)
         result = test1.get_next()
         assert isinstance(result, ResourceBundle)
         resources.append(result)
@@ -94,10 +127,16 @@ def test_api2():
         _ = test1.get_next()
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
+    # void icu::ResourceBundle::resetIterator(void)
     test1.reset_iterator()
     assert test1.has_next()
 
     for index, expected in enumerate(resources):
+        # [2]
+        # ResourceBundle icu::ResourceBundle::get(
+        #       int32_t index,
+        #       UErrorCode &status
+        # )
         result = test1.get(index)
         assert isinstance(result, ResourceBundle)
         assert result.get_key() is not None
@@ -111,7 +150,13 @@ def test_api2():
 
     # "testtypes" > "binarytest"
     test2 = test1.get("binarytest")
+    assert isinstance(test2, ResourceBundle)
     assert test2.get_type() == UResType.URES_BINARY
+
+    # const uint8_t *icu::ResourceBundle::getBinary(
+    #       int32_t &len,
+    #       UErrorCode &status
+    # )
     result = test2.get_binary()
     assert isinstance(result, list)
     assert len(result) == 15
@@ -122,6 +167,7 @@ def test_api2():
 
     # "testtypes" > "emptybin"
     test3 = test1.get("emptybin")
+    assert isinstance(test3, ResourceBundle)
     assert test3.get_type() == UResType.URES_BINARY
     result = test3.get_binary()
     assert isinstance(result, list)
@@ -129,17 +175,22 @@ def test_api2():
 
     # "testtypes" > "minusone"
     test4 = test1.get("minusone")
+    assert isinstance(test4, ResourceBundle)
     assert test4.get_type() == UResType.URES_INT
+
+    # int32_t icu::ResourceBundle::getInt(UErrorCode &status)
     result = test4.get_int()
     assert isinstance(result, int)
     assert result == -1
 
+    # uint32_t icu::ResourceBundle::getUInt(UErrorCode &status)
     result = test4.get_uint()
     assert isinstance(result, int)
     assert result == _int28_to_uint28(-1)
 
     # "testtypes" > "emptyint"
     test5 = test1.get("emptyint")
+    assert isinstance(test5, ResourceBundle)
     assert test5.get_type() == UResType.URES_INT
     result = test5.get_int()
     assert isinstance(result, int)
@@ -151,13 +202,20 @@ def test_api2():
 
     # "testtypes" > "integerarray"
     test6 = test1.get("integerarray")
+    assert isinstance(test6, ResourceBundle)
     assert test6.get_type() == UResType.URES_INT_VECTOR
+
+    # const int32_t *icu::ResourceBundle::getIntVector(
+    #       int32_t &len,
+    #       UErrorCode &status
+    # )
     result = test6.get_int_vector()
     assert isinstance(result, list)
     assert result == [1, 2, 3, -3, 4, 5, 6, 7]
 
     # "testtypes" > "emptyintv"
     test7 = test1.get("emptyintv")
+    assert isinstance(test7, ResourceBundle)
     assert test7.get_type() == UResType.URES_INT_VECTOR
     result = test7.get_int_vector()
     assert isinstance(result, list)
@@ -165,8 +223,15 @@ def test_api2():
 
     # "testtypes" > "menu" > "file"
     test8 = test1.get("menu")
+    assert isinstance(test8, ResourceBundle)
     test9 = test8.get("file")
+    assert isinstance(test9, ResourceBundle)
 
+    # [2]
+    # UnicodeString icu::ResourceBundle::getNextString(
+    #       const char **key,
+    #       UErrorCode &status
+    # )
     result = test9.get_next_string()
     assert isinstance(result, UnicodeString)
     assert str(result) in ["Open", "Save", "Exit"]
@@ -185,7 +250,10 @@ def test_api2():
 
     # "testtypes" > "zerotest"
     test10 = test1.get("zerotest")
+    assert isinstance(test10, ResourceBundle)
     assert test10.get_type() == UResType.URES_STRING
+
+    # UnicodeString icu::ResourceBundle::getString(UErrorCode &status)
     result = test10.get_string()
     assert isinstance(result, UnicodeString)
     assert len(result) == 7
@@ -193,6 +261,7 @@ def test_api2():
 
     # "testtypes" > "emptystring"
     test11 = test1.get("emptystring")
+    assert isinstance(test11, ResourceBundle)
     assert test11.get_type() == UResType.URES_STRING
     result = test11.get_string()
     assert isinstance(result, UnicodeString)
@@ -200,6 +269,8 @@ def test_api2():
 
     # "default"
     test12 = ResourceBundle(str(path), Locale.get_us())
+
+    # void icu::ResourceBundle::getVersion(UVersionInfo versionInfo)
     version_info = test12.get_version()
     assert isinstance(version_info, list)
     assert len(version_info) == 4
@@ -214,7 +285,10 @@ def test_api2():
 
 def test_clone():
     test1 = ResourceBundle(None, Locale.get_us())
+
+    # ResourceBundle *icu::ResourceBundle::clone()
     test2 = test1.clone()
+    assert isinstance(test2, ResourceBundle)
     assert test1.get_name() == test2.get_name()
     assert test1.get_key() == test2.get_key()
 
@@ -236,9 +310,10 @@ def test_resource_bundle():
     assert default_locale != res_locale
 
     # [1]
-    # ResourceBundle::ResourceBundle(const UnicodeString &packageName,
-    #                                const Locale &locale,
-    #                                UErrorCode &err
+    # icu::ResourceBundle::ResourceBundle(
+    #       const UnicodeString &packageName,
+    #       const Locale &locale,
+    #       UErrorCode &err
     # )
     test1 = ResourceBundle(UnicodeString(), res_locale)
     assert test1.get_type() == UResType.URES_TABLE
@@ -261,8 +336,9 @@ def test_resource_bundle():
     assert test1b.get_name() == res_locale.get_name()
 
     # [2]
-    # ResourceBundle::ResourceBundle(const UnicodeString &packageName,
-    #                                UErrorCode &err
+    # icu::ResourceBundle::ResourceBundle(
+    #       const UnicodeString &packageName,
+    #       UErrorCode &err
     # )
     test2 = ResourceBundle(UnicodeString())
     assert test2.get_type() == UResType.URES_TABLE
@@ -285,7 +361,7 @@ def test_resource_bundle():
     assert test2a.get_name() == default_locale.get_name()
 
     # [3]
-    # ResourceBundle::ResourceBundle(UErrorCode &err)
+    # icu::ResourceBundle::ResourceBundle(UErrorCode &err)
     test3 = ResourceBundle()
     assert test3.get_type() == UResType.URES_TABLE
     assert test3.get_size() >= 0
@@ -297,9 +373,10 @@ def test_resource_bundle():
     assert test3.get_name() == default_locale.get_name()
 
     # [4]
-    # ResourceBundle::ResourceBundle(const char *packageName,
-    #                                const Locale &locale,
-    #                                UErrorCode &err
+    # icu::ResourceBundle::ResourceBundle(
+    #       const char *packageName,
+    #       const Locale &locale,
+    #       UErrorCode &err
     # )
     test4 = ResourceBundle(None, res_locale)
     assert test4.get_type() == UResType.URES_TABLE
@@ -322,7 +399,7 @@ def test_resource_bundle():
     assert test4a.get_name() == res_locale.get_name()
 
     # [5]
-    # ResourceBundle::ResourceBundle(const ResourceBundle &original)
+    # icu::ResourceBundle::ResourceBundle(const ResourceBundle &original)
     test5 = ResourceBundle(test1)
     assert test5.get_type() == UResType.URES_TABLE
     assert test5.get_size() >= 0
@@ -334,8 +411,9 @@ def test_resource_bundle():
     assert test5.get_name() == res_locale.get_name()
 
     # [6]
-    # ResourceBundle::ResourceBundle(UResourceBundle *res,
-    #                                UErrorCode &status
+    # icu::ResourceBundle::ResourceBundle(
+    #       UResourceBundle *res,
+    #       UErrorCode &status
     # )
     rb = ures_open(None, str(res_locale))
     test6 = ResourceBundle(rb)

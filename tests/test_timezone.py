@@ -138,7 +138,7 @@ def test_rule_based_time_zone():
     initial_rule2 = InitialTimeZoneRule("STD", 5 * HOUR, 0)
 
     # [1]
-    # RuleBasedTimeZone::RuleBasedTimeZone(
+    # icu::RuleBasedTimeZone::RuleBasedTimeZone(
     #       const UnicodeString &id,
     #       InitialTimeZoneRule *initialRule
     # )
@@ -231,37 +231,70 @@ def test_rule_based_time_zone():
     zone2.complete()
 
     # [2]
-    # RuleBasedTimeZone::RuleBasedTimeZone(
+    # icu::RuleBasedTimeZone::RuleBasedTimeZone(
     #       const RuleBasedTimeZone &source
     # )
     zone3 = RuleBasedTimeZone(zone2)
 
-    zone4 = zone2.clone()
+    # RuleBasedTimeZone *icu::RuleBasedTimeZone::clone()
+    zone2a = zone2.clone()
+    assert isinstance(zone2a, RuleBasedTimeZone)
+    assert zone2a == zone2
 
+    zone2b = copy.copy(zone2)
+    assert zone2b == zone2
+
+    zone2c = copy.deepcopy(zone2)
+    assert zone2c == zone2
+
+    # UBool icu::TimeZone::operator!=(const TimeZone &that)
+    assert zone1 != zone2
+    assert zone1 != zone3
+    assert not (zone2 != zone3)
+
+    # UBool icu::RuleBasedTimeZone::operator==(const TimeZone &that)
+    assert not (zone1 == zone2)
+    assert not (zone1 == zone3)
+    assert zone2 == zone3
+
+    # int32_t icu::BasicTimeZone::countTransitionRules(UErrorCode &status)
     assert zone1.count_transition_rules() == 2
     assert zone2.count_transition_rules() == 4
 
+    # int32_t icu::TimeZone::getDSTSavings()
     assert zone1.get_dst_savings() == 1 * HOUR
     assert zone2.get_dst_savings() == 0
 
+    # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
     id_ = UnicodeString()
     result = zone1.get_id(id_)
     assert isinstance(result, UnicodeString)
-    assert result == id_
+    assert id(result) == id(id_)
     assert result == "r1"
 
+    # UBool icu::BasicTimeZone::getNextTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
     assert zone1.get_next_transition(base, False, tzt)
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
+    # UBool icu::BasicTimeZone::getPreviousTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     assert zone1.get_previous_transition(base, False, tzt)
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
+    # int32_t icu::TimeZone::getRawOffset(void)
     assert zone1.get_raw_offset() == 0
     assert zone2.get_raw_offset() == 6 * HOUR
 
-    # void BasicTimeZone::getSimpleRulesNear(
+    # void icu::BasicTimeZone::getSimpleRulesNear(
     #       UDate date,
     #       InitialTimeZoneRule *&initial,
     #       AnnualTimeZoneRule *&std,
@@ -285,7 +318,7 @@ def test_rule_based_time_zone():
     assert dr.get_rule_month() == UCalendarMonths.UCAL_JANUARY
     assert dr.get_rule_day_of_month() == 0
 
-    # void BasicTimeZone::getTimeZoneRules(
+    # void icu::BasicTimeZone::getTimeZoneRules(
     #       const InitialTimeZoneRule *&initial,
     #       const TimeZoneRule *trsrules[],
     #       int32_t &trscount,
@@ -303,36 +336,33 @@ def test_rule_based_time_zone():
     assert trsrules[2] == tzr23
     assert trsrules[3] == tzr24
 
+    # UBool icu::BasicTimeZone::hasEquivalentTransitions(
+    #       const BasicTimeZone &tz,
+    #       UDate start,
+    #       UDate end,
+    #       UBool ignoreDstAmount,
+    #       UErrorCode &ec
+    # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
     assert not zone1.has_equivalent_transitions(zone2, start, end, False)
     assert not zone2.has_equivalent_transitions(zone1, start, end, False)
 
+    # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     assert not zone1.has_same_rules(zone2)
     assert zone2.has_same_rules(zone3)
 
-    assert zone1 != zone2
-    assert zone1 != zone3
-    assert zone1 != zone4
-    assert not (zone2 != zone3)
-    assert not (zone2 != zone4)
-    assert not (zone3 != zone4)
-
-    assert not (zone1 == zone2)
-    assert not (zone1 == zone3)
-    assert not (zone1 == zone4)
-    assert zone2 == zone3
-    assert zone2 == zone4
-    assert zone3 == zone4
-
+    # void icu::TimeZone::setID(const UnicodeString &ID)
     zone1.set_id(UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
 
+    # void icu::TimeZone::setRawOffset(int32_t offsetMillis)
     zone1.set_raw_offset(-5 * HOUR)  # Nothing to do
     assert zone1.get_raw_offset() == 0
 
+    # UBool icu::TimeZone::useDaylightTime(void)
     assert zone1.use_daylight_time()
     assert not zone2.use_daylight_time()
 
@@ -375,7 +405,7 @@ def test_rule_based_time_zone_get_offset():
     zone.complete()
 
     # [1]
-    # void RuleBasedTimeZone::getOffset(
+    # void icu::RuleBasedTimeZone::getOffset(
     #       UDate date,
     #       UBool local,
     #       int32_t &rawOffset,
@@ -387,7 +417,7 @@ def test_rule_based_time_zone_get_offset():
     assert dst_offset == 0
 
     # [2]
-    # int32_t RuleBasedTimeZone::getOffset(
+    # int32_t icu::RuleBasedTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -407,7 +437,7 @@ def test_rule_based_time_zone_get_offset():
         28) == 8.5 * HOUR
 
     # [3]
-    # int32_t RuleBasedTimeZone::getOffset(
+    # int32_t icu::RuleBasedTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -491,14 +521,14 @@ def test_simple_time_zone():
     assert issubclass(SimpleTimeZone, TimeZone)
 
     # [2]
-    # SimpleTimeZone::SimpleTimeZone(
+    # icu::SimpleTimeZone::SimpleTimeZone(
     #       int32_t rawOffsetGMT,
     #       const UnicodeString &ID
     # )
     zone2 = SimpleTimeZone(8 * HOUR, UnicodeString("s2"))
 
     # [3]
-    # SimpleTimeZone::SimpleTimeZone(
+    # icu::SimpleTimeZone::SimpleTimeZone(
     #       int32_t rawOffsetGMT,
     #       const UnicodeString &ID,
     #       int8_t savingsStartMonth,
@@ -524,7 +554,7 @@ def test_simple_time_zone():
         0)
 
     # [4]
-    # SimpleTimeZone::SimpleTimeZone(
+    # icu::SimpleTimeZone::SimpleTimeZone(
     #       int32_t rawOffsetGMT,
     #       const UnicodeString &ID,
     #       int8_t savingsStartMonth,
@@ -552,7 +582,7 @@ def test_simple_time_zone():
         int(0.5 * HOUR))
 
     # [5]
-    # SimpleTimeZone::SimpleTimeZone(
+    # icu::SimpleTimeZone::SimpleTimeZone(
     #       int32_t rawOffsetGMT,
     #       const UnicodeString &ID,
     #       int8_t savingsStartMonth,
@@ -584,42 +614,91 @@ def test_simple_time_zone():
         int(0.5 * HOUR))
 
     # [1]
-    # SimpleTimeZone::SimpleTimeZone(const SimpleTimeZone &source)
+    # icu::SimpleTimeZone::SimpleTimeZone(const SimpleTimeZone &source)
     zone1 = SimpleTimeZone(zone5)
 
+    # SimpleTimeZone *icu::SimpleTimeZone::clone()
+    zone1a = zone1.clone()
+    assert isinstance(zone1a, SimpleTimeZone)
+    assert zone1a == zone1
+
+    zone1b = copy.copy(zone1)
+    assert zone1b == zone1
+
+    zone1c = copy.deepcopy(zone1)
+    assert zone1c == zone1
+
+    # UBool icu::TimeZone::operator!=(const TimeZone &that)
+    assert zone1 != zone2
+    assert zone1 != zone3
+    assert zone1 != zone4
+    assert not (zone1 != zone5)
+    assert zone2 != zone3
+    assert zone2 != zone4
+    assert zone2 != zone5
+    assert zone3 != zone4
+    assert zone3 != zone5
+    assert zone4 != zone5
+
+    # UBool icu::SimpleTimeZone::operator==(const TimeZone &that)
+    assert not (zone1 == zone2)
+    assert not (zone1 == zone3)
+    assert not (zone1 == zone4)
+    assert zone1 == zone5
+    assert not (zone2 == zone3)
+    assert not (zone2 == zone4)
+    assert not (zone2 == zone5)
+    assert not (zone3 == zone4)
+    assert not (zone3 == zone5)
+    assert not (zone4 == zone5)
+
+    # int32_t icu::BasicTimeZone::countTransitionRules(UErrorCode &status)
     assert zone1.count_transition_rules() == 2
     assert zone2.count_transition_rules() == 0
     assert zone3.count_transition_rules() == 2
     assert zone4.count_transition_rules() == 2
     assert zone5.count_transition_rules() == 2
 
+    # int32_t icu::TimeZone::getDSTSavings()
     assert zone1.get_dst_savings() == 0.5 * HOUR
     assert zone2.get_dst_savings() == 1 * HOUR
     assert zone3.get_dst_savings() == 1 * HOUR
     assert zone4.get_dst_savings() == 0.5 * HOUR
     assert zone5.get_dst_savings() == 0.5 * HOUR
 
+    # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
     id_ = UnicodeString()
     result = zone1.get_id(id_)
     assert isinstance(result, UnicodeString)
-    assert result == id_
+    assert id(result) == id(id_)
     assert result == "s5"
 
+    # UBool icu::BasicTimeZone::getNextTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
     assert zone3.get_next_transition(base, False, tzt)
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
+    # UBool icu::BasicTimeZone::getPreviousTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     assert zone3.get_previous_transition(base, False, tzt)
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
+    # int32_t icu::TimeZone::getRawOffset(void)
     assert zone1.get_raw_offset() == 8 * HOUR
     assert zone2.get_raw_offset() == 8 * HOUR
     assert zone3.get_raw_offset() == 0
     assert zone4.get_raw_offset() == -5 * HOUR
     assert zone5.get_raw_offset() == 8 * HOUR
 
-    # void BasicTimeZone::getSimpleRulesNear(
+    # void icu::BasicTimeZone::getSimpleRulesNear(
     #       UDate date,
     #       InitialTimeZoneRule *&initial,
     #       AnnualTimeZoneRule *&std,
@@ -650,7 +729,7 @@ def test_simple_time_zone():
     assert dr.get_rule_month() == UCalendarMonths.UCAL_MARCH
     assert dr.get_rule_day_of_month() == 0
 
-    # void BasicTimeZone::getTimeZoneRules(
+    # void icu::BasicTimeZone::getTimeZoneRules(
     #       const InitialTimeZoneRule *&initial,
     #       const TimeZoneRule *trsrules[],
     #       int32_t &trscount,
@@ -681,59 +760,56 @@ def test_simple_time_zone():
     assert dr.get_rule_month() == UCalendarMonths.UCAL_MARCH
     assert dr.get_rule_day_of_month() == 0
 
+    # UBool icu::BasicTimeZone::hasEquivalentTransitions(
+    #       const BasicTimeZone &tz,
+    #       UDate start,
+    #       UDate end,
+    #       UBool ignoreDstAmount,
+    #       UErrorCode &ec
+    # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
     assert not zone5.has_equivalent_transitions(zone4, start, end, False)
     assert zone5.has_equivalent_transitions(zone1, start, end, False)
 
+    # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     assert not zone5.has_same_rules(zone4)
     assert zone5.has_same_rules(zone1)
 
-    assert zone1 != zone2
-    assert zone1 != zone3
-    assert zone1 != zone4
-    assert not (zone1 != zone5)
-    assert zone2 != zone3
-    assert zone2 != zone4
-    assert zone2 != zone5
-    assert zone3 != zone4
-    assert zone3 != zone5
-    assert zone4 != zone5
-
-    assert not (zone1 == zone2)
-    assert not (zone1 == zone3)
-    assert not (zone1 == zone4)
-    assert zone1 == zone5
-    assert not (zone2 == zone3)
-    assert not (zone2 == zone4)
-    assert not (zone2 == zone5)
-    assert not (zone3 == zone4)
-    assert not (zone3 == zone5)
-    assert not (zone4 == zone5)
-
+    # void icu::SimpleTimeZone::setDSTSavings(
+    #       int32_t millisSavedDuringDST,
+    #       UErrorCode &status
+    # )
     zone1.set_dst_savings(1 * HOUR)
     assert zone1.get_dst_savings() == 1 * HOUR
     zone2.set_dst_savings(int(0.5 * HOUR))
     assert zone2.get_dst_savings() == 0.5 * HOUR
 
+    # void icu::TimeZone::setID(const UnicodeString &ID)
     zone1.set_id(UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
 
+    # void icu::TimeZone::setRawOffset(int32_t offsetMillis)
     zone1.set_raw_offset(0)
     assert zone1.get_raw_offset() == 0
     zone2.set_raw_offset(-5 * HOUR)
     assert zone2.get_raw_offset() == -5 * HOUR
 
     _, trsrules = zone1.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     assert trsrules[0].get_start_year() == 0
     assert trsrules[1].get_start_year() == 0
     zone1.set_start_year(1966)
     _, trsrules = zone1.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     assert trsrules[0].get_start_year() == 1966
     assert trsrules[1].get_start_year() == 1966
 
+    # UBool icu::TimeZone::useDaylightTime(void)
     assert zone1.use_daylight_time()
     assert not zone2.use_daylight_time()
     assert zone3.use_daylight_time()
@@ -758,7 +834,7 @@ def test_simple_time_zone_get_offset():
         int(0.5 * HOUR))
 
     # [1]
-    # void SimpleTimeZone::getOffset(
+    # void icu::SimpleTimeZone::getOffset(
     #       UDate date,
     #       UBool local,
     #       int32_t &rawOffset,
@@ -770,7 +846,7 @@ def test_simple_time_zone_get_offset():
     assert dst_offset == 0
 
     # [2]
-    # int32_t SimpleTimeZone::getOffset(
+    # int32_t icu::SimpleTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -788,7 +864,7 @@ def test_simple_time_zone_get_offset():
         0) == 8.5 * HOUR
 
     # [3]
-    # int32_t SimpleTimeZone::getOffset(
+    # int32_t icu::SimpleTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -810,7 +886,7 @@ def test_simple_time_zone_get_offset():
         28) == 8.5 * HOUR
 
     # [4]
-    # int32_t SimpleTimeZone::getOffset(
+    # int32_t icu::SimpleTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -882,7 +958,7 @@ def test_simple_time_zone_set_end_rule():
         int(0.5 * HOUR))
 
     # [1]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t dayOfWeek,
@@ -899,6 +975,8 @@ def test_simple_time_zone_set_end_rule():
         SimpleTimeZone.UTC_TIME,
         True)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
@@ -909,7 +987,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [2]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t dayOfWeek,
@@ -924,6 +1002,8 @@ def test_simple_time_zone_set_end_rule():
         5 * HOUR,
         True)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
@@ -934,7 +1014,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
 
     # [3]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t time,
@@ -947,6 +1027,8 @@ def test_simple_time_zone_set_end_rule():
         4 * HOUR,
         SimpleTimeZone.UTC_TIME)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 30
@@ -957,7 +1039,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [4]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t time,
@@ -968,6 +1050,8 @@ def test_simple_time_zone_set_end_rule():
         31,
         3 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 31
@@ -978,7 +1062,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
 
     # [5]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfWeekInMonth,
     #       int32_t dayOfWeek,
@@ -993,6 +1077,8 @@ def test_simple_time_zone_set_end_rule():
         2 * HOUR,
         SimpleTimeZone.UTC_TIME)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
@@ -1003,7 +1089,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [6]
-    # void SimpleTimeZone::setEndRule(
+    # void icu::SimpleTimeZone::setEndRule(
     #       int32_t month,
     #       int32_t dayOfWeekInMonth,
     #       int32_t dayOfWeek,
@@ -1016,6 +1102,8 @@ def test_simple_time_zone_set_end_rule():
         UCalendarDaysOfWeek.UCAL_WEDNESDAY,
         1 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
@@ -1043,7 +1131,7 @@ def test_simple_time_zone_set_start_rule():
         int(0.5 * HOUR))
 
     # [1]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t dayOfWeek,
@@ -1060,6 +1148,8 @@ def test_simple_time_zone_set_start_rule():
         SimpleTimeZone.UTC_TIME,
         True)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
@@ -1070,7 +1160,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [2]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t dayOfWeek,
@@ -1085,6 +1175,8 @@ def test_simple_time_zone_set_start_rule():
         2 * HOUR,
         True)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 28
@@ -1095,7 +1187,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
 
     # [3]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t time,
@@ -1108,6 +1200,8 @@ def test_simple_time_zone_set_start_rule():
         3 * HOUR,
         SimpleTimeZone.UTC_TIME)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 31
@@ -1118,7 +1212,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [4]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfMonth,
     #       int32_t time,
@@ -1129,6 +1223,8 @@ def test_simple_time_zone_set_start_rule():
         30,
         4 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 30
@@ -1139,7 +1235,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
 
     # [5]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfWeekInMonth,
     #       int32_t dayOfWeek,
@@ -1154,6 +1250,8 @@ def test_simple_time_zone_set_start_rule():
         5 * HOUR,
         SimpleTimeZone.UTC_TIME)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
@@ -1164,7 +1262,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
 
     # [6]
-    # void SimpleTimeZone::setStartRule(
+    # void icu::SimpleTimeZone::setStartRule(
     #       int32_t month,
     #       int32_t dayOfWeekInMonth,
     #       int32_t dayOfWeek,
@@ -1177,6 +1275,8 @@ def test_simple_time_zone_set_start_rule():
         UCalendarDaysOfWeek.UCAL_WEDNESDAY,
         6 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
+    assert isinstance(trsrules, list)
+    assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
     assert dr.get_date_rule_type() == DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
@@ -1190,22 +1290,27 @@ def test_simple_time_zone_set_start_rule():
 def test_time_zone():
     id_ = UnicodeString("PST")
 
+    # static TimeZone *icu::TimeZone::createDefault(void)
     zone1 = TimeZone.create_default()
-    assert isinstance(zone1, TimeZone)
+    assert isinstance(zone1, BasicTimeZone)
 
+    # static TimeZone *icu::TimeZone::createTimeZone(const UnicodeString &ID)
     zone2 = TimeZone.create_time_zone(id_)
-    assert isinstance(zone2, TimeZone)
+    assert isinstance(zone2, BasicTimeZone)
 
     zone3 = TimeZone.create_time_zone("PST")
-    assert isinstance(zone3, TimeZone)
+    assert isinstance(zone3, BasicTimeZone)
     assert not (zone2 != zone3)
     assert zone2 == zone3
 
+    # static const TimeZone *icu::TimeZone::getGMT(void)
     zone4 = TimeZone.get_gmt()
-    assert isinstance(zone4, TimeZone)
+    assert isinstance(zone4, BasicTimeZone)
 
+    # static void icu::TimeZone::setDefault(const TimeZone &zone)
     TimeZone.set_default(zone1)
 
+    # static int32_t icu::TimeZone::countEquivalentIDs(const UnicodeString &id)
     n = TimeZone.count_equivalent_ids(id_)
     assert n > 0
     ids = [TimeZone.get_equivalent_id(id_, i) for i in range(n)]
@@ -1217,13 +1322,13 @@ def test_time_zone():
     assert ids[0] == id2
 
     # [1]
-    # static StringEnumeration *TimeZone::createEnumeration()
+    # static StringEnumeration *icu::TimeZone::createEnumeration()
     it1 = TimeZone.create_enumeration()
     assert isinstance(it1, StringEnumeration)
     assert len(it1) > 0
 
     # [2]
-    # static StringEnumeration *TimeZone::createEnumeration(
+    # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       const char *country
     # )
     it2 = TimeZone.create_enumeration(None)
@@ -1235,7 +1340,7 @@ def test_time_zone():
     assert len(it3) > 0
 
     # [3]
-    # static StringEnumeration *TimeZone::createEnumeration(
+    # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       int32_t rawOffset
     # )
     it4 = TimeZone.create_enumeration(-8 * HOUR)
@@ -1247,6 +1352,12 @@ def test_time_zone():
     assert "America/Los_Angeles" in it3
     assert "America/Los_Angeles" in it4
 
+    # static StringEnumeration *icu::TimeZone::createTimeZoneIDEnumeration(
+    #       USystemTimeZoneType zoneType,
+    #       const char *region,
+    #       const int32_t *rawOffset,
+    #       UErrorCode &ec
+    # )
     it5 = TimeZone.create_time_zone_id_enumeration(
         USystemTimeZoneType.UCAL_ZONE_TYPE_ANY,
         None,
@@ -1280,7 +1391,7 @@ def test_time_zone():
     assert "America/Los_Angeles" in it8
 
     # [1]
-    # static UnicodeString &TimeZone::getCanonicalID(
+    # static UnicodeString &icu::TimeZone::getCanonicalID(
     #       const UnicodeString &id,
     #       UnicodeString &canonicalID,
     #       UBool &isSystemID,
@@ -1289,64 +1400,70 @@ def test_time_zone():
     canonical_id = UnicodeString()
     result, is_system_id = TimeZone.get_canonical_id(id_, canonical_id)
     assert isinstance(result, UnicodeString)
-    assert result == canonical_id
+    assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
     assert is_system_id
 
     canonical_id.remove()
     result, is_system_id = TimeZone.get_canonical_id("PST", canonical_id)
-    assert result == canonical_id
+    assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
     assert is_system_id
 
     locale = Locale.get_english()
 
     # [1]
-    # UnicodeString &TimeZone::getDisplayName(const Locale &locale,
-    #                                         UnicodeString &result)
+    # UnicodeString &icu::TimeZone::getDisplayName(
+    #       const Locale &locale,
+    #       UnicodeString &result
+    # )
     result = UnicodeString()
     output = zone2.get_display_name(locale, result)
     assert isinstance(output, UnicodeString)
-    assert output == result
+    assert id(output) == id(result)
     assert result == "Pacific Standard Time"
     assert zone2.get_display_name("en", result) == "Pacific Standard Time"
 
     # [2]
-    # UnicodeString &TimeZone::getDisplayName(UBool inDaylight,
-    #                                         EDisplayType style,
-    #                                         const Locale &locale,
-    #                                         UnicodeString &result
+    # UnicodeString &icu::TimeZone::getDisplayName(
+    #       UBool inDaylight,
+    #       EDisplayType style,
+    #       const Locale &locale,
+    #       UnicodeString &result
     # )
     output = zone2.get_display_name(True, TimeZone.LONG, locale, result)
     assert isinstance(output, UnicodeString)
-    assert output == result
+    assert id(output) == id(result)
     assert result == "Pacific Daylight Time"
     assert (zone2.get_display_name(True, TimeZone.LONG, "en", result)
             == "Pacific Daylight Time")
 
     # [3]
-    # UnicodeString &TimeZone::getDisplayName(UBool inDaylight,
-    #                                         EDisplayType style,
-    #                                         UnicodeString &result
+    # UnicodeString &icu::TimeZone::getDisplayName(
+    #       UBool inDaylight,
+    #       EDisplayType style,
+    #       UnicodeString &result
     # )
     output = zone2.get_display_name(True, TimeZone.LONG_GMT, result)
     assert isinstance(output, UnicodeString)
-    assert output == result
+    assert id(output) == id(result)
     assert result == "GMT-07:00"
 
     # [4]
-    # UnicodeString &TimeZone::getDisplayName(UnicodeString &result)
+    # UnicodeString &icu::TimeZone::getDisplayName(UnicodeString &result)
     output = zone2.get_display_name(result)
     assert isinstance(output, UnicodeString)
-    assert output == result
+    assert id(output) == id(result)
     assert len(result) > 0
 
+    # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
     id2 = UnicodeString()
     result = zone2.get_id(id2)
     assert isinstance(result, UnicodeString)
-    assert result == id2
+    assert id(result) == id(id2)
     assert id2 == "PST"
 
+    # void icu::TimeZone::setID(const UnicodeString &ID)
     zone2.set_id(UnicodeString("America/Los_Angeles"))
     zone2.get_id(id2)
     assert id2 == "America/Los_Angeles"
@@ -1356,7 +1473,7 @@ def test_time_zone():
     assert id2 == "US(PST)"
 
     # [1]
-    # static int32_t TimeZone::getRegion(
+    # static int32_t icu::TimeZone::getRegion(
     #       const UnicodeString &id,
     #       char *region,
     #       int32_t capacity,
@@ -1367,6 +1484,7 @@ def test_time_zone():
     assert region == "US"
     assert TimeZone.get_region("PST") == "US"
 
+    # static const char *icu::TimeZone::getTZDataVersion(UErrorCode &status)
     result = TimeZone.get_tz_data_version()
     assert isinstance(result, str)
     assert len(result) > 0  # e.g., "2020d"
@@ -1374,31 +1492,44 @@ def test_time_zone():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
 def test_time_zone_detect_host_time_zone():
+    # static TimeZone *icu::TimeZone::detectHostTimeZone()
     zone = TimeZone.detect_host_time_zone()
-    assert isinstance(zone, TimeZone)
+    assert isinstance(zone, BasicTimeZone)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_time_zone_get_unknown():
+    # static const TimeZone &icu::TimeZone::getUnknown()
     zone = TimeZone.get_unknown()
-    assert isinstance(zone, TimeZone)
+    assert isinstance(zone, BasicTimeZone)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
 def test_time_zone_get_windows_id():
+    # static UnicodeString &icu::TimeZone::getWindowsID(
+    #       const UnicodeString &id,
+    #       UnicodeString &winid,
+    #       UErrorCode &status
+    # )
     id_ = UnicodeString("America/New_York")
     winid = UnicodeString()
     result = TimeZone.get_windows_id(id_, winid)
     assert isinstance(result, UnicodeString)
-    assert result == winid
+    assert id(result) == id(winid)
     assert winid == "Eastern Standard Time"
     assert (TimeZone.get_windows_id("America/New_York", winid)
             == "Eastern Standard Time")
 
+    # static UnicodeString &icu::TimeZone::getIDForWindowsID(
+    #       const UnicodeString &winid,
+    #       const char *region,
+    #       UnicodeString &id,
+    #       UErrorCode &status
+    # )
     id_ = UnicodeString()
     result = TimeZone.get_id_for_windows_id(winid, None, id_)
     assert isinstance(result, UnicodeString)
-    assert result == id_
+    assert id(result) == id(id_)
     assert id_ == "America/New_York"
     assert (TimeZone.get_id_for_windows_id("Eastern Standard Time", None, id_)
             == "America/New_York")
@@ -1406,13 +1537,14 @@ def test_time_zone_get_windows_id():
     id_ = UnicodeString()
     result = TimeZone.get_id_for_windows_id(winid, "CA", id_)
     assert isinstance(result, UnicodeString)
-    assert result == id_
+    assert id(result) == id(id_)
     assert id_ == "America/Toronto"
     assert (TimeZone.get_id_for_windows_id("Eastern Standard Time", "CA", id_)
             == "America/Toronto")
 
 
 def test_time_zone_has_same_rules():
+    # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     id_ = "Europe/Moscow"
     otz = TimeZone.create_time_zone(id_)
     vtz1 = VTimeZone.create_vtime_zone_by_id(id_)
@@ -1432,7 +1564,7 @@ def test_vtime_zone():
     assert issubclass(VTimeZone, BasicTimeZone)
     assert issubclass(VTimeZone, TimeZone)
 
-    # static VTimeZone *VTimeZone::createVTimeZoneByID(
+    # static VTimeZone *icu::VTimeZone::createVTimeZoneByID(
     #       const UnicodeString &ID
     # )
     id1 = UnicodeString("America/New_York")
@@ -1443,14 +1575,14 @@ def test_vtime_zone():
     vtzdata = UnicodeString()
     zone1.write(vtzdata)
 
-    # static VTimeZone *VTimeZone::createVTimeZone(
+    # static VTimeZone *icu::VTimeZone::createVTimeZone(
     #       const UnicodeString &vtzdata,
     #       UErrorCode &status
     # )
     zone2 = VTimeZone.create_vtime_zone(vtzdata)
     assert isinstance(zone2, VTimeZone)
 
-    # static VTimeZone *VTimeZone::createVTimeZoneFromBasicTimeZone(
+    # static VTimeZone *icu::VTimeZone::createVTimeZoneFromBasicTimeZone(
     #       const BasicTimeZone &basicTZ,
     #       UErrorCode &status
     # )
@@ -1468,47 +1600,84 @@ def test_vtime_zone():
     zone3 = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
     assert isinstance(zone3, VTimeZone)
 
-    # VTimeZone::VTimeZone(const VTimeZone &source)
+    # icu::VTimeZone::VTimeZone(const VTimeZone &source)
     zone4 = VTimeZone(zone3)
 
-    zone5 = zone1.clone()
-    assert isinstance(zone5, VTimeZone)
+    # VTimeZone *icu::VTimeZone::clone()
+    zone1a = zone1.clone()
+    assert isinstance(zone1a, VTimeZone)
+    assert zone1a == zone1
 
+    zone1b = copy.copy(zone1)
+    assert zone1b == zone1
+
+    zone1c = copy.deepcopy(zone1)
+    assert zone1c == zone1
+
+    # UBool icu::TimeZone::operator!=(const TimeZone &that)
+    assert zone1 != zone2
+    assert zone1 != zone3
+    assert zone1 != zone4
+    assert zone2 != zone3
+    assert zone2 != zone4
+    assert not (zone3 != zone4)
+
+    # UBool icu::VTimeZone::operator==(const TimeZone &that)
+    assert not (zone1 == zone2)
+    assert not (zone1 == zone3)
+    assert not (zone1 == zone4)
+    assert not (zone2 == zone3)
+    assert not (zone2 == zone4)
+    assert zone3 == zone4
+
+    # int32_t icu::BasicTimeZone::countTransitionRules(UErrorCode &status)
     assert zone1.count_transition_rules() == 4
     assert zone2.count_transition_rules() == 17
     assert zone3.count_transition_rules() == 2
     assert zone4.count_transition_rules() == 2
-    assert zone5.count_transition_rules() == 4
 
+    # int32_t icu::TimeZone::getDSTSavings()
     assert zone1.get_dst_savings() == 1 * HOUR
     assert zone2.get_dst_savings() == 1 * HOUR
     assert zone3.get_dst_savings() == 1 * HOUR
 
+    # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
     id_ = UnicodeString()
     result = zone1.get_id(id_)
     assert isinstance(result, UnicodeString)
-    assert result == id_
+    assert id(result) == id(id_)
     assert len(result) == 0
 
-    # UBool VTimeZone::getLastModified(UDate &lastModified)
+    # UBool icu::VTimeZone::getLastModified(UDate &lastModified)
     assert zone1.get_last_modified() == (True, 1215298800000.0)
     assert zone2.get_last_modified() == (True, 1215298800000.0)
     result, _ = zone3.get_last_modified()
     assert not result
 
+    # UBool icu::BasicTimeZone::getNextTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
     assert zone3.get_next_transition(base, False, tzt)
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
+    # UBool icu::BasicTimeZone::getPreviousTransition(
+    #       UDate base,
+    #       UBool inclusive,
+    #       TimeZoneTransition &result
+    # )
     assert zone3.get_previous_transition(base, False, tzt)
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
+    # int32_t icu::TimeZone::getRawOffset(void)
     assert zone1.get_raw_offset() == -5 * HOUR
     assert zone2.get_raw_offset() == -5 * HOUR
     assert zone3.get_raw_offset() == 0
 
-    # void BasicTimeZone::getSimpleRulesNear(
+    # void icu::BasicTimeZone::getSimpleRulesNear(
     #       UDate date,
     #       InitialTimeZoneRule *&initial,
     #       AnnualTimeZoneRule *&std,
@@ -1532,7 +1701,7 @@ def test_vtime_zone():
     assert dr.get_rule_month() == UCalendarMonths.UCAL_APRIL
     assert dr.get_rule_day_of_month() == 0
 
-    # void BasicTimeZone::getTimeZoneRules(
+    # void icu::BasicTimeZone::getTimeZoneRules(
     #       const InitialTimeZoneRule *&initial,
     #       const TimeZoneRule *trsrules[],
     #       int32_t &trscount,
@@ -1556,72 +1725,72 @@ def test_vtime_zone():
     assert dr.get_rule_month() == UCalendarMonths.UCAL_JANUARY
     assert dr.get_rule_day_of_month() == 0
 
+    # UBool icu::VTimeZone::getTZURL(UnicodeString &url)
     url = UnicodeString()
     assert zone1.get_tzurl(url)
     assert url == "http://source.icu-project.org/timezone"
     assert not zone3.get_tzurl(url)
 
+    # UBool icu::BasicTimeZone::hasEquivalentTransitions(
+    #       const BasicTimeZone &tz,
+    #       UDate start,
+    #       UDate end,
+    #       UBool ignoreDstAmount,
+    #       UErrorCode &ec
+    # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
     assert not zone1.has_equivalent_transitions(zone3, start, end, False)
     assert not zone3.has_equivalent_transitions(zone1, start, end, False)
 
+    # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     assert not zone1.has_same_rules(zone2)
     assert not zone2.has_same_rules(zone3)
 
-    assert zone1 != zone2
-    assert zone1 != zone3
-    assert zone1 != zone4
-    assert not (zone1 != zone5)
-    assert zone2 != zone3
-    assert zone2 != zone4
-    assert zone2 != zone5
-    assert not (zone3 != zone4)
-    assert zone3 != zone5
-    assert zone4 != zone5
-
-    assert not (zone1 == zone2)
-    assert not (zone1 == zone3)
-    assert not (zone1 == zone4)
-    assert zone1 == zone5
-    assert not (zone2 == zone3)
-    assert not (zone2 == zone4)
-    assert not (zone2 == zone5)
-    assert zone3 == zone4
-    assert not (zone3 == zone5)
-    assert not (zone4 == zone5)
-
+    # void icu::TimeZone::setID(const UnicodeString &ID)
     zone1.set_id(UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
 
+    # void icu::TimeZone::setRawOffset(int32_t offsetMillis)
     zone1.set_raw_offset(5 * HOUR)  # Nothing to do
     assert zone1.get_raw_offset() == -5 * HOUR
 
+    # void icu::VTimeZone::setTZURL(const UnicodeString &url)
     zone1.set_tzurl("http://www.example.com")
     assert zone1.get_tzurl(url)
     assert url == "http://www.example.com"
 
+    # UBool icu::TimeZone::useDaylightTime(void)
     assert zone1.use_daylight_time()
     assert zone2.use_daylight_time()
     assert zone3.use_daylight_time()
 
     # [1]
-    # void VTimeZone::write(UDate start,
-    #                       UnicodeString &result,
-    #                       UErrorCode &status)
+    # void icu::VTimeZone::write(
+    #       UDate start,
+    #       UnicodeString &result,
+    #       UErrorCode &status
+    # )
     result1 = UnicodeString()
     zone1.write(1231027200000.0, result1)
     assert len(result1) > 0
 
     # [2]
-    # void VTimeZone::write(UnicodeString &result,
-    #                       UErrorCode &status)
+    # void icu::VTimeZone::write(
+    #       UnicodeString &result,
+    #       UErrorCode &status
+    # )
     result2 = UnicodeString()
     zone1.write(result2)
     assert len(result2) > 0
 
+    # void icu::VTimeZone::writeSimple(
+    #       UDate time,
+    #       UnicodeString &result,
+    #       UErrorCode &status
+    # )
     result3 = UnicodeString()
     zone1.write_simple(1231027200000.0, result3)
     assert len(result3) > 0
@@ -1645,7 +1814,7 @@ def test_vtime_zone_get_offset():
     zone = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
 
     # [1]
-    # void VTimeZone::getOffset(
+    # void icu::VTimeZone::getOffset(
     #       UDate date,
     #       UBool local,
     #       int32_t &rawOffset,
@@ -1657,7 +1826,7 @@ def test_vtime_zone_get_offset():
     assert dst_offset == 0
 
     # [2]
-    # int32_t VTimeZone::getOffset(
+    # int32_t icu::VTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,
@@ -1677,7 +1846,7 @@ def test_vtime_zone_get_offset():
         28) == 8.5 * HOUR
 
     # [3]
-    # int32_t VTimeZone::getOffset(
+    # int32_t icu::VTimeZone::getOffset(
     #       uint8_t era,
     #       int32_t year,
     #       int32_t month,

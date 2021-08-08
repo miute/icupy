@@ -18,6 +18,10 @@ def test_api():
 
     s = UnicodeString()
     with gc(utext_open_unicode_string(None, s), utext_close) as dest:
+        # UText *icu::RegexMatcher::getInput(
+        #       UText *dest,
+        #       UErrorCode &status
+        # )
         result = matcher.get_input(dest)
         assert result == dest
         assert utext_extract(dest, 0, utext_native_length(dest)) == src
@@ -26,21 +30,39 @@ def test_api():
         assert utext_extract(result, 0, utext_native_length(result)) == src
         utext_close(result)
 
+    # int32_t icu::RegexMatcher::getStackLimit()
     assert matcher.get_stack_limit() > 0
+
+    # void icu::RegexMatcher::setStackLimit(
+    #       int32_t limit,
+    #       UErrorCode &status
+    # )
     matcher.set_stack_limit(0)
     assert matcher.get_stack_limit() == 0
 
+    # int32_t icu::RegexMatcher::getTimeLimit()
     assert matcher.get_time_limit() == 0
+
+    # void icu::RegexMatcher::setTimeLimit(
+    #       int32_t limit,
+    #       UErrorCode &status
+    # )
     matcher.set_time_limit(10)
     assert matcher.get_time_limit() == 10
 
+    # UBool icu::RegexMatcher::hasAnchoringBounds()
     assert matcher.has_anchoring_bounds()
+
+    # RegexMatcher &icu::RegexMatcher::useAnchoringBounds(UBool b)
     result = matcher.use_anchoring_bounds(False)
     assert isinstance(result, RegexMatcher)
     assert result == matcher
     assert not matcher.has_anchoring_bounds()
 
+    # UBool icu::RegexMatcher::hasTransparentBounds()
     assert not matcher.has_transparent_bounds()
+
+    # RegexMatcher &icu::RegexMatcher::useTransparentBounds(UBool b)
     result = matcher.use_transparent_bounds(True)
     assert isinstance(result, RegexMatcher)
     assert result == matcher
@@ -49,7 +71,11 @@ def test_api():
     matcher.use_anchoring_bounds(True)
     matcher.use_transparent_bounds(False)
     assert matcher.find()  # "foo"
+
+    # UBool icu::RegexMatcher::hitEnd()
     assert not matcher.hit_end()
+
+    # UBool icu::RegexMatcher::requireEnd()
     assert not matcher.require_end()
 
     assert matcher.find()  # "bar"
@@ -64,13 +90,16 @@ def test_api():
     assert matcher.hit_end()
     assert not matcher.require_end()
 
+    # const UnicodeString &icu::RegexMatcher::input()
     result = matcher.input()
     assert isinstance(result, UnicodeString)
     assert result == src
 
+    # UText *icu::RegexMatcher::inputText()
     result = matcher.input_text()
     assert utext_extract(result, 0, utext_native_length(result)) == src
 
+    # const RegexPattern &icu::RegexMatcher::pattern()
     pattern = matcher.pattern()
     assert isinstance(pattern, RegexPattern)
     assert pattern.pattern() == regexp
@@ -85,7 +114,7 @@ def test_append_replacement():
     assert matcher.find()
 
     # [1]
-    # RegexMatcher &RegexMatcher::appendReplacement(
+    # RegexMatcher &icu::RegexMatcher::appendReplacement(
     #       UnicodeString &dest,
     #       const UnicodeString &replacement,
     #       UErrorCode &status
@@ -94,7 +123,7 @@ def test_append_replacement():
     replacement1 = UnicodeString("abc")
     result = matcher.append_replacement(dest1, replacement1)
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert dest1 == "foo abc"
 
     matcher.reset()
@@ -104,7 +133,7 @@ def test_append_replacement():
     dest1.remove()
     result = matcher.append_replacement(dest1, "abc")
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert dest1 == "foo abc"
 
     matcher.reset()
@@ -112,7 +141,7 @@ def test_append_replacement():
     assert matcher.find()
 
     # [2]
-    # RegexMatcher &RegexMatcher::appendReplacement(
+    # RegexMatcher &icu::RegexMatcher::appendReplacement(
     #       UText *dest,
     #       UText *replacement,
     #       UErrorCode &status
@@ -122,7 +151,7 @@ def test_append_replacement():
     replacement2 = utext_open_utf8(None, "abc", -1)
     result = matcher.append_replacement(dest2, replacement2)
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert utext_extract(dest2, 0, utext_native_length(dest2)) == "foo abc"
     utext_close(dest2)
     utext_close(replacement2)
@@ -137,13 +166,13 @@ def test_append_tail():
     assert matcher.find()
 
     # [1]
-    # UnicodeString &RegexMatcher::appendTail(UnicodeString &dest)
+    # UnicodeString &icu::RegexMatcher::appendTail(UnicodeString &dest)
     dest1 = UnicodeString()
     replacement1 = UnicodeString("abc")
     matcher.append_replacement(dest1, replacement1)
     result = matcher.append_tail(dest1)
     assert isinstance(result, UnicodeString)
-    assert result == dest1
+    assert id(result) == id(dest1)
     assert dest1 == "foo abc baz"
 
     matcher.reset()
@@ -151,8 +180,9 @@ def test_append_tail():
     assert matcher.find()
 
     # [2]
-    # UText *RegexMatcher::appendTail(UText *dest,
-    #                                 UErrorCode &status
+    # UText *icu::RegexMatcher::appendTail(
+    #       UText *dest,
+    #       UErrorCode &status
     # )
     s2 = UnicodeString()
     dest2 = utext_open_unicode_string(None, s2)
@@ -173,29 +203,29 @@ def test_end():
     matcher.looking_at(0)
 
     # [1]
-    # int32_t RegexMatcher::end(int32_t group,
-    #                           UErrorCode &status
-    # )
-    #
-    # int64_t RegexMatcher::end64(int32_t group,
-    #                             UErrorCode &status
+    # int32_t icu::RegexMatcher::end(
+    #       int32_t group,
+    #       UErrorCode &status
     # )
     assert matcher.end(0) == 10
     assert matcher.end(1) == 8
     assert matcher.end(2) == 6
     assert matcher.end(3) == 10
 
+    # int64_t icu::RegexMatcher::end64(
+    #       int32_t group,
+    #       UErrorCode &status
+    # )
     assert matcher.end64(0) == 10
     assert matcher.end64(1) == 8
     assert matcher.end64(2) == 6
     assert matcher.end64(3) == 10
 
     # [2]
-    # int32_t RegexMatcher::end(UErrorCode &status)
-    #
-    # int64_t RegexMatcher::end64(UErrorCode &status)
+    # int32_t icu::RegexMatcher::end(UErrorCode &status)
     assert matcher.end() == 10
 
+    # int64_t icu::RegexMatcher::end64(UErrorCode &status)
     assert matcher.end64() == 10
 
 
@@ -205,10 +235,10 @@ def test_find():
     matcher = RegexMatcher(regexp, src, 0)
 
     # [1]
-    # UBool RegexMatcher::find()
+    # UBool icu::RegexMatcher::find()
     #
     # [3]
-    # UBool RegexMatcher::find(UErrorCode &status)
+    # UBool icu::RegexMatcher::find(UErrorCode &status)
     # (ICU>=55)
     assert matcher.find()
     assert matcher.start() == 1
@@ -217,8 +247,9 @@ def test_find():
     assert not matcher.find()
 
     # [2]
-    # UBool RegexMatcher::find(int64_t start,
-    #                          UErrorCode &status
+    # UBool icu::RegexMatcher::find(
+    #       int64_t start,
+    #       UErrorCode &status
     # )
     assert matcher.find(2)
     assert matcher.start() == 6
@@ -231,12 +262,15 @@ def test_group():
     regexp = UnicodeString("01(23(45)67)(.*)")
     src = UnicodeString("0123456789")
     matcher = RegexMatcher(regexp, src, 0)
+
+    # int32_t icu::RegexMatcher::groupCount()
     assert matcher.group_count() == 3
     matcher.looking_at(0)
 
     # [1]
-    # UnicodeString RegexMatcher::group(int32_t groupNum,
-    #                                   UErrorCode &status
+    # UnicodeString icu::RegexMatcher::group(
+    #       int32_t groupNum,
+    #       UErrorCode &status
     # )
     result = matcher.group(0)
     assert isinstance(result, UnicodeString)
@@ -246,10 +280,11 @@ def test_group():
     assert matcher.group(3) == "89"
 
     # [2]
-    # UText *RegexMatcher::group(int32_t groupNum,
-    #                            UText *dest,
-    #                            int64_t &group_len,
-    #                            UErrorCode &status
+    # UText *icu::RegexMatcher::group(
+    #       int32_t groupNum,
+    #       UText *dest,
+    #       int64_t &group_len,
+    #       UErrorCode &status
     # )
     dest, group_len = matcher.group(0, None)
     assert utext_get_native_index(dest) == 0
@@ -274,15 +309,16 @@ def test_group():
     utext_close(dest)
 
     # [3]
-    # UnicodeString RegexMatcher::group(UErrorCode &status)
+    # UnicodeString icu::RegexMatcher::group(UErrorCode &status)
     result = matcher.group()
     assert isinstance(result, UnicodeString)
     assert result == "0123456789"
 
     # [4]
-    # UText *RegexMatcher::group(UText *dest,
-    #                            int64_t &group_len,
-    #                            UErrorCode &status
+    # UText *icu::RegexMatcher::group(
+    #       UText *dest,
+    #       int64_t &group_len,
+    #       UErrorCode &status
     # )
     dest, group_len = matcher.group(None)
     assert utext_get_native_index(dest) == 0
@@ -303,8 +339,9 @@ def test_looking_at():
     matcher = RegexMatcher(regexp, src, 0)
 
     # [1]
-    # UBool RegexMatcher::lookingAt(int64_t startIndex,
-    #                               UErrorCode &status
+    # UBool icu::RegexMatcher::lookingAt(
+    #       int64_t startIndex,
+    #       UErrorCode &status
     # )
     assert matcher.looking_at(0)
     assert matcher.looking_at(1)
@@ -312,7 +349,7 @@ def test_looking_at():
     assert not matcher.looking_at(3)
 
     # [2]
-    # UBool RegexMatcher::lookingAt(UErrorCode &status)
+    # UBool icu::RegexMatcher::lookingAt(UErrorCode &status)
     assert matcher.looking_at()
 
 
@@ -322,15 +359,16 @@ def test_matches():
     matcher = RegexMatcher(regexp, src, 0)
 
     # [1]
-    # UBool RegexMatcher::matches(int64_t startIndex,
-    #                             UErrorCode &status
+    # UBool icu::RegexMatcher::matches(
+    #       int64_t startIndex,
+    #       UErrorCode &status
     # )
     assert not matcher.matches(0)
     assert not matcher.matches(4)
     assert matcher.matches(8)
 
     # [2]
-    # UBool RegexMatcher::matches(UErrorCode &status)
+    # UBool icu::RegexMatcher::matches(UErrorCode &status)
     assert not matcher.matches()
 
 
@@ -338,9 +376,10 @@ def test_regex_matcher():
     s = "\\w+"
 
     # [1]
-    # RegexMatcher::RegexMatcher(const UnicodeString &regexp,
-    #                            uint32_t flags,
-    #                            UErrorCode &status
+    # icu::RegexMatcher::RegexMatcher(
+    #       const UnicodeString &regexp,
+    #       uint32_t flags,
+    #       UErrorCode &status
     # )
     regexp1 = UnicodeString(s)
     test1 = RegexMatcher(regexp1, URegexpFlag.UREGEX_CASE_INSENSITIVE)
@@ -351,9 +390,10 @@ def test_regex_matcher():
     assert test1a.pattern().pattern() == s
 
     # [2]
-    # RegexMatcher::RegexMatcher(UText *regexp,
-    #                            uint32_t flags,
-    #                            UErrorCode &status
+    # icu::RegexMatcher::RegexMatcher(
+    #       UText *regexp,
+    #       uint32_t flags,
+    #       UErrorCode &status
     # )
     regexp2 = utext_open_utf8(None, s, -1)
     test2 = RegexMatcher(regexp2, URegexpFlag.UREGEX_CASE_INSENSITIVE)
@@ -362,10 +402,11 @@ def test_regex_matcher():
     utext_close(regexp2)
 
     # [3]
-    # RegexMatcher::RegexMatcher(const UnicodeString &regexp,
-    #                            const UnicodeString &input,
-    #                            uint32_t flags,
-    #                            UErrorCode &status
+    # icu::RegexMatcher::RegexMatcher(
+    #       const UnicodeString &regexp,
+    #       const UnicodeString &input,
+    #       uint32_t flags,
+    #       UErrorCode &status
     # )
     regexp3 = UnicodeString(s)
     src3 = UnicodeString("foo bar baz")
@@ -382,10 +423,11 @@ def test_regex_matcher():
     assert test3a.input() == "foo bar baz"
 
     # [4]
-    # RegexMatcher::RegexMatcher(UText *regexp,
-    #                            UText *input,
-    #                            uint32_t flags,
-    #                            UErrorCode &status
+    # icu::RegexMatcher::RegexMatcher(
+    #       UText *regexp,
+    #       UText *input,
+    #       uint32_t flags,
+    #       UErrorCode &status
     # )
     regexp4 = utext_open_utf8(None, s, -1)
     src4 = utext_open_utf8(None, "foo bar baz", -1)
@@ -409,7 +451,7 @@ def test_region():
     assert matcher.group() == "foo"
 
     # [1]
-    # RegexMatcher &RegexMatcher::region(
+    # RegexMatcher &icu::RegexMatcher::region(
     #       int64_t regionStart,
     #       int64_t regionLimit,
     #       int64_t startIndex,
@@ -426,7 +468,7 @@ def test_region():
     assert matcher.group() == "ar"
 
     # [2]
-    # RegexMatcher &RegexMatcher::region(
+    # RegexMatcher &icu::RegexMatcher::region(
     #       int64_t start,
     #       int64_t limit,
     #       UErrorCode &status
@@ -448,7 +490,7 @@ def test_replace_all():
     matcher = RegexMatcher(regexp, src, 0)
 
     # [1]
-    # UnicodeString RegexMatcher::replaceAll(
+    # UnicodeString icu::RegexMatcher::replaceAll(
     #       const UnicodeString &replacement,
     #       UErrorCode &status
     # )
@@ -461,9 +503,10 @@ def test_replace_all():
     assert result == ".xyz..xyz.."
 
     # [2]
-    # UText *RegexMatcher::replaceAll(UText *replacement,
-    #                                 UText *dest,
-    #                                 UErrorCode &status
+    # UText *icu::RegexMatcher::replaceAll(
+    #       UText *replacement,
+    #       UText *dest,
+    #       UErrorCode &status
     # )
     replacement = utext_open_utf8(None, "xyz", -1)
     dest = matcher.replace_all(replacement, None)
@@ -484,7 +527,7 @@ def test_replace_first():
     matcher = RegexMatcher(regexp, src, 0)
 
     # [1]
-    # UnicodeString RegexMatcher::replaceFirst(
+    # UnicodeString icu::RegexMatcher::replaceFirst(
     #       const UnicodeString &replacement,
     #       UErrorCode &status
     # )
@@ -497,9 +540,10 @@ def test_replace_first():
     assert result == ".xyz..abc.."
 
     # [2]
-    # UText *RegexMatcher::replaceFirst(UText *replacement,
-    #                                   UText *dest,
-    #                                   UErrorCode &status
+    # UText *icu::RegexMatcher::replaceFirst(
+    #       UText *replacement,
+    #       UText *dest,
+    #       UErrorCode &status
     # )
     replacement = utext_open_utf8(None, "xyz", -1)
     dest = matcher.replace_first(replacement, None)
@@ -523,20 +567,20 @@ def test_reset():
     assert not matcher.find()
 
     # [1]
-    # RegexMatcher &RegexMatcher::reset()
+    # RegexMatcher &icu::RegexMatcher::reset()
     result = matcher.reset()
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert matcher.find()
     assert matcher.group() == "foo"
     assert not matcher.find()
 
     # [2]
-    # RegexMatcher &RegexMatcher::reset(const UnicodeString &input)
+    # RegexMatcher &icu::RegexMatcher::reset(const UnicodeString &input)
     src2 = UnicodeString("foo bar")
     result = matcher.reset(src2)
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert matcher.find()
     assert matcher.group() == "foo"
     assert matcher.find()
@@ -544,22 +588,23 @@ def test_reset():
     assert not matcher.find()
 
     # [3]
-    # RegexMatcher &RegexMatcher::reset(int64_t index,
-    #                                   UErrorCode &status
+    # RegexMatcher &icu::RegexMatcher::reset(
+    #       int64_t index,
+    #       UErrorCode &status
     # )
     result = matcher.reset(4)
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert matcher.find()
     assert matcher.group() == "bar"
     assert not matcher.find()
 
     # [4]
-    # RegexMatcher &RegexMatcher::reset(UText *input)
+    # RegexMatcher &icu::RegexMatcher::reset(UText *input)
     src4 = utext_open_utf8(None, "abc xyz", -1)
     result = matcher.reset(src4)
     assert isinstance(result, RegexMatcher)
-    assert result == matcher
+    assert id(result) == id(matcher)
     assert matcher.find()
     assert matcher.group() == "abc"
     assert matcher.find()
@@ -571,8 +616,9 @@ def test_reset():
 def test_set_find_progress_callback():
     result1 = []
 
-    # UBool URegexFindProgressCallback(const void *context,
-    #                                  int64_t matchIndex
+    # UBool URegexFindProgressCallback(
+    #       const void *context,
+    #       int64_t matchIndex
     # )
     def _find_progress_callback1(_context: object, _match_index: int) -> bool:
         assert _context is None
@@ -591,7 +637,7 @@ def test_set_find_progress_callback():
     src = UnicodeString(".abc..abc..")
     matcher = RegexMatcher(regexp, src, 0)
 
-    # void RegexMatcher::getFindProgressCallback(
+    # void icu::RegexMatcher::getFindProgressCallback(
     #       URegexFindProgressCallback *&callback,
     #       const void *&context,
     #       UErrorCode &status
@@ -600,7 +646,7 @@ def test_set_find_progress_callback():
     assert isinstance(callback0, URegexFindProgressCallbackPtr)
     assert isinstance(context0, ConstVoidPtr)
 
-    # void RegexMatcher::setFindProgressCallback(
+    # void icu::RegexMatcher::setFindProgressCallback(
     #       URegexFindProgressCallback *callback,
     #       const void *context,
     #       UErrorCode &status
@@ -653,7 +699,7 @@ def test_set_match_callback():
     matcher = RegexMatcher(regexp, 0)
     src = UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
 
-    # void RegexMatcher::getMatchCallback(
+    # void icu::RegexMatcher::getMatchCallback(
     #       URegexMatchCallback *&callback,
     #       const void *&context,
     #       UErrorCode &status
@@ -662,7 +708,7 @@ def test_set_match_callback():
     assert isinstance(callback0, URegexMatchCallbackPtr)
     assert isinstance(context0, ConstVoidPtr)
 
-    # void RegexMatcher::setMatchCallback(
+    # void icu::RegexMatcher::setMatchCallback(
     #       URegexMatchCallback *callback,
     #       const void *context,
     #       UErrorCode &status
@@ -698,10 +744,11 @@ def test_split():
     src1 = UnicodeString("foo bar baz")
 
     # [1]
-    # int32_t RegexMatcher::split(const UnicodeString &input,
-    #                             UnicodeString dest[],
-    #                             int32_t destCapacity,
-    #                             UErrorCode &status
+    # int32_t icu::RegexMatcher::split(
+    #       const UnicodeString &input,
+    #       UnicodeString dest[],
+    #       int32_t destCapacity,
+    #       UErrorCode &status
     # )
     dest1 = UnicodeStringVector(10)
     result = matcher.split(src1, dest1)
@@ -716,10 +763,11 @@ def test_split():
     assert dest1[1] == "bar baz"
 
     # [2]
-    # int32_t RegexMatcher::split(UText *input,
-    #                             UText *dest[],
-    #                             int32_t destCapacity,
-    #                             UErrorCode &status
+    # int32_t icu::RegexMatcher::split(
+    #       UText *input,
+    #       UText *dest[],
+    #       int32_t destCapacity,
+    #       UErrorCode &status
     # )
     src2 = utext_open_const_unicode_string(None, src1)
     dest2 = UTextVector(10)
@@ -745,27 +793,27 @@ def test_start():
     matcher.looking_at(0)
 
     # [1]
-    # int32_t RegexMatcher::start(int32_t group,
-    #                             UErrorCode &status
-    # )
-    #
-    # int64_t RegexMatcher::start64(int32_t group,
-    #                               UErrorCode &status
+    # int32_t icu::RegexMatcher::start(
+    #       int32_t group,
+    #       UErrorCode &status
     # )
     assert matcher.start(0) == 0
     assert matcher.start(1) == 2
     assert matcher.start(2) == 4
     assert matcher.start(3) == 8
 
+    # int64_t icu::RegexMatcher::start64(
+    #       int32_t group,
+    #       UErrorCode &status
+    # )
     assert matcher.start64(0) == 0
     assert matcher.start64(1) == 2
     assert matcher.start64(2) == 4
     assert matcher.start64(3) == 8
 
     # [2]
-    # int32_t RegexMatcher::start(UErrorCode &status)
-    #
-    # int64_t RegexMatcher::start64(UErrorCode &status)
+    # int32_t icu::RegexMatcher::start(UErrorCode &status)
     assert matcher.start() == 0
 
+    # int64_t icu::RegexMatcher::start64(UErrorCode &status)
     assert matcher.start64() == 0

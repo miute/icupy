@@ -1,9 +1,15 @@
-from icupy import StringCharacterIterator, UnicodeString
+from icupy import (
+    CharacterIterator, ForwardCharacterIterator, StringCharacterIterator,
+    UCharCharacterIterator, UnicodeString,
+)
 
 
 def test_iter():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
+
+    # int32_t icu::CharacterIterator::getLength(void)
+    assert it.get_length() == len(it) == 4
 
     assert list(it) == ["a", "\U0001f338", "b"]
 
@@ -32,24 +38,26 @@ def test_move():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
 
-    pos = it.move(1, StringCharacterIterator.START)
-    assert pos == 1
-    pos = it.move(1, StringCharacterIterator.CURRENT)
-    assert pos == 2
-    pos = it.move(1, StringCharacterIterator.END)
-    assert pos == 4
+    # int32_t icu::CharacterIterator::move(
+    #       int32_t delta,
+    #       EOrigin origin
+    # )
+    assert it.move(1, StringCharacterIterator.START) == 1
+    assert it.move(1, StringCharacterIterator.CURRENT) == 2
+    assert it.move(1, StringCharacterIterator.END) == 4
 
 
 def test_move32():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
 
-    pos = it.move32(1, StringCharacterIterator.START)
-    assert pos == 1
-    pos = it.move32(1, StringCharacterIterator.CURRENT)
-    assert pos == 3
-    pos = it.move32(1, StringCharacterIterator.END)
-    assert pos == 4
+    # int32_t icu::CharacterIterator::move32(
+    #       int32_t delta,
+    #       EOrigin origin
+    # )
+    assert it.move32(1, StringCharacterIterator.START) == 1
+    assert it.move32(1, StringCharacterIterator.CURRENT) == 3
+    assert it.move32(1, StringCharacterIterator.END) == 4
 
 
 def test_next():
@@ -57,27 +65,38 @@ def test_next():
     it = StringCharacterIterator(src)
 
     t = list()
-    it.set_to_start()
+
+    # int32_t icu::CharacterIterator::setToStart()
+    assert it.set_to_start() == 0
+
+    # UBool icu::ForwardCharacterIterator::hasNext()
     while it.has_next():
+        # char16_t icu::CharacterIterator::current(void)
         current = it.current()
+
+        # char16_t icu::ForwardCharacterIterator::nextPostInc(void)
         c = it.next_post_inc()
         assert c == current
         t.append(c)
     assert t == [0x61, 0xd83c, 0xdf38, 0x62]
 
-    t.clear()
+    # char16_t icu::CharacterIterator::firstPostInc(void)
     c = it.first_post_inc()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         t.append(c)
         c = it.next_post_inc()
     assert t == [0x61, 0xd83c, 0xdf38, 0x62]
 
-    t.clear()
+    # char16_t icu::CharacterIterator::first(void)
     c = it.first()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         current = it.current()
         assert c == current
         t.append(c)
+
+        # char16_t icu::CharacterIterator::next(void)
         c = it.next()
     assert t == [0x61, 0xd83c, 0xdf38, 0x62]
 
@@ -89,25 +108,32 @@ def test_next32():
     t = list()
     it.set_to_start()
     while it.has_next():
+        # UChar32 icu::CharacterIterator::current32(void)
         current = it.current32()
+
+        # UChar32 icu::ForwardCharacterIterator::next32PostInc(void)
         c = it.next32_post_inc()
         assert c == current
         t.append(c)
     assert t == [0x61, 0x1f338, 0x62]
 
-    t.clear()
+    # UChar32 icu::CharacterIterator::first32PostInc(void)
     c = it.first32_post_inc()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         t.append(c)
         c = it.next32_post_inc()
     assert t == [0x61, 0x1f338, 0x62]
 
-    t.clear()
+    # UChar32 icu::CharacterIterator::first32(void)
     c = it.first32()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         current = it.current32()
         assert c == current
         t.append(c)
+
+        # UChar32 icu::CharacterIterator::next32(void)
         c = it.next32()
     assert t == [0x61, 0x1f338, 0x62]
 
@@ -117,16 +143,22 @@ def test_previous():
     it = StringCharacterIterator(src)
 
     t = list()
-    it.set_to_end()
+
+    # int32_t icu::CharacterIterator::setToEnd()
+    assert it.set_to_end() == 4
+
+    # UBool icu::CharacterIterator::hasPrevious()
     while it.has_previous():
+        # char16_t icu::CharacterIterator::previous(void)
         c = it.previous()
         current = it.current()
         assert c == current
         t.append(c)
     assert t == [0x62, 0xdf38, 0xd83c, 0x61]
 
-    t.clear()
+    # char16_t icu::CharacterIterator::last(void)
     c = it.last()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         t.append(c)
         c = it.previous()
@@ -140,14 +172,16 @@ def test_previous32():
     t = list()
     it.set_to_end()
     while it.has_previous():
+        # UChar32 icu::CharacterIterator::previous32(void)
         c = it.previous32()
         current = it.current32()
         assert c == current
         t.append(c)
     assert t == [0x62, 0x1f338, 0x61]
 
-    t.clear()
+    # UChar32 icu::CharacterIterator::last32(void)
     c = it.last32()
+    t.clear()
     while c != StringCharacterIterator.DONE:
         t.append(c)
         c = it.previous32()
@@ -158,50 +192,75 @@ def test_set_index():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
 
-    c = it.set_index(0)
-    assert c == 0x61
-    c = it.set_index(1)
-    assert c == 0xd83c
-    c = it.set_index(2)
-    assert c == 0xdf38
-    c = it.set_index(3)
-    assert c == 0x62
+    # int32_t icu::CharacterIterator::getIndex(void)
+    assert it.get_index() == 0
+
+    # char16_t icu::CharacterIterator::setIndex(int32_t position)
+    assert it.set_index(0) == 0x61
+    assert it.get_index() == 0
+
+    assert it.set_index(1) == 0xd83c
+    assert it.get_index() == 1
+
+    assert it.set_index(2) == 0xdf38
+    assert it.get_index() == 2
+
+    assert it.set_index(3) == 0x62
+    assert it.get_index() == 3
+
+    # int32_t icu::CharacterIterator::endIndex(void)
+    assert it.end_index() == 4
+
+    # int32_t icu::CharacterIterator::startIndex(void)
+    assert it.start_index() == 0
 
 
 def test_set_index32():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
 
-    c = it.set_index32(0)
-    assert c == 0x61
-    c = it.set_index32(1)
-    assert c == 0x1f338
-    c = it.set_index32(2)
-    assert c == 0x1f338
-    c = it.set_index32(3)
-    assert c == 0x62
+    # UChar32 icu::CharacterIterator::setIndex32(int32_t position)
+    assert it.set_index32(0) == 0x61
+    assert it.get_index() == 0
+
+    assert it.set_index32(1) == 0x1f338
+    assert it.get_index() == 1
+
+    assert it.set_index32(2) == 0x1f338
+    assert it.get_index() == 1
+
+    assert it.set_index32(3) == 0x62
+    assert it.get_index() == 3
 
 
 def test_set_text():
     src = UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = StringCharacterIterator(src)
 
+    # [2]
+    # void icu::StringCharacterIterator::setText(const UnicodeString &newText)
     it.set_text(UnicodeString("foo bar baz"))
-    dest = UnicodeString()
-    it.get_text(dest)
-    assert dest == "foo bar baz"
+
+    # void icu::CharacterIterator::getText(UnicodeString &result)
+    result = UnicodeString()
+    it.get_text(result)
+    assert result == "foo bar baz"
 
 
 def test_string_character_iterator():
-    src = UnicodeString("a\\uD83C\\uDF38b").unescape()
+    assert issubclass(CharacterIterator, ForwardCharacterIterator)
+    assert issubclass(UCharCharacterIterator, CharacterIterator)
+    assert issubclass(StringCharacterIterator, UCharCharacterIterator)
+
+    text_str = UnicodeString("a\\uD83C\\uDF38b").unescape()
     expected = "a\U0001f338b"
     dest = UnicodeString()
 
     # [1]
-    # StringCharacterIterator::StringCharacterIterator(
+    # icu::StringCharacterIterator::StringCharacterIterator(
     #       const UnicodeString &textStr
     # )
-    it1 = StringCharacterIterator(src)
+    it1 = StringCharacterIterator(text_str)
     assert it1.get_length() == 4
     assert len(it1) == 4
     dest.remove()
@@ -209,11 +268,11 @@ def test_string_character_iterator():
     assert dest == expected
 
     # [2]
-    # StringCharacterIterator::StringCharacterIterator(
+    # icu::StringCharacterIterator::StringCharacterIterator(
     #       const UnicodeString &textStr,
     #       int32_t textPos
     # )
-    it2 = StringCharacterIterator(src, 2)
+    it2 = StringCharacterIterator(text_str, 2)
     assert it2.get_length() == 4
     assert len(it2) == 4
     dest.remove()
@@ -222,13 +281,13 @@ def test_string_character_iterator():
     assert it2.current() == 0xdf38
 
     # [3]
-    # StringCharacterIterator::StringCharacterIterator(
+    # icu::StringCharacterIterator::StringCharacterIterator(
     #       const UnicodeString &textStr,
     #       int32_t textBegin,
     #       int32_t textEnd,
     #       int32_t textPos
     # )
-    it3 = StringCharacterIterator(src, 1, 3, 0)
+    it3 = StringCharacterIterator(text_str, 1, 3, 0)
     assert it3.get_length() == 4
     assert len(it3) == 4
     dest.remove()
@@ -243,7 +302,7 @@ def test_string_character_iterator():
     assert c == 0xd83c
 
     # [4]
-    # StringCharacterIterator::StringCharacterIterator(
+    # icu::StringCharacterIterator::StringCharacterIterator(
     #       const StringCharacterIterator &that
     # )
     it1.set_index(2)

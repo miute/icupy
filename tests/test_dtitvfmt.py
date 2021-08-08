@@ -16,25 +16,25 @@ def test_api():
     fmt2 = DateIntervalFormat.create_instance("yMMMd", "en")
     fmt3 = DateIntervalFormat.create_instance("yMMMd", Locale.get_japanese())
 
-    # DateIntervalFormat::operator!=()
+    # UBool icu::DateIntervalFormat::operator!=(const Format &)
     assert not (fmt1 != fmt2)
     assert fmt1 != fmt3
     assert fmt2 != fmt3
 
-    # DateIntervalFormat::operator==()
+    # UBool icu::DateIntervalFormat::operator==(const Format &)
     assert fmt1 == fmt2
     assert not (fmt1 == fmt3)
     assert not (fmt2 == fmt3)
 
-    # const DateFormat *DateIntervalFormat::getDateFormat(void)
+    # const DateFormat *icu::DateIntervalFormat::getDateFormat(void)
     dtfmt = fmt2.get_date_format()
     assert isinstance(dtfmt, DateFormat)
 
-    # const DateIntervalInfo *DateIntervalFormat::getDateIntervalInfo(void)
+    # const DateIntervalInfo *icu::DateIntervalFormat::getDateIntervalInfo()
     dtitvinf = fmt2.get_date_interval_info()
     assert isinstance(dtitvinf, DateIntervalInfo)
 
-    # void DateIntervalFormat::setDateIntervalInfo(
+    # void icu::DateIntervalFormat::setDateIntervalInfo(
     #       const DateIntervalInfo &newIntervalPatterns,
     #       UErrorCode &status
     # )
@@ -43,28 +43,21 @@ def test_api():
     fmt2.set_date_interval_info(new_interval_patterns)
     assert fmt2.get_date_interval_info() == new_interval_patterns
 
-    # const TimeZone &DateIntervalFormat::getTimeZone(void)
+    # const TimeZone &icu::DateIntervalFormat::getTimeZone(void)
     zone2 = fmt2.get_time_zone()
     assert isinstance(zone2, TimeZone)
 
-    # void DateIntervalFormat::setTimeZone(const TimeZone &zone)
+    # void icu::DateIntervalFormat::setTimeZone(const TimeZone &zone)
     zone = TimeZone.create_time_zone("JST")
     assert zone != zone2
     fmt2.set_time_zone(zone)
     assert fmt2.get_time_zone() == zone
 
-    from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
-    to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
-    append_to = UnicodeString()
-    field_position = FieldPosition(FieldPosition.DONT_CARE)
-    fmt2.format(DateInterval(from_date, to_date), append_to, field_position)
-    assert (append_to
-            == "2013\u5E744\u670826\u65E5\uFF5E28\u65E5")  # 2013年4月26日～28日
-
 
 def test_clone():
     fmt1 = DateIntervalFormat.create_instance("yMMMd", Locale.get_english())
 
+    # DateIntervalFormat *icu::DateIntervalFormat::clone()
     fmt2 = fmt1.clone()
     assert isinstance(fmt2, DateIntervalFormat)
     assert fmt2 == fmt1
@@ -80,7 +73,7 @@ def test_create_instance():
     dtitvinf = DateIntervalInfo(Locale.get_english())
 
     # [1]
-    # static DateIntervalFormat *DateIntervalFormat::createInstance(
+    # static DateIntervalFormat *icu::DateIntervalFormat::createInstance(
     #       const UnicodeString &skeleton,
     #       const DateIntervalInfo &dtitvinf,
     #       UErrorCode &status
@@ -93,10 +86,11 @@ def test_create_instance():
     fmt1a = DateIntervalFormat.create_instance(
         "yMMMd",
         dtitvinf)
+    assert isinstance(fmt1a, DateIntervalFormat)
     assert fmt1 == fmt1a
 
     # [2]
-    # static DateIntervalFormat *DateIntervalFormat::createInstance(
+    # static DateIntervalFormat *icu::DateIntervalFormat::createInstance(
     #       const UnicodeString &skeleton,
     #       const Locale &locale,
     #       const DateIntervalInfo &dtitvinf,
@@ -112,18 +106,23 @@ def test_create_instance():
         "yMMMd",
         Locale("en"),
         dtitvinf)
+    assert isinstance(fmt2a, DateIntervalFormat)
+
     fmt2b = DateIntervalFormat.create_instance(
         UnicodeString("yMMMd"),
         "en",
         dtitvinf)
+    assert isinstance(fmt2b, DateIntervalFormat)
+
     fmt2c = DateIntervalFormat.create_instance(
         "yMMMd",
         "en",
         dtitvinf)
+    assert isinstance(fmt2c, DateIntervalFormat)
     assert fmt2 == fmt2a == fmt2b == fmt2c
 
     # [3]
-    # static DateIntervalFormat *DateIntervalFormat::createInstance(
+    # static DateIntervalFormat *icu::DateIntervalFormat::createInstance(
     #       const UnicodeString &skeleton,
     #       const Locale &locale,
     #       UErrorCode &status
@@ -136,16 +135,21 @@ def test_create_instance():
     fmt3a = DateIntervalFormat.create_instance(
         "yMMMd",
         Locale("en"))
+    assert isinstance(fmt3a, DateIntervalFormat)
+
     fmt3b = DateIntervalFormat.create_instance(
         UnicodeString("yMMMd"),
         "en")
+    assert isinstance(fmt3b, DateIntervalFormat)
+
     fmt3c = DateIntervalFormat.create_instance(
         "yMMMd",
         "en")
+    assert isinstance(fmt3c, DateIntervalFormat)
     assert fmt3 == fmt3a == fmt3b == fmt3c
 
     # [4]
-    # static DateIntervalFormat *DateIntervalFormat::createInstance(
+    # static DateIntervalFormat *icu::DateIntervalFormat::createInstance(
     #       const UnicodeString &skeleton,
     #       UErrorCode &status
     # )
@@ -153,6 +157,7 @@ def test_create_instance():
     assert isinstance(fmt4, DateIntervalFormat)
 
     fmt4a = DateIntervalFormat.create_instance("yMMMd")
+    assert isinstance(fmt4a, DateIntervalFormat)
     assert fmt4 == fmt4a
 
 
@@ -161,35 +166,38 @@ def test_date_interval():
     to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
 
     # [1]
-    # DateInterval::DateInterval(UDate fromDate,
-    #                            UDate toDate)
+    # icu::DateInterval::DateInterval(
+    #       UDate fromDate,
+    #       UDate toDate
+    # )
     itv1 = DateInterval(from_date, to_date)
 
     # [2]
-    # DateInterval::DateInterval(const DateInterval &other)
+    # icu::DateInterval::DateInterval(const DateInterval &other)
     itv2 = DateInterval(itv1)
 
-    # DateInterval *DateInterval::clone()
+    # DateInterval *icu::DateInterval::clone()
     itv3 = itv1.clone()
+    assert isinstance(itv3, DateInterval)
 
-    # DateInterval::operator!=()
+    # UBool icu::DateInterval::operator!=(const DateInterval &)
     assert not (itv1 != itv2)
     assert not (itv1 != itv3)
     assert not (itv2 != itv3)
 
-    # DateInterval::operator==()
+    # UBool icu::DateInterval::operator==(const DateInterval &)
     assert itv1 == itv2 == itv3
 
-    # UDate DateInterval::getFromDate()
+    # UDate icu::DateInterval::getFromDate()
     assert itv2.get_from_date() == from_date
 
-    # UDate DateInterval::getToDate()
+    # UDate icu::DateInterval::getToDate()
     assert itv2.get_to_date() == to_date
 
 
 def test_date_interval_info():
     # [2]
-    # DateIntervalInfo::DateIntervalInfo(
+    # icu::DateIntervalInfo::DateIntervalInfo(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
@@ -198,27 +206,27 @@ def test_date_interval_info():
     dtitvinf2b = DateIntervalInfo(Locale("ja"))
 
     # [3]
-    # DateIntervalInfo::DateIntervalInfo(const DateIntervalInfo &)
+    # icu::DateIntervalInfo::DateIntervalInfo(const DateIntervalInfo &)
     dtitvinf3 = DateIntervalInfo(dtitvinf2)
 
-    # DateIntervalInfo *DateIntervalInfo::clone()
+    # icu::DateIntervalInfo *DateIntervalInfo::clone()
     dtitvinf4 = dtitvinf2.clone()
     assert isinstance(dtitvinf4, DateIntervalInfo)
 
-    # DateIntervalInfo::operator!=()
+    # UBool icu::DateIntervalInfo::operator!=(const DateIntervalInfo &)
     assert not (dtitvinf2 != dtitvinf2a)
     assert dtitvinf2 != dtitvinf2b
     assert not (dtitvinf2 != dtitvinf3)
     assert not (dtitvinf2 != dtitvinf4)
 
-    # DateIntervalInfo::operator==()
+    # UBool icu::DateIntervalInfo::operator==(const DateIntervalInfo &)
     assert dtitvinf2 == dtitvinf2a == dtitvinf3 == dtitvinf4
     assert not (dtitvinf2 == dtitvinf2b)
 
-    # UBool DateIntervalInfo::getDefaultOrder()
+    # UBool icu::DateIntervalInfo::getDefaultOrder()
     assert not dtitvinf2.get_default_order()
 
-    # UnicodeString &DateIntervalInfo::getFallbackIntervalPattern(
+    # UnicodeString &icu::DateIntervalInfo::getFallbackIntervalPattern(
     #       UnicodeString &result
     # )
     result = UnicodeString()
@@ -227,7 +235,7 @@ def test_date_interval_info():
     assert id(result) == id(pattern)
     assert result == "{0} \u2013 {1}"
 
-    # void DateIntervalInfo::setFallbackIntervalPattern(
+    # void icu::DateIntervalInfo::setFallbackIntervalPattern(
     #       const UnicodeString &fallbackPattern,
     #       UErrorCode &status
     # )
@@ -237,7 +245,7 @@ def test_date_interval_info():
     dtitvinf3.set_fallback_interval_pattern("{0} \u2013 {1}")
     assert dtitvinf3.get_fallback_interval_pattern(result) == "{0} \u2013 {1}"
 
-    # UnicodeString &DateIntervalInfo::getIntervalPattern(
+    # UnicodeString &icu::DateIntervalInfo::getIntervalPattern(
     #       const UnicodeString &skeleton,
     #       UCalendarDateFields field,
     #       UnicodeString &result,
@@ -260,7 +268,7 @@ def test_date_interval_info():
     assert id(result) == id(pattern)
     assert result == "HH:mm \u2013 HH:mm"
 
-    # void DateIntervalInfo::setIntervalPattern(
+    # void icu::DateIntervalInfo::setIntervalPattern(
     #       const UnicodeString &skeleton,
     #       UCalendarDateFields lrgDiffCalUnit,
     #       const UnicodeString &intervalPattern,
@@ -310,7 +318,7 @@ def test_format():
     to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
 
     # [1]
-    # UnicodeString &DateIntervalFormat::format(
+    # UnicodeString &icu::DateIntervalFormat::format(
     #       Calendar &fromCalendar,
     #       Calendar &toCalendar,
     #       UnicodeString &appendTo,
@@ -334,7 +342,7 @@ def test_format():
     assert result == "Apr 26 \u2013 28, 2013"
 
     # [2]
-    # UnicodeString &DateIntervalFormat::format(
+    # UnicodeString &icu::DateIntervalFormat::format(
     #       const DateInterval *dtInterval,
     #       UnicodeString &appendTo,
     #       FieldPosition &fieldPosition,
@@ -412,7 +420,7 @@ def test_format_to_value():
     to_calendar.set_time(to_date)
 
     # [1]
-    # FormattedDateInterval DateIntervalFormat::formatToValue(
+    # FormattedDateInterval icu::DateIntervalFormat::formatToValue(
     #       Calendar &fromCalendar,
     #       Calendar &toCalendar,
     #       UErrorCode &status
@@ -422,7 +430,7 @@ def test_format_to_value():
     assert dtitv1.to_temp_string() == "Apr 26 \u2013 28, 2013"
 
     # [2]
-    # FormattedDateInterval DateIntervalFormat::formatToValue(
+    # FormattedDateInterval icu::DateIntervalFormat::formatToValue(
     #       const DateInterval &dtInterval,
     #       UErrorCode &status
     # )
@@ -445,7 +453,7 @@ def test_formatted_date_interval():
     dtitv = fmt.format_to_value(DateInterval(from_date, to_date))
     assert isinstance(dtitv, FormattedDateInterval)
 
-    # Appendable &FormattedDateInterval::appendTo(
+    # Appendable &icu::FormattedDateInterval::appendTo(
     #       Appendable &appendable,
     #       UErrorCode &status
     # )
@@ -457,7 +465,7 @@ def test_formatted_date_interval():
     assert id(result) == id(appendable)
     assert dest == "\U0001f338Apr 26 \u2013 28, 2013"
 
-    # UBool FormattedDateInterval::nextPosition(
+    # UBool icu::FormattedDateInterval::nextPosition(
     #       ConstrainedFieldPosition &cfpos,
     #       UErrorCode &status
     # )
@@ -494,12 +502,14 @@ def test_formatted_date_interval():
 
     assert not dtitv.next_position(cfpos)
 
-    # UnicodeString FormattedDateInterval::toString(UErrorCode &status)
+    # UnicodeString icu::FormattedDateInterval::toString(UErrorCode &status)
     result = dtitv.to_string()
     assert isinstance(result, UnicodeString)
     assert result == "Apr 26 \u2013 28, 2013"
 
-    # UnicodeString FormattedDateInterval::toTempString(UErrorCode &status)
+    # UnicodeString icu::FormattedDateInterval::toTempString(
+    #       UErrorCode &status
+    # )
     result = dtitv.to_temp_string()
     assert isinstance(result, UnicodeString)
     assert result == "Apr 26 \u2013 28, 2013"
@@ -511,14 +521,14 @@ def test_get_context():
 
     fmt = DateIntervalFormat.create_instance("yMMMd", Locale.get_english())
 
-    # UDisplayContext DateIntervalFormat::getContext(
+    # UDisplayContext icu::DateIntervalFormat::getContext(
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
     assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
             == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
 
-    # void DateIntervalFormat::setContext(
+    # void icu::DateIntervalFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )

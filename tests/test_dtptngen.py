@@ -14,17 +14,21 @@ def test_api():
     gen3 = DateTimePatternGenerator.create_instance(
         Locale("en_US@calendar=japanese"))
 
-    # DateTimePatternGenerator::operator!=()
+    # UBool icu::DateTimePatternGenerator::operator!=(
+    #       const DateTimePatternGenerator &other
+    # )
     assert not (gen1 != gen2)
     assert gen1 != gen3
     assert gen2 != gen3
 
-    # DateTimePatternGenerator::operator==()
+    # UBool icu::DateTimePatternGenerator::operator==(
+    #       const DateTimePatternGenerator &other
+    # )
     assert gen1 == gen2
     assert not (gen1 == gen3)
     assert not (gen2 == gen3)
 
-    # const UnicodeString &DateTimePatternGenerator::getAppendItemFormat(
+    # const UnicodeString &icu::DateTimePatternGenerator::getAppendItemFormat(
     #       UDateTimePatternField field
     # )
     result = gen2.get_append_item_format(
@@ -32,7 +36,7 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "{0} {1}"
 
-    # void DateTimePatternGenerator::setAppendItemFormat(
+    # void icu::DateTimePatternGenerator::setAppendItemFormat(
     #       UDateTimePatternField field,
     #       const UnicodeString &value
     # )
@@ -48,7 +52,7 @@ def test_api():
     assert gen2.get_append_item_format(
         UDateTimePatternField.UDATPG_ERA_FIELD) == "{0} {1}"
 
-    # const UnicodeString &DateTimePatternGenerator::getAppendItemName(
+    # const UnicodeString &icu::DateTimePatternGenerator::getAppendItemName(
     #       UDateTimePatternField field
     # )
     result = gen2.get_append_item_name(
@@ -56,7 +60,7 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "era"
 
-    # void DateTimePatternGenerator::setAppendItemName(
+    # void icu::DateTimePatternGenerator::setAppendItemName(
     #       UDateTimePatternField field,
     #       const UnicodeString &value
     # )
@@ -72,7 +76,7 @@ def test_api():
     assert gen2.get_append_item_name(
         UDateTimePatternField.UDATPG_ERA_FIELD) == "era"
 
-    # UnicodeString DateTimePatternGenerator::getBaseSkeleton(
+    # UnicodeString icu::DateTimePatternGenerator::getBaseSkeleton(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
@@ -84,7 +88,7 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "Hm"
 
-    # StringEnumeration *DateTimePatternGenerator::getBaseSkeletons(
+    # StringEnumeration *icu::DateTimePatternGenerator::getBaseSkeletons(
     #       UErrorCode &status
     # )
     it = gen1.get_base_skeletons()
@@ -92,7 +96,7 @@ def test_api():
     assert len(it) > 0
 
     # [1]
-    # UnicodeString DateTimePatternGenerator::getBestPattern(
+    # UnicodeString icu::DateTimePatternGenerator::getBestPattern(
     #       const UnicodeString &skeleton,
     #       UDateTimePatternMatchOptions options,
     #       UErrorCode &status
@@ -110,7 +114,7 @@ def test_api():
     assert result == "MMMM d, h:mm a"
 
     # [2]
-    # UnicodeString DateTimePatternGenerator::getBestPattern(
+    # UnicodeString icu::DateTimePatternGenerator::getBestPattern(
     #       const UnicodeString &skeleton,
     #       UErrorCode &status
     # )
@@ -122,12 +126,12 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "MMMM d, h:mm a"
 
-    # const UnicodeString &DateTimePatternGenerator::getDateTimeFormat()
+    # const UnicodeString &icu::DateTimePatternGenerator::getDateTimeFormat()
     result = gen2.get_date_time_format()
     assert isinstance(result, UnicodeString)
     assert result == "{1}, {0}"
 
-    # void DateTimePatternGenerator::setDateTimeFormat(
+    # void icu::DateTimePatternGenerator::setDateTimeFormat(
     #       const UnicodeString &dateTimeFormat
     # )
     gen2.set_date_time_format(UnicodeString("{1} 'at' {0}"))
@@ -136,19 +140,22 @@ def test_api():
     gen2.set_date_time_format("{1}, {0}")
     assert gen2.get_date_time_format() == "{1}, {0}"
 
-    # const UnicodeString &DateTimePatternGenerator::getDecimal()
+    # const UnicodeString &icu::DateTimePatternGenerator::getDecimal()
     result = gen2.get_decimal()
     assert isinstance(result, UnicodeString)
     assert result == "."
 
-    # void DateTimePatternGenerator::setDecimal(const UnicodeString &decimal)
+    # void icu::DateTimePatternGenerator::setDecimal(
+    #       const UnicodeString &decimal
+    # )
     gen2.set_decimal(UnicodeString(","))
     assert gen2.get_decimal() == ","
 
     gen2.set_decimal(".")
     assert gen2.get_decimal() == "."
 
-    # const UnicodeString &DateTimePatternGenerator::getPatternForSkeleton(
+    # const UnicodeString &
+    # icu::DateTimePatternGenerator::getPatternForSkeleton(
     #       const UnicodeString &skeleton
     # )
     result = gen1.get_pattern_for_skeleton(UnicodeString("yMMMd"))
@@ -159,7 +166,7 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "MMM d, y"
 
-    # UnicodeString DateTimePatternGenerator::getSkeleton(
+    # UnicodeString icu::DateTimePatternGenerator::getSkeleton(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
@@ -171,7 +178,7 @@ def test_api():
     assert isinstance(result, UnicodeString)
     assert result == "yMMMd"
 
-    # StringEnumeration *DateTimePatternGenerator::getSkeletons(
+    # StringEnumeration *icu::DateTimePatternGenerator::getSkeletons(
     #       UErrorCode &status
     # )
     it = gen1.get_skeletons()
@@ -179,7 +186,7 @@ def test_api():
     assert len(it) > 0
 
     # [1]
-    # UnicodeString DateTimePatternGenerator::replaceFieldTypes(
+    # UnicodeString icu::DateTimePatternGenerator::replaceFieldTypes(
     #       const UnicodeString &pattern,
     #       const UnicodeString &skeleton,
     #       UDateTimePatternMatchOptions options,
@@ -214,7 +221,7 @@ def test_api():
     assert result == "dd-MMMM HH:mm"
 
     # [2]
-    # UnicodeString DateTimePatternGenerator::replaceFieldTypes(
+    # UnicodeString icu::DateTimePatternGenerator::replaceFieldTypes(
     #       const UnicodeString &pattern,
     #       const UnicodeString &skeleton,
     #       UErrorCode &status
@@ -247,6 +254,7 @@ def test_api():
 def test_clone():
     gen1 = DateTimePatternGenerator.create_instance("en_US")
 
+    # DateTimePatternGenerator *icu::DateTimePatternGenerator::clone()
     gen2 = gen1.clone()
     assert isinstance(gen2, DateTimePatternGenerator)
     assert gen2 == gen1
@@ -260,11 +268,11 @@ def test_clone():
 
 def test_create_empty_instance():
     # static DateTimePatternGenerator *
-    # DateTimePatternGenerator::createEmptyInstance(UErrorCode &status)
+    # icu::DateTimePatternGenerator::createEmptyInstance(UErrorCode &status)
     gen = DateTimePatternGenerator.create_empty_instance()
     assert isinstance(gen, DateTimePatternGenerator)
 
-    # UDateTimePatternConflict DateTimePatternGenerator::addPattern(
+    # UDateTimePatternConflict icu::DateTimePatternGenerator::addPattern(
     #       const UnicodeString &pattern,
     #       UBool override,
     #       UnicodeString &conflictingPattern,
@@ -289,14 +297,14 @@ def test_create_empty_instance():
     assert result == UDateTimePatternConflict.UDATPG_NO_CONFLICT
     assert len(conflicting_pattern) == 0
 
-    # StringEnumeration *DateTimePatternGenerator::getBaseSkeletons(
+    # StringEnumeration *icu::DateTimePatternGenerator::getBaseSkeletons(
     #       UErrorCode &status
     # )
     it1 = gen.get_base_skeletons()
     assert isinstance(it1, StringEnumeration)
     assert list(it1) == ["Hm", "MMMMd", "MMMMMd"]
 
-    # StringEnumeration *DateTimePatternGenerator::getSkeletons(
+    # StringEnumeration *icu::DateTimePatternGenerator::getSkeletons(
     #       UErrorCode &status
     # )
     it2 = gen.get_skeletons()
@@ -307,7 +315,7 @@ def test_create_empty_instance():
 def test_create_instance():
     # [1]
     # static DateTimePatternGenerator *
-    # DateTimePatternGenerator::createInstance(
+    # icu::DateTimePatternGenerator::createInstance(
     #       const Locale &uLocale,
     #       UErrorCode &status
     # )
@@ -319,7 +327,7 @@ def test_create_instance():
 
     # [2]
     # static DateTimePatternGenerator *
-    # DateTimePatternGenerator::createInstance(UErrorCode &status)
+    # icu::DateTimePatternGenerator::createInstance(UErrorCode &status)
     gen2 = DateTimePatternGenerator.create_instance()
     assert isinstance(gen2, DateTimePatternGenerator)
 
@@ -330,7 +338,7 @@ def test_get_default_hour_cycle():
 
     gen = DateTimePatternGenerator.create_instance(Locale("en_US"))
 
-    # UDateFormatHourCycle DateTimePatternGenerator::getDefaultHourCycle(
+    # UDateFormatHourCycle icu::DateTimePatternGenerator::getDefaultHourCycle(
     #       UErrorCode &status
     # )
     assert (gen.get_default_hour_cycle()
@@ -343,7 +351,7 @@ def test_get_field_display_name():
 
     gen = DateTimePatternGenerator.create_instance(Locale("en_US"))
 
-    # UnicodeString DateTimePatternGenerator::getFieldDisplayName(
+    # UnicodeString icu::DateTimePatternGenerator::getFieldDisplayName(
     #       UDateTimePatternField field,
     #       UDateTimePGDisplayWidth width
     # )
@@ -356,7 +364,8 @@ def test_get_field_display_name():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
 def test_static_get_skeleton():
-    # static UnicodeString DateTimePatternGenerator::staticGetBaseSkeleton(
+    # static UnicodeString
+    # icu::DateTimePatternGenerator::staticGetBaseSkeleton(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
@@ -370,7 +379,7 @@ def test_static_get_skeleton():
     assert isinstance(result, UnicodeString)
     assert result == "MdHm"
 
-    # static UnicodeString DateTimePatternGenerator::staticGetSkeleton(
+    # static UnicodeString icu::DateTimePatternGenerator::staticGetSkeleton(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )

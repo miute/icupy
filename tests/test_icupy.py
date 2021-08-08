@@ -66,8 +66,9 @@ def test_u_success():
 
 
 def test_u_version_from_string():
-    # void u_versionFromString(UVersionInfo versionArray,
-    #                          const char *versionString
+    # void u_versionFromString(
+    #       UVersionInfo versionArray,
+    #       const char *versionString
     # )
     version_array = u_version_from_string("123.45.67.89")
     assert isinstance(version_array, list)
@@ -79,8 +80,9 @@ def test_u_version_from_string():
 
 
 def test_u_version_to_string():
-    # void u_versionToString(const UVersionInfo versionArray,
-    #                        char *versionString
+    # void u_versionToString(
+    #       const UVersionInfo versionArray,
+    #       char *versionString
     # )
     version_string = u_version_to_string([123, 45, 67, 89])
     assert isinstance(version_string, str)

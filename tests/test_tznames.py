@@ -5,6 +5,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
+
 from icupy import (
     Locale, StringEnumeration, TimeZoneNames, UTimeZoneNameType,
     UnicodeString,
@@ -12,7 +13,7 @@ from icupy import (
 
 
 def test_api():
-    # static TimeZoneNames *TimeZoneNames::createInstance(
+    # static TimeZoneNames *icu::TimeZoneNames::createInstance(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
@@ -24,18 +25,18 @@ def test_api():
 
     tzn3 = TimeZoneNames.create_instance("ja")
 
-    # TimeZoneNames::operator!=()
+    # UBool icu::TimeZoneNames::operator!=(const TimeZoneNames &other)
     assert not (tzn1 != tzn2)
     assert tzn1 != tzn3
     assert tzn2 != tzn3
 
-    # TimeZoneNames::operator==()
+    # UBool icu::TimeZoneNames::operator==(const TimeZoneNames &other)
     assert tzn1 == tzn2
     assert not (tzn1 == tzn3)
     assert not (tzn2 == tzn3)
 
     # [1]
-    # StringEnumeration *TimeZoneNames::getAvailableMetaZoneIDs(
+    # StringEnumeration *icu::TimeZoneNames::getAvailableMetaZoneIDs(
     #       const UnicodeString &tzID,
     #       UErrorCode &status
     # )
@@ -51,7 +52,7 @@ def test_api():
     assert it2 == it1
 
     # [2]
-    # StringEnumeration *TimeZoneNames::getAvailableMetaZoneIDs(
+    # StringEnumeration *icu::TimeZoneNames::getAvailableMetaZoneIDs(
     #       UErrorCode &status
     # )
     it3 = tzn1.get_available_meta_zone_ids()
@@ -62,7 +63,7 @@ def test_api():
     date = 1358208000000.0  # 2013-01-15T00:00:00Z
     name = UnicodeString()
 
-    # UnicodeString &TimeZoneNames::getDisplayName(
+    # UnicodeString &icu::TimeZoneNames::getDisplayName(
     #       const UnicodeString &tzID,
     #       UTimeZoneNameType type,
     #       UDate date,
@@ -86,7 +87,7 @@ def test_api():
     assert id(result) == id(name)
     assert result == "Pacific Daylight Time"
 
-    # UnicodeString &TimeZoneNames::getExemplarLocationName(
+    # UnicodeString &icu::TimeZoneNames::getExemplarLocationName(
     #       const UnicodeString &tzID,
     #       UnicodeString &name
     # )
@@ -104,7 +105,7 @@ def test_api():
     assert id(result) == id(name)
     assert result == "Tokyo"
 
-    # UnicodeString &TimeZoneNames::getMetaZoneDisplayName(
+    # UnicodeString &icu::TimeZoneNames::getMetaZoneDisplayName(
     #       const UnicodeString &mzID,
     #       UTimeZoneNameType type,
     #       UnicodeString &name
@@ -127,7 +128,7 @@ def test_api():
 
     mz_id = UnicodeString()
 
-    # UnicodeString &TimeZoneNames::getMetaZoneID(
+    # UnicodeString &icu::TimeZoneNames::getMetaZoneID(
     #       const UnicodeString &tzID,
     #       UDate date,
     #       UnicodeString &mzID
@@ -150,7 +151,7 @@ def test_api():
 
     tz_id = UnicodeString()
 
-    # UnicodeString &TimeZoneNames::getReferenceZoneID(
+    # UnicodeString &icu::TimeZoneNames::getReferenceZoneID(
     #       const UnicodeString &mzID,
     #       const char *region,
     #       UnicodeString &tzID
@@ -171,7 +172,7 @@ def test_api():
     assert id(result) == id(tz_id)
     assert result == "America/Los_Angeles"
 
-    # UnicodeString &TimeZoneNames::getTimeZoneDisplayName(
+    # UnicodeString &icu::TimeZoneNames::getTimeZoneDisplayName(
     #       const UnicodeString &tzID,
     #       UTimeZoneNameType type,
     #       UnicodeString &name
@@ -196,6 +197,7 @@ def test_api():
 def test_clone():
     tzn1 = TimeZoneNames.create_instance(Locale("en"))
 
+    # TimeZoneNames *icu::TimeZoneNames::clone()
     tzn2 = tzn1.clone()
     assert isinstance(tzn2, TimeZoneNames)
     assert tzn2 == tzn1
@@ -209,7 +211,7 @@ def test_clone():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_create_tzdb_instance():
-    # static TimeZoneNames *TimeZoneNames::createTZDBInstance(
+    # static TimeZoneNames *icu::TimeZoneNames::createTZDBInstance(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
@@ -219,5 +221,5 @@ def test_create_tzdb_instance():
     tzn2 = TimeZoneNames.create_tzdb_instance("en")
     assert isinstance(tzn2, TimeZoneNames)
 
-    # TZDBTimeZoneNames::operator==() is not implemented (ICU 69)
+    # UBool icu::TZDBTimeZoneNames::operator==(...) is not implemented (ICU 69)
     # assert tzn1 == tzn2

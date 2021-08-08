@@ -1,9 +1,10 @@
 import copy
 
+import pytest
 from icupy import (
     BreakIterator, CharacterIterator, Locale, RuleBasedBreakIterator,
     StringCharacterIterator, StringEnumeration, ULocDataLocaleType,
-    UnicodeString, UParseError, UWordBreak,
+    UParseError, UWordBreak, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
     utext_close, utext_extract, utext_native_length,
     utext_open_const_unicode_string,
 )
@@ -13,6 +14,8 @@ def test_adopt_text():
     bi = BreakIterator.create_line_instance(Locale.get_us())
     src = UnicodeString("foo bar baz.")
     it = StringCharacterIterator(src)
+
+    # void icu::BreakIterator::adoptText(CharacterIterator *it)
     bi.adopt_text(it)
     assert bi.first() == 0
     assert bi.next() == 4
@@ -31,6 +34,7 @@ def test_clone():
     bi1.set_text(src)
     bi1.next()
 
+    # BreakIterator *icu::BreakIterator::clone()
     bi2 = bi1.clone()
     assert isinstance(bi2, BreakIterator)
     assert id(bi1) != id(bi2)
@@ -47,7 +51,12 @@ def test_clone():
 
 
 def test_create_character_instance():
+    # static BreakIterator *icu::BreakIterator::createCharacterInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
     bi = BreakIterator.create_character_instance(Locale.get_us())
+    assert isinstance(bi, BreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -79,7 +88,12 @@ def test_create_character_instance():
 
 
 def test_create_line_instance():
+    # static BreakIterator *icu::BreakIterator::createLineInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
     bi = BreakIterator.create_line_instance(Locale.get_us())
+    assert isinstance(bi, BreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -102,7 +116,12 @@ def test_create_line_instance():
 
 
 def test_create_sentence_instance():
+    # static BreakIterator *icu::BreakIterator::createSentenceInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
     bi = BreakIterator.create_sentence_instance(Locale.get_us())
+    assert isinstance(bi, BreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -123,7 +142,12 @@ def test_create_sentence_instance():
 
 
 def test_create_word_instance():
+    # static BreakIterator *icu::BreakIterator::createWordInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
     bi = BreakIterator.create_word_instance(Locale.get_us())
+    assert isinstance(bi, BreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -153,6 +177,7 @@ def test_following():
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
+    # int32_t icu::BreakIterator::following(int32_t offset)
     # [0, 3, 4, 7, 8, 11, 12]
     assert bi.following(0) == 3
     assert bi.following(3) == 4
@@ -165,7 +190,7 @@ def test_following():
 
 def test_get_available_locales():
     # [2]
-    # static StringEnumeration *BreakIterator::getAvailableLocales()
+    # static StringEnumeration *icu::BreakIterator::getAvailableLocales()
     it = BreakIterator.get_available_locales()
     assert isinstance(it, StringEnumeration)
     assert len(it) > 0
@@ -180,10 +205,10 @@ def test_get_display_name():
         default_locale = Locale.get_default()
         us_locale = Locale.get_us()
         Locale.set_default(us_locale)
-        dest = UnicodeString()
+        name = UnicodeString()
 
         # [1]
-        # static UnicodeString &BreakIterator::getDisplayName(
+        # static UnicodeString &icu::BreakIterator::getDisplayName(
         #       const Locale &objectLocale,
         #       const Locale &displayLocale,
         #       UnicodeString &name
@@ -191,45 +216,51 @@ def test_get_display_name():
         result = BreakIterator.get_display_name(
             Locale.get_france(),
             us_locale,
-            dest)
-        assert id(result) == id(dest)
-        assert dest == "French (France)"
+            name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "French (France)"
 
-        dest.remove()
+        name.remove()
         result = BreakIterator.get_display_name(
             "fr_FR",
             Locale("en_US"),
-            dest)
-        assert id(result) == id(dest)
-        assert dest == "French (France)"
+            name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "French (France)"
 
-        dest.remove()
+        name.remove()
         result = BreakIterator.get_display_name(
             Locale("fr_FR"),
             "en_US",
-            dest)
-        assert id(result) == id(dest)
-        assert dest == "French (France)"
+            name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "French (France)"
 
-        dest.remove()
-        result = BreakIterator.get_display_name("fr_FR", "en_US", dest)
-        assert id(result) == id(dest)
-        assert dest == "French (France)"
+        name.remove()
+        result = BreakIterator.get_display_name("fr_FR", "en_US", name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "French (France)"
 
         # [2]
-        # static UnicodeString &BreakIterator::getDisplayName(
+        # static UnicodeString &icu::BreakIterator::getDisplayName(
         #       const Locale &objectLocale,
         #       UnicodeString &name
         # )
-        dest.remove()
-        result = BreakIterator.get_display_name(us_locale, dest)
-        assert id(result) == id(dest)
-        assert dest == "English (United States)"
+        name.remove()
+        result = BreakIterator.get_display_name(us_locale, name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "English (United States)"
 
-        dest.remove()
-        result = BreakIterator.get_display_name("en_US", dest)
-        assert id(result) == id(dest)
-        assert dest == "English (United States)"
+        name.remove()
+        result = BreakIterator.get_display_name("en_US", name)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name)
+        assert name == "English (United States)"
     finally:
         if default_locale:
             Locale.set_default(default_locale)
@@ -239,24 +270,35 @@ def test_get_locale():
     bi1 = BreakIterator.create_word_instance(Locale.get_english())
     bi2 = BreakIterator.create_word_instance(Locale.get_french())
 
+    # Locale icu::BreakIterator::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
     loc = bi1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
     assert loc.get_name() == "en"
 
     loc = bi1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+    assert isinstance(loc, Locale)
     assert len(loc.get_name()) == 0
 
     loc = bi2.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
     assert loc.get_name() == "fr"
 
     loc = bi2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+    assert isinstance(loc, Locale)
     assert len(loc.get_name()) == 0
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
 def test_get_rule_status():
     bi = BreakIterator.create_word_instance(Locale.get_us())
     src = UnicodeString("foo bar baz!")
     bi.set_text(src)
     assert bi.first() == 0
+
+    # int32_t icu::BreakIterator::getRuleStatus()
     assert bi.get_rule_status() == UWordBreak.UBRK_WORD_NONE
     assert bi.next() == 3
     assert bi.get_rule_status() == UWordBreak.UBRK_WORD_LETTER
@@ -273,6 +315,7 @@ def test_get_rule_status():
     assert bi.next() == BreakIterator.DONE
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
 def test_get_rule_status_vec():
     # From icu/source/test/intltest/rbbiapts.cpp:
     # void RBBIAPITest::TestRuleStatusVec()
@@ -283,39 +326,52 @@ def test_get_rule_status_vec():
                           "[0-5]{500}; \n"
                           "!.*;\n",
                           -1,
-                          UnicodeString.EInvariant.INVARIANT)
+                          UnicodeString.INVARIANT)
     parse_error = UParseError()
     bi = RuleBasedBreakIterator(rules, parse_error)
     src = UnicodeString("Aapz5?")
     bi.set_text(src)
 
+    # int32_t icu::BreakIterator::getRuleStatusVec(
+    #       int32_t *fillInVec,
+    #       int32_t capacity,
+    #       UErrorCode &status
+    # )
     assert bi.next() == 1
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [100, 300]
 
     assert bi.next() == 2
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [200, 300]
 
     assert bi.next() == 3
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [200, 300]
 
     assert bi.next() == 4
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [300]
 
     assert bi.next() == 5
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [400, 500]
 
     assert bi.next() == 6
     values = bi.get_rule_status_vec()
+    assert isinstance(values, list)
     assert values == [0]
 
 
 def test_get_rules():
     bi = BreakIterator.create_word_instance(Locale.get_us())
+
+    # const UnicodeString &icu::RuleBasedBreakIterator::getRules(void)
     rules = bi.get_rules()
     assert isinstance(rules, UnicodeString)
     assert rules.length() > 0
@@ -324,6 +380,7 @@ def test_get_rules():
 def test_get_text():
     bi = BreakIterator.create_word_instance(Locale.get_us())
 
+    # CharacterIterator &icu::BreakIterator::getText(void)
     it = bi.get_text()
     assert it is None
 
@@ -339,6 +396,10 @@ def test_get_text():
 def test_get_utext():
     bi = BreakIterator.create_word_instance(Locale.get_us())
 
+    # UText *icu::BreakIterator::getUText(
+    #       UText *fillIn,
+    #       UErrorCode &status
+    # )
     ut1 = bi.get_utext(None)
     dest = utext_extract(ut1, 0, utext_native_length(ut1))
     assert len(dest) == 0
@@ -362,6 +423,7 @@ def test_hash_code():
     bi2 = BreakIterator.create_word_instance(Locale.get_us())
     bi3 = BreakIterator.create_word_instance(Locale.get_us())
 
+    # int32_t icu::RuleBasedBreakIterator::hashCode(void)
     assert bi1.hash_code() != bi2.hash_code()
     assert bi2.hash_code() == bi3.hash_code()
 
@@ -380,6 +442,7 @@ def test_is_boundary():
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
+    # UBool icu::BreakIterator::isBoundary(int32_t offset)
     # [0, 3, 4, 7, 8, 11, 12]
     assert bi.is_boundary(0)
     assert not bi.is_boundary(1)
@@ -401,6 +464,8 @@ def test_next():
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
+    # [1]
+    # int32_t icu::BreakIterator::next(int32_t n)
     # [0, 3, 4, 7, 8, 11, 12]
     assert bi.first() == 0
     assert bi.next(3) == 7
@@ -412,14 +477,29 @@ def test_next():
     assert bi.next(-3) == BreakIterator.DONE
     assert bi.current() == 0
 
+    # [2]
+    # int32_t icu::BreakIterator::next(void)
+    assert bi.first() == 0
+    assert bi.next() == 3
+    assert bi.next() == 4
+    assert bi.next() == 7
+    assert bi.next() == 8
+    assert bi.next() == 11
+    assert bi.next() == 12
+    assert bi.next() == BreakIterator.DONE
+
 
 def test_operator():
     bi1 = BreakIterator.create_character_instance(Locale.get_us())
     bi2 = BreakIterator.create_word_instance(Locale.get_us())
     bi3 = BreakIterator.create_word_instance(Locale.get_us())
     src = UnicodeString("foo bar baz.")
+
+    # UBool icu::BreakIterator::operator!=(const BreakIterator &rhs)
     assert bi1 != bi2
     assert bi1 != bi3
+
+    # UBool icu::BreakIterator::operator==(const BreakIterator &)
     assert bi2 == bi3
 
     bi2.next()
@@ -444,6 +524,7 @@ def test_preceding():
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
+    # int32_t icu::BreakIterator::preceding(int32_t offset)
     # [0, 3, 4, 7, 8, 11, 12]
     assert bi.preceding(12) == 11
     assert bi.preceding(11) == 8
@@ -459,6 +540,7 @@ def test_previous():
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
+    # int32_t icu::BreakIterator::previous(void)
     assert bi.last() == 12
     assert bi.previous() == 11
     assert bi.previous() == 8
@@ -473,11 +555,11 @@ def test_rule_based_break_iterator():
     src = UnicodeString("foo.")
 
     # [1]
-    # RuleBasedBreakIterator::RuleBasedBreakIterator()
+    # icu::RuleBasedBreakIterator::RuleBasedBreakIterator()
     pass  # NotImplemented
 
     # [3]
-    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    # icu::RuleBasedBreakIterator::RuleBasedBreakIterator(
     #       const UnicodeString &rules,
     #       UParseError &parseError,
     #       UErrorCode &status
@@ -514,7 +596,7 @@ def test_rule_based_break_iterator():
     assert bi3 == bi3a
 
     # [4]
-    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    # icu::RuleBasedBreakIterator::RuleBasedBreakIterator(
     #       const uint8_t *compiledRules,
     #       uint32_t ruleLength,
     #       UErrorCode &status
@@ -532,7 +614,7 @@ def test_rule_based_break_iterator():
     assert bi4.current() == 4
 
     # [2]
-    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    # icu::RuleBasedBreakIterator::RuleBasedBreakIterator(
     #       const RuleBasedBreakIterator &that
     # )
     bi2 = RuleBasedBreakIterator(bi3)
@@ -546,7 +628,7 @@ def test_rule_based_break_iterator():
     assert bi2.current() == 4
 
     # [5]
-    # RuleBasedBreakIterator::RuleBasedBreakIterator(
+    # icu::RuleBasedBreakIterator::RuleBasedBreakIterator(
     #       UDataMemory *image,
     #       UErrorCode &status
     # )
@@ -559,7 +641,7 @@ def test_set_text():
     src2 = UnicodeString("lorem ipsum")
 
     # [1]
-    # void BreakIterator::setText(const UnicodeString &newText)
+    # void icu::BreakIterator::setText(const UnicodeString &newText)
     bi.set_text(src1)
     assert bi.current() == 0
     assert bi.next() == 3
@@ -569,8 +651,9 @@ def test_set_text():
     assert bi.next() == 5
 
     # [2]
-    # void BreakIterator::setText(UText *text,
-    #                             UErrorCode &status
+    # void icu::BreakIterator::setText(
+    #       UText *text,
+    #       UErrorCode &status
     # )
     ut = utext_open_const_unicode_string(None, src1)
     bi.set_text(ut)

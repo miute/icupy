@@ -3,8 +3,8 @@ import copy
 import pytest
 from icupy import (
     BreakIterator, Collator, ICUException, Locale, RuleBasedCollator,
-    StringCharacterIterator, StringSearch, UErrorCode, USEARCH_DONE,
-    USearchAttribute, USearchAttributeValue, UnicodeString,
+    SearchIterator, StringCharacterIterator, StringSearch, UErrorCode,
+    USEARCH_DONE, USearchAttribute, USearchAttributeValue, UnicodeString,
 )
 
 
@@ -16,34 +16,62 @@ def test_api():
     it = StringSearch(pattern, text, coll, breakiter)
 
     assert USEARCH_DONE == StringSearch.DONE
+
+    # int32_t icu::SearchIterator::first(UErrorCode &status)
     assert it.first() == 0
+
+    # int32_t icu::SearchIterator::getMatchedLength(void)
     assert it.get_matched_length() == 4
+
+    # int32_t icu::SearchIterator::getMatchedStart(void)
     assert it.get_matched_start() == 0
+
+    # void icu::SearchIterator::getMatchedText(UnicodeString &result)
     result = UnicodeString()
     it.get_matched_text(result)
     assert result == "abab"
+
+    # int32_t icu::StringSearch::getOffset(void)
     assert it.get_offset() == 0
 
+    # int32_t icu::SearchIterator::following(
+    #       int32_t position,
+    #       UErrorCode &status
+    # )
     assert it.following(0) == 0
     assert it.following(1) == 2
     assert it.following(3) == 4
     assert it.following(5) == USEARCH_DONE
 
+    # int32_t icu::SearchIterator::last(UErrorCode &status)
     assert it.last() == 4
 
+    # void icu::StringSearch::reset()
     it.reset()
+
+    # int32_t icu::SearchIterator::next(UErrorCode &status)
     assert it.next() == 0
     assert it.next() == 4
     assert it.next() == USEARCH_DONE
 
     assert list(it) == [0, 4]
 
+    # int32_t icu::SearchIterator::preceding(
+    #       int32_t position,
+    #       UErrorCode &status
+    # )
     assert it.preceding(8) == 4
     assert it.preceding(7) == 2
     assert it.preceding(5) == 0
     assert it.preceding(3) == USEARCH_DONE
 
+    # void icu::StringSearch::setOffset(
+    #       int32_t position,
+    #       UErrorCode &status
+    # )
     it.set_offset(8)
+
+    # int32_t icu::SearchIterator::previous(UErrorCode &status)
     assert it.previous() == 4
     assert it.previous() == 0
     assert it.previous() == USEARCH_DONE
@@ -57,30 +85,59 @@ def test_api():
         it.set_offset(9)
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
+    # USearchAttributeValue icu::SearchIterator::getAttribute(
+    #       USearchAttribute attribute
+    # )
     assert (it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
             == USearchAttributeValue.USEARCH_OFF)
+
+    # void icu::SearchIterator::setAttribute(
+    #       USearchAttribute attribute,
+    #       USearchAttributeValue value,
+    #       UErrorCode &status
+    # )
     it.set_attribute(USearchAttribute.USEARCH_OVERLAP,
                      USearchAttributeValue.USEARCH_ON)
     assert (it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
             == USearchAttributeValue.USEARCH_ON)
 
+    # const BreakIterator *icu::SearchIterator::getBreakIterator(void)
     result = it.get_break_iterator()
     assert isinstance(result, BreakIterator)
     assert result == breakiter
-    breakiter2 = BreakIterator.create_character_instance(Locale.get_france())
+
+    # void icu::SearchIterator::setBreakIterator(
+    #       BreakIterator *breakiter,
+    #       UErrorCode &status
+    # )
+    breakiter2 = BreakIterator.create_character_instance(Locale.get_japan())
+    assert breakiter2 != breakiter
     it.set_break_iterator(breakiter2)
     assert it.get_break_iterator() == breakiter2
 
+    # RuleBasedCollator *icu::StringSearch::getCollator()
     result = it.get_collator()
     assert isinstance(result, RuleBasedCollator)
     assert result == coll
-    coll2 = Collator.create_instance(Locale.get_france())
+
+    # void icu::StringSearch::setCollator(
+    #       RuleBasedCollator *coll,
+    #       UErrorCode &status
+    # )
+    coll2 = Collator.create_instance(Locale.get_japan())
+    assert coll2 != coll
     it.set_collator(coll2)
     assert it.get_collator() == coll2
 
+    # const UnicodeString &icu::StringSearch::getPattern()
     result = it.get_pattern()
     assert isinstance(result, UnicodeString)
     assert result == pattern
+
+    # void icu::StringSearch::setPattern(
+    #       const UnicodeString &pattern,
+    #       UErrorCode &status
+    # )
     pattern2 = UnicodeString("ab")
     it.set_pattern(pattern2)
     assert it.get_pattern() == pattern2
@@ -88,6 +145,7 @@ def test_api():
     it.set_pattern("abc")
     assert it.get_pattern() == "abc"
 
+    # const UnicodeString &icu::SearchIterator::getText(void)
     result = it.get_text()
     assert isinstance(result, UnicodeString)
     assert result == text
@@ -101,6 +159,7 @@ def test_clone():
     test1 = StringSearch(pattern, text, coll, breakiter)
     assert test1.next() != USEARCH_DONE
 
+    # StringSearch *icu::StringSearch::clone()
     test2 = test1.clone()
     assert isinstance(test2, StringSearch)
     assert test2 != test1
@@ -117,6 +176,7 @@ def test_clone():
     assert test4.next() != USEARCH_DONE
     assert test4 == test1
 
+    # StringSearch *icu::StringSearch::safeClone()
     test5 = test1.safe_clone()
     assert isinstance(test5, StringSearch)
     assert test5 == test1
@@ -130,7 +190,10 @@ def test_operator():
     test1 = StringSearch(pattern, text, coll, breakiter)
     test2 = StringSearch(pattern, text, coll, breakiter)
 
+    # UBool icu::SearchIterator::operator!=(const SearchIterator &that)
     assert not (test1 != test2)
+
+    # UBool icu::StringSearch::operator==(const SearchIterator &that)
     assert test1 == test2
 
     assert test1.next() != USEARCH_DONE
@@ -149,22 +212,28 @@ def test_set_text():
     it = StringSearch(pattern, text, coll, None)
 
     # [1]
-    # void StringSearch::setText(CharacterIterator &text,
-    #                            UErrorCode &status)
+    # void icu::StringSearch::setText(
+    #       CharacterIterator &text,
+    #       UErrorCode &status
+    # )
     text1 = UnicodeString("ab c")
     chariter = StringCharacterIterator(text1)
     it.set_text(chariter)
     assert it.get_text() == text1
 
     # [2]
-    # void StringSearch::setText(const UnicodeString &text,
-    #                            UErrorCode &status)
+    # void icu::StringSearch::setText(
+    #       const UnicodeString &text,
+    #       UErrorCode &status
+    # )
     text2 = UnicodeString("a bc")
     it.set_text(text2)
     assert it.get_text() == text2
 
 
 def test_string_search():
+    assert issubclass(StringSearch, SearchIterator)
+
     pattern = UnicodeString("fox")
     text1 = UnicodeString("The quick brown fox jumps over the lazy dog.")
     breakiter = BreakIterator.create_word_instance(Locale.get_us())
@@ -172,11 +241,13 @@ def test_string_search():
     text2 = StringCharacterIterator(text1)
 
     # [1]
-    # StringSearch::StringSearch(const UnicodeString &pattern,
-    #                            const UnicodeString &text,
-    #                            const Locale &locale,
-    #                            BreakIterator *breakiter,
-    #                            UErrorCode &status)
+    # icu::StringSearch::StringSearch(
+    #       const UnicodeString &pattern,
+    #       const UnicodeString &text,
+    #       const Locale &locale,
+    #       BreakIterator *breakiter,
+    #       UErrorCode &status
+    # )
     test1 = StringSearch(pattern, text1, Locale.get_us(), None)
     assert test1.get_break_iterator() is None
     assert test1.get_collator()
@@ -208,11 +279,13 @@ def test_string_search():
     assert test1e.get_text() == text1
 
     # [2]
-    # StringSearch::StringSearch(const UnicodeString &pattern,
-    #                            const UnicodeString &text,
-    #                            RuleBasedCollator *coll,
-    #                            BreakIterator *breakiter,
-    #                            UErrorCode &status)
+    # icu::StringSearch::StringSearch(
+    #       const UnicodeString &pattern,
+    #       const UnicodeString &text,
+    #       RuleBasedCollator *coll,
+    #       BreakIterator *breakiter,
+    #       UErrorCode &status
+    # )
     test2 = StringSearch(pattern, text1, coll, None)
     assert test2.get_break_iterator() is None
     assert test2.get_collator() == coll
@@ -232,11 +305,13 @@ def test_string_search():
     assert test2c.get_text() == text1
 
     # [3]
-    # StringSearch::StringSearch(const UnicodeString &pattern,
-    #                            CharacterIterator &text,
-    #                            const Locale &locale,
-    #                            BreakIterator *breakiter,
-    #                            UErrorCode &status)
+    # icu::StringSearch::StringSearch(
+    #       const UnicodeString &pattern,
+    #       CharacterIterator &text,
+    #       const Locale &locale,
+    #       BreakIterator *breakiter,
+    #       UErrorCode &status
+    # )
     test3 = StringSearch(pattern, text2, Locale.get_us(), None)
     assert test3.get_break_iterator() is None
     assert test3.get_collator()
@@ -268,11 +343,13 @@ def test_string_search():
     assert test3e.get_text() == text1
 
     # [4]
-    # StringSearch::StringSearch(const UnicodeString &pattern,
-    #                            CharacterIterator &text,
-    #                            RuleBasedCollator *coll,
-    #                            BreakIterator *breakiter,
-    #                            UErrorCode &status)
+    # icu::StringSearch::StringSearch(
+    #       const UnicodeString &pattern,
+    #       CharacterIterator &text,
+    #       RuleBasedCollator *coll,
+    #       BreakIterator *breakiter,
+    #       UErrorCode &status
+    # )
     test4 = StringSearch(pattern, text2, coll, None)
     assert test4.get_break_iterator() is None
     assert test4.get_collator() == coll
@@ -292,7 +369,7 @@ def test_string_search():
     assert test4c.get_text() == text1
 
     # [5]
-    # StringSearch::StringSearch(const StringSearch &that)
+    # icu::StringSearch::StringSearch(const StringSearch &that)
     test5 = StringSearch(test2b)
     assert test5.get_break_iterator() == breakiter
     assert test5.get_collator() == coll

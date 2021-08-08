@@ -3,7 +3,9 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 62:
     pytest.skip("ICU4C<62", allow_module_level=True)
+
 import copy
+
 from icupy import (
     ICUException, Locale, MeasureUnit, StringEnumeration, UErrorCode,
 )
@@ -71,6 +73,7 @@ def test_api():
 def test_clone():
     unit1 = MeasureUnit.get_kilometer()
 
+    # MeasureUnit *icu::MeasureUnit::clone()
     unit2 = unit1.clone()
     assert isinstance(unit2, MeasureUnit)
     assert unit2 == unit1
@@ -84,9 +87,14 @@ def test_clone():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_for_identifier():
+    # static MeasureUnit icu::MeasureUnit::forIdentifier(
+    #       StringPiece identifier,
+    #       UErrorCode &status
+    # )
     unit = MeasureUnit.for_identifier("furlong-per-nanosecond")
     assert isinstance(unit, MeasureUnit)
 
+    # const char *icu::MeasureUnit::getIdentifier()
     result = unit.get_identifier()
     assert isinstance(result, str)
     assert result == "furlong-per-nanosecond"
@@ -96,7 +104,9 @@ def test_for_identifier():
 def test_get_complexity():
     from icupy import UMeasureUnitComplexity
 
-    # UMeasureUnitComplexity icu::MeasureUnit::getComplexity(UErrorCode &status)
+    # UMeasureUnitComplexity icu::MeasureUnit::getComplexity(
+    #       UErrorCode &status
+    # )
     unit = MeasureUnit.get_meter()
     assert (unit.get_complexity()
             == UMeasureUnitComplexity.UMEASURE_UNIT_SINGLE)
@@ -112,6 +122,7 @@ def test_get_complexity():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_get_dimensionality():
+    # int32_t icu::MeasureUnit::getDimensionality(UErrorCode &status)
     unit = MeasureUnit.create_cubic_meter()
     assert unit.get_dimensionality() == 3
 
@@ -123,6 +134,7 @@ def test_get_dimensionality():
 def test_get_prefix():
     from icupy import UMeasurePrefix
 
+    # UMeasurePrefix icu::MeasureUnit::getPrefix(UErrorCode &status)
     unit = MeasureUnit.get_kilometer()
     assert unit.get_prefix() == UMeasurePrefix.UMEASURE_PREFIX_KILO
 

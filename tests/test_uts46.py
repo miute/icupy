@@ -15,6 +15,10 @@ _severe_errors = (IDNA.ERROR_LEADING_COMBINING_MARK |
 _common_options = (IDNA.USE_STD3_RULES | IDNA.CHECK_BIDI |
                    IDNA.CHECK_CONTEXTJ | IDNA.CHECK_CONTEXTO)
 
+# static IDNA *icu::IDNA::createUTS46Instance(
+#       uint32_t options,
+#       UErrorCode &errorCode
+# )
 _trans = IDNA.create_uts46_instance(_common_options)
 _nontrans = IDNA.create_uts46_instance(
     _common_options |
@@ -414,43 +418,66 @@ def _is_ascii(s: UnicodeString) -> bool:
 
 
 def test_api():
-    result = UnicodeString()
+    # UnicodeString &icu::IDNA::nameToASCII(
+    #       const UnicodeString &name,
+    #       UnicodeString &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # )
+    dest = UnicodeString()
     info = IDNAInfo()
     src = UnicodeString("www.eXample.cOm")
     expected = UnicodeString("www.example.com")
-    _trans.name_to_ascii(src, result, info)
+    result = _trans.name_to_ascii(src, dest, info)
     assert not info.has_errors()
-    assert result == expected
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert dest == expected
 
-    result.remove()
-    _trans.name_to_ascii("www.eXample.cOm", result, info)
+    dest.remove()
+    result = _trans.name_to_ascii("www.eXample.cOm", dest, info)
     assert not info.has_errors()
-    assert result == expected
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert dest == expected
 
+    # UnicodeString &icu::IDNA::labelToASCII(
+    #       const UnicodeString &label,
+    #       UnicodeString &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # )
     src.set_to_bogus()
-    result = UnicodeString("quatsch")
+    dest = UnicodeString("quatsch")
     with pytest.raises(ICUException) as exc_info:
-        _nontrans.label_to_ascii(src, result, info)
+        _nontrans.label_to_ascii(src, dest, info)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
-    assert result.is_bogus()
+    assert dest.is_bogus()
 
+    dest.remove()
     src = UnicodeString("xn--bcher.de-65a")
     expected = UnicodeString("xn--bcher\\uFFFDde-65a").unescape()
-    _nontrans.label_to_ascii(src, result, info)
+    result = _nontrans.label_to_ascii(src, dest, info)
     assert (info.get_errors() == (IDNA.ERROR_LABEL_HAS_DOT |
                                   IDNA.ERROR_INVALID_ACE_LABEL))
-    assert result == expected
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert dest == expected
 
-    result.remove()
-    _nontrans.label_to_ascii("xn--bcher.de-65a", result, info)
+    dest.remove()
+    result = _nontrans.label_to_ascii("xn--bcher.de-65a", dest, info)
     assert (info.get_errors() == (IDNA.ERROR_LABEL_HAS_DOT |
                                   IDNA.ERROR_INVALID_ACE_LABEL))
-    assert result == expected
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert dest == expected
 
-    result.remove()
-    _trans.label_to_unicode("\x61\u00df", result, info)
+    dest.remove()
+    result = _trans.label_to_unicode("\x61\u00df", dest, info)
     assert info.get_errors() == 0
-    assert result == "\x61\x73\x73"
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert dest == "\x61\x73\x73"
 
 
 def test_not_std3():
@@ -462,28 +489,48 @@ def test_not_std3():
     dest = UnicodeString()
     info = IDNAInfo()
 
+    # UnicodeString &icu::IDNA::nameToUnicode(
+    #       const UnicodeString &name,
+    #       UnicodeString &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # )
     # '\x00a_2+2=4\n.essen.net'
     result = not3.name_to_unicode(src, dest, info)
-    assert result != src
-    assert result == dest
     assert not info.has_errors()
-    assert len(result) == 19
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert result != src
     assert result == expected
 
+    # UnicodeString &icu::IDNA::nameToASCII(
+    #       const UnicodeString &name,
+    #       UnicodeString &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # )
+    dest.remove()
     src = UnicodeString("a z.xn--4db.edu")
-    not3.name_to_ascii(src, result, info)
-    assert result == src
+    result = not3.name_to_ascii(src, dest, info)
     assert info.get_errors() == IDNA.ERROR_BIDI
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert result == src
 
+    dest.remove()
     src = UnicodeString("a\\u2260b\\u226Ec\\u226Fd").unescape()
-    not3.name_to_unicode(src, result, info)
-    assert result == src
+    result = not3.name_to_unicode(src, dest, info)
     assert not info.has_errors()
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert result == src
 
-    result.remove()
-    not3.name_to_unicode("a\u2260b\u226Ec\u226Fd", result, info)
-    assert result == src
+    dest.remove()
+    result = not3.name_to_unicode("a\u2260b\u226Ec\u226Fd", dest, info)
     assert not info.has_errors()
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(dest)
+    assert result == src
 
 
 @pytest.mark.parametrize(('s', 'mode', 'u', 'errors'), _test_cases)

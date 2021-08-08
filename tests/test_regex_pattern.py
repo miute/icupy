@@ -13,6 +13,8 @@ def test_clone():
     regex = UnicodeString("\\w+")
     test1 = RegexPattern.compile(regex, 0)
     assert isinstance(test1, RegexPattern)
+
+    # RegexPattern *icu::RegexPattern::clone()
     test2 = test1.clone()
     assert isinstance(test2, RegexPattern)
     assert test2.pattern() == regex
@@ -28,7 +30,7 @@ def test_compile():
     s = "\\w+"
 
     # [1]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       const UnicodeString &regex,
     #       uint32_t flags,
     #       UErrorCode &status
@@ -45,7 +47,7 @@ def test_compile():
     assert test1a.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     # [2]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       const UnicodeString &regex,
     #       uint32_t flags,
     #       UParseError &pe,
@@ -53,23 +55,25 @@ def test_compile():
     # )
     regex2 = UnicodeString(s)
     pe = UParseError()
-    test2 = RegexPattern.compile(regex2,
-                                 URegexpFlag.UREGEX_CASE_INSENSITIVE,
-                                 pe)
+    test2 = RegexPattern.compile(
+        regex2,
+        URegexpFlag.UREGEX_CASE_INSENSITIVE,
+        pe)
     assert isinstance(test2, RegexPattern)
     assert test2.pattern() == s
     assert test2.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     pe = UParseError()
-    test2a = RegexPattern.compile(s,
-                                  URegexpFlag.UREGEX_CASE_INSENSITIVE,
-                                  pe)
+    test2a = RegexPattern.compile(
+        s,
+        URegexpFlag.UREGEX_CASE_INSENSITIVE,
+        pe)
     assert isinstance(test2a, RegexPattern)
     assert test2a.pattern() == s
     assert test2a.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     # [3]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       const UnicodeString &regex,
     #       UParseError &pe,
     #       UErrorCode &status
@@ -88,7 +92,7 @@ def test_compile():
     assert test3a.flags() == 0
 
     # [4]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       UText *regex,
     #       uint32_t flags,
     #       UErrorCode &status
@@ -101,7 +105,7 @@ def test_compile():
     utext_close(regex4)
 
     # [5]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       UText *regex,
     #       uint32_t flags,
     #       UParseError &pe,
@@ -109,16 +113,17 @@ def test_compile():
     # )
     regex5 = utext_open_utf8(None, s, -1)
     pe = UParseError()
-    test5 = RegexPattern.compile(regex5,
-                                 URegexpFlag.UREGEX_CASE_INSENSITIVE,
-                                 pe)
+    test5 = RegexPattern.compile(
+        regex5,
+        URegexpFlag.UREGEX_CASE_INSENSITIVE,
+        pe)
     assert isinstance(test5, RegexPattern)
     assert test5.pattern() == s
     assert test5.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
     utext_close(regex5)
 
     # [6]
-    # static RegexPattern *RegexPattern::compile(
+    # static RegexPattern *icu::RegexPattern::compile(
     #       UText *regex,
     #       UParseError &pe,
     #       UErrorCode &status
@@ -138,7 +143,7 @@ def test_group_number_from_name():
     pattern = RegexPattern.compile(regex, 0)
 
     # [1]
-    # int32_t RegexPattern::groupNumberFromName(
+    # int32_t icu::RegexPattern::groupNumberFromName(
     #       const char *groupName,
     #       int32_t nameLength,
     #       UErrorCode &status
@@ -148,7 +153,7 @@ def test_group_number_from_name():
     assert pattern.group_number_from_name("C", -1) == 3
 
     # [2]
-    # int32_t RegexPattern::groupNumberFromName(
+    # int32_t icu::RegexPattern::groupNumberFromName(
     #       const UnicodeString &groupName,
     #       UErrorCode &status
     # )
@@ -166,8 +171,9 @@ def test_matcher():
     pattern = RegexPattern.compile(regex, 0)
 
     # [1]
-    # RegexMatcher *RegexPattern::matcher(const UnicodeString &input,
-    #                                     UErrorCode &status
+    # RegexMatcher *icu::RegexPattern::matcher(
+    #       const UnicodeString &input,
+    #       UErrorCode &status
     # )
     src1 = UnicodeString("foo bar baz")
     matcher1 = pattern.matcher(src1)
@@ -176,7 +182,7 @@ def test_matcher():
     assert matcher1.input() == src1
 
     # [2]
-    # RegexMatcher *RegexPattern::matcher(UErrorCode &status)
+    # RegexMatcher *icu::RegexPattern::matcher(UErrorCode &status)
     matcher2 = pattern.matcher()
     assert isinstance(matcher2, RegexMatcher)
     assert matcher2.pattern().pattern() == regex
@@ -189,10 +195,11 @@ def test_matches():
     src1b = UnicodeString("123")
 
     # [1]
-    # static UBool RegexPattern::matches(const UnicodeString &regex,
-    #                                    const UnicodeString &input,
-    #                                    UParseError &pe,
-    #                                    UErrorCode &status
+    # static UBool icu::RegexPattern::matches(
+    #       const UnicodeString &regex,
+    #       const UnicodeString &input,
+    #       UParseError &pe,
+    #       UErrorCode &status
     # )
     pe = UParseError()
     assert RegexPattern.matches(regex1, src1a, pe)
@@ -207,10 +214,11 @@ def test_matches():
     assert not RegexPattern.matches("[A-Za-z]+", src1b, pe)
 
     # [2]
-    # static UBool RegexPattern::matches(UText *regex,
-    #                                    UText *input,
-    #                                    UParseError &pe,
-    #                                    UErrorCode &status
+    # static UBool icu::RegexPattern::matches(
+    #       UText *regex,
+    #       UText *input,
+    #       UParseError &pe,
+    #       UErrorCode &status
     # )
     regex2 = utext_open_const_unicode_string(None, regex1)
     src2a = utext_open_const_unicode_string(None, src1a)
@@ -232,9 +240,11 @@ def test_operator():
     test2 = RegexPattern.compile(regex, URegexpFlag.UREGEX_CASE_INSENSITIVE)
     test3 = RegexPattern.compile(regex, 0)
 
+    # UBool icu::RegexPattern::operator!=(const RegexPattern &that)
     assert test1 != test2
     assert not (test1 != test3)
 
+    # UBool icu::RegexPattern::operator==(const RegexPattern &that)
     assert not (test1 == test2)
     assert test1 == test3
 
@@ -243,10 +253,12 @@ def test_pattern_text():
     regex = UnicodeString("\\w+")
     pattern = RegexPattern.compile(regex, 0)
 
+    # UnicodeString icu::RegexPattern::pattern()
     result1 = pattern.pattern()
     assert isinstance(result1, UnicodeString)
     assert result1 == "\\w+"
 
+    # UText *icu::RegexPattern::patternText(UErrorCode &status)
     result2 = pattern.pattern_text()
     dest = utext_extract(result2, 0, utext_native_length(result2))
     assert dest == "\\w+"
@@ -255,13 +267,13 @@ def test_pattern_text():
 
 def test_regex_pattern():
     # [1]
-    # RegexPattern::RegexPattern()
+    # icu::RegexPattern::RegexPattern()
     test1 = RegexPattern()
     pattern1 = test1.pattern()
     assert pattern1.length() == 0
 
     # [2]
-    # RegexPattern::RegexPattern(const RegexPattern &source)
+    # icu::RegexPattern::RegexPattern(const RegexPattern &source)
     regex = UnicodeString("\\w+")
     source = RegexPattern.compile(regex, 0)
     assert isinstance(source, RegexPattern)
@@ -275,10 +287,11 @@ def test_split():
     src1 = UnicodeString("foo bar baz")
 
     # [1]
-    # int32_t RegexPattern::split(const UnicodeString &input,
-    #                             UnicodeString dest[],
-    #                             int32_t destCapacity,
-    #                             UErrorCode &status
+    # int32_t icu::RegexPattern::split(
+    #       const UnicodeString &input,
+    #       UnicodeString dest[],
+    #       int32_t destCapacity,
+    #       UErrorCode &status
     # )
     dest1 = UnicodeStringVector(10)
     result = pattern.split(src1, dest1)
@@ -293,10 +306,11 @@ def test_split():
     assert dest1[1] == "bar baz"
 
     # [2]
-    # int32_t RegexPattern::split(UText *input,
-    #                             UText *dest[],
-    #                             int32_t destCapacity,
-    #                             UErrorCode &status
+    # int32_t icu::RegexPattern::split(
+    #       UText *input,
+    #       UText *dest[],
+    #       int32_t destCapacity,
+    #       UErrorCode &status
     # )
     src2 = utext_open_const_unicode_string(None, src1)
     dest2 = UTextVector(10)

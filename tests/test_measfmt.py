@@ -5,6 +5,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
+
 from icupy import (
     CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,
     Formattable, ICUException, Locale, Measure, MeasureFormat, MeasureUnit,
@@ -67,6 +68,7 @@ def test_api():
 def test_clone():
     fmt1 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
 
+    # MeasureFormat *icu::MeasureFormat::clone()
     fmt2 = fmt1.clone()
     assert isinstance(fmt2, MeasureFormat)
     assert fmt2 == fmt1

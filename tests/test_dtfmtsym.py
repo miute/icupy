@@ -9,7 +9,7 @@ def test_api():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # Locale DateFormatSymbols::getLocale(
+    # Locale icu::DateFormatSymbols::getLocale(
     #       ULocDataLocaleType type,
     #       UErrorCode &status
     # )
@@ -17,7 +17,7 @@ def test_api():
     assert isinstance(locale, Locale)
     assert locale == Locale("ja_JP")
 
-    # UnicodeString &DateFormatSymbols::getLocalPatternChars(
+    # UnicodeString &icu::DateFormatSymbols::getLocalPatternChars(
     #       UnicodeString &result
     # )
     result = UnicodeString()
@@ -26,7 +26,7 @@ def test_api():
     assert id(chars) == id(result)
     assert len(chars) > 0
 
-    # void DateFormatSymbols::setLocalPatternChars(
+    # void icu::DateFormatSymbols::setLocalPatternChars(
     #       const UnicodeString &newLocalPatternChars
     # )
     sym2.set_local_pattern_chars(UnicodeString("abcdefghijklmonpqr"))
@@ -37,7 +37,7 @@ def test_api():
     chars = sym2.get_local_pattern_chars(result)
     assert chars == "GyMdkHmsSEDFwWahKzYeugAZvcLQqVUOXxrbB"
 
-    # static const char16_t *DateFormatSymbols::getPatternUChars(void)
+    # static const char16_t *icu::DateFormatSymbols::getPatternUChars(void)
     uchars = DateFormatSymbols.get_pattern_uchars()
     assert isinstance(uchars, str)
     assert len(uchars) > 0
@@ -45,26 +45,26 @@ def test_api():
 
 def test_date_format_symbols():
     # [1]
-    # DateFormatSymbols::DateFormatSymbols(UErrorCode &status)
+    # icu::DateFormatSymbols::DateFormatSymbols(UErrorCode &status)
     sym1 = DateFormatSymbols()
 
     # [2]
-    # DateFormatSymbols::DateFormatSymbols(
+    # icu::DateFormatSymbols::DateFormatSymbols(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
     sym2 = DateFormatSymbols(Locale.get_us())
 
     # [5]
-    # DateFormatSymbols::DateFormatSymbols(const DateFormatSymbols &)
+    # icu::DateFormatSymbols::DateFormatSymbols(const DateFormatSymbols &)
     sym5 = DateFormatSymbols(sym2)
 
-    # DateFormatSymbols::operator!=(const DateFormatSymbols &other)
+    # icu::DateFormatSymbols::operator!=(const DateFormatSymbols &other)
     assert sym1 != sym2
     assert sym1 != sym5
     assert not (sym2 != sym5)
 
-    # DateFormatSymbols::operator==(const DateFormatSymbols &other)
+    # icu::DateFormatSymbols::operator==(const DateFormatSymbols &other)
     assert not (sym1 == sym2)
     assert not (sym1 == sym5)
     assert sym2 == sym5
@@ -74,7 +74,9 @@ def test_get_am_pm_strings():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getAmPmStrings(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getAmPmStrings(
+    #       int32_t &count
+    # )
     ampms = sym.get_am_pm_strings()
     assert isinstance(ampms, list)
     assert len(ampms) == 2
@@ -82,7 +84,7 @@ def test_get_am_pm_strings():
     assert ampms[0] == "\u5348\u524d"  # 午前
     assert ampms[1] == "\u5348\u5f8c"  # 午後
 
-    # void DateFormatSymbols::setAmPmStrings(
+    # void icu::DateFormatSymbols::setAmPmStrings(
     #       const UnicodeString *ampms,
     #       int32_t count
     # )
@@ -95,7 +97,7 @@ def test_get_era_names():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getEraNames(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getEraNames(int32_t &count)
     era_names = sym.get_era_names()
     assert isinstance(era_names, list)
     assert len(era_names) == 2
@@ -103,7 +105,7 @@ def test_get_era_names():
     assert era_names[0] == "\u7D00\u5143\u524D"  # 紀元前
     assert era_names[1] == "\u897F\u66A6"  # 西暦
 
-    # void DateFormatSymbols::setEraNames(
+    # void icu::DateFormatSymbols::setEraNames(
     #       const UnicodeString *eraNames,
     #       int32_t count
     # )
@@ -116,7 +118,7 @@ def test_get_eras():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getEras(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getEras(int32_t &count)
     eras = sym.get_eras()
     assert isinstance(eras, list)
     assert len(eras) == 2
@@ -124,7 +126,7 @@ def test_get_eras():
     assert eras[0] == "\u7D00\u5143\u524D"  # 紀元前
     assert eras[1] == "\u897F\u66A6"  # 西暦
 
-    # void DateFormatSymbols::setEras(
+    # void icu::DateFormatSymbols::setEras(
     #       const UnicodeString *eras,
     #       int32_t count
     # )
@@ -138,7 +140,7 @@ def test_get_months():
     sym2 = DateFormatSymbols(Locale("und"))
 
     # [1]
-    # const UnicodeString *DateFormatSymbols::getMonths(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getMonths(int32_t &count)
     months1 = sym.get_months()
     assert isinstance(months1, list)
     assert len(months1) == 12
@@ -147,7 +149,7 @@ def test_get_months():
     assert months1[11] == "12\u6708"  # 12月
 
     # [1]
-    # void DateFormatSymbols::setMonths(
+    # void icu::DateFormatSymbols::setMonths(
     #       const UnicodeString *months,
     #       int32_t count
     # )
@@ -156,7 +158,7 @@ def test_get_months():
     assert sym2.get_months() == months1
 
     # [2]
-    # const UnicodeString *DateFormatSymbols::getMonths(
+    # const UnicodeString *icu::DateFormatSymbols::getMonths(
     #       int32_t &count,
     #       DtContextType context,
     #       DtWidthType width
@@ -170,7 +172,7 @@ def test_get_months():
     assert months2[11] == "12\u6708"  # 12月
 
     # [2]
-    # void DateFormatSymbols::setMonths(
+    # void icu::DateFormatSymbols::setMonths(
     #       const UnicodeString *months,
     #       int32_t count,
     #       DtContextType context,
@@ -190,7 +192,9 @@ def test_get_narrow_eras():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getNarrowEras(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getNarrowEras(
+    #       int32_t &count
+    # )
     narrow_eras = sym.get_narrow_eras()
     assert isinstance(narrow_eras, list)
     assert len(narrow_eras) == 2
@@ -198,7 +202,7 @@ def test_get_narrow_eras():
     assert narrow_eras[0] == "BC"
     assert narrow_eras[1] == "AD"
 
-    # void DateFormatSymbols::setNarrowEras(
+    # void icu::DateFormatSymbols::setNarrowEras(
     #       const UnicodeString *narrowEras,
     #       int32_t count
     # )
@@ -211,7 +215,7 @@ def test_get_quarters():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getQuarters(
+    # const UnicodeString *icu::DateFormatSymbols::getQuarters(
     #       int32_t &count,
     #       DtContextType context,
     #       DtWidthType width
@@ -224,7 +228,7 @@ def test_get_quarters():
     assert quarters[0] == "\u7B2C1\u56DB\u534A\u671F"  # 第1四半期
     assert quarters[3] == "\u7B2C4\u56DB\u534A\u671F"  # 第4四半期
 
-    # void DateFormatSymbols::setQuarters(
+    # void icu::DateFormatSymbols::setQuarters(
     #       const UnicodeString *quarters,
     #       int32_t count,
     #       DtContextType context,
@@ -244,7 +248,9 @@ def test_get_short_months():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getShortMonths(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getShortMonths(
+    #       int32_t &count
+    # )
     short_months = sym.get_short_months()
     assert isinstance(short_months, list)
     assert len(short_months) == 12
@@ -252,7 +258,7 @@ def test_get_short_months():
     assert short_months[0] == "1\u6708"  # 1月
     assert short_months[11] == "12\u6708"  # 12月
 
-    # void DateFormatSymbols::setShortMonths(
+    # void icu::DateFormatSymbols::setShortMonths(
     #       const UnicodeString *shortMonths,
     #       int32_t count
     # )
@@ -265,7 +271,9 @@ def test_get_short_weekdays():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getShortWeekdays(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getShortWeekdays(
+    #       int32_t &count
+    # )
     abbrev_weekdays = sym.get_short_weekdays()
     assert isinstance(abbrev_weekdays, list)
     assert len(abbrev_weekdays) == 8
@@ -274,7 +282,7 @@ def test_get_short_weekdays():
     assert abbrev_weekdays[1] == "\u65E5"  # 日
     assert abbrev_weekdays[7] == "\u571F"  # 土
 
-    # void DateFormatSymbols::setShortWeekdays(
+    # void icu::DateFormatSymbols::setShortWeekdays(
     #       const UnicodeString *abbrevWeekdays,
     #       int32_t count
     # )
@@ -288,7 +296,7 @@ def test_get_weekdays():
     sym2 = DateFormatSymbols(Locale("und"))
 
     # [1]
-    # const UnicodeString *DateFormatSymbols::getWeekdays(int32_t &count)
+    # const UnicodeString *icu::DateFormatSymbols::getWeekdays(int32_t &count)
     weekdays1 = sym.get_weekdays()
     assert isinstance(weekdays1, list)
     assert len(weekdays1) == 8
@@ -298,7 +306,7 @@ def test_get_weekdays():
     assert weekdays1[7] == "\u571F\u66DC\u65E5"  # 土曜日
 
     # [1]
-    # void DateFormatSymbols::setWeekdays(
+    # void icu::DateFormatSymbols::setWeekdays(
     #       const UnicodeString *weekdays,
     #       int32_t count
     # )
@@ -307,7 +315,7 @@ def test_get_weekdays():
     assert sym2.get_weekdays() == weekdays1
 
     # [2]
-    # const UnicodeString *DateFormatSymbols::getWeekdays(
+    # const UnicodeString *icu::DateFormatSymbols::getWeekdays(
     #       int32_t &count,
     #       DtContextType context,
     #       DtWidthType width
@@ -322,7 +330,7 @@ def test_get_weekdays():
     assert weekdays2[7] == "\u571F"  # 土
 
     # [2]
-    # void DateFormatSymbols::setWeekdays(
+    # void icu::DateFormatSymbols::setWeekdays(
     #       const UnicodeString *weekdays,
     #       int32_t count,
     #       DtContextType context,
@@ -343,7 +351,7 @@ def test_get_year_names():
     sym = DateFormatSymbols(Locale.get_china())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getYearNames(
+    # const UnicodeString *icu::DateFormatSymbols::getYearNames(
     #       int32_t &count,
     #       DtContextType context,
     #       DtWidthType width
@@ -398,7 +406,7 @@ def test_get_year_names():
     ]
     year_names = [UnicodeString(s) for s in src]
 
-    # void DateFormatSymbols::setYearNames(
+    # void icu::DateFormatSymbols::setYearNames(
     #       const UnicodeString *yearNames,
     #       int32_t count,
     #       DtContextType context,
@@ -419,7 +427,7 @@ def test_get_zodiac_names():
     sym = DateFormatSymbols(Locale.get_china())
     sym2 = DateFormatSymbols(Locale("und"))
 
-    # const UnicodeString *DateFormatSymbols::getZodiacNames(
+    # const UnicodeString *icu::DateFormatSymbols::getZodiacNames(
     #       int32_t &count,
     #       DtContextType context,
     #       DtWidthType width
@@ -436,7 +444,7 @@ def test_get_zodiac_names():
     ]
     zodiac_names = [UnicodeString(s) for s in src]
 
-    # void DateFormatSymbols::setZodiacNames(
+    # void icu::DateFormatSymbols::setZodiacNames(
     #       const UnicodeString *zodiacNames,
     #       int32_t count,
     #       DtContextType context,

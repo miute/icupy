@@ -3,7 +3,9 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 62:
     pytest.skip("ICU4C<62", allow_module_level=True)
+
 import copy
+
 from icupy import Locale, MeasureUnit, TimeUnit
 from icupy.number import NumberFormatter
 
@@ -54,6 +56,7 @@ def test_api():
 def test_clone():
     unit1 = TimeUnit.create_instance(TimeUnit.UTIMEUNIT_MONTH)
 
+    # TimeUnit *icu::TimeUnit::clone()
     unit2 = unit1.clone()
     assert isinstance(unit2, TimeUnit)
     assert unit2 == unit1

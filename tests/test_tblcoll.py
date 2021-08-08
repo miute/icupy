@@ -16,7 +16,9 @@ def test_clone():
     test1 = Collator.create_instance(Locale.get_japanese())
     rules1 = test1.get_rules()
 
+    # RuleBasedCollator *icu::RuleBasedCollator::clone()
     test2 = test1.clone()
+    assert isinstance(test2, RuleBasedCollator)
     rules2 = test2.get_rules()
     assert rules2 == rules1
 
@@ -35,19 +37,21 @@ def test_compare():
     target = UnicodeString("abc")
 
     # [2]
-    # UCollationResult Collator::compare(const char16_t *source,
-    #                                    int32_t sourceLength,
-    #                                    const char16_t *target,
-    #                                    int32_t targetLength,
-    #                                    UErrorCode &status
+    # UCollationResult icu::Collator::compare(
+    #       const char16_t *source,
+    #       int32_t sourceLength,
+    #       const char16_t *target,
+    #       int32_t targetLength,
+    #       UErrorCode &status
     # )
     assert coll.compare("ABC", -1, "abc", -1) == UCollationResult.UCOL_GREATER
 
     # [5]
-    # UCollationResult Collator::compare(const UnicodeString &source,
-    #                                    const UnicodeString &target,
-    #                                    int32_t length,
-    #                                    UErrorCode &status
+    # UCollationResult icu::Collator::compare(
+    #       const UnicodeString &source,
+    #       const UnicodeString &target,
+    #       int32_t length,
+    #       UErrorCode &status
     # )
     assert coll.compare(source, target, 3) == UCollationResult.UCOL_GREATER
     assert coll.compare("ABC", target, 3) == UCollationResult.UCOL_GREATER
@@ -55,9 +59,10 @@ def test_compare():
     assert coll.compare("ABC", "abc", 3) == UCollationResult.UCOL_GREATER
 
     # [6]
-    # UCollationResult Collator::compare(const UnicodeString &source,
-    #                                    const UnicodeString &target,
-    #                                    UErrorCode &status
+    # UCollationResult icu::Collator::compare(
+    #       const UnicodeString &source,
+    #       const UnicodeString &target,
+    #       UErrorCode &status
     # )
     assert coll.compare(source, target) == UCollationResult.UCOL_GREATER
     assert coll.compare("ABC", target) == UCollationResult.UCOL_GREATER
@@ -76,7 +81,7 @@ def test_create_collation_element_iterator():
 
     # [1]
     # CollationElementIterator *
-    # RuleBasedCollator::createCollationElementIterator(
+    # icu::RuleBasedCollator::createCollationElementIterator(
     #       const CharacterIterator &source
     # )
     source = StringCharacterIterator(UnicodeString("cha"))
@@ -102,7 +107,7 @@ def test_create_collation_element_iterator():
 
     # [2]
     # CollationElementIterator *
-    # RuleBasedCollator::createCollationElementIterator(
+    # icu::RuleBasedCollator::createCollationElementIterator(
     #       const UnicodeString &source
     # )
     source = UnicodeString("cha")
@@ -129,15 +134,18 @@ def test_create_collation_element_iterator():
 
 def test_create_instance():
     # [1]
-    # static Collator *Collator::createInstance(const Locale &loc,
-    #                                           UErrorCode &err
+    # static Collator *icu::Collator::createInstance(
+    #       const Locale &loc,
+    #       UErrorCode &err
     # )
     test1 = Collator.create_instance(Locale())
+    assert isinstance(test1, RuleBasedCollator)
     rules1 = test1.get_rules()
 
     # [2]
-    # static Collator *Collator::createInstance(UErrorCode &err)
+    # static Collator *icu::Collator::createInstance(UErrorCode &err)
     test2 = Collator.create_instance()
+    assert isinstance(test2, RuleBasedCollator)
     rules2 = test2.get_rules()
 
     assert rules1 == rules2
@@ -148,6 +156,10 @@ def test_equals():
     source = UnicodeString("ABC")
     target = UnicodeString("abc")
 
+    # UBool icu::Collator::equals(
+    #       const UnicodeString &source,
+    #       const UnicodeString &target
+    # )
     assert not coll.equals(source, target)
     assert not coll.equals("ABC", target)
     assert not coll.equals(source, "abc")
@@ -163,6 +175,11 @@ def test_equals():
 
 def test_get_attribute():
     coll = Collator.create_instance(Locale.get_canada_french())
+
+    # UColAttributeValue icu::RuleBasedCollator::getAttribute(
+    #       UColAttribute attr,
+    #       UErrorCode &status
+    # )
     assert (coll.get_attribute(UColAttribute.UCOL_FRENCH_COLLATION)
             == UColAttributeValue.UCOL_ON)
     assert (coll.get_attribute(UColAttribute.UCOL_ALTERNATE_HANDLING)
@@ -180,6 +197,11 @@ def test_get_attribute():
     assert (coll.get_attribute(UColAttribute.UCOL_NUMERIC_COLLATION)
             == UColAttributeValue.UCOL_STRENGTH_LIMIT)
 
+    # void icu::RuleBasedCollator::setAttribute(
+    #       UColAttribute attr,
+    #       UColAttributeValue value,
+    #       UErrorCode &status
+    # )
     coll.set_attribute(UColAttribute.UCOL_STRENGTH,
                        UColAttributeValue.UCOL_PRIMARY)
     assert (coll.get_attribute(UColAttribute.UCOL_STRENGTH)
@@ -188,7 +210,7 @@ def test_get_attribute():
 
 def test_get_available_locales():
     # [2]
-    # static StringEnumeration *Collator::getAvailableLocales(void)
+    # static StringEnumeration *icu::Collator::getAvailableLocales(void)
     it = Collator.get_available_locales()
     assert isinstance(it, StringEnumeration)
     assert len(it) > 0
@@ -201,25 +223,31 @@ def test_get_bound():
     coll = Collator.create_instance(Locale("sh"))
     source = coll.get_sort_key("Smith", -1)
 
-    # static int32_t Collator::getBound(const uint8_t *source,
-    #                                   int32_t sourceLength,
-    #                                   UColBoundMode boundType,
-    #                                   uint32_t noOfLevels,
-    #                                   uint8_t *result,
-    #                                   int32_t resultLength,
-    #                                   UErrorCode &status
+    # static int32_t icu::Collator::getBound(
+    #       const uint8_t *source,
+    #       int32_t sourceLength,
+    #       UColBoundMode boundType,
+    #       uint32_t noOfLevels,
+    #       uint8_t *result,
+    #       int32_t resultLength,
+    #       UErrorCode &status
     # )
-    result1 = Collator.get_bound(source,
-                                 len(source),
-                                 UColBoundMode.UCOL_BOUND_LOWER,
-                                 1)
-    result2 = Collator.get_bound(source,
-                                 len(source),
-                                 UColBoundMode.UCOL_BOUND_UPPER,
-                                 1)
+    result1 = Collator.get_bound(
+        source,
+        len(source),
+        UColBoundMode.UCOL_BOUND_LOWER,
+        1)
+    result2 = Collator.get_bound(
+        source,
+        len(source),
+        UColBoundMode.UCOL_BOUND_UPPER,
+        1)
     assert isinstance(result1, list)
+    assert isinstance(result2, list)
     assert len(result1) > 0
+    assert len(result2) > 0
     assert all(isinstance(x, int) for x in result1)
+    assert all(isinstance(x, int) for x in result2)
     assert result1 < source
     assert result2 > source
 
@@ -228,28 +256,31 @@ def test_get_collation_key():
     coll = Collator.create_instance(Locale.get_english())
 
     # [1]
-    # CollationKey &Collator::getCollationKey(const char16_t *source,
-    #                                         int32_t sourceLength,
-    #                                         CollationKey &key,
-    #                                         UErrorCode &status
+    # CollationKey &icu::Collator::getCollationKey(
+    #       const char16_t *source,
+    #       int32_t sourceLength,
+    #       CollationKey &key,
+    #       UErrorCode &status
     # )
     key1 = CollationKey()
-    result1 = coll.get_collation_key("ABC", -1, key1)
-    assert isinstance(result1, CollationKey)
-    assert result1 == key1
+    result = coll.get_collation_key("ABC", -1, key1)
+    assert isinstance(result, CollationKey)
+    assert id(result) == id(key1)
 
     # [2]
-    # CollationKey &Collator::getCollationKey(const UnicodeString &source,
-    #                                         CollationKey &key,
-    #                                         UErrorCode &status
+    # CollationKey &icu::Collator::getCollationKey(
+    #       const UnicodeString &source,
+    #       CollationKey &key,
+    #       UErrorCode &status
     # )
     key2 = CollationKey()
-    result2 = coll.get_collation_key(UnicodeString("abc"), key2)
-    assert isinstance(result2, CollationKey)
-    assert result2 == key2
+    result = coll.get_collation_key(UnicodeString("abc"), key2)
+    assert isinstance(result, CollationKey)
+    assert id(result) == id(key2)
 
-    result2 = coll.get_collation_key("abc", key2)
-    assert result2 == key2
+    result = coll.get_collation_key("abc", key2)
+    assert isinstance(result, CollationKey)
+    assert id(result) == id(key2)
 
     assert key1.compare_to(key2) == UCollationResult.UCOL_GREATER
     assert key2.compare_to(key1) == UCollationResult.UCOL_LESS
@@ -264,28 +295,29 @@ def test_get_display_name():
         object_locale = Locale("ja")
 
         # [1]
-        # static UnicodeString &Collator::getDisplayName(
+        # static UnicodeString &icu::Collator::getDisplayName(
         #       const Locale &objectLocale,
         #       const Locale &displayLocale,
         #       UnicodeString &name
         # )
         name1 = UnicodeString()
-        result1 = Collator.get_display_name(object_locale,
-                                            display_locale,
-                                            name1)
-        assert isinstance(result1, UnicodeString)
-        assert result1 == name1
+        result = Collator.get_display_name(
+            object_locale,
+            display_locale,
+            name1)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name1)
         assert name1 == "Japanese"
 
         # [2]
-        # static UnicodeString &Collator::getDisplayName(
+        # static UnicodeString &icu::Collator::getDisplayName(
         #       const Locale &objectLocale,
         #       UnicodeString &name
         # )
         name2 = UnicodeString()
-        result2 = Collator.get_display_name(object_locale, name2)
-        assert isinstance(result2, UnicodeString)
-        assert result2 == name2
+        result = Collator.get_display_name(object_locale, name2)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name2)
         assert name2 == "Japanese"
     finally:
         if default_locale:
@@ -293,7 +325,7 @@ def test_get_display_name():
 
 
 def test_get_equivalent_reorder_codes():
-    # static int32_t Collator::getEquivalentReorderCodes(
+    # static int32_t icu::Collator::getEquivalentReorderCodes(
     #       int32_t reorderCode,
     #       int32_t *dest,
     #       int32_t destCapacity,
@@ -309,7 +341,7 @@ def test_get_equivalent_reorder_codes():
 
 
 def test_get_functional_equivalent():
-    # static Locale Collator::getFunctionalEquivalent(
+    # static Locale icu::Collator::getFunctionalEquivalent(
     #       const char *keyword,
     #       const Locale &locale,
     #       UBool &isAvailable,
@@ -317,24 +349,34 @@ def test_get_functional_equivalent():
     # )
     result, is_available = Collator.get_functional_equivalent(
         "collation",
-        Locale.get_japanese()
-    )
+        Locale.get_japanese())
     assert isinstance(result, Locale)
     assert result == Locale.get_japanese()
     assert is_available
 
 
 def test_get_keywords():
+    # static StringEnumeration *icu::Collator::getKeywords(UErrorCode &status)
     keywords = Collator.get_keywords()
     assert isinstance(keywords, StringEnumeration)
     assert len(keywords) > 0
     assert "collation" in keywords
 
+    # static StringEnumeration *icu::Collator::getKeywordValues(
+    #       const char *keyword,
+    #       UErrorCode &status
+    # )
     values = Collator.get_keyword_values("collation")
-    assert isinstance(keywords, StringEnumeration)
-    assert len(keywords) > 0
+    assert isinstance(values, StringEnumeration)
+    assert len(values) > 0
     assert "standard" in values
 
+    # static StringEnumeration *icu::Collator::getKeywordValuesForLocale(
+    #       const char *keyword,
+    #       const Locale &locale,
+    #       UBool commonlyUsed,
+    #       UErrorCode &status
+    # )
     it = Collator.get_keyword_values_for_locale(
         "collation",
         Locale.get_japanese(),
@@ -346,20 +388,36 @@ def test_get_keywords():
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_get_max_variable():
     coll = Collator.create_instance(Locale.get_japanese())
+
+    # UColReorderCode icu::Collator::getMaxVariable()
     assert (coll.get_max_variable()
             == UColReorderCode.UCOL_REORDER_CODE_PUNCTUATION)
-    weight1 = coll.get_variable_top()
 
+    # uint32_t icu::Collator::getVariableTop(UErrorCode &status)
+    weight1 = coll.get_variable_top()
+    assert isinstance(weight1, int)
+
+    # Collator& icu::Collator::setMaxVariable(
+    #       UColReorderCode group,
+    #       UErrorCode &errorCode
+    # )
     coll.set_max_variable(UColReorderCode.UCOL_REORDER_CODE_CURRENCY)
     assert (coll.get_max_variable()
             == UColReorderCode.UCOL_REORDER_CODE_CURRENCY)
     weight2 = coll.get_variable_top()
+    assert isinstance(weight2, int)
 
     assert weight1 != weight2
 
 
 def test_get_reorder_codes():
     coll = Collator.create_instance(Locale.get_japanese())
+
+    # int32_t icu::Collator::getReorderCodes(
+    #       int32_t *dest,
+    #       int32_t destCapacity,
+    #       UErrorCode &status
+    # )
     dest = coll.get_reorder_codes()
     assert isinstance(dest, list)
     assert dest == [
@@ -368,6 +426,11 @@ def test_get_reorder_codes():
         UScriptCode.USCRIPT_HAN,
     ]
 
+    # void icu::Collator::setReorderCodes(
+    #       const int32_t *reorderCodes,
+    #       int32_t reorderCodesLength,
+    #       UErrorCode &status
+    # )
     reorder_codes = [
         UScriptCode.USCRIPT_HAN,
         UScriptCode.USCRIPT_KATAKANA,
@@ -382,13 +445,14 @@ def test_get_rules():
     coll = Collator.create_instance(Locale.get_japanese())
 
     # [1]
-    # UnicodeString &RuleBasedCollator::getRules()
+    # UnicodeString &icu::RuleBasedCollator::getRules()
     rules1 = coll.get_rules()
     assert isinstance(rules1, UnicodeString)
 
     # [2]
-    # void RuleBasedCollator::getRules(UColRuleOption delta,
-    #                                  UnicodeString &buffer
+    # void icu::RuleBasedCollator::getRules(
+    #       UColRuleOption delta,
+    #       UnicodeString &buffer
     # )
     rules2 = UnicodeString()
     coll.get_rules(UColRuleOption.UCOL_TAILORING_ONLY, rules2)
@@ -403,10 +467,11 @@ def test_get_sort_key():
     coll = Collator.create_instance(Locale.get_japanese())
 
     # [1]
-    # int32_t Collator::getSortKey(const char16_t *source,
-    #                              int32_t sourceLength,
-    #                              uint8_t *result,
-    #                              int32_t resultLength
+    # int32_t icu::Collator::getSortKey(
+    #       const char16_t *source,
+    #       int32_t sourceLength,
+    #       uint8_t *result,
+    #       int32_t resultLength
     # )
     result1 = coll.get_sort_key("ABC", -1)
     assert isinstance(result1, list)
@@ -414,9 +479,10 @@ def test_get_sort_key():
     assert all(isinstance(x, int) for x in result1)
 
     # [2]
-    # int32_t Collator::getSortKey(const UnicodeString &source,
-    #                              uint8_t *result,
-    #                              int32_t resultLength
+    # int32_t icu::Collator::getSortKey(
+    #       const UnicodeString &source,
+    #       uint8_t *result,
+    #       int32_t resultLength
     # )
     result2 = coll.get_sort_key(UnicodeString("abc"))
     assert isinstance(result2, list)
@@ -431,17 +497,22 @@ def test_get_sort_key():
 
 def test_get_tailored_set():
     coll1 = Collator.create_instance(Locale.get_english())
-    uset1 = coll1.get_tailored_set()
-    assert isinstance(uset1, UnicodeSet)
-    assert len(uset1) == 0
+
+    # UnicodeSet *icu::Collator::getTailoredSet(UErrorCode &status)
+    uniset1 = coll1.get_tailored_set()
+    assert isinstance(uniset1, UnicodeSet)
+    assert len(uniset1) == 0
 
     coll2 = Collator.create_instance(Locale.get_japanese())
-    uset2 = coll2.get_tailored_set()
-    assert len(uset2) > 0
+    uniset2 = coll2.get_tailored_set()
+    assert isinstance(uniset2, UnicodeSet)
+    assert len(uniset2) > 0
 
 
 def test_get_version():
     coll = Collator.create_instance(Locale.get_japanese())
+
+    # void icu::Collator::getVersion(UVersionInfo info)
     info = coll.get_version()
     assert isinstance(info, list)
     assert len(info) == 4
@@ -454,6 +525,10 @@ def test_greater():
     source = UnicodeString("ABC")
     target = UnicodeString("abc")
 
+    # UBool icu::Collator::greater(
+    #       const UnicodeString &source,
+    #       const UnicodeString &target
+    # )
     assert coll.greater(source, target)
     assert coll.greater("ABC", target)
     assert coll.greater(source, "abc")
@@ -472,6 +547,10 @@ def test_greater_or_equal():
     source = UnicodeString("ABC")
     target = UnicodeString("abc")
 
+    # UBool icu::Collator::greaterOrEqual(
+    #       const UnicodeString &source,
+    #       const UnicodeString &target
+    # )
     assert coll.greater_or_equal(source, target)
     assert coll.greater_or_equal("ABC", target)
     assert coll.greater_or_equal(source, "abc")
@@ -489,6 +568,8 @@ def test_hash_code():
     coll1 = Collator.create_instance(Locale.get_english())
     coll2 = Collator.create_instance(Locale("da", "DK", ""))
     coll3 = Collator.create_instance(Locale.get_english())
+
+    # int32_t icu::Collator::hashCode(void)
     assert coll1.hash_code() != coll2.hash_code()
     assert coll1.hash_code() == coll3.hash_code()
     assert coll2.hash_code() != coll3.hash_code()
@@ -498,70 +579,81 @@ def test_operator():
     coll1 = Collator.create_instance(Locale.get_english())
     coll2 = Collator.create_instance(Locale("da", "DK", ""))
     coll3 = Collator.create_instance(Locale.get_english())
+
+    # UBool icu::Collator::operator!=(const Collator &other)
     assert coll1 != coll2
+
+    # UBool icu::Collator::operator==(const Collator &other)
     assert coll1 == coll3
     assert coll2 != coll3
 
 
 def test_rule_based_collator():
+    assert issubclass(RuleBasedCollator, Collator)
+
     base = Collator.create_instance(Locale.get_japanese())
     rules = base.get_rules()
     assert len(rules) > 0
 
     # [1]
-    # RuleBasedCollator::RuleBasedCollator(const UnicodeString &rules,
-    #                                      UErrorCode &status
+    # icu::RuleBasedCollator::RuleBasedCollator(
+    #       const UnicodeString &rules,
+    #       UErrorCode &status
     # )
     test1 = RuleBasedCollator(rules)
     rules1 = test1.get_rules()
     assert rules1 == rules
 
     # [2]
-    # RuleBasedCollator::RuleBasedCollator(
+    # icu::RuleBasedCollator::RuleBasedCollator(
     #       const UnicodeString &rules,
     #       ECollationStrength collationStrength,
     #       UErrorCode &status
     # )
-    test2 = RuleBasedCollator(rules,
-                              Collator.ECollationStrength.TERTIARY)
+    test2 = RuleBasedCollator(
+        rules,
+        Collator.ECollationStrength.TERTIARY)
     rules2 = test2.get_rules()
     assert rules2 == rules
 
     # [3]
-    # RuleBasedCollator::RuleBasedCollator(
+    # icu::RuleBasedCollator::RuleBasedCollator(
     #       const UnicodeString &rules,
     #       UColAttributeValue decompositionMode,
     #       UErrorCode &status
     # )
-    test3 = RuleBasedCollator(rules,
-                              UColAttributeValue.UCOL_ON)
+    test3 = RuleBasedCollator(
+        rules,
+        UColAttributeValue.UCOL_ON)
     rules3 = test3.get_rules()
     assert rules3 == rules
 
     # [4]
-    # RuleBasedCollator::RuleBasedCollator(
+    # icu::RuleBasedCollator::RuleBasedCollator(
     #       const UnicodeString &rules,
     #       ECollationStrength collationStrength,
     #       UColAttributeValue decompositionMode,
     #       UErrorCode &status
     # )
-    test4 = RuleBasedCollator(rules,
-                              Collator.ECollationStrength.TERTIARY,
-                              UColAttributeValue.UCOL_ON)
+    test4 = RuleBasedCollator(
+        rules,
+        Collator.ECollationStrength.TERTIARY,
+        UColAttributeValue.UCOL_ON)
     rules4 = test4.get_rules()
     assert rules4 == rules
 
     # [6]
-    # RuleBasedCollator::RuleBasedCollator(const RuleBasedCollator &other)
+    # icu::RuleBasedCollator::RuleBasedCollator(const RuleBasedCollator &other)
     test6 = RuleBasedCollator(test1)
     rules6 = test6.get_rules()
     assert rules6 == rules
 
     # [7]
-    # RuleBasedCollator::RuleBasedCollator(const uint8_t *bin,
-    #                                      int32_t length,
-    #                                      const RuleBasedCollator *base,
-    #                                      UErrorCode &status
+    # icu::RuleBasedCollator::RuleBasedCollator(
+    #       const uint8_t *bin,
+    #       int32_t length,
+    #       const RuleBasedCollator *base,
+    #       UErrorCode &status
     # )
     # buffer = test1.clone_binary()
     # assert isinstance(buffer, list)

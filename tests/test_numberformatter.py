@@ -5,6 +5,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 60:
     pytest.skip("ICU4C<60", allow_module_level=True)
+
 from icupy import (
     CurrencyUnit, DecimalFormatSymbols, ErrorCode, Format, Formattable,
     INT32_MAX, Locale, MeasureUnit, UCurrencyUsage, UErrorCode,

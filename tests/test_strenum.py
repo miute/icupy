@@ -4,12 +4,21 @@ from icupy import Locale, UnicodeString, StringEnumeration
 
 
 def test_clone():
+    # StringEnumeration *icu::Locale::createKeywords(UErrorCode &status)
     loc = Locale("de@calendar=buddhist;collation=phonebook")
     it1 = loc.create_keywords()
     assert isinstance(it1, StringEnumeration)
-    assert len(it1) == 2
+
+    # int32_t icu::StringEnumeration::count(UErrorCode &status)
+    assert it1.count() == len(it1) == 2
+
+    # const char *icu::StringEnumeration::next(
+    #       int32_t *resultLength,
+    #       UErrorCode &status
+    # )
     assert it1.next() is not None
 
+    # StringEnumeration *icu::StringEnumeration::clone()
     it2 = it1.clone()
     assert isinstance(it2, StringEnumeration)
     assert len(it2) == 2
@@ -41,6 +50,10 @@ def test_next():
     assert it.count() == 2
     assert len(it) == 2
 
+    # const char *icu::StringEnumeration::next(
+    #       int32_t *resultLength,
+    #       UErrorCode &status
+    # )
     result = it.next()
     assert isinstance(result, str)
     assert result in ["calendar", "collation"]
@@ -71,7 +84,10 @@ def test_operator():
     it2 = loc2.create_keywords()
     assert isinstance(it2, StringEnumeration)
 
+    # UBool icu::StringEnumeration::operator!=(const StringEnumeration &that)
     assert not (it1 != it2)
+
+    # UBool icu::StringEnumeration::operator==(const StringEnumeration &that)
     assert it1 == it2
 
 
@@ -84,12 +100,11 @@ def test_reset():
 
     _ = it.next()
     _ = it.next()
-    result = it.next()
-    assert result is None
+    assert it.next() is None
 
+    # void icu::StringEnumeration::reset(UErrorCode &status)
     it.reset()
-    result = it.next()
-    assert result is not None
+    assert it.next() is not None
 
 
 def test_snext():
@@ -99,6 +114,7 @@ def test_snext():
     assert it.count() == 2
     assert len(it) == 2
 
+    # const UnicodeString *icu::StringEnumeration::snext(UErrorCode &status)
     result = it.snext()
     assert isinstance(result, UnicodeString)
     assert str(result) in ["calendar", "collation"]
@@ -129,6 +145,10 @@ def test_unext():
     assert it.count() == 2
     assert len(it) == 2
 
+    # const char16_t *icu::StringEnumeration::unext(
+    #       int32_t *resultLength,
+    #       UErrorCode &status
+    # )
     result = it.unext()
     assert isinstance(result, str)
     assert result in ["calendar", "collation"]

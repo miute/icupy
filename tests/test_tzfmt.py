@@ -5,6 +5,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
+
 from icupy import (
     FieldPosition, FieldPositionIterator, Format, Formattable, ICUException,
     Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames,
@@ -17,7 +18,7 @@ from icupy import (
 def test_api():
     assert issubclass(TimeZoneFormat, Format)
 
-    # static TimeZoneFormat *TimeZoneFormat::createInstance(
+    # static TimeZoneFormat *icu::TimeZoneFormat::createInstance(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
@@ -28,17 +29,17 @@ def test_api():
     assert isinstance(fmt2, TimeZoneFormat)
     assert isinstance(fmt3, TimeZoneFormat)
 
-    # TimeZoneFormat::operator!=()
+    # UBool icu::Format::operator!=(const Format &other)
     assert not (fmt1 != fmt2)
     assert fmt1 != fmt3
     assert fmt2 != fmt3
 
-    # TimeZoneFormat::operator==()
+    # UBool icu::TimeZoneFormat::operator==(const Format &other)
     assert fmt1 == fmt2
     assert not (fmt1 == fmt3)
     assert not (fmt2 == fmt3)
 
-    # UnicodeString &TimeZoneFormat::formatOffsetLocalizedGMT(
+    # UnicodeString &icu::TimeZoneFormat::formatOffsetLocalizedGMT(
     #       int32_t offset,
     #       UnicodeString &result,
     #       UErrorCode &status
@@ -49,24 +50,26 @@ def test_api():
     assert id(result) == id(string)
     assert result == "GMT-08:30"
 
-    # uint32_t TimeZoneFormat::getDefaultParseOptions(void)
+    # uint32_t icu::TimeZoneFormat::getDefaultParseOptions(void)
     assert (fmt2.get_default_parse_options()
             == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
 
-    # void TimeZoneFormat::setDefaultParseOptions(uint32_t flags)
+    # void icu::TimeZoneFormat::setDefaultParseOptions(uint32_t flags)
     fmt2.set_default_parse_options(
         UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
     assert (fmt2.get_default_parse_options()
             == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
 
-    # UnicodeString &TimeZoneFormat::getGMTOffsetDigits(UnicodeString &digits)
+    # UnicodeString &icu::TimeZoneFormat::getGMTOffsetDigits(
+    #       UnicodeString &digits
+    # )
     digits = UnicodeString()
     result = fmt2.get_gmt_offset_digits(digits)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(digits)
     assert result == "0123456789"
 
-    # void TimeZoneFormat::setGMTOffsetDigits(
+    # void icu::TimeZoneFormat::setGMTOffsetDigits(
     #       const UnicodeString &digits,
     #       UErrorCode &status
     # )
@@ -76,7 +79,7 @@ def test_api():
     fmt2.set_gmt_offset_digits("0123456789")
     assert fmt2.get_gmt_offset_digits(digits) == "0123456789"
 
-    # UnicodeString &TimeZoneFormat::getGMTOffsetPattern(
+    # UnicodeString &icu::TimeZoneFormat::getGMTOffsetPattern(
     #       UTimeZoneFormatGMTOffsetPatternType type,
     #       UnicodeString &pattern
     # )
@@ -88,7 +91,7 @@ def test_api():
     assert id(result) == id(pattern)
     assert result == "+HH:mm"
 
-    # void TimeZoneFormat::setGMTOffsetPattern(
+    # void icu::TimeZoneFormat::setGMTOffsetPattern(
     #       UTimeZoneFormatGMTOffsetPatternType type,
     #       const UnicodeString &pattern,
     #       UErrorCode &status
@@ -107,13 +110,13 @@ def test_api():
         UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
         pattern) == "+HH:mm"
 
-    # UnicodeString &TimeZoneFormat::getGMTPattern(UnicodeString &pattern)
+    # UnicodeString &icu::TimeZoneFormat::getGMTPattern(UnicodeString &pattern)
     result = fmt2.get_gmt_pattern(pattern)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(pattern)
     assert result == "GMT{0}"
 
-    # void TimeZoneFormat::setGMTPattern(
+    # void icu::TimeZoneFormat::setGMTPattern(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
@@ -123,7 +126,7 @@ def test_api():
     fmt2.set_gmt_pattern("GMT{0}")
     assert fmt2.get_gmt_pattern(pattern) == "GMT{0}"
 
-    # UnicodeString &TimeZoneFormat::getGMTZeroFormat(
+    # UnicodeString &icu::TimeZoneFormat::getGMTZeroFormat(
     #       UnicodeString &gmtZeroFormat
     # )
     gmt_zero_format = UnicodeString()
@@ -132,7 +135,7 @@ def test_api():
     assert id(result) == id(gmt_zero_format)
     assert result == "GMT"
 
-    # void TimeZoneFormat::setGMTZeroFormat(
+    # void icu::TimeZoneFormat::setGMTZeroFormat(
     #       const UnicodeString &gmtZeroFormat,
     #       UErrorCode &status
     # )
@@ -142,17 +145,17 @@ def test_api():
     fmt2.set_gmt_zero_format("GMT")
     assert fmt2.get_gmt_zero_format(gmt_zero_format) == "GMT"
 
-    # const TimeZoneNames *TimeZoneFormat::getTimeZoneNames()
+    # const TimeZoneNames *icu::TimeZoneFormat::getTimeZoneNames()
     tzn = fmt2.get_time_zone_names()
     assert isinstance(tzn, TimeZoneNames)
 
-    # void TimeZoneFormat::setTimeZoneNames(const TimeZoneNames &tznames)
+    # void icu::TimeZoneFormat::setTimeZoneNames(const TimeZoneNames &tznames)
     tznames = TimeZoneNames.create_instance("ja")
     assert tznames != tzn
     fmt2.set_time_zone_names(tznames)
     assert fmt2.get_time_zone_names() == tznames
 
-    # int32_t TimeZoneFormat::parseOffsetISO8601(
+    # int32_t icu::TimeZoneFormat::parseOffsetISO8601(
     #       const UnicodeString &text,
     #       ParsePosition &pos
     # )
@@ -166,7 +169,7 @@ def test_api():
     assert pos.get_error_index() == -1
     assert result == -8.5 * HOUR
 
-    # int32_t TimeZoneFormat::parseOffsetLocalizedGMT(
+    # int32_t icu::TimeZoneFormat::parseOffsetLocalizedGMT(
     #       const UnicodeString &text,
     #       ParsePosition &pos
     # )
@@ -182,6 +185,7 @@ def test_api():
 
 
 def test_clone():
+    # TimeZoneFormat *icu::TimeZoneFormat::clone()
     fmt1 = TimeZoneFormat.create_instance("en")
 
     fmt2 = fmt1.clone()
@@ -205,7 +209,7 @@ def test_format():
     date = 1358208000000.0  # 2013-01-15T00:00:00Z
 
     # [1]
-    # UnicodeString &TimeZoneFormat::format(
+    # UnicodeString &icu::TimeZoneFormat::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       FieldPosition &pos,
@@ -219,7 +223,7 @@ def test_format():
     assert result == "GMT+09:00"
 
     # [3]
-    # UnicodeString &TimeZoneFormat::format(
+    # UnicodeString &icu::TimeZoneFormat::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       FieldPositionIterator *posIter,
@@ -232,7 +236,7 @@ def test_format():
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
-    # UnicodeString &TimeZoneFormat::format(
+    # UnicodeString &icu::TimeZoneFormat::format(
     #       const Formattable &obj,
     #       UnicodeString &appendTo,
     #       UErrorCode &status
@@ -244,7 +248,7 @@ def test_format():
     assert result == "GMT+09:00"
 
     # [5]
-    # UnicodeString &TimeZoneFormat::format(
+    # UnicodeString &icu::TimeZoneFormat::format(
     #       UTimeZoneFormatStyle style,
     #       const TimeZone &tz,
     #       UDate date,
@@ -292,7 +296,7 @@ def test_icu_51():
     offset = int(-8.5 * HOUR)
     result = UnicodeString()
 
-    # UnicodeString &TimeZoneFormat::formatOffsetISO8601Basic(
+    # UnicodeString &icu::TimeZoneFormat::formatOffsetISO8601Basic(
     #       int32_t offset,
     #       UBool useUtcIndicator,
     #       UBool isShort,
@@ -310,7 +314,7 @@ def test_icu_51():
     assert id(result) == id(string)
     assert result == "-0830"
 
-    # UnicodeString &TimeZoneFormat::formatOffsetISO8601Extended(
+    # UnicodeString &icu::TimeZoneFormat::formatOffsetISO8601Extended(
     #       int32_t offset,
     #       UBool useUtcIndicator,
     #       UBool isShort,
@@ -328,7 +332,7 @@ def test_icu_51():
     assert id(result) == id(string)
     assert result == "-08:30"
 
-    # UnicodeString &TimeZoneFormat::formatOffsetShortLocalizedGMT(
+    # UnicodeString &icu::TimeZoneFormat::formatOffsetShortLocalizedGMT(
     #       int32_t offset,
     #       UnicodeString &result,
     #       UErrorCode &status
@@ -340,7 +344,7 @@ def test_icu_51():
     assert id(result) == id(string)
     assert result == "GMT-8:30"
 
-    # int32_t TimeZoneFormat::parseOffsetShortLocalizedGMT(
+    # int32_t icu::TimeZoneFormat::parseOffsetShortLocalizedGMT(
     #       const UnicodeString &text,
     #       ParsePosition &pos
     # )
@@ -364,7 +368,7 @@ def test_parse():
     tzid = UnicodeString()
 
     # [1]
-    # TimeZone *TimeZoneFormat::parse(
+    # TimeZone *icu::TimeZoneFormat::parse(
     #       UTimeZoneFormatStyle style,
     #       const UnicodeString &text,
     #       ParsePosition &pos,
@@ -433,7 +437,7 @@ def test_parse():
     assert tz is None
 
     # [2]
-    # TimeZone *TimeZoneFormat::parse(
+    # TimeZone *icu::TimeZoneFormat::parse(
     #       UTimeZoneFormatStyle style,
     #       const UnicodeString &text,
     #       ParsePosition &pos,
@@ -551,7 +555,7 @@ def test_parse_upcasting():
 def test_parse_object():
     fmt = TimeZoneFormat.create_instance("en")
 
-    # void TimeZoneFormat::parseObject(
+    # void icu::TimeZoneFormat::parseObject(
     #       const UnicodeString &source,
     #       Formattable &result,
     #       ParsePosition &parse_pos
@@ -581,7 +585,7 @@ def test_parse_object():
     assert tz.get_dst_savings() == 1 * HOUR
 
     # [2]
-    # void Format::parseObject(
+    # void icu::Format::parseObject(
     #       const UnicodeString &source,
     #       Formattable &result,
     #       UErrorCode &status

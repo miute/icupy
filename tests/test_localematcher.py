@@ -3,6 +3,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 65:
     pytest.skip("ICU4C<65", allow_module_level=True)
+
 from icupy import (
     ErrorCode, Locale, LocaleMatcher, UErrorCode, ULocMatchDemotion,
     ULocMatchFavorSubtag,
@@ -12,6 +13,13 @@ from icupy import (
 def test_builder():
     locales = [Locale("fr"), Locale("en_GB"), Locale("en")]
 
+    # icu::LocaleMatcher::Builder::Builder()
+    #
+    # Builder &icu::LocaleMatcher::Builder::addSupportedLocale(
+    #       const Locale &locale
+    # )
+    #
+    # LocaleMatcher icu::LocaleMatcher::Builder::build(UErrorCode &errorCode)
     matcher = (LocaleMatcher.Builder()
                .add_supported_locale(locales[0])
                .add_supported_locale("en_GB")
@@ -20,7 +28,7 @@ def test_builder():
     assert isinstance(matcher, LocaleMatcher)
 
     # [1]
-    # const Locale *LocaleMatcher::getBestMatch(
+    # const Locale *icu::LocaleMatcher::getBestMatch(
     #       const Locale &desiredLocale,
     #       UErrorCode &errorCode
     # )
@@ -28,8 +36,12 @@ def test_builder():
     assert matcher.get_best_match("en_US") == Locale("en")
 
     # [2]
-    # Builder &LocaleMatcher::Builder::setSupportedLocales(
+    # Builder &icu::LocaleMatcher::Builder::setSupportedLocales(
     #       Locale::Iterator &locales
+    # )
+    #
+    # Builder &icu::LocaleMatcher::Builder::setDefaultLocale(
+    #       const Locale *defaultLocale
     # )
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales(locales)
@@ -38,6 +50,9 @@ def test_builder():
     assert matcher.get_best_match(Locale("ja_JP")) == Locale("de")
     assert matcher.get_best_match("ja_JP") == Locale("de")
 
+    # Builder &icu::LocaleMatcher::Builder::setDemotionPerDesiredLocale(
+    #       ULocMatchDemotion demotion
+    # )
     supported = [Locale("fr"), Locale("de-CH"), Locale("it")]
     desired = [Locale("fr-CH"), Locale("de-CH"), Locale("it")]
     matcher = (LocaleMatcher.Builder()
@@ -47,12 +62,15 @@ def test_builder():
                .build())
 
     # [2]
-    # const Locale *LocaleMatcher::getBestMatch(
+    # const Locale *icu::LocaleMatcher::getBestMatch(
     #       Locale::Iterator &desiredLocales,
     #       UErrorCode &errorCode
     # )
     assert matcher.get_best_match(desired) == Locale("de_CH")
 
+    # Builder &icu::LocaleMatcher::Builder::setFavorSubtag(
+    #       ULocMatchFavorSubtag subtag
+    # )
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales(locales)
                .set_favor_subtag(ULocMatchFavorSubtag.ULOCMATCH_FAVOR_SCRIPT)
@@ -60,6 +78,9 @@ def test_builder():
     assert matcher.get_best_match(Locale("ja")) == Locale("fr")
     assert matcher.get_best_match("ja") == Locale("fr")
 
+    # Builder &icu::LocaleMatcher::Builder::setSupportedLocalesFromListString(
+    #       StringPiece locales
+    # )
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales_from_list_string(
         " el, fr;q=0.555555, en-GB ; q = 0.88  , el; q =0, en;q=0.88 , fr ")
@@ -68,7 +89,7 @@ def test_builder():
         "el, fr, fr;q=0, en-GB") == Locale("en_GB")
     assert matcher.get_best_match(Locale("en_US")) == Locale("en")
 
-    # UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode)
+    # UBool icu::LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode)
     bld = LocaleMatcher.Builder().set_supported_locales(locales)
     bld.build()
     out_error_code = ErrorCode()
@@ -80,6 +101,9 @@ def test_builder():
 def test_builder_set_direction():
     from icupy import ULocMatchDirection
 
+    # Builder &icu::LocaleMatcher::Builder::setDirection(
+    #       ULocMatchDirection direction
+    # )
     supported = [Locale("ar"), Locale("nn")]
     desired = [Locale("arz-EG"), Locale("nb-DK")]
     matcher = (LocaleMatcher.Builder()
@@ -92,6 +116,10 @@ def test_builder_set_direction():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_builder_set_max_distance():
+    # Builder &icu::LocaleMatcher::Builder::setMaxDistance(
+    #       const Locale &desired,
+    #       const Locale &supported
+    # )
     matcher = (LocaleMatcher.Builder()
                .set_max_distance(Locale("de-AT"), Locale.get_german())
                .build())
@@ -118,6 +146,7 @@ def test_builder_set_max_distance():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_builder_set_no_default_locale():
+    # Builder &icu::LocaleMatcher::Builder::setNoDefaultLocale()
     locales = [Locale("fr"), Locale("en_GB"), Locale("en")]
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales(locales)
@@ -129,7 +158,7 @@ def test_builder_set_no_default_locale():
     assert matcher.get_best_match("ja_JP") is None
 
 
-def test_result():
+def test_get_best_match_result():
     locales = [Locale("fr"), Locale("en-GB")]
     matcher = (LocaleMatcher.Builder()
                .set_supported_locales(locales)
@@ -138,7 +167,7 @@ def test_result():
                .build())
 
     # [1]
-    # Result LocaleMatcher::getBestMatchResult(
+    # Result icu::LocaleMatcher::getBestMatchResult(
     #       const Locale &desiredLocale,
     #       UErrorCode &errorCode
     # )
@@ -161,7 +190,7 @@ def test_result():
     assert result.make_resolved_locale() == Locale("de")
 
     # [2]
-    # Result LocaleMatcher::getBestMatchResult(
+    # Result icu::LocaleMatcher::getBestMatchResult(
     #       Locale::Iterator &desiredLocales,
     #       UErrorCode &errorCode
     # )
