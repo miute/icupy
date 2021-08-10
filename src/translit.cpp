@@ -63,9 +63,34 @@ void init_translit(py::module &m) {
         },
         py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
       .def_static(
+          // const char16_t *id -> const UnicodeString &id
+          "create_from_rules",
+          [](const char16_t *id, const UnicodeString &rules, UTransDirection dir, UParseError &parse_error) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
+      .def_static(
           // const char16_t *rules -> const UnicodeString &rules
           "create_from_rules",
           [](const UnicodeString &id, const char16_t *rules, UTransDirection dir, UParseError &parse_error) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
+      .def_static(
+          // const char16_t *id -> const UnicodeString &id
+          // const char16_t *rules -> const UnicodeString &rules
+          "create_from_rules",
+          [](const char16_t *id, const char16_t *rules, UTransDirection dir, UParseError &parse_error) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
@@ -86,8 +111,32 @@ void init_translit(py::module &m) {
         },
         py::arg("id_"), py::arg("dir_"))
       .def_static(
+          // const char16_t *id -> const UnicodeString &id
+          "create_instance",
+          [](const char16_t *id, UTransDirection dir) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = Transliterator::createInstance(id, dir, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("id_"), py::arg("dir_"))
+      .def_static(
           "create_instance",
           [](const UnicodeString &id, UTransDirection dir, UParseError &parse_error) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("id_"), py::arg("dir_"), py::arg("parse_error"))
+      .def_static(
+          // const char16_t *id -> const UnicodeString &id
+          "create_instance",
+          [](const char16_t *id, UTransDirection dir, UParseError &parse_error) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {

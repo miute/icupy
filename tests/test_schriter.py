@@ -246,6 +246,11 @@ def test_set_text():
     it.get_text(result)
     assert result == "foo bar baz"
 
+    new_text = "a\U0001f338b"
+    it.set_text(new_text)
+    it.get_text(result)
+    assert result == new_text
+
 
 def test_string_character_iterator():
     assert issubclass(CharacterIterator, ForwardCharacterIterator)
@@ -267,6 +272,13 @@ def test_string_character_iterator():
     it1.get_text(dest)
     assert dest == expected
 
+    it1a = StringCharacterIterator("a\U0001f338b")
+    assert it1a.get_length() == 4
+    assert len(it1a) == 4
+    dest.remove()
+    it1a.get_text(dest)
+    assert dest == expected
+
     # [2]
     # icu::StringCharacterIterator::StringCharacterIterator(
     #       const UnicodeString &textStr,
@@ -279,6 +291,14 @@ def test_string_character_iterator():
     it2.get_text(dest)
     assert dest == expected
     assert it2.current() == 0xdf38
+
+    it2a = StringCharacterIterator("a\U0001f338b", 2)
+    assert it2a.get_length() == 4
+    assert len(it2a) == 4
+    dest.remove()
+    it2a.get_text(dest)
+    assert dest == expected
+    assert it2a.current() == 0xdf38
 
     # [3]
     # icu::StringCharacterIterator::StringCharacterIterator(
@@ -294,12 +314,20 @@ def test_string_character_iterator():
     it3.get_text(dest)
     assert dest == expected
     assert it3.current() == 0xd83c
-    c = it3.next()
-    assert c == 0xdf38
-    c = it3.next()
-    assert c == StringCharacterIterator.DONE
-    c = it3.first()
-    assert c == 0xd83c
+    assert it3.next() == 0xdf38
+    assert it3.next() == StringCharacterIterator.DONE
+    assert it3.first() == 0xd83c
+
+    it3a = StringCharacterIterator("a\U0001f338b", 1, 3, 0)
+    assert it3a.get_length() == 4
+    assert len(it3a) == 4
+    dest.remove()
+    it3a.get_text(dest)
+    assert dest == expected
+    assert it3a.current() == 0xd83c
+    assert it3a.next() == 0xdf38
+    assert it3a.next() == StringCharacterIterator.DONE
+    assert it3a.first() == 0xd83c
 
     # [4]
     # icu::StringCharacterIterator::StringCharacterIterator(

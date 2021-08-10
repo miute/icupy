@@ -131,6 +131,14 @@ def test_create_collation_element_iterator():
 
     assert list(it2) == [order1, order2, order3]
 
+    it2a = coll.create_collation_element_iterator("cha")
+    assert isinstance(it2a, CollationElementIterator)
+
+    assert it2a.next() == order1
+    assert it2a.next() == order2
+    assert it2a.next() == order3
+    assert it2a.next() == CollationElementIterator.NULLORDER
+
 
 def test_create_instance():
     # [1]
@@ -601,8 +609,10 @@ def test_rule_based_collator():
     #       UErrorCode &status
     # )
     test1 = RuleBasedCollator(rules)
-    rules1 = test1.get_rules()
-    assert rules1 == rules
+    assert test1.get_rules() == rules
+
+    test1a = RuleBasedCollator(str(rules))
+    assert test1a.get_rules() == rules
 
     # [2]
     # icu::RuleBasedCollator::RuleBasedCollator(
@@ -613,8 +623,12 @@ def test_rule_based_collator():
     test2 = RuleBasedCollator(
         rules,
         Collator.ECollationStrength.TERTIARY)
-    rules2 = test2.get_rules()
-    assert rules2 == rules
+    assert test2.get_rules() == rules
+
+    test2a = RuleBasedCollator(
+        str(rules),
+        Collator.TERTIARY)
+    assert test2a.get_rules() == rules
 
     # [3]
     # icu::RuleBasedCollator::RuleBasedCollator(
@@ -625,8 +639,12 @@ def test_rule_based_collator():
     test3 = RuleBasedCollator(
         rules,
         UColAttributeValue.UCOL_ON)
-    rules3 = test3.get_rules()
-    assert rules3 == rules
+    assert test3.get_rules() == rules
+
+    test3a = RuleBasedCollator(
+        str(rules),
+        UColAttributeValue.UCOL_ON)
+    assert test3a.get_rules() == rules
 
     # [4]
     # icu::RuleBasedCollator::RuleBasedCollator(
@@ -639,14 +657,18 @@ def test_rule_based_collator():
         rules,
         Collator.ECollationStrength.TERTIARY,
         UColAttributeValue.UCOL_ON)
-    rules4 = test4.get_rules()
-    assert rules4 == rules
+    assert test4.get_rules() == rules
+
+    test4a = RuleBasedCollator(
+        str(rules),
+        Collator.ECollationStrength.TERTIARY,
+        UColAttributeValue.UCOL_ON)
+    assert test4a.get_rules() == rules
 
     # [6]
     # icu::RuleBasedCollator::RuleBasedCollator(const RuleBasedCollator &other)
     test6 = RuleBasedCollator(test1)
-    rules6 = test6.get_rules()
-    assert rules6 == rules
+    assert test6.get_rules() == rules
 
     # [7]
     # icu::RuleBasedCollator::RuleBasedCollator(

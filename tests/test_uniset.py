@@ -218,6 +218,14 @@ def test_apply_pattern():
     assert test1.contains(0x41, 0x5a)
     assert test1.contains(0x61, 0x7a)
 
+    pos = ParsePosition()
+    result = test1.apply_pattern("[0-9]", pos, options, None)
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test1)
+    assert pos.get_index() == 5
+    assert test1.size() == 10  # [0-9]
+    assert test1.contains(0x30, 0x39)
+
     with pytest.raises(ICUException) as exc_info:
         test1.apply_pattern(UnicodeString(), pos, options, None)
     assert exc_info.value.args[0] == UErrorCode.U_MALFORMED_SET
@@ -233,6 +241,12 @@ def test_apply_pattern():
     assert id(result) == id(test2)
     assert test2.size() == 26 + 1  # [a-z{ab}]
     assert test2.contains(0x61, 0x7a)
+
+    result = test2.apply_pattern("[0-9]")
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test2)
+    assert test2.size() == 10  # [0-9]
+    assert test2.contains(0x30, 0x39)
 
     with pytest.raises(ICUException) as exc_info:
         test2.apply_pattern(UnicodeString())
@@ -365,18 +379,19 @@ def test_complement():
     # UnicodeSet &icu::UnicodeSet::complement(UChar32 start, UChar32 end)
     #
     # [4]
-    # UnicodeSet &UnicodeSet::complement()
-    test1.complement(
-        UnicodeString("ab")
-    ).complement(
-        0xdf
-    ).complement(
-        0x30, 0x39
-    ).complement()
-    assert test1.size() == 12  # [0-10\u00DF{ab}]
+    # UnicodeSet &icu::UnicodeSet::complement()
+    result = (test1.complement(UnicodeString("ab"))
+              .complement("cd")
+              .complement(0xdf)
+              .complement(0x30, 0x39)
+              .complement())
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test1)
+    assert test1.size() == 13  # [0-9\u00DF{ab}{cd}]
     assert test1.contains(0x30, 0x39)
     assert test1.contains(0xdf)
-    assert test1.contains(UnicodeString("ab"))
+    assert test1.contains("ab")
+    assert test1.contains("cd")
 
 
 def test_complement_all():
@@ -389,10 +404,16 @@ def test_complement_all():
     # UnicodeSet &icu::UnicodeSet::complementAll(const UnicodeSet &c)
     #
     # [2]
-    # UnicodeSet &UnicodeSet::complementAll(const UnicodeString &s)
-    test1.complement_all(test2).complement_all(UnicodeString("ab"))
-    assert test1.size() == 12 - 10 + 2  # [ab]
-    assert test1.contains(0x61, 0x62)
+    # UnicodeSet &icu::UnicodeSet::complementAll(const UnicodeString &s)
+    result = (test1.complement_all(test2)
+              .complement_all(UnicodeString("ab"))
+              .complement_all("cd"))
+    assert isinstance(result, UnicodeSet)
+    assert id(result) == id(test1)
+    assert test1.size() == 12 - 10 + 2 + 2  # [a-d\u00DF{ab}]
+    assert test1.contains(0x61, 0x64)
+    assert test1.contains(0xdf)
+    assert test1.contains("ab")
 
 
 def test_contains():
@@ -610,28 +631,29 @@ def test_remove():
 
 def test_remove_all():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
-    assert test1.size() == 12
-    test2 = UnicodeSet(0x30, 0x39)
+    test2 = test1.clone()
+    assert test2.size() == 12
+    test3 = UnicodeSet(0x30, 0x39)
 
     # [1]
     # UnicodeSet &icu::UnicodeSet::removeAll(const UnicodeSet &c)
     #
     # [2]
     # UnicodeSet &icu::UnicodeSet::removeAll(const UnicodeString &s)
-    result = test1.remove_all(test2).remove_all(UnicodeString("ab"))
+    result = test2.remove_all(test3).remove_all(UnicodeString("ab"))
     assert isinstance(result, UnicodeSet)
-    assert id(result) == id(test1)
-    assert test1.size() == 12 - 10  # [\u00DF{ab}]
-    assert test1.contains(0xdf)
-    assert test1.contains(UnicodeString("ab"))
+    assert id(result) == id(test2)
+    assert test2.size() == 12 - 10  # [\u00DF{ab}]
+    assert test2.contains(0xdf)
+    assert test2.contains(UnicodeString("ab"))
 
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
-    result = test1.remove_all("ab").remove_all(test2)
+    test2 = test1.clone()
+    result = test2.remove_all(test3).remove_all("ab")
     assert isinstance(result, UnicodeSet)
-    assert id(result) == id(test1)
-    assert test1.size() == 12 - 10  # [\u00DF{ab}]
-    assert test1.contains(0xdf)
-    assert test1.contains(UnicodeString("ab"))
+    assert id(result) == id(test2)
+    assert test2.size() == 12 - 10  # [\u00DF{ab}]
+    assert test2.contains(0xdf)
+    assert test2.contains(UnicodeString("ab"))
 
 
 def test_remove_all_strings():
@@ -822,6 +844,10 @@ def test_unicode_set():
     assert test4.size() == 10
     assert test4.contains(0x30, 0x39)
 
+    test4a = UnicodeSet("[0-9]")
+    assert test4a.size() == 10
+    assert test4a.contains(0x30, 0x39)
+
     # [6]
     # icu::UnicodeSet::UnicodeSet(
     #       const UnicodeString &pattern,
@@ -838,6 +864,13 @@ def test_unicode_set():
     assert pos.get_index() == pattern.length()
     assert test6.size() == 10
     assert test6.contains(0x30, 0x39)
+
+    pos = ParsePosition()
+    pos.set_index(4)
+    test6a = UnicodeSet("foo [ 0-9 ]", pos, options, None)
+    assert pos.get_index() == 11
+    assert test6a.size() == 10
+    assert test6a.contains(0x30, 0x39)
 
     # [7]
     # icu::UnicodeSet::UnicodeSet(const UnicodeSet &o)

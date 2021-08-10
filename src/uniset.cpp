@@ -47,6 +47,17 @@ void init_uniset(py::module &m) {
              return result;
            }),
            py::arg("pattern"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          py::init([](const char16_t *pattern) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<UnicodeSet>(pattern, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"))
       .def(py::init([](const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
                        std::optional<const SymbolTable *> symbols) {
              UErrorCode error_code = U_ZERO_ERROR;
@@ -57,6 +68,18 @@ void init_uniset(py::module &m) {
              return result;
            }),
            py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          py::init([](const char16_t *pattern, ParsePosition &pos, uint32_t options,
+                      std::optional<const SymbolTable *> symbols) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(py::init<const UnicodeSet &>(), py::arg("o"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
@@ -150,8 +173,33 @@ void init_uniset(py::module &m) {
         },
         py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          "apply_pattern",
+          [](UnicodeSet &self, const char16_t *pattern, ParsePosition &pos, uint32_t options,
+             std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
+      .def(
           "apply_pattern",
           [](UnicodeSet &self, const UnicodeString &pattern) -> UnicodeSet & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.applyPattern(pattern, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("pattern"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          "apply_pattern",
+          [](UnicodeSet &self, const char16_t *pattern) -> UnicodeSet & {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
@@ -215,11 +263,19 @@ void init_uniset(py::module &m) {
   us.def("close_over", &UnicodeSet::closeOver, py::arg("attribute"));
   us.def("compact", &UnicodeSet::compact);
   us.def("complement", py::overload_cast<const UnicodeString &>(&UnicodeSet::complement), py::arg("s"))
+      .def(
+          // const char16_t *s -> const UnicodeString &s
+          "complement", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.complement(s); },
+          py::arg("s"))
       .def("complement", py::overload_cast<UChar32>(&UnicodeSet::complement), py::arg("c"))
       .def("complement", py::overload_cast<UChar32, UChar32>(&UnicodeSet::complement), py::arg("start"), py::arg("end"))
       .def("complement", py::overload_cast<>(&UnicodeSet::complement));
   us.def("complement_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::complementAll), py::arg("c"))
-      .def("complement_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::complementAll), py::arg("s"));
+      .def("complement_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::complementAll), py::arg("s"))
+      .def(
+          // const char16_t *s -> const UnicodeString &s
+          "complement_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.complementAll(s); },
+          py::arg("s"));
   us.def("contains", py::overload_cast<const UnicodeString &>(&UnicodeSet::contains, py::const_), py::arg("s"))
       .def(
           // const char16_t *s -> const UnicodeString &s

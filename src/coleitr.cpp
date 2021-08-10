@@ -82,6 +82,17 @@ void init_coleitr(py::module &m) {
               throw ICUException(error_code);
             }
           },
+          py::arg("str_"))
+      .def(
+          // const char16_t *str -> const UnicodeString &str
+          "set_text",
+          [](CollationElementIterator &self, const char16_t *str) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.setText(str, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+          },
           py::arg("str_"));
   cei.def("strength_order", &CollationElementIterator::strengthOrder, py::arg("order"));
   cei.def_static("tertiary_order", &CollationElementIterator::tertiaryOrder, py::arg("order"));

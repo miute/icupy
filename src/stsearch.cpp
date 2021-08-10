@@ -166,9 +166,33 @@ void init_stsearch(py::module &m) {
               }),
           py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
       .def(
+          // const char16_t *text -> const UnicodeString &text
+          py::init(
+              [](const UnicodeString &pattern, const char16_t *text, const Locale &locale, BreakIterator *breakiter) {
+                UErrorCode error_code = U_ZERO_ERROR;
+                auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
+                if (U_FAILURE(error_code)) {
+                  throw ICUException(error_code);
+                }
+                return result;
+              }),
+          py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
+      .def(
           // const char *locale -> const Locale &locale
           py::init([](const UnicodeString &pattern, const UnicodeString &text, const char *locale,
                       BreakIterator *breakiter) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          // const char16_t *text -> const UnicodeString &text
+          py::init([](const char16_t *pattern, const char16_t *text, const Locale &locale, BreakIterator *breakiter) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
@@ -189,6 +213,32 @@ void init_stsearch(py::module &m) {
                 }
                 return result;
               }),
+          py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          // const char *locale -> const Locale &locale
+          py::init(
+              [](const UnicodeString &pattern, const char16_t *text, const char *locale, BreakIterator *breakiter) {
+                UErrorCode error_code = U_ZERO_ERROR;
+                auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
+                if (U_FAILURE(error_code)) {
+                  throw ICUException(error_code);
+                }
+                return result;
+              }),
+          py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          // const char16_t *text -> const UnicodeString &text
+          // const char *locale -> const Locale &locale
+          py::init([](const char16_t *pattern, const char16_t *text, const char *locale, BreakIterator *breakiter) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
           py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
       .def(
           // [2] StringSearch::StringSearch
@@ -213,6 +263,31 @@ void init_stsearch(py::module &m) {
             }
             return result;
           }),
+          py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          py::init([](const UnicodeString &pattern, const char16_t *text, RuleBasedCollator *coll,
+                      BreakIterator *breakiter) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
+      .def(
+          // const char16_t *pattern -> const UnicodeString &pattern
+          // const char16_t *text -> const UnicodeString &text
+          py::init(
+              [](const char16_t *pattern, const char16_t *text, RuleBasedCollator *coll, BreakIterator *breakiter) {
+                UErrorCode error_code = U_ZERO_ERROR;
+                auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
+                if (U_FAILURE(error_code)) {
+                  throw ICUException(error_code);
+                }
+                return result;
+              }),
           py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
       .def(
           // [3] StringSearch::StringSearch
@@ -353,6 +428,17 @@ void init_stsearch(py::module &m) {
       .def(
           "set_text",
           [](StringSearch &self, const UnicodeString &text) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.setText(text, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+          },
+          py::arg("text"))
+      .def(
+          // const char16_t *text -> const UnicodeString &text
+          "set_text",
+          [](StringSearch &self, const char16_t *text) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setText(text, error_code);
             if (U_FAILURE(error_code)) {

@@ -213,6 +213,17 @@ void init_tblcoll(py::module &m) {
             return result;
           }),
           py::arg("rules"))
+      .def(
+          // const char16_t *rules -> const UnicodeString &rules
+          py::init([](const char16_t *rules) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("rules"))
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
@@ -222,6 +233,17 @@ void init_tblcoll(py::module &m) {
              return result;
            }),
            py::arg("rules"), py::arg("collation_strength"))
+      .def(
+          // const char16_t *rules -> const UnicodeString &rules
+          py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("rules"), py::arg("collation_strength"))
       .def(py::init([](const UnicodeString &rules, UColAttributeValue decomposition_mode) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
@@ -231,6 +253,17 @@ void init_tblcoll(py::module &m) {
              return result;
            }),
            py::arg("rules"), py::arg("decomposition_mode"))
+      .def(
+          // const char16_t *rules -> const UnicodeString &rules
+          py::init([](const char16_t *rules, UColAttributeValue decomposition_mode) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("rules"), py::arg("decomposition_mode"))
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength,
                        UColAttributeValue decomposition_mode) {
              UErrorCode error_code = U_ZERO_ERROR;
@@ -242,6 +275,19 @@ void init_tblcoll(py::module &m) {
              return result;
            }),
            py::arg("rules"), py::arg("collation_strength"), py::arg("decomposition_mode"))
+      .def(
+          // const char16_t *rules -> const UnicodeString &rules
+          py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength,
+                      UColAttributeValue decomposition_mode) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto result =
+                std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          }),
+          py::arg("rules"), py::arg("collation_strength"), py::arg("decomposition_mode"))
       .def(py::init<const RuleBasedCollator &>(), py::arg("other"))
       // FIXME: Implement "icu::RuleBasedCollator::RuleBasedCollator(const uint8_t *bin,
       // int32_t length, const RuleBasedCollator *base, UErrorCode &status)".
@@ -401,7 +447,14 @@ void init_tblcoll(py::module &m) {
           py::arg("source"))
       .def("create_collation_element_iterator",
            py::overload_cast<const UnicodeString &>(&RuleBasedCollator::createCollationElementIterator, py::const_),
-           py::arg("source"));
+           py::arg("source"))
+      .def(
+          // const char16_t *source -> const UnicodeString &source
+          "create_collation_element_iterator",
+          [](const RuleBasedCollator &self, const char16_t *source) {
+            return self.createCollationElementIterator(source);
+          },
+          py::arg("source"));
   rbc.def(
       "get_attribute",
       [](const RuleBasedCollator &self, UColAttribute attr) {

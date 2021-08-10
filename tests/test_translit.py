@@ -150,13 +150,39 @@ def test_create_instance():
         UTransDirection.UTRANS_FORWARD,
         parse_error)
     assert isinstance(test3, Transliterator)
+    assert test3.get_id() == id3
+    parsed_rules3 = UnicodeString()
+    test3.to_rules(parsed_rules3, True)
 
     test3a = Transliterator.create_from_rules(
+        str(id3),
+        rules3,
+        UTransDirection.UTRANS_FORWARD,
+        parse_error)
+    assert isinstance(test3a, Transliterator)
+    assert test3a.get_id() == id3
+    rules = UnicodeString()
+    assert test3a.to_rules(rules, True) == parsed_rules3
+
+    test3b = Transliterator.create_from_rules(
         id3,
         str(rules3),
         UTransDirection.UTRANS_FORWARD,
         parse_error)
-    assert isinstance(test3a, Transliterator)
+    assert isinstance(test3b, Transliterator)
+    assert test3b.get_id() == id3
+    rules = UnicodeString()
+    assert test3b.to_rules(rules, True) == parsed_rules3
+
+    test3c = Transliterator.create_from_rules(
+        str(id3),
+        str(rules3),
+        UTransDirection.UTRANS_FORWARD,
+        parse_error)
+    assert isinstance(test3c, Transliterator)
+    assert test3c.get_id() == id3
+    rules = UnicodeString()
+    assert test3c.to_rules(rules, True) == parsed_rules3
 
     # [1]
     # static Transliterator *icu::Transliterator::createInstance(
@@ -169,6 +195,17 @@ def test_create_instance():
         id1,
         UTransDirection.UTRANS_FORWARD)
     assert isinstance(test1, Transliterator)
+    assert test1.get_id() == id1
+    parsed_rules1 = UnicodeString()
+    test1.to_rules(parsed_rules1, True)
+
+    test1a = Transliterator.create_instance(
+        str(id1),
+        UTransDirection.UTRANS_FORWARD)
+    assert isinstance(test1a, Transliterator)
+    assert test1a.get_id() == id1
+    rules = UnicodeString()
+    assert test1a.to_rules(rules, True) == parsed_rules1
 
     # [2]
     # static Transliterator *icu::Transliterator::createInstance(
@@ -183,6 +220,18 @@ def test_create_instance():
         UTransDirection.UTRANS_FORWARD,
         parse_error)
     assert isinstance(test2, Transliterator)
+    assert test2.get_id() == id1
+    parsed_rules1 = UnicodeString()
+    test2.to_rules(parsed_rules1, True)
+
+    test2a = Transliterator.create_instance(
+        str(id1),
+        UTransDirection.UTRANS_FORWARD,
+        parse_error)
+    assert isinstance(test2a, Transliterator)
+    assert test2a.get_id() == id1
+    rules = UnicodeString()
+    assert test2a.to_rules(rules, True) == parsed_rules1
 
     # Transliterator *icu::Transliterator::createInverse(UErrorCode &status)
     id4 = UnicodeString("Hiragana-Katakana", -1)

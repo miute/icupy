@@ -88,6 +88,10 @@ def test_api():
     assert it1 == it2
     assert not (it1 != it2)
 
+    it2.set_text("cha")
+    assert it1 == it2
+    assert not (it1 != it2)
+
     # int32_t icu::CollationElementIterator::primaryOrder(int32_t order)
     assert (CollationElementIterator.primary_order(order1)
             == CollationElementIterator.primary_order(it2.next()))
