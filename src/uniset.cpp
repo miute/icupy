@@ -337,7 +337,7 @@ void init_uniset(py::module &m) {
   us.def("remove", py::overload_cast<const UnicodeString &>(&UnicodeSet::remove), py::arg("s"))
       .def(
           // const char16_t *s -> const UnicodeString &s
-          "remove", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.remove(s); })
+          "remove", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.remove(s); }, py::arg("s"))
       .def("remove", py::overload_cast<UChar32>(&UnicodeSet::remove), py::arg("c"))
       .def("remove", py::overload_cast<UChar32, UChar32>(&UnicodeSet::remove), py::arg("start"), py::arg("end"));
   us.def("remove_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::removeAll), py::arg("c"))

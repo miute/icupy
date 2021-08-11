@@ -18,14 +18,14 @@ void init_char16ptr(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 59)
   py::class_<Char16Ptr>(m, "Char16Ptr")
-      .def(py::init<char16_t *>())
+      .def(py::init<char16_t *>(), py::arg("p"))
       .def(
           "__getitem__", [](const Char16Ptr &self, int32_t index) -> uint16_t { return *(self + index); },
           py::arg("index"))
       .def("get", &Char16Ptr::get);
 
   py::class_<ConstChar16Ptr>(m, "ConstChar16Ptr")
-      .def(py::init<const char16_t *>())
+      .def(py::init<const char16_t *>(), py::arg("p"))
       .def(
           "__getitem__", [](const ConstChar16Ptr &self, int32_t index) -> uint16_t { return *(self + index); },
           py::arg("index"))

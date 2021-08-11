@@ -760,7 +760,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           "set_to",
           [](UnicodeString &self, UBool is_terminated, const char16_t *text, int32_t text_length) -> UnicodeString & {
             return self.setTo(is_terminated, text, text_length);
-          })
+          },
+          py::arg("is_terminated"), py::arg("text"), py::arg("text_length"))
       .def("set_to", py::overload_cast<UChar32>(&UnicodeString::setTo), py::arg("src_char"));
   us.def("set_to_bogus", &UnicodeString::setToBogus);
   us.def("starts_with", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::startsWith, py::const_),
