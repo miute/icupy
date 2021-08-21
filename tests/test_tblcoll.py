@@ -217,14 +217,15 @@ def test_get_attribute():
 
 
 def test_get_available_locales():
-    # [2]
-    # static StringEnumeration *icu::Collator::getAvailableLocales(void)
+    # [1]
+    # static const Locale *icu::Collator::getAvailableLocales(
+    #       int32_t &count
+    # )
     it = Collator.get_available_locales()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, list)
     assert len(it) > 0
-    assert all(isinstance(x, str) for x in it)
-    assert "ja" in it
-    assert "und" not in it
+    assert all(isinstance(x, Locale) for x in it)
+    assert Locale("ja") in it
 
 
 def test_get_bound():

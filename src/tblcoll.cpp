@@ -73,7 +73,18 @@ void init_tblcoll(py::module &m) {
             return self.equals(source, target);
           },
           py::arg("source"), py::arg("target"));
-  coll.def_static("get_available_locales", py::overload_cast<>(&Collator::getAvailableLocales));
+  coll.def_static(
+      "get_available_locales",
+      []() {
+        int32_t count;
+        auto p = Collator::getAvailableLocales(count);
+        std::vector<const Locale *> result(count);
+        for (int32_t i = 0; i < count; ++i) {
+          result[i] = p + i;
+        }
+        return result;
+      },
+      py::return_value_policy::reference);
   coll.def_static(
       "get_bound",
       [](const std::vector<uint8_t> &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
