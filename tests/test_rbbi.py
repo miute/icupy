@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     BreakIterator, CharacterIterator, Locale, RuleBasedBreakIterator,
-    StringCharacterIterator, StringEnumeration, ULocDataLocaleType,
+    StringCharacterIterator, ULocDataLocaleType,
     UParseError, UWordBreak, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
     utext_close, utext_extract, utext_native_length,
     utext_open_const_unicode_string,
@@ -189,14 +189,15 @@ def test_following():
 
 
 def test_get_available_locales():
-    # [2]
-    # static StringEnumeration *icu::BreakIterator::getAvailableLocales()
+    # [1]
+    # static const Locale *icu::BreakIterator::getAvailableLocales(
+    #       int32_t &count
+    # )
     it = BreakIterator.get_available_locales()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, list)
     assert len(it) > 0
-    assert all(isinstance(x, str) for x in it)
-    assert "ja" in it
-    assert "und" not in it
+    assert all(isinstance(x, Locale) for x in it)
+    assert Locale("ja") in it
 
 
 def test_get_display_name():
