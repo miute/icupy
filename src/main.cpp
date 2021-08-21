@@ -2,6 +2,7 @@
 #include <unicode/errorcode.h>
 #include <unicode/fmtable.h>
 #include <unicode/locid.h>
+#include <unicode/plurrule.h>
 
 #ifndef MODULE_NAME
 #define MODULE_NAME icu
@@ -42,6 +43,7 @@ void init_numberrangeformatter(py::module &m, py::module &m2);
 void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
+void init_plurrule(py::module &m, py::class_<PluralRules, UObject> &pr);
 void init_rbbi(py::module &m);
 void init_regex(py::module &m);
 void init_resbund(py::module &m);
@@ -82,6 +84,7 @@ void init_unorm2(py::module &m);
 void init_unum(py::module &m);
 void init_unumberformatter(py::module &m);
 void init_unumberrangeformatter(py::module &m);
+void init_upluralrules(py::module &m);
 void init_uregex(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
@@ -141,6 +144,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   py::class_<Formattable, UObject> fmt(m, "Formattable");
 
+  py::class_<PluralRules, UObject> pr(m, "PluralRules");
+
   py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
       .def(py::init<size_t>(), py::arg("n"));
 
@@ -185,6 +190,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_dcfmtsym(m);                     // icu::DecimalFormatSymbols
   init_numberformatter(m, number);      // icu::number::NumberFormatter
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
+  init_plurrule(m, pr);                 // icu::PluralRules
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
@@ -229,6 +235,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_unum(m);
   init_unumberformatter(m);
   init_unumberrangeformatter(m);
+  init_upluralrules(m);
   init_uregex(m);
   init_ures(m);
   init_uscript(m);

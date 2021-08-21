@@ -46,6 +46,7 @@ pybind11_add_module(
     numsys.cpp
     parseerr.cpp
     parsepos.cpp
+    plurrule.cpp
     rbbi.cpp
     regex.cpp
     resbund.cpp
@@ -86,6 +87,7 @@ pybind11_add_module(
     unum.cpp
     unumberformatter.cpp
     unumberrangeformatter.cpp
+    upluralrules.cpp
     uregex.cpp
     ures.cpp
     uscript.cpp
