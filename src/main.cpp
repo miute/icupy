@@ -13,6 +13,7 @@ using namespace icu;
 void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
+void init_currpinf(py::module &m);
 void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
 void init_dcfmtsym(py::module &m);
@@ -171,6 +172,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_nounit(m);   // icu::NoUnit
   init_measure(m);  // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
 
+  init_currpinf(m);     // icu::CurrencyPluralInfo
   init_dtintrv(m);      // icu::DateInterval
   init_dtitvinf(m);     // icu::DateIntervalInfo
   init_fieldpos(m);     // icu::FieldPosition
