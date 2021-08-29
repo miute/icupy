@@ -19,6 +19,7 @@ pybind11_add_module(
     currunit.cpp
     datefmt.cpp
     dcfmtsym.cpp
+    decimfmt.cpp
     dtfmtsym.cpp
     dtintrv.cpp
     dtitvfmt.cpp
@@ -44,6 +45,7 @@ pybind11_add_module(
     nounit.cpp
     numberformatter.cpp
     numberrangeformatter.cpp
+    numfmt.cpp
     numsys.cpp
     parseerr.cpp
     parsepos.cpp

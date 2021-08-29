@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <unicode/decimfmt.h>
 #include <unicode/errorcode.h>
 #include <unicode/fmtable.h>
 #include <unicode/locid.h>
@@ -17,6 +18,7 @@ void init_currpinf(py::module &m);
 void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
 void init_dcfmtsym(py::module &m);
+void init_decimfmt(py::module &m, py::class_<DecimalFormat, NumberFormat> &df);
 void init_dtfmtsym(py::module &m);
 void init_dtintrv(py::module &m);
 void init_dtitvfmt(py::module &m);
@@ -41,6 +43,7 @@ void init_normalizer2(py::module &m);
 void init_nounit(py::module &m);
 void init_numberformatter(py::module &m, py::module &m2);
 void init_numberrangeformatter(py::module &m, py::module &m2);
+void init_numfmt(py::module &m, py::class_<NumberFormat, Format> &nf);
 void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
@@ -178,21 +181,30 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_fieldpos(m);     // icu::FieldPosition
   init_fpositer(m);     // icu::FieldPositionIterator
   init_fmtable(m, fmt); // icu::Formattable
-  init_format(m);       // icu::Format
-  init_datefmt(m);      // icu::DateFormat
-  init_dtfmtsym(m);     // icu::DateFormatSymbols
-  init_dtitvfmt(m);     // icu::DateIntervalFormat
-  init_tznames(m);      // icu::TimeZoneNames
-  init_tzfmt(m);        // icu::TimeZoneFormat
-  init_smpdtfmt(m);     // icu::SimpleDateFormat
+  init_numsys(m);       // icu::NumberingSystem
+  init_dcfmtsym(m);     // icu::DecimalFormatSymbols
+
+  init_format(m); // icu::Format
+
+  py::class_<NumberFormat, Format> numfmt(m, "NumberFormat");
+
+  py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat");
+
+  init_numfmt(m, numfmt); // icu::NumberFormat
+
+  init_datefmt(m);  // icu::DateFormat
+  init_dtfmtsym(m); // icu::DateFormatSymbols
+  init_dtitvfmt(m); // icu::DateIntervalFormat
+  init_tznames(m);  // icu::TimeZoneNames
+  init_tzfmt(m);    // icu::TimeZoneFormat
+  init_smpdtfmt(m); // icu::SimpleDateFormat
 
   init_measfmt(m); // icu::MeasureFormat
 
-  init_numsys(m);                       // icu::NumberingSystem
-  init_dcfmtsym(m);                     // icu::DecimalFormatSymbols
   init_numberformatter(m, number);      // icu::number::NumberFormatter
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
   init_plurrule(m, pr);                 // icu::PluralRules
+  init_decimfmt(m, decfmt);             // icu::DecimalFormat
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
