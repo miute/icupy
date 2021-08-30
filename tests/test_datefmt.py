@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     Calendar, DateFormat, FieldPosition, FieldPositionIterator,
-    Format, Formattable, GregorianCalendar, ICUException, Locale,
+    Format, Formattable, GregorianCalendar, ICUException, Locale, NumberFormat,
     ParsePosition, TimeZone, UDateFormatField, UErrorCode,
     ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
@@ -61,6 +61,20 @@ def test_api():
     loc = fmt.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
     assert isinstance(loc, Locale)
     assert loc == Locale("en")
+
+    # const NumberFormat *icu::DateFormat::getNumberFormat(void)
+    numfmt = fmt.get_number_format()
+    assert isinstance(numfmt, NumberFormat)
+
+    # void icu::DateFormat::setNumberFormat(
+    #       const NumberFormat &newNumberFormat
+    # )
+    new_number_format = NumberFormat.create_instance()
+    new_number_format.set_parse_integer_only(True)
+    new_number_format.set_grouping_used(False)
+    assert numfmt != new_number_format
+    fmt.set_number_format(new_number_format)
+    assert fmt.get_number_format() == new_number_format
 
     # const TimeZone &icu::DateFormat::getTimeZone(void)
     zone3 = fmt2.get_time_zone()

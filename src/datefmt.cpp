@@ -234,7 +234,7 @@ void init_datefmt(py::module &m) {
       },
       py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-  // TODO: Implement "const NumberFormat *icu::DateFormat::getNumberFormat(void)".
+  df.def("get_number_format", &DateFormat::getNumberFormat, py::return_value_policy::reference);
   df.def(
       "get_time_zone",
       [](const DateFormat &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
@@ -348,6 +348,6 @@ void init_datefmt(py::module &m) {
       py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("set_lenient", &DateFormat::setLenient, py::arg("lenient"));
-  // TODO: Implement "void icu::DateFormat::setNumberFormat(const NumberFormat &newNumberFormat)".
+  df.def("set_number_format", &DateFormat::setNumberFormat, py::arg("new_number_format"));
   df.def("set_time_zone", &DateFormat::setTimeZone, py::arg("zone"));
 }
