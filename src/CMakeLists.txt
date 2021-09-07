@@ -51,6 +51,7 @@ pybind11_add_module(
     parsepos.cpp
     plurrule.cpp
     rbbi.cpp
+    rbnf.cpp
     regex.cpp
     resbund.cpp
     schriter.cpp

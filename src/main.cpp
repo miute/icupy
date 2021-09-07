@@ -49,6 +49,7 @@ void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
 void init_plurrule(py::module &m, py::class_<PluralRules, UObject> &pr);
 void init_rbbi(py::module &m);
+void init_rbnf(py::module &m);
 void init_regex(py::module &m);
 void init_resbund(py::module &m);
 void init_schriter(py::module &m);
@@ -191,6 +192,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat");
 
   init_numfmt(m, numfmt); // icu::NumberFormat
+  init_rbnf(m);           // icu::RuleBasedNumberFormat
 
   init_datefmt(m);  // icu::DateFormat
   init_dtfmtsym(m); // icu::DateFormatSymbols
@@ -268,5 +270,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   m.attr("INT16_MIN") = INT16_MIN;
   m.attr("INT32_MAX") = INT32_MAX;
   m.attr("INT32_MIN") = INT32_MIN;
+  m.attr("INT64_MAX") = INT64_MAX;
+  m.attr("INT64_MIN") = INT64_MIN;
   m.attr("U_SENTINEL") = U_SENTINEL;
 }
