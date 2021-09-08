@@ -15,6 +15,7 @@ pybind11_add_module(
     appendable.cpp
     char16ptr.cpp
     coleitr.cpp
+    compactdecimalformat.cpp
     currpinf.cpp
     currunit.cpp
     datefmt.cpp

@@ -14,6 +14,7 @@ using namespace icu;
 void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
+void init_compactdecimalformat(py::module &m);
 void init_currpinf(py::module &m);
 void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
@@ -207,6 +208,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
   init_plurrule(m, pr);                 // icu::PluralRules
   init_decimfmt(m, decfmt);             // icu::DecimalFormat
+  init_compactdecimalformat(m);         // icu::CompactDecimalFormat
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
