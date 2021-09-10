@@ -42,6 +42,8 @@ pybind11_add_module(
     measfmt.cpp
     measunit.cpp
     measure.cpp
+    messagepattern.cpp
+    msgfmt.cpp
     normalizer2.cpp
     nounit.cpp
     numberformatter.cpp

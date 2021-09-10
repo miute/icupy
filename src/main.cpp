@@ -40,6 +40,8 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
 void init_measfmt(py::module &m);
 void init_measunit(py::module &m);
 void init_measure(py::module &m);
+void init_messagepattern(py::module &m);
+void init_msgfmt(py::module &m);
 void init_normalizer2(py::module &m);
 void init_nounit(py::module &m);
 void init_numberformatter(py::module &m, py::module &m2);
@@ -203,6 +205,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_smpdtfmt(m); // icu::SimpleDateFormat
 
   init_measfmt(m); // icu::MeasureFormat
+
+  init_messagepattern(m); // icu::MessagePattern
+  init_msgfmt(m);         // icu::MessageFormat
 
   init_numberformatter(m, number);      // icu::number::NumberFormatter
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
