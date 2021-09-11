@@ -183,8 +183,9 @@ def test_get_months():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    months2 = sym.get_months(DateFormatSymbols.FORMAT,
-                             DateFormatSymbols.ABBREVIATED)
+    months2 = sym.get_months(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
     assert isinstance(months2, list)
     assert len(months2) == 12
     assert all(isinstance(x, UnicodeString) for x in months2)
@@ -198,14 +199,17 @@ def test_get_months():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    assert sym2.get_months(DateFormatSymbols.FORMAT,
-                           DateFormatSymbols.ABBREVIATED) != months2
-    sym2.set_months(months2,
-                    len(months2),
-                    DateFormatSymbols.FORMAT,
-                    DateFormatSymbols.ABBREVIATED)
-    assert sym2.get_months(DateFormatSymbols.FORMAT,
-                           DateFormatSymbols.ABBREVIATED) == months2
+    assert sym2.get_months(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != months2
+    sym2.set_months(
+        months2,
+        len(months2),
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym2.get_months(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == months2
 
     assert sym3.get_months(
         DateFormatSymbols.FORMAT,
@@ -258,8 +262,9 @@ def test_get_quarters():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    quarters = sym.get_quarters(DateFormatSymbols.FORMAT,
-                                DateFormatSymbols.WIDE)
+    quarters = sym.get_quarters(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE)
     assert isinstance(quarters, list)
     assert len(quarters) == 4
     assert all(isinstance(x, UnicodeString) for x in quarters)
@@ -272,14 +277,17 @@ def test_get_quarters():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    assert sym2.get_quarters(DateFormatSymbols.FORMAT,
-                             DateFormatSymbols.WIDE) != quarters
-    sym2.set_quarters(quarters,
-                      len(quarters),
-                      DateFormatSymbols.FORMAT,
-                      DateFormatSymbols.WIDE)
-    assert sym2.get_quarters(DateFormatSymbols.FORMAT,
-                             DateFormatSymbols.WIDE) == quarters
+    assert sym2.get_quarters(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE) != quarters
+    sym2.set_quarters(
+        quarters,
+        len(quarters),
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE)
+    assert sym2.get_quarters(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE) == quarters
 
     assert sym3.get_quarters(
         DateFormatSymbols.FORMAT,
@@ -385,8 +393,9 @@ def test_get_weekdays():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    weekdays2 = sym.get_weekdays(DateFormatSymbols.FORMAT,
-                                 DateFormatSymbols.ABBREVIATED)
+    weekdays2 = sym.get_weekdays(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
     assert isinstance(weekdays2, list)
     assert len(weekdays2) == 8
     assert all(isinstance(x, UnicodeString) for x in weekdays2)
@@ -401,14 +410,17 @@ def test_get_weekdays():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    assert sym2.get_weekdays(DateFormatSymbols.FORMAT,
-                             DateFormatSymbols.ABBREVIATED) != weekdays2
-    sym2.set_weekdays(weekdays2,
-                      len(weekdays2),
-                      DateFormatSymbols.FORMAT,
-                      DateFormatSymbols.ABBREVIATED)
-    assert sym2.get_weekdays(DateFormatSymbols.FORMAT,
-                             DateFormatSymbols.ABBREVIATED) == weekdays2
+    assert sym2.get_weekdays(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != weekdays2
+    sym2.set_weekdays(
+        weekdays2,
+        len(weekdays2),
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym2.get_weekdays(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == weekdays2
 
     assert sym3.get_weekdays(
         DateFormatSymbols.FORMAT,
@@ -434,8 +446,9 @@ def test_get_year_names():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    year_names = sym.get_year_names(DateFormatSymbols.FORMAT,
-                                    DateFormatSymbols.ABBREVIATED)
+    year_names = sym.get_year_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
     assert isinstance(year_names, list)
     assert len(year_names) == 0
 
@@ -490,14 +503,17 @@ def test_get_year_names():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    assert sym2.get_year_names(DateFormatSymbols.FORMAT,
-                               DateFormatSymbols.ABBREVIATED) != year_names
-    sym2.set_year_names(year_names,
-                        len(year_names),
-                        DateFormatSymbols.FORMAT,
-                        DateFormatSymbols.ABBREVIATED)
-    assert sym2.get_year_names(DateFormatSymbols.FORMAT,
-                               DateFormatSymbols.ABBREVIATED) == year_names
+    assert sym2.get_year_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != year_names
+    sym2.set_year_names(
+        year_names,
+        len(year_names),
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym2.get_year_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == year_names
 
     assert sym3.get_year_names(
         DateFormatSymbols.FORMAT,
@@ -523,8 +539,9 @@ def test_get_zodiac_names():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    zodiac_names = sym.get_zodiac_names(DateFormatSymbols.FORMAT,
-                                        DateFormatSymbols.ABBREVIATED)
+    zodiac_names = sym.get_zodiac_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
     assert isinstance(zodiac_names, list)
     assert len(zodiac_names) == 0
 
@@ -541,14 +558,17 @@ def test_get_zodiac_names():
     #       DtContextType context,
     #       DtWidthType width
     # )
-    assert sym2.get_zodiac_names(DateFormatSymbols.FORMAT,
-                                 DateFormatSymbols.ABBREVIATED) != zodiac_names
-    sym2.set_zodiac_names(zodiac_names,
-                          len(zodiac_names),
-                          DateFormatSymbols.FORMAT,
-                          DateFormatSymbols.ABBREVIATED)
-    assert sym2.get_zodiac_names(DateFormatSymbols.FORMAT,
-                                 DateFormatSymbols.ABBREVIATED) == zodiac_names
+    assert sym2.get_zodiac_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != zodiac_names
+    sym2.set_zodiac_names(
+        zodiac_names,
+        len(zodiac_names),
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym2.get_zodiac_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == zodiac_names
 
     assert sym3.get_zodiac_names(
         DateFormatSymbols.FORMAT,
