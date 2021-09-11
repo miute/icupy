@@ -1,7 +1,7 @@
 import pytest
 from icupy import (
-    DateFormatSymbols, Locale, UnicodeString, UnicodeStringVector,
-    ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM,
+    DateFormatSymbols, Locale, ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM,
+    UnicodeString,
 )
 
 
@@ -73,6 +73,7 @@ def test_date_format_symbols():
 def test_get_am_pm_strings():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getAmPmStrings(
     #       int32_t &count
@@ -89,13 +90,18 @@ def test_get_am_pm_strings():
     #       int32_t count
     # )
     assert sym2.get_am_pm_strings() != ampms
-    sym2.set_am_pm_strings(UnicodeStringVector(ampms))
+    sym2.set_am_pm_strings(ampms, len(ampms))
     assert sym2.get_am_pm_strings() == ampms
+
+    assert sym3.get_am_pm_strings() != ampms
+    sym3.set_am_pm_strings(ampms)  # count is optional
+    assert sym3.get_am_pm_strings() == ampms
 
 
 def test_get_era_names():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getEraNames(int32_t &count)
     era_names = sym.get_era_names()
@@ -110,13 +116,18 @@ def test_get_era_names():
     #       int32_t count
     # )
     assert sym2.get_era_names() != era_names
-    sym2.set_era_names(UnicodeStringVector(era_names))
+    sym2.set_era_names(era_names, len(era_names))
     assert sym2.get_era_names() == era_names
+
+    assert sym3.get_era_names() != era_names
+    sym3.set_era_names(era_names)  # count is optional
+    assert sym3.get_era_names() == era_names
 
 
 def test_get_eras():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getEras(int32_t &count)
     eras = sym.get_eras()
@@ -131,13 +142,18 @@ def test_get_eras():
     #       int32_t count
     # )
     assert sym2.get_eras() != eras
-    sym2.set_eras(UnicodeStringVector(eras))
+    sym2.set_eras(eras, len(eras))
     assert sym2.get_eras() == eras
+
+    assert sym3.get_eras() != eras
+    sym3.set_eras(eras)  # count is optional
+    assert sym3.get_eras() == eras
 
 
 def test_get_months():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # [1]
     # const UnicodeString *icu::DateFormatSymbols::getMonths(int32_t &count)
@@ -154,8 +170,12 @@ def test_get_months():
     #       int32_t count
     # )
     assert sym2.get_months() != months1
-    sym2.set_months(UnicodeStringVector(months1))
+    sym2.set_months(months1, len(months1))
     assert sym2.get_months() == months1
+
+    assert sym3.get_months() != months1
+    sym3.set_months(months1)  # count is optional
+    assert sym3.get_months() == months1
 
     # [2]
     # const UnicodeString *icu::DateFormatSymbols::getMonths(
@@ -180,17 +200,30 @@ def test_get_months():
     # )
     assert sym2.get_months(DateFormatSymbols.FORMAT,
                            DateFormatSymbols.ABBREVIATED) != months2
-    sym2.set_months(UnicodeStringVector(months2),
+    sym2.set_months(months2,
                     len(months2),
                     DateFormatSymbols.FORMAT,
                     DateFormatSymbols.ABBREVIATED)
     assert sym2.get_months(DateFormatSymbols.FORMAT,
                            DateFormatSymbols.ABBREVIATED) == months2
 
+    assert sym3.get_months(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != months2
+    sym3.set_months(
+        months2,
+        -1,
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym3.get_months(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == months2
+
 
 def test_get_narrow_eras():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getNarrowEras(
     #       int32_t &count
@@ -207,13 +240,18 @@ def test_get_narrow_eras():
     #       int32_t count
     # )
     assert sym2.get_narrow_eras() != narrow_eras
-    sym2.set_narrow_eras(UnicodeStringVector(narrow_eras))
+    sym2.set_narrow_eras(narrow_eras, len(narrow_eras))
     assert sym2.get_narrow_eras() == narrow_eras
+
+    assert sym3.get_narrow_eras() != narrow_eras
+    sym3.set_narrow_eras(narrow_eras)  # count is optional
+    assert sym3.get_narrow_eras() == narrow_eras
 
 
 def test_get_quarters():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getQuarters(
     #       int32_t &count,
@@ -236,17 +274,30 @@ def test_get_quarters():
     # )
     assert sym2.get_quarters(DateFormatSymbols.FORMAT,
                              DateFormatSymbols.WIDE) != quarters
-    sym2.set_quarters(UnicodeStringVector(quarters),
+    sym2.set_quarters(quarters,
                       len(quarters),
                       DateFormatSymbols.FORMAT,
                       DateFormatSymbols.WIDE)
     assert sym2.get_quarters(DateFormatSymbols.FORMAT,
                              DateFormatSymbols.WIDE) == quarters
 
+    assert sym3.get_quarters(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE) != quarters
+    sym3.set_quarters(
+        quarters,
+        -1,
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE)
+    assert sym3.get_quarters(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.WIDE) == quarters
+
 
 def test_get_short_months():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getShortMonths(
     #       int32_t &count
@@ -263,13 +314,18 @@ def test_get_short_months():
     #       int32_t count
     # )
     assert sym2.get_short_months() != short_months
-    sym2.set_short_months(UnicodeStringVector(short_months))
+    sym2.set_short_months(short_months, len(short_months))
     assert sym2.get_short_months() == short_months
+
+    assert sym3.get_short_months() != short_months
+    sym3.set_short_months(short_months)  # count is optional
+    assert sym3.get_short_months() == short_months
 
 
 def test_get_short_weekdays():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getShortWeekdays(
     #       int32_t &count
@@ -287,13 +343,18 @@ def test_get_short_weekdays():
     #       int32_t count
     # )
     assert sym2.get_short_weekdays() != abbrev_weekdays
-    sym2.set_short_weekdays(UnicodeStringVector(abbrev_weekdays))
+    sym2.set_short_weekdays(abbrev_weekdays, len(abbrev_weekdays))
     assert sym2.get_short_weekdays() == abbrev_weekdays
+
+    assert sym3.get_short_weekdays() != abbrev_weekdays
+    sym3.set_short_weekdays(abbrev_weekdays)  # count is optional
+    assert sym3.get_short_weekdays() == abbrev_weekdays
 
 
 def test_get_weekdays():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # [1]
     # const UnicodeString *icu::DateFormatSymbols::getWeekdays(int32_t &count)
@@ -311,8 +372,12 @@ def test_get_weekdays():
     #       int32_t count
     # )
     assert sym2.get_weekdays() != weekdays1
-    sym2.set_weekdays(UnicodeStringVector(weekdays1))
+    sym2.set_weekdays(weekdays1, len(weekdays1))
     assert sym2.get_weekdays() == weekdays1
+
+    assert sym3.get_weekdays() != weekdays1
+    sym3.set_weekdays(weekdays1)  # count is optional
+    assert sym3.get_weekdays() == weekdays1
 
     # [2]
     # const UnicodeString *icu::DateFormatSymbols::getWeekdays(
@@ -338,18 +403,31 @@ def test_get_weekdays():
     # )
     assert sym2.get_weekdays(DateFormatSymbols.FORMAT,
                              DateFormatSymbols.ABBREVIATED) != weekdays2
-    sym2.set_weekdays(UnicodeStringVector(weekdays2),
+    sym2.set_weekdays(weekdays2,
                       len(weekdays2),
                       DateFormatSymbols.FORMAT,
                       DateFormatSymbols.ABBREVIATED)
     assert sym2.get_weekdays(DateFormatSymbols.FORMAT,
                              DateFormatSymbols.ABBREVIATED) == weekdays2
 
+    assert sym3.get_weekdays(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != weekdays2
+    sym3.set_weekdays(
+        weekdays2,
+        -1,
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym3.get_weekdays(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == weekdays2
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_get_year_names():
     sym = DateFormatSymbols(Locale.get_china())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getYearNames(
     #       int32_t &count,
@@ -414,18 +492,31 @@ def test_get_year_names():
     # )
     assert sym2.get_year_names(DateFormatSymbols.FORMAT,
                                DateFormatSymbols.ABBREVIATED) != year_names
-    sym2.set_year_names(UnicodeStringVector(year_names),
+    sym2.set_year_names(year_names,
                         len(year_names),
                         DateFormatSymbols.FORMAT,
                         DateFormatSymbols.ABBREVIATED)
     assert sym2.get_year_names(DateFormatSymbols.FORMAT,
                                DateFormatSymbols.ABBREVIATED) == year_names
 
+    assert sym3.get_year_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != year_names
+    sym3.set_year_names(
+        year_names,
+        -1,
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym3.get_year_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == year_names
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_get_zodiac_names():
     sym = DateFormatSymbols(Locale.get_china())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols(Locale("und"))
 
     # const UnicodeString *icu::DateFormatSymbols::getZodiacNames(
     #       int32_t &count,
@@ -452,9 +543,21 @@ def test_get_zodiac_names():
     # )
     assert sym2.get_zodiac_names(DateFormatSymbols.FORMAT,
                                  DateFormatSymbols.ABBREVIATED) != zodiac_names
-    sym2.set_zodiac_names(UnicodeStringVector(zodiac_names),
+    sym2.set_zodiac_names(zodiac_names,
                           len(zodiac_names),
                           DateFormatSymbols.FORMAT,
                           DateFormatSymbols.ABBREVIATED)
     assert sym2.get_zodiac_names(DateFormatSymbols.FORMAT,
                                  DateFormatSymbols.ABBREVIATED) == zodiac_names
+
+    assert sym3.get_zodiac_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) != zodiac_names
+    sym3.set_zodiac_names(
+        zodiac_names,
+        -1,
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED)
+    assert sym3.get_zodiac_names(
+        DateFormatSymbols.FORMAT,
+        DateFormatSymbols.ABBREVIATED) == zodiac_names
