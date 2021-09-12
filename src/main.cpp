@@ -50,6 +50,7 @@ void init_numfmt(py::module &m, py::class_<NumberFormat, Format> &nf);
 void init_numsys(py::module &m);
 void init_parseerr(py::module &m);
 void init_parsepos(py::module &m);
+void init_plurfmt(py::module &m);
 void init_plurrule(py::module &m, py::class_<PluralRules, UObject> &pr);
 void init_rbbi(py::module &m);
 void init_rbnf(py::module &m);
@@ -214,6 +215,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_plurrule(m, pr);                 // icu::PluralRules
   init_decimfmt(m, decfmt);             // icu::DecimalFormat
   init_compactdecimalformat(m);         // icu::CompactDecimalFormat
+  init_plurfmt(m);                      // icu::PluralFormat
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator

@@ -52,6 +52,7 @@ pybind11_add_module(
     numsys.cpp
     parseerr.cpp
     parsepos.cpp
+    plurfmt.cpp
     plurrule.cpp
     rbbi.cpp
     rbnf.cpp
