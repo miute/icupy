@@ -666,7 +666,7 @@ def test_format():
     assert result == "2,147,483,648"
 
     # [22], [23]
-    # UnicodeString& icu::NumberFormat::format(
+    # UnicodeString &icu::NumberFormat::format(
     #       int64_t number,
     #       UnicodeString &appendTo
     #       FieldPosition &pos
@@ -714,6 +714,17 @@ def test_format():
 
     append_to.remove()
     result = fmt.format(s, append_to, None)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "-10,456"
+
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       UErrorCode &status
+    # )
+    append_to.remove()
+    result = fmt.format(Formattable(d), append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"

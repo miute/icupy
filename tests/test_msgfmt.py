@@ -502,6 +502,31 @@ def test_parse():
     assert objs[1].get_type() == Formattable.STRING
     assert objs[1].get_string() == "def"
 
+    # void icu::Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       UErrorCode &status
+    # )
+    result = Formattable()
+    fmt.parse_object(UnicodeString(s), result)
+    assert result.get_type() == Formattable.ARRAY
+    objs = result.get_array()
+    assert len(objs) == 2
+    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_string() == "abc"
+    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_string() == "def"
+
+    result = Formattable()
+    fmt.parse_object(s, result)
+    assert result.get_type() == Formattable.ARRAY
+    objs = result.get_array()
+    assert len(objs) == 2
+    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_string() == "abc"
+    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_string() == "def"
+
 
 def test_set_format():
     fmt = MessageFormat("{0,date} {1,time}", Locale.get_us())

@@ -277,7 +277,18 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             }
             return result;
           },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"));
+          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          "format",
+          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.format(obj, append_to, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   df.def(
       "get_attribute",

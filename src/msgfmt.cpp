@@ -444,7 +444,28 @@ void init_msgfmt(py::module &m) {
           [](const MessageFormat &self, const char16_t *source, Formattable &result, ParsePosition &pos) {
             self.parseObject(source, result, pos);
           },
-          py::arg("source"), py::arg("result"), py::arg("pos"));
+          py::arg("source"), py::arg("result"), py::arg("pos"))
+      .def(
+          "parse_object",
+          [](const Format &self, const UnicodeString &source, Formattable &result) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.parseObject(source, result, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+          },
+          py::arg("source"), py::arg("result"))
+      .def(
+          // const char16_t *source -> const UnicodeString &source
+          "parse_object",
+          [](const Format &self, const char16_t *source, Formattable &result) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.parseObject(source, result, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+          },
+          py::arg("source"), py::arg("result"));
   mf.def(
         // [1] MessageFormat::setFormat
         "set_format",

@@ -101,7 +101,48 @@ void init_compactdecimalformat(py::module &m) {
             }
             return result;
           },
-          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos_iter"));
+          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          "format",
+          [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
+             FieldPosition &pos) -> UnicodeString & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.format(obj, append_to, pos, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"), py::arg("pos"))
+      .def(
+          "format",
+          [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
+      .def("format", py::overload_cast<double, UnicodeString &>(&NumberFormat::format, py::const_),
+           py::arg("number").noconvert(), py::arg("append_to"))
+      .def("format", py::overload_cast<int32_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
+           py::arg("append_to"))
+      .def("format", py::overload_cast<int64_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
+           py::arg("append_to"))
+      .def(
+          "format",
+          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+            UErrorCode error_code = U_ZERO_ERROR;
+            auto &result = self.format(obj, append_to, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUException(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"));
   cdf.def(
          // [1] CompactDecimalFormat::parse
          "parse",

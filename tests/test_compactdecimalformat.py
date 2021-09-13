@@ -179,6 +179,73 @@ def test_format():
     assert id(result) == id(append_to)
     assert result == "-10K"
 
+    # UnicodeString &icu::NumberFormat::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPosition &pos,
+    #       UErrorCode &status
+    # )
+    append_to.remove()
+    pos = FieldPosition(FieldPosition.DONT_CARE)
+    result = fmt.format(Formattable(n64), append_to, pos)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "9,223,372T"
+
+    # UnicodeString &icu::NumberFormat::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPositionIterator *posIter,
+    #       UErrorCode &status
+    # )
+    append_to.remove()
+    pos_iter = FieldPositionIterator()
+    result = fmt.format(Formattable(n64), append_to, pos_iter)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "9,223,372T"
+
+    # UnicodeString &icu::NumberFormat::format(
+    #       double number,
+    #       UnicodeString &appendTo
+    # )
+    append_to.remove()
+    result = fmt.format(d, append_to)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "-10K"
+
+    # UnicodeString &icu::NumberFormat::format(
+    #       int32_t number,
+    #       UnicodeString &appendTo
+    # )
+    append_to.remove()
+    result = fmt.format(n32, append_to)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "2.1B"
+
+    # UnicodeString &icu::NumberFormat::format(
+    #       int64_t number,
+    #       UnicodeString &appendTo
+    # )
+    append_to.remove()
+    result = fmt.format(n64, append_to)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "9,223,372T"
+
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       UErrorCode &status
+    # )
+    append_to.remove()
+    result = fmt.format(Formattable(d), append_to)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "-10K"
+
 
 def test_parse():
     fmt = CompactDecimalFormat.create_instance(
