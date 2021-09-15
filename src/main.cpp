@@ -57,6 +57,7 @@ void init_rbnf(py::module &m);
 void init_regex(py::module &m);
 void init_resbund(py::module &m);
 void init_schriter(py::module &m);
+void init_selfmt(py::module &m);
 void init_smpdtfmt(py::module &m);
 void init_sortkey(py::module &m);
 void init_strenum(py::module &m);
@@ -209,6 +210,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_messagepattern(m); // icu::MessagePattern
   init_msgfmt(m);         // icu::MessageFormat
+
+  init_selfmt(m); // icu::SelectFormat
 
   init_numberformatter(m, number);      // icu::number::NumberFormatter
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
