@@ -100,7 +100,7 @@ void init_timezone(py::module &m) {
         auto result = TimeZone::createTimeZoneIDEnumeration(
             zone_type, region, raw_offset.has_value() ? &raw_offset.value() : NULL, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -122,7 +122,7 @@ void init_timezone(py::module &m) {
           UBool is_system_id;
           auto &result = TimeZone::getCanonicalID(id, canonical_id, is_system_id, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return py::make_tuple(result, is_system_id);
         },
@@ -135,7 +135,7 @@ void init_timezone(py::module &m) {
             UBool is_system_id;
             auto &result = TimeZone::getCanonicalID(id, canonical_id, is_system_id, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return py::make_tuple(result, is_system_id);
           },
@@ -179,7 +179,7 @@ void init_timezone(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = TimeZone::getIDForWindowsID(winid, region, id, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -191,7 +191,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = TimeZone::getIDForWindowsID(winid, region, id, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -204,7 +204,7 @@ void init_timezone(py::module &m) {
         int32_t raw_offset, dst_offset;
         self.getOffset(date, local, raw_offset, dst_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(raw_offset, dst_offset);
       },
@@ -217,7 +217,7 @@ void init_timezone(py::module &m) {
           std::string result(8, '\0');
           auto length = TimeZone::getRegion(id, result.data(), (int32_t)result.size(), error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           result.resize(length);
           return result;
@@ -231,7 +231,7 @@ void init_timezone(py::module &m) {
             std::string result(8, '\0');
             auto length = TimeZone::getRegion(id, result.data(), (int32_t)result.size(), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             result.resize(length);
             return result;
@@ -241,7 +241,7 @@ void init_timezone(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = TimeZone::getTZDataVersion(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -255,7 +255,7 @@ void init_timezone(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = TimeZone::getWindowsID(id, winid, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -267,7 +267,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = TimeZone::getWindowsID(id, winid, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -291,7 +291,7 @@ void init_timezone(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.countTransitionRules(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -306,7 +306,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(raw_offset, dst_offset);
       },
@@ -322,7 +322,7 @@ void init_timezone(py::module &m) {
         AnnualTimeZoneRule *trsrules[2]{0};
         self.getSimpleRulesNear(date, initial, trsrules[0], trsrules[1], error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(initial, trsrules[0], trsrules[1]);
       },
@@ -336,7 +336,7 @@ void init_timezone(py::module &m) {
         int32_t trscount = (int32_t)trsrules.size();
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(initial, trsrules);
       },
@@ -347,7 +347,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.hasEquivalentTransitions(tz, start, end, ignore_dst_amount, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -374,7 +374,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.addTransitionRule(rule ? rule->clone() : NULL, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("rule"));
@@ -383,14 +383,14 @@ void init_timezone(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.complete(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   });
   rbtz.def("count_transition_rules", [](const RuleBasedTimeZone &self) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.countTransitionRules(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -403,7 +403,7 @@ void init_timezone(py::module &m) {
             int32_t raw_offset, dst_offset;
             self.getOffset(date, local, raw_offset, dst_offset, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return py::make_tuple(raw_offset, dst_offset);
           },
@@ -415,7 +415,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, millis, month_length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -428,7 +428,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -442,7 +442,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(raw_offset, dst_offset);
       },
@@ -460,7 +460,7 @@ void init_timezone(py::module &m) {
         int32_t trscount = (int32_t)trsrules.size();
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(initial, trsrules);
       },
@@ -489,7 +489,7 @@ void init_timezone(py::module &m) {
                  savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
                  savings_end_time, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -507,7 +507,7 @@ void init_timezone(py::module &m) {
                  savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
                  savings_end_time, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -525,7 +525,7 @@ void init_timezone(py::module &m) {
                  savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
                  savings_end_time, savings_dst, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -543,7 +543,7 @@ void init_timezone(py::module &m) {
                  savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
                  savings_end_time, savings_dst, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -563,7 +563,7 @@ void init_timezone(py::module &m) {
                 savings_start_time, savings_start_time_mode, savings_end_month, savings_end_day_of_week_in_month,
                 savings_end_day_of_week, savings_end_time, savings_end_time_mode, savings_dst, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -584,7 +584,7 @@ void init_timezone(py::module &m) {
                 savings_start_time, savings_start_time_mode, savings_end_month, savings_end_day_of_week_in_month,
                 savings_end_day_of_week, savings_end_time, savings_end_time_mode, savings_dst, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -603,7 +603,7 @@ void init_timezone(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.countTransitionRules(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -617,7 +617,7 @@ void init_timezone(py::module &m) {
            int32_t raw_offset, dst_offset;
            self.getOffset(date, local, raw_offset, dst_offset, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return py::make_tuple(raw_offset, dst_offset);
          },
@@ -629,7 +629,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -642,7 +642,7 @@ void init_timezone(py::module &m) {
             auto result = self.getOffset(era, year, month, day, day_of_week, milliseconds, month_length,
                                          prev_month_length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -655,7 +655,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, milliseconds, month_length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -670,7 +670,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(raw_offset, dst_offset);
       },
@@ -688,7 +688,7 @@ void init_timezone(py::module &m) {
         int32_t trscount = (int32_t)trsrules.size();
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(initial, trsrules);
       },
@@ -700,7 +700,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setDSTSavings(millis_saved_during_dst, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("millis_saved_during_dst"));
@@ -713,7 +713,7 @@ void init_timezone(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setEndRule(month, day_of_month, day_of_week, time, mode, after, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"), py::arg("time"), py::arg("mode"),
@@ -727,7 +727,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setEndRule(month, day_of_week_in_month, day_of_week, time, mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"), py::arg("mode"))
@@ -740,7 +740,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setEndRule(month, day_of_month, day_of_week, time, after, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"), py::arg("time"), py::arg("after"))
@@ -751,7 +751,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setEndRule(month, day_of_month, time, mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("time"), py::arg("mode"))
@@ -762,7 +762,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setEndRule(month, day_of_month, time, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("time"))
@@ -774,7 +774,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setEndRule(month, day_of_week_in_month, day_of_week, time, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"));
@@ -788,7 +788,7 @@ void init_timezone(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setStartRule(month, day_of_month, day_of_week, time, mode, after, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"), py::arg("time"), py::arg("mode"),
@@ -802,7 +802,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setStartRule(month, day_of_week_in_month, day_of_week, time, mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"), py::arg("mode"))
@@ -815,7 +815,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setStartRule(month, day_of_month, day_of_week, time, after, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"), py::arg("time"), py::arg("after"))
@@ -826,7 +826,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setStartRule(month, day_of_month, time, mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("time"), py::arg("mode"))
@@ -837,7 +837,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setStartRule(month, day_of_month, time, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_month"), py::arg("time"))
@@ -849,7 +849,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setStartRule(month, day_of_week_in_month, day_of_week, time, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"));
@@ -868,7 +868,7 @@ void init_timezone(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.countTransitionRules(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -878,7 +878,7 @@ void init_timezone(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = VTimeZone::createVTimeZone(vtzdata, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -889,7 +889,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = VTimeZone::createVTimeZone(vtzdata, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -903,7 +903,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = VTimeZone::createVTimeZoneFromBasicTimeZone(basic_tz, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -922,7 +922,7 @@ void init_timezone(py::module &m) {
            int32_t raw_offset, dst_offset;
            self.getOffset(date, local, raw_offset, dst_offset, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return py::make_tuple(raw_offset, dst_offset);
          },
@@ -934,7 +934,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, millis, month_length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -947,7 +947,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -961,7 +961,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(raw_offset, dst_offset);
       },
@@ -979,7 +979,7 @@ void init_timezone(py::module &m) {
         int32_t trscount = (int32_t)trsrules.size();
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(initial, trsrules);
       },
@@ -998,7 +998,7 @@ void init_timezone(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.write(start, result, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("start"), py::arg("result"))
@@ -1008,7 +1008,7 @@ void init_timezone(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.write(result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("result"));
@@ -1018,7 +1018,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.writeSimple(time, result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("time"), py::arg("result"));

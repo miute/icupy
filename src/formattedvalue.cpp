@@ -42,7 +42,7 @@ void init_formattedvalue(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.appendTo(appendable, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -53,7 +53,7 @@ void init_formattedvalue(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.nextPosition(cfpos, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -62,7 +62,7 @@ void init_formattedvalue(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toString(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -70,7 +70,7 @@ void init_formattedvalue(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toTempString(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });

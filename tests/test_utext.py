@@ -1,6 +1,6 @@
 import pytest
 from icupy import (
-    ICUException, StringCharacterIterator, UErrorCode, UTextVector,
+    ICUError, StringCharacterIterator, UErrorCode, UTextVector,
     U_SENTINEL, UnicodeString,
     utext_char32_at, utext_clone, utext_close, utext_copy, utext_current32,
     utext_equals, utext_extract, utext_freeze, utext_get_native_index,
@@ -190,7 +190,7 @@ def test_copy():
     with gc(utext_open_uchars(None, s1, -1), utext_close) as ut1:
         assert not utext_is_writable(ut1)
 
-        with pytest.raises(ICUException) as exc_info:
+        with pytest.raises(ICUError) as exc_info:
             utext_copy(ut1, 0, 2, 2, False)
         assert exc_info.value.args[0] == UErrorCode.U_NO_WRITE_PERMISSION
 
@@ -397,7 +397,7 @@ def test_replace():
     with gc(utext_open_uchars(None, s1, -1), utext_close) as ut1:
         assert not utext_is_writable(ut1)
 
-        with pytest.raises(ICUException) as exc_info:
+        with pytest.raises(ICUError) as exc_info:
             utext_replace(ut1, 1, 2, "abc", -1)
         assert exc_info.value.args[0] == UErrorCode.U_NO_WRITE_PERMISSION
 

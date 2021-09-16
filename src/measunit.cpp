@@ -68,7 +68,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createAcre(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -76,7 +76,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createArcMinute(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -84,7 +84,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createArcSecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -92,7 +92,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCelsius(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -100,7 +100,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCentimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -108,7 +108,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicKilometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -116,7 +116,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicMile(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -124,7 +124,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDay(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -132,7 +132,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDegree(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -140,7 +140,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFahrenheit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -148,7 +148,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFoot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -156,7 +156,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGForce(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -164,7 +164,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGram(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -172,7 +172,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHectare(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -180,7 +180,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHectopascal(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -188,7 +188,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHorsepower(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -196,7 +196,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHour(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -204,7 +204,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -212,7 +212,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createInchHg(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -220,7 +220,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilogram(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -228,7 +228,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -236,7 +236,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilometerPerHour(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -244,7 +244,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilowatt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -252,7 +252,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLightYear(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -260,7 +260,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLiter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -268,7 +268,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -276,7 +276,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMeterPerSecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -284,7 +284,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMile(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -292,7 +292,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilePerHour(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -300,7 +300,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMillibar(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -308,7 +308,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMillimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -316,7 +316,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMillisecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -324,7 +324,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMinute(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -332,7 +332,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMonth(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -340,7 +340,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createOunce(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -348,7 +348,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPicometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -356,7 +356,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPound(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -364,7 +364,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -372,7 +372,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareFoot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -380,7 +380,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareKilometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -388,7 +388,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareMeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -396,7 +396,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareMile(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -404,7 +404,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createWatt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -412,7 +412,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createWeek(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -420,7 +420,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createYard(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -428,7 +428,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createYear(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -441,7 +441,7 @@ void init_measunit(py::module &m) {
           error_code = U_ZERO_ERROR;
           MeasureUnit::getAvailable(type, result.data(), capacity, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -453,7 +453,7 @@ void init_measunit(py::module &m) {
         error_code = U_ZERO_ERROR;
         MeasureUnit::getAvailable(result.data(), capacity, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -461,7 +461,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::getAvailableTypes(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -474,7 +474,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createAcreFoot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -482,7 +482,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createAmpere(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -490,7 +490,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createAstronomicalUnit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -498,7 +498,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createBit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -506,7 +506,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createBushel(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -514,7 +514,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createByte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -522,7 +522,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCalorie(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -530,7 +530,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCarat(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -538,7 +538,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCentiliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -546,7 +546,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicCentimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -554,7 +554,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicFoot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -562,7 +562,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -570,7 +570,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicMeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -578,7 +578,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCubicYard(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -586,7 +586,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCup(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -594,7 +594,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDeciliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -602,7 +602,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDecimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -610,7 +610,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFathom(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -618,7 +618,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFluidOunce(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -626,7 +626,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFoodcalorie(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -634,7 +634,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFurlong(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -642,7 +642,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGallon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -650,7 +650,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGigabit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -658,7 +658,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGigabyte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -666,7 +666,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGigahertz(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -674,7 +674,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGigawatt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -682,7 +682,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHectoliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -690,7 +690,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createHertz(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -698,7 +698,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createJoule(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -706,7 +706,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKarat(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -714,7 +714,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKelvin(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -722,7 +722,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilobit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -730,7 +730,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilobyte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -738,7 +738,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilocalorie(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -746,7 +746,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilohertz(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -754,7 +754,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilojoule(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -762,7 +762,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilowattHour(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -770,7 +770,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLiterPerKilometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -778,7 +778,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLux(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -786,7 +786,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegabit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -794,7 +794,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegabyte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -802,7 +802,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegahertz(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -810,7 +810,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegaliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -818,7 +818,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegawatt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -826,7 +826,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMeterPerSecondSquared(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -834,7 +834,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMetricTon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -842,7 +842,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMicrogram(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -850,7 +850,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMicrometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -858,7 +858,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMicrosecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -866,7 +866,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilePerGallon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -874,7 +874,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilliampere(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -882,7 +882,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilligram(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -890,7 +890,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilliliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -898,7 +898,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMillimeterOfMercury(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -906,7 +906,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilliwatt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -914,7 +914,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createNanometer(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -922,7 +922,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createNanosecond(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -930,7 +930,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createNauticalMile(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -938,7 +938,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createOhm(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -946,7 +946,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createOunceTroy(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -954,7 +954,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createParsec(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -962,7 +962,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPint(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -970,7 +970,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPoundPerSquareInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -978,7 +978,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createQuart(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -986,7 +986,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createRadian(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -994,7 +994,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareCentimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1002,7 +1002,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1010,7 +1010,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSquareYard(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1018,7 +1018,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createStone(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1026,7 +1026,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createTablespoon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1034,7 +1034,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createTeaspoon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1042,7 +1042,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createTerabit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1050,7 +1050,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createTerabyte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1058,7 +1058,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createTon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1066,7 +1066,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createVolt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1077,7 +1077,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCentury(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1085,7 +1085,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCupMetric(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1093,7 +1093,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGenericTemperature(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1101,7 +1101,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKnot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1109,7 +1109,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLiterPer100Kilometers(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1117,7 +1117,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMileScandinavian(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1125,7 +1125,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPintMetric(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1133,7 +1133,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createRevolutionAngle(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1144,7 +1144,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGallonImperial(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1152,7 +1152,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilePerGallonImperial(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1160,7 +1160,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilligramPerDeciliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1168,7 +1168,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMillimolePerLiter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1176,7 +1176,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPartPerMillion(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1187,7 +1187,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPoint(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1198,7 +1198,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createAtmosphere(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1206,7 +1206,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPercent(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1214,7 +1214,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPermille(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1222,7 +1222,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPetabyte(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1233,7 +1233,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createBarrel(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1241,7 +1241,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createBritishThermalUnit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1249,7 +1249,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDalton(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1257,7 +1257,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDayPerson(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1265,7 +1265,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDunam(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1273,7 +1273,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createEarthMass(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1281,7 +1281,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createElectronvolt(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1289,7 +1289,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createFluidOunceImperial(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1297,7 +1297,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createKilopascal(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1305,7 +1305,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegapascal(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1313,7 +1313,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMole(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1321,7 +1321,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMonthPerson(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1329,7 +1329,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createNewton(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1337,7 +1337,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createNewtonMeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1345,7 +1345,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPermyriad(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1353,7 +1353,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPoundFoot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1361,7 +1361,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPoundForce(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1369,7 +1369,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSolarLuminosity(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1377,7 +1377,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSolarMass(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1385,7 +1385,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createSolarRadius(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1393,7 +1393,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createWeekPerson(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1401,7 +1401,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createYearPerson(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1573,7 +1573,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createBar(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1581,7 +1581,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDecade(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1589,7 +1589,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDotPerCentimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1597,7 +1597,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDotPerInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1605,7 +1605,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createEm(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1613,7 +1613,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMegapixel(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1621,7 +1621,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPascal(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1629,7 +1629,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPixel(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1637,7 +1637,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPixelPerCentimeter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1645,7 +1645,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPixelPerInch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1653,7 +1653,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createThermUs(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1677,7 +1677,7 @@ void init_measunit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = MeasureUnit::forIdentifier(identifier, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1686,7 +1686,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getComplexity(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1694,7 +1694,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getDimensionality(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1705,7 +1705,7 @@ void init_measunit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.product(other, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1714,7 +1714,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.reciprocal(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1724,7 +1724,7 @@ void init_measunit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.withDimensionality(dimensionality, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1736,7 +1736,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createCandela(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1744,7 +1744,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDessertSpoon(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1752,7 +1752,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDessertSpoonImperial(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1760,7 +1760,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDot(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1768,7 +1768,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDram(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1776,7 +1776,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createDrop(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1784,7 +1784,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createEarthRadius(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1792,7 +1792,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createGrain(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1800,7 +1800,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createJigger(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1808,7 +1808,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLumen(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1816,7 +1816,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createPinch(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1824,7 +1824,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createQuartImperial(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1844,7 +1844,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto pair = self.splitToSingleUnits(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     std::vector<MeasureUnit> result(pair.second);
     for (int32_t i = 0; i < pair.second; ++i) {
@@ -1859,7 +1859,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1868,7 +1868,7 @@ void init_measunit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getPrefix(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -1878,7 +1878,7 @@ void init_measunit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.withPrefix(prefix, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },

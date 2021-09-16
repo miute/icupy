@@ -28,7 +28,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucsdet_detect(ucsd, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         } else if (p == NULL) {
           return std::nullopt;
         }
@@ -42,7 +42,7 @@ void init_ucsdet(py::module &m) {
         int32_t matches_found;
         auto p = ucsdet_detectAll(ucsd, &matches_found, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         std::vector<std::unique_ptr<_ConstUCharsetMatchPtr>> result(matches_found);
         for (int32_t n = 0; n < matches_found; ++n, ++p) {
@@ -61,7 +61,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucsdet_getAllDetectableCharsets(ucsd, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
       },
@@ -72,7 +72,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucsdet_getConfidence(ucsm, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -83,7 +83,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucsdet_getLanguage(ucsm, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -94,7 +94,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucsdet_getName(ucsm, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -108,7 +108,7 @@ void init_ucsdet(py::module &m) {
         error_code = U_ZERO_ERROR;
         ucsdet_getUChars(ucsm, result.data(), cap, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -120,7 +120,7 @@ void init_ucsdet(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto p = ucsdet_open(&error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return std::make_unique<_UCharsetDetectorPtr>(p);
   });
@@ -130,7 +130,7 @@ void init_ucsdet(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucsdet_setDeclaredEncoding(ucsd, encoding, length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("ucsd"), py::arg("encoding"), py::arg("length") = -1);
@@ -145,7 +145,7 @@ void init_ucsdet(py::module &m) {
         std::memcpy(s, text_in, size);
         ucsdet_setText(ucsd, s, len, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         ucsd.set_source(source);
       },

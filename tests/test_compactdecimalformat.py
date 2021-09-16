@@ -8,7 +8,7 @@ import copy
 
 from icupy import (
     CompactDecimalFormat, DecimalFormat, FieldPosition, FieldPositionIterator,
-    Formattable, ICUException, INT32_MAX, INT64_MAX, Locale, ParsePosition,
+    Formattable, ICUError, INT32_MAX, INT64_MAX, Locale, ParsePosition,
     UErrorCode, UNumberCompactStyle, UnicodeString,
 )
 
@@ -279,11 +279,11 @@ def test_parse():
     #       UErrorCode &status
     # )
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse(UnicodeString(s), result)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse(s, result)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR

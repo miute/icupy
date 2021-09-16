@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    ICUException, Locale, StringEnumeration, UErrorCode,
+    ICUError, Locale, StringEnumeration, UErrorCode,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
 
@@ -525,7 +525,7 @@ def test_get_keyword_value():
     assert len(value) == 0
 
     loc.set_to_bogus()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = loc.get_keyword_value("calendar")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
@@ -598,12 +598,12 @@ def test_get_unicode_keyword_value():
     assert isinstance(value, str)
     assert value == "phonebk"
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = loc.get_unicode_keyword_value("cu")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     loc.set_to_bogus()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = loc.get_unicode_keyword_value("ca")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
@@ -775,7 +775,7 @@ def test_set_keyword_value():
     loc.set_keyword_value("calendar", "buddhist")
     assert loc.get_name() == "de_DE@calendar=buddhist;collation=phonebook"
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         loc.set_keyword_value(None, None)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
@@ -798,7 +798,7 @@ def test_set_unicode_keyword_value():
     loc.set_unicode_keyword_value("ca", "buddhist")
     assert loc.get_name() == "de_DE@calendar=buddhist;collation=phonebook"
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         loc.set_unicode_keyword_value(None, None)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 

@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUException,
+    FieldPosition, FieldPositionIterator, Formattable, ICUError,
     ParsePosition, SelectFormat, UErrorCode, UnicodeString,
 )
 
@@ -87,7 +87,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(
             Formattable(UnicodeString("feminine")),
             append_to,
@@ -95,7 +95,7 @@ def test_format():
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(
             Formattable(UnicodeString("feminine")),
             append_to,
@@ -163,12 +163,12 @@ def test_parse_object():
     #       UErrorCode &status
     # )
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse_object(UnicodeString("feminineVerbValue"), result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse_object("feminineVerbValue", result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 

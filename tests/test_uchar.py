@@ -1,7 +1,7 @@
 import pytest
 from icupy import (
     ConstVoidPtr,
-    ICUException, UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
+    ICUError, UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
     UCPMapRangeOption, UCPMapValueFilterPtr,
     UErrorCode, UDecompositionType, UEastAsianWidth, UnicodeSet, UProperty,
     UPropertyNameChoice,
@@ -39,7 +39,7 @@ def test_api():
                             "Cherry Blossom") == 0x1f338
     assert u_char_from_name(UCharNameChoice.U_EXTENDED_CHAR_NAME,
                             "<Other Symbol-1f338>") == 0x1f338
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = u_char_from_name(UCharNameChoice.U_EXTENDED_CHAR_NAME,
                              "<So-1f338>")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_CHAR_FOUND

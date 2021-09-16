@@ -18,7 +18,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.addPattern(pattern, override, conflicting_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -31,7 +31,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.addPattern(pattern, override, conflicting_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -41,7 +41,7 @@ void init_dtptngen(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = DateTimePatternGenerator::createEmptyInstance(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -51,7 +51,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::createInstance(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -63,7 +63,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::createInstance(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -72,7 +72,7 @@ void init_dtptngen(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = DateTimePatternGenerator::createInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -84,7 +84,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBaseSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -96,7 +96,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBaseSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -105,7 +105,7 @@ void init_dtptngen(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getBaseSkeletons(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -115,7 +115,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBestPattern(skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -127,7 +127,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBestPattern(skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -138,7 +138,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBestPattern(skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -150,7 +150,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBestPattern(skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -162,7 +162,7 @@ void init_dtptngen(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getDefaultHourCycle(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -186,7 +186,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -198,7 +198,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -207,7 +207,7 @@ void init_dtptngen(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getSkeletons(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -219,7 +219,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -232,7 +232,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -245,7 +245,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -259,7 +259,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -271,7 +271,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -283,7 +283,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -295,7 +295,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -308,7 +308,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -349,7 +349,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::staticGetBaseSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -361,7 +361,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::staticGetBaseSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -372,7 +372,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::staticGetSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -384,7 +384,7 @@ void init_dtptngen(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = DateTimePatternGenerator::staticGetSkeleton(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },

@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     DecimalFormat, FieldPosition, FieldPositionIterator, Formattable,
-    ICUException, Locale, MessageFormat, ParsePosition, SimpleDateFormat,
+    ICUError, Locale, MessageFormat, ParsePosition, SimpleDateFormat,
     StringEnumeration, TimeZone, UErrorCode, UMessagePatternApostropheMode,
     UParseError, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
@@ -236,12 +236,12 @@ def test_format():
     ])
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(obj, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(obj, append_to, None)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 

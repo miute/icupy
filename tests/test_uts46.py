@@ -1,7 +1,7 @@
 import pytest
 
 from icupy import (
-    ICUException, IDNA, IDNAInfo, U_ICU_VERSION_MAJOR_NUM, UErrorCode,
+    ICUError, IDNA, IDNAInfo, U_ICU_VERSION_MAJOR_NUM, UErrorCode,
     UnicodeString, US_INV,
 )
 
@@ -449,7 +449,7 @@ def test_api():
     # )
     src.set_to_bogus()
     dest = UnicodeString("quatsch")
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _nontrans.label_to_ascii(src, dest, info)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
     assert dest.is_bogus()

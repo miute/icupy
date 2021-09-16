@@ -41,7 +41,7 @@ void init_ures(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto resource_bundle = ures_open(package_name, locale, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
@@ -52,7 +52,7 @@ void init_ures(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto resource_bundle = ures_openDirect(package_name, locale, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },

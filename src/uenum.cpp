@@ -23,7 +23,7 @@ void init_uenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = uenum_count(en, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -34,7 +34,7 @@ void init_uenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = uenum_next(en, NULL, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -51,7 +51,7 @@ void init_uenum(py::module &m) {
         }
         auto p = uenum_openCharStringsEnumeration(source.get(), count.value_or(strings.size()), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
@@ -63,7 +63,7 @@ void init_uenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = uenum_openFromStringEnumeration(adopted->clone(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
       },
@@ -81,7 +81,7 @@ void init_uenum(py::module &m) {
         }
         auto p = uenum_openUCharStringsEnumeration(source.get(), count.value_or(strings.size()), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
@@ -93,7 +93,7 @@ void init_uenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         uenum_reset(en, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("en"));
@@ -103,7 +103,7 @@ void init_uenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = uenum_unext(en, NULL, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },

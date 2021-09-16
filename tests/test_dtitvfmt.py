@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     Calendar, DateFormat, DateInterval, DateIntervalFormat, DateIntervalInfo,
-    FieldPosition, FieldPositionIterator, Format, Formattable, ICUException,
+    FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
     Locale, TimeZone, UCalendarDateFields, UErrorCode,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
@@ -382,7 +382,7 @@ def test_format():
     # )
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(
             Formattable(DateInterval(from_date, to_date)),
             append_to,

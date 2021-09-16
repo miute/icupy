@@ -10,7 +10,7 @@ void init_currunit(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = std::make_unique<CurrencyUnit>(iso_code, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          }),

@@ -41,7 +41,7 @@ void init_stsearch(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto n = self.next(error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              } else if (n == USEARCH_DONE) {
                throw py::stop_iteration();
              }
@@ -52,7 +52,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         for (auto n = self.last(error_code); n != USEARCH_DONE; n = self.previous(error_code)) {
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           result.push_back(n);
         }
@@ -62,7 +62,7 @@ void init_stsearch(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.first(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -72,7 +72,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.following(position, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -87,7 +87,7 @@ void init_stsearch(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.last(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -95,7 +95,7 @@ void init_stsearch(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.next(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -105,7 +105,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.preceding(position, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -114,7 +114,7 @@ void init_stsearch(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.previous(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -124,7 +124,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setAttribute(attribute, value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("attribute"), py::arg("value"));
@@ -134,7 +134,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setBreakIterator(breakiter, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("breakiter"));
@@ -148,7 +148,7 @@ void init_stsearch(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         }),
@@ -160,7 +160,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -172,7 +172,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -184,7 +184,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -196,7 +196,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -209,7 +209,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -222,7 +222,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -235,7 +235,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -247,7 +247,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -259,7 +259,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -271,7 +271,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -284,7 +284,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -296,7 +296,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -308,7 +308,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -320,7 +320,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -332,7 +332,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, locale, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -344,7 +344,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -356,7 +356,7 @@ void init_stsearch(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<StringSearch>(pattern, text, coll, breakiter, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -381,7 +381,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setCollator(coll, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("coll"));
@@ -391,7 +391,7 @@ void init_stsearch(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setOffset(position, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("position"));
@@ -401,7 +401,7 @@ void init_stsearch(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           self.setPattern(pattern, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
         },
         py::arg("pattern"))
@@ -411,7 +411,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"));
@@ -421,7 +421,7 @@ void init_stsearch(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           self.setText(text, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
         },
         py::arg("text"))
@@ -431,7 +431,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setText(text, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"))
@@ -442,7 +442,7 @@ void init_stsearch(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setText(text, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"));

@@ -38,7 +38,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<Formattable>(number, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -75,7 +75,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             int32_t count;
             self.getArray(count, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             if (index < 0) {
               index += count;
@@ -97,7 +97,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     int32_t count;
     auto array = self.getArray(count, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     std::vector<Formattable> result(count);
     for (int32_t i = 0; i < count; ++i) {
@@ -109,7 +109,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getDate(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -117,7 +117,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto str = self.getDecimalNumber(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return py::str(str.data());
   });
@@ -125,7 +125,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getDouble(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -133,7 +133,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getInt64(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -141,7 +141,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getLong(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -185,7 +185,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.getString(error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           })
@@ -195,7 +195,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &value = self.getString(result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return value;
           },
@@ -215,7 +215,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setDecimalNumber(number_string, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("number_string"));

@@ -4,7 +4,7 @@ from icupy import U_ICU_VERSION_MAJOR_NUM
 if U_ICU_VERSION_MAJOR_NUM < 64:
     pytest.skip("ICU4C<64", allow_module_level=True)
 
-from icupy import ErrorCode, ICUException, Locale, LocaleBuilder, UErrorCode
+from icupy import ErrorCode, ICUError, Locale, LocaleBuilder, UErrorCode
 
 
 def test_api():
@@ -132,7 +132,7 @@ def test_copy_error_to():
     assert not bld.copy_error_to(out_error_code)
     assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         bld.set_unicode_locale_keyword("123", "abc").build()
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
     out_error_code = ErrorCode()

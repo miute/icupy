@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    Calendar, CurrencyAmount, DateInterval, Formattable, ICUException,
+    Calendar, CurrencyAmount, DateInterval, Formattable, ICUError,
     INT32_MAX, TimeUnit, TimeUnitAmount, TimeZone, UErrorCode, UnicodeString,
 )
 
@@ -33,14 +33,14 @@ def test_api():
     assert isinstance(array2, list)
     assert array2 == array
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.get_array()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     # UDate icu::Formattable::getDate(UErrorCode &status)
     assert fmt2.get_date() == 1231027200000.0
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt3.get_date()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
@@ -49,7 +49,7 @@ def test_api():
     assert isinstance(result, str)
     assert result == "2.147483648E+9"
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.get_decimal_number()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
 
@@ -58,7 +58,7 @@ def test_api():
     assert fmt4.get_double() == INT32_MAX
     assert fmt5.get_double() == INT32_MAX + 1
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.get_double()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
@@ -67,14 +67,14 @@ def test_api():
     assert fmt4.get_int64() == INT32_MAX
     assert fmt5.get_int64() == INT32_MAX + 1
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.get_int64()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     # int32_t icu::Formattable::getLong(UErrorCode &status)
     assert fmt4.get_long() == INT32_MAX
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt5.get_long()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
@@ -99,7 +99,7 @@ def test_api():
     assert id(result) == id(output)
     assert output == result == "1e-3"
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.get_string()
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
@@ -129,7 +129,7 @@ def test_api():
         _ = fmt10[5]
     assert fmt10[-1] == fmt8  # Non-standard
 
-    with pytest.raises(ICUException) as exc_info:  # Non-standard
+    with pytest.raises(ICUError) as exc_info:  # Non-standard
         _ = fmt2[0]
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 

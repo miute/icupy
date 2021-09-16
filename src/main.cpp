@@ -107,7 +107,7 @@ void init_utypes(py::module &m);
 void init_uversion(py::module &m);
 void init_voidptr(py::module &m);
 
-ICUException::ICUException(UErrorCode error_code, const char *message) {
+ICUError::ICUError(UErrorCode error_code, const char *message) {
   error_code_ = error_code;
   what_.append(u_errorName(error_code));
   if (message != nullptr && *message != 0) {
@@ -118,13 +118,13 @@ ICUException::ICUException(UErrorCode error_code, const char *message) {
 }
 
 PYBIND11_MODULE(MODULE_NAME, m) {
-  static py::exception<ICUException> ex(m, "ICUException");
+  static py::exception<ICUError> ex(m, "ICUError");
   py::register_exception_translator([](std::exception_ptr p) {
     try {
       if (p) {
         std::rethrow_exception(p);
       }
-    } catch (const ICUException &e) {
+    } catch (const ICUError &e) {
       ErrorCode error_code;
       error_code.set(e.get_error_code());
       auto message = e.get_message();

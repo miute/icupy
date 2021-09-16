@@ -25,7 +25,7 @@ _UTextVector::_UTextVector(size_t n) {
     error_code = U_ZERO_ERROR;
     values_[i] = utext_openUnicodeString(NULL, &sources_[i], &error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   }
 }
@@ -39,7 +39,7 @@ _UTextVector::_UTextVector(const _UnicodeStringList &iterable) {
     error_code = U_ZERO_ERROR;
     values_[i] = utext_openUnicodeString(NULL, &sources_[i], &error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   }
 }
@@ -103,7 +103,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, src.get_source());
       },
@@ -125,7 +125,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         utext_copy(ut, native_start, native_limit, dest_index, move, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), py::arg("dest_index"), py::arg("move"));
@@ -142,7 +142,7 @@ void init_utext(py::module &m) {
         error_code = U_ZERO_ERROR;
         utext_extract(ut, native_start, native_limit, result.data(), dest_capacity, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -175,7 +175,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_openCharacterIterator(ut.value_or(nullptr), ci, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -186,7 +186,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_openConstUnicodeString(ut.value_or(nullptr), s, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -197,7 +197,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_openReplaceable(ut.value_or(nullptr), rep, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -209,7 +209,7 @@ void init_utext(py::module &m) {
         auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max((int64_t)0, length));
         auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
       },
@@ -220,7 +220,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_openUnicodeString(ut.value_or(nullptr), s, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -232,7 +232,7 @@ void init_utext(py::module &m) {
         auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max((int64_t)0, length));
         auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
       },
@@ -250,7 +250,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = utext_replace(ut, native_start, native_limit, replacement_text, replacement_length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -267,7 +267,7 @@ void init_utext(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = utext_setup(ut.value_or(nullptr), extra_space, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },

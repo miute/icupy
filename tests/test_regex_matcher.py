@@ -1,6 +1,6 @@
 import pytest
 from icupy import (
-    ConstVoidPtr, ICUException, RegexMatcher, RegexPattern, UErrorCode,
+    ConstVoidPtr, ICUError, RegexMatcher, RegexPattern, UErrorCode,
     URegexFindProgressCallbackPtr, URegexMatchCallbackPtr, URegexpFlag,
     UTextVector, UnicodeString, UnicodeStringVector,
     utext_close, utext_extract, utext_get_native_index, utext_native_length,
@@ -664,7 +664,7 @@ def test_set_find_progress_callback():
     context2 = ConstVoidPtr(result2)
     matcher.set_find_progress_callback(callback2, context2)
     assert matcher.find(0)
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         matcher.find()
     assert exc_info.value.args[0] == UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 5]
@@ -725,7 +725,7 @@ def test_set_match_callback():
     context2 = ConstVoidPtr(result2)
     matcher.set_match_callback(callback2, context2)
     matcher.reset(src)
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         matcher.matches()
     assert exc_info.value.args[0] == UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 2, 3, 4, 5]

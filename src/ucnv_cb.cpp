@@ -8,7 +8,7 @@ void init_ucnv_cb(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_cbFromUWriteBytes(args, source, length, offset_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));
@@ -18,7 +18,7 @@ void init_ucnv_cb(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_cbFromUWriteSub(args, offset_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -28,7 +28,7 @@ void init_ucnv_cb(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_cbToUWriteSub(args, offset_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -38,7 +38,7 @@ void init_ucnv_cb(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_cbToUWriteUChars(args, source, length, offset_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));

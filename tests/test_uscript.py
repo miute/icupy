@@ -1,7 +1,7 @@
 import pytest
 
 from icupy import (
-    ICUException, UErrorCode, UnicodeString, UScriptCode, UScriptUsage,
+    ICUError, UErrorCode, UnicodeString, UScriptCode, UScriptUsage,
     uscript_breaks_between_letters, uscript_get_code, uscript_get_name,
     uscript_get_sample_string, uscript_get_sample_unicode_string,
     uscript_get_script, uscript_get_script_extensions, uscript_get_short_name,
@@ -46,7 +46,7 @@ def test_api():
     # UScriptCode uscript_getScript(UChar32 codepoint, UErrorCode *err)
     assert uscript_get_script(0x0d02) == UScriptCode.USCRIPT_MALAYALAM
     assert uscript_get_script(0) == UScriptCode.USCRIPT_COMMON
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = uscript_get_script(-1)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 

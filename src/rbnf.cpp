@@ -18,7 +18,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -29,7 +29,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -40,7 +40,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -51,7 +51,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -62,7 +62,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -74,7 +74,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -85,7 +85,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -96,7 +96,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -108,7 +108,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -120,7 +120,7 @@ void init_rbnf(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -132,7 +132,7 @@ void init_rbnf(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -144,7 +144,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -156,7 +156,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -169,7 +169,7 @@ void init_rbnf(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -182,7 +182,7 @@ void init_rbnf(py::module &m) {
                 UErrorCode error_code = U_ZERO_ERROR;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
                 if (U_FAILURE(error_code)) {
-                  throw ICUException(error_code);
+                  throw ICUError(error_code);
                 }
                 return result;
               }),
@@ -195,7 +195,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -206,7 +206,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(tag, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -217,7 +217,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedNumberFormat>(tag, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -243,7 +243,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -257,7 +257,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -269,7 +269,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -282,7 +282,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -295,7 +295,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -318,7 +318,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -331,7 +331,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -344,7 +344,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -367,7 +367,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -380,7 +380,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -393,7 +393,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -416,7 +416,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -429,7 +429,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -482,7 +482,7 @@ void init_rbnf(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getRuleSetDisplayNameLocale(index, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -509,7 +509,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"))
@@ -520,7 +520,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));
@@ -531,7 +531,7 @@ void init_rbnf(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setContext(value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("value"));
@@ -546,7 +546,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setDefaultRuleSet(rule_set_name, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("rule_set_name"))
@@ -557,7 +557,7 @@ void init_rbnf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setDefaultRuleSet(rule_set_name, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("rule_set_name"));

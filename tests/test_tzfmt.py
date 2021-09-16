@@ -7,7 +7,7 @@ if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
 from icupy import (
-    FieldPosition, FieldPositionIterator, Format, Formattable, ICUException,
+    FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
     Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames,
     UErrorCode, UTimeZoneFormatGMTOffsetPatternType,
     UTimeZoneFormatParseOption, UTimeZoneFormatStyle, UTimeZoneFormatTimeType,
@@ -231,7 +231,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(obj, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 

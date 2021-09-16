@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from icupy import (
-    ConstVoidPtr, ICUException, Locale, UErrorCode, UnicodeSet, UnicodeString,
+    ConstVoidPtr, ICUError, Locale, UErrorCode, UnicodeSet, UnicodeString,
     u_strlen,
     # ucnv
     UCNV_LOCALE_OPTION_STRING, UCNV_VERSION_OPTION_STRING,
@@ -189,7 +189,7 @@ def test_open_package():
     cnv = None
     try:
         cnv = ucnv_open_package(str(path), "test3")
-    except ICUException as ex:
+    except ICUError as ex:
         if ex.args[0] != UErrorCode.U_FILE_ACCESS_ERROR:
             raise
         pytest.skip("testdata.dat is not found (not an error). "

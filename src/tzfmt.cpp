@@ -73,7 +73,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = TimeZoneFormat::createInstance(locale, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -85,7 +85,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = TimeZoneFormat::createInstance(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -98,7 +98,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto &result = self.format(obj, append_to, pos, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -111,7 +111,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -123,7 +123,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -143,7 +143,7 @@ void init_tzfmt(py::module &m) {
         auto &string =
             self.formatOffsetISO8601Basic(offset, use_utc_indicator, is_short, ignore_seconds, result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return string;
       },
@@ -157,7 +157,7 @@ void init_tzfmt(py::module &m) {
         auto &string =
             self.formatOffsetISO8601Extended(offset, use_utc_indicator, is_short, ignore_seconds, result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return string;
       },
@@ -170,7 +170,7 @@ void init_tzfmt(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &string = self.formatOffsetLocalizedGMT(offset, result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return string;
       },
@@ -182,7 +182,7 @@ void init_tzfmt(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &string = self.formatOffsetShortLocalizedGMT(offset, result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return string;
       },
@@ -262,7 +262,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"))
@@ -273,7 +273,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));
@@ -316,7 +316,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setGMTOffsetDigits(digits, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("digits"))
@@ -327,7 +327,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setGMTOffsetDigits(digits, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("digits"));
@@ -337,7 +337,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setGMTOffsetPattern(type, pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("type_"), py::arg("pattern"))
@@ -348,7 +348,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setGMTOffsetPattern(type, pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("type_"), py::arg("pattern"));
@@ -358,7 +358,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setGMTPattern(pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("pattern"))
@@ -369,7 +369,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setGMTPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"));
@@ -379,7 +379,7 @@ void init_tzfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setGMTZeroFormat(gmt_zero_format, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("gmt_zero_format"))
@@ -390,7 +390,7 @@ void init_tzfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setGMTZeroFormat(gmt_zero_format, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("gmt_zero_format"));

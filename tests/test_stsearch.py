@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    BreakIterator, Collator, ICUException, Locale, RuleBasedCollator,
+    BreakIterator, Collator, ICUError, Locale, RuleBasedCollator,
     SearchIterator, StringCharacterIterator, StringSearch, UErrorCode,
     USEARCH_DONE, USearchAttribute, USearchAttributeValue, UnicodeString,
 )
@@ -81,7 +81,7 @@ def test_api():
     assert it.get_offset() == 0
     it.set_offset(4)
     assert it.get_offset() == 4
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         it.set_offset(9)
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 

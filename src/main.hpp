@@ -18,9 +18,9 @@ using _UnicodeStringVector = std::vector<icu::UnicodeString>;
 
 PYBIND11_MAKE_OPAQUE(_UnicodeStringVector);
 
-class ICUException : public std::exception {
+class ICUError : public std::exception {
 public:
-  explicit ICUException(UErrorCode error_code, const char *message = "");
+  explicit ICUError(UErrorCode error_code, const char *message = "");
   const char *what() const noexcept override { return what_.c_str(); };
   UErrorCode get_error_code() const { return error_code_; };
   const char *get_message() const { return message_.c_str(); };

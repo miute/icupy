@@ -48,7 +48,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormat::createCurrencyInstance(in_locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -60,7 +60,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createCurrencyInstance(in_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -69,7 +69,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = NumberFormat::createCurrencyInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -79,7 +79,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormat::createInstance(desired_locale, style, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -91,7 +91,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createInstance(desired_locale, style, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -102,7 +102,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createInstance(in_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -114,7 +114,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createInstance(in_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -123,7 +123,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = NumberFormat::createInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -133,7 +133,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormat::createPercentInstance(in_locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -145,7 +145,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createPercentInstance(in_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -156,7 +156,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createPercentInstance(error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           });
@@ -166,7 +166,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormat::createScientificInstance(in_locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -178,7 +178,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormat::createScientificInstance(in_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -187,7 +187,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = NumberFormat::createScientificInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -200,7 +200,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.format(obj, append_to, pos, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -214,7 +214,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -226,7 +226,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -238,7 +238,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -255,7 +255,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -276,7 +276,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -297,7 +297,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -310,7 +310,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -333,7 +333,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getContext(type, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -365,7 +365,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"))
@@ -376,7 +376,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));
@@ -409,7 +409,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"))
@@ -420,7 +420,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));

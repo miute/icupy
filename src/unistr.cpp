@@ -52,7 +52,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<UnicodeString>(src, src_length, cnv, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -358,7 +358,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           error_code = U_ZERO_ERROR;
           self.extract(dest.data(), (int32_t)dest.size(), cnv, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return py::bytes(dest.data(), length);
         },
@@ -371,7 +371,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
             UErrorCode error_code = U_ZERO_ERROR;
             self.extract(result.data(), (int32_t)result.size(), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           })
@@ -830,7 +830,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
     error_code = U_ZERO_ERROR;
     self.toUTF32(dest.data(), length, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return std::u32string(dest.begin(), dest.end());
   });

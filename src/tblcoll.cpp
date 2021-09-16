@@ -37,7 +37,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Collator::createInstance(loc, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -46,7 +46,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Collator::createInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -96,7 +96,7 @@ void init_tblcoll(py::module &m) {
         Collator::getBound(source.data(), source_length, bound_type, no_of_levels, result.data(), result_length,
                            error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -115,7 +115,7 @@ void init_tblcoll(py::module &m) {
         error_code = U_ZERO_ERROR;
         Collator::getEquivalentReorderCodes(reorder_code, result.data(), dest_capacity, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -127,7 +127,7 @@ void init_tblcoll(py::module &m) {
         UBool is_available = true;
         auto result = Collator::getFunctionalEquivalent(keyword, locale, is_available, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(result, is_available);
       },
@@ -136,7 +136,7 @@ void init_tblcoll(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = Collator::getKeywords(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -146,7 +146,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Collator::getKeywordValues(keyword, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -157,7 +157,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Collator::getKeywordValuesForLocale(keyword, locale, commonly_used, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -219,7 +219,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -230,7 +230,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -239,7 +239,7 @@ void init_tblcoll(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -250,7 +250,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -259,7 +259,7 @@ void init_tblcoll(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -270,7 +270,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -281,7 +281,7 @@ void init_tblcoll(py::module &m) {
              auto result =
                  std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -294,7 +294,7 @@ void init_tblcoll(py::module &m) {
             auto result =
                 std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -307,7 +307,7 @@ void init_tblcoll(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<RuleBasedCollator>(bin.data(), length, base, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -326,7 +326,7 @@ void init_tblcoll(py::module &m) {
     error_code = U_ZERO_ERROR;
     self.cloneBinary(result.data(), capacity, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -337,7 +337,7 @@ void init_tblcoll(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = self.compare(source, source_length, target, target_length, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -348,7 +348,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -360,7 +360,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -372,7 +372,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -385,7 +385,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, length, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -396,7 +396,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -408,7 +408,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -420,7 +420,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -433,7 +433,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(source, target, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -446,7 +446,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.compare(s_iter, t_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -472,7 +472,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getAttribute(attr, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -484,7 +484,7 @@ void init_tblcoll(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto &result = self.getCollationKey(source, source_length, key, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -495,7 +495,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.getCollationKey(source, key, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -507,7 +507,7 @@ void init_tblcoll(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.getCollationKey(source, key, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -522,7 +522,7 @@ void init_tblcoll(py::module &m) {
     std::vector<int32_t> result(dest_capacity);
     self.getReorderCodes(result.data(), dest_capacity, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -561,7 +561,7 @@ void init_tblcoll(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getTailoredSet(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -569,7 +569,7 @@ void init_tblcoll(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getVariableTop(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -586,7 +586,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setAttribute(attr, value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("attr"), py::arg("value"));
@@ -596,7 +596,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.setMaxVariable(group, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -607,7 +607,7 @@ void init_tblcoll(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setReorderCodes(reorder_codes.data(), reorder_codes_length, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("reorder_codes"), py::arg("reorder_codes_length"));

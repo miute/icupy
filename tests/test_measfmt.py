@@ -8,7 +8,7 @@ if U_ICU_VERSION_MAJOR_NUM < 53:
 
 from icupy import (
     CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,
-    Formattable, ICUException, Locale, Measure, MeasureFormat, MeasureUnit,
+    Formattable, ICUError, Locale, Measure, MeasureFormat, MeasureUnit,
     ParsePosition, TimeUnit, TimeUnitAmount, UErrorCode, UMeasureFormatWidth,
     UnicodeString,
 )
@@ -183,7 +183,7 @@ def test_format():
     # )
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt1.format(
             Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
             append_to,
@@ -192,7 +192,7 @@ def test_format():
 
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt1.format(
             Formattable(CurrencyAmount(Formattable(1), "USD")),
             append_to,
@@ -201,7 +201,7 @@ def test_format():
 
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt2.format(
             Formattable(CurrencyAmount(Formattable(1), "USD")),
             append_to,
@@ -210,7 +210,7 @@ def test_format():
 
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt1.format(
             Formattable(TimeUnitAmount(Formattable(2),
                                        TimeUnit.UTIMEUNIT_DAY)),
@@ -371,17 +371,17 @@ def test_parse_object():
     #       UErrorCode &status
     # )
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt1.parse_object(UnicodeString("3.5 feet"), result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt1.parse_object("3.5 feet", result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt1.parse_object("1.00 US dollars", result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
@@ -396,7 +396,7 @@ def test_parse_object():
     assert camt.get_iso_currency() == "USD"
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt1.parse_object("2 days", result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 

@@ -68,7 +68,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_countAliases(alias, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -102,7 +102,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getAlias(alias, n, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -113,13 +113,13 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         const auto count = ucnv_countAliases(alias, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         std::vector<const char *> result(count);
         error_code = U_ZERO_ERROR;
         ucnv_getAliases(alias, result.data(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -131,7 +131,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getCanonicalName(alias, standard, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -142,7 +142,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getCCSID(converter, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -157,7 +157,7 @@ void init_ucnv(py::module &m) {
         error_code = U_ZERO_ERROR;
         ucnv_getDisplayName(converter, display_locale, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -184,7 +184,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getName(converter, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -195,7 +195,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getPlatform(converter, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -206,7 +206,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getStandard(n, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -217,7 +217,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_getStandardName(name, standard, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -230,7 +230,7 @@ void init_ucnv(py::module &m) {
         int8_t len = sizeof(sub_chars);
         ucnv_getSubstChars(converter, sub_chars, &len, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::bytes(sub_chars, len);
       },
@@ -259,7 +259,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_getUnicodeSet(cnv, set_fill_in, which_set, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("cnv"), py::arg("set_fill_in"), py::arg("which_set"));
@@ -271,7 +271,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ucnv_isFixedWidth(cnv, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -282,7 +282,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucnv_open(converter_name, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UConverterPtr>(p);
       },
@@ -291,7 +291,7 @@ void init_ucnv(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto p = ucnv_openAllNames(&error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return std::make_unique<_UEnumerationPtr>(p);
   });
@@ -301,7 +301,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucnv_openCCSID(codepage, platform, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UConverterPtr>(p);
       },
@@ -312,7 +312,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucnv_openPackage(package_name, converter_name, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UConverterPtr>(p);
       },
@@ -323,7 +323,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ucnv_openStandardNames(conv_name, standard, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
       },
@@ -360,7 +360,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_setFromUCallBack(converter, fp, cp, &old_action, &old_context, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         if (old_action == new_action.callback) {
           // Old Python callback function and callback data
@@ -380,7 +380,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_setSubstChars(converter, sub_chars, len, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("converter"), py::arg("sub_chars"), py::arg("len_"));
@@ -390,7 +390,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_setSubstString(converter, s, length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("converter"), py::arg("s"), py::arg("length"));
@@ -414,7 +414,7 @@ void init_ucnv(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ucnv_setToUCallBack(converter, fp, cp, &old_action, &old_context, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         if (old_action == new_action.callback) {
           // Old Python callback function and callback data

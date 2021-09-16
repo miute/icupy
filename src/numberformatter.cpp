@@ -68,7 +68,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.appendTo(appendable, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -80,7 +80,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getOutputUnit(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -93,7 +93,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.nextPosition(cfpos, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -105,7 +105,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toDecimalNumber<std::string>(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -116,7 +116,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toString(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -127,7 +127,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toTempString(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -159,7 +159,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.formatDecimal(value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -170,7 +170,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.formatDouble(value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -181,7 +181,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.formatInt(value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -191,7 +191,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toFormat(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -205,7 +205,7 @@ void init_numberformatter(py::module &, py::module &m2) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormatter::forSkeleton(skeleton, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -217,7 +217,7 @@ void init_numberformatter(py::module &, py::module &m2) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormatter::forSkeleton(skeleton, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -231,7 +231,7 @@ void init_numberformatter(py::module &, py::module &m2) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -243,7 +243,7 @@ void init_numberformatter(py::module &, py::module &m2) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -338,7 +338,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toSkeleton(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -444,7 +444,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toSkeleton(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });

@@ -12,7 +12,7 @@ void init_currpinf(py::module &m) {
        UErrorCode error_code = U_ZERO_ERROR;
        auto result = std::make_unique<CurrencyPluralInfo>(error_code);
        if (U_FAILURE(error_code)) {
-         throw ICUException(error_code);
+         throw ICUError(error_code);
        }
        return result;
      }))
@@ -20,7 +20,7 @@ void init_currpinf(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -31,7 +31,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -60,7 +60,7 @@ void init_currpinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setCurrencyPluralPattern(plural_count, pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("plural_count"), py::arg("pattern"))
@@ -71,7 +71,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("plural_count"), py::arg("pattern"))
@@ -82,7 +82,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("plural_count"), py::arg("pattern"))
@@ -94,7 +94,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("plural_count"), py::arg("pattern"));
@@ -104,7 +104,7 @@ void init_currpinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setLocale(loc, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("loc"))
@@ -115,7 +115,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setLocale(loc, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("loc"));
@@ -125,7 +125,7 @@ void init_currpinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setPluralRules(rule_description, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("rule_description"))
@@ -136,7 +136,7 @@ void init_currpinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setPluralRules(rule_description, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("rule_description"));

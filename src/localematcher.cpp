@@ -41,7 +41,7 @@ void init_localematcher(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.getBestMatch(desired_locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -53,7 +53,7 @@ void init_localematcher(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getBestMatch(desired_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -66,7 +66,7 @@ void init_localematcher(py::module &m) {
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatch(iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -77,7 +77,7 @@ void init_localematcher(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getBestMatchForListString(desired_locale_list, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -88,7 +88,7 @@ void init_localematcher(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.getBestMatchResult(desired_locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -101,7 +101,7 @@ void init_localematcher(py::module &m) {
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatchResult(iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -113,7 +113,7 @@ void init_localematcher(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.isMatch(desired, supported, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -125,7 +125,7 @@ void init_localematcher(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.isMatch(desired, supported, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -137,7 +137,7 @@ void init_localematcher(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.isMatch(desired, supported, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -150,7 +150,7 @@ void init_localematcher(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.isMatch(desired, supported, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -169,7 +169,7 @@ void init_localematcher(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.build(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -230,7 +230,7 @@ void init_localematcher(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.makeResolvedLocale(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });

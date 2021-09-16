@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    ICUException, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
+    ICUError, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
     UProperty, USET_IGNORE_SPACE, USetSpanCondition, U_ICU_VERSION_MAJOR_NUM,
     UnicodeSet, UnicodeString,
     u_get_binary_property_set,
@@ -192,7 +192,7 @@ def test_apply_int_property_value():
     assert test1.contains(0x3099)
     assert test1.contains(0x309a)
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         test1.apply_int_property_value(UProperty.UCHAR_INT_LIMIT, 0)
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
@@ -226,7 +226,7 @@ def test_apply_pattern():
     assert test1.size() == 10  # [0-9]
     assert test1.contains(0x30, 0x39)
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         test1.apply_pattern(UnicodeString(), pos, options, None)
     assert exc_info.value.args[0] == UErrorCode.U_MALFORMED_SET
 
@@ -248,7 +248,7 @@ def test_apply_pattern():
     assert test2.size() == 10  # [0-9]
     assert test2.contains(0x30, 0x39)
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         test2.apply_pattern(UnicodeString())
     assert exc_info.value.args[0] == UErrorCode.U_MALFORMED_SET
 
@@ -270,7 +270,7 @@ def test_apply_property_alias():
     assert test1.contains(0x3099)
     assert test1.contains(0x309a)
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         test1.apply_property_alias(UnicodeString("ccc"),
                                    UnicodeString("-"))
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR

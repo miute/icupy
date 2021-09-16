@@ -11,7 +11,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -22,7 +22,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -43,7 +43,7 @@ void init_dtitvinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return string;
          },
@@ -56,7 +56,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return string;
           },
@@ -67,7 +67,7 @@ void init_dtitvinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setFallbackIntervalPattern(fallback_pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("fallback_pattern"))
@@ -78,7 +78,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setFallbackIntervalPattern(fallback_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("fallback_pattern"));
@@ -89,7 +89,7 @@ void init_dtitvinf(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
@@ -101,7 +101,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
@@ -113,7 +113,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
@@ -126,7 +126,7 @@ void init_dtitvinf(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"));

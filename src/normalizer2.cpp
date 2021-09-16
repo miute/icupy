@@ -11,7 +11,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.append(first, second, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -23,7 +23,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.append(first, second, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -39,7 +39,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getInstance(package_name, name, mode, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -51,7 +51,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getNFCInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -62,7 +62,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getNFDInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -73,7 +73,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getNFKCCasefoldInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -84,7 +84,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getNFKCInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -95,7 +95,7 @@ void init_normalizer2(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Normalizer2::getNFKDInstance(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -111,7 +111,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.isNormalized(s, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -123,7 +123,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.isNormalized(s, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -134,7 +134,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.normalize(src, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -146,7 +146,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.normalize(src, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -157,7 +157,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.normalize(src, dest, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -169,7 +169,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.normalize(src, dest, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -180,7 +180,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.normalizeSecondAndAppend(first, second, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -192,7 +192,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.normalizeSecondAndAppend(first, second, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -203,7 +203,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.quickCheck(s, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -215,7 +215,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.quickCheck(s, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -226,7 +226,7 @@ void init_normalizer2(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.spanQuickCheckYes(s, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -238,7 +238,7 @@ void init_normalizer2(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.spanQuickCheckYes(s, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },

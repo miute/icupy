@@ -31,7 +31,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.addLikelySubtags(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -40,7 +40,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.canonicalize(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
@@ -51,7 +51,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.createKeywords(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -60,7 +60,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.createUnicodeKeywords(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -70,7 +70,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = Locale::forLanguageTag(tag, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code, tag);
+          throw ICUError(error_code, tag);
         }
         return result;
       },
@@ -195,7 +195,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     std::set<std::string> result;
     self.getKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -205,7 +205,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "get_keyword_value",
       [](const Locale &self, const char *keyword_name) {
         if (self.isBogus()) {
-          throw ICUException(U_ILLEGAL_ARGUMENT_ERROR);
+          throw ICUError(U_ILLEGAL_ARGUMENT_ERROR);
         }
         UErrorCode error_code = U_ZERO_ERROR;
         const auto length = self.getKeywordValue(keyword_name, NULL, 0, error_code);
@@ -213,7 +213,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         error_code = U_ZERO_ERROR;
         self.getKeywordValue(keyword_name, result.data(), (int32_t)result.size(), error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -225,7 +225,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         std::string result = self.getKeywordValue<std::string>(keyword_name, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -251,7 +251,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     std::set<std::string> result;
     self.getUnicodeKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -261,7 +261,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getUnicodeKeywordValue<std::string>(keyword_name, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code, keyword_name);
+          throw ICUError(error_code, keyword_name);
         }
         return result;
       },
@@ -279,7 +279,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.minimizeSubtags(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -289,7 +289,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         Locale::setDefault(new_locale.value_or(nullptr), error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("new_locale"));
@@ -300,7 +300,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setKeywordValue(keyword_name, keyword_value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("keyword_name"), py::arg("keyword_value"));
@@ -313,7 +313,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setUnicodeKeywordValue(keyword_name, keyword_value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("keyword_name"), py::arg("keyword_value"));
@@ -321,7 +321,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.toLanguageTag<std::string>(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });

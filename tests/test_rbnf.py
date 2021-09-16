@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUException,
+    FieldPosition, FieldPositionIterator, Formattable, ICUError,
     INT32_MAX, INT64_MAX, Locale, NumberFormat, ParsePosition,
     RuleBasedNumberFormat, UErrorCode, UParseError, URBNFRuleSetTag,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
@@ -198,7 +198,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(Formattable(d), append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
@@ -275,7 +275,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(d, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
@@ -343,7 +343,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(n32, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
@@ -403,7 +403,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(n64, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
@@ -417,7 +417,7 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(s, append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 

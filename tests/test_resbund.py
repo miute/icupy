@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from icupy import (
-    ICUException, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
+    ICUError, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
     UnicodeString, UResType,
     ures_close, ures_open, ures_open_direct,
 )
@@ -97,7 +97,7 @@ def test_api2():
     rb = None
     try:
         rb = ures_open_direct(str(path), "testtypes")
-    except ICUException as ex:
+    except ICUError as ex:
         if ex.args[0] != UErrorCode.U_MISSING_RESOURCE_ERROR:
             raise
         pytest.skip("testdata.dat is not found (not an error). "
@@ -123,7 +123,7 @@ def test_api2():
         resources.append(result)
 
     assert not test1.has_next()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = test1.get_next()
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
@@ -244,7 +244,7 @@ def test_api2():
     assert isinstance(result, UnicodeString)
     assert str(result) in ["Open", "Save", "Exit"]
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = test9.get_next_string()
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 

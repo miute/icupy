@@ -24,7 +24,7 @@ void init_coleitr(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.next(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         } else if (result == CollationElementIterator::NULLORDER) {
           throw py::stop_iteration();
         }
@@ -38,7 +38,7 @@ void init_coleitr(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.next(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -46,7 +46,7 @@ void init_coleitr(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.previous(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -59,7 +59,7 @@ void init_coleitr(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setOffset(new_offset, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("new_offset"));
@@ -69,7 +69,7 @@ void init_coleitr(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.setText(str, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("str_"))
@@ -79,7 +79,7 @@ void init_coleitr(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setText(str, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("str_"))
@@ -90,7 +90,7 @@ void init_coleitr(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setText(str, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("str_"));

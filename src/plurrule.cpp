@@ -18,7 +18,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
       UErrorCode error_code = U_ZERO_ERROR;
       auto result = std::make_unique<PluralRules>(error_code);
       if (U_FAILURE(error_code)) {
-        throw ICUException(error_code);
+        throw ICUError(error_code);
       }
       return result;
     }));
@@ -34,7 +34,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = PluralRules::createDefaultRules(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -44,7 +44,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = PluralRules::createRules(description, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -56,7 +56,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = PluralRules::createRules(description, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -67,7 +67,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = PluralRules::forLocale(locale, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -79,7 +79,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = PluralRules::forLocale(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -91,7 +91,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = PluralRules::forLocale(locale, type, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -103,7 +103,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = PluralRules::forLocale(locale, type, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -115,7 +115,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getKeywords(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -128,7 +128,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
           error_code = U_ZERO_ERROR;
           self.getSamples(keyword, result.data(), dest_capacity, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -143,7 +143,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             error_code = U_ZERO_ERROR;
             self.getSamples(keyword, result.data(), dest_capacity, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -160,7 +160,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.select(number, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -174,7 +174,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.select(number, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },

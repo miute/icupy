@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     Calendar, DateFormat, FieldPosition, FieldPositionIterator,
-    Format, Formattable, GregorianCalendar, ICUException, Locale, NumberFormat,
+    Format, Formattable, GregorianCalendar, ICUError, Locale, NumberFormat,
     ParsePosition, TimeZone, UDateFormatField, UErrorCode,
     ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )
@@ -530,7 +530,7 @@ def test_parse():
     assert isinstance(result, float)
     assert result == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.parse("07/10/96 4:5:0 PM, PDT")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
@@ -580,6 +580,6 @@ def test_parse_object():
     assert result.get_date() == 837039900000.0  # 1996-07-10T16:05:00-07:00
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse_object("07/10/96 4:5:0 PM, PDT", result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR

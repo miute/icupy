@@ -28,7 +28,7 @@ void init_tmunit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = TimeUnit::createInstance(time_unit_field, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },

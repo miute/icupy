@@ -68,7 +68,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ubidi_countRuns(bidi, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -106,7 +106,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = ubidi_getLevels(bidi, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         const auto length = ubidi_getProcessedLength(bidi);
         std::vector<UBiDiLevel> result(p, p + length);
@@ -119,7 +119,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ubidi_getLogicalIndex(bidi, visual_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -134,7 +134,7 @@ void init_ubidi(py::module &m) {
         std::vector<int32_t> result(length);
         ubidi_getLogicalMap(bidi, result.data(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -157,7 +157,7 @@ void init_ubidi(py::module &m) {
         UBiDiLevel para_level;
         auto result = ubidi_getParagraph(bidi, char_index, &para_start, &para_limit, &para_level, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(result, para_start, para_limit, para_level);
       },
@@ -171,7 +171,7 @@ void init_ubidi(py::module &m) {
         UBiDiLevel para_level;
         ubidi_getParagraphByIndex(bidi, para_index, &para_start, &para_limit, &para_level, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return py::make_tuple(para_start, para_limit, para_level);
       },
@@ -196,7 +196,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = ubidi_getVisualIndex(bidi, logical_index, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -211,7 +211,7 @@ void init_ubidi(py::module &m) {
         std::vector<int32_t> result(length);
         ubidi_getVisualMap(bidi, result.data(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -248,7 +248,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto bidi = ubidi_openSized(max_length, max_run_count, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UBiDiPtr>(bidi);
       },
@@ -293,7 +293,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ubidi_setClassCallback(bidi, fp, cp, &old_fn, &old_context, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         if (old_fn == new_fn.callback) {
           // Old Python callback function and old callback data
@@ -328,7 +328,7 @@ void init_ubidi(py::module &m) {
         }
         ubidi_setContext(bidi, prologue_ptr.get(), pro_length, epilogue_ptr.get(), epi_length, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         bidi.set_prologue(prologue_ptr);
         bidi.set_epilogue(epilogue_ptr);
@@ -343,7 +343,7 @@ void init_ubidi(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         ubidi_setLine(para_bidi, start, limit, line_bidi, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("para_bidi"), py::arg("start"), py::arg("limit"), py::arg("line_bidi"));
@@ -367,7 +367,7 @@ void init_ubidi(py::module &m) {
         }
         ubidi_setPara(bidi, text_ptr.get(), length, para_level, embedding_levels_ptr.get(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         bidi.set_text(text_ptr);
         bidi.set_embedding_levels(embedding_levels_ptr);
@@ -398,7 +398,7 @@ void init_ubidi(py::module &m) {
         std::u16string result(length, u'\0');
         length = ubidi_writeReordered(bidi, result.data(), (int32_t)result.size(), options, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         result.resize(length);
         return result;
@@ -412,7 +412,7 @@ void init_ubidi(py::module &m) {
         const auto length =
             ubidi_writeReverse(src, src_length, result.data(), (int32_t)result.size(), options, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         result.resize(length);
         return result;

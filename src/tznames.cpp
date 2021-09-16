@@ -40,7 +40,7 @@ void init_tznames(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = TimeZoneNames::createInstance(locale, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -52,7 +52,7 @@ void init_tznames(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = TimeZoneNames::createInstance(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -64,7 +64,7 @@ void init_tznames(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = TimeZoneNames::createTZDBInstance(locale, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -76,7 +76,7 @@ void init_tznames(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = TimeZoneNames::createTZDBInstance(locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -88,7 +88,7 @@ void init_tznames(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = self.getAvailableMetaZoneIDs(tz_id, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -100,7 +100,7 @@ void init_tznames(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getAvailableMetaZoneIDs(tz_id, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -109,7 +109,7 @@ void init_tznames(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getAvailableMetaZoneIDs(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });

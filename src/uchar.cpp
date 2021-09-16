@@ -1010,7 +1010,7 @@ void init_uchar(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = u_charFromName(name_choice, name, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1025,7 +1025,7 @@ void init_uchar(py::module &m) {
         error_code = U_ZERO_ERROR;
         u_charName(code, name_choice, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1044,7 +1044,7 @@ void init_uchar(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto uset = u_getBinaryPropertySet(property, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_ConstUSetPtr>(uset);
       },
@@ -1060,7 +1060,7 @@ void init_uchar(py::module &m) {
         error_code = U_ZERO_ERROR;
         u_getFC_NFKC_Closure(c, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -1072,7 +1072,7 @@ void init_uchar(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto map = u_getIntPropertyMap(property, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_ConstUCPMapPtr>(map);
       },

@@ -25,7 +25,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         }),
@@ -36,7 +36,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -47,7 +47,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -58,7 +58,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -69,7 +69,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -80,7 +80,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -91,7 +91,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.appendReplacement(dest, replacement, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -103,7 +103,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.appendReplacement(dest, replacement, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -114,7 +114,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.appendReplacement(dest, replacement, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -126,7 +126,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto p = self.appendTail(dest, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return std::make_unique<_UTextPtr>(p);
           },
@@ -137,7 +137,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.end(group, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -146,7 +146,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.end(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -156,7 +156,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.end64(group, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -165,7 +165,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.end64(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -178,7 +178,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.find(start, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -189,7 +189,7 @@ void init_regex(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = self.find(error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            })
@@ -201,7 +201,7 @@ void init_regex(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.getFindProgressCallback(callback, context, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     if (callback == _URegexFindProgressCallbackPtr::callback) {
       // Python callback function and callback data
@@ -218,7 +218,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = self.getInput(dest.value_or(nullptr), error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -229,7 +229,7 @@ void init_regex(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.getMatchCallback(callback, context, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     if (callback == _URegexMatchCallbackPtr::callback) {
       // Python callback function and callback data
@@ -248,7 +248,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.group(group_num, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -260,7 +260,7 @@ void init_regex(py::module &m) {
             int64_t group_len;
             auto p = self.group(group_num, dest.value_or(nullptr), group_len, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return py::make_tuple(std::make_unique<_UTextPtr>(p), group_len);
           },
@@ -270,7 +270,7 @@ void init_regex(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = self.group(error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            })
@@ -281,7 +281,7 @@ void init_regex(py::module &m) {
             int64_t group_len;
             auto p = self.group(dest.value_or(nullptr), group_len, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return py::make_tuple(std::make_unique<_UTextPtr>(p), group_len);
           },
@@ -301,7 +301,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.lookingAt(start_index, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -310,7 +310,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.lookingAt(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -320,7 +320,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.matches(start_index, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -329,7 +329,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.matches(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -341,7 +341,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.region(region_start, region_limit, start_index, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -352,7 +352,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.region(start, limit, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -367,7 +367,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.replaceAll(replacement, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -379,7 +379,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceAll(replacement, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -390,7 +390,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto p = self.replaceAll(replacement, dest.value_or(nullptr), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return std::make_unique<_UTextPtr>(p);
           },
@@ -401,7 +401,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.replaceFirst(replacement, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -413,7 +413,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.replaceFirst(replacement, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -424,7 +424,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto p = self.replaceFirst(replacement, dest.value_or(nullptr), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return std::make_unique<_UTextPtr>(p);
           },
@@ -438,7 +438,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.reset(index, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -463,7 +463,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setFindProgressCallback(fp, cp, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("callback"), py::arg("context"));
@@ -484,7 +484,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setMatchCallback(fp, cp, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("callback"), py::arg("context"));
@@ -494,7 +494,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setStackLimit(limit, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("limit"));
@@ -504,7 +504,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setTimeLimit(limit, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("limit"));
@@ -515,7 +515,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.split(input, dest.data(), dest_capacity.value_or((int32_t)dest.size()), error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -529,7 +529,7 @@ void init_regex(py::module &m) {
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
             auto result = self.split(input, output.data(), output_capacity, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -540,7 +540,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.start(group, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -549,7 +549,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.start(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -559,7 +559,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.start64(group, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -568,7 +568,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.start64(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -590,7 +590,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = RegexPattern::compile(regex, flags, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -602,7 +602,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -613,7 +613,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, flags, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -625,7 +625,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, flags, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -636,7 +636,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -648,7 +648,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -659,7 +659,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, flags, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -670,7 +670,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, flags, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -681,7 +681,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::compile(regex, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -694,7 +694,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.groupNumberFromName(group_name, name_length, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -705,7 +705,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.groupNumberFromName(group_name, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -717,7 +717,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.groupNumberFromName(group_name, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -729,7 +729,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.matcher(input, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -738,7 +738,7 @@ void init_regex(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.matcher(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       });
@@ -748,7 +748,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = RegexPattern::matches(regex, input, pe, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -760,7 +760,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::matches(regex, input, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -771,7 +771,7 @@ void init_regex(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = RegexPattern::matches(regex, input, pe, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -781,7 +781,7 @@ void init_regex(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto p = self.patternText(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return std::make_unique<_UTextPtr>(p);
   });
@@ -792,7 +792,7 @@ void init_regex(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.split(input, dest.data(), dest_capacity.value_or((int32_t)dest.size()), error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -806,7 +806,7 @@ void init_regex(py::module &m) {
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
             auto result = self.split(input, output.data(), output_capacity, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },

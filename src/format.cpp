@@ -23,7 +23,7 @@ void init_format(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto &result = self.format(obj, append_to, pos, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -35,7 +35,7 @@ void init_format(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -46,7 +46,7 @@ void init_format(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -57,7 +57,7 @@ void init_format(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.getLocale(type, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -78,7 +78,7 @@ void init_format(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"))
@@ -89,7 +89,7 @@ void init_format(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));

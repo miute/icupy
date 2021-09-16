@@ -14,7 +14,7 @@ void init_smpdtfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = std::make_unique<SimpleDateFormat>(error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          }))
@@ -24,7 +24,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -35,7 +35,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -46,7 +46,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -57,7 +57,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -68,7 +68,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -80,7 +80,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -91,7 +91,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -102,7 +102,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -113,7 +113,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -124,7 +124,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -135,7 +135,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -147,7 +147,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -158,7 +158,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -169,7 +169,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -192,7 +192,7 @@ void init_smpdtfmt(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            self.applyLocalizedPattern(pattern, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
          },
          py::arg("pattern"))
@@ -203,7 +203,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyLocalizedPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"));
@@ -228,7 +228,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(cal, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -242,7 +242,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -256,7 +256,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -268,7 +268,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -289,7 +289,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(date, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -298,7 +298,7 @@ void init_smpdtfmt(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.get2DigitYearStart(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -335,7 +335,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.parse(text, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -347,7 +347,7 @@ void init_smpdtfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.parse(text, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -358,7 +358,7 @@ void init_smpdtfmt(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.set2DigitYearStart(d, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("d"));
@@ -369,7 +369,7 @@ void init_smpdtfmt(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         self.setContext(value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
       },
       py::arg("value"));
@@ -384,7 +384,7 @@ void init_smpdtfmt(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &string = self.toLocalizedPattern(result, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return string;
       },

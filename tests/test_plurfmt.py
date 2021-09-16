@@ -7,7 +7,7 @@ if U_ICU_VERSION_MAJOR_NUM < 50:
 import copy
 
 from icupy import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUException, Locale,
+    FieldPosition, FieldPositionIterator, Formattable, ICUError, Locale,
     NumberFormat, ParsePosition, PluralFormat, PluralRules, UErrorCode,
     UPluralType, UnicodeString,
 )
@@ -102,12 +102,12 @@ def test_format():
     # )
     append_to.remove()
     pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(Formattable(3), append_to, pos_iter)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(Formattable(3), append_to, None)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
@@ -201,12 +201,12 @@ def test_parse_object():
     #       UErrorCode &status
     # )
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse_object(source, result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     result = Formattable()
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         fmt.parse_object(str(source), result)
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 

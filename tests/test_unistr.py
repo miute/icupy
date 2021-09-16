@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    Appendable, ICUException, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM,
+    Appendable, ICUError, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM,
     UErrorCode, UnicodeString, UnicodeStringAppendable, UnicodeStringVector,
     US_INV, u_unescape, ucnv_close, ucnv_open,
 )
@@ -514,7 +514,7 @@ def test_extract():
     assert isinstance(dest, str)
     assert dest == expected
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = test3.extract()
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 

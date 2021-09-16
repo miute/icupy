@@ -3,7 +3,7 @@ import copy
 import pytest
 from icupy import (
     DateFormat, DateFormatSymbols, FieldPosition, FieldPositionIterator,
-    Format, Formattable, GregorianCalendar, ICUException, Locale,
+    Format, Formattable, GregorianCalendar, ICUError, Locale,
     ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
     UCalendarMonths, UDateFormatField, UErrorCode, U_ICU_VERSION_MAJOR_NUM,
     UnicodeString,
@@ -380,7 +380,7 @@ def test_parse():
     assert isinstance(result, float)
     assert result == date
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = fmt.parse("1996.07.10 AD at 15:08:56, PDT")
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 

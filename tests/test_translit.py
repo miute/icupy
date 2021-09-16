@@ -2,7 +2,7 @@ import copy
 
 import pytest
 from icupy import (
-    ICUException, Locale, StringEnumeration, Transliterator, UErrorCode,
+    ICUError, Locale, StringEnumeration, Transliterator, UErrorCode,
     UnicodeSet, UnicodeString, UParseError, UTransDirection, UTransPosition,
 )
 
@@ -63,7 +63,7 @@ def test_api():
     t2 = trans.get_element(2)
     assert isinstance(t2, Transliterator)
 
-    with pytest.raises(ICUException) as exc_info:
+    with pytest.raises(ICUError) as exc_info:
         _ = trans.get_element(3)
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 

@@ -7,7 +7,7 @@ if U_ICU_VERSION_MAJOR_NUM < 62:
 import copy
 
 from icupy import (
-    ICUException, Locale, MeasureUnit, StringEnumeration, UErrorCode,
+    ICUError, Locale, MeasureUnit, StringEnumeration, UErrorCode,
 )
 from icupy.number import NumberFormatter
 
@@ -682,7 +682,7 @@ def test_measure_unit_57():
         assert (fmt.unit(MeasureUnit.create_milligram_per_deciliter())
                 .format_int(1)
                 .to_string()) == "1 mg/dL"
-    except ICUException as ex:
+    except ICUError as ex:
         assert ex.args[0] == UErrorCode.U_MISSING_RESOURCE_ERROR  # ICU 69.1
 
     assert (fmt.unit(MeasureUnit.create_millimole_per_liter())
@@ -1223,7 +1223,7 @@ def test_measure_unit_64():
         assert (fmt.unit(MeasureUnit.get_milligram_per_deciliter())
                 .format_int(1)
                 .to_string()) == "1 mg/dL"
-    except ICUException as ex:
+    except ICUError as ex:
         assert ex.args[0] == UErrorCode.U_MISSING_RESOURCE_ERROR  # ICU 69.1
 
     assert (fmt.unit(MeasureUnit.get_milliliter())

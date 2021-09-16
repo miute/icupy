@@ -21,7 +21,7 @@ void init_compactdecimalformat(py::module &m) {
            UErrorCode error_code = U_ZERO_ERROR;
            auto result = CompactDecimalFormat::createInstance(in_locale, style, error_code);
            if (U_FAILURE(error_code)) {
-             throw ICUException(error_code);
+             throw ICUError(error_code);
            }
            return result;
          },
@@ -33,7 +33,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = CompactDecimalFormat::createInstance(in_locale, style, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -50,7 +50,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -67,7 +67,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -84,7 +84,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -97,7 +97,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -109,7 +109,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -121,7 +121,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -138,7 +138,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -162,7 +162,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"))
@@ -173,7 +173,7 @@ void init_compactdecimalformat(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parse(text, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));

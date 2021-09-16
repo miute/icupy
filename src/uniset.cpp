@@ -42,7 +42,7 @@ void init_uniset(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<UnicodeSet>(pattern, error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -53,7 +53,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<UnicodeSet>(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -63,7 +63,7 @@ void init_uniset(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            }),
@@ -75,7 +75,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -155,7 +155,7 @@ void init_uniset(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.applyIntPropertyValue(prop, value, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -167,7 +167,7 @@ void init_uniset(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -180,7 +180,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -191,7 +191,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -203,7 +203,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -214,7 +214,7 @@ void init_uniset(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.applyPropertyAlias(prop, value, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -226,7 +226,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -238,7 +238,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -251,7 +251,7 @@ void init_uniset(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -373,7 +373,7 @@ void init_uniset(py::module &m) {
     error_code = U_ZERO_ERROR;
     self.serialize(result.data(), length, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });

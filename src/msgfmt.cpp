@@ -13,7 +13,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = std::make_unique<MessageFormat>(pattern, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         }),
@@ -24,7 +24,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -35,7 +35,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -46,7 +46,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -57,7 +57,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -69,7 +69,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -80,7 +80,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -91,7 +91,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -102,7 +102,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -114,7 +114,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           }),
@@ -139,7 +139,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           self.applyPattern(pattern, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
         },
         py::arg("pattern"))
@@ -150,7 +150,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyPattern(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"))
@@ -162,7 +162,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyPattern(pattern, apos_mode, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("apos_mode"), py::arg("parse_error"))
@@ -174,7 +174,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyPattern(pattern, apos_mode, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("apos_mode"), py::arg("parse_error"))
@@ -185,7 +185,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyPattern(pattern, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("parse_error"))
@@ -196,7 +196,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.applyPattern(pattern, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("parse_error"));
@@ -206,7 +206,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = MessageFormat::autoQuoteApostrophe(pattern, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -218,7 +218,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = MessageFormat::autoQuoteApostrophe(pattern, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -233,7 +233,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto &result = self.format(obj, append_to, pos, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -246,7 +246,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -258,7 +258,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(obj, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -274,7 +274,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(source.data(), count, append_to, ignore, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -293,7 +293,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = MessageFormat::format(pattern, arguments.data(), count, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -309,7 +309,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = MessageFormat::format(pattern, arguments.data(), count, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -327,7 +327,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(_argument_names.data(), arguments.data(), count, append_to, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -339,7 +339,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.getFormat(format_name, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -351,7 +351,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = self.getFormat(format_name, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -360,7 +360,7 @@ void init_msgfmt(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.getFormatNames(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -385,7 +385,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto p = self.parse(source, count, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           std::vector<Formattable *> result(count);
           for (int32_t i = 0; i < count; ++i) {
@@ -402,7 +402,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto p = self.parse(source, count, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             std::vector<Formattable *> result(count);
             for (int32_t i = 0; i < count; ++i) {
@@ -451,7 +451,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"))
@@ -462,7 +462,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.parseObject(source, result, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));
@@ -473,7 +473,7 @@ void init_msgfmt(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           self.setFormat(format_name, format, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
         },
         py::arg("format_name"), py::arg("format_"))
@@ -484,7 +484,7 @@ void init_msgfmt(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.setFormat(format_name, format, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("format_name"), py::arg("format_"))

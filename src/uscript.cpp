@@ -254,7 +254,7 @@ void init_uscript(py::module &m) {
         error_code = U_ZERO_ERROR;
         uscript_getCode(name_or_abbr_or_locale, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -270,7 +270,7 @@ void init_uscript(py::module &m) {
         error_code = U_ZERO_ERROR;
         uscript_getSampleString(script, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -283,7 +283,7 @@ void init_uscript(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = uscript_getScript(codepoint, &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -298,7 +298,7 @@ void init_uscript(py::module &m) {
         error_code = U_ZERO_ERROR;
         uscript_getScriptExtensions(c, result.data(), (int32_t)result.size(), &error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },

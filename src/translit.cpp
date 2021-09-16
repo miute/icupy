@@ -57,7 +57,7 @@ void init_translit(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -69,7 +69,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -81,7 +81,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -94,7 +94,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -105,7 +105,7 @@ void init_translit(py::module &m) {
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = Transliterator::createInstance(id, dir, error_code);
           if (U_FAILURE(error_code)) {
-            throw ICUException(error_code);
+            throw ICUError(error_code);
           }
           return result;
         },
@@ -117,7 +117,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createInstance(id, dir, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -128,7 +128,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -140,7 +140,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
             return result;
           },
@@ -149,7 +149,7 @@ void init_translit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.createInverse(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -163,7 +163,7 @@ void init_translit(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = Transliterator::getAvailableIDs(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -241,7 +241,7 @@ void init_translit(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.getElement(index, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -295,7 +295,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.transliterate(text, index, insertion, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"), py::arg("insertion"))
@@ -306,7 +306,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.transliterate(text, index, insertion, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"), py::arg("insertion"))
@@ -316,7 +316,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.transliterate(text, index, insertion, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"), py::arg("insertion"))
@@ -326,7 +326,7 @@ void init_translit(py::module &m) {
             UErrorCode error_code = U_ZERO_ERROR;
             self.transliterate(text, index, error_code);
             if (U_FAILURE(error_code)) {
-              throw ICUException(error_code);
+              throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"));

@@ -29,7 +29,7 @@ void init_strenum(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              self.reset(error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return self;
            })
@@ -38,7 +38,7 @@ void init_strenum(py::module &m) {
              UErrorCode error_code = U_ZERO_ERROR;
              auto result = self.count(error_code);
              if (U_FAILURE(error_code)) {
-               throw ICUException(error_code);
+               throw ICUError(error_code);
              }
              return result;
            })
@@ -49,7 +49,7 @@ void init_strenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.next(NULL, error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         } else if (result == NULL) {
           throw py::stop_iteration();
         }
@@ -60,7 +60,7 @@ void init_strenum(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.count(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -68,7 +68,7 @@ void init_strenum(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.next(NULL, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
@@ -76,7 +76,7 @@ void init_strenum(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     self.reset(error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
   });
   se.def(
@@ -85,7 +85,7 @@ void init_strenum(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.snext(error_code);
         if (U_FAILURE(error_code)) {
-          throw ICUException(error_code);
+          throw ICUError(error_code);
         }
         return result;
       },
@@ -94,7 +94,7 @@ void init_strenum(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = self.unext(NULL, error_code);
     if (U_FAILURE(error_code)) {
-      throw ICUException(error_code);
+      throw ICUError(error_code);
     }
     return result;
   });
