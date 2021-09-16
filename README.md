@@ -1,21 +1,21 @@
 # icupy
 
-Python bindings for ICU4C.
+Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
 
 ## Installation
 
 ### Prerequisites
 
-- [Python](https://www.python.org/) >=3.8, <4
-- [ICU4C](http://site.icu-project.org/) (>=64 recommended)
+- [Python](https://www.python.org/) >=3.8
+- [ICU4C](https://icu.unicode.org/) (>=64 recommended)
 - C++17 compatible compiler (depends on [pybind11](https://github.com/pybind/pybind11))
 - [CMake](https://cmake.org/) >=3.7
 
 ### Building from source
 
-1. If on Windows or ICU is located in a non-regular place, set the `ICU_ROOT` environment variable to the root of the ICU installation.
+1. If installing icupy on Windows or if ICU is located in a non-regular place, set the `ICU_ROOT` environment variable to the root of the ICU installation. (e.g., `set ICU_ROOT=C:\icu`)
 
-1. Installing from PyPI:
+2. Installing from PyPI:
 
     ```bash
     pip install icupy
@@ -28,9 +28,11 @@ Python bindings for ICU4C.
     pip install ./icupy
     ```
 
-## Notes
+## Changes
 
-- Changed C function name and class method name from camel case to snake case.
+- **Naming Rules**
+  - Renamed C functions and C++ class methods from mixed case to snake case. (e.g., `findAndReplace()` → `find_and_replace()`)
+  - Renamed C++ enumerators to upper snake case without "k" prefix. (e.g., `kDateOffset` → `DATE_OFFSET`)
 
 ## Examples
 
@@ -52,10 +54,11 @@ Python bindings for ICU4C.
 
     ```python
     >>> import icupy as icu
-    >>> uts46 = icu.IDNA.create_uts46_instance(icu.IDNA.NONTRANSITIONAL_TO_ASCII)
+    >>> uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_NONTRANSITIONAL_TO_ASCII)
     >>> dest = icu.UnicodeString()
     >>> info = icu.IDNAInfo()
     >>> uts46.name_to_ascii(icu.UnicodeString("faß.ExAmPlE"), dest, info)
+    UnicodeString("xn--fa-hia.example")
     >>> str(dest)
     'xn--fa-hia.example'
     ```
