@@ -13,17 +13,20 @@ void init_localematcher(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   py::enum_<ULocMatchDemotion>(m, "ULocMatchDemotion", py::arithmetic())
       .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE)
-      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION);
+      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION)
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   py::enum_<ULocMatchDirection>(m, "ULocMatchDirection", py::arithmetic())
       .value("ULOCMATCH_DIRECTION_WITH_ONE_WAY", ULOCMATCH_DIRECTION_WITH_ONE_WAY)
-      .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY", ULOCMATCH_DIRECTION_ONLY_TWO_WAY);
+      .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY", ULOCMATCH_DIRECTION_ONLY_TWO_WAY)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   py::enum_<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag", py::arithmetic())
       .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE)
-      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT);
+      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT)
+      .export_values();
 
   // icu::LocaleMatcher
   py::class_<LocaleMatcher, UMemory> lm(m, "LocaleMatcher");

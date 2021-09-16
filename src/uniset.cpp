@@ -17,7 +17,8 @@ void init_uniset(py::module &m) {
   py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic())
       .value("U_MISMATCH", U_MISMATCH)
       .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH)
-      .value("U_MATCH", U_MATCH);
+      .value("U_MATCH", U_MATCH)
+      .export_values();
 
   // icu::UnicodeFunctor
   py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor");

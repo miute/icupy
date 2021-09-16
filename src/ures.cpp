@@ -27,8 +27,8 @@ void init_ures(py::module &m) {
       .value("RES_INT_VECTOR", RES_INT_VECTOR)
       .value("RES_RESERVED", RES_RESERVED)
       .value("URES_LIMIT", URES_LIMIT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UResType>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::class_<_UResourceBundlePtr>(m, "_UResourceBundlePtr");
 

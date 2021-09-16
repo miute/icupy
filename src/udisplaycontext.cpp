@@ -22,7 +22,7 @@ void init_udisplaycontext(py::module &m) {
       .value("UDISPCTX_SUBSTITUTE", UDISPCTX_SUBSTITUTE)
       .value("UDISPCTX_NO_SUBSTITUTE", UDISPCTX_NO_SUBSTITUTE)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      ;
+      .export_values();
 
   py::enum_<UDisplayContextType>(m, "UDisplayContextType", py::arithmetic())
       .value("UDISPCTX_TYPE_DIALECT_HANDLING", UDISPCTX_TYPE_DIALECT_HANDLING)
@@ -34,7 +34,7 @@ void init_udisplaycontext(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("UDISPCTX_TYPE_SUBSTITUTE_HANDLING", UDISPCTX_TYPE_SUBSTITUTE_HANDLING)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      ;
+      .export_values();
 
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

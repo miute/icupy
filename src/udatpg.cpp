@@ -9,7 +9,7 @@ void init_udatpg(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDATPG_CONFLICT_COUNT", UDATPG_CONFLICT_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UDateTimePatternField>(m, "UDateTimePatternField", py::arithmetic())
       .value("UDATPG_ERA_FIELD", UDATPG_ERA_FIELD)
@@ -31,17 +31,19 @@ void init_udatpg(py::module &m) {
 #ifndef U_FORCE_HIDE_DEPRECATED_API
       .value("UDATPG_FIELD_COUNT", UDATPG_FIELD_COUNT)
 #endif // U_FORCE_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UDateTimePatternMatchOptions>(m, "UDateTimePatternMatchOptions", py::arithmetic())
       .value("UDATPG_MATCH_NO_OPTIONS", UDATPG_MATCH_NO_OPTIONS)
       .value("UDATPG_MATCH_HOUR_FIELD_LENGTH", UDATPG_MATCH_HOUR_FIELD_LENGTH)
-      .value("UDATPG_MATCH_ALL_FIELDS_LENGTH", UDATPG_MATCH_ALL_FIELDS_LENGTH);
+      .value("UDATPG_MATCH_ALL_FIELDS_LENGTH", UDATPG_MATCH_ALL_FIELDS_LENGTH)
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 61)
   py::enum_<UDateTimePGDisplayWidth>(m, "UDateTimePGDisplayWidth", py::arithmetic())
       .value("UDATPG_WIDE", UDATPG_WIDE)
       .value("UDATPG_ABBREVIATED", UDATPG_ABBREVIATED)
-      .value("UDATPG_NARROW", UDATPG_NARROW);
+      .value("UDATPG_NARROW", UDATPG_NARROW)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
 }

@@ -36,14 +36,16 @@ void init_measunit(py::module &m) {
       .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI)
       .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI)
       .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI)
-      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI);
+      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   py::enum_<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity", py::arithmetic())
       .value("UMEASURE_UNIT_SINGLE", UMEASURE_UNIT_SINGLE)
       .value("UMEASURE_UNIT_COMPOUND", UMEASURE_UNIT_COMPOUND)
-      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED);
+      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   // icu::MeasureUnit

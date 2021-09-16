@@ -18,7 +18,7 @@ void init_uset(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("USET_SPAN_CONDITION_COUNT", USET_SPAN_CONDITION_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::class_<_ConstUSetPtr>(m, "_ConstUSetPtr");
 

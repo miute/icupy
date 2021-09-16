@@ -15,9 +15,9 @@ void init_uchar(py::module &m) {
       .value("U_BPT_CLOSE", U_BPT_CLOSE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_BPT_COUNT", U_BPT_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UBidiPairedBracketType>
-#endif  // (U_ICU_VERSION_MAJOR_NUM >= 52)
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
   py::enum_<UBlockCode>(m, "UBlockCode", py::arithmetic())
       .value("UBLOCK_NO_BLOCK", UBLOCK_NO_BLOCK)
@@ -350,8 +350,8 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 66)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UBlockCode>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UCharCategory>(m, "UCharCategory", py::arithmetic())
       .value("U_UNASSIGNED", U_UNASSIGNED)
@@ -385,7 +385,8 @@ void init_uchar(py::module &m) {
       .value("U_OTHER_SYMBOL", U_OTHER_SYMBOL)
       .value("U_INITIAL_PUNCTUATION", U_INITIAL_PUNCTUATION)
       .value("U_FINAL_PUNCTUATION", U_FINAL_PUNCTUATION)
-      .value("U_CHAR_CATEGORY_COUNT", U_CHAR_CATEGORY_COUNT);
+      .value("U_CHAR_CATEGORY_COUNT", U_CHAR_CATEGORY_COUNT)
+      .export_values();
 
   py::enum_<UCharDirection>(m, "UCharDirection", py::arithmetic())
       .value("U_LEFT_TO_RIGHT", U_LEFT_TO_RIGHT)
@@ -413,8 +414,8 @@ void init_uchar(py::module &m) {
       .value("U_POP_DIRECTIONAL_ISOLATE", U_POP_DIRECTIONAL_ISOLATE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UCharDirection>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UCharNameChoice>(m, "UCharNameChoice", py::arithmetic())
       .value("U_UNICODE_CHAR_NAME", U_UNICODE_CHAR_NAME)
@@ -425,8 +426,8 @@ void init_uchar(py::module &m) {
       .value("U_CHAR_NAME_ALIAS", U_CHAR_NAME_ALIAS)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UCharNameChoice>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UDecompositionType>(m, "UDecompositionType", py::arithmetic())
       .value("U_DT_NONE", U_DT_NONE)
@@ -449,8 +450,8 @@ void init_uchar(py::module &m) {
       .value("U_DT_WIDE", U_DT_WIDE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_DT_COUNT", U_DT_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UDecompositionType>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic())
       .value("U_EA_NEUTRAL", U_EA_NEUTRAL)
@@ -461,8 +462,8 @@ void init_uchar(py::module &m) {
       .value("U_EA_WIDE", U_EA_WIDE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_EA_COUNT", U_EA_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UEastAsianWidth>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UGraphemeClusterBreak>(m, "UGraphemeClusterBreak", py::arithmetic())
       .value("U_GCB_OTHER", U_GCB_OTHER)
@@ -489,8 +490,8 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_GCB_COUNT", U_GCB_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UGraphemeClusterBreak>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UHangulSyllableType>(m, "UHangulSyllableType", py::arithmetic())
       .value("U_HST_NOT_APPLICABLE", U_HST_NOT_APPLICABLE)
@@ -501,8 +502,8 @@ void init_uchar(py::module &m) {
       .value("U_HST_LVT_SYLLABLE", U_HST_LVT_SYLLABLE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_HST_COUNT", U_HST_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UHangulSyllableType>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   py::enum_<UIndicPositionalCategory>(m, "UIndicPositionalCategory", py::arithmetic())
@@ -523,9 +524,9 @@ void init_uchar(py::module &m) {
       .value("U_INPC_VISUAL_ORDER_LEFT", U_INPC_VISUAL_ORDER_LEFT)
 #if (U_ICU_VERSION_MAJOR_NUM >= 66)
       .value("U_INPC_TOP_AND_BOTTOM_AND_LEFT", U_INPC_TOP_AND_BOTTOM_AND_LEFT)
-#endif  // (U_ICU_VERSION_MAJOR_NUM >= 66)
-      ; // <UIndicPositionalCategory>
-#endif  // (U_ICU_VERSION_MAJOR_NUM >= 63)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 66)
+      .export_values();
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   py::enum_<UIndicSyllabicCategory>(m, "UIndicSyllabicCategory", py::arithmetic())
@@ -564,8 +565,8 @@ void init_uchar(py::module &m) {
       .value("U_INSC_VISARGA", U_INSC_VISARGA)
       .value("U_INSC_VOWEL", U_INSC_VOWEL)
       .value("U_INSC_VOWEL_DEPENDENT", U_INSC_VOWEL_DEPENDENT)
-      .value("U_INSC_VOWEL_INDEPENDENT", U_INSC_VOWEL_INDEPENDENT);
-  // <UIndicSyllabicCategory>
+      .value("U_INSC_VOWEL_INDEPENDENT", U_INSC_VOWEL_INDEPENDENT)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   py::enum_<UJoiningGroup>(m, "UJoiningGroup", py::arithmetic())
@@ -684,8 +685,8 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UJoiningGroup>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic())
       .value("U_JT_NON_JOINING", U_JT_NON_JOINING)
@@ -696,8 +697,8 @@ void init_uchar(py::module &m) {
       .value("U_JT_TRANSPARENT", U_JT_TRANSPARENT)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JT_COUNT", U_JT_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UJoiningType>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic())
       .value("U_LB_UNKNOWN", U_LB_UNKNOWN)
@@ -752,8 +753,8 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_LB_COUNT", U_LB_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <ULineBreak>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UNumericType>(m, "UNumericType", py::arithmetic())
       .value("U_NT_NONE", U_NT_NONE)
@@ -762,8 +763,8 @@ void init_uchar(py::module &m) {
       .value("U_NT_NUMERIC", U_NT_NUMERIC)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_NT_COUNT", U_NT_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UNumericType>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<UProperty>(m, "UProperty", py::arithmetic())
       .value("UCHAR_ALPHABETIC", UCHAR_ALPHABETIC)
@@ -911,15 +912,16 @@ void init_uchar(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT)
 #endif // U_HIDE_DEPRECATED_API
-      .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE);
+      .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE)
+      .export_values();
 
   py::enum_<UPropertyNameChoice>(m, "UPropertyNameChoice", py::arithmetic())
       .value("U_SHORT_PROPERTY_NAME", U_SHORT_PROPERTY_NAME)
       .value("U_LONG_PROPERTY_NAME", U_LONG_PROPERTY_NAME)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_PROPERTY_NAME_CHOICE_COUNT", U_PROPERTY_NAME_CHOICE_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UProperty>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic())
       .value("U_SB_OTHER", U_SB_OTHER)
@@ -939,16 +941,16 @@ void init_uchar(py::module &m) {
       .value("U_SB_SCONTINUE", U_SB_SCONTINUE)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_SB_COUNT", U_SB_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <USentenceBreak>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   py::enum_<UVerticalOrientation>(m, "UVerticalOrientation", py::arithmetic())
       .value("U_VO_ROTATED", U_VO_ROTATED)
       .value("U_VO_TRANSFORMED_ROTATED", U_VO_TRANSFORMED_ROTATED)
       .value("U_VO_TRANSFORMED_UPRIGHT", U_VO_TRANSFORMED_UPRIGHT)
-      .value("U_VO_UPRIGHT", U_VO_UPRIGHT);
-  // <UVerticalOrientation>
+      .value("U_VO_UPRIGHT", U_VO_UPRIGHT)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   py::enum_<UWordBreakValues>(m, "UWordBreakValues", py::arithmetic())
@@ -985,8 +987,8 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_WB_COUNT", U_WB_COUNT)
-#endif  // U_HIDE_DEPRECATED_API
-      ; // <UWordBreakValues>
+#endif // U_HIDE_DEPRECATED_API
+      .export_values();
 
   m.def(
       "u_get_gc_mask", [](UChar32 c) { return U_GET_GC_MASK(c); }, py::arg("c"));

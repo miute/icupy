@@ -230,7 +230,7 @@ void init_uscript(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT)
 #endif // U_HIDE_DEPRECATED_API
-      ; // <UScriptCode>
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   py::enum_<UScriptUsage>(m, "UScriptUsage", py::arithmetic())
@@ -239,7 +239,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_USAGE_EXCLUDED", USCRIPT_USAGE_EXCLUDED)
       .value("USCRIPT_USAGE_LIMITED_USE", USCRIPT_USAGE_LIMITED_USE)
       .value("USCRIPT_USAGE_ASPIRATIONAL", USCRIPT_USAGE_ASPIRATIONAL)
-      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED);
+      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)

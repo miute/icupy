@@ -9,7 +9,8 @@
 void init_ucnv(py::module &m) {
   py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic())
       .value("UCNV_UNKNOWN", UCNV_UNKNOWN)
-      .value("UCNV_IBM", UCNV_IBM);
+      .value("UCNV_IBM", UCNV_IBM)
+      .export_values();
 
   py::enum_<UConverterType>(m, "UConverterType", py::arithmetic())
       .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
@@ -48,7 +49,8 @@ void init_ucnv(py::module &m) {
       .value("UCNV_CESU8", UCNV_CESU8)
       .value("UCNV_IMAP_MAILBOX", UCNV_IMAP_MAILBOX)
       .value("UCNV_COMPOUND_TEXT", UCNV_COMPOUND_TEXT)
-      .value("UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES", UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES);
+      .value("UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES", UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES)
+      .export_values();
 
   py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic())
       .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET)
@@ -56,7 +58,7 @@ void init_ucnv(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCNV_SET_COUNT", UCNV_SET_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   m.def(
       "ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); }, py::arg("converter"));

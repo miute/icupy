@@ -27,7 +27,8 @@ void init_ucpmap(py::module &m) {
   py::enum_<UCPMapRangeOption>(m, "UCPMapRangeOption", py::arithmetic())
       .value("UCPMAP_RANGE_NORMAL", UCPMAP_RANGE_NORMAL)
       .value("UCPMAP_RANGE_FIXED_LEAD_SURROGATES", UCPMAP_RANGE_FIXED_LEAD_SURROGATES)
-      .value("UCPMAP_RANGE_FIXED_ALL_SURROGATES", UCPMAP_RANGE_FIXED_ALL_SURROGATES);
+      .value("UCPMAP_RANGE_FIXED_ALL_SURROGATES", UCPMAP_RANGE_FIXED_ALL_SURROGATES)
+      .export_values();
 
   py::class_<_ConstUCPMapPtr>(m, "_ConstUCPMapPtr");
 

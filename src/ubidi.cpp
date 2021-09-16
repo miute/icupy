@@ -35,7 +35,8 @@ void init_ubidi(py::module &m) {
       .value("UBIDI_LTR", UBIDI_LTR)
       .value("UBIDI_RTL", UBIDI_RTL)
       .value("UBIDI_MIXED", UBIDI_MIXED)
-      .value("UBIDI_NEUTRAL", UBIDI_NEUTRAL);
+      .value("UBIDI_NEUTRAL", UBIDI_NEUTRAL)
+      .export_values();
 
   py::enum_<UBiDiReorderingMode>(m, "UBiDiReorderingMode", py::arithmetic())
       .value("UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT)
@@ -44,13 +45,15 @@ void init_ubidi(py::module &m) {
       .value("UBIDI_REORDER_RUNS_ONLY", UBIDI_REORDER_RUNS_ONLY)
       .value("UBIDI_REORDER_INVERSE_NUMBERS_AS_L", UBIDI_REORDER_INVERSE_NUMBERS_AS_L)
       .value("UBIDI_REORDER_INVERSE_LIKE_DIRECT", UBIDI_REORDER_INVERSE_LIKE_DIRECT)
-      .value("UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL", UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
+      .value("UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL", UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL)
+      .export_values();
 
   py::enum_<UBiDiReorderingOption>(m, "UBiDiReorderingOption", py::arithmetic())
       .value("UBIDI_OPTION_DEFAULT", UBIDI_OPTION_DEFAULT)
       .value("UBIDI_OPTION_INSERT_MARKS", UBIDI_OPTION_INSERT_MARKS)
       .value("UBIDI_OPTION_REMOVE_CONTROLS", UBIDI_OPTION_REMOVE_CONTROLS)
-      .value("UBIDI_OPTION_STREAMING", UBIDI_OPTION_STREAMING);
+      .value("UBIDI_OPTION_STREAMING", UBIDI_OPTION_STREAMING)
+      .export_values();
 
   py::class_<_UBiDiClassCallbackPtr>(m, "UBiDiClassCallbackPtr")
       .def(py::init<std::nullptr_t>(), py::arg("fn"))

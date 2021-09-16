@@ -39,7 +39,8 @@ void init_uregex(py::module &m) {
       .value("UREGEX_MULTILINE", UREGEX_MULTILINE)
       .value("UREGEX_UNIX_LINES", UREGEX_UNIX_LINES)
       .value("UREGEX_UWORD", UREGEX_UWORD)
-      .value("UREGEX_ERROR_ON_UNKNOWN_ESCAPES", UREGEX_ERROR_ON_UNKNOWN_ESCAPES);
+      .value("UREGEX_ERROR_ON_UNKNOWN_ESCAPES", UREGEX_ERROR_ON_UNKNOWN_ESCAPES)
+      .export_values();
 
   py::class_<_URegexFindProgressCallbackPtr>(m, "URegexFindProgressCallbackPtr")
       .def(py::init<py::function>(), py::arg("action"));

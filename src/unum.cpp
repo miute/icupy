@@ -5,12 +5,14 @@ void init_unum(py::module &m) {
   py::enum_<UCurrencySpacing>(m, "UCurrencySpacing", py::arithmetic())
       .value("UNUM_CURRENCY_MATCH", UNUM_CURRENCY_MATCH)
       .value("UNUM_CURRENCY_SURROUNDING_MATCH", UNUM_CURRENCY_SURROUNDING_MATCH)
-      .value("UNUM_CURRENCY_INSERT", UNUM_CURRENCY_INSERT);
+      .value("UNUM_CURRENCY_INSERT", UNUM_CURRENCY_INSERT)
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   py::enum_<UNumberCompactStyle>(m, "UNumberCompactStyle", py::arithmetic())
       .value("UNUM_SHORT", UNUM_SHORT)
-      .value("UNUM_LONG", UNUM_LONG);
+      .value("UNUM_LONG", UNUM_LONG)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   py::enum_<UNumberFormatAttribute>(m, "UNumberFormatAttribute", py::arithmetic())
@@ -59,7 +61,7 @@ void init_unum(py::module &m) {
       .value("UNUM_PARSE_CASE_SENSITIVE", UNUM_PARSE_CASE_SENSITIVE)
       .value("UNUM_SIGN_ALWAYS_SHOWN", UNUM_SIGN_ALWAYS_SHOWN)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-      ;
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   py::enum_<UNumberFormatFields>(m, "UNumberFormatFields", py::arithmetic())
@@ -78,20 +80,22 @@ void init_unum(py::module &m) {
       .value("UNUM_MEASURE_UNIT_FIELD", UNUM_MEASURE_UNIT_FIELD)
       .value("UNUM_COMPACT_FIELD", UNUM_COMPACT_FIELD)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-      ;
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   py::enum_<UNumberFormatMinimumGroupingDigits>(m, "UNumberFormatMinimumGroupingDigits", py::arithmetic())
       .value("UNUM_MINIMUM_GROUPING_DIGITS_AUTO", UNUM_MINIMUM_GROUPING_DIGITS_AUTO)
-      .value("UNUM_MINIMUM_GROUPING_DIGITS_MIN2", UNUM_MINIMUM_GROUPING_DIGITS_MIN2);
+      .value("UNUM_MINIMUM_GROUPING_DIGITS_MIN2", UNUM_MINIMUM_GROUPING_DIGITS_MIN2)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
   py::enum_<UNumberFormatPadPosition>(m, "UNumberFormatPadPosition", py::arithmetic())
       .value("UNUM_PAD_BEFORE_PREFIX", UNUM_PAD_BEFORE_PREFIX)
       .value("UNUM_PAD_AFTER_PREFIX", UNUM_PAD_AFTER_PREFIX)
       .value("UNUM_PAD_BEFORE_SUFFIX", UNUM_PAD_BEFORE_SUFFIX)
-      .value("UNUM_PAD_AFTER_SUFFIX", UNUM_PAD_AFTER_SUFFIX);
+      .value("UNUM_PAD_AFTER_SUFFIX", UNUM_PAD_AFTER_SUFFIX)
+      .export_values();
 
   py::enum_<UNumberFormatRoundingMode>(m, "UNumberFormatRoundingMode", py::arithmetic())
       .value("UNUM_ROUND_CEILING", UNUM_ROUND_CEILING)
@@ -107,7 +111,7 @@ void init_unum(py::module &m) {
       .value("UNUM_ROUND_HALF_CEILING", UNUM_ROUND_HALF_CEILING)
       .value("UNUM_ROUND_HALF_FLOOR", UNUM_ROUND_HALF_FLOOR)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-      ;
+      .export_values();
 
   py::enum_<UNumberFormatStyle>(m, "UNumberFormatStyle", py::arithmetic())
       .value("UNUM_PATTERN_DECIMAL", UNUM_PATTERN_DECIMAL)
@@ -136,7 +140,8 @@ void init_unum(py::module &m) {
       .value("UNUM_CURRENCY_STANDARD", UNUM_CURRENCY_STANDARD)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
       .value("UNUM_DEFAULT", UNUM_DEFAULT)
-      .value("UNUM_IGNORE", UNUM_IGNORE);
+      .value("UNUM_IGNORE", UNUM_IGNORE)
+      .export_values();
 
   py::enum_<UNumberFormatSymbol>(m, "UNumberFormatSymbol", py::arithmetic())
       .value("UNUM_DECIMAL_SEPARATOR_SYMBOL", UNUM_DECIMAL_SEPARATOR_SYMBOL)
@@ -169,7 +174,7 @@ void init_unum(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UNUM_EXPONENT_MULTIPLICATION_SYMBOL", UNUM_EXPONENT_MULTIPLICATION_SYMBOL)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-      ;
+      .export_values();
 
   py::enum_<UNumberFormatTextAttribute>(m, "UNumberFormatTextAttribute", py::arithmetic())
       .value("UNUM_POSITIVE_PREFIX", UNUM_POSITIVE_PREFIX)
@@ -179,5 +184,6 @@ void init_unum(py::module &m) {
       .value("UNUM_PADDING_CHARACTER", UNUM_PADDING_CHARACTER)
       .value("UNUM_CURRENCY_CODE", UNUM_CURRENCY_CODE)
       .value("UNUM_DEFAULT_RULESET", UNUM_DEFAULT_RULESET)
-      .value("UNUM_PUBLIC_RULESETS", UNUM_PUBLIC_RULESETS);
+      .value("UNUM_PUBLIC_RULESETS", UNUM_PUBLIC_RULESETS)
+      .export_values();
 }

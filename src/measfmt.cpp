@@ -12,7 +12,8 @@ void init_measfmt(py::module &m) {
       .value("UMEASFMT_WIDTH_WIDE", UMEASFMT_WIDTH_WIDE)
       .value("UMEASFMT_WIDTH_SHORT", UMEASFMT_WIDTH_SHORT)
       .value("UMEASFMT_WIDTH_NARROW", UMEASFMT_WIDTH_NARROW)
-      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC);
+      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   // icu::MeasureFormat

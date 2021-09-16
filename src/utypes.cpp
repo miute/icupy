@@ -238,7 +238,7 @@ void init_utypes(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_ERROR_LIMIT", U_ERROR_LIMIT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   m.def("u_error_name", &u_errorName, py::arg("code"));
   m.def("u_failure", &U_FAILURE, py::arg("code"));

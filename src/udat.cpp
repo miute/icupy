@@ -10,7 +10,7 @@ void init_udat(py::module &m) {
       .value("UDAT_PARSE_PARTIAL_LITERAL_MATCH", UDAT_PARSE_PARTIAL_LITERAL_MATCH)
       .value("UDAT_PARSE_MULTIPLE_PATTERNS_FOR_MATCH", UDAT_PARSE_MULTIPLE_PATTERNS_FOR_MATCH)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
-      ;
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   py::enum_<UDateFormatField>(m, "UDateFormatField", py::arithmetic())
@@ -58,14 +58,15 @@ void init_udat(py::module &m) {
       .value("UDAT_AM_PM_MIDNIGHT_NOON_FIELD", UDAT_AM_PM_MIDNIGHT_NOON_FIELD)
       .value("UDAT_FLEXIBLE_DAY_PERIOD_FIELD", UDAT_FLEXIBLE_DAY_PERIOD_FIELD)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
-      ;
+      .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   py::enum_<UDateFormatHourCycle>(m, "UDateFormatHourCycle", py::arithmetic())
       .value("UDAT_HOUR_CYCLE_11", UDAT_HOUR_CYCLE_11)
       .value("UDAT_HOUR_CYCLE_12", UDAT_HOUR_CYCLE_12)
       .value("UDAT_HOUR_CYCLE_23", UDAT_HOUR_CYCLE_23)
-      .value("UDAT_HOUR_CYCLE_24", UDAT_HOUR_CYCLE_24);
+      .value("UDAT_HOUR_CYCLE_24", UDAT_HOUR_CYCLE_24)
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   py::enum_<UDateFormatStyle>(m, "UDateFormatStyle", py::arithmetic())
@@ -83,7 +84,7 @@ void init_udat(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .value("UDAT_PATTERN", UDAT_PATTERN)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
-      ;
+      .export_values();
 
   py::enum_<UDateFormatSymbolType>(m, "UDateFormatSymbolType", py::arithmetic())
       .value("UDAT_ERAS", UDAT_ERAS)
@@ -119,7 +120,7 @@ void init_udat(py::module &m) {
       .value("UDAT_ZODIAC_NAMES_ABBREVIATED", UDAT_ZODIAC_NAMES_ABBREVIATED)
       .value("UDAT_ZODIAC_NAMES_NARROW", UDAT_ZODIAC_NAMES_NARROW)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-      ;
+      .export_values();
 
   // Skeletons for dates
   m.attr("UDAT_ABBR_MONTH_DAY") = UDAT_ABBR_MONTH_DAY;

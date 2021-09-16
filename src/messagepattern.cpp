@@ -4,7 +4,8 @@
 void init_messagepattern(py::module &m) {
   py::enum_<UMessagePatternApostropheMode>(m, "UMessagePatternApostropheMode", py::arithmetic())
       .value("UMSGPAT_APOS_DOUBLE_OPTIONAL", UMSGPAT_APOS_DOUBLE_OPTIONAL)
-      .value("UMSGPAT_APOS_DOUBLE_REQUIRED", UMSGPAT_APOS_DOUBLE_REQUIRED);
+      .value("UMSGPAT_APOS_DOUBLE_REQUIRED", UMSGPAT_APOS_DOUBLE_REQUIRED)
+      .export_values();
 
   py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType", py::arithmetic())
       .value("UMSGPAT_ARG_TYPE_NONE", UMSGPAT_ARG_TYPE_NONE)
@@ -15,7 +16,7 @@ void init_messagepattern(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .value("UMSGPAT_ARG_TYPE_SELECTORDINAL", UMSGPAT_ARG_TYPE_SELECTORDINAL)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
-      ;
+      .export_values();
 
   py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType", py::arithmetic())
       .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START)
@@ -31,7 +32,8 @@ void init_messagepattern(py::module &m) {
       .value("UMSGPAT_PART_TYPE_ARG_STYLE", UMSGPAT_PART_TYPE_ARG_STYLE)
       .value("UMSGPAT_PART_TYPE_ARG_SELECTOR", UMSGPAT_PART_TYPE_ARG_SELECTOR)
       .value("UMSGPAT_PART_TYPE_ARG_INT", UMSGPAT_PART_TYPE_ARG_INT)
-      .value("UMSGPAT_PART_TYPE_ARG_DOUBLE", UMSGPAT_PART_TYPE_ARG_DOUBLE);
+      .value("UMSGPAT_PART_TYPE_ARG_DOUBLE", UMSGPAT_PART_TYPE_ARG_DOUBLE)
+      .export_values();
 
   // TODO: Implement icu::MessagePattern class.
 

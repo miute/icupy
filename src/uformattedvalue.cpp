@@ -16,6 +16,6 @@ void init_uformattedvalue(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
       .value("UFIELD_CATEGORY_NUMBER_RANGE_SPAN", UFIELD_CATEGORY_NUMBER_RANGE_SPAN)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-      ;
+      .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 }

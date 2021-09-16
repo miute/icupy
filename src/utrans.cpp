@@ -5,7 +5,8 @@
 void init_utrans(py::module &m) {
   py::enum_<UTransDirection>(m, "UTransDirection", py::arithmetic())
       .value("UTRANS_FORWARD", UTRANS_FORWARD)
-      .value("UTRANS_REVERSE", UTRANS_REVERSE);
+      .value("UTRANS_REVERSE", UTRANS_REVERSE)
+      .export_values();
 
   py::class_<UTransPosition> tp(m, "UTransPosition");
   tp.def(py::init<>())

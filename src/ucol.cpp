@@ -20,7 +20,7 @@ void init_ucol(py::module &m) {
 #ifndef U_FORCE_HIDE_DEPRECATED_API
       .value("UCOL_ATTRIBUTE_COUNT", UCOL_ATTRIBUTE_COUNT)
 #endif // U_FORCE_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UColAttributeValue>(m, "UColAttributeValue", py::arithmetic())
       .value("UCOL_DEFAULT", UCOL_DEFAULT)
@@ -41,7 +41,7 @@ void init_ucol(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_ATTRIBUTE_VALUE_COUNT", UCOL_ATTRIBUTE_VALUE_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UColBoundMode>(m, "UColBoundMode", py::arithmetic())
       .value("UCOL_BOUND_LOWER", UCOL_BOUND_LOWER)
@@ -50,12 +50,13 @@ void init_ucol(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_BOUND_VALUE_COUNT", UCOL_BOUND_VALUE_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UCollationResult>(m, "UCollationResult", py::arithmetic())
       .value("UCOL_EQUAL", UCOL_EQUAL)
       .value("UCOL_GREATER", UCOL_GREATER)
-      .value("UCOL_LESS", UCOL_LESS);
+      .value("UCOL_LESS", UCOL_LESS)
+      .export_values();
 
   py::enum_<UColReorderCode>(m, "UColReorderCode", py::arithmetic())
       .value("UCOL_REORDER_CODE_DEFAULT", UCOL_REORDER_CODE_DEFAULT)
@@ -70,9 +71,10 @@ void init_ucol(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_REORDER_CODE_LIMIT", UCOL_REORDER_CODE_LIMIT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<UColRuleOption>(m, "UColRuleOption", py::arithmetic())
       .value("UCOL_TAILORING_ONLY", UCOL_TAILORING_ONLY)
-      .value("UCOL_FULL_RULES", UCOL_FULL_RULES);
+      .value("UCOL_FULL_RULES", UCOL_FULL_RULES)
+      .export_values();
 }

@@ -19,7 +19,7 @@ void init_tzfmt(py::module &m) {
       .value("UTZFMT_PAT_POSITIVE_H", UTZFMT_PAT_POSITIVE_H)
       .value("UTZFMT_PAT_NEGATIVE_H", UTZFMT_PAT_NEGATIVE_H)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-      ;
+      .export_values();
 
   py::enum_<UTimeZoneFormatParseOption>(m, "UTimeZoneFormatParseOption", py::arithmetic())
       .value("UTZFMT_PARSE_OPTION_NONE", UTZFMT_PARSE_OPTION_NONE)
@@ -27,7 +27,7 @@ void init_tzfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS", UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-      ;
+      .export_values();
 
   py::enum_<UTimeZoneFormatStyle>(m, "UTimeZoneFormatStyle", py::arithmetic())
       .value("UTZFMT_STYLE_GENERIC_LOCATION", UTZFMT_STYLE_GENERIC_LOCATION)
@@ -52,12 +52,13 @@ void init_tzfmt(py::module &m) {
       .value("UTZFMT_STYLE_ZONE_ID_SHORT", UTZFMT_STYLE_ZONE_ID_SHORT)
       .value("UTZFMT_STYLE_EXEMPLAR_LOCATION", UTZFMT_STYLE_EXEMPLAR_LOCATION)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-      ;
+      .export_values();
 
   py::enum_<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType", py::arithmetic())
       .value("UTZFMT_TIME_TYPE_UNKNOWN", UTZFMT_TIME_TYPE_UNKNOWN)
       .value("UTZFMT_TIME_TYPE_STANDARD", UTZFMT_TIME_TYPE_STANDARD)
-      .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT);
+      .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT)
+      .export_values();
 
   // icu::TimeZoneFormat
   py::class_<TimeZoneFormat, Format> tzf(m, "TimeZoneFormat");

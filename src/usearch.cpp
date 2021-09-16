@@ -11,7 +11,7 @@ void init_usearch(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("USEARCH_ATTRIBUTE_COUNT", USEARCH_ATTRIBUTE_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   py::enum_<USearchAttributeValue>(m, "USearchAttributeValue", py::arithmetic())
       .value("USEARCH_DEFAULT", USEARCH_DEFAULT)
@@ -23,7 +23,7 @@ void init_usearch(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
       .value("USEARCH_ATTRIBUTE_VALUE_COUNT", USEARCH_ATTRIBUTE_VALUE_COUNT)
 #endif // U_HIDE_DEPRECATED_API
-      ;
+      .export_values();
 
   m.attr("USEARCH_DONE") = USEARCH_DONE;
 }

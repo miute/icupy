@@ -44,7 +44,8 @@ void init_ucnv_err(py::module &m) {
       .value("UCNV_IRREGULAR", UCNV_IRREGULAR)
       .value("UCNV_RESET", UCNV_RESET)
       .value("UCNV_CLOSE", UCNV_CLOSE)
-      .value("UCNV_CLONE", UCNV_CLONE);
+      .value("UCNV_CLONE", UCNV_CLONE)
+      .export_values();
 
   py::class_<_UConverterFromUCallbackPtr>(m, "UConverterFromUCallbackPtr")
       .def(py::init<py::function>(), py::arg("action"));

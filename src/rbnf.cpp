@@ -8,7 +8,8 @@ void init_rbnf(py::module &m) {
       .value("URBNF_SPELLOUT", URBNF_SPELLOUT)
       .value("URBNF_ORDINAL", URBNF_ORDINAL)
       .value("URBNF_DURATION", URBNF_DURATION)
-      .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM);
+      .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM)
+      .export_values();
 
   // icu::RuleBasedNumberFormat
   py::class_<RuleBasedNumberFormat, NumberFormat> rbnf(m, "RuleBasedNumberFormat");

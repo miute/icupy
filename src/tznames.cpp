@@ -20,7 +20,7 @@ void init_tznames(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("UTZNM_EXEMPLAR_LOCATION", UTZNM_EXEMPLAR_LOCATION)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-      ;
+      .export_values();
 
   // icu::TimeZoneNames
   py::class_<TimeZoneNames, UObject> tzn(m, "TimeZoneNames");
