@@ -35,6 +35,7 @@ pybind11_add_module(
     fpositer.cpp
     gregocal.cpp
     idna.cpp
+    listformatter.cpp
     localebuilder.cpp
     localematcher.cpp
     locid.cpp
@@ -89,6 +90,7 @@ pybind11_add_module(
     uenum.cpp
     uformattedvalue.cpp
     uidna.cpp
+    ulistformatter.cpp
     uloc.cpp
     uniset.cpp
     unistr.cpp

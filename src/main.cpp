@@ -34,6 +34,7 @@ void init_formattedvalue(py::module &m);
 void init_fpositer(py::module &m);
 void init_gregocal(py::module &m);
 void init_idna(py::module &m);
+void init_listformatter(py::module &m);
 void init_localebuilder(py::module &m);
 void init_localematcher(py::module &m);
 void init_locid(py::module &m, py::class_<Locale, UObject> &loc);
@@ -87,6 +88,7 @@ void init_udisplaycontext(py::module &m);
 void init_uenum(py::module &m);
 void init_uformattedvalue(py::module &m);
 void init_uidna(py::module &m);
+void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
 void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
@@ -225,6 +227,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_dtptngen(m);      // icu::DateTimePatternGenerator
   init_idna(m);          // icu::IDNA
+  init_listformatter(m); // icu::ListFormatter
   init_localebuilder(m); // icu::LocaleBuilder
   init_localematcher(m); // icu::LocaleMatcher
   init_locid(m, loc);    // icu::Locale
@@ -258,6 +261,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uenum(m);
   init_uformattedvalue(m);
   init_uidna(m);
+  init_ulistformatter(m);
   init_uloc(m);
   init_unorm2(m);
   init_unum(m);
