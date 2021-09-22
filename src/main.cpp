@@ -56,6 +56,7 @@ void init_plurrule(py::module &m, py::class_<PluralRules, UObject> &pr);
 void init_rbbi(py::module &m);
 void init_rbnf(py::module &m);
 void init_regex(py::module &m);
+void init_reldatefmt(py::module &m);
 void init_resbund(py::module &m);
 void init_schriter(py::module &m);
 void init_selfmt(py::module &m);
@@ -98,6 +99,7 @@ void init_unumberformatter(py::module &m);
 void init_unumberrangeformatter(py::module &m);
 void init_upluralrules(py::module &m);
 void init_uregex(py::module &m);
+void init_ureldatefmt(py::module &m);
 void init_ures(py::module &m);
 void init_uscript(py::module &m);
 void init_usearch(py::module &m);
@@ -233,6 +235,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_locid(m, loc);    // icu::Locale
   init_rbbi(m);          // icu::RuleBasedBreakIterator
   init_regex(m);         // icu::RegexPattern, icu::RegexMatcher
+  init_reldatefmt(m);    // icu::RelativeDateTimeFormatter
   init_resbund(m);       // icu::ResourceBundle
   init_sortkey(m);       // icu::CollationKey
 
@@ -269,6 +272,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_unumberrangeformatter(m);
   init_upluralrules(m);
   init_uregex(m);
+  init_ureldatefmt(m);
   init_ures(m);
   init_uscript(m);
   init_usearch(m);
