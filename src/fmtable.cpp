@@ -1,5 +1,4 @@
 #include "main.hpp"
-#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
@@ -45,10 +44,13 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           py::arg("number"))
       .def(py::init<const UnicodeString &>(), py::arg("str_to_copy"))
       .def(py::init<const Formattable &>(), py::arg("source"))
-      .def(py::init([](const std::vector<Formattable> &array_to_copy, std::optional<int32_t> count) {
-             return std::make_unique<Formattable>(array_to_copy.data(), count.value_or((int32_t)array_to_copy.size()));
+      .def(py::init([](const std::vector<Formattable> &array_to_copy, int32_t count) {
+             if (count == -1) {
+               count = (int32_t)array_to_copy.size();
+             }
+             return std::make_unique<Formattable>(array_to_copy.data(), count);
            }),
-           py::arg("array_to_copy"), py::arg("count") = std::nullopt)
+           py::arg("array_to_copy"), py::arg("count") = -1)
       // FIXME: Implement "icu::Formattable::Formattable(UObject *objectToAdopt)".
       .def(py::init(
                [](const Calendar &object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt.clone()); }),
@@ -204,10 +206,13 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   fmt.def("is_numeric", &Formattable::isNumeric);
   fmt.def(
       "set_array",
-      [](Formattable &self, const std::vector<Formattable> &array, std::optional<int32_t> count) {
-        self.setArray(array.data(), count.value_or((int32_t)array.size()));
+      [](Formattable &self, const std::vector<Formattable> &array, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)array.size();
+        }
+        self.setArray(array.data(), count);
       },
-      py::arg("array"), py::arg("count") = std::nullopt);
+      py::arg("array"), py::arg("count") = -1);
   fmt.def("set_date", &Formattable::setDate, py::arg("d"));
   fmt.def(
       "set_decimal_number",

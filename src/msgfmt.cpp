@@ -494,10 +494,13 @@ void init_msgfmt(py::module &m) {
           py::arg("format_"));
   mf.def(
       "set_formats",
-      [](MessageFormat &self, std::vector<const Format *> &new_formats, std::optional<int32_t> count) {
-        self.setFormats(new_formats.data(), count.value_or((int32_t)new_formats.size()));
+      [](MessageFormat &self, std::vector<const Format *> &new_formats, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)new_formats.size();
+        }
+        self.setFormats(new_formats.data(), count);
       },
-      py::arg("new_formats"), py::arg("count") = std::nullopt);
+      py::arg("new_formats"), py::arg("count") = -1);
   mf.def("set_locale", &MessageFormat::setLocale, py::arg("locale"))
       .def(
           // const char *locale -> const Locale &locale

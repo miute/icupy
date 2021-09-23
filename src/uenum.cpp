@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include "uenumptr.hpp"
-#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/strenum.h>
 #include <unicode/ustring.h>
@@ -42,20 +41,23 @@ void init_uenum(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_open_char_strings_enumeration",
-      [](const std::vector<std::string> &strings, std::optional<int32_t> count) {
+      [](const std::vector<std::string> &strings, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)strings.size();
+        }
         UErrorCode error_code = U_ZERO_ERROR;
         auto source = std::shared_ptr<char *[]>(new char *[strings.size()], std::default_delete<char *[]>());
         auto s = source.get();
         for (size_t n = 0; n < strings.size(); ++n, ++s) {
           *s = strdup(strings[n].c_str());
         }
-        auto p = uenum_openCharStringsEnumeration(source.get(), count.value_or(strings.size()), &error_code);
+        auto p = uenum_openCharStringsEnumeration(source.get(), count, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
-      py::arg("strings"), py::arg("count") = std::nullopt);
+      py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_open_from_string_enumeration",
@@ -71,7 +73,10 @@ void init_uenum(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_open_uchar_strings_enumeration",
-      [](const std::vector<std::u16string> &strings, std::optional<int32_t> count) {
+      [](const std::vector<std::u16string> &strings, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)strings.size();
+        }
         UErrorCode error_code = U_ZERO_ERROR;
         auto source = std::shared_ptr<UChar *[]>(new UChar *[strings.size()], std::default_delete<UChar *[]>());
         auto s = source.get();
@@ -79,13 +84,13 @@ void init_uenum(py::module &m) {
           *s = new UChar[strings[n].size() + 1];
           u_strcpy(*s, strings[n].c_str());
         }
-        auto p = uenum_openUCharStringsEnumeration(source.get(), count.value_or(strings.size()), &error_code);
+        auto p = uenum_openUCharStringsEnumeration(source.get(), count, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
-      py::arg("strings"), py::arg("count") = std::nullopt);
+      py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_reset",

@@ -510,30 +510,34 @@ void init_regex(py::module &m) {
       py::arg("limit"));
   rm.def(
         "split",
-        [](RegexMatcher &self, const UnicodeString &input, _UnicodeStringVector &dest,
-           std::optional<int32_t> dest_capacity) {
+        [](RegexMatcher &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {
+          if (dest_capacity == -1) {
+            dest_capacity = (int32_t)dest.size();
+          }
           UErrorCode error_code = U_ZERO_ERROR;
-          auto result = self.split(input, dest.data(), dest_capacity.value_or((int32_t)dest.size()), error_code);
+          auto result = self.split(input, dest.data(), dest_capacity, error_code);
           if (U_FAILURE(error_code)) {
             throw ICUError(error_code);
           }
           return result;
         },
-        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = std::nullopt)
+        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest, std::optional<int32_t> dest_capacity) {
+          [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
+            if (dest_capacity == -1) {
+              dest_capacity = (int32_t)dest.size();
+            }
             UErrorCode error_code = U_ZERO_ERROR;
-            const int32_t output_capacity = dest_capacity.value_or((int32_t)dest.size());
-            std::vector<UText *> output(std::max(0, output_capacity));
+            std::vector<UText *> output(std::max(0, dest_capacity));
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
-            auto result = self.split(input, output.data(), output_capacity, error_code);
+            auto result = self.split(input, output.data(), dest_capacity, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
             return result;
           },
-          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = std::nullopt);
+          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1);
   rm.def(
         "start",
         [](const RegexMatcher &self, int32_t group) {
@@ -787,28 +791,32 @@ void init_regex(py::module &m) {
   });
   rp.def(
         "split",
-        [](const RegexPattern &self, const UnicodeString &input, _UnicodeStringVector &dest,
-           std::optional<int32_t> dest_capacity) {
+        [](const RegexPattern &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {
+          if (dest_capacity == -1) {
+            dest_capacity = (int32_t)dest.size();
+          }
           UErrorCode error_code = U_ZERO_ERROR;
-          auto result = self.split(input, dest.data(), dest_capacity.value_or((int32_t)dest.size()), error_code);
+          auto result = self.split(input, dest.data(), dest_capacity, error_code);
           if (U_FAILURE(error_code)) {
             throw ICUError(error_code);
           }
           return result;
         },
-        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = std::nullopt)
+        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest, std::optional<int32_t> dest_capacity) {
+          [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
+            if (dest_capacity == -1) {
+              dest_capacity = (int32_t)dest.size();
+            }
             UErrorCode error_code = U_ZERO_ERROR;
-            const int32_t output_capacity = dest_capacity.value_or((int32_t)dest.size());
-            std::vector<UText *> output(std::max(0, output_capacity));
+            std::vector<UText *> output(std::max(0, dest_capacity));
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
-            auto result = self.split(input, output.data(), output_capacity, error_code);
+            auto result = self.split(input, output.data(), dest_capacity, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
             return result;
           },
-          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = std::nullopt);
+          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1);
 }

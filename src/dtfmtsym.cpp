@@ -1,5 +1,4 @@
 #include "main.hpp"
-#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/dtfmtsym.h>
@@ -229,25 +228,34 @@ void init_dtfmtsym(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
   dfs.def(
       "set_am_pm_strings",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)ampms.size();
+        }
         std::vector<UnicodeString> _ampms(std::begin(ampms), std::end(ampms));
-        self.setAmPmStrings(_ampms.data(), count.value_or((int32_t)ampms.size()));
+        self.setAmPmStrings(_ampms.data(), count);
       },
-      py::arg("ampms"), py::arg("count") = std::nullopt);
+      py::arg("ampms"), py::arg("count") = -1);
   dfs.def(
       "set_era_names",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &era_names, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &era_names, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)era_names.size();
+        }
         std::vector<UnicodeString> _era_names(std::begin(era_names), std::end(era_names));
-        self.setEraNames(_era_names.data(), count.value_or((int32_t)era_names.size()));
+        self.setEraNames(_era_names.data(), count);
       },
-      py::arg("era_names"), py::arg("count") = std::nullopt);
+      py::arg("era_names"), py::arg("count") = -1);
   dfs.def(
       "set_eras",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &eras, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &eras, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)eras.size();
+        }
         std::vector<UnicodeString> _eras(std::begin(eras), std::end(eras));
-        self.setEras(_eras.data(), count.value_or((int32_t)eras.size()));
+        self.setEras(_eras.data(), count);
       },
-      py::arg("eras"), py::arg("count") = std::nullopt);
+      py::arg("eras"), py::arg("count") = -1);
   dfs.def("set_local_pattern_chars", &DateFormatSymbols::setLocalPatternChars, py::arg("new_local_pattern_chars"))
       .def(
           // const char16_t *new_local_pattern_chars -> const UnicodeString &new_local_pattern_chars
@@ -258,11 +266,14 @@ void init_dtfmtsym(py::module &m) {
           py::arg("new_local_pattern_chars"));
   dfs.def(
          "set_months",
-         [](DateFormatSymbols &self, const std::list<UnicodeString> &months, std::optional<int32_t> count) {
+         [](DateFormatSymbols &self, const std::list<UnicodeString> &months, int32_t count) {
+           if (count == -1) {
+             count = (int32_t)months.size();
+           }
            std::vector<UnicodeString> _months(std::begin(months), std::end(months));
-           self.setMonths(_months.data(), count.value_or((int32_t)months.size()));
+           self.setMonths(_months.data(), count);
          },
-         py::arg("months"), py::arg("count") = std::nullopt)
+         py::arg("months"), py::arg("count") = -1)
       .def(
           "set_months",
           [](DateFormatSymbols &self, const std::list<UnicodeString> &months, int32_t count,
@@ -276,11 +287,14 @@ void init_dtfmtsym(py::module &m) {
           py::arg("months"), py::arg("count"), py::arg("context"), py::arg("width"));
   dfs.def(
       "set_narrow_eras",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &narrow_eras, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &narrow_eras, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)narrow_eras.size();
+        }
         std::vector<UnicodeString> _narrow_eras(std::begin(narrow_eras), std::end(narrow_eras));
-        self.setNarrowEras(_narrow_eras.data(), count.value_or((int32_t)narrow_eras.size()));
+        self.setNarrowEras(_narrow_eras.data(), count);
       },
-      py::arg("narrow_eras"), py::arg("count") = std::nullopt);
+      py::arg("narrow_eras"), py::arg("count") = -1);
   dfs.def(
       "set_quarters",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &quarters, int32_t count,
@@ -294,25 +308,34 @@ void init_dtfmtsym(py::module &m) {
       py::arg("quarters"), py::arg("count"), py::arg("context"), py::arg("width"));
   dfs.def(
       "set_short_months",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &short_months, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &short_months, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)short_months.size();
+        }
         std::vector<UnicodeString> _short_months(std::begin(short_months), std::end(short_months));
-        self.setShortMonths(_short_months.data(), count.value_or((int32_t)short_months.size()));
+        self.setShortMonths(_short_months.data(), count);
       },
-      py::arg("short_months"), py::arg("count") = std::nullopt);
+      py::arg("short_months"), py::arg("count") = -1);
   dfs.def(
       "set_short_weekdays",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &abbrev_weekdays, std::optional<int32_t> count) {
+      [](DateFormatSymbols &self, const std::list<UnicodeString> &abbrev_weekdays, int32_t count) {
+        if (count == -1) {
+          count = (int32_t)abbrev_weekdays.size();
+        }
         std::vector<UnicodeString> _abbrev_weekdays(std::begin(abbrev_weekdays), std::end(abbrev_weekdays));
-        self.setShortWeekdays(_abbrev_weekdays.data(), count.value_or((int32_t)abbrev_weekdays.size()));
+        self.setShortWeekdays(_abbrev_weekdays.data(), count);
       },
-      py::arg("abbrev_weekdays"), py::arg("count") = std::nullopt);
+      py::arg("abbrev_weekdays"), py::arg("count") = -1);
   dfs.def(
          "set_weekdays",
-         [](DateFormatSymbols &self, const std::list<UnicodeString> &weekdays, std::optional<int32_t> count) {
+         [](DateFormatSymbols &self, const std::list<UnicodeString> &weekdays, int32_t count) {
+           if (count == -1) {
+             count = (int32_t)weekdays.size();
+           }
            std::vector<UnicodeString> _weekdays(std::begin(weekdays), std::end(weekdays));
-           self.setWeekdays(_weekdays.data(), count.value_or((int32_t)weekdays.size()));
+           self.setWeekdays(_weekdays.data(), count);
          },
-         py::arg("weekdays"), py::arg("count") = std::nullopt)
+         py::arg("weekdays"), py::arg("count") = -1)
       .def(
           "set_weekdays",
           [](DateFormatSymbols &self, const std::list<UnicodeString> &weekdays, int32_t count,
