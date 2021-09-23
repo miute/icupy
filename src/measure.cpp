@@ -10,9 +10,10 @@ using namespace icu;
 void init_measure(py::module &m) {
   // icu::Measure
   py::class_<Measure, UObject> meas(m, "Measure");
-  meas.def(py::init([](const Formattable &number, const MeasureUnit &adopted_unit) {
+  meas.def(py::init([](const Formattable &number, const MeasureUnit *adopted_unit) {
              UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::make_unique<Measure>(number, adopted_unit.clone(), error_code);
+             auto result =
+                 std::make_unique<Measure>(number, adopted_unit ? adopted_unit->clone() : nullptr, error_code);
              if (U_FAILURE(error_code)) {
                throw ICUError(error_code);
              }
