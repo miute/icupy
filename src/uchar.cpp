@@ -1022,7 +1022,7 @@ void init_uchar(py::module &m) {
       "u_char_name",
       [](UChar32 code, UCharNameChoice name_choice) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = u_charName(code, name_choice, NULL, 0, &error_code);
+        const auto length = u_charName(code, name_choice, nullptr, 0, &error_code);
         std::string result(length, '\0');
         error_code = U_ZERO_ERROR;
         u_charName(code, name_choice, result.data(), (int32_t)result.size(), &error_code);
@@ -1057,7 +1057,7 @@ void init_uchar(py::module &m) {
       "u_get_fc_nfkc_closure",
       [](UChar32 c) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = u_getFC_NFKC_Closure(c, NULL, 0, &error_code);
+        const auto length = u_getFC_NFKC_Closure(c, nullptr, 0, &error_code);
         std::u16string result(length, u'\0');
         error_code = U_ZERO_ERROR;
         u_getFC_NFKC_Closure(c, result.data(), (int32_t)result.size(), &error_code);

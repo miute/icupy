@@ -21,10 +21,11 @@ void init_tztrans(py::module &m) {
   // FIXME: Implement "void icu::TimeZoneTransition::adoptTo(TimeZoneRule *to)".
   /*
   tzt.def(
-      "adopt_from", [](TimeZoneTransition &self, TimeZoneRule *from) { self.adoptFrom(from ? from->clone() : NULL); },
+      "adopt_from",
+      [](TimeZoneTransition &self, TimeZoneRule *from) { self.adoptFrom(from ? from->clone() : nullptr); },
       py::arg("from"));
   tzt.def(
-      "adopt_to", [](TimeZoneTransition &self, TimeZoneRule *to) { self.adoptTo(to ? to->clone() : NULL); },
+      "adopt_to", [](TimeZoneTransition &self, TimeZoneRule *to) { self.adoptTo(to ? to->clone() : nullptr); },
       py::arg("to"));
   */
   tzt.def("clone", &TimeZoneTransition::clone);

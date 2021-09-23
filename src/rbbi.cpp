@@ -218,7 +218,7 @@ void init_rbbi(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   bi.def("get_rule_status_vec", [](BreakIterator &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    std::vector<int32_t> result(self.getRuleStatusVec(NULL, 0, error_code));
+    std::vector<int32_t> result(self.getRuleStatusVec(nullptr, 0, error_code));
     error_code = U_ZERO_ERROR;
     self.getRuleStatusVec(result.data(), (int32_t)result.size(), error_code);
     if (U_FAILURE(error_code)) {
@@ -273,7 +273,7 @@ void init_rbbi(py::module &m) {
       .def(py::self == py::self, py::arg("other"));
   rbbi.def(
       "adopt_text",
-      [](RuleBasedBreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : NULL); },
+      [](RuleBasedBreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : nullptr); },
       py::arg("it"));
   rbbi.def("clone", &RuleBasedBreakIterator::clone);
   rbbi.def("current", &RuleBasedBreakIterator::current);

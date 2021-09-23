@@ -123,7 +123,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         "get_samples",
         [](PluralRules &self, const UnicodeString &keyword) {
           UErrorCode error_code = U_ZERO_ERROR;
-          auto dest_capacity = self.getSamples(keyword, (double *)NULL, 0, error_code);
+          auto dest_capacity = self.getSamples(keyword, (double *)nullptr, 0, error_code);
           std::vector<double> result(dest_capacity);
           error_code = U_ZERO_ERROR;
           self.getSamples(keyword, result.data(), dest_capacity, error_code);
@@ -138,7 +138,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
           "get_samples",
           [](PluralRules &self, const char16_t *keyword) {
             UErrorCode error_code = U_ZERO_ERROR;
-            auto dest_capacity = self.getSamples(keyword, (double *)NULL, 0, error_code);
+            auto dest_capacity = self.getSamples(keyword, (double *)nullptr, 0, error_code);
             std::vector<double> result(dest_capacity);
             error_code = U_ZERO_ERROR;
             self.getSamples(keyword, result.data(), dest_capacity, error_code);

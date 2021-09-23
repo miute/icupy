@@ -81,8 +81,8 @@ void init_ucnv(py::module &m) {
       "ucnv_detect_unicode_signature",
       [](const char *source, int32_t source_length) -> std::optional<const char *> {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ucnv_detectUnicodeSignature(source, source_length, NULL, &error_code);
-        if (result == NULL) {
+        auto result = ucnv_detectUnicodeSignature(source, source_length, nullptr, &error_code);
+        if (result == nullptr) {
           return std::nullopt;
         }
         return result;
@@ -154,7 +154,7 @@ void init_ucnv(py::module &m) {
       "ucnv_get_display_name",
       [](_UConverterPtr &converter, const char *display_locale) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = ucnv_getDisplayName(converter, display_locale, NULL, 0, &error_code);
+        const auto length = ucnv_getDisplayName(converter, display_locale, nullptr, 0, &error_code);
         std::u16string result(length, u'\0');
         error_code = U_ZERO_ERROR;
         ucnv_getDisplayName(converter, display_locale, result.data(), (int32_t)result.size(), &error_code);

@@ -47,10 +47,10 @@ void init_strenum(py::module &m) {
           py::is_operator(), py::arg("other"))
       .def("__next__", [](StringEnumeration &self) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto result = self.next(NULL, error_code);
+        auto result = self.next(nullptr, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
-        } else if (result == NULL) {
+        } else if (result == nullptr) {
           throw py::stop_iteration();
         }
         return result;
@@ -66,7 +66,7 @@ void init_strenum(py::module &m) {
   });
   se.def("next", [](StringEnumeration &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.next(NULL, error_code);
+    auto result = self.next(nullptr, error_code);
     if (U_FAILURE(error_code)) {
       throw ICUError(error_code);
     }
@@ -92,7 +92,7 @@ void init_strenum(py::module &m) {
       py::return_value_policy::reference);
   se.def("unext", [](StringEnumeration &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.unext(NULL, error_code);
+    auto result = self.unext(nullptr, error_code);
     if (U_FAILURE(error_code)) {
       throw ICUError(error_code);
     }

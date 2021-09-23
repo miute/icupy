@@ -208,7 +208,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
           throw ICUError(U_ILLEGAL_ARGUMENT_ERROR);
         }
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = self.getKeywordValue(keyword_name, NULL, 0, error_code);
+        const auto length = self.getKeywordValue(keyword_name, nullptr, 0, error_code);
         std::string result(length, '\0');
         error_code = U_ZERO_ERROR;
         self.getKeywordValue(keyword_name, result.data(), (int32_t)result.size(), error_code);

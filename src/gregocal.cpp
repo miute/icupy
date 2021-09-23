@@ -46,7 +46,7 @@ void init_gregocal(py::module &m) {
   // FIXME: Implement "void icu::Calendar::adoptTimeZone(TimeZone *value)".
   /*
   cal.def(
-      "adopt_time_zone", [](Calendar &self, TimeZone *value) { self.adoptTimeZone(value ? value->clone() : NULL); },
+      "adopt_time_zone", [](Calendar &self, TimeZone *value) { self.adoptTimeZone(value ? value->clone() : nullptr); },
       py::arg("value"));
   */
   cal.def(

@@ -50,7 +50,7 @@ void init_timezone(py::module &m) {
   // FIXME: Implement "static void icu::TimeZone::adoptDefault(TimeZone *zone)".
   /*
   tz.def_static(
-      "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : NULL); }, py::arg("zone"));
+      "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : nullptr); }, py::arg("zone"));
   */
   tz.def("clone", &TimeZone::clone);
   tz.def_static("count_equivalent_ids", &TimeZone::countEquivalentIDs, py::arg("id_"))
@@ -98,7 +98,7 @@ void init_timezone(py::module &m) {
       [](USystemTimeZoneType zone_type, const char *region, const std::optional<int32_t> &raw_offset) {
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = TimeZone::createTimeZoneIDEnumeration(
-            zone_type, region, raw_offset.has_value() ? &raw_offset.value() : NULL, error_code);
+            zone_type, region, raw_offset.has_value() ? &raw_offset.value() : nullptr, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -355,11 +355,11 @@ void init_timezone(py::module &m) {
 
   // icu::RuleBasedTimeZone
   rbtz.def(py::init([](const UnicodeString &id, InitialTimeZoneRule *initial_rule) {
-             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : NULL);
+             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : nullptr);
            }),
            py::arg("id_"), py::arg("initial_rule"))
       .def(py::init([](const char *id, InitialTimeZoneRule *initial_rule) {
-             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : NULL);
+             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : nullptr);
            }),
            py::arg("id_"), py::arg("initial_rule"))
       .def(py::init<const RuleBasedTimeZone &>(), py::arg("source"))
@@ -372,7 +372,7 @@ void init_timezone(py::module &m) {
       "add_transition_rule",
       [](RuleBasedTimeZone &self, TimeZoneRule *rule) {
         UErrorCode error_code = U_ZERO_ERROR;
-        self.addTransitionRule(rule ? rule->clone() : NULL, error_code);
+        self.addTransitionRule(rule ? rule->clone() : nullptr, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

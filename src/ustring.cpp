@@ -7,7 +7,7 @@ void init_ustring(py::module &m) {
   m.def(
       "u_unescape",
       [](const char *src) {
-        const auto length = u_unescape(src, NULL, 0);
+        const auto length = u_unescape(src, nullptr, 0);
         std::u16string result(length, u'\0');
         u_unescape(src, result.data(), (int32_t)result.size());
         return result;

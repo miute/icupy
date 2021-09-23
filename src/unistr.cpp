@@ -353,7 +353,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         "extract",
         [](const UnicodeString &self, _UConverterPtr &cnv) {
           UErrorCode error_code = U_ZERO_ERROR;
-          const auto length = self.extract(NULL, 0, cnv, error_code);
+          const auto length = self.extract(nullptr, 0, cnv, error_code);
           std::string dest(length, '\0');
           error_code = U_ZERO_ERROR;
           self.extract(dest.data(), (int32_t)dest.size(), cnv, error_code);
@@ -381,7 +381,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           // int32_t extract(int32_t start, int32_t startLength, char *target, const char *codepage = 0)
           "extract",
           [](const UnicodeString &self, int32_t start, int32_t start_length, const char *codepage) {
-            const auto length = self.extract(start, start_length, NULL, codepage);
+            const auto length = self.extract(start, start_length, nullptr, codepage);
             if (length <= 0) {
               return py::bytes();
             }
@@ -395,7 +395,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           //                 enum EInvariant inv)
           "extract",
           [](const UnicodeString &self, int32_t start, int32_t start_length, UnicodeString::EInvariant inv) {
-            const auto length = self.extract(start, start_length, NULL, 0, inv);
+            const auto length = self.extract(start, start_length, nullptr, 0, inv);
             if (length <= 0) {
               return py::bytes();
             }
@@ -408,7 +408,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           // int32_t extract(int32_t start, int32_t startLength, char *target, uint32_t targetLength)
           "extract",
           [](const UnicodeString &self, int32_t start, int32_t start_length) {
-            const auto length = self.extract(start, start_length, (char *)NULL, (uint32_t)0);
+            const auto length = self.extract(start, start_length, (char *)nullptr, (uint32_t)0);
             if (length <= 0) {
               return py::bytes();
             }
@@ -825,7 +825,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper));
   us.def("to_utf32", [](const UnicodeString &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    const auto length = self.toUTF32(NULL, 0, error_code);
+    const auto length = self.toUTF32(nullptr, 0, error_code);
     std::vector<UChar32> dest(length);
     error_code = U_ZERO_ERROR;
     self.toUTF32(dest.data(), length, error_code);

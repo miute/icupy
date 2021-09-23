@@ -29,7 +29,7 @@ void init_ucsdet(py::module &m) {
         auto p = ucsdet_detect(ucsd, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
-        } else if (p == NULL) {
+        } else if (p == nullptr) {
           return std::nullopt;
         }
         return std::make_unique<_ConstUCharsetMatchPtr>(p);
@@ -103,7 +103,7 @@ void init_ucsdet(py::module &m) {
       "ucsdet_get_uchars",
       [](_ConstUCharsetMatchPtr &ucsm) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto cap = ucsdet_getUChars(ucsm, NULL, 0, &error_code);
+        const auto cap = ucsdet_getUChars(ucsm, nullptr, 0, &error_code);
         std::u16string result(cap, '\0');
         error_code = U_ZERO_ERROR;
         ucsdet_getUChars(ucsm, result.data(), cap, &error_code);

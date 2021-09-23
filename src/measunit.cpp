@@ -438,7 +438,7 @@ void init_measunit(py::module &m) {
         "get_available",
         [](const char *type) {
           UErrorCode error_code = U_ZERO_ERROR;
-          int32_t capacity = MeasureUnit::getAvailable(type, NULL, 0, error_code);
+          int32_t capacity = MeasureUnit::getAvailable(type, nullptr, 0, error_code);
           auto result = std::vector<MeasureUnit>(capacity);
           error_code = U_ZERO_ERROR;
           MeasureUnit::getAvailable(type, result.data(), capacity, error_code);
@@ -450,7 +450,7 @@ void init_measunit(py::module &m) {
         py::arg("type_"))
       .def_static("get_available", []() {
         UErrorCode error_code = U_ZERO_ERROR;
-        int32_t capacity = MeasureUnit::getAvailable(NULL, 0, error_code);
+        int32_t capacity = MeasureUnit::getAvailable(nullptr, 0, error_code);
         auto result = std::vector<MeasureUnit>(capacity);
         error_code = U_ZERO_ERROR;
         MeasureUnit::getAvailable(result.data(), capacity, error_code);

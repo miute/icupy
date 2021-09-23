@@ -23,7 +23,7 @@ _UTextVector::_UTextVector(size_t n) {
   UErrorCode error_code;
   for (size_t i = 0; i < n; ++i) {
     error_code = U_ZERO_ERROR;
-    values_[i] = utext_openUnicodeString(NULL, &sources_[i], &error_code);
+    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], &error_code);
     if (U_FAILURE(error_code)) {
       throw ICUError(error_code);
     }
@@ -37,7 +37,7 @@ _UTextVector::_UTextVector(const _UnicodeStringList &iterable) {
   UErrorCode error_code;
   for (size_t i = 0; i < size; ++i) {
     error_code = U_ZERO_ERROR;
-    values_[i] = utext_openUnicodeString(NULL, &sources_[i], &error_code);
+    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], &error_code);
     if (U_FAILURE(error_code)) {
       throw ICUError(error_code);
     }
@@ -112,7 +112,7 @@ void init_utext(py::module &m) {
       "utext_close",
       [](_UTextPtr &ut) -> std::optional<_UTextPtr> {
         auto p = utext_close(ut);
-        if (p == NULL) {
+        if (p == nullptr) {
           return std::nullopt;
         }
         assert(p == (UText *)ut);
@@ -137,7 +137,7 @@ void init_utext(py::module &m) {
       "utext_extract",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto dest_capacity = utext_extract(ut, native_start, native_limit, NULL, 0, &error_code);
+        const auto dest_capacity = utext_extract(ut, native_start, native_limit, nullptr, 0, &error_code);
         std::u16string result(dest_capacity, u'\0');
         error_code = U_ZERO_ERROR;
         utext_extract(ut, native_start, native_limit, result.data(), dest_capacity, &error_code);

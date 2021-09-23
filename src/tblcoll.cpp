@@ -90,7 +90,7 @@ void init_tblcoll(py::module &m) {
       [](const std::vector<uint8_t> &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
         UErrorCode error_code = U_ZERO_ERROR;
         const auto result_length =
-            Collator::getBound(source.data(), source_length, bound_type, no_of_levels, NULL, 0, error_code);
+            Collator::getBound(source.data(), source_length, bound_type, no_of_levels, nullptr, 0, error_code);
         std::vector<uint8_t> result(result_length);
         error_code = U_ZERO_ERROR;
         Collator::getBound(source.data(), source_length, bound_type, no_of_levels, result.data(), result_length,
@@ -110,7 +110,7 @@ void init_tblcoll(py::module &m) {
       "get_equivalent_reorder_codes",
       [](int32_t reorder_code) {
         UErrorCode error_code = U_ZERO_ERROR;
-        const auto dest_capacity = Collator::getEquivalentReorderCodes(reorder_code, NULL, 0, error_code);
+        const auto dest_capacity = Collator::getEquivalentReorderCodes(reorder_code, nullptr, 0, error_code);
         std::vector<int32_t> result(dest_capacity);
         error_code = U_ZERO_ERROR;
         Collator::getEquivalentReorderCodes(reorder_code, result.data(), dest_capacity, error_code);
@@ -321,7 +321,7 @@ void init_tblcoll(py::module &m) {
   rbc.def("clone", &RuleBasedCollator::clone);
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    const auto capacity = self.cloneBinary(NULL, 0, error_code);
+    const auto capacity = self.cloneBinary(nullptr, 0, error_code);
     std::vector<uint8_t> result(capacity);
     error_code = U_ZERO_ERROR;
     self.cloneBinary(result.data(), capacity, error_code);
@@ -517,7 +517,7 @@ void init_tblcoll(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   rbc.def("get_reorder_codes", [](const RuleBasedCollator &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    const auto dest_capacity = self.getReorderCodes(NULL, 0, error_code);
+    const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
     error_code = U_ZERO_ERROR;
     std::vector<int32_t> result(dest_capacity);
     self.getReorderCodes(result.data(), dest_capacity, error_code);
@@ -532,7 +532,7 @@ void init_tblcoll(py::module &m) {
   rbc.def(
          "get_sort_key",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length) {
-           const auto result_length = self.getSortKey(source, source_length, NULL, 0);
+           const auto result_length = self.getSortKey(source, source_length, nullptr, 0);
            std::vector<uint8_t> result(result_length);
            self.getSortKey(source, source_length, result.data(), result_length);
            return result;
@@ -541,7 +541,7 @@ void init_tblcoll(py::module &m) {
       .def(
           "get_sort_key",
           [](const RuleBasedCollator &self, const UnicodeString &source) {
-            const auto result_length = self.getSortKey(source, NULL, 0);
+            const auto result_length = self.getSortKey(source, nullptr, 0);
             std::vector<uint8_t> result(result_length);
             self.getSortKey(source, result.data(), result_length);
             return result;
@@ -551,7 +551,7 @@ void init_tblcoll(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "get_sort_key",
           [](const RuleBasedCollator &self, const char16_t *source) {
-            const auto result_length = self.getSortKey(source, NULL, 0);
+            const auto result_length = self.getSortKey(source, nullptr, 0);
             std::vector<uint8_t> result(result_length);
             self.getSortKey(source, result.data(), result_length);
             return result;

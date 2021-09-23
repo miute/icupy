@@ -31,7 +31,7 @@ void init_uenum(py::module &m) {
       "uenum_next",
       [](_UEnumerationPtr &en) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto result = uenum_next(en, NULL, &error_code);
+        auto result = uenum_next(en, nullptr, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -63,7 +63,7 @@ void init_uenum(py::module &m) {
       "uenum_open_from_string_enumeration",
       [](StringEnumeration *adopted) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto p = uenum_openFromStringEnumeration(adopted->clone(), &error_code);
+        auto p = uenum_openFromStringEnumeration(adopted ? adopted->clone() : nullptr, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -106,7 +106,7 @@ void init_uenum(py::module &m) {
       "uenum_unext",
       [](_UEnumerationPtr &en) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto result = uenum_unext(en, NULL, &error_code);
+        auto result = uenum_unext(en, nullptr, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

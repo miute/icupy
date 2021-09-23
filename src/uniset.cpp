@@ -369,7 +369,7 @@ void init_uniset(py::module &m) {
           py::arg("s"));
   us.def("serialize", [](const UnicodeSet &self) {
     UErrorCode error_code = U_ZERO_ERROR;
-    const auto length = self.serialize(NULL, 0, error_code);
+    const auto length = self.serialize(nullptr, 0, error_code);
     std::vector<uint16_t> result(length);
     error_code = U_ZERO_ERROR;
     self.serialize(result.data(), length, error_code);
