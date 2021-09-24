@@ -3,6 +3,8 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4819)
+
+#define strdup _strdup
 #endif // _MSC_VER
 
 #include <list>
