@@ -165,7 +165,6 @@ target_link_libraries(
 )
 
 pybind11_extension(${PROJECT_NAME})
-pybind11_strip(${PROJECT_NAME})
 
 install(
     TARGETS
