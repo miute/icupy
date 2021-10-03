@@ -12,6 +12,7 @@ find_package(ICU REQUIRED COMPONENTS dt i18n io uc)
 
 pybind11_add_module(
     ${PROJECT_NAME}
+    alphaindex.cpp
     appendable.cpp
     char16ptr.cpp
     coleitr.cpp

@@ -11,6 +11,7 @@
 
 using namespace icu;
 
+void init_alphaindex(py::module &m);
 void init_appendable(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
@@ -244,6 +245,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_tblcoll(m);     // icu::RuleBasedCollator
   init_stsearch(m);    // icu::StringSearch
   init_translit(m);    // icu::Transliterator
+
+  init_alphaindex(m); // icu::AlphabeticIndex
 
   init_unistr(m, rep, us); // icu::UnicodeString
 
