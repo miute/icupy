@@ -24,8 +24,14 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
     Alternatively, installing from the git repository:
 
     ```bash
-    git clone --recursive https://github.com/miute/icupy.git
-    pip install ./icupy
+    pip install git+https://github.com/miute/icupy.git
+    ```
+   
+    Optionally, the CMake environment variables are available.
+    e.g., Using the Ninja build system:
+
+    ```bash
+    CMAKE_GENERATOR=Ninja pip install icupy
     ```
 
 ## Changes
