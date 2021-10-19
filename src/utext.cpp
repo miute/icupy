@@ -71,7 +71,7 @@ void init_utext(py::module &m) {
   utp.def_property_readonly("magic", [](const _UTextPtr &self) { return self->magic; });
   utp.def_property_readonly("flags", [](const _UTextPtr &self) { return self->flags; });
   utp.def_property_readonly("provider_properties", [](const _UTextPtr &self) { return self->providerProperties; });
-  utp.def_property_readonly("p_funcs", [](const _UTextPtr &self) { return (ssize_t)self->pFuncs; });
+  utp.def_property_readonly("p_funcs", [](const _UTextPtr &self) { return (py::ssize_t)self->pFuncs; });
 
   // _UTextVector
   py::class_<_UTextVector> utv(m, "UTextVector");
