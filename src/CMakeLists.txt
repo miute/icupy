@@ -76,6 +76,7 @@ pybind11_add_module(
     tzrule.cpp
     tztrans.cpp
     ubidi.cpp
+    ubiditransform.cpp
     ubrk.cpp
     ucal.cpp
     uchar.cpp

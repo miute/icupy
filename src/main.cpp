@@ -74,6 +74,7 @@ void init_tznames(py::module &m);
 void init_tzrule(py::module &m);
 void init_tztrans(py::module &m);
 void init_ubidi(py::module &m);
+void init_ubiditransform(py::module &m);
 void init_ubrk(py::module &m);
 void init_ucal(py::module &m);
 void init_uchar(py::module &m);
@@ -252,6 +253,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_unistr(m, rep, us); // icu::UnicodeString
 
   init_ubidi(m);
+  init_ubiditransform(m);
   init_ubrk(m);
   init_ucal(m);
   init_uchar(m);
