@@ -109,6 +109,7 @@ pybind11_add_module(
     usearch.cpp
     uset.cpp
     ushape.cpp
+    usprep.cpp
     ustring.cpp
     utext.cpp
     utrans.cpp
