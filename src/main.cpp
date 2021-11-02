@@ -107,6 +107,7 @@ void init_uscript(py::module &m);
 void init_usearch(py::module &m);
 void init_uset(py::module &m);
 void init_ushape(py::module &m);
+void init_uspoof(py::module &m);
 void init_usprep(py::module &m);
 void init_ustring(py::module &m);
 void init_utext(py::module &m);
@@ -285,6 +286,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_usearch(m);
   init_uset(m);
   init_ushape(m);
+  init_uspoof(m);
   init_usprep(m);
   init_ustring(m);
   init_utext(m);

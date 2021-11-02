@@ -179,3 +179,4 @@ dmypy.json
 
 build*/
 tests/**/*.dat
+tests/**/*.txt
