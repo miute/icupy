@@ -113,6 +113,7 @@ pybind11_add_module(
     usprep.cpp
     ustring.cpp
     utext.cpp
+    utmscale.cpp
     utrans.cpp
     utypes.cpp
     uversion.cpp

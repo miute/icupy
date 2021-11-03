@@ -111,6 +111,7 @@ void init_uspoof(py::module &m);
 void init_usprep(py::module &m);
 void init_ustring(py::module &m);
 void init_utext(py::module &m);
+void init_utmscale(py::module &m);
 void init_utrans(py::module &m);
 void init_utypes(py::module &m);
 void init_uversion(py::module &m);
@@ -290,6 +291,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_usprep(m);
   init_ustring(m);
   init_utext(m);
+  init_utmscale(m);
   init_utrans(m);
   init_utypes(m);
   init_uversion(m);
