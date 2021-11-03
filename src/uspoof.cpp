@@ -441,7 +441,7 @@ void init_uspoof(py::module &m) {
       [](const py::buffer &data, int32_t length) {
         auto info = data.request();
         if (length == -1) {
-          length = (int32_t)info.size;
+          length = static_cast<int32_t>(info.size);
         }
         UErrorCode error_code = U_ZERO_ERROR;
         auto p = uspoof_openFromSerialized(info.ptr, length, nullptr, &error_code);

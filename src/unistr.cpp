@@ -111,7 +111,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
             }
             std::u16string result(slice_length, u'\0');
             for (size_t n = 0; n < slice_length; ++n) {
-              result[n] = self[(int32_t)start];
+              result[n] = self[static_cast<int32_t>(start)];
               start += step;
             }
             return result;
@@ -148,7 +148,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
                  if (c == '"') {
                    ss << "\\\"";
                  } else {
-                   ss << (char)c;
+                   ss << static_cast<char>(c);
                  }
                } else {
                  if (c <= 0xff) {
@@ -356,7 +356,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           const auto length = self.extract(nullptr, 0, cnv, error_code);
           std::string dest(length, '\0');
           error_code = U_ZERO_ERROR;
-          self.extract(dest.data(), (int32_t)dest.size(), cnv, error_code);
+          self.extract(dest.data(), static_cast<int32_t>(dest.size()), cnv, error_code);
           if (U_FAILURE(error_code)) {
             throw ICUError(error_code);
           }
@@ -369,7 +369,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           [](const UnicodeString &self) {
             std::u16string result(self.length(), u'\0');
             UErrorCode error_code = U_ZERO_ERROR;
-            self.extract(result.data(), (int32_t)result.size(), error_code);
+            self.extract(result.data(), static_cast<int32_t>(result.size()), error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
@@ -400,7 +400,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
               return py::bytes();
             }
             std::string target(length, '\0');
-            self.extract(start, start_length, target.data(), (int32_t)target.size(), inv);
+            self.extract(start, start_length, target.data(), static_cast<int32_t>(target.size()), inv);
             return py::bytes(target.data(), length);
           },
           py::arg("start"), py::arg("start_length"), py::arg("inv"))
@@ -408,12 +408,12 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           // int32_t extract(int32_t start, int32_t startLength, char *target, uint32_t targetLength)
           "extract",
           [](const UnicodeString &self, int32_t start, int32_t start_length) {
-            const auto length = self.extract(start, start_length, (char *)nullptr, (uint32_t)0);
+            const auto length = self.extract(start, start_length, nullptr, uint32_t{0});
             if (length <= 0) {
               return py::bytes();
             }
             std::string target(length, '\0');
-            self.extract(start, start_length, target.data(), (uint32_t)target.size());
+            self.extract(start, start_length, target.data(), static_cast<uint32_t>(target.size()));
             return py::bytes(target.data(), length);
           },
           py::arg("start"), py::arg("start_length"));
@@ -683,8 +683,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       py::arg("target_length"), py::arg("pad_char") = 0x20);
   us.def("remove", py::overload_cast<>(&UnicodeString::remove))
       .def("remove", py::overload_cast<int32_t, int32_t>(&UnicodeString::remove), py::arg("start"),
-           py::arg("length") = (int32_t)INT32_MAX)
-      .def("remove_between", &UnicodeString::removeBetween, py::arg("start"), py::arg("limit") = (int32_t)INT32_MAX);
+           py::arg("length") = INT32_MAX)
+      .def("remove_between", &UnicodeString::removeBetween, py::arg("start"), py::arg("limit") = INT32_MAX);
   us.def("replace", py::overload_cast<int32_t, int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::replace),
          py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def("replace", py::overload_cast<int32_t, int32_t, const UnicodeString &>(&UnicodeString::replace),

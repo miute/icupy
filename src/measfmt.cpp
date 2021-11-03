@@ -142,7 +142,7 @@ void init_measfmt(py::module &m) {
          UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
         UErrorCode error_code = U_ZERO_ERROR;
         if (measure_count == -1) {
-          measure_count = (int32_t)measures.size();
+          measure_count = static_cast<int32_t>(measures.size());
         }
         auto &result = self.formatMeasures(measures.data(), measure_count, append_to, pos, error_code);
         if (U_FAILURE(error_code)) {

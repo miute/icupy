@@ -512,7 +512,7 @@ void init_regex(py::module &m) {
         "split",
         [](RegexMatcher &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
-            dest_capacity = (int32_t)dest.size();
+            dest_capacity = static_cast<int32_t>(dest.size());
           }
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.split(input, dest.data(), dest_capacity, error_code);
@@ -526,7 +526,7 @@ void init_regex(py::module &m) {
           "split",
           [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
             if (dest_capacity == -1) {
-              dest_capacity = (int32_t)dest.size();
+              dest_capacity = static_cast<int32_t>(dest.size());
             }
             UErrorCode error_code = U_ZERO_ERROR;
             std::vector<UText *> output(std::max(0, dest_capacity));
@@ -793,7 +793,7 @@ void init_regex(py::module &m) {
         "split",
         [](const RegexPattern &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
-            dest_capacity = (int32_t)dest.size();
+            dest_capacity = static_cast<int32_t>(dest.size());
           }
           UErrorCode error_code = U_ZERO_ERROR;
           auto result = self.split(input, dest.data(), dest_capacity, error_code);
@@ -807,7 +807,7 @@ void init_regex(py::module &m) {
           "split",
           [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
             if (dest_capacity == -1) {
-              dest_capacity = (int32_t)dest.size();
+              dest_capacity = static_cast<int32_t>(dest.size());
             }
             UErrorCode error_code = U_ZERO_ERROR;
             std::vector<UText *> output(std::max(0, dest_capacity));

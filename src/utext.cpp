@@ -71,7 +71,8 @@ void init_utext(py::module &m) {
   utp.def_property_readonly("magic", [](const _UTextPtr &self) { return self->magic; });
   utp.def_property_readonly("flags", [](const _UTextPtr &self) { return self->flags; });
   utp.def_property_readonly("provider_properties", [](const _UTextPtr &self) { return self->providerProperties; });
-  utp.def_property_readonly("p_funcs", [](const _UTextPtr &self) { return (py::ssize_t)self->pFuncs; });
+  utp.def_property_readonly("p_funcs",
+                            [](const _UTextPtr &self) { return reinterpret_cast<std::intptr_t>(self->pFuncs); });
 
   // _UTextVector
   py::class_<_UTextVector> utv(m, "UTextVector");
@@ -206,7 +207,7 @@ void init_utext(py::module &m) {
       "utext_open_uchars",
       [](std::optional<_UTextPtr> &ut, const UChar *s, int64_t length) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max((int64_t)0, length));
+        auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max(int64_t{0}, length));
         auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
@@ -229,7 +230,7 @@ void init_utext(py::module &m) {
       "utext_open_utf8",
       [](std::optional<_UTextPtr> &ut, const char *s, int64_t length) {
         UErrorCode error_code = U_ZERO_ERROR;
-        auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max((int64_t)0, length));
+        auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max(int64_t{0}, length));
         auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
@@ -274,9 +275,9 @@ void init_utext(py::module &m) {
       py::arg("ut"), py::arg("extra_space"));
   */
 
-  m.attr("UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE") = (int32_t)UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE;
-  m.attr("UTEXT_PROVIDER_STABLE_CHUNKS") = (int32_t)UTEXT_PROVIDER_STABLE_CHUNKS;
-  m.attr("UTEXT_PROVIDER_WRITABLE") = (int32_t)UTEXT_PROVIDER_WRITABLE;
-  m.attr("UTEXT_PROVIDER_HAS_META_DATA") = (int32_t)UTEXT_PROVIDER_HAS_META_DATA;
-  m.attr("UTEXT_PROVIDER_OWNS_TEXT") = (int32_t)UTEXT_PROVIDER_OWNS_TEXT;
+  m.attr("UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE") = int32_t{UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE};
+  m.attr("UTEXT_PROVIDER_STABLE_CHUNKS") = int32_t{UTEXT_PROVIDER_STABLE_CHUNKS};
+  m.attr("UTEXT_PROVIDER_WRITABLE") = int32_t{UTEXT_PROVIDER_WRITABLE};
+  m.attr("UTEXT_PROVIDER_HAS_META_DATA") = int32_t{UTEXT_PROVIDER_HAS_META_DATA};
+  m.attr("UTEXT_PROVIDER_OWNS_TEXT") = int32_t{UTEXT_PROVIDER_OWNS_TEXT};
 }

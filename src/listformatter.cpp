@@ -121,7 +121,7 @@ void init_listformatter(py::module &m) {
          UnicodeString &append_to) -> UnicodeString & {
         std::vector<UnicodeString> _items(std::begin(items), std::end(items));
         if (count == -1) {
-          count = (int32_t)items.size();
+          count = static_cast<int32_t>(items.size());
         }
         UErrorCode error_code = U_ZERO_ERROR;
         auto &result = self.format(_items.data(), count, append_to, error_code);
@@ -137,7 +137,7 @@ void init_listformatter(py::module &m) {
       [](const ListFormatter &self, const std::list<UnicodeString> &items, int32_t count) {
         std::vector<UnicodeString> _items(std::begin(items), std::end(items));
         if (count == -1) {
-          count = (int32_t)items.size();
+          count = static_cast<int32_t>(items.size());
         }
         UErrorCode error_code = U_ZERO_ERROR;
         auto result = self.formatStringsToValue(_items.data(), count, error_code);

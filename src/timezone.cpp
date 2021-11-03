@@ -215,7 +215,7 @@ void init_timezone(py::module &m) {
         [](const UnicodeString &id) {
           UErrorCode error_code = U_ZERO_ERROR;
           std::string result(8, '\0');
-          auto length = TimeZone::getRegion(id, result.data(), (int32_t)result.size(), error_code);
+          auto length = TimeZone::getRegion(id, result.data(), static_cast<int32_t>(result.size()), error_code);
           if (U_FAILURE(error_code)) {
             throw ICUError(error_code);
           }
@@ -229,7 +229,7 @@ void init_timezone(py::module &m) {
           [](const char16_t *id) {
             UErrorCode error_code = U_ZERO_ERROR;
             std::string result(8, '\0');
-            auto length = TimeZone::getRegion(id, result.data(), (int32_t)result.size(), error_code);
+            auto length = TimeZone::getRegion(id, result.data(), static_cast<int32_t>(result.size()), error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
@@ -333,7 +333,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         const InitialTimeZoneRule *initial;
         std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
-        int32_t trscount = (int32_t)trsrules.size();
+        int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
@@ -457,7 +457,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         const InitialTimeZoneRule *initial;
         std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
-        int32_t trscount = (int32_t)trsrules.size();
+        int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
@@ -685,7 +685,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         const InitialTimeZoneRule *initial;
         std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
-        int32_t trscount = (int32_t)trsrules.size();
+        int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
@@ -976,7 +976,7 @@ void init_timezone(py::module &m) {
         UErrorCode error_code = U_ZERO_ERROR;
         const InitialTimeZoneRule *initial;
         std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
-        int32_t trscount = (int32_t)trsrules.size();
+        int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);

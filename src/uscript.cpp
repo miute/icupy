@@ -253,7 +253,7 @@ void init_uscript(py::module &m) {
         const auto length = uscript_getCode(name_or_abbr_or_locale, nullptr, 0, &error_code);
         std::vector<UScriptCode> result(length);
         error_code = U_ZERO_ERROR;
-        uscript_getCode(name_or_abbr_or_locale, result.data(), (int32_t)result.size(), &error_code);
+        uscript_getCode(name_or_abbr_or_locale, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -269,7 +269,7 @@ void init_uscript(py::module &m) {
         const auto length = uscript_getSampleString(script, nullptr, 0, &error_code);
         std::u16string result(length, u'\0');
         error_code = U_ZERO_ERROR;
-        uscript_getSampleString(script, result.data(), (int32_t)result.size(), &error_code);
+        uscript_getSampleString(script, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -297,7 +297,7 @@ void init_uscript(py::module &m) {
         const auto length = uscript_getScriptExtensions(c, nullptr, 0, &error_code);
         std::vector<UScriptCode> result(length);
         error_code = U_ZERO_ERROR;
-        uscript_getScriptExtensions(c, result.data(), (int32_t)result.size(), &error_code);
+        uscript_getScriptExtensions(c, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

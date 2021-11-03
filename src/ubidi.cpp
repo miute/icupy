@@ -399,7 +399,7 @@ void init_ubidi(py::module &m) {
         }
         error_code = U_ZERO_ERROR;
         std::u16string result(length, u'\0');
-        length = ubidi_writeReordered(bidi, result.data(), (int32_t)result.size(), options, &error_code);
+        length = ubidi_writeReordered(bidi, result.data(), static_cast<int32_t>(result.size()), options, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -412,8 +412,8 @@ void init_ubidi(py::module &m) {
       [](const UChar *src, int32_t src_length, uint16_t options) {
         UErrorCode error_code = U_ZERO_ERROR;
         std::u16string result(src_length, u'\0');
-        const auto length =
-            ubidi_writeReverse(src, src_length, result.data(), (int32_t)result.size(), options, &error_code);
+        const auto length = ubidi_writeReverse(src, src_length, result.data(), static_cast<int32_t>(result.size()),
+                                               options, &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

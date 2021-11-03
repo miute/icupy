@@ -220,7 +220,7 @@ void init_rbbi(py::module &m) {
     UErrorCode error_code = U_ZERO_ERROR;
     std::vector<int32_t> result(self.getRuleStatusVec(nullptr, 0, error_code));
     error_code = U_ZERO_ERROR;
-    self.getRuleStatusVec(result.data(), (int32_t)result.size(), error_code);
+    self.getRuleStatusVec(result.data(), static_cast<int32_t>(result.size()), error_code);
     if (U_FAILURE(error_code)) {
       throw ICUError(error_code);
     }

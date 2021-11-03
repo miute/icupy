@@ -226,7 +226,7 @@ void init_messagepattern(py::module &m) {
           "validate_argument_name", [](const char16_t *name) { return MessagePattern::validateArgumentName(name); },
           py::arg("name"));
 
-  m.attr("UMSGPAT_ARG_NAME_NOT_NUMBER") = (int32_t)UMSGPAT_ARG_NAME_NOT_NUMBER;
-  m.attr("UMSGPAT_ARG_NAME_NOT_VALID") = (int32_t)UMSGPAT_ARG_NAME_NOT_VALID;
+  m.attr("UMSGPAT_ARG_NAME_NOT_NUMBER") = int32_t{UMSGPAT_ARG_NAME_NOT_NUMBER};
+  m.attr("UMSGPAT_ARG_NAME_NOT_VALID") = int32_t{UMSGPAT_ARG_NAME_NOT_VALID};
   m.attr("UMSGPAT_NO_NUMERIC_VALUE") = UMSGPAT_NO_NUMERIC_VALUE;
 }

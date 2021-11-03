@@ -122,7 +122,7 @@ void init_uniset(py::module &m) {
             }
             std::vector<UChar32> result(slice_length);
             for (size_t n = 0; n < slice_length; ++n) {
-              result[n] = self.charAt((int32_t)start);
+              result[n] = self.charAt(static_cast<int32_t>(start));
               start += step;
             }
             return result;

@@ -269,7 +269,7 @@ void init_msgfmt(py::module &m) {
           [](const MessageFormat &self, const std::vector<Formattable> &source, int32_t count, UnicodeString &append_to,
              FieldPosition &ignore) -> UnicodeString & {
             if (count == -1) {
-              count = (int32_t)source.size();
+              count = static_cast<int32_t>(source.size());
             }
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = self.format(source.data(), count, append_to, ignore, error_code);
@@ -288,7 +288,7 @@ void init_msgfmt(py::module &m) {
           [](const UnicodeString &pattern, const std::vector<Formattable> &arguments, int32_t count,
              UnicodeString &append_to) -> UnicodeString & {
             if (count == -1) {
-              count = (int32_t)arguments.size();
+              count = static_cast<int32_t>(arguments.size());
             }
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = MessageFormat::format(pattern, arguments.data(), count, append_to, error_code);
@@ -304,7 +304,7 @@ void init_msgfmt(py::module &m) {
           [](const char16_t *pattern, const std::vector<Formattable> &arguments, int32_t count,
              UnicodeString &append_to) -> UnicodeString & {
             if (count == -1) {
-              count = (int32_t)arguments.size();
+              count = static_cast<int32_t>(arguments.size());
             }
             UErrorCode error_code = U_ZERO_ERROR;
             auto &result = MessageFormat::format(pattern, arguments.data(), count, append_to, error_code);
@@ -321,7 +321,7 @@ void init_msgfmt(py::module &m) {
           [](const MessageFormat &self, const std::list<UnicodeString> &argument_names,
              const std::vector<Formattable> &arguments, int32_t count, UnicodeString &append_to) -> UnicodeString & {
             if (count == -1) {
-              count = (int32_t)argument_names.size();
+              count = static_cast<int32_t>(argument_names.size());
             }
             std::vector<UnicodeString> _argument_names(std::begin(argument_names), std::end(argument_names));
             UErrorCode error_code = U_ZERO_ERROR;
@@ -496,7 +496,7 @@ void init_msgfmt(py::module &m) {
       "set_formats",
       [](MessageFormat &self, std::vector<const Format *> &new_formats, int32_t count) {
         if (count == -1) {
-          count = (int32_t)new_formats.size();
+          count = static_cast<int32_t>(new_formats.size());
         }
         self.setFormats(new_formats.data(), count);
       },

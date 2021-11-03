@@ -1025,7 +1025,7 @@ void init_uchar(py::module &m) {
         const auto length = u_charName(code, name_choice, nullptr, 0, &error_code);
         std::string result(length, '\0');
         error_code = U_ZERO_ERROR;
-        u_charName(code, name_choice, result.data(), (int32_t)result.size(), &error_code);
+        u_charName(code, name_choice, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }
@@ -1060,7 +1060,7 @@ void init_uchar(py::module &m) {
         const auto length = u_getFC_NFKC_Closure(c, nullptr, 0, &error_code);
         std::u16string result(length, u'\0');
         error_code = U_ZERO_ERROR;
-        u_getFC_NFKC_Closure(c, result.data(), (int32_t)result.size(), &error_code);
+        u_getFC_NFKC_Closure(c, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

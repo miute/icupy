@@ -92,7 +92,7 @@ void init_ucnv(py::module &m) {
       "ucnv_fix_file_separator",
       [](const _UConverterPtr &cnv, const UChar *source, int32_t source_len) {
         std::u16string result(source, source_len);
-        ucnv_fixFileSeparator(cnv, result.data(), (int32_t)result.size());
+        ucnv_fixFileSeparator(cnv, result.data(), static_cast<int32_t>(result.size()));
         return result;
       },
       py::arg("cnv"), py::arg("source"), py::arg("source_len"));
@@ -157,7 +157,7 @@ void init_ucnv(py::module &m) {
         const auto length = ucnv_getDisplayName(converter, display_locale, nullptr, 0, &error_code);
         std::u16string result(length, u'\0');
         error_code = U_ZERO_ERROR;
-        ucnv_getDisplayName(converter, display_locale, result.data(), (int32_t)result.size(), &error_code);
+        ucnv_getDisplayName(converter, display_locale, result.data(), static_cast<int32_t>(result.size()), &error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

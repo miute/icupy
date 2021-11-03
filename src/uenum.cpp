@@ -43,7 +43,7 @@ void init_uenum(py::module &m) {
       "uenum_open_char_strings_enumeration",
       [](const std::vector<std::string> &strings, int32_t count) {
         if (count == -1) {
-          count = (int32_t)strings.size();
+          count = static_cast<int32_t>(strings.size());
         }
         UErrorCode error_code = U_ZERO_ERROR;
         auto source = std::shared_ptr<char *[]>(new char *[strings.size()], std::default_delete<char *[]>());
@@ -75,7 +75,7 @@ void init_uenum(py::module &m) {
       "uenum_open_uchar_strings_enumeration",
       [](const std::vector<std::u16string> &strings, int32_t count) {
         if (count == -1) {
-          count = (int32_t)strings.size();
+          count = static_cast<int32_t>(strings.size());
         }
         UErrorCode error_code = U_ZERO_ERROR;
         auto source = std::shared_ptr<UChar *[]>(new UChar *[strings.size()], std::default_delete<UChar *[]>());

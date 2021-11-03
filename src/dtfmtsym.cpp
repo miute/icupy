@@ -230,7 +230,7 @@ void init_dtfmtsym(py::module &m) {
       "set_am_pm_strings",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count) {
         if (count == -1) {
-          count = (int32_t)ampms.size();
+          count = static_cast<int32_t>(ampms.size());
         }
         std::vector<UnicodeString> _ampms(std::begin(ampms), std::end(ampms));
         self.setAmPmStrings(_ampms.data(), count);
@@ -240,7 +240,7 @@ void init_dtfmtsym(py::module &m) {
       "set_era_names",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &era_names, int32_t count) {
         if (count == -1) {
-          count = (int32_t)era_names.size();
+          count = static_cast<int32_t>(era_names.size());
         }
         std::vector<UnicodeString> _era_names(std::begin(era_names), std::end(era_names));
         self.setEraNames(_era_names.data(), count);
@@ -250,7 +250,7 @@ void init_dtfmtsym(py::module &m) {
       "set_eras",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &eras, int32_t count) {
         if (count == -1) {
-          count = (int32_t)eras.size();
+          count = static_cast<int32_t>(eras.size());
         }
         std::vector<UnicodeString> _eras(std::begin(eras), std::end(eras));
         self.setEras(_eras.data(), count);
@@ -268,7 +268,7 @@ void init_dtfmtsym(py::module &m) {
          "set_months",
          [](DateFormatSymbols &self, const std::list<UnicodeString> &months, int32_t count) {
            if (count == -1) {
-             count = (int32_t)months.size();
+             count = static_cast<int32_t>(months.size());
            }
            std::vector<UnicodeString> _months(std::begin(months), std::end(months));
            self.setMonths(_months.data(), count);
@@ -280,7 +280,7 @@ void init_dtfmtsym(py::module &m) {
              DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
             std::vector<UnicodeString> _months(std::begin(months), std::end(months));
             if (count == -1) {
-              count = (int32_t)months.size();
+              count = static_cast<int32_t>(months.size());
             }
             self.setMonths(_months.data(), count, context, width);
           },
@@ -289,7 +289,7 @@ void init_dtfmtsym(py::module &m) {
       "set_narrow_eras",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &narrow_eras, int32_t count) {
         if (count == -1) {
-          count = (int32_t)narrow_eras.size();
+          count = static_cast<int32_t>(narrow_eras.size());
         }
         std::vector<UnicodeString> _narrow_eras(std::begin(narrow_eras), std::end(narrow_eras));
         self.setNarrowEras(_narrow_eras.data(), count);
@@ -301,7 +301,7 @@ void init_dtfmtsym(py::module &m) {
          DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
         std::vector<UnicodeString> _quarters(std::begin(quarters), std::end(quarters));
         if (count == -1) {
-          count = (int32_t)quarters.size();
+          count = static_cast<int32_t>(quarters.size());
         }
         self.setQuarters(_quarters.data(), count, context, width);
       },
@@ -310,7 +310,7 @@ void init_dtfmtsym(py::module &m) {
       "set_short_months",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &short_months, int32_t count) {
         if (count == -1) {
-          count = (int32_t)short_months.size();
+          count = static_cast<int32_t>(short_months.size());
         }
         std::vector<UnicodeString> _short_months(std::begin(short_months), std::end(short_months));
         self.setShortMonths(_short_months.data(), count);
@@ -320,7 +320,7 @@ void init_dtfmtsym(py::module &m) {
       "set_short_weekdays",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &abbrev_weekdays, int32_t count) {
         if (count == -1) {
-          count = (int32_t)abbrev_weekdays.size();
+          count = static_cast<int32_t>(abbrev_weekdays.size());
         }
         std::vector<UnicodeString> _abbrev_weekdays(std::begin(abbrev_weekdays), std::end(abbrev_weekdays));
         self.setShortWeekdays(_abbrev_weekdays.data(), count);
@@ -330,7 +330,7 @@ void init_dtfmtsym(py::module &m) {
          "set_weekdays",
          [](DateFormatSymbols &self, const std::list<UnicodeString> &weekdays, int32_t count) {
            if (count == -1) {
-             count = (int32_t)weekdays.size();
+             count = static_cast<int32_t>(weekdays.size());
            }
            std::vector<UnicodeString> _weekdays(std::begin(weekdays), std::end(weekdays));
            self.setWeekdays(_weekdays.data(), count);
@@ -342,7 +342,7 @@ void init_dtfmtsym(py::module &m) {
              DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
             std::vector<UnicodeString> _weekdays(std::begin(weekdays), std::end(weekdays));
             if (count == -1) {
-              count = (int32_t)weekdays.size();
+              count = static_cast<int32_t>(weekdays.size());
             }
             self.setWeekdays(_weekdays.data(), count, context, width);
           },
@@ -354,7 +354,7 @@ void init_dtfmtsym(py::module &m) {
          DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
         std::vector<UnicodeString> _year_names(std::begin(year_names), std::end(year_names));
         if (count == -1) {
-          count = (int32_t)year_names.size();
+          count = static_cast<int32_t>(year_names.size());
         }
         self.setYearNames(_year_names.data(), count, context, width);
       },
@@ -365,7 +365,7 @@ void init_dtfmtsym(py::module &m) {
          DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
         std::vector<UnicodeString> _zodiac_names(std::begin(zodiac_names), std::end(zodiac_names));
         if (count == -1) {
-          count = (int32_t)zodiac_names.size();
+          count = static_cast<int32_t>(zodiac_names.size());
         }
         self.setZodiacNames(_zodiac_names.data(), count, context, width);
       },

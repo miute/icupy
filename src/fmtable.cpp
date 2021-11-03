@@ -46,7 +46,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .def(py::init<const Formattable &>(), py::arg("source"))
       .def(py::init([](const std::vector<Formattable> &array_to_copy, int32_t count) {
              if (count == -1) {
-               count = (int32_t)array_to_copy.size();
+               count = static_cast<int32_t>(array_to_copy.size());
              }
              return std::make_unique<Formattable>(array_to_copy.data(), count);
            }),
@@ -208,7 +208,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       "set_array",
       [](Formattable &self, const std::vector<Formattable> &array, int32_t count) {
         if (count == -1) {
-          count = (int32_t)array.size();
+          count = static_cast<int32_t>(array.size());
         }
         self.setArray(array.data(), count);
       },

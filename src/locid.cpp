@@ -211,7 +211,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         const auto length = self.getKeywordValue(keyword_name, nullptr, 0, error_code);
         std::string result(length, '\0');
         error_code = U_ZERO_ERROR;
-        self.getKeywordValue(keyword_name, result.data(), (int32_t)result.size(), error_code);
+        self.getKeywordValue(keyword_name, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (U_FAILURE(error_code)) {
           throw ICUError(error_code);
         }

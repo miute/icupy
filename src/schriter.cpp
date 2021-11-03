@@ -118,7 +118,7 @@ void init_schriter(py::module &m) {
              if (self.getIndex() == self.endIndex()) {
                throw py::stop_iteration();
              }
-             return (char32_t)self.next32PostInc();
+             return static_cast<char32_t>(self.next32PostInc());
            })
       .def("__reversed__", [](StringCharacterIterator &self) {
         std::vector<char32_t> result;
