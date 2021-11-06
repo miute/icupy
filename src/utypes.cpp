@@ -70,6 +70,11 @@ void init_utypes(py::module &m) {
              "Collator version is not compatible with the base version")
       .value("U_USELESS_COLLATOR_ERROR", U_USELESS_COLLATOR_ERROR, "Collator is options only and no base is specified")
       .value("U_NO_WRITE_PERMISSION", U_NO_WRITE_PERMISSION, "Attempt to modify read-only or constant data")
+#if (U_ICU_VERSION_MAJOR_NUM >= 68)
+      .value("U_INPUT_TOO_LONG_ERROR", U_INPUT_TOO_LONG_ERROR,
+             "The input is impractically long for an operation. It is rejected because it may lead to problems such as "
+             "excessive processing time, stack depth, or heap memory requirements.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_STANDARD_ERROR_LIMIT", U_STANDARD_ERROR_LIMIT)
 #endif // U_HIDE_DEPRECATED_API

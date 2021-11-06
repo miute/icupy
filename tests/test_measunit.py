@@ -1672,6 +1672,33 @@ def test_measure_unit_69():
             .to_string()) == "1 mg/dL"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_measure_unit_70():
+    fmt = NumberFormatter.with_locale(Locale.get_us())
+
+    # static MeasureUnit *icu::MeasureUnit::createItem(UErrorCode &status)
+    assert (fmt.unit(MeasureUnit.create_item())
+            .format_int(1)
+            .to_string()) == "1 item"
+
+    # static MeasureUnit *icu::MeasureUnit::createKilowattHourPer100Kilometer(
+    #       UErrorCode &status
+    # )
+    assert (fmt.unit(MeasureUnit.create_kilowatt_hour_per_100_kilometer())
+            .format_int(1)
+            .to_string()) == "1 kWh/100km"
+
+    # static MeasureUnit icu::MeasureUnit::getItem()
+    assert (fmt.unit(MeasureUnit.get_item())
+            .format_int(1)
+            .to_string()) == "1 item"
+
+    # static MeasureUnit icu::MeasureUnit::getKilowattHourPer100Kilometer()
+    assert (fmt.unit(MeasureUnit.get_kilowatt_hour_per_100_kilometer())
+            .format_int(1)
+            .to_string()) == "1 kWh/100km"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(

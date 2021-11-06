@@ -1321,37 +1321,6 @@ def test_time_zone():
     id2 = TimeZone.get_equivalent_id("PST", 0)
     assert ids[0] == id2
 
-    # [1]
-    # static StringEnumeration *icu::TimeZone::createEnumeration()
-    it1 = TimeZone.create_enumeration()
-    assert isinstance(it1, StringEnumeration)
-    assert len(it1) > 0
-
-    # [2]
-    # static StringEnumeration *icu::TimeZone::createEnumeration(
-    #       const char *country
-    # )
-    it2 = TimeZone.create_enumeration(None)
-    assert isinstance(it2, StringEnumeration)
-    assert len(it2) > 0
-
-    it3 = TimeZone.create_enumeration("US")
-    assert isinstance(it3, StringEnumeration)
-    assert len(it3) > 0
-
-    # [3]
-    # static StringEnumeration *icu::TimeZone::createEnumeration(
-    #       int32_t rawOffset
-    # )
-    it4 = TimeZone.create_enumeration(-8 * HOUR)
-    assert isinstance(it4, StringEnumeration)
-    assert len(it4) > 0
-
-    assert len(it1) == len(it2)
-    assert len(it1) > len(it3) > len(it4)
-    assert "America/Los_Angeles" in it3
-    assert "America/Los_Angeles" in it4
-
     # static StringEnumeration *icu::TimeZone::createTimeZoneIDEnumeration(
     #       USystemTimeZoneType zoneType,
     #       const char *region,
@@ -1488,6 +1457,79 @@ def test_time_zone():
     result = TimeZone.get_tz_data_version()
     assert isinstance(result, str)
     assert len(result) > 0  # e.g., "2020d"
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM > 69, reason="ICU4C>69")
+def test_time_zone_create_enumeration_69():
+    # **Deprecated in ICU 70**
+    # [1]
+    # static StringEnumeration *icu::TimeZone::createEnumeration()
+    it1 = TimeZone.create_enumeration()
+    assert isinstance(it1, StringEnumeration)
+    assert len(it1) > 0
+
+    # **Deprecated in ICU 70**
+    # [2]
+    # static StringEnumeration *icu::TimeZone::createEnumeration(
+    #       const char *country
+    # )
+    it2 = TimeZone.create_enumeration(None)
+    assert isinstance(it2, StringEnumeration)
+    assert len(it2) > 0
+
+    it3 = TimeZone.create_enumeration("US")
+    assert isinstance(it3, StringEnumeration)
+    assert len(it3) > 0
+
+    # **Deprecated in ICU 70**
+    # [3]
+    # static StringEnumeration *icu::TimeZone::createEnumeration(
+    #       int32_t rawOffset
+    # )
+    it4 = TimeZone.create_enumeration(-8 * HOUR)
+    assert isinstance(it4, StringEnumeration)
+    assert len(it4) > 0
+
+    assert len(it1) == len(it2)
+    assert len(it1) > len(it3) > len(it4)
+    assert "America/Los_Angeles" in it3
+    assert "America/Los_Angeles" in it4
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_time_zone_create_enumeration_70():
+    # [4]
+    # static StringEnumeration *icu::TimeZone::createEnumeration(
+    #       UErrorCode &status
+    # )
+    it1 = TimeZone.create_enumeration()
+    assert isinstance(it1, StringEnumeration)
+    assert len(it1) > 0
+
+    # static StringEnumeration *icu::TimeZone::createEnumerationForRawOffset(
+    #       int32_t rawOffset,
+    #       UErrorCode &status
+    # )
+    it4 = TimeZone.create_enumeration_for_raw_offset(-8 * HOUR)
+    assert isinstance(it4, StringEnumeration)
+    assert len(it4) > 0
+
+    # static StringEnumeration *icu::TimeZone::createEnumerationForRegion(
+    #       const char *region,
+    #       UErrorCode &status
+    # )
+    it2 = TimeZone.create_enumeration_for_region(None)
+    assert isinstance(it2, StringEnumeration)
+    assert len(it2) > 0
+
+    it3 = TimeZone.create_enumeration_for_region("US")
+    assert isinstance(it3, StringEnumeration)
+    assert len(it3) > 0
+
+    assert len(it1) == len(it2)
+    assert len(it1) > len(it3) > len(it4)
+    assert "America/Los_Angeles" in it3
+    assert "America/Los_Angeles" in it4
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")

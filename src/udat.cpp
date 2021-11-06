@@ -120,6 +120,12 @@ void init_udat(py::module &m) {
       .value("UDAT_ZODIAC_NAMES_ABBREVIATED", UDAT_ZODIAC_NAMES_ABBREVIATED)
       .value("UDAT_ZODIAC_NAMES_NARROW", UDAT_ZODIAC_NAMES_NARROW)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+      .value("UDAT_NARROW_QUARTERS", UDAT_NARROW_QUARTERS, "The narrow quarter names, for example 1.")
+      .value("UDAT_STANDALONE_NARROW_QUARTERS", UDAT_STANDALONE_NARROW_QUARTERS,
+             "The narrow standalone quarter names, for example 1.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
       .export_values();
 
   // Skeletons for dates

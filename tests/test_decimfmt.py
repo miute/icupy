@@ -100,6 +100,7 @@ def test_api():
 
     # void icu::DecimalFormat::setNegativePrefix(const UnicodeString &newValue)
     fmt.set_negative_prefix(UnicodeString("\u2212"))
+    assert fmt.get_negative_prefix(result) == "\u2212"  # "−"
     fmt.set_negative_prefix("\u2212")
     assert fmt.get_negative_prefix(result) == "\u2212"  # "−"
 
@@ -113,9 +114,10 @@ def test_api():
     assert result == " euros"
 
     # void icu::DecimalFormat::setNegativeSuffix(const UnicodeString &newValue)
-    fmt.set_negative_suffix(UnicodeString("~"))
-    fmt.set_negative_suffix("~")
-    assert fmt.get_negative_suffix(result) == "~"
+    fmt.set_negative_suffix(UnicodeString("%"))
+    assert fmt.get_negative_suffix(result) == "%"
+    fmt.set_negative_suffix("%")
+    assert fmt.get_negative_suffix(result) == "%"
 
     # UnicodeString icu::DecimalFormat::getPadCharacterString()
     result = fmt.get_pad_character_string()
@@ -124,9 +126,9 @@ def test_api():
 
     # void icu::DecimalFormat::setPadCharacter(const UnicodeString &padChar)
     fmt.set_pad_character(UnicodeString("_"))
+    assert fmt.get_pad_character_string() == "_"
     fmt.set_pad_character("_")
-    result = fmt.get_pad_character_string()
-    assert result == "_"
+    assert fmt.get_pad_character_string() == "_"
 
     # EPadPosition icu::DecimalFormat::getPadPosition(void)
     assert fmt.get_pad_position() == DecimalFormat.PAD_BEFORE_PREFIX
@@ -146,6 +148,7 @@ def test_api():
 
     # void icu::DecimalFormat::setPositivePrefix(const UnicodeString &newValue)
     fmt.set_positive_prefix(UnicodeString("+"))
+    assert fmt.get_positive_prefix(result) == "+"
     fmt.set_positive_prefix("+")
     assert fmt.get_positive_prefix(result) == "+"
 
@@ -160,6 +163,7 @@ def test_api():
 
     # void icu::DecimalFormat::setPositiveSuffix(const UnicodeString &newValue)
     fmt.set_positive_suffix(UnicodeString("_"))
+    assert fmt.get_positive_suffix(result) == "_"
     fmt.set_positive_suffix("_")
     assert fmt.get_positive_suffix(result) == "_"
 

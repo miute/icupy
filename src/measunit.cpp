@@ -1798,6 +1798,16 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  mu.def_static("create_item", []() {
+    UErrorCode error_code = U_ZERO_ERROR;
+    auto result = MeasureUnit::createItem(error_code);
+    if (U_FAILURE(error_code)) {
+      throw ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("create_jigger", []() {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createJigger(error_code);
@@ -1806,6 +1816,16 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  mu.def_static("create_kilowatt_hour_per_100_kilometer", []() {
+    UErrorCode error_code = U_ZERO_ERROR;
+    auto result = MeasureUnit::createKilowattHourPer100Kilometer(error_code);
+    if (U_FAILURE(error_code)) {
+      throw ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("create_lumen", []() {
     UErrorCode error_code = U_ZERO_ERROR;
     auto result = MeasureUnit::createLumen(error_code);
@@ -1838,7 +1858,13 @@ void init_measunit(py::module &m) {
   mu.def_static("get_drop", &MeasureUnit::getDrop);
   mu.def_static("get_earth_radius", &MeasureUnit::getEarthRadius);
   mu.def_static("get_grain", &MeasureUnit::getGrain);
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  mu.def_static("get_item", &MeasureUnit::getItem);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("get_jigger", &MeasureUnit::getJigger);
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  mu.def_static("get_kilowatt_hour_per_100_kilometer", &MeasureUnit::getKilowattHourPer100Kilometer);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("get_lumen", &MeasureUnit::getLumen);
   mu.def_static("get_pinch", &MeasureUnit::getPinch);
   mu.def_static("get_quart_imperial", &MeasureUnit::getQuartImperial);

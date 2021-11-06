@@ -564,6 +564,16 @@ def test_hash_code():
     assert test1.hash_code() == test2.hash_code()
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_has_strings():
+    test1 = UnicodeSet("[a-z]")
+    test2 = UnicodeSet("[a-z{ab}]")
+
+    # UBool icu::UnicodeSet::hasStrings()
+    assert not test1.has_strings()
+    assert test2.has_strings()
+
+
 def test_matches():
     test1 = UnicodeSet(UnicodeString("[0-9{abc}]"))
     text = UnicodeString("abcd 789")

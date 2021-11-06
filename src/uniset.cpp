@@ -324,6 +324,9 @@ void init_uniset(py::module &m) {
   us.def("get_range_end", &UnicodeSet::getRangeEnd, py::arg("index"));
   us.def("get_range_start", &UnicodeSet::getRangeStart, py::arg("index"));
   us.def("hash_code", &UnicodeSet::hashCode);
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  us.def("has_strings", &UnicodeSet::hasStrings);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   us.def("index_of", &UnicodeSet::indexOf, py::arg("c"));
   us.def("is_bogus", &UnicodeSet::isBogus);
   us.def("is_empty", &UnicodeSet::isEmpty);

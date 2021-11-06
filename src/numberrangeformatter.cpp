@@ -34,6 +34,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   py::class_<NumberRangeFormatter> nrf(m2, "NumberRangeFormatter");
 
   // icu::number::FormattedNumberRange
+  // Omit `icu::number::FormattedNumberRange::FormattedNumberRange()`.
   fnr.def(
       "append_to",
       [](const FormattedNumberRange &self, Appendable &appendable) -> Appendable & {

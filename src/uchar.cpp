@@ -348,6 +348,21 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_TANGUT_SUPPLEMENT", UBLOCK_TANGUT_SUPPLEMENT)
       .value("UBLOCK_YEZIDI", UBLOCK_YEZIDI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 66)
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+      .value("UBLOCK_ARABIC_EXTENDED_B", UBLOCK_ARABIC_EXTENDED_B)
+      .value("UBLOCK_CYPRO_MINOAN", UBLOCK_CYPRO_MINOAN)
+      .value("UBLOCK_ETHIOPIC_EXTENDED_B", UBLOCK_ETHIOPIC_EXTENDED_B)
+      .value("UBLOCK_KANA_EXTENDED_B", UBLOCK_KANA_EXTENDED_B)
+      .value("UBLOCK_LATIN_EXTENDED_F", UBLOCK_LATIN_EXTENDED_F)
+      .value("UBLOCK_LATIN_EXTENDED_G", UBLOCK_LATIN_EXTENDED_G)
+      .value("UBLOCK_OLD_UYGHUR", UBLOCK_OLD_UYGHUR)
+      .value("UBLOCK_TANGSA", UBLOCK_TANGSA)
+      .value("UBLOCK_TOTO", UBLOCK_TOTO)
+      .value("UBLOCK_UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED_A",
+             UBLOCK_UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED_A)
+      .value("UBLOCK_VITHKUQI", UBLOCK_VITHKUQI)
+      .value("UBLOCK_ZNAMENNY_MUSICAL_NOTATION", UBLOCK_ZNAMENNY_MUSICAL_NOTATION)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT)
 #endif // U_HIDE_DEPRECATED_API
@@ -683,6 +698,10 @@ void init_uchar(py::module &m) {
       .value("U_JG_HANIFI_ROHINGYA_KINNA_YA", U_JG_HANIFI_ROHINGYA_KINNA_YA)
       .value("U_JG_HANIFI_ROHINGYA_PA", U_JG_HANIFI_ROHINGYA_PA)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+      .value("U_JG_THIN_YEH", U_JG_THIN_YEH)
+      .value("U_JG_VERTICAL_TAIL", U_JG_VERTICAL_TAIL)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT)
 #endif // U_HIDE_DEPRECATED_API
@@ -839,6 +858,23 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("UCHAR_EXTENDED_PICTOGRAPHIC", UCHAR_EXTENDED_PICTOGRAPHIC)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+      .value("UCHAR_BASIC_EMOJI", UCHAR_BASIC_EMOJI,
+             "Binary property of strings Basic_Emoji. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_EMOJI_KEYCAP_SEQUENCE", UCHAR_EMOJI_KEYCAP_SEQUENCE,
+             "Binary property of strings Emoji_Keycap_Sequence. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE", UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE,
+             "Binary property of strings RGI_Emoji_Modifier_Sequence. See "
+             "https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_RGI_EMOJI_FLAG_SEQUENCE", UCHAR_RGI_EMOJI_FLAG_SEQUENCE,
+             "Binary property of strings RGI_Emoji_Flag_Sequence. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_RGI_EMOJI_TAG_SEQUENCE", UCHAR_RGI_EMOJI_TAG_SEQUENCE,
+             "Binary property of strings RGI_Emoji_Tag_Sequence. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_RGI_EMOJI_ZWJ_SEQUENCE", UCHAR_RGI_EMOJI_ZWJ_SEQUENCE,
+             "Binary property of strings RGI_Emoji_ZWJ_Sequence. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_RGI_EMOJI", UCHAR_RGI_EMOJI,
+             "Binary property of strings RGI_Emoji. See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT)
 #endif // U_HIDE_DEPRECATED_API

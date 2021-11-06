@@ -65,11 +65,52 @@ void init_timezone(py::module &m) {
     }
     return tz;
   });
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  tz.def_static("create_enumeration", []() {
+    UErrorCode error_code = U_ZERO_ERROR;
+    auto result = TimeZone::createEnumeration(error_code);
+    if (U_FAILURE(error_code)) {
+      throw ICUError(error_code);
+    }
+    return result;
+  });
+#ifndef U_HIDE_DEPRECATED_API
+  tz.def_static("create_enumeration", py::overload_cast<const char *>(&TimeZone::createEnumeration), py::arg("country"))
+      .def_static("create_enumeration", py::overload_cast<int32_t>(&TimeZone::createEnumeration),
+                  py::arg("raw_offset"));
+#endif // U_HIDE_DEPRECATED_API
+#else  // !(U_ICU_VERSION_MAJOR_NUM >= 70)
   tz.def_static("create_enumeration", py::overload_cast<>(&TimeZone::createEnumeration))
       .def_static("create_enumeration", py::overload_cast<const char *>(&TimeZone::createEnumeration),
                   py::arg("country"))
       .def_static("create_enumeration", py::overload_cast<int32_t>(&TimeZone::createEnumeration),
                   py::arg("raw_offset"));
+#endif // !(U_ICU_VERSION_MAJOR_NUM >= 70)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  tz.def_static(
+      "create_enumeration_for_raw_offset",
+      [](int32_t raw_offset) {
+        UErrorCode error_code = U_ZERO_ERROR;
+        auto result = TimeZone::createEnumerationForRawOffset(raw_offset, error_code);
+        if (U_FAILURE(error_code)) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("raw_offset"));
+  tz.def_static(
+      "create_enumeration_for_region",
+      [](const char *region) {
+        UErrorCode error_code = U_ZERO_ERROR;
+        auto result = TimeZone::createEnumerationForRegion(region, error_code);
+        if (U_FAILURE(error_code)) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("region"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   tz.def_static(
         "create_time_zone",
         [](const UnicodeString &id) -> std::variant<BasicTimeZone *, TimeZone *> {
