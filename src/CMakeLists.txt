@@ -108,6 +108,7 @@ pybind11_add_module(
     uscript.cpp
     usearch.cpp
     uset.cpp
+    usetiter.cpp
     ushape.cpp
     uspoof.cpp
     usprep.cpp

@@ -106,6 +106,7 @@ void init_ures(py::module &m);
 void init_uscript(py::module &m);
 void init_usearch(py::module &m);
 void init_uset(py::module &m);
+void init_usetiter(py::module &m);
 void init_ushape(py::module &m);
 void init_uspoof(py::module &m);
 void init_usprep(py::module &m);
@@ -246,6 +247,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_sortkey(m);       // icu::CollationKey
 
   init_uniset(m);      // icu::UnicodeSet
+  init_usetiter(m);    // icu::UnicodeSetIterator
   init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
   init_tblcoll(m);     // icu::RuleBasedCollator
   init_stsearch(m);    // icu::StringSearch
