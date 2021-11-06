@@ -13,7 +13,15 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
 
 ### Building from source
 
-1. If installing icupy on Windows or if ICU is located in a non-regular place, set the `ICU_ROOT` environment variable to the root of the ICU installation. (e.g., `set ICU_ROOT=C:\icu`)
+1. Configuring environment variables:
+
+    **Windows:**
+
+    * Set the `ICU_ROOT` environment variable to the root of the ICU installation. (default is `C:\icu`)
+
+    **Linux/POSIX:**
+
+    * If the ICU is located in a non-regular place, set the `PKG_CONFIG_PATH` and `LD_LIBRARY_PATH` environment variables.
 
 2. Installing from PyPI:
 
@@ -28,7 +36,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
     ```
    
     Optionally, the CMake environment variables are available.
-    e.g., Using the Ninja build system:
+    For example, using the Ninja build system:
 
     ```bash
     CMAKE_GENERATOR=Ninja pip install icupy
