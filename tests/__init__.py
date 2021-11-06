@@ -1,4 +1,3 @@
-import os
 import sys
 from contextlib import contextmanager
 from pathlib import Path
@@ -10,9 +9,11 @@ def _startup():
         sys.path.append(path)
 
     if sys.platform.startswith("win"):
-        path = os.path.join(os.getenv("ICU_ROOT", "C:\\icu"),
-                            "bin" + "64" if sys.maxsize > 2 ** 32 else "")
-        assert os.path.isdir(path)  # ICU4C not found
+        import os
+
+        path = (Path(os.getenv("ICU_ROOT", "C:\\icu"))
+                / "bin64" if sys.maxsize > 2 ** 32 else "bin").resolve()
+        assert path.is_dir()  # ICU4C not found
         os.add_dll_directory(path)
 
 
