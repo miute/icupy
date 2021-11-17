@@ -4,7 +4,22 @@
 #include <unicode/uscript.h>
 
 void init_uscript(py::module &m) {
-  py::enum_<UScriptCode>(m, "UScriptCode", py::arithmetic())
+  py::enum_<UScriptCode>(
+      m, "UScriptCode", py::arithmetic(),
+      "Constants for ISO 15924 script codes.\n\n"
+      "The current set of script code constants supports at least all scripts that are encoded in the version of "
+      "Unicode which ICU currently supports. The names of the constants are usually derived from the Unicode script "
+      "property value aliases. See UAX #24 Unicode Script Property (http://www.unicode.org/reports/tr24/) and "
+      "http://www.unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt .\n\n"
+      "In addition, constants for many ISO 15924 script codes are included, for use with language tags, CLDR data, and "
+      "similar. Some of those codes are not used in the Unicode Character Database (UCD). For example, there are no "
+      "characters that have a UCD script property value of Hans or Hant. All Han ideographs have the Hani script "
+      "property value in Unicode.\n\n"
+      "Private-use codes Qaaa..Qabx are not included, except as used in the UCD or in CLDR.\n\n"
+      "Starting with ICU 55, script codes are only added when their scripts have been or will certainly be encoded in "
+      "Unicode, and have been assigned Unicode script property value aliases, to ensure that their script names are "
+      "stable and match the names of the constants. Script codes like Latf and Aran that are not subject to separate "
+      "encoding may be added at any time.")
       .value("USCRIPT_INVALID_CODE", USCRIPT_INVALID_CODE)
       .value("USCRIPT_COMMON", USCRIPT_COMMON)
       .value("USCRIPT_INHERITED", USCRIPT_INHERITED)
@@ -46,8 +61,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_THAANA", USCRIPT_THAANA)
       .value("USCRIPT_THAI", USCRIPT_THAI)
       .value("USCRIPT_TIBETAN", USCRIPT_TIBETAN)
-      .value("USCRIPT_CANADIAN_ABORIGINAL", USCRIPT_CANADIAN_ABORIGINAL)
-      .value("USCRIPT_UCAS", USCRIPT_UCAS)
+      .value("USCRIPT_CANADIAN_ABORIGINAL", USCRIPT_CANADIAN_ABORIGINAL, "Canadian_Aboriginal script.")
+      .value("USCRIPT_UCAS", USCRIPT_UCAS, "Canadian_Aboriginal script (alias).")
       .value("USCRIPT_YI", USCRIPT_YI)
       .value("USCRIPT_TAGALOG", USCRIPT_TAGALOG)
       .value("USCRIPT_HANUNOO", USCRIPT_HANUNOO)
@@ -61,7 +76,7 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_SHAVIAN", USCRIPT_SHAVIAN)
       .value("USCRIPT_TAI_LE", USCRIPT_TAI_LE)
       .value("USCRIPT_UGARITIC", USCRIPT_UGARITIC)
-      .value("USCRIPT_KATAKANA_OR_HIRAGANA", USCRIPT_KATAKANA_OR_HIRAGANA)
+      .value("USCRIPT_KATAKANA_OR_HIRAGANA", USCRIPT_KATAKANA_OR_HIRAGANA, "New script code in Unicode 4.0.1.")
       .value("USCRIPT_BUGINESE", USCRIPT_BUGINESE)
       .value("USCRIPT_GLAGOLITIC", USCRIPT_GLAGOLITIC)
       .value("USCRIPT_KHAROSHTHI", USCRIPT_KHAROSHTHI)
@@ -124,7 +139,7 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_OL_CHIKI", USCRIPT_OL_CHIKI)
       .value("USCRIPT_REJANG", USCRIPT_REJANG)
       .value("USCRIPT_SAURASHTRA", USCRIPT_SAURASHTRA)
-      .value("USCRIPT_SIGN_WRITING", USCRIPT_SIGN_WRITING)
+      .value("USCRIPT_SIGN_WRITING", USCRIPT_SIGN_WRITING, "Sutton SignWriting.")
       .value("USCRIPT_SUNDANESE", USCRIPT_SUNDANESE)
       .value("USCRIPT_MOON", USCRIPT_MOON)
       .value("USCRIPT_MEITEI_MAYEK", USCRIPT_MEITEI_MAYEK)
@@ -149,13 +164,14 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_BASSA_VAH", USCRIPT_BASSA_VAH)
       .value("USCRIPT_DUPLOYAN", USCRIPT_DUPLOYAN)
 #ifndef U_HIDE_DEPRECATED_API
-      .value("USCRIPT_DUPLOYAN_SHORTAND", USCRIPT_DUPLOYAN_SHORTAND)
+      .value("USCRIPT_DUPLOYAN_SHORTAND", USCRIPT_DUPLOYAN_SHORTAND,
+             "**Deprecated:** ICU 54 Typo, use *USCRIPT_DUPLOYAN*.")
 #endif // U_HIDE_DEPRECATED_API
       .value("USCRIPT_ELBASAN", USCRIPT_ELBASAN)
       .value("USCRIPT_GRANTHA", USCRIPT_GRANTHA)
       .value("USCRIPT_KPELLE", USCRIPT_KPELLE)
       .value("USCRIPT_LOMA", USCRIPT_LOMA)
-      .value("USCRIPT_MENDE", USCRIPT_MENDE)
+      .value("USCRIPT_MENDE", USCRIPT_MENDE, "Mende Kikakui.")
       .value("USCRIPT_MEROITIC_CURSIVE", USCRIPT_MEROITIC_CURSIVE)
       .value("USCRIPT_OLD_NORTH_ARABIAN", USCRIPT_OLD_NORTH_ARABIAN)
       .value("USCRIPT_NABATAEAN", USCRIPT_NABATAEAN)
@@ -235,18 +251,23 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_VITHKUQI", USCRIPT_VITHKUQI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 #ifndef U_HIDE_DEPRECATED_API
-      .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT)
+      .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-  py::enum_<UScriptUsage>(m, "UScriptUsage", py::arithmetic())
-      .value("USCRIPT_USAGE_NOT_ENCODED", USCRIPT_USAGE_NOT_ENCODED)
-      .value("USCRIPT_USAGE_UNKNOWN", USCRIPT_USAGE_UNKNOWN)
-      .value("USCRIPT_USAGE_EXCLUDED", USCRIPT_USAGE_EXCLUDED)
-      .value("USCRIPT_USAGE_LIMITED_USE", USCRIPT_USAGE_LIMITED_USE)
-      .value("USCRIPT_USAGE_ASPIRATIONAL", USCRIPT_USAGE_ASPIRATIONAL)
-      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED)
+  py::enum_<UScriptUsage>(
+      m, "UScriptUsage", py::arithmetic(),
+      "Script usage constants.\n\n"
+      "See UAX #31 Unicode Identifier and Pattern Syntax. "
+      "http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_from_Identifiers")
+      .value("USCRIPT_USAGE_NOT_ENCODED", USCRIPT_USAGE_NOT_ENCODED, "Not encoded in Unicode.")
+      .value("USCRIPT_USAGE_UNKNOWN", USCRIPT_USAGE_UNKNOWN, "Unknown script usage.")
+      .value("USCRIPT_USAGE_EXCLUDED", USCRIPT_USAGE_EXCLUDED, "Candidate for Exclusion from Identifiers.")
+      .value("USCRIPT_USAGE_LIMITED_USE", USCRIPT_USAGE_LIMITED_USE, "Limited Use script.")
+      .value("USCRIPT_USAGE_ASPIRATIONAL", USCRIPT_USAGE_ASPIRATIONAL, "Aspirational Use script.")
+      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED, "Recommended script.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 

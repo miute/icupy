@@ -12,18 +12,40 @@ using namespace icu;
 
 void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   // icu::Formattable
-  py::enum_<Formattable::ISDATE>(fmt, "ISDATE", py::arithmetic())
+  py::enum_<Formattable::ISDATE>(
+      fmt, "ISDATE", py::arithmetic(),
+      "This enum is only used to let callers distinguish between the *Formattable(UDate)* constructor and the "
+      "*Formattable(double)* constructor; the compiler cannot distinguish the signatures, since UDate is currently "
+      "typedefed to be either double or long.\n\n"
+      "If UDate is changed later to be a bonafide class or struct, then we no longer need this enum.")
       .value("IS_DATE", Formattable::ISDATE::kIsDate)
       .export_values();
 
-  py::enum_<Formattable::Type>(fmt, "Type", py::arithmetic())
-      .value("DATE", Formattable::Type::kDate)
-      .value("DOUBLE", Formattable::Type::kDouble)
-      .value("LONG", Formattable::Type::kLong)
-      .value("STRING", Formattable::Type::kString)
-      .value("ARRAY", Formattable::Type::kArray)
-      .value("INT64", Formattable::Type::kInt64)
-      .value("OBJECT", Formattable::Type::kObject)
+  py::enum_<Formattable::Type>(
+      fmt, "Type", py::arithmetic(),
+      "Selector for flavor of data type contained within a *Formattable* object.\n\n"
+      "*Formattable* is a union of several different types, and at any time contains exactly one type.")
+      .value("DATE", Formattable::Type::kDate,
+             "Selector indicating a UDate value.\n\n  "
+             "Use *get_date* to retrieve the value.")
+      .value("DOUBLE", Formattable::Type::kDouble,
+             "Selector indicating a double value.\n\n  "
+             "Use *get_double* to retrieve the value.")
+      .value("LONG", Formattable::Type::kLong,
+             "Selector indicating a 32-bit integer value.\n\n  "
+             "Use *get_long* to retrieve the value.")
+      .value("STRING", Formattable::Type::kString,
+             "Selector indicating a UnicodeString value.\n\n  "
+             "Use *get_string* to retrieve the value.")
+      .value("ARRAY", Formattable::Type::kArray,
+             "Selector indicating an array of Formattables.\n\n  "
+             "Use *get_array* to retrieve the value.")
+      .value("INT64", Formattable::Type::kInt64,
+             "Selector indicating a 64-bit integer value.\n\n  "
+             "Use *get_int64* to retrieve the value.")
+      .value("OBJECT", Formattable::Type::kObject,
+             "Selector indicating a UObject value.\n\n  "
+             "Use *get_object* to retrieve the value.")
       .export_values();
 
   fmt.def(py::init<>())

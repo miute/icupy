@@ -10,7 +10,7 @@ using namespace icu;
 
 void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &df) {
   // icu::DecimalFormat
-  py::enum_<DecimalFormat::EPadPosition>(df, "EPadPosition", py::arithmetic())
+  py::enum_<DecimalFormat::EPadPosition>(df, "EPadPosition", py::arithmetic(), "Pad position.")
       .value("PAD_BEFORE_PREFIX", DecimalFormat::kPadBeforePrefix)
       .value("PAD_AFTER_PREFIX", DecimalFormat::kPadAfterPrefix)
       .value("PAD_BEFORE_SUFFIX", DecimalFormat::kPadBeforeSuffix)

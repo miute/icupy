@@ -6,37 +6,101 @@ using namespace icu;
 using Part = MessagePattern::Part;
 
 void init_messagepattern(py::module &m) {
-  py::enum_<UMessagePatternApostropheMode>(m, "UMessagePatternApostropheMode", py::arithmetic())
-      .value("UMSGPAT_APOS_DOUBLE_OPTIONAL", UMSGPAT_APOS_DOUBLE_OPTIONAL)
-      .value("UMSGPAT_APOS_DOUBLE_REQUIRED", UMSGPAT_APOS_DOUBLE_REQUIRED)
+  py::enum_<UMessagePatternApostropheMode>(
+      m, "UMessagePatternApostropheMode", py::arithmetic(),
+      "Mode for when an apostrophe starts quoted literal text for *MessageFormat* output.\n\n"
+      "The default is DOUBLE_OPTIONAL unless overridden via uconfig.h (*UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE*).\n\n"
+      "A pair of adjacent apostrophes always results in a single apostrophe in the output, even when the pair is "
+      "between two single, text-quoting apostrophes.")
+      .value("UMSGPAT_APOS_DOUBLE_OPTIONAL", UMSGPAT_APOS_DOUBLE_OPTIONAL,
+             "A literal apostrophe is represented by either a single or a double apostrophe pattern character.\n\n  "
+             "Within a MessageFormat pattern, a single apostrophe only starts quoted literal text if it immediately "
+             "precedes a curly brace {}, or a pipe symbol | if inside a choice format, or a pound symbol # if inside a "
+             "plural format.\n\n  "
+             "This is the default behavior starting with ICU 4.8.")
+      .value("UMSGPAT_APOS_DOUBLE_REQUIRED", UMSGPAT_APOS_DOUBLE_REQUIRED,
+             "A literal apostrophe must be represented by a double apostrophe pattern character.\n\n  "
+             "A single apostrophe always starts quoted literal text.\n\n  "
+             "This is the behavior of ICU 4.6 and earlier, and of the JDK.")
       .export_values();
 
-  py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType", py::arithmetic())
-      .value("UMSGPAT_ARG_TYPE_NONE", UMSGPAT_ARG_TYPE_NONE)
-      .value("UMSGPAT_ARG_TYPE_SIMPLE", UMSGPAT_ARG_TYPE_SIMPLE)
-      .value("UMSGPAT_ARG_TYPE_CHOICE", UMSGPAT_ARG_TYPE_CHOICE)
-      .value("UMSGPAT_ARG_TYPE_PLURAL", UMSGPAT_ARG_TYPE_PLURAL)
-      .value("UMSGPAT_ARG_TYPE_SELECT", UMSGPAT_ARG_TYPE_SELECT)
+  py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType", py::arithmetic(),
+                                    "Argument type constants.\n\n"
+                                    "Returned by *Part.get_arg_type()* for ARG_START and ARG_LIMIT parts.\n\n"
+                                    "Messages nested inside an argument are each delimited by MSG_START and MSG_LIMIT, "
+                                    "with a nesting level one greater than the surrounding message.")
+      .value("UMSGPAT_ARG_TYPE_NONE", UMSGPAT_ARG_TYPE_NONE, "The argument has no specified type.")
+      .value("UMSGPAT_ARG_TYPE_SIMPLE", UMSGPAT_ARG_TYPE_SIMPLE,
+             "The argument has a \"simple\" type which is provided by the ARG_TYPE part. An ARG_STYLE part might "
+             "follow that.")
+      .value("UMSGPAT_ARG_TYPE_CHOICE", UMSGPAT_ARG_TYPE_CHOICE,
+             "The argument is a *ChoiceFormat* with one or more ((ARG_INT | ARG_DOUBLE), ARG_SELECTOR, message) "
+             "tuples.")
+      .value("UMSGPAT_ARG_TYPE_PLURAL", UMSGPAT_ARG_TYPE_PLURAL,
+             "The argument is a cardinal-number *PluralFormat* with an optional ARG_INT or ARG_DOUBLE offset "
+             "(e.g., offset:1) and one or more (ARG_SELECTOR [explicit-value] message) tuples.\n\n  "
+             "If the selector has an explicit value (e.g., =2), then that value is provided by the ARG_INT or "
+             "ARG_DOUBLE part preceding the message. Otherwise the message immediately follows the ARG_SELECTOR.")
+      .value("UMSGPAT_ARG_TYPE_SELECT", UMSGPAT_ARG_TYPE_SELECT,
+             "The argument is a *SelectFormat* with one or more (ARG_SELECTOR, message) pairs.")
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
-      .value("UMSGPAT_ARG_TYPE_SELECTORDINAL", UMSGPAT_ARG_TYPE_SELECTORDINAL)
+      .value("UMSGPAT_ARG_TYPE_SELECTORDINAL", UMSGPAT_ARG_TYPE_SELECTORDINAL,
+             "The argument is an ordinal-number *PluralFormat* with the same style parts sequence and semantics as "
+             "*UMSGPAT_ARG_TYPE_PLURAL*.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
       .export_values();
 
-  py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType", py::arithmetic())
-      .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START)
-      .value("UMSGPAT_PART_TYPE_MSG_LIMIT", UMSGPAT_PART_TYPE_MSG_LIMIT)
-      .value("UMSGPAT_PART_TYPE_SKIP_SYNTAX", UMSGPAT_PART_TYPE_SKIP_SYNTAX)
-      .value("UMSGPAT_PART_TYPE_INSERT_CHAR", UMSGPAT_PART_TYPE_INSERT_CHAR)
-      .value("UMSGPAT_PART_TYPE_REPLACE_NUMBER", UMSGPAT_PART_TYPE_REPLACE_NUMBER)
-      .value("UMSGPAT_PART_TYPE_ARG_START", UMSGPAT_PART_TYPE_ARG_START)
-      .value("UMSGPAT_PART_TYPE_ARG_LIMIT", UMSGPAT_PART_TYPE_ARG_LIMIT)
-      .value("UMSGPAT_PART_TYPE_ARG_NUMBER", UMSGPAT_PART_TYPE_ARG_NUMBER)
-      .value("UMSGPAT_PART_TYPE_ARG_NAME", UMSGPAT_PART_TYPE_ARG_NAME)
-      .value("UMSGPAT_PART_TYPE_ARG_TYPE", UMSGPAT_PART_TYPE_ARG_TYPE)
-      .value("UMSGPAT_PART_TYPE_ARG_STYLE", UMSGPAT_PART_TYPE_ARG_STYLE)
-      .value("UMSGPAT_PART_TYPE_ARG_SELECTOR", UMSGPAT_PART_TYPE_ARG_SELECTOR)
-      .value("UMSGPAT_PART_TYPE_ARG_INT", UMSGPAT_PART_TYPE_ARG_INT)
-      .value("UMSGPAT_PART_TYPE_ARG_DOUBLE", UMSGPAT_PART_TYPE_ARG_DOUBLE)
+  py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType", py::arithmetic(),
+                                     "*MessagePattern::Part* type constants.")
+      .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START,
+             "Start of a message pattern (main or nested).\n\n  "
+             "The length is 0 for the top-level message and for a choice argument sub-message, otherwise 1 for the "
+             "'{'. The value indicates the nesting level, starting with 0 for the main message.\n\n  "
+             "There is always a later MSG_LIMIT part.")
+      .value("UMSGPAT_PART_TYPE_MSG_LIMIT", UMSGPAT_PART_TYPE_MSG_LIMIT,
+             "End of a message pattern (main or nested).\n\n  "
+             "The length is 0 for the top-level message and the last sub-message of a choice argument, otherwise 1 for "
+             "the '}' or (in a choice argument style) the '|'. The value indicates the nesting level, starting with 0 "
+             "for the main message.")
+      .value("UMSGPAT_PART_TYPE_SKIP_SYNTAX", UMSGPAT_PART_TYPE_SKIP_SYNTAX,
+             "Indicates a substring of the pattern string which is to be skipped when formatting.\n\n  "
+             "For example, an apostrophe that begins or ends quoted text would be indicated with such a part. The "
+             "value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_INSERT_CHAR", UMSGPAT_PART_TYPE_INSERT_CHAR,
+             "Indicates that a syntax character needs to be inserted for auto-quoting.\n\n  "
+             "The length is 0. The value is the character code of the insertion character. (U+0027=APOSTROPHE)")
+      .value("UMSGPAT_PART_TYPE_REPLACE_NUMBER", UMSGPAT_PART_TYPE_REPLACE_NUMBER,
+             "Indicates a syntactic (non-escaped) # symbol in a plural variant.\n\n  "
+             "When formatting, replace this part's substring with the (value-offset) for the plural argument value. "
+             "The value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_ARG_START", UMSGPAT_PART_TYPE_ARG_START,
+             "Start of an argument.\n\n  "
+             "The length is 1 for the '{'. The value is the ordinal value of the ArgType. Use *get_arg_type()*.\n\n  "
+             "This part is followed by either an ARG_NUMBER or ARG_NAME, followed by optional argument sub-parts "
+             "(see *UMessagePatternArgType* constants) and finally an ARG_LIMIT part.")
+      .value("UMSGPAT_PART_TYPE_ARG_LIMIT", UMSGPAT_PART_TYPE_ARG_LIMIT,
+             "End of an argument.\n\n  "
+             "The length is 1 for the '}'. The value is the ordinal value of the ArgType. Use *get_arg_type()*.")
+      .value("UMSGPAT_PART_TYPE_ARG_NUMBER", UMSGPAT_PART_TYPE_ARG_NUMBER,
+             "The argument number, provided by the value.")
+      .value("UMSGPAT_PART_TYPE_ARG_NAME", UMSGPAT_PART_TYPE_ARG_NAME,
+             "The argument name.\n\n  "
+             "The value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_ARG_TYPE", UMSGPAT_PART_TYPE_ARG_TYPE,
+             "The argument type.\n\n  "
+             "The value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_ARG_STYLE", UMSGPAT_PART_TYPE_ARG_STYLE,
+             "The argument style text.\n\n  "
+             "The value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_ARG_SELECTOR", UMSGPAT_PART_TYPE_ARG_SELECTOR,
+             "A selector substring in a \"complex\" argument style.\n\n  "
+             "The value is undefined and currently always 0.")
+      .value("UMSGPAT_PART_TYPE_ARG_INT", UMSGPAT_PART_TYPE_ARG_INT,
+             "An integer value, for example the offset or an explicit selector value in a *PluralFormat* style.\n\n  "
+             "The part value is the integer value.")
+      .value("UMSGPAT_PART_TYPE_ARG_DOUBLE", UMSGPAT_PART_TYPE_ARG_DOUBLE,
+             "A numeric value, for example the offset or an explicit selector value in a *PluralFormat* style.\n\n  "
+             "The part value is an index into an internal array of numeric values; use *get_numeric_value()*.")
       .export_values();
 
   // icu::MessagePattern

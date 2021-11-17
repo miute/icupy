@@ -13,17 +13,44 @@ void init_idna(py::module &m) {
   py::class_<IDNA, UObject> idna(m, "IDNA");
 
   py::enum_<decltype(UIDNA_DEFAULT)>(idna, "IDNA", py::arithmetic())
-      .value("DEFAULT", UIDNA_DEFAULT)
+      .value("DEFAULT", UIDNA_DEFAULT,
+             "Default options value: None of the other options are set.\n\n  "
+             "For use in static worker and factory methods.")
 #ifndef U_HIDE_DEPRECATED_API
-      .value("ALLOW_UNASSIGNED", UIDNA_ALLOW_UNASSIGNED)
+      .value("ALLOW_UNASSIGNED", UIDNA_ALLOW_UNASSIGNED,
+             "**Deprecated:** ICU 55 Use UTS #46 instead via *uidna_open_uts46()* or class *IDNA*.")
 #endif // U_HIDE_DEPRECATED_API
-      .value("USE_STD3_RULES", UIDNA_USE_STD3_RULES)
-      .value("CHECK_BIDI", UIDNA_CHECK_BIDI)
-      .value("CHECK_CONTEXTJ", UIDNA_CHECK_CONTEXTJ)
-      .value("NONTRANSITIONAL_TO_ASCII", UIDNA_NONTRANSITIONAL_TO_ASCII)
-      .value("NONTRANSITIONAL_TO_UNICODE", UIDNA_NONTRANSITIONAL_TO_UNICODE)
+      .value("USE_STD3_RULES", UIDNA_USE_STD3_RULES,
+             "Option to check whether the input conforms to the STD3 ASCII rules, for example the restriction of "
+             "labels to LDH characters (ASCII Letters, Digits and Hyphen-Minus).\n\n  "
+             "For use in static worker and factory methods.")
+      .value("CHECK_BIDI", UIDNA_CHECK_BIDI,
+             "IDNA option to check for whether the input conforms to the BiDi rules.\n\n  "
+             "For use in static worker and factory methods.\n\n  "
+             "This option is ignored by the IDNA2003 implementation. (IDNA2003 always performs a BiDi check.)")
+      .value("CHECK_CONTEXTJ", UIDNA_CHECK_CONTEXTJ,
+             "IDNA option to check for whether the input conforms to the CONTEXTJ rules.\n\n  "
+             "For use in static worker and factory methods.\n\n  "
+             "This option is ignored by the IDNA2003 implementation. (The CONTEXTJ check is new in IDNA2008.)")
+      .value("NONTRANSITIONAL_TO_ASCII", UIDNA_NONTRANSITIONAL_TO_ASCII,
+             "IDNA option for nontransitional processing in *to_ascii()*.\n\n  "
+             "For use in static worker and factory methods.\n\n  "
+             "By default, *to_ascii()* uses transitional processing.\n\n  "
+             "This option is ignored by the IDNA2003 implementation. (This is only relevant for compatibility of newer "
+             "IDNA implementations with IDNA2003.)")
+      .value("NONTRANSITIONAL_TO_UNICODE", UIDNA_NONTRANSITIONAL_TO_UNICODE,
+             "IDNA option for nontransitional processing in *to_unicode()*.\n\n  "
+             "For use in static worker and factory methods.\n\n  "
+             "By default, *to_unicode()* uses transitional processing.\n\n  "
+             "This option is ignored by the IDNA2003 implementation. (This is only relevant for compatibility of newer "
+             "IDNA implementations with IDNA2003.)")
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .value("CHECK_CONTEXTO", UIDNA_CHECK_CONTEXTO)
+      .value("CHECK_CONTEXTO", UIDNA_CHECK_CONTEXTO,
+             "IDNA option to check for whether the input conforms to the CONTEXTO rules.\n\n  "
+             "For use in static worker and factory methods.\n\n  "
+             "This option is ignored by the IDNA2003 implementation. (The CONTEXTO check is new in "
+             "IDNA2008.)\n\n  "
+             "This is for use by registries for IDNA2008 conformance. UTS #46 does not require the CONTEXTO check.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
       .export_values();
 

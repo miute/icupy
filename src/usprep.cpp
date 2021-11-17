@@ -6,7 +6,9 @@ _UStringPrepProfilePtr::~_UStringPrepProfilePtr() {}
 UStringPrepProfile *_UStringPrepProfilePtr::get() const { return p_; }
 
 void init_usprep(py::module &m) {
-  py::enum_<UStringPrepProfileType>(m, "UStringPrepProfileType", py::arithmetic())
+  py::enum_<UStringPrepProfileType>(
+      m, "UStringPrepProfileType", py::arithmetic(),
+      "enums for the standard stringprep profile types supported by *usprep_open_by_type*.")
       .value("USPREP_RFC3491_NAMEPREP", USPREP_RFC3491_NAMEPREP, "RFC3491 Nameprep.")
       .value("USPREP_RFC3530_NFS4_CS_PREP", USPREP_RFC3530_NFS4_CS_PREP, "RFC3530 nfs4_cs_prep.")
       .value("USPREP_RFC3530_NFS4_CS_PREP_CI", USPREP_RFC3530_NFS4_CS_PREP_CI,

@@ -14,10 +14,21 @@ using namespace icu;
 
 void init_uniset(py::module &m) {
   // icu::UMatchDegree
-  py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic())
-      .value("U_MISMATCH", U_MISMATCH)
-      .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH)
-      .value("U_MATCH", U_MATCH)
+  py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic(),
+                          "Constants returned by *UnicodeMatcher::matches()* indicating the degree of match.")
+      .value("U_MISMATCH", U_MISMATCH,
+             "Constant returned by *matches()* indicating a mismatch between the text and this matcher.\n\n  "
+             "The text contains a character which does not match, or the text does not contain all desired characters "
+             "for a non-incremental match.")
+      .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH,
+             "Constant returned by *matches()* indicating a partial match between the text and this matcher.\n\n  "
+             "This value is only returned for incremental match operations. All characters of the text match, but more "
+             "characters are required for a complete match. Alternatively, for variable-length matchers, all "
+             "characters of the text match, and if more characters were supplied at limit, they might also match.")
+      .value("U_MATCH", U_MATCH,
+             "Constant returned by *matches()* indicating a complete match between the text and this matcher.\n\n  "
+             "For an incremental variable-length match, this value is returned if the given text matches, and it is "
+             "known that additional characters would not alter the extent of the match.")
       .export_values();
 
   // icu::UnicodeFunctor
@@ -33,8 +44,8 @@ void init_uniset(py::module &m) {
   py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet");
 
   py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())
-      .value("MIN_VALUE", UnicodeSet::MIN_VALUE)
-      .value("MAX_VALUE", UnicodeSet::MAX_VALUE)
+      .value("MIN_VALUE", UnicodeSet::MIN_VALUE, "Minimum value that can be stored in a *UnicodeSet*.")
+      .value("MAX_VALUE", UnicodeSet::MAX_VALUE, "Maximum value that can be stored in a *UnicodeSet*.")
       .export_values();
 
   us.def(py::init<>())

@@ -10,54 +10,106 @@ using namespace icu;
 
 void init_tzfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
-  py::enum_<UTimeZoneFormatGMTOffsetPatternType>(m, "UTimeZoneFormatGMTOffsetPatternType", py::arithmetic())
-      .value("UTZFMT_PAT_POSITIVE_HM", UTZFMT_PAT_POSITIVE_HM)
-      .value("UTZFMT_PAT_POSITIVE_HMS", UTZFMT_PAT_POSITIVE_HMS)
-      .value("UTZFMT_PAT_NEGATIVE_HM", UTZFMT_PAT_NEGATIVE_HM)
-      .value("UTZFMT_PAT_NEGATIVE_HMS", UTZFMT_PAT_NEGATIVE_HMS)
+  py::enum_<UTimeZoneFormatGMTOffsetPatternType>(m, "UTimeZoneFormatGMTOffsetPatternType", py::arithmetic(),
+                                                 "Constants for GMT offset pattern types.")
+      .value("UTZFMT_PAT_POSITIVE_HM", UTZFMT_PAT_POSITIVE_HM, "Positive offset with hours and minutes fields.")
+      .value("UTZFMT_PAT_POSITIVE_HMS", UTZFMT_PAT_POSITIVE_HMS,
+             "Positive offset with hours, minutes and seconds fields.")
+      .value("UTZFMT_PAT_NEGATIVE_HM", UTZFMT_PAT_NEGATIVE_HM, "Negative offset with hours and minutes fields.")
+      .value("UTZFMT_PAT_NEGATIVE_HMS", UTZFMT_PAT_NEGATIVE_HMS,
+             "Negative offset with hours, minutes and seconds fields.")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("UTZFMT_PAT_POSITIVE_H", UTZFMT_PAT_POSITIVE_H)
-      .value("UTZFMT_PAT_NEGATIVE_H", UTZFMT_PAT_NEGATIVE_H)
+      .value("UTZFMT_PAT_POSITIVE_H", UTZFMT_PAT_POSITIVE_H, "Positive offset with hours field.")
+      .value("UTZFMT_PAT_NEGATIVE_H", UTZFMT_PAT_NEGATIVE_H, "Negative offset with hours field.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 
-  py::enum_<UTimeZoneFormatParseOption>(m, "UTimeZoneFormatParseOption", py::arithmetic())
-      .value("UTZFMT_PARSE_OPTION_NONE", UTZFMT_PARSE_OPTION_NONE)
-      .value("UTZFMT_PARSE_OPTION_ALL_STYLES", UTZFMT_PARSE_OPTION_ALL_STYLES)
+  py::enum_<UTimeZoneFormatParseOption>(
+      m, "UTimeZoneFormatParseOption", py::arithmetic(),
+      "Constants for parse option flags, used for specifying optional parse behavior.")
+      .value("UTZFMT_PARSE_OPTION_NONE", UTZFMT_PARSE_OPTION_NONE, "No option.")
+      .value("UTZFMT_PARSE_OPTION_ALL_STYLES", UTZFMT_PARSE_OPTION_ALL_STYLES,
+             "When a time zone display name is not found within a set of display names used for the specified style, "
+             "look for the name from display names used by other styles.")
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-      .value("UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS", UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS)
+      .value("UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS", UTZFMT_PARSE_OPTION_TZ_DATABASE_ABBREVIATIONS,
+             "When parsing a time zone display name in *UTZFMT_STYLE_SPECIFIC_SHORT*, look for the IANA tz database "
+             "compatible zone abbreviations in addition to the localized names coming from the *icu::TimeZoneNames* "
+             "currently used by the *icu::TimeZoneFormat*.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .export_values();
 
-  py::enum_<UTimeZoneFormatStyle>(m, "UTimeZoneFormatStyle", py::arithmetic())
-      .value("UTZFMT_STYLE_GENERIC_LOCATION", UTZFMT_STYLE_GENERIC_LOCATION)
-      .value("UTZFMT_STYLE_GENERIC_LONG", UTZFMT_STYLE_GENERIC_LONG)
-      .value("UTZFMT_STYLE_GENERIC_SHORT", UTZFMT_STYLE_GENERIC_SHORT)
-      .value("UTZFMT_STYLE_SPECIFIC_LONG", UTZFMT_STYLE_SPECIFIC_LONG)
-      .value("UTZFMT_STYLE_SPECIFIC_SHORT", UTZFMT_STYLE_SPECIFIC_SHORT)
-      .value("UTZFMT_STYLE_LOCALIZED_GMT", UTZFMT_STYLE_LOCALIZED_GMT)
+  py::enum_<UTimeZoneFormatStyle>(
+      m, "UTimeZoneFormatStyle", py::arithmetic(),
+      "Constants for time zone display format style used by format/parse APIs in *TimeZoneFormat*.")
+      .value("UTZFMT_STYLE_GENERIC_LOCATION", UTZFMT_STYLE_GENERIC_LOCATION,
+             "Generic location format, such as \"United States Time(New York)\", \"Italy Time\".")
+      .value("UTZFMT_STYLE_GENERIC_LONG", UTZFMT_STYLE_GENERIC_LONG,
+             "Generic long non-location format, such as \"Eastern Time\".")
+      .value("UTZFMT_STYLE_GENERIC_SHORT", UTZFMT_STYLE_GENERIC_SHORT,
+             "Generic short non-location format, such as \"ET\".")
+      .value("UTZFMT_STYLE_SPECIFIC_LONG", UTZFMT_STYLE_SPECIFIC_LONG,
+             "Specific long format, such as \"Eastern Standard Time\".")
+      .value("UTZFMT_STYLE_SPECIFIC_SHORT", UTZFMT_STYLE_SPECIFIC_SHORT,
+             "Specific short format, such as \"EST\", \"PDT\".")
+      .value("UTZFMT_STYLE_LOCALIZED_GMT", UTZFMT_STYLE_LOCALIZED_GMT,
+             "Localized GMT offset format, such as \"GMT-05:00\", \"UTC+0100\".")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("UTZFMT_STYLE_LOCALIZED_GMT_SHORT", UTZFMT_STYLE_LOCALIZED_GMT_SHORT)
-      .value("UTZFMT_STYLE_ISO_BASIC_SHORT", UTZFMT_STYLE_ISO_BASIC_SHORT)
-      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_SHORT", UTZFMT_STYLE_ISO_BASIC_LOCAL_SHORT)
-      .value("UTZFMT_STYLE_ISO_BASIC_FIXED", UTZFMT_STYLE_ISO_BASIC_FIXED)
-      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_FIXED", UTZFMT_STYLE_ISO_BASIC_LOCAL_FIXED)
-      .value("UTZFMT_STYLE_ISO_BASIC_FULL", UTZFMT_STYLE_ISO_BASIC_FULL)
-      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_FULL", UTZFMT_STYLE_ISO_BASIC_LOCAL_FULL)
-      .value("UTZFMT_STYLE_ISO_EXTENDED_FIXED", UTZFMT_STYLE_ISO_EXTENDED_FIXED)
-      .value("UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FIXED", UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FIXED)
-      .value("UTZFMT_STYLE_ISO_EXTENDED_FULL", UTZFMT_STYLE_ISO_EXTENDED_FULL)
-      .value("UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FULL", UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FULL)
-      .value("UTZFMT_STYLE_ZONE_ID", UTZFMT_STYLE_ZONE_ID)
-      .value("UTZFMT_STYLE_ZONE_ID_SHORT", UTZFMT_STYLE_ZONE_ID_SHORT)
-      .value("UTZFMT_STYLE_EXEMPLAR_LOCATION", UTZFMT_STYLE_EXEMPLAR_LOCATION)
+      .value("UTZFMT_STYLE_LOCALIZED_GMT_SHORT", UTZFMT_STYLE_LOCALIZED_GMT_SHORT,
+             "Short localized GMT offset format, such as \"GMT-5\", \"UTC+1:30\" This style is equivalent to the LDML "
+             "date format pattern \"O\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_SHORT", UTZFMT_STYLE_ISO_BASIC_SHORT,
+             "Short ISO 8601 local time difference (basic format) or the UTC indicator.\n\n  "
+             "For example, \"-05\", \"+0530\", and \"Z\"(UTC). This style is equivalent to the LDML date format "
+             "pattern \"X\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_SHORT", UTZFMT_STYLE_ISO_BASIC_LOCAL_SHORT,
+             "Short ISO 8601 locale time difference (basic format).\n\n  "
+             "For example, \"-05\" and \"+0530\". This style is equivalent to the LDML date format pattern \"x\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_FIXED", UTZFMT_STYLE_ISO_BASIC_FIXED,
+             "Fixed width ISO 8601 local time difference (basic format) or the UTC indicator.\n\n  "
+             "For example, \"-0500\", \"+0530\", and \"Z\"(UTC). This style is equivalent to the LDML date format "
+             "pattern \"XX\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_FIXED", UTZFMT_STYLE_ISO_BASIC_LOCAL_FIXED,
+             "Fixed width ISO 8601 local time difference (basic format).\n\n  "
+             "For example, \"-0500\" and \"+0530\". This style is equivalent to the LDML date format pattern \"xx\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_FULL", UTZFMT_STYLE_ISO_BASIC_FULL,
+             "ISO 8601 local time difference (basic format) with optional seconds field, or the UTC indicator.\n\n  "
+             "For example, \"-0500\", \"+052538\", and \"Z\"(UTC). This style is equivalent to the LDML date format "
+             "pattern \"XXXX\".")
+      .value("UTZFMT_STYLE_ISO_BASIC_LOCAL_FULL", UTZFMT_STYLE_ISO_BASIC_LOCAL_FULL,
+             "ISO 8601 local time difference (basic format) with optional seconds field.\n\n  "
+             "For example, \"-0500\" and \"+052538\". This style is equivalent to the LDML date format pattern "
+             "\"xxxx\".")
+      .value("UTZFMT_STYLE_ISO_EXTENDED_FIXED", UTZFMT_STYLE_ISO_EXTENDED_FIXED,
+             "Fixed width ISO 8601 local time difference (extended format) or the UTC indicator.\n\n  "
+             "For example, \"-05:00\", \"+05:30\", and \"Z\"(UTC). This style is equivalent to the LDML date format "
+             "pattern \"XXX\".")
+      .value("UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FIXED", UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FIXED,
+             "Fixed width ISO 8601 local time difference (extended format).\n\n  "
+             "For example, \"-05:00\" and \"+05:30\". This style is equivalent to the LDML date format pattern \"xxx\" "
+             "and \"ZZZZZ\".")
+      .value("UTZFMT_STYLE_ISO_EXTENDED_FULL", UTZFMT_STYLE_ISO_EXTENDED_FULL,
+             "ISO 8601 local time difference (extended format) with optional seconds field, or the UTC indicator.\n\n  "
+             "For example, \"-05:00\", \"+05:25:38\", and \"Z\"(UTC). This style is equivalent to the LDML date format "
+             "pattern \"XXXXX\".")
+      .value("UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FULL", UTZFMT_STYLE_ISO_EXTENDED_LOCAL_FULL,
+             "ISO 8601 local time difference (extended format) with optional seconds field.\n\n  "
+             "For example, \"-05:00\" and \"+05:25:38\". This style is equivalent to the LDML date format pattern "
+             "\"xxxxx\".")
+      .value("UTZFMT_STYLE_ZONE_ID", UTZFMT_STYLE_ZONE_ID, "Time Zone ID, such as \"America/Los_Angeles\".")
+      .value("UTZFMT_STYLE_ZONE_ID_SHORT", UTZFMT_STYLE_ZONE_ID_SHORT,
+             "Short Time Zone ID (BCP 47 Unicode location extension, time zone type value), such as \"uslax\".")
+      .value("UTZFMT_STYLE_EXEMPLAR_LOCATION", UTZFMT_STYLE_EXEMPLAR_LOCATION,
+             "Exemplar location, such as \"Los Angeles\" and \"Paris\".")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 
-  py::enum_<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType", py::arithmetic())
-      .value("UTZFMT_TIME_TYPE_UNKNOWN", UTZFMT_TIME_TYPE_UNKNOWN)
-      .value("UTZFMT_TIME_TYPE_STANDARD", UTZFMT_TIME_TYPE_STANDARD)
-      .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT)
+  py::enum_<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType", py::arithmetic(),
+                                     "Constants for time types used by *TimeZoneFormat* APIs for receiving time type "
+                                     "(standard time, daylight time or unknown).")
+      .value("UTZFMT_TIME_TYPE_UNKNOWN", UTZFMT_TIME_TYPE_UNKNOWN, "Unknown.")
+      .value("UTZFMT_TIME_TYPE_STANDARD", UTZFMT_TIME_TYPE_STANDARD, "Standard time.")
+      .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT, "Daylight saving time.")
       .export_values();
 
   // icu::TimeZoneFormat

@@ -13,7 +13,8 @@ void init_rbbi(py::module &m) {
   py::class_<BreakIterator, UObject> bi(m, "BreakIterator");
 
   py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator", py::arithmetic())
-      .value("DONE", BreakIterator::DONE)
+      .value("DONE", BreakIterator::DONE,
+             "*DONE* is returned by *previous()* and *next()* after all valid boundaries have been returned.")
       .export_values();
 
   bi.def("__copy__", &BreakIterator::clone)

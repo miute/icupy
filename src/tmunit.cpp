@@ -7,7 +7,8 @@ void init_tmunit(py::module &m) {
   // icu::TimeUnit
   py::class_<TimeUnit, MeasureUnit> tu(m, "TimeUnit");
 
-  py::enum_<TimeUnit::UTimeUnitFields>(tu, "UTimeUnitFields", py::arithmetic())
+  py::enum_<TimeUnit::UTimeUnitFields>(tu, "UTimeUnitFields", py::arithmetic(),
+                                       "Constants for all the time units we supported.")
       .value("UTIMEUNIT_YEAR", TimeUnit::UTIMEUNIT_YEAR)
       .value("UTIMEUNIT_MONTH", TimeUnit::UTIMEUNIT_MONTH)
       .value("UTIMEUNIT_DAY", TimeUnit::UTIMEUNIT_DAY)

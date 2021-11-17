@@ -9,7 +9,8 @@ void init_coleitr(py::module &m) {
   py::class_<CollationElementIterator, UObject> cei(m, "CollationElementIterator");
 
   py::enum_<decltype(CollationElementIterator::NULLORDER)>(cei, "CollationElementIterator", py::arithmetic())
-      .value("NULLORDER", CollationElementIterator::NULLORDER)
+      .value("NULLORDER", CollationElementIterator::NULLORDER,
+             "*NULLORDER* indicates that an error has occurred while processing.")
       .export_values();
 
   cei.def(py::init<CollationElementIterator &>(), py::arg("other"))

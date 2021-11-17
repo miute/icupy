@@ -18,7 +18,7 @@ USpoofCheckResult *_USpoofCheckResultPtr::get() const { return p_; }
 void init_uspoof(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   py::enum_<URestrictionLevel>(m, "URestrictionLevel", py::arithmetic(),
-                               "Constants from UAX #39 for use in uspoof_setRestrictionLevel, and for returned "
+                               "Constants from UAX #39 for use in *uspoof_set_restriction_level*, and for returned "
                                "identifier restriction levels in check results.")
       .value("USPOOF_ASCII", USPOOF_ASCII,
              "All characters in the string are in the identifier profile and all characters in the string are in the "
@@ -46,32 +46,32 @@ void init_uspoof(py::module &m) {
              "Any valid identifiers, including characters outside of the Identifier Profile.")
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
       .value("USPOOF_RESTRICTION_LEVEL_MASK", USPOOF_RESTRICTION_LEVEL_MASK,
-             "Mask for selecting the Restriction Level bits from the return value of uspoof_check.")
+             "Mask for selecting the Restriction Level bits from the return value of *uspoof_check*.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
-  py::enum_<USpoofChecks>(
-      m, "USpoofChecks", py::arithmetic(),
-      "Enum for the kinds of checks that USpoofChecker can perform. These enum values are used both to select the set "
-      "of checks that will be performed, and to report results from the check function.")
-      .value(
-          "USPOOF_SINGLE_SCRIPT_CONFUSABLE", USPOOF_SINGLE_SCRIPT_CONFUSABLE,
-          "When performing the two-string uspoof_areConfusable test, this flag in the return value indicates that the "
-          "two strings are visually confusable and that they are from the same script, according to UTS 39 section 4.")
-      .value("USPOOF_MIXED_SCRIPT_CONFUSABLE", USPOOF_MIXED_SCRIPT_CONFUSABLE,
-             "When performing the two-string uspoof_areConfusable test, this flag in the return value indicates that "
-             "the two strings are visually confusable and that they are not from the same script, according to UTS 39 "
+  py::enum_<USpoofChecks>(m, "USpoofChecks", py::arithmetic(),
+                          "Enum for the kinds of checks that *USpoofChecker* can perform.\n\n"
+                          "These enum values are used both to select the set of checks that will be performed, and to "
+                          "report results from the check function.")
+      .value("USPOOF_SINGLE_SCRIPT_CONFUSABLE", USPOOF_SINGLE_SCRIPT_CONFUSABLE,
+             "When performing the two-string *uspoof_are_confusable* test, this flag in the return value indicates "
+             "that the two strings are visually confusable and that they are from the same script, according to UTS 39 "
              "section 4.")
+      .value("USPOOF_MIXED_SCRIPT_CONFUSABLE", USPOOF_MIXED_SCRIPT_CONFUSABLE,
+             "When performing the two-string *uspoof_are_confusable* test, this flag in the return value indicates "
+             "that the two strings are visually confusable and that they are not from the same script, according to "
+             "UTS 39 section 4.")
       .value("USPOOF_WHOLE_SCRIPT_CONFUSABLE", USPOOF_WHOLE_SCRIPT_CONFUSABLE,
-             "When performing the two-string uspoof_areConfusable test, this flag in the return value indicates that "
-             "the two strings are visually confusable and that they are not from the same script but both of them are "
-             "single-script strings, according to UTS 39 section 4.")
+             "When performing the two-string *uspoof_are_confusable* test, this flag in the return value indicates "
+             "that the two strings are visually confusable and that they are not from the same script but both of them "
+             "are single-script strings, according to UTS 39 section 4.")
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("USPOOF_CONFUSABLE", USPOOF_CONFUSABLE,
-             "Enable this flag in uspoof_setChecks to turn on all types of confusables.\n\n  "
+             "Enable this flag in *uspoof_set_checks* to turn on all types of confusables.\n\n  "
              "You may set the checks to some subset of SINGLE_SCRIPT_CONFUSABLE, MIXED_SCRIPT_CONFUSABLE, or "
-             "WHOLE_SCRIPT_CONFUSABLE to make uspoof_areConfusable return only those types of confusables.")
+             "WHOLE_SCRIPT_CONFUSABLE to make *uspoof_are_confusable* return only those types of confusables.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -81,21 +81,21 @@ void init_uspoof(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .value("USPOOF_RESTRICTION_LEVEL", USPOOF_RESTRICTION_LEVEL,
              "Check that an identifier is no looser than the specified RestrictionLevel.\n\n  "
-             "The default if uspoof_setRestrictionLevel is not called is HIGHLY_RESTRICTIVE.\n\n  "
-             "If USPOOF_AUX_INFO is enabled the actual restriction level of the identifier being tested will also be "
-             "returned by uspoof_check().")
+             "The default if *uspoof_set_restriction_level* is not called is HIGHLY_RESTRICTIVE.\n\n  "
+             "If *USPOOF_AUX_INFO* is enabled the actual restriction level of the identifier being tested will also be "
+             "returned by *uspoof_check()*.")
 #ifndef U_HIDE_DEPRECATED_API
       .value("USPOOF_SINGLE_SCRIPT", USPOOF_SINGLE_SCRIPT, "**Deprecated:** ICU 51 Use RESTRICTION_LEVEL instead.")
 #endif // U_HIDE_DEPRECATED_API
-      .value(
-          "USPOOF_INVISIBLE", USPOOF_INVISIBLE,
-          "Check an identifier for the presence of invisible characters, such as zero-width spaces, or character "
-          "sequences that are likely not to display, such as multiple occurrences of the same non-spacing mark. This "
-          "check does not test the input string as a whole for conformance to any particular syntax for identifiers.")
+      .value("USPOOF_INVISIBLE", USPOOF_INVISIBLE,
+             "Check an identifier for the presence of invisible characters, such as zero-width spaces, or character "
+             "sequences that are likely not to display, such as multiple occurrences of the same non-spacing mark. "
+             "This check does not test the input string as a whole for conformance to any particular syntax for "
+             "identifiers.")
       .value("USPOOF_CHAR_LIMIT", USPOOF_CHAR_LIMIT,
              "Check that an identifier contains only characters from a specified set of acceptable characters.\n\n  "
-             "See uspoof_setAllowedChars and uspoof_setAllowedLocales. Note that a string that fails this check will "
-             "also fail the USPOOF_RESTRICTION_LEVEL check.")
+             "See *uspoof_set_allowed_chars* and *uspoof_set_allowed_locales*. Note that a string that fails this "
+             "check will also fail the *USPOOF_RESTRICTION_LEVEL* check.")
       .value("USPOOF_MIXED_NUMBERS", USPOOF_MIXED_NUMBERS,
              "Check that an identifier does not mix numbers from different numbering systems.\n\n  "
              "For more information, see UTS 39 section 5.3.")
@@ -115,10 +115,11 @@ void init_uspoof(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("USPOOF_ALL_CHECKS", USPOOF_ALL_CHECKS, "Enable all spoof checks.")
       .value("USPOOF_AUX_INFO", USPOOF_AUX_INFO,
-             "Enable the return of auxiliary (non-error) information in the upper bits of the check results value.\n\n "
-             " If this \"check\" is not enabled, the results of uspoof_check will be zero when an identifier passes "
+             "Enable the return of auxiliary (non-error) information in the upper bits of the check results "
+             "value.\n\n  "
+             "If this \"check\" is not enabled, the results of *uspoof_check* will be zero when an identifier passes "
              "all of the enabled checks.\n\n  "
-             "If this \"check\" is enabled, (uspoof_check() & USPOOF_ALL_CHECKS) will be zero when an identifier "
+             "If this \"check\" is enabled, (*uspoof_check()* & *USPOOF_ALL_CHECKS*) will be zero when an identifier "
              "passes all checks.")
       .export_values();
 

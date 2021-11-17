@@ -12,19 +12,25 @@ using ImmutableIndex = AlphabeticIndex::ImmutableIndex;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
 void init_alphaindex(py::module &m) {
-  py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType", py::arithmetic())
+  py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType", py::arithmetic(),
+                                       "Constants for Alphabetic Index Label Types.\n\n"
+                                       "The form of these enum constants anticipates having a plain C API for "
+                                       "Alphabetic Indexes that will also use them.")
       .value("U_ALPHAINDEX_NORMAL", U_ALPHAINDEX_NORMAL,
              "Normal Label, typically the starting letter of the names in the bucket with this label.")
       .value("U_ALPHAINDEX_UNDERFLOW", U_ALPHAINDEX_UNDERFLOW,
-             "Undeflow Label. The bucket with this label contains names in scripts that sort before any of the bucket "
-             "labels in this index.")
+             "Undeflow Label.\n\n  "
+             "The bucket with this label contains names in scripts that sort before any of the bucket labels in this "
+             "index.")
       .value("U_ALPHAINDEX_INFLOW", U_ALPHAINDEX_INFLOW,
-             "Inflow Label. The bucket with this label contains names in scripts that sort between two of the bucket "
-             "labels in this index. Inflow labels are created when an index contains normal labels for multiple "
-             "scripts, and skips other scripts that sort between some of the included scripts.")
+             "Inflow Label.\n\n  "
+             "The bucket with this label contains names in scripts that sort between two of the bucket labels in this "
+             "index. Inflow labels are created when an index contains normal labels for multiple scripts, and skips "
+             "other scripts that sort between some of the included scripts.")
       .value("U_ALPHAINDEX_OVERFLOW", U_ALPHAINDEX_OVERFLOW,
-             "Overflow Label. Te bucket with this label contains names in scripts that sort after all of the bucket "
-             "labels in this index.")
+             "Overflow Label.\n\n  "
+             "Te bucket with this label contains names in scripts that sort after all of the bucket labels in this "
+             "index.")
       .export_values();
 
   // icu::AlphabeticIndex

@@ -23,7 +23,11 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   rep.def("length", &Replaceable::length);
 
   // icu::UnicodeString
-  py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic())
+  py::enum_<UnicodeString::EInvariant>(
+      us, "EInvariant", py::arithmetic(),
+      "Constant to be used in the *UnicodeString(char *, int32_t, EInvariant)* constructor which constructs a Unicode "
+      "string from an invariant-character char \\* string.\n\n"
+      "Use the macro *US_INV* instead of the full qualification for this value.")
       .value("INVARIANT", UnicodeString::kInvariant)
       .export_values();
 

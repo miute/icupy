@@ -4,7 +4,7 @@
 using namespace icu;
 
 void init_rbnf(py::module &m) {
-  py::enum_<URBNFRuleSetTag>(m, "URBNFRuleSetTag", py::arithmetic())
+  py::enum_<URBNFRuleSetTag>(m, "URBNFRuleSetTag", py::arithmetic(), "Tags for the predefined rulesets.")
       .value("URBNF_SPELLOUT", URBNF_SPELLOUT)
       .value("URBNF_ORDINAL", URBNF_ORDINAL)
       .value("URBNF_DURATION", URBNF_DURATION)

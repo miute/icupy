@@ -10,13 +10,16 @@ void init_schriter(py::module &m) {
   py::class_<ForwardCharacterIterator, UObject> fci(m, "ForwardCharacterIterator");
 
   py::enum_<decltype(ForwardCharacterIterator::DONE)>(fci, "ForwardCharacterIterator", py::arithmetic())
-      .value("DONE", ForwardCharacterIterator::DONE)
+      .value("DONE", ForwardCharacterIterator::DONE,
+             "Value returned by most of *ForwardCharacterIterator*'s functions when the iterator has reached the "
+             "limits of its iteration.")
       .export_values();
 
   // icu::CharacterIterator
   py::class_<CharacterIterator, ForwardCharacterIterator> ci(m, "CharacterIterator");
 
-  py::enum_<CharacterIterator::EOrigin>(ci, "EOrigin", py::arithmetic())
+  py::enum_<CharacterIterator::EOrigin>(ci, "EOrigin", py::arithmetic(),
+                                        "Origin enumeration for the *move()* and *move32()* functions.")
       .value("START", CharacterIterator::kStart)
       .value("CURRENT", CharacterIterator::kCurrent)
       .value("END", CharacterIterator::kEnd)

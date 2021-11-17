@@ -10,7 +10,8 @@ void init_fieldpos(py::module &m) {
   py::class_<FieldPosition, UObject> fp(m, "FieldPosition");
 
   py::enum_<decltype(FieldPosition::DONT_CARE)>(fp, "FieldPosition", py::arithmetic())
-      .value("DONT_CARE", FieldPosition::DONT_CARE)
+      .value("DONT_CARE", FieldPosition::DONT_CARE,
+             "*DONT_CARE* may be specified as the field to indicate that the caller doesn't need to specify a field.")
       .export_values();
 
   fp.def(py::init<>())

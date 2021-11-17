@@ -372,7 +372,8 @@ void init_gregocal(py::module &m) {
   // icu::GregorianCalendar
   py::class_<GregorianCalendar, Calendar> gc(m, "GregorianCalendar");
 
-  py::enum_<GregorianCalendar::EEras>(gc, "EEras", py::arithmetic())
+  py::enum_<GregorianCalendar::EEras>(gc, "EEras", py::arithmetic(),
+                                      "Useful constants for *GregorianCalendar* and *TimeZone*.")
       .value("BC", GregorianCalendar::EEras::BC)
       .value("AD", GregorianCalendar::EEras::AD)
       .export_values();

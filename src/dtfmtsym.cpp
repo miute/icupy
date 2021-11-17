@@ -9,24 +9,28 @@ void init_dtfmtsym(py::module &m) {
   // icu::DateFormatSymbols
   py::class_<DateFormatSymbols, UObject> dfs(m, "DateFormatSymbols");
 
-  py::enum_<DateFormatSymbols::DtContextType>(dfs, "DtContextType", py::arithmetic())
+  py::enum_<DateFormatSymbols::DtContextType>(dfs, "DtContextType", py::arithmetic(),
+                                              "Selector for date formatting context.")
       .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT)
       .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE)
 #ifndef U_HIDE_DEPRECATED_API
-      .value("DT_CONTEXT_COUNT", DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT)
+      .value("DT_CONTEXT_COUNT", DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT,
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
-  py::enum_<DateFormatSymbols::DtWidthType>(dfs, "DtWidthType", py::arithmetic())
+  py::enum_<DateFormatSymbols::DtWidthType>(dfs, "DtWidthType", py::arithmetic(), "Selector for date formatting width.")
       .value("ABBREVIATED", DateFormatSymbols::DtWidthType::ABBREVIATED)
       .value("WIDE", DateFormatSymbols::DtWidthType::WIDE)
       .value("NARROW", DateFormatSymbols::DtWidthType::NARROW)
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("SHORT", DateFormatSymbols::DtWidthType::SHORT)
+      .value("SHORT", DateFormatSymbols::DtWidthType::SHORT,
+             "Short width is currently only supported for weekday names.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
 #ifndef U_HIDE_DEPRECATED_API
-      .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT)
+      .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT,
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 

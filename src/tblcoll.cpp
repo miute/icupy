@@ -12,7 +12,21 @@ void init_tblcoll(py::module &m) {
   // icu::Collator
   py::class_<Collator, UObject> coll(m, "Collator");
 
-  py::enum_<Collator::ECollationStrength>(coll, "ECollationStrength", py::arithmetic())
+  py::enum_<Collator::ECollationStrength>(
+      coll, "ECollationStrength", py::arithmetic(),
+      "Base letter represents a primary difference.\n\n"
+      "Set comparison level to PRIMARY to ignore secondary and tertiary differences. Use this to set the strength of "
+      "a Collator object.\n"
+      "Example of primary difference, \"abc\" < \"abd\"\n\n"
+      "Diacritical differences on the same base letter represent a secondary difference. Set comparison level to "
+      "SECONDARY to ignore tertiary differences. Use this to set the strength of a Collator object.\n"
+      "Example of secondary difference, \"&auml;\" >> \"a\".\n\n"
+      "Uppercase and lowercase versions of the same character represents a tertiary difference. Set comparison level "
+      "to TERTIARY to include all comparison differences. Use this to set the strength of a Collator object.\n"
+      "Example of tertiary difference, \"abc\" <<< \"ABC\".\n\n"
+      "Two characters are considered \"identical\" when they have the same unicode spellings.\n"
+      "For example, \"&auml;\" == \"&auml;\".\n\n"
+      "*UCollationStrength* is also used to determine the strength of sort keys generated from Collator objects.")
       .value("PRIMARY", Collator::PRIMARY)
       .value("SECONDARY", Collator::SECONDARY)
       .value("TERTIARY", Collator::TERTIARY)
@@ -21,7 +35,8 @@ void init_tblcoll(py::module &m) {
       .export_values();
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
-  py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult", py::arithmetic())
+  py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult", py::arithmetic(),
+                                         "**Deprecated:** ICU 2.6. Use C enum UCollationResult defined in ucol.h")
       .value("LESS", Collator::LESS)
       .value("EQUAL", Collator::EQUAL)
       .value("GREATER", Collator::GREATER)

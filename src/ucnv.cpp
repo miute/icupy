@@ -7,12 +7,14 @@
 #include <pybind11/stl.h>
 
 void init_ucnv(py::module &m) {
-  py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic())
+  py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic(),
+                                "Enum for specifying which platform a converter ID refers to.\n\n"
+                                "The use of platform/CCSID is not recommended. See *ucnv_open_ccsid()*.")
       .value("UCNV_UNKNOWN", UCNV_UNKNOWN)
       .value("UCNV_IBM", UCNV_IBM)
       .export_values();
 
-  py::enum_<UConverterType>(m, "UConverterType", py::arithmetic())
+  py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(), "Enum for specifying basic types of converters.")
       .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
       .value("UCNV_SBCS", UCNV_SBCS)
       .value("UCNV_DBCS", UCNV_DBCS)
@@ -52,11 +54,14 @@ void init_ucnv(py::module &m) {
       .value("UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES", UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES)
       .export_values();
 
-  py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic())
-      .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET)
-      .value("UCNV_ROUNDTRIP_AND_FALLBACK_SET", UCNV_ROUNDTRIP_AND_FALLBACK_SET)
+  py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic(),
+                                  "Selectors for Unicode sets that can be returned by *ucnv_get_unicode_set()*.")
+      .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET, "Select the set of roundtrippable Unicode code points.")
+      .value("UCNV_ROUNDTRIP_AND_FALLBACK_SET", UCNV_ROUNDTRIP_AND_FALLBACK_SET,
+             "Select the set of Unicode code points with roundtrip or fallback mappings.")
 #ifndef U_HIDE_DEPRECATED_API
-      .value("UCNV_SET_COUNT", UCNV_SET_COUNT)
+      .value("UCNV_SET_COUNT", UCNV_SET_COUNT,
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 

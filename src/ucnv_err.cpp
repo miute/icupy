@@ -38,13 +38,34 @@ void _UConverterToUCallbackPtr::callback(const void *context, UConverterToUnicod
 }
 
 void init_ucnv_err(py::module &m) {
-  py::enum_<UConverterCallbackReason>(m, "UConverterCallbackReason", py::arithmetic())
-      .value("UCNV_UNASSIGNED", UCNV_UNASSIGNED)
-      .value("UCNV_ILLEGAL", UCNV_ILLEGAL)
-      .value("UCNV_IRREGULAR", UCNV_IRREGULAR)
-      .value("UCNV_RESET", UCNV_RESET)
-      .value("UCNV_CLOSE", UCNV_CLOSE)
-      .value("UCNV_CLONE", UCNV_CLONE)
+  py::enum_<UConverterCallbackReason>(
+      m, "UConverterCallbackReason", py::arithmetic(),
+      "The process condition code to be used with the callbacks.\n\n"
+      "Codes which are greater than *UCNV_IRREGULAR* should be passed on to any chained callbacks.")
+      .value("UCNV_UNASSIGNED", UCNV_UNASSIGNED,
+             "The code point is unassigned.\n\n  "
+             "The error code *U_INVALID_CHAR_FOUND* will be set.")
+      .value("UCNV_ILLEGAL", UCNV_ILLEGAL,
+             "The code point is illegal.\n\n  "
+             "For example, \\\\x81\\\\x2E is illegal in SJIS because \\\\x2E is not a valid trail byte for the \\\\x81 "
+             "lead byte. Also, starting with Unicode 3.0.1, non-shortest byte sequences in UTF-8 (like \\\\xC1\\\\xA1 "
+             "instead of \\\\x61 for U+0061) are also illegal, not just irregular. The error code "
+             "*U_ILLEGAL_CHAR_FOUND* will be set.")
+      .value("UCNV_IRREGULAR", UCNV_IRREGULAR,
+             "The codepoint is not a regular sequence in the encoding.\n\n  "
+             "For example, \\\\xED\\\\xA0\\\\x80..\\\\xED\\\\xBF\\\\xBF are irregular UTF-8 byte sequences for single "
+             "surrogate code points. The error code *U_INVALID_CHAR_FOUND* will be set.")
+      .value("UCNV_RESET", UCNV_RESET,
+             "The callback is called with this reason when a 'reset' has occurred.\n\n  "
+             "Callback should reset all state.")
+      .value("UCNV_CLOSE", UCNV_CLOSE,
+             "Called when the converter is closed.\n\n  "
+             "The callback should release any allocated memory.")
+      .value("UCNV_CLONE", UCNV_CLONE,
+             "Called when *ucnv_safe_clone()* is called on the converter.\n\n  "
+             "the pointer available as the 'context' is an alias to the original converters' context pointer. If the "
+             "context must be owned by the new converter, the callback must clone the data and call "
+             "*ucnv_set_from_ucall_back* (or *set_to_ucall_back*) with the correct pointer.")
       .export_values();
 
   py::class_<_UConverterFromUCallbackPtr>(m, "UConverterFromUCallbackPtr")

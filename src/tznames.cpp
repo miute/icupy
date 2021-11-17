@@ -9,16 +9,19 @@ using namespace icu;
 
 void init_tznames(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
-  py::enum_<UTimeZoneNameType>(m, "UTimeZoneNameType", py::arithmetic())
-      .value("UTZNM_UNKNOWN", UTZNM_UNKNOWN)
-      .value("UTZNM_LONG_GENERIC", UTZNM_LONG_GENERIC)
-      .value("UTZNM_LONG_STANDARD", UTZNM_LONG_STANDARD)
-      .value("UTZNM_LONG_DAYLIGHT", UTZNM_LONG_DAYLIGHT)
-      .value("UTZNM_SHORT_GENERIC", UTZNM_SHORT_GENERIC)
-      .value("UTZNM_SHORT_STANDARD", UTZNM_SHORT_STANDARD)
-      .value("UTZNM_SHORT_DAYLIGHT", UTZNM_SHORT_DAYLIGHT)
+  py::enum_<UTimeZoneNameType>(m, "UTimeZoneNameType", py::arithmetic(), "Constants for time zone display name types.")
+      .value("UTZNM_UNKNOWN", UTZNM_UNKNOWN, "Unknown display name type.")
+      .value("UTZNM_LONG_GENERIC", UTZNM_LONG_GENERIC, "Long display name, such as \"Eastern Time\".")
+      .value("UTZNM_LONG_STANDARD", UTZNM_LONG_STANDARD,
+             "Long display name for standard time, such as \"Eastern Standard Time\".")
+      .value("UTZNM_LONG_DAYLIGHT", UTZNM_LONG_DAYLIGHT,
+             "Long display name for daylight saving time, such as \"Eastern Daylight Time\".")
+      .value("UTZNM_SHORT_GENERIC", UTZNM_SHORT_GENERIC, "Short display name, such as \"ET\".")
+      .value("UTZNM_SHORT_STANDARD", UTZNM_SHORT_STANDARD, "Short display name for standard time, such as \"EST\".")
+      .value("UTZNM_SHORT_DAYLIGHT", UTZNM_SHORT_DAYLIGHT,
+             "Short display name for daylight saving time, such as \"EDT\".")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("UTZNM_EXEMPLAR_LOCATION", UTZNM_EXEMPLAR_LOCATION)
+      .value("UTZNM_EXEMPLAR_LOCATION", UTZNM_EXEMPLAR_LOCATION, "Exemplar location name, such as \"Los Angeles\".")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 

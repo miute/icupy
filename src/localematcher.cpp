@@ -11,21 +11,51 @@ using Result = LocaleMatcher::Result;
 
 void init_localematcher(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
-  py::enum_<ULocMatchDemotion>(m, "ULocMatchDemotion", py::arithmetic())
-      .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE)
-      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION)
+  py::enum_<ULocMatchDemotion>(
+      m, "ULocMatchDemotion", py::arithmetic(),
+      "*Builder* option for whether all desired locales are treated equally or earlier ones are preferred.")
+      .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE, "All desired locales are treated equally.")
+      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION,
+             "Earlier desired locales are preferred. From each desired locale to the next, the distance to any "
+             "supported locale is increased by an additional amount which is at least as large as most region "
+             "mismatches. A later desired locale has to have a better match with some supported locale due to more "
+             "than merely having the same region subtag.\n\n  "
+             "For example: *Supported={en, sv} desired=[en-GB, sv]* yields *Result(en-GB, en)* because with the "
+             "demotion of sv its perfect match is no better than the region distance between the earlier desired "
+             "locale en-GB and en=en-US.\n\n  "
+             "Notes:\n\n  "
+             "* In some cases, language and/or script differences can be as small as the typical region difference. "
+             "(Example: sr-Latn vs. sr-Cyrl)\n  "
+             "* It is possible for certain region differences to be larger than usual, and larger than the demotion. "
+             "(As of CLDR 35 there is no such case, but this is possible in future versions of the data.)")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
-  py::enum_<ULocMatchDirection>(m, "ULocMatchDirection", py::arithmetic())
-      .value("ULOCMATCH_DIRECTION_WITH_ONE_WAY", ULOCMATCH_DIRECTION_WITH_ONE_WAY)
-      .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY", ULOCMATCH_DIRECTION_ONLY_TWO_WAY)
+  py::enum_<ULocMatchDirection>(
+      m, "ULocMatchDirection", py::arithmetic(),
+      "*Builder* option for whether to include or ignore one-way (fallback) match data.\n\n"
+      "The *LocaleMatcher* uses CLDR languageMatch data which includes fallback (oneway=true) entries. Sometimes it is "
+      "desirable to ignore those.\n\n"
+      "For example, consider a web application with the UI in a given language, with a link to another, related web "
+      "app. The link should include the UI language, and the target server may also use the client’s Accept-Language "
+      "header data. The target server has its own list of supported languages. One may want to favor UI language "
+      "consistency, that is, if there is a decent match for the original UI language, we want to use it, but not if it "
+      "is merely a fallback.")
+      .value("ULOCMATCH_DIRECTION_WITH_ONE_WAY", ULOCMATCH_DIRECTION_WITH_ONE_WAY,
+             "Locale matching includes one-way matches such as Breton→French. (default)")
+      .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY", ULOCMATCH_DIRECTION_ONLY_TWO_WAY,
+             "Locale matching limited to two-way matches including e.g. Danish↔Norwegian but ignoring one-way matches.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
-  py::enum_<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag", py::arithmetic())
-      .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE)
-      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT)
+  py::enum_<ULocMatchFavorSubtag>(
+      m, "ULocMatchFavorSubtag", py::arithmetic(),
+      "*Builder* option for whether the language subtag or the script subtag is most important.")
+      .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE,
+             "Language differences are most important, then script differences, then region differences. (This is the "
+             "default behavior.)")
+      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT,
+             "Makes script differences matter relatively more than language differences.")
       .export_values();
 
   // icu::LocaleMatcher

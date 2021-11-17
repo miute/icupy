@@ -2,31 +2,32 @@
 #include <unicode/utmscale.h>
 
 void init_utmscale(py::module &m) {
-  py::enum_<UDateTimeScale>(m, "UDateTimeScale", py::arithmetic(),
-                            "UDateTimeScale values are used to specify the time scale used for conversion into or out "
-                            "if the universal time scale.")
+  py::enum_<UDateTimeScale>(
+      m, "UDateTimeScale", py::arithmetic(),
+      "*UDateTimeScale* values are used to specify the time scale used for conversion into or out "
+      "if the universal time scale.")
       .value("UDTS_JAVA_TIME", UDTS_JAVA_TIME,
-             "Used in the JDK. Data is a Java long (int64_t). Value is milliseconds since January 1, 1970.")
+             "Used in the JDK. Data is a Java *long* (*int64_t*). Value is milliseconds since January 1, 1970.")
       .value("UDTS_UNIX_TIME", UDTS_UNIX_TIME,
-             "Used on Unix systems. Data is int32_t or int64_t. Value is seconds since January 1, 1970.")
+             "Used on Unix systems. Data is *int32_t* or *int64_t*. Value is seconds since January 1, 1970.")
       .value("UDTS_ICU4C_TIME", UDTS_ICU4C_TIME,
-             "Used in IUC4C. Data is a double. Value is milliseconds since January 1, 1970.")
+             "Used in IUC4C. Data is a *double*. Value is milliseconds since January 1, 1970.")
       .value("UDTS_WINDOWS_FILE_TIME", UDTS_WINDOWS_FILE_TIME,
-             "Used in Windows for file times. Data is an int64_t. Value is ticks (1 tick == 100 nanoseconds) since "
+             "Used in Windows for file times. Data is an *int64_t*. Value is ticks (1 tick == 100 nanoseconds) since "
              "January 1, 1601.")
       .value("UDTS_DOTNET_DATE_TIME", UDTS_DOTNET_DATE_TIME,
-             "Used in the .NET framework's System.DateTime structure. Data is an int64_t. Value is ticks (1 tick == "
-             "100 nanoseconds) since January 1, 0001.")
+             "Used in the .NET framework's *System.DateTime* structure. Data is an *int64_t*. Value is ticks "
+             "(1 tick == 100 nanoseconds) since January 1, 0001.")
       .value("UDTS_MAC_OLD_TIME", UDTS_MAC_OLD_TIME,
-             "Used in older Macintosh systems. Data is int32_t or int64_t. Value is seconds since January 1, 1904.")
+             "Used in older Macintosh systems. Data is *int32_t* or *int64_t*. Value is seconds since January 1, 1904.")
       .value("UDTS_MAC_TIME", UDTS_MAC_TIME,
-             "Used in newer Macintosh systems. Data is a double. Value is seconds since January 1, 2001.")
+             "Used in newer Macintosh systems. Data is a *double*. Value is seconds since January 1, 2001.")
       .value("UDTS_EXCEL_TIME", UDTS_EXCEL_TIME,
-             "Used in Excel. Data is an ?unknown?. Value is days since December 31, 1899.")
+             "Used in Excel. Data is an *?unknown?*. Value is days since December 31, 1899.")
       .value("UDTS_DB2_TIME", UDTS_DB2_TIME,
-             "Used in DB2. Data is an ?unknown?. Value is days since December 31, 1899.")
+             "Used in DB2. Data is an *?unknown?*. Value is days since December 31, 1899.")
       .value("UDTS_UNIX_MICROSECONDS_TIME", UDTS_UNIX_MICROSECONDS_TIME,
-             "Data is a long. Value is microseconds since January 1, 1970. Similar to Unix time (linear value from "
+             "Data is a *long*. Value is microseconds since January 1, 1970. Similar to Unix time (linear value from "
              "1970) and struct timeval (microseconds resolution).")
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDTS_MAX_SCALE", UDTS_MAX_SCALE,
@@ -36,7 +37,7 @@ void init_utmscale(py::module &m) {
 
   py::enum_<UTimeScaleValue>(
       m, "UTimeScaleValue", py::arithmetic(),
-      "UTimeScaleValue values are used to specify the time scale values to utmscale_get_time_scale_value.")
+      "*UTimeScaleValue* values are used to specify the time scale values to *utmscale_get_time_scale_value*.")
       .value("UTSV_UNITS_VALUE", UTSV_UNITS_VALUE, "The constant used to select the units vale for a time scale.")
       .value("UTSV_EPOCH_OFFSET_VALUE", UTSV_EPOCH_OFFSET_VALUE,
              "The constant used to select the epoch offset value for a time scale.")

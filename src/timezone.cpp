@@ -27,15 +27,19 @@ void init_timezone(py::module &m) {
   py::class_<VTimeZone, BasicTimeZone> vtz(m, "VTimeZone");
 
   // icu::TimeZone
-  py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic())
-      .value("SHORT", TimeZone::EDisplayType::SHORT)
-      .value("LONG", TimeZone::EDisplayType::LONG)
-      .value("SHORT_GENERIC", TimeZone::EDisplayType::SHORT_GENERIC)
-      .value("LONG_GENERIC", TimeZone::EDisplayType::LONG_GENERIC)
-      .value("SHORT_GMT", TimeZone::EDisplayType::SHORT_GMT)
-      .value("LONG_GMT", TimeZone::EDisplayType::LONG_GMT)
-      .value("SHORT_COMMONLY_USED", TimeZone::EDisplayType::SHORT_COMMONLY_USED)
-      .value("GENERIC_LOCATION", TimeZone::EDisplayType::GENERIC_LOCATION)
+  py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic(), "Enum for use with *get_display_name*.")
+      .value("SHORT", TimeZone::EDisplayType::SHORT, "Selector for short display name.")
+      .value("LONG", TimeZone::EDisplayType::LONG, "Selector for long display name.")
+      .value("SHORT_GENERIC", TimeZone::EDisplayType::SHORT_GENERIC, "Selector for short generic display name.")
+      .value("LONG_GENERIC", TimeZone::EDisplayType::LONG_GENERIC, "Selector for long generic display name.")
+      .value("SHORT_GMT", TimeZone::EDisplayType::SHORT_GMT,
+             "Selector for short display name derived from time zone offset.")
+      .value("LONG_GMT", TimeZone::EDisplayType::LONG_GMT,
+             "Selector for long display name derived from time zone offset.")
+      .value("SHORT_COMMONLY_USED", TimeZone::EDisplayType::SHORT_COMMONLY_USED,
+             "Selector for short display name derived from the time zone's fallback name.")
+      .value("GENERIC_LOCATION", TimeZone::EDisplayType::GENERIC_LOCATION,
+             "Selector for long display name derived from the time zone's fallback name.")
       .export_values();
 
   tz.def("__copy__", &TimeZone::clone)
@@ -511,7 +515,13 @@ void init_timezone(py::module &m) {
   rbtz.def("use_daylight_time", &RuleBasedTimeZone::useDaylightTime);
 
   // icu::SimpleTimeZone
-  py::enum_<SimpleTimeZone::TimeMode>(stz, "TimeMode", py::arithmetic())
+  py::enum_<SimpleTimeZone::TimeMode>(
+      stz, "TimeMode", py::arithmetic(),
+      "*TimeMode* is used, together with a millisecond offset after midnight, to specify a rule transition time.\n\n"
+      "Most rules transition at a local wall time, that is, according to the current time in effect, either standard, "
+      "or DST. However, some rules transition at local standard time, and some at a specific UTC time. Although it "
+      "might seem that all times could be converted to wall time, thus eliminating the need for this parameter, this "
+      "is not the case.")
       .value("WALL_TIME", SimpleTimeZone::TimeMode::WALL_TIME)
       .value("STANDARD_TIME", SimpleTimeZone::TimeMode::STANDARD_TIME)
       .value("UTC_TIME", SimpleTimeZone::TimeMode::UTC_TIME)

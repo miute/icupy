@@ -9,7 +9,7 @@ using namespace icu;
 
 void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic())
+  py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic(), "Represents an absolute unit.")
       .value("UDAT_ABSOLUTE_SUNDAY", UDAT_ABSOLUTE_SUNDAY, "Sunday.")
       .value("UDAT_ABSOLUTE_MONDAY", UDAT_ABSOLUTE_MONDAY, "Monday.")
       .value("UDAT_ABSOLUTE_TUESDAY", UDAT_ABSOLUTE_TUESDAY, "Tuesday.")
@@ -33,24 +33,31 @@ void init_reldatefmt(py::module &m) {
 
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_ABSOLUTE_UNIT_COUNT", UDAT_ABSOLUTE_UNIT_COUNT,
-             "Deprecated: ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
-  py::enum_<UDateDirection>(m, "UDateDirection", py::arithmetic())
-      .value("UDAT_DIRECTION_LAST_2", UDAT_DIRECTION_LAST_2, "Two before. Not fully supported in every locale.")
+  py::enum_<UDateDirection>(m, "UDateDirection", py::arithmetic(),
+                            "Represents a direction for an absolute unit e.g., \"Next Tuesday\" or \"Last Tuesday\".")
+      .value("UDAT_DIRECTION_LAST_2", UDAT_DIRECTION_LAST_2,
+             "Two before.\n\n  "
+             "Not fully supported in every locale.")
       .value("UDAT_DIRECTION_LAST", UDAT_DIRECTION_LAST, "Last.")
       .value("UDAT_DIRECTION_THIS", UDAT_DIRECTION_THIS, "This.")
       .value("UDAT_DIRECTION_NEXT", UDAT_DIRECTION_NEXT, "Next.")
-      .value("UDAT_DIRECTION_NEXT_2", UDAT_DIRECTION_NEXT_2, "Two after. Not fully supported in every locale.")
+      .value("UDAT_DIRECTION_NEXT_2", UDAT_DIRECTION_NEXT_2,
+             "Two after.\n\n  "
+             "Not fully supported in every locale.")
       .value("UDAT_DIRECTION_PLAIN", UDAT_DIRECTION_PLAIN, "Plain, which means the absence of a qualifier.")
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_DIRECTION_COUNT", UDAT_DIRECTION_COUNT,
-             "Deprecated: ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
-  py::enum_<UDateRelativeUnit>(m, "UDateRelativeUnit", py::arithmetic())
+  py::enum_<UDateRelativeUnit>(m, "UDateRelativeUnit", py::arithmetic(),
+                               "Represents the unit for formatting a relative date.\n\n"
+                               "e.g., \"in 5 days\" or \"in 3 months\"")
       .value("UDAT_RELATIVE_SECONDS", UDAT_RELATIVE_SECONDS, "Seconds.")
       .value("UDAT_RELATIVE_MINUTES", UDAT_RELATIVE_MINUTES, "Minutes.")
       .value("UDAT_RELATIVE_HOURS", UDAT_RELATIVE_HOURS, "Hours.")
@@ -60,7 +67,7 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_RELATIVE_YEARS", UDAT_RELATIVE_YEARS, "Years.")
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_RELATIVE_UNIT_COUNT", UDAT_RELATIVE_UNIT_COUNT,
-             "Deprecated: ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 

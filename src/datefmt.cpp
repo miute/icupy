@@ -9,7 +9,11 @@ void init_datefmt(py::module &m) {
   // icu::DateFormat
   py::class_<DateFormat, Format> df(m, "DateFormat");
 
-  py::enum_<DateFormat::EStyle>(df, "EStyle", py::arithmetic())
+  py::enum_<DateFormat::EStyle>(df, "EStyle", py::arithmetic(),
+                                "Constants for various style patterns.\n\n"
+                                "These reflect the order of items in the DateTimePatterns resource. There are 4 time "
+                                "patterns, 4 date patterns, the default date-time pattern, and 4 date-time patterns. "
+                                "Each block of 4 values in the resource occurs in the order full, long, medium, short.")
       .value("NONE", DateFormat::EStyle::kNone)
       .value("FULL", DateFormat::EStyle::kFull)
       .value("LONG", DateFormat::EStyle::kLong)

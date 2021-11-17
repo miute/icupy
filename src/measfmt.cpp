@@ -8,11 +8,17 @@ using namespace icu;
 
 void init_measfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  py::enum_<UMeasureFormatWidth>(m, "UMeasureFormatWidth", py::arithmetic())
-      .value("UMEASFMT_WIDTH_WIDE", UMEASFMT_WIDTH_WIDE)
-      .value("UMEASFMT_WIDTH_SHORT", UMEASFMT_WIDTH_SHORT)
-      .value("UMEASFMT_WIDTH_NARROW", UMEASFMT_WIDTH_NARROW)
-      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC)
+  py::enum_<UMeasureFormatWidth>(
+      m, "UMeasureFormatWidth", py::arithmetic(),
+      "Constants for various widths.\n\n"
+      "There are 4 widths: Wide, Short, Narrow, Numeric. For example, for English, when formatting \"3 hours\" Wide is "
+      "\"3 hours\"; short is \"3 hrs\"; narrow is \"3h\"; formatting \"3 hours 17 minutes\" as numeric give \"3:17\"")
+      .value("UMEASFMT_WIDTH_WIDE", UMEASFMT_WIDTH_WIDE, "Spell out measure units.")
+      .value("UMEASFMT_WIDTH_SHORT", UMEASFMT_WIDTH_SHORT, "Abbreviate measure units.")
+      .value("UMEASFMT_WIDTH_NARROW", UMEASFMT_WIDTH_NARROW, "Use symbols for measure units when possible.")
+      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC,
+             "Completely omit measure units when possible.\n\n  "
+             "For example, format '5 hours, 37 minutes' as '5:37'")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
