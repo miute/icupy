@@ -14,6 +14,7 @@ pybind11_add_module(
     ${PROJECT_NAME}
     alphaindex.cpp
     appendable.cpp
+    caniter.cpp
     char16ptr.cpp
     coleitr.cpp
     compactdecimalformat.cpp

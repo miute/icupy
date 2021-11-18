@@ -13,6 +13,7 @@ using namespace icu;
 
 void init_alphaindex(py::module &m);
 void init_appendable(py::module &m);
+void init_caniter(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_compactdecimalformat(py::module &m);
@@ -234,6 +235,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
 
+  init_caniter(m);       // icu::CanonicalIterator
   init_dtptngen(m);      // icu::DateTimePatternGenerator
   init_idna(m);          // icu::IDNA
   init_listformatter(m); // icu::ListFormatter
