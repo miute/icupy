@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     DateFormat, DateFormatSymbols, FieldPosition, FieldPositionIterator,
     Format, Formattable, GregorianCalendar, ICUError, Locale,
     ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
@@ -280,7 +280,7 @@ def test_format():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_get_context():
-    from icupy import UDisplayContext, UDisplayContextType
+    from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = SimpleDateFormat(
         "yyyy.MM.dd G 'at' HH:mm:ss z",

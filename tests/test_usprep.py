@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from icupy import (
+from icupy.icu import (
     ICUError, UErrorCode, UParseError, USPREP_ALLOW_UNASSIGNED,
     USPREP_DEFAULT, UStringPrepProfileType,
     u_unescape, usprep_close, usprep_open, usprep_open_by_type,

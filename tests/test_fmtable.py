@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Calendar, CurrencyAmount, DateInterval, Formattable, ICUError,
     INT32_MAX, TimeUnit, TimeUnitAmount, TimeZone, UErrorCode, UnicodeString,
 )
@@ -307,7 +307,7 @@ def test_formattable():
 
 
 def test_get_object_upcasting():
-    from icupy import BasicTimeZone, SimpleTimeZone
+    from icupy.icu import BasicTimeZone, SimpleTimeZone
 
     fmt = Formattable(TimeZone.get_gmt())
     zone = fmt.get_object()

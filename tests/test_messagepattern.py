@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     MessagePattern, UMSGPAT_NO_NUMERIC_VALUE, UMessagePatternApostropheMode,
     UMessagePatternArgType, UMessagePatternPartType, UParseError,
     UnicodeString,

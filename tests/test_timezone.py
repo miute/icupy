@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     AnnualTimeZoneRule, BasicTimeZone, DateTimeRule, GregorianCalendar,
     InitialTimeZoneRule, Locale, RuleBasedTimeZone, SimpleTimeZone,
     StringEnumeration, TimeZone, TimeZoneTransition, UCalendarDaysOfWeek,
@@ -107,7 +107,7 @@ def test_basic_time_zone():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_basic_time_zone_get_offset_from_local():
-    from icupy import UTimeZoneLocalOption
+    from icupy.icu import UTimeZoneLocalOption
 
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
@@ -457,7 +457,7 @@ def test_rule_based_time_zone_get_offset():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_rule_based_time_zone_get_offset_from_local():
-    from icupy import UTimeZoneLocalOption
+    from icupy.icu import UTimeZoneLocalOption
 
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
@@ -908,7 +908,7 @@ def test_simple_time_zone_get_offset():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_simple_time_zone_get_offset_from_local():
-    from icupy import UTimeZoneLocalOption
+    from icupy.icu import UTimeZoneLocalOption
 
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
@@ -1908,7 +1908,7 @@ def test_vtime_zone_get_offset():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_vtime_zone_get_offset_from_local():
-    from icupy import UTimeZoneLocalOption
+    from icupy.icu import UTimeZoneLocalOption
 
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()

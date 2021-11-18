@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     FilteredNormalizer2, Normalizer2, UNormalization2Mode,
     UNormalizationCheckResult, US_INV, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
     UnicodeString,

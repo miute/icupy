@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     CollationKey, Collator, Locale, UCollationResult, UColAttribute,
     UColAttributeValue, UnicodeString
 )

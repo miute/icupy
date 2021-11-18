@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Calendar, DateFormat, FieldPosition, FieldPositionIterator,
     Format, Formattable, GregorianCalendar, ICUError, Locale, NumberFormat,
     ParsePosition, TimeZone, UDateFormatField, UErrorCode,
@@ -385,7 +385,7 @@ def test_format():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_get_boolean_attribute():
-    from icupy import UDateFormatBooleanAttribute
+    from icupy.icu import UDateFormatBooleanAttribute
 
     fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
@@ -415,7 +415,7 @@ def test_get_boolean_attribute():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_get_context():
-    from icupy import UDisplayContext, UDisplayContextType
+    from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = DateFormat.create_date_time_instance(
         DateFormat.MEDIUM,
@@ -440,7 +440,7 @@ def test_get_context():
 
 
 def test_get_time_zone_upcasting():
-    from icupy import BasicTimeZone, SimpleTimeZone
+    from icupy.icu import BasicTimeZone, SimpleTimeZone
 
     fmt = DateFormat.create_date_time_instance()
 

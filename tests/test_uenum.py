@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     Locale, U_ICU_VERSION_MAJOR_NUM,
     uenum_close, uenum_count, uenum_next, uenum_open_char_strings_enumeration,
     uenum_open_from_string_enumeration, uenum_open_uchar_strings_enumeration,

@@ -1,13 +1,13 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 62:
     pytest.skip("ICU4C<62", allow_module_level=True)
 
 import copy
 
-from icupy import CurrencyUnit, Locale, MeasureUnit
-from icupy.number import NumberFormatter
+from icupy.icu import CurrencyUnit, Locale, MeasureUnit
+from icupy.icu.number import NumberFormatter
 
 
 def test_api():

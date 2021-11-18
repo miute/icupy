@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     DecimalFormat, FieldPosition, FieldPositionIterator, Formattable,
     ICUError, Locale, MessageFormat, ParsePosition, SimpleDateFormat,
     StringEnumeration, TimeZone, UErrorCode, UMessagePatternApostropheMode,
@@ -574,7 +574,7 @@ def test_set_format():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_set_format_62():
-    from icupy.number import NumberFormatter
+    from icupy.icu.number import NumberFormatter
 
     fmt = MessageFormat("{0,number,currency}", Locale.get_us())
     obj = Formattable([

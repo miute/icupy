@@ -2,7 +2,7 @@ import copy
 from functools import cmp_to_key
 
 import pytest
-from icupy import (
+from icupy.icu import (
     CollationElementIterator, CollationKey, Collator, Locale,
     RuleBasedCollator, StringCharacterIterator, StringEnumeration,
     UColAttribute, UColAttributeValue, UColBoundMode, UColReorderCode,

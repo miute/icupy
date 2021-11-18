@@ -2,7 +2,7 @@ import copy
 from pathlib import Path
 
 import pytest
-from icupy import (
+from icupy.icu import (
     ICUError, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
     UnicodeString, UResType,
     ures_close, ures_open, ures_open_direct,

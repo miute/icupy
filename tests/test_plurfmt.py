@@ -1,12 +1,12 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
 import copy
 
-from icupy import (
+from icupy.icu import (
     FieldPosition, FieldPositionIterator, Formattable, ICUError, Locale,
     NumberFormat, ParsePosition, PluralFormat, PluralRules, UErrorCode,
     UPluralType, UnicodeString,

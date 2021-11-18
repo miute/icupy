@@ -1,12 +1,12 @@
 import copy
 
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
     Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames,
     UErrorCode, UTimeZoneFormatGMTOffsetPatternType,
@@ -501,7 +501,7 @@ def test_parse():
 
 
 def test_parse_upcasting():
-    from icupy import BasicTimeZone, SimpleTimeZone
+    from icupy.icu import BasicTimeZone, SimpleTimeZone
 
     fmt = TimeZoneFormat.create_instance("en")
 

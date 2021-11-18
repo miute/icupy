@@ -1,10 +1,10 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     DecimalFormat, Locale, NumberFormat, RelativeDateTimeFormatter,
     UDateAbsoluteUnit, UDateDirection, UDateRelativeUnit, UnicodeString,
 )
@@ -62,7 +62,7 @@ def test_api():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_api_54():
-    from icupy import UDateRelativeDateTimeFormatterStyle, UDisplayContext
+    from icupy.icu import UDateRelativeDateTimeFormatterStyle, UDisplayContext
 
     fmt = RelativeDateTimeFormatter(
         "en",
@@ -134,7 +134,7 @@ def test_format():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
 def test_format_57():
-    from icupy import URelativeDateTimeUnit
+    from icupy.icu import URelativeDateTimeUnit
 
     fmt = RelativeDateTimeFormatter("en")
 
@@ -166,7 +166,7 @@ def test_format_57():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
 def test_format_numeric():
-    from icupy import URelativeDateTimeUnit
+    from icupy.icu import URelativeDateTimeUnit
 
     fmt = RelativeDateTimeFormatter("en-US")
 
@@ -197,7 +197,7 @@ def test_format_numeric():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_numeric_to_value():
-    from icupy import (
+    from icupy.icu import (
         ConstrainedFieldPosition, FormattedRelativeDateTime,
         FormattedValue, UFieldCategory, UNumberFormatFields,
         URelativeDateTimeFormatterField, URelativeDateTimeUnit,
@@ -296,7 +296,7 @@ def test_format_numeric_to_value():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_to_value():
-    from icupy import FormattedRelativeDateTime, URelativeDateTimeUnit
+    from icupy.icu import FormattedRelativeDateTime, URelativeDateTimeUnit
 
     fmt = RelativeDateTimeFormatter("en-US")
 
@@ -383,7 +383,7 @@ def test_relative_date_time_formatter():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_relative_date_time_formatter_54():
-    from icupy import UDateRelativeDateTimeFormatterStyle, UDisplayContext
+    from icupy.icu import UDateRelativeDateTimeFormatterStyle, UDisplayContext
 
     # [4]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(

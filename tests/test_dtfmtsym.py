@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     DateFormatSymbols, Locale, ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM,
     UnicodeString,
 )

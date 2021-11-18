@@ -1,6 +1,5 @@
 import pytest
-
-from icupy import (
+from icupy.icu import (
     ICUError, UErrorCode, UnicodeString, UScriptCode, UScriptUsage,
     uscript_breaks_between_letters, uscript_get_code, uscript_get_name,
     uscript_get_sample_string, uscript_get_sample_unicode_string,

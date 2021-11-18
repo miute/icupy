@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     BreakIterator, Collator, ICUError, Locale, RuleBasedCollator,
     SearchIterator, StringCharacterIterator, StringSearch, UErrorCode,
     USEARCH_DONE, USearchAttribute, USearchAttributeValue, UnicodeString,

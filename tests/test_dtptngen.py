@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     DateTimePatternGenerator, Locale, StringEnumeration,
     UDateTimePatternConflict, UDateTimePatternField,
     UDateTimePatternMatchOptions, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
@@ -334,7 +334,7 @@ def test_create_instance():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_get_default_hour_cycle():
-    from icupy import UDateFormatHourCycle
+    from icupy.icu import UDateFormatHourCycle
 
     gen = DateTimePatternGenerator.create_instance(Locale("en_US"))
 
@@ -347,7 +347,7 @@ def test_get_default_hour_cycle():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
 def test_get_field_display_name():
-    from icupy import UDateTimePGDisplayWidth
+    from icupy.icu import UDateTimePGDisplayWidth
 
     gen = DateTimePatternGenerator.create_instance(Locale("en_US"))
 

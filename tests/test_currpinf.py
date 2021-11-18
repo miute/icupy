@@ -1,6 +1,6 @@
 import copy
 
-from icupy import (
+from icupy.icu import (
     CurrencyPluralInfo, Locale, PluralRules, UnicodeString,
 )
 

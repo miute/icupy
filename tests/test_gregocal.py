@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Calendar, GregorianCalendar, Locale, SimpleTimeZone, StringEnumeration,
     TimeZone, UCalendarDateFields, UCalendarDaysOfWeek, UCalendarMonths,
     UCalendarWallTimeOption, UCalendarWeekdayType, ULocDataLocaleType,
@@ -438,7 +438,7 @@ def test_get_skipped_wall_time_option():
 
 
 def test_get_time_zone_upcasting():
-    from icupy import BasicTimeZone
+    from icupy.icu import BasicTimeZone
 
     cal = Calendar.create_instance()
 

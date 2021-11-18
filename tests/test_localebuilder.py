@@ -1,10 +1,10 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 64:
     pytest.skip("ICU4C<64", allow_module_level=True)
 
-from icupy import ErrorCode, ICUError, Locale, LocaleBuilder, UErrorCode
+from icupy.icu import ErrorCode, ICUError, Locale, LocaleBuilder, UErrorCode
 
 
 def test_api():

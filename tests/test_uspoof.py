@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from icupy import (
+from icupy.icu import (
     UParseError, USpoofChecks, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
     UnicodeString,
     uspoof_are_confusable, uspoof_are_confusable_unicode_string,
@@ -220,7 +220,7 @@ def test_api():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy import (
+    from icupy.icu import (
         URestrictionLevel,
         uspoof_get_inclusion_set, uspoof_get_inclusion_unicode_set,
         uspoof_get_recommended_set, uspoof_get_recommended_unicode_set,
@@ -267,7 +267,7 @@ def test_api_51():
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
 def test_api_58():
     # From icu/source/test/intltest/itspoof.cpp
-    from icupy import (
+    from icupy.icu import (
         URestrictionLevel,
         uspoof_check2, uspoof_check2_unicode_string, uspoof_check2_utf8,
         uspoof_close_check_result, uspoof_get_check_result_checks,

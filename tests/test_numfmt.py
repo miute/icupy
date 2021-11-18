@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     DecimalFormat, Format, Locale, NumberFormat, UNumberFormatStyle,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )

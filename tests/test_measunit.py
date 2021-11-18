@@ -1,15 +1,15 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 62:
     pytest.skip("ICU4C<62", allow_module_level=True)
 
 import copy
 
-from icupy import (
+from icupy.icu import (
     ICUError, Locale, MeasureUnit, StringEnumeration, UErrorCode,
 )
-from icupy.number import NumberFormatter
+from icupy.icu.number import NumberFormatter
 
 
 def test_api():
@@ -102,7 +102,7 @@ def test_for_identifier():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_get_complexity():
-    from icupy import UMeasureUnitComplexity
+    from icupy.icu import UMeasureUnitComplexity
 
     # UMeasureUnitComplexity icu::MeasureUnit::getComplexity(
     #       UErrorCode &status
@@ -132,7 +132,7 @@ def test_get_dimensionality():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_get_prefix():
-    from icupy import UMeasurePrefix
+    from icupy.icu import UMeasurePrefix
 
     # UMeasurePrefix icu::MeasureUnit::getPrefix(UErrorCode &status)
     unit = MeasureUnit.get_kilometer()
@@ -1761,7 +1761,7 @@ def test_with_dimensionality():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_with_prefix():
-    from icupy import UMeasurePrefix
+    from icupy.icu import UMeasurePrefix
 
     unit = MeasureUnit.create_byte()
 

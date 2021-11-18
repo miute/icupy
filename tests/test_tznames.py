@@ -1,12 +1,12 @@
 import copy
 
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     Locale, StringEnumeration, TimeZoneNames, UTimeZoneNameType,
     UnicodeString,
 )

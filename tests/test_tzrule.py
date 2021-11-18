@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     AnnualTimeZoneRule, DateTimeRule, InitialTimeZoneRule,
     TimeArrayTimeZoneRule, TimeZoneRule, TimeZoneTransition,
     UCalendarDaysOfWeek, UCalendarMonths, U_MILLIS_PER_HOUR as HOUR,

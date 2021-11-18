@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     FieldPosition, FieldPositionIterator, Formattable, ICUError,
     INT32_MAX, INT64_MAX, Locale, NumberFormat, ParsePosition,
     RuleBasedNumberFormat, UErrorCode, UParseError, URBNFRuleSetTag,
@@ -86,7 +86,7 @@ def test_api():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_api_49():
-    from icupy import DecimalFormatSymbols
+    from icupy.icu import DecimalFormatSymbols
 
     fmt = RuleBasedNumberFormat(
         URBNFRuleSetTag.URBNF_ORDINAL,
@@ -107,7 +107,7 @@ def test_api_49():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_api_53():
-    from icupy import UDisplayContext, UDisplayContextType
+    from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = RuleBasedNumberFormat(
         URBNFRuleSetTag.URBNF_SPELLOUT,

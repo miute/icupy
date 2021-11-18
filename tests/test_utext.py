@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     ICUError, StringCharacterIterator, UErrorCode, UTextVector,
     U_SENTINEL, UnicodeString,
     utext_char32_at, utext_clone, utext_close, utext_copy, utext_current32,

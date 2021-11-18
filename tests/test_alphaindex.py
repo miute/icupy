@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     AlphabeticIndex, ConstVoidPtr, Locale, RuleBasedCollator,
     UAlphabeticIndexLabelType, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
     UnicodeString,
@@ -268,7 +268,7 @@ def test_api():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy import Collator
+    from icupy.icu import Collator
 
     # [2]
     # icu::AlphabeticIndex::AlphabeticIndex(

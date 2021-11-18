@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Calendar, DateFormat, DateInterval, DateIntervalFormat, DateIntervalInfo,
     FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
     Locale, TimeZone, UCalendarDateFields, UErrorCode,
@@ -406,7 +406,7 @@ def test_format():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_to_value():
-    from icupy import FormattedDateInterval
+    from icupy.icu import FormattedDateInterval
 
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
     to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
@@ -442,7 +442,7 @@ def test_format_to_value():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_date_interval():
-    from icupy import (
+    from icupy.icu import (
         ConstrainedFieldPosition, FormattedDateInterval, UDateFormatField,
         UFieldCategory, UnicodeStringAppendable,
     )
@@ -517,7 +517,7 @@ def test_formatted_date_interval():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_get_context():
-    from icupy import UDisplayContext, UDisplayContextType
+    from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = DateIntervalFormat.create_instance("yMMMd", Locale.get_english())
 
@@ -539,7 +539,7 @@ def test_get_context():
 
 
 def test_get_time_zone_upcasting():
-    from icupy import BasicTimeZone, SimpleTimeZone
+    from icupy.icu import BasicTimeZone, SimpleTimeZone
 
     fmt = DateIntervalFormat.create_instance("yMMMd")
 

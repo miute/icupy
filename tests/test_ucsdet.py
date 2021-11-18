@@ -1,6 +1,6 @@
 from functools import partial
 
-from icupy import (
+from icupy.icu import (
     ucsdet_close, ucsdet_detect, ucsdet_detect_all,
     ucsdet_enable_input_filter, ucsdet_get_all_detectable_charsets,
     ucsdet_get_confidence, ucsdet_get_language, ucsdet_get_name,

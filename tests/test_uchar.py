@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     ConstVoidPtr,
     ICUError, UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
     UCPMapRangeOption, UCPMapValueFilterPtr,

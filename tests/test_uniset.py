@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     ICUError, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
     UProperty, USET_IGNORE_SPACE, USetSpanCondition, U_ICU_VERSION_MAJOR_NUM,
     UnicodeSet, UnicodeString,

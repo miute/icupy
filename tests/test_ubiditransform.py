@@ -1,10 +1,10 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 58:
     pytest.skip("ICU4C<58", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     UBIDI_LTR, UBIDI_MIRRORING_OFF, UBIDI_MIRRORING_ON, UBiDiOrder,
     U_SHAPE_DIGITS_ALEN2AN_INIT_LR, U_SHAPE_LETTERS_UNSHAPE,
     u_shape_arabic, u_unescape, ubiditransform_close, ubiditransform_open,

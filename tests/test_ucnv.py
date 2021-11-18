@@ -2,7 +2,7 @@ from functools import partial
 from pathlib import Path
 
 import pytest
-from icupy import (
+from icupy.icu import (
     ConstVoidPtr, ICUError, Locale, UErrorCode, UnicodeSet, UnicodeString,
     u_strlen,
     # ucnv

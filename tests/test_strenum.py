@@ -1,6 +1,6 @@
 import copy
 
-from icupy import Locale, UnicodeString, StringEnumeration
+from icupy.icu import Locale, UnicodeString, StringEnumeration
 
 
 def test_clone():

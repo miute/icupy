@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     CharacterIterator, ForwardCharacterIterator, StringCharacterIterator,
     UCharCharacterIterator, UnicodeString,
 )

@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     RegexMatcher, RegexPattern, UParseError, URegexpFlag, UTextVector,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString, UnicodeStringVector,
     utext_close, utext_extract, utext_native_length,

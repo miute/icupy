@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Appendable, ICUError, INT32_MAX, Locale, U_ICU_VERSION_MAJOR_NUM,
     UErrorCode, UnicodeString, UnicodeStringAppendable, UnicodeStringVector,
     US_INV, u_unescape, ucnv_close, ucnv_open,

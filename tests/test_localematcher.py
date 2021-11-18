@@ -1,10 +1,10 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 65:
     pytest.skip("ICU4C<65", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     ErrorCode, Locale, LocaleMatcher, UErrorCode, ULocMatchDemotion,
     ULocMatchFavorSubtag,
 )
@@ -99,7 +99,7 @@ def test_builder():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_builder_set_direction():
-    from icupy import ULocMatchDirection
+    from icupy.icu import ULocMatchDirection
 
     # Builder &icu::LocaleMatcher::Builder::setDirection(
     #       ULocMatchDirection direction

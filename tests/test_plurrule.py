@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     Locale, PluralRules, StringEnumeration, U_ICU_VERSION_MAJOR_NUM,
     UnicodeString,
 )
@@ -94,7 +94,7 @@ def test_for_locale():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
 def test_for_locale_50():
-    from icupy import UPluralType
+    from icupy.icu import UPluralType
 
     # [2]
     # static PluralRules *icu::PluralRules::forLocale(
@@ -159,7 +159,7 @@ def test_select():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_select_64():
-    from icupy.number import NumberFormatter
+    from icupy.icu.number import NumberFormatter
 
     rules = PluralRules.create_rules("a: n not in 0..100;")
     fmt = NumberFormatter.with_locale("en")
@@ -178,8 +178,8 @@ def test_select_64():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_select_68():
-    from icupy import Formattable
-    from icupy.number import NumberFormatter, NumberRangeFormatter
+    from icupy.icu import Formattable
+    from icupy.icu.number import NumberFormatter, NumberRangeFormatter
 
     rules = PluralRules.for_locale("fr")
     fmt = (NumberRangeFormatter.with_locale("fr")

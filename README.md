@@ -53,7 +53,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
 - icu::UnicodeString with error callback
 
     ```python
-    >>> import icupy as icu
+    >>> import icupy.icu as icu
     >>> cnv = icu.ucnv_open("utf-8")
     >>> action = icu.UCNV_TO_U_CALLBACK_ESCAPE
     >>> context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
@@ -67,7 +67,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
 - icu::IDNA (UTS #46)
 
     ```python
-    >>> import icupy as icu
+    >>> import icupy.icu as icu
     >>> uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_NONTRANSITIONAL_TO_ASCII)
     >>> dest = icu.UnicodeString()
     >>> info = icu.IDNAInfo()

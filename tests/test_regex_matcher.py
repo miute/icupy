@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     ConstVoidPtr, ICUError, RegexMatcher, RegexPattern, UErrorCode,
     URegexFindProgressCallbackPtr, URegexMatchCallbackPtr, URegexpFlag,
     UTextVector, UnicodeString, UnicodeStringVector,

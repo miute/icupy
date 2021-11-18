@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     UDateTimeScale, UTimeScaleValue,
     utmscale_from_int64, utmscale_get_time_scale_value, utmscale_to_int64,
 )

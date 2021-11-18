@@ -1,5 +1,5 @@
 import pytest
-from icupy import (
+from icupy.icu import (
     ErrorCode, ICUError, UErrorCode, U_ICU_VERSION_MAJOR_NUM,
     u_failure, u_get_version, u_success, u_version_from_string,
     u_version_to_string,
@@ -31,7 +31,7 @@ def test_icu_error():
     assert error_code == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     if U_ICU_VERSION_MAJOR_NUM >= 63:
-        from icupy import Locale
+        from icupy.icu import Locale
 
         with pytest.raises(ICUError) as exc_info:
             _ = Locale.for_language_tag("x")
@@ -74,7 +74,7 @@ def test_icu_exception():
     assert error_code == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     if U_ICU_VERSION_MAJOR_NUM >= 63:
-        from icupy import Locale
+        from icupy.icu import Locale
 
         with pytest.raises(ICUException) as exc_info:
             _ = Locale.for_language_tag("x")

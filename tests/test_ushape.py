@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     U_SHAPE_DIGITS_AN2EN, U_SHAPE_DIGITS_EN2AN,
     U_SHAPE_DIGIT_TYPE_AN, U_SHAPE_DIGIT_TYPE_AN_EXTENDED,
     u_shape_arabic,

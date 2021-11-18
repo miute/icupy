@@ -1,10 +1,10 @@
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
-from icupy import ListFormatter, Locale, UnicodeString
+from icupy.icu import ListFormatter, Locale, UnicodeString
 
 
 def test_api():
@@ -58,7 +58,7 @@ def test_create_instance():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_create_instance_67():
-    from icupy import UListFormatterType, UListFormatterWidth
+    from icupy.icu import UListFormatterType, UListFormatterWidth
 
     # [2]
     # static ListFormatter *icu::ListFormatter::createInstance(
@@ -82,7 +82,7 @@ def test_create_instance_67():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_strings_to_value():
-    from icupy import (
+    from icupy.icu import (
         ConstrainedFieldPosition, FormattedList, FormattedValue,
         UFieldCategory, UListFormatterField, UnicodeStringAppendable,
     )

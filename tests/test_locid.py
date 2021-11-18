@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     ICUError, Locale, StringEnumeration, UErrorCode,
     U_ICU_VERSION_MAJOR_NUM, UnicodeString,
 )

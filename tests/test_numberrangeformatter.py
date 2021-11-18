@@ -1,17 +1,17 @@
 import copy
 
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 63:
     pytest.skip("ICU4C<63", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     ErrorCode, Formattable, Locale, MeasureUnit, UErrorCode,
     UNumberRangeCollapse, UNumberRangeIdentityFallback,
     UNumberRangeIdentityResult, UnicodeString, UnicodeStringAppendable,
 )
-from icupy.number import (
+from icupy.icu.number import (
     FormattedNumberRange, LocalizedNumberRangeFormatter, NumberFormatter,
     NumberRangeFormatter, UnlocalizedNumberRangeFormatter,
 )
@@ -54,7 +54,7 @@ def test_formatted_number_range_63():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_range_64():
-    from icupy import FormattedValue
+    from icupy.icu import FormattedValue
 
     assert issubclass(FormattedNumberRange, FormattedValue)
 
@@ -101,7 +101,7 @@ def test_formatted_number_range_68():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_formatted_number_range_69():
-    from icupy import (
+    from icupy.icu import (
         ConstrainedFieldPosition, UFieldCategory, UNumberFormatFields,
     )
 

@@ -1,4 +1,4 @@
-from icupy import (
+from icupy.icu import (
     ConstVoidPtr,
     UBIDI_DEFAULT_LTR, UBIDI_DO_MIRRORING, UBIDI_INSERT_LRM_FOR_NUMERIC,
     UBIDI_LEVEL_OVERRIDE, UBIDI_MAP_NOWHERE,

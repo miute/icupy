@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     FieldPosition, FieldPositionIterator, Formattable, ICUError,
     ParsePosition, SelectFormat, UErrorCode, UnicodeString,
 )

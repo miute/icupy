@@ -1,6 +1,5 @@
 import pytest
-
-from icupy import (
+from icupy.icu import (
     ICUError, IDNA, IDNAInfo, U_ICU_VERSION_MAJOR_NUM, UErrorCode,
     UnicodeString, US_INV,
 )

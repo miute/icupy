@@ -1,19 +1,19 @@
 import copy
 
 import pytest
-from icupy import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 60:
     pytest.skip("ICU4C<60", allow_module_level=True)
 
-from icupy import (
+from icupy.icu import (
     CurrencyUnit, DecimalFormatSymbols, ErrorCode, Format, Formattable,
     INT32_MAX, Locale, MeasureUnit, UCurrencyUsage, UErrorCode,
     UNumberDecimalSeparatorDisplay, UNumberFormatRoundingMode,
     UNumberSignDisplay, UNumberUnitWidth, UParseError, UnicodeString,
     UnicodeStringAppendable,
 )
-from icupy.number import (
+from icupy.icu.number import (
     CurrencyPrecision, FormattedNumber, FractionPrecision, IncrementPrecision,
     IntegerWidth, LocalizedNumberFormatter, Notation, NumberFormatter,
     Precision, ScientificNotation, UnlocalizedNumberFormatter,
@@ -48,7 +48,7 @@ def test_formatted_number_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_64():
-    from icupy import (
+    from icupy.icu import (
         ConstrainedFieldPosition, FormattedValue, UFieldCategory,
         UNumberFormatFields,
     )
@@ -226,7 +226,7 @@ def test_localized_number_formatter_60():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
 def test_localized_number_formatter_61():
-    from icupy import UNumberGroupingStrategy
+    from icupy.icu import UNumberGroupingStrategy
 
     fmt = NumberFormatter.with_locale(Locale.get_us())
     assert isinstance(fmt, LocalizedNumberFormatter)
@@ -248,7 +248,7 @@ def test_localized_number_formatter_61():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_localized_number_formatter_62():
-    from icupy.number import Scale
+    from icupy.icu.number import Scale
 
     # [1]
     # icu::number::LocalizedNumberFormatter::LocalizedNumberFormatter()
@@ -334,7 +334,7 @@ def test_localized_number_formatter_68():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_no_unit():
-    from icupy import NoUnit
+    from icupy.icu import NoUnit
 
     fmt = NumberFormatter.with_locale(Locale.get_us())
 
@@ -467,7 +467,7 @@ def test_precision_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_precision_69():
-    from icupy import UNumberRoundingPriority, UNumberTrailingZeroDisplay
+    from icupy.icu import UNumberRoundingPriority, UNumberTrailingZeroDisplay
 
     # icu::number::Precision
     assert isinstance(
@@ -488,7 +488,7 @@ def test_precision_69():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_scale():
-    from icupy.number import Scale
+    from icupy.icu.number import Scale
 
     # icu::number::Scale
     assert isinstance(Scale.by_decimal("5.2"), Scale)
@@ -577,7 +577,7 @@ def test_unlocalized_number_formatter_60():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
 def test_unlocalized_number_formatter_61():
-    from icupy import UNumberGroupingStrategy
+    from icupy.icu import UNumberGroupingStrategy
 
     fmt = NumberFormatter.with_()
     assert isinstance(fmt, UnlocalizedNumberFormatter)
@@ -599,7 +599,7 @@ def test_unlocalized_number_formatter_61():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_unlocalized_number_formatter_62():
-    from icupy.number import Scale
+    from icupy.icu.number import Scale
 
     # [1]
     # icu::number::UnlocalizedNumberFormatter::UnlocalizedNumberFormatter()

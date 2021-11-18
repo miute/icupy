@@ -1,7 +1,7 @@
 import copy
 
 import pytest
-from icupy import (
+from icupy.icu import (
     CurrencyPluralInfo, DecimalFormat, DecimalFormatSymbols, FieldPosition,
     FieldPositionIterator, Formattable, INT32_MAX, Locale, NumberFormat,
     ParsePosition, UParseError, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
@@ -240,7 +240,7 @@ def test_api():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_api_49():
-    from icupy import CurrencyAmount
+    from icupy.icu import CurrencyAmount
 
     symbols = DecimalFormatSymbols(Locale.get_us())
     fmt = DecimalFormat("0", symbols)
@@ -272,7 +272,7 @@ def test_api_49():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy import UNumberFormatAttribute
+    from icupy.icu import UNumberFormatAttribute
 
     symbols = DecimalFormatSymbols(Locale.get_us())
     fmt = DecimalFormat("0", symbols)
@@ -310,7 +310,7 @@ def test_api_53():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_api_54():
-    from icupy import UCurrencyUsage
+    from icupy.icu import UCurrencyUsage
 
     symbols = DecimalFormatSymbols(Locale.get_us())
     fmt = DecimalFormat("0", symbols)
@@ -348,7 +348,7 @@ def test_api_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_api_64():
-    from icupy.number import LocalizedNumberFormatter
+    from icupy.icu.number import LocalizedNumberFormatter
 
     symbols = DecimalFormatSymbols(Locale.get_us())
     fmt = DecimalFormat("0", symbols)
