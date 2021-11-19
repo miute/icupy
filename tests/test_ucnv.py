@@ -13,16 +13,16 @@ from icupy.icu import (
     ucnv_fix_file_separator, ucnv_flush_cache,
     ucnv_get_alias, ucnv_get_aliases, ucnv_get_available_name,
     ucnv_get_canonical_name, ucnv_get_ccsid, ucnv_get_default_name,
-    ucnv_get_display_name, ucnv_get_from_u_call_back, ucnv_get_name,
+    ucnv_get_display_name, ucnv_get_from_ucall_back, ucnv_get_name,
     ucnv_get_platform, ucnv_get_standard, ucnv_get_standard_name,
-    ucnv_get_subst_chars, ucnv_get_to_u_call_back, ucnv_get_type,
+    ucnv_get_subst_chars, ucnv_get_to_ucall_back, ucnv_get_type,
     ucnv_get_unicode_set,
     ucnv_is_ambiguous, ucnv_is_fixed_width,
     ucnv_open, ucnv_open_all_names, ucnv_open_ccsid, ucnv_open_package,
     ucnv_open_standard_names, ucnv_reset,
     ucnv_reset_from_unicode, ucnv_reset_to_unicode,
-    ucnv_set_fallback, ucnv_set_from_u_call_back, ucnv_set_subst_chars,
-    ucnv_set_subst_string, ucnv_set_to_u_call_back, ucnv_uses_fallback,
+    ucnv_set_fallback, ucnv_set_from_ucall_back, ucnv_set_subst_chars,
+    ucnv_set_subst_string, ucnv_set_to_ucall_back, ucnv_uses_fallback,
     # ucnv_err
     UCNV_ESCAPE_C, UCNV_ESCAPE_XML_HEX,
     UCNV_FROM_U_CALLBACK_ESCAPE, UCNV_TO_U_CALLBACK_ESCAPE,
@@ -201,7 +201,7 @@ def test_open_package():
         assert ucnv_get_subst_chars(cnv) == b"\xFF"
 
 
-def test_set_from_u_call_back():
+def test_set_from_ucall_back():
     result1, result2, result3 = [], [], []
 
     # void (* UConverterFromUCallback)(const void *context,
@@ -272,7 +272,7 @@ def test_set_from_u_call_back():
         #                            UConverterFromUCallback *action,
         #                            const void **context
         # )
-        old_action1, old_context1 = ucnv_get_from_u_call_back(cnv)
+        old_action1, old_context1 = ucnv_get_from_ucall_back(cnv)
 
         # void ucnv_setFromUCallBack(UConverter *converter,
         #                            UConverterFromUCallback newAction,
@@ -282,7 +282,7 @@ def test_set_from_u_call_back():
         #                            UErrorCode *err
         # )
         context2 = ConstVoidPtr(None)
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             UCNV_FROM_U_CALLBACK_ESCAPE,
             context2)  # %UXXXX
@@ -290,7 +290,7 @@ def test_set_from_u_call_back():
         assert dest == b"a\xb1b%UD83C%UDF38c"
 
         context3 = ConstVoidPtr(UCNV_ESCAPE_C)
-        old_action3, old_context3 = ucnv_set_from_u_call_back(
+        old_action3, old_context3 = ucnv_set_from_ucall_back(
             cnv,
             UCNV_FROM_U_CALLBACK_ESCAPE,
             context3)  # \\uXXXX
@@ -298,7 +298,7 @@ def test_set_from_u_call_back():
         assert dest == b"a\xb1b\\U0001F338c"
 
         context4 = ConstVoidPtr(UCNV_ESCAPE_XML_HEX)
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             UCNV_FROM_U_CALLBACK_ESCAPE,
             context4)  # &#xXXXX;
@@ -307,7 +307,7 @@ def test_set_from_u_call_back():
 
         action5 = UConverterFromUCallbackPtr(_from_u_callback1)
         context5 = ConstVoidPtr(None)
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             action5,
             context5)
@@ -317,7 +317,7 @@ def test_set_from_u_call_back():
 
         action6 = UConverterFromUCallbackPtr(_from_u_callback2)
         context6 = ConstVoidPtr("foo bar baz")
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             action6,
             context6)
@@ -328,7 +328,7 @@ def test_set_from_u_call_back():
         action7 = UConverterFromUCallbackPtr(_from_u_callback3)
         d = {"key": "foo bar baz"}
         context7 = ConstVoidPtr(d)
-        old_action7, old_context7 = ucnv_set_from_u_call_back(
+        old_action7, old_context7 = ucnv_set_from_ucall_back(
             cnv,
             action7,
             context7)
@@ -336,7 +336,7 @@ def test_set_from_u_call_back():
         assert len(result3) > 0
         assert dest == b"a\xb1b\\U0001f338c"
 
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             old_action7,
             old_context7)
@@ -347,14 +347,14 @@ def test_set_from_u_call_back():
         assert len(result2) > 0
         assert dest == b"a\xb1b\xfc\xfcc"
 
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             old_action3,
             old_context3)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b%UD83C%UDF38c"
 
-        ucnv_set_from_u_call_back(
+        ucnv_set_from_ucall_back(
             cnv,
             old_action1,
             old_context1)
@@ -362,7 +362,7 @@ def test_set_from_u_call_back():
         assert dest == b"a\xb1b\xfc\xfcc"
 
 
-def test_set_to_u_call_back():
+def test_set_to_ucall_back():
     result1, result2, result3 = [], [], []
 
     # void (* UConverterToUCallback)(const void *context,
@@ -436,7 +436,7 @@ def test_set_to_u_call_back():
         #                          UConverterToUCallback *action,
         #                          const void **context
         # )
-        old_action1, old_context1 = ucnv_get_to_u_call_back(cnv)
+        old_action1, old_context1 = ucnv_get_to_ucall_back(cnv)
 
         # void ucnv_setToUCallBack(UConverter *converter,
         #                          UConverterToUCallback newAction,
@@ -446,7 +446,7 @@ def test_set_to_u_call_back():
         #                          UErrorCode *err
         # )
         context2 = ConstVoidPtr(None)
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             UCNV_TO_U_CALLBACK_ESCAPE,
             context2)  # %XNN
@@ -459,7 +459,7 @@ def test_set_to_u_call_back():
                         "b")
 
         context3 = ConstVoidPtr(UCNV_ESCAPE_C)
-        old_action3, old_context3 = ucnv_set_to_u_call_back(
+        old_action3, old_context3 = ucnv_set_to_ucall_back(
             cnv,
             UCNV_TO_U_CALLBACK_ESCAPE,
             context3)  # \\xXX
@@ -472,7 +472,7 @@ def test_set_to_u_call_back():
                         "b")
 
         context4 = ConstVoidPtr(UCNV_ESCAPE_XML_HEX)
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             UCNV_TO_U_CALLBACK_ESCAPE,
             context4)  # &#xXX;
@@ -486,7 +486,7 @@ def test_set_to_u_call_back():
 
         action5 = UConverterToUCallbackPtr(_to_u_callback1)
         context5 = ConstVoidPtr(None)
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             action5,
             context5)
@@ -501,7 +501,7 @@ def test_set_to_u_call_back():
 
         action6 = UConverterToUCallbackPtr(_to_u_callback2)
         context6 = ConstVoidPtr("foo bar baz")
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             action6,
             context6)
@@ -517,7 +517,7 @@ def test_set_to_u_call_back():
         action7 = UConverterToUCallbackPtr(_to_u_callback3)
         d = {"key": "foo bar baz"}
         context7 = ConstVoidPtr(d)
-        old_action7, old_context7 = ucnv_set_to_u_call_back(
+        old_action7, old_context7 = ucnv_set_to_ucall_back(
             cnv,
             action7,
             context7)
@@ -530,7 +530,7 @@ def test_set_to_u_call_back():
                         "%xED%xA0%x80"
                         "b")
 
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             old_action7,
             old_context7)
@@ -546,7 +546,7 @@ def test_set_to_u_call_back():
                         "\\xed\\xa0\\x80"
                         "b")
 
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             old_action3,
             old_context3)
@@ -558,7 +558,7 @@ def test_set_to_u_call_back():
                         "%XED%XA0%X80"
                         "b")
 
-        ucnv_set_to_u_call_back(
+        ucnv_set_to_ucall_back(
             cnv,
             old_action1,
             old_context1)
