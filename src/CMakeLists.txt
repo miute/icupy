@@ -15,6 +15,7 @@ pybind11_add_module(
     alphaindex.cpp
     appendable.cpp
     caniter.cpp
+    casemap.cpp
     char16ptr.cpp
     coleitr.cpp
     compactdecimalformat.cpp
@@ -29,6 +30,7 @@ pybind11_add_module(
     dtitvinf.cpp
     dtptngen.cpp
     dtrule.cpp
+    edits.cpp
     errorcode.cpp
     fieldpos.cpp
     fmtable.cpp

@@ -14,6 +14,7 @@ using namespace icu;
 void init_alphaindex(py::module &m);
 void init_appendable(py::module &m);
 void init_caniter(py::module &m);
+void init_casemap(py::module &m);
 void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_compactdecimalformat(py::module &m);
@@ -28,6 +29,7 @@ void init_dtitvfmt(py::module &m);
 void init_dtitvinf(py::module &m);
 void init_dtptngen(py::module &m);
 void init_dtrule(py::module &m);
+void init_edits(py::module &m);
 void init_errorcode(py::module &m);
 void init_fieldpos(py::module &m);
 void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt);
@@ -247,6 +249,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_reldatefmt(m);    // icu::RelativeDateTimeFormatter
   init_resbund(m);       // icu::ResourceBundle
   init_sortkey(m);       // icu::CollationKey
+
+  init_edits(m);   // icu::Edits
+  init_casemap(m); // icu::CaseMap
 
   init_uniset(m);      // icu::UnicodeSet
   init_usetiter(m);    // icu::UnicodeSetIterator
