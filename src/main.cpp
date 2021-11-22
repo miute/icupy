@@ -32,6 +32,7 @@ void init_dtrule(py::module &m);
 void init_edits(py::module &m);
 void init_errorcode(py::module &m);
 void init_fieldpos(py::module &m);
+void init_filteredbrk(py::module &m);
 void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt);
 void init_format(py::module &m);
 void init_formattedvalue(py::module &m);
@@ -249,6 +250,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_reldatefmt(m);    // icu::RelativeDateTimeFormatter
   init_resbund(m);       // icu::ResourceBundle
   init_sortkey(m);       // icu::CollationKey
+
+  init_filteredbrk(m); // icu::FilteredBreakIteratorBuilder
 
   init_edits(m);   // icu::Edits
   init_casemap(m); // icu::CaseMap

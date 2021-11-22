@@ -33,6 +33,7 @@ pybind11_add_module(
     edits.cpp
     errorcode.cpp
     fieldpos.cpp
+    filteredbrk.cpp
     fmtable.cpp
     format.cpp
     formattedvalue.cpp

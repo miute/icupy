@@ -20,11 +20,17 @@ void init_rbbi(py::module &m) {
   bi.def("__copy__", &BreakIterator::clone)
       .def(
           "__deepcopy__", [](const BreakIterator &self, py::dict) { return self.clone(); }, py::arg("memo"))
+      .def(
+          "__eq__", [](const BreakIterator &self, const BreakIterator &other) { return self == other; },
+          py::arg("other"))
       .def("__iter__",
            [](BreakIterator &self) -> BreakIterator & {
              self.first();
              return self;
            })
+      .def(
+          "__ne__", [](const BreakIterator &self, const BreakIterator &other) { return self != other; },
+          py::arg("other"))
       .def("__next__",
            [](BreakIterator &self) {
              auto n = self.next();
@@ -40,6 +46,10 @@ void init_rbbi(py::module &m) {
         }
         return result;
       });
+  bi.def(
+      "adopt_text", [](BreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : nullptr); },
+      py::arg("it"));
+  bi.def("clone", &BreakIterator::clone);
   bi.def_static(
         "create_character_instance",
         [](const Locale &where) {
@@ -157,6 +167,9 @@ void init_rbbi(py::module &m) {
             return it;
           },
           py::arg("where"));
+  bi.def("current", &BreakIterator::current);
+  bi.def("first", &BreakIterator::first);
+  bi.def("following", &BreakIterator::following, py::arg("offset"));
   bi.def_static(
       "get_available_locales",
       []() {
@@ -215,8 +228,8 @@ void init_rbbi(py::module &m) {
         return result;
       },
       py::arg("type_"));
-  bi.def("get_rule_status", &BreakIterator::getRuleStatus);
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
+  bi.def("get_rule_status", &BreakIterator::getRuleStatus);
   bi.def("get_rule_status_vec", [](BreakIterator &self) {
     UErrorCode error_code = U_ZERO_ERROR;
     std::vector<int32_t> result(self.getRuleStatusVec(nullptr, 0, error_code));
@@ -228,9 +241,39 @@ void init_rbbi(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
-  // TODO: Implement "static URegistryKey registerInstance(BreakIterator *toAdopt, const Locale &locale,
+  bi.def("get_text", &BreakIterator::getText);
+  bi.def(
+      "get_utext",
+      [](const BreakIterator &self, std::optional<_UTextPtr> &fill_in) {
+        UErrorCode error_code = U_ZERO_ERROR;
+        auto p = self.getUText(fill_in.value_or(nullptr), error_code);
+        if (U_FAILURE(error_code)) {
+          throw ICUError(error_code);
+        }
+        return std::make_unique<_UTextPtr>(p);
+      },
+      py::arg("fill_in"));
+  bi.def("is_boundary", &BreakIterator::isBoundary, py::arg("offset"));
+  bi.def("last", &BreakIterator::last);
+  bi.def("next", py::overload_cast<int32_t>(&BreakIterator::next), py::arg("n"))
+      .def("next", py::overload_cast<>(&BreakIterator::next));
+  bi.def("preceding", &BreakIterator::preceding, py::arg("offset"));
+  bi.def("previous", &BreakIterator::previous);
+  // FIXME: Implement "BreakIterator& BreakIterator::refreshInputText(UText *input, UErrorCode &status)".
+  // TODO: Implement "static URegistryKey BreakIterator::registerInstance(BreakIterator *toAdopt, const Locale &locale,
   // UBreakIteratorType kind,	UErrorCode &status)".
-  // TODO: Implement "static UBool unregister(URegistryKey key, UErrorCode &status)".
+  bi.def("set_text", py::overload_cast<const UnicodeString &>(&BreakIterator::setText), py::arg("text"))
+      .def(
+          "set_text",
+          [](BreakIterator &self, _UTextPtr &text) {
+            UErrorCode error_code = U_ZERO_ERROR;
+            self.setText(text, error_code);
+            if (U_FAILURE(error_code)) {
+              throw ICUError(error_code);
+            }
+          },
+          py::arg("text"));
+  // TODO: Implement "static UBool BreakIterator::unregister(URegistryKey key, UErrorCode &status)".
 
   // icu::RuleBasedBreakIterator
   py::class_<RuleBasedBreakIterator, BreakIterator> rbbi(m, "RuleBasedBreakIterator");

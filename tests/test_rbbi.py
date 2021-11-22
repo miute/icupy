@@ -172,6 +172,105 @@ def test_create_word_instance():
     assert loc.get_name() == "en_US"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
+def test_filtered_break_iterator_builder_56():
+    from icupy.icu import FilteredBreakIteratorBuilder
+
+    # [1]
+    # static FilteredBreakIteratorBuilder *
+    # icu::FilteredBreakIteratorBuilder::createInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
+    where = Locale.get_english()
+    builder1 = FilteredBreakIteratorBuilder.create_instance(where)
+    assert isinstance(builder1, FilteredBreakIteratorBuilder)
+
+    builder1a = FilteredBreakIteratorBuilder.create_instance("en")
+    assert isinstance(builder1a, FilteredBreakIteratorBuilder)
+
+    # **Deprecated in ICU 60**
+    # [2]
+    # static FilteredBreakIteratorBuilder *
+    # icu::FilteredBreakIteratorBuilder::createInstance(UErrorCode &status)
+    builder2 = FilteredBreakIteratorBuilder.create_instance()
+    assert isinstance(builder2, FilteredBreakIteratorBuilder)
+
+    # UBool icu::FilteredBreakIteratorBuilder::suppressBreakAfter(
+    #       const UnicodeString &string,
+    #       UErrorCode &status
+    # )
+    assert builder2.suppress_break_after(UnicodeString("Mr."))
+    assert builder2.suppress_break_after("Capt.")
+    assert not builder2.suppress_break_after("Mr.")
+    assert not builder2.suppress_break_after(UnicodeString("Capt."))
+
+    # UBool icu::FilteredBreakIteratorBuilder::unsuppressBreakAfter(
+    #       const UnicodeString &string,
+    #       UErrorCode &status
+    # )
+    assert builder2.unsuppress_break_after(UnicodeString("Capt."))
+    assert builder2.unsuppress_break_after("Mr.")
+    assert not builder2.unsuppress_break_after("Capt.")
+    assert not builder2.unsuppress_break_after(UnicodeString("Mr."))
+
+    # **Deprecated in ICU 60**
+    # BreakIterator *icu::FilteredBreakIteratorBuilder::build(
+    #       BreakIterator *adoptBreakIterator,
+    #       UErrorCode &status
+    # )
+    builder2.suppress_break_after("Mr.")
+    bi = builder2.build(BreakIterator.create_sentence_instance(where))
+    assert isinstance(bi, BreakIterator)
+
+    text = UnicodeString(
+        "In the meantime Mr. Weston arrived with his small ship, which he had "
+        "now recovered. Capt. Gorges, who informed the Sgt. here that one "
+        "purpose of his going east was to meet with Mr. Weston, took this "
+        "opportunity to call him to account for some abuses he had to lay to "
+        "his charge."
+    )
+    bi.set_text(text)
+    assert bi.next() == 84
+    assert bi.next() == 90
+    assert bi.next() == 278
+    assert bi.next() == BreakIterator.DONE
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+def test_filtered_break_iterator_builder_60():
+    from icupy.icu import FilteredBreakIteratorBuilder
+
+    # static FilteredBreakIteratorBuilder *
+    # icu::FilteredBreakIteratorBuilder::createEmptyInstance(UErrorCode &status)
+    builder = FilteredBreakIteratorBuilder.create_empty_instance()
+    assert isinstance(builder, FilteredBreakIteratorBuilder)
+
+    # BreakIterator *
+    # icu::FilteredBreakIteratorBuilder::wrapIteratorWithFilter(
+    #       BreakIterator *adoptBreakIterator,
+    #       UErrorCode &status
+    # )
+    bi = builder.wrap_iterator_with_filter(
+        BreakIterator.create_sentence_instance(Locale.get_english()))
+    assert isinstance(bi, BreakIterator)
+
+    text = UnicodeString(
+        "In the meantime Mr. Weston arrived with his small ship, which he had "
+        "now recovered. Capt. Gorges, who informed the Sgt. here that one "
+        "purpose of his going east was to meet with Mr. Weston, took this "
+        "opportunity to call him to account for some abuses he had to lay to "
+        "his charge."
+    )
+    bi.set_text(text)
+    assert bi.next() == 20
+    assert bi.next() == 84
+    assert bi.next() == 90
+    assert bi.next() == 181
+    assert bi.next() == 278
+    assert bi.next() == BreakIterator.DONE
+
+
 def test_following():
     bi = BreakIterator.create_word_instance(Locale.get_us())
     src = UnicodeString("foo bar baz.")
