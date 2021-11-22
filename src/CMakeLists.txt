@@ -38,6 +38,7 @@ pybind11_add_module(
     format.cpp
     formattedvalue.cpp
     fpositer.cpp
+    gender.cpp
     gregocal.cpp
     idna.cpp
     listformatter.cpp
@@ -96,6 +97,7 @@ pybind11_add_module(
     udisplaycontext.cpp
     uenum.cpp
     uformattedvalue.cpp
+    ugender.cpp
     uidna.cpp
     ulistformatter.cpp
     uloc.cpp
