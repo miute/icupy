@@ -91,15 +91,28 @@ def test_u_failure():
     assert u_failure(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+def test_u_get_data_version():
+    from icupy.icu import u_get_data_version
+
+    # void u_getDataVersion(
+    #       UVersionInfo dataVersionFillin,
+    #       UErrorCode *status
+    # )
+    data_version = u_get_data_version()
+    assert isinstance(data_version, list)
+    assert len(data_version) == 4
+    assert all(isinstance(x, int) for x in data_version)
+    assert all(x >= 0 for x in data_version)
+
+
 def test_u_get_version():
     # void u_getVersion(UVersionInfo versionArray)
     version_array = u_get_version()
     assert isinstance(version_array, list)
     assert len(version_array) == 4
-    assert version_array[0] > 0
-    assert version_array[1] >= 0
-    assert version_array[2] >= 0
-    assert version_array[3] >= 0
+    assert all(isinstance(x, int) for x in version_array)
+    assert all(x >= 0 for x in version_array)
 
 
 def test_u_success():

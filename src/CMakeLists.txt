@@ -40,6 +40,7 @@ pybind11_add_module(
     fpositer.cpp
     gender.cpp
     gregocal.cpp
+    icudataver.cpp
     idna.cpp
     listformatter.cpp
     localebuilder.cpp

@@ -39,6 +39,7 @@ void init_formattedvalue(py::module &m);
 void init_fpositer(py::module &m);
 void init_gender(py::module &m);
 void init_gregocal(py::module &m);
+void init_icudataver(py::module &m);
 void init_idna(py::module &m);
 void init_listformatter(py::module &m);
 void init_localebuilder(py::module &m);
@@ -270,6 +271,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_unistr(m, rep, us); // icu::UnicodeString
 
+  init_icudataver(m);
   init_ubidi(m);
   init_ubiditransform(m);
   init_ubrk(m);
