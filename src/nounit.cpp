@@ -10,6 +10,7 @@ void init_nounit(py::module &m) {
   // icu::NoUnit
   auto m2 = m.def_submodule("NoUnit");
 
+  m2.def("base", &NoUnit::base);
   m2.def("percent", &NoUnit::percent);
   m2.def("permille", &NoUnit::permille);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)

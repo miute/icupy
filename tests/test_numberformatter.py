@@ -338,6 +338,10 @@ def test_no_unit():
 
     fmt = NumberFormatter.with_locale(Locale.get_us())
 
+    unit = NoUnit.base()
+    assert isinstance(unit, MeasureUnit)
+    assert fmt.unit(unit).format_int(1).to_string() == "1"
+
     unit = NoUnit.percent()
     assert isinstance(unit, MeasureUnit)
     assert fmt.unit(unit).format_int(1).to_string() == "1%"
