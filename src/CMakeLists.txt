@@ -45,6 +45,7 @@ pybind11_add_module(
     listformatter.cpp
     localebuilder.cpp
     localematcher.cpp
+    locdspnm.cpp
     locid.cpp
     main.cpp
     measfmt.cpp
@@ -100,6 +101,7 @@ pybind11_add_module(
     uformattedvalue.cpp
     ugender.cpp
     uidna.cpp
+    uldnames.cpp
     ulistformatter.cpp
     uloc.cpp
     uniset.cpp
