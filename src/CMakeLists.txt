@@ -66,6 +66,7 @@ pybind11_add_module(
     rbbi.cpp
     rbnf.cpp
     regex.cpp
+    region.cpp
     reldatefmt.cpp
     resbund.cpp
     schriter.cpp
@@ -112,6 +113,7 @@ pybind11_add_module(
     unumberrangeformatter.cpp
     upluralrules.cpp
     uregex.cpp
+    uregion.cpp
     ureldatefmt.cpp
     ures.cpp
     uscript.cpp
