@@ -70,6 +70,7 @@ pybind11_add_module(
     reldatefmt.cpp
     resbund.cpp
     schriter.cpp
+    scientificnumberformatter.cpp
     selfmt.cpp
     smpdtfmt.cpp
     sortkey.cpp

@@ -68,6 +68,7 @@ void init_region(py::module &m);
 void init_reldatefmt(py::module &m);
 void init_resbund(py::module &m);
 void init_schriter(py::module &m);
+void init_scientificnumberformatter(py::module &m);
 void init_selfmt(py::module &m);
 void init_smpdtfmt(py::module &m);
 void init_sortkey(py::module &m);
@@ -241,6 +242,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_decimfmt(m, decfmt);             // icu::DecimalFormat
   init_compactdecimalformat(m);         // icu::CompactDecimalFormat
   init_plurfmt(m);                      // icu::PluralFormat
+  init_scientificnumberformatter(m);    // icu::ScientificNumberFormatter
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
