@@ -1,10 +1,10 @@
-import copy
-
 import pytest
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
+
+import copy
 
 from icupy.icu import (
     CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,

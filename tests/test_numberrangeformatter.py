@@ -1,10 +1,10 @@
-import copy
-
 import pytest
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 63:
     pytest.skip("ICU4C<63", allow_module_level=True)
+
+import copy
 
 from icupy.icu import (
     ErrorCode, Formattable, Locale, MeasureUnit, UErrorCode,
