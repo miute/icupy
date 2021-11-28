@@ -21,8 +21,7 @@ from icupy.icu import (
     ubidi_set_line, ubidi_set_para, ubidi_set_reordering_mode,
     ubidi_set_reordering_options, ubidi_write_reordered, ubidi_write_reverse,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

@@ -14,8 +14,7 @@ from icupy.icu import (
     uspoof_set_allowed_locales, uspoof_set_allowed_unicode_set,
     uspoof_set_checks,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

@@ -12,8 +12,7 @@ from icupy.icu import (
     utext_open_utf8, utext_previous32, utext_previous32_from, utext_replace,
     utext_set_native_index,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

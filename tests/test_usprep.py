@@ -7,8 +7,7 @@ from icupy.icu import (
     u_unescape, usprep_close, usprep_open, usprep_open_by_type,
     usprep_prepare,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_open():

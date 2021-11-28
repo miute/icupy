@@ -6,10 +6,9 @@ from icupy.icu import (
     ucsdet_get_confidence, ucsdet_get_language, ucsdet_get_name,
     ucsdet_get_uchars, ucsdet_is_input_filter_enabled, ucsdet_open,
     ucsdet_set_declared_encoding, ucsdet_set_text,
-    uenum_close, uenum_count, uenum_next
+    uenum_close, uenum_count, uenum_next,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

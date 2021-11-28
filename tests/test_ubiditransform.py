@@ -10,7 +10,7 @@ from icupy.icu import (
     u_shape_arabic, u_unescape, ubiditransform_close, ubiditransform_open,
     ubiditransform_transform,
 )
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

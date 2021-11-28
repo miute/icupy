@@ -6,8 +6,7 @@ from icupy.icu import (
     UErrorCode, UnicodeString, UnicodeStringAppendable, UnicodeStringVector,
     US_INV, u_unescape, ucnv_close, ucnv_open,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_append():

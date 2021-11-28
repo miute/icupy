@@ -7,8 +7,7 @@ from icupy.icu import (
     utext_open_const_unicode_string, utext_open_unicode_string,
     utext_open_utf8, utext_replace,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

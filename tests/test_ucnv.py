@@ -35,8 +35,7 @@ from icupy.icu import (
     # uenum
     uenum_close, uenum_count, uenum_next,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 def test_api():

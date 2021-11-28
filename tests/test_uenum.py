@@ -5,8 +5,7 @@ from icupy.icu import (
     uenum_open_from_string_enumeration, uenum_open_uchar_strings_enumeration,
     uenum_reset, uenum_unext,
 )
-
-from . import gc
+from icupy.utils import gc
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
