@@ -75,6 +75,7 @@ pybind11_add_module(
     smpdtfmt.cpp
     sortkey.cpp
     strenum.cpp
+    stringoptions.cpp
     stsearch.cpp
     tblcoll.cpp
     timezone.cpp

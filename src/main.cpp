@@ -73,6 +73,7 @@ void init_selfmt(py::module &m);
 void init_smpdtfmt(py::module &m);
 void init_sortkey(py::module &m);
 void init_strenum(py::module &m);
+void init_stringoptions(py::module &m);
 void init_stsearch(py::module &m);
 void init_tblcoll(py::module &m);
 void init_timezone(py::module &m);
@@ -280,6 +281,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_unistr(m, rep, us); // icu::UnicodeString
 
   init_icudataver(m);
+  init_stringoptions(m);
   init_ubidi(m);
   init_ubiditransform(m);
   init_ubrk(m);
