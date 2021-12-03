@@ -16,7 +16,11 @@ void init_numberformatter(py::module &, py::module &m2) {
   py::class_<NumberFormatter> nf(m2, "NumberFormatter");
 
   // icu::number::FormattedNumber
+#if (U_ICU_VERSION_MAJOR_NUM >= 64)
   py::class_<FormattedNumber, UMemory, FormattedValue> fn(m2, "FormattedNumber");
+#else
+  py::class_<FormattedNumber, UMemory> fn(m2, "FormattedNumber");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   // icu::number::IntegerWidth
   py::class_<IntegerWidth, UMemory> iw(m2, "IntegerWidth");
