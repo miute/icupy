@@ -5,7 +5,6 @@ from icupy.icu import (
     ICUError, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
     UProperty, USET_IGNORE_SPACE, USetSpanCondition, U_ICU_VERSION_MAJOR_NUM,
     UnicodeSet, UnicodeString,
-    u_get_binary_property_set,
 )
 
 
@@ -534,7 +533,10 @@ def test_create_from_all():
     assert test1.contains(0x61, 0x62)
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
 def test_from_uset():
+    from icupy.icu import u_get_binary_property_set
+
     # [1]
     # const UnicodeSet *icu::UnicodeSet::fromUSet(const USet *uset)
     uset1 = u_get_binary_property_set(UProperty.UCHAR_POSIX_BLANK)

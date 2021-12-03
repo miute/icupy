@@ -2,14 +2,13 @@ import pytest
 from icupy.icu import (
     ConstVoidPtr,
     ICUError, UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
-    UCPMapRangeOption, UCPMapValueFilterPtr,
-    UErrorCode, UDecompositionType, UEastAsianWidth, UnicodeSet, UProperty,
-    UPropertyNameChoice,
-    U_FOLD_CASE_DEFAULT, U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_NO_NUMERIC_VALUE,
+    UErrorCode, UDecompositionType, UEastAsianWidth,
+    UnicodeSet, UProperty, UPropertyNameChoice, U_FOLD_CASE_DEFAULT,
+    U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_ICU_VERSION_MAJOR_NUM, U_NO_NUMERIC_VALUE,
     u_char_age, u_char_digit_value, u_char_direction, u_char_from_name,
     u_char_mirror, u_char_name, u_char_type, u_digit, u_fold_case,
-    u_for_digit, u_get_bidi_paired_bracket, u_get_binary_property_set,
-    u_get_combining_class, u_get_fc_nfkc_closure, u_get_int_property_map,
+    u_for_digit, u_get_bidi_paired_bracket,
+    u_get_combining_class, u_get_fc_nfkc_closure,
     u_get_int_property_max_value, u_get_int_property_min_value,
     u_get_int_property_value, u_get_numeric_value, u_get_property_enum,
     u_get_property_name, u_get_property_value_enum,
@@ -20,8 +19,7 @@ from icupy.icu import (
     u_is_java_space_char, u_islower, u_is_mirrored, u_isprint, u_ispunct,
     u_isspace, u_istitle, u_is_ualphabetic, u_is_ulowercase, u_isupper,
     u_is_uuppercase, u_is_uwhite_space, u_is_whitespace, u_isxdigit,
-    u_tolower, u_totitle, u_toupper, ublock_get_code, ucpmap_get,
-    ucpmap_get_range,
+    u_tolower, u_totitle, u_toupper, ublock_get_code,
 )
 
 
@@ -171,7 +169,10 @@ def test_u_char_age():
     assert version_array[3] == 0
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
 def test_u_get_binary_property_set():
+    from icupy.icu import u_get_binary_property_set
+
     # const USet *u_getBinaryPropertySet(UProperty property,
     #                                    UErrorCode *pErrorCode
     # )
@@ -183,7 +184,13 @@ def test_u_get_binary_property_set():
     assert uniset.contains(0x3000)  # U+3000: Ideographic Space
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
 def test_u_get_int_property_map():
+    from icupy.icu import (
+        UCPMapRangeOption, UCPMapValueFilterPtr,
+        u_get_int_property_map, ucpmap_get, ucpmap_get_range,
+    )
+
     # UCPMap *u_getIntPropertyMap(UProperty property,
     #                             UErrorCode *pErrorCode
     # )
