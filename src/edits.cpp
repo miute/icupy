@@ -23,9 +23,15 @@ void init_edits(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
   ed.def("add_replace", &Edits::addReplace, py::arg("old_length"), py::arg("new_length"));
   ed.def("add_unchanged", &Edits::addUnchanged, py::arg("unchanged_length"));
+#if (U_ICU_VERSION_MAJOR_NUM >= 65)
   ed.def(
       "copy_error_to", [](const Edits &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
       py::arg("out_error_code"));
+#else
+  ed.def(
+      "copy_error_to", [](Edits &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      py::arg("out_error_code"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
   ed.def("get_coarse_changes_iterator", &Edits::getCoarseChangesIterator);
   ed.def("get_coarse_iterator", &Edits::getCoarseIterator);
   ed.def("get_fine_changes_iterator", &Edits::getFineChangesIterator);
