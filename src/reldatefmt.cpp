@@ -153,7 +153,7 @@ void init_reldatefmt(py::module &m) {
           py::init([](const Locale &locale, NumberFormat *nf_to_adopt) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                locale, nf_to_adopt ? nf_to_adopt->clone() : nullptr, error_code);
+                locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
@@ -165,7 +165,7 @@ void init_reldatefmt(py::module &m) {
           py::init([](const char *locale, NumberFormat *nf_to_adopt) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                locale, nf_to_adopt ? nf_to_adopt->clone() : nullptr, error_code);
+                locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
@@ -179,7 +179,8 @@ void init_reldatefmt(py::module &m) {
                       UDisplayContext capitalization_context) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                locale, nf_to_adopt ? nf_to_adopt->clone() : nullptr, style, capitalization_context, error_code);
+                locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), style,
+                capitalization_context, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }
@@ -192,7 +193,8 @@ void init_reldatefmt(py::module &m) {
                       UDisplayContext capitalization_context) {
             UErrorCode error_code = U_ZERO_ERROR;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                locale, nf_to_adopt ? nf_to_adopt->clone() : nullptr, style, capitalization_context, error_code);
+                locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), style,
+                capitalization_context, error_code);
             if (U_FAILURE(error_code)) {
               throw ICUError(error_code);
             }

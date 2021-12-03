@@ -12,8 +12,8 @@ void init_measure(py::module &m) {
   py::class_<Measure, UObject> meas(m, "Measure");
   meas.def(py::init([](const Formattable &number, const MeasureUnit *adopted_unit) {
              UErrorCode error_code = U_ZERO_ERROR;
-             auto result =
-                 std::make_unique<Measure>(number, adopted_unit ? adopted_unit->clone() : nullptr, error_code);
+             auto result = std::make_unique<Measure>(
+                 number, reinterpret_cast<MeasureUnit *>(adopted_unit ? adopted_unit->clone() : nullptr), error_code);
              if (U_FAILURE(error_code)) {
                throw ICUError(error_code);
              }

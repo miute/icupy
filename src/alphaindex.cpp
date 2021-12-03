@@ -95,7 +95,8 @@ void init_alphaindex(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .def(py::init([](RuleBasedCollator *collator) {
              UErrorCode error_code = U_ZERO_ERROR;
-             auto result = std::make_unique<AlphabeticIndex>(collator ? collator->clone() : nullptr, error_code);
+             auto result = std::make_unique<AlphabeticIndex>(
+                 reinterpret_cast<RuleBasedCollator *>(collator ? collator->clone() : nullptr), error_code);
              if (U_FAILURE(error_code)) {
                throw ICUError(error_code);
              }

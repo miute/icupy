@@ -125,7 +125,8 @@ void init_scientificnumberformatter(py::module &m) {
           [](DecimalFormat *fmt_to_adopt, const UnicodeString &begin_markup, const UnicodeString &end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
-                fmt_to_adopt ? fmt_to_adopt->clone() : nullptr, begin_markup, end_markup, error_code);
+                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), begin_markup,
+                end_markup, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -138,7 +139,8 @@ void init_scientificnumberformatter(py::module &m) {
           [](DecimalFormat *fmt_to_adopt, const char16_t *begin_markup, const UnicodeString &end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
-                fmt_to_adopt ? fmt_to_adopt->clone() : nullptr, begin_markup, end_markup, error_code);
+                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), begin_markup,
+                end_markup, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -151,7 +153,8 @@ void init_scientificnumberformatter(py::module &m) {
           [](DecimalFormat *fmt_to_adopt, const UnicodeString &begin_markup, const char16_t *end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
-                fmt_to_adopt ? fmt_to_adopt->clone() : nullptr, begin_markup, end_markup, error_code);
+                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), begin_markup,
+                end_markup, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -165,7 +168,8 @@ void init_scientificnumberformatter(py::module &m) {
           [](DecimalFormat *fmt_to_adopt, const char16_t *begin_markup, const char16_t *end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
-                fmt_to_adopt ? fmt_to_adopt->clone() : nullptr, begin_markup, end_markup, error_code);
+                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), begin_markup,
+                end_markup, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -202,7 +206,7 @@ void init_scientificnumberformatter(py::module &m) {
           [](DecimalFormat *fmt_to_adopt) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createSuperscriptInstance(
-                fmt_to_adopt ? fmt_to_adopt->clone() : nullptr, error_code);
+                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
