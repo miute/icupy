@@ -14,9 +14,8 @@ from icupy.icu import (
     UnicodeStringAppendable,
 )
 from icupy.icu.number import (
-    CurrencyPrecision, FormattedNumber, FractionPrecision, IncrementPrecision,
-    IntegerWidth, LocalizedNumberFormatter, Notation, NumberFormatter,
-    Precision, ScientificNotation, UnlocalizedNumberFormatter,
+    FormattedNumber, IntegerWidth, LocalizedNumberFormatter, Notation,
+    NumberFormatter, ScientificNotation, UnlocalizedNumberFormatter,
 )
 
 
@@ -196,13 +195,6 @@ def test_localized_number_formatter_60():
     assert isinstance(result, LocalizedNumberFormatter)
 
     # template<typename Derived>
-    # Derived icu::number::NumberFormatterSettings<Derived>::sign(
-    #       UNumberSignDisplay style
-    # )
-    result = fmt.sign(UNumberSignDisplay.UNUM_SIGN_AUTO)
-    assert isinstance(result, LocalizedNumberFormatter)
-
-    # template<typename Derived>
     # Derived icu::number::NumberFormatterSettings<Derived>::symbols(
     #       const DecimalFormatSymbols &symbols
     # )
@@ -248,7 +240,7 @@ def test_localized_number_formatter_61():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_localized_number_formatter_62():
-    from icupy.icu.number import Scale
+    from icupy.icu.number import Precision, Scale
 
     # [1]
     # icu::number::LocalizedNumberFormatter::LocalizedNumberFormatter()
@@ -286,6 +278,13 @@ def test_localized_number_formatter_62():
     #       const Scale &scale
     # )
     result = fmt.scale(Scale.power_of_ten(2))
+    assert isinstance(result, LocalizedNumberFormatter)
+
+    # template<typename Derived>
+    # Derived icu::number::NumberFormatterSettings<Derived>::sign(
+    #       UNumberSignDisplay style
+    # )
+    result = fmt.sign(UNumberSignDisplay.UNUM_SIGN_AUTO)
     assert isinstance(result, LocalizedNumberFormatter)
 
     # template<typename Derived>
@@ -425,7 +424,12 @@ def test_notation():
         ScientificNotation)
 
 
-def test_precision_60():
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
+def test_precision_60_62():
+    from icupy.icu.number import (
+        CurrencyPrecision, FractionPrecision, IncrementPrecision, Precision,
+    )
+
     # icu::number::Precision
     assert isinstance(Precision.currency(UCurrencyUsage.UCURR_USAGE_STANDARD),
                       CurrencyPrecision)
@@ -462,6 +466,8 @@ def test_precision_60():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_precision_62():
+    from icupy.icu.number import Precision
+
     # icu::number::Precision
     assert isinstance(Precision.fixed_significant_digits(3), Precision)
     assert isinstance(Precision.max_significant_digits(4), Precision)
@@ -472,6 +478,7 @@ def test_precision_62():
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_precision_69():
     from icupy.icu import UNumberRoundingPriority, UNumberTrailingZeroDisplay
+    from icupy.icu.number import Precision
 
     # icu::number::Precision
     assert isinstance(
@@ -551,13 +558,6 @@ def test_unlocalized_number_formatter_60():
     assert isinstance(result, UnlocalizedNumberFormatter)
 
     # template<typename Derived>
-    # Derived icu::number::NumberFormatterSettings<Derived>::sign(
-    #       UNumberSignDisplay style
-    # )
-    result = fmt.sign(UNumberSignDisplay.UNUM_SIGN_AUTO)
-    assert isinstance(result, UnlocalizedNumberFormatter)
-
-    # template<typename Derived>
     # Derived icu::number::NumberFormatterSettings<Derived>::symbols(
     #       const DecimalFormatSymbols &symbols
     # )
@@ -603,7 +603,7 @@ def test_unlocalized_number_formatter_61():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_unlocalized_number_formatter_62():
-    from icupy.icu.number import Scale
+    from icupy.icu.number import Precision, Scale
 
     # [1]
     # icu::number::UnlocalizedNumberFormatter::UnlocalizedNumberFormatter()
@@ -628,6 +628,13 @@ def test_unlocalized_number_formatter_62():
     #       const Scale &scale
     # )
     result = fmt.scale(Scale.power_of_ten(2))
+    assert isinstance(result, UnlocalizedNumberFormatter)
+
+    # template<typename Derived>
+    # Derived icu::number::NumberFormatterSettings<Derived>::sign(
+    #       UNumberSignDisplay style
+    # )
+    result = fmt.sign(UNumberSignDisplay.UNUM_SIGN_AUTO)
     assert isinstance(result, UnlocalizedNumberFormatter)
 
     # template<typename Derived>

@@ -1,4 +1,5 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
 #include <unicode/errorcode.h>
 #include <unicode/numberformatter.h>
@@ -31,6 +32,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   // icu::number::ScientificNotation
   py::class_<ScientificNotation, Notation> sn(m2, "ScientificNotation");
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::Precision
   py::class_<Precision, UMemory> pre(m2, "Precision");
 
@@ -42,6 +44,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
   // icu::number::IncrementPrecision
   py::class_<IncrementPrecision, Precision> ip(m2, "IncrementPrecision");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::Scale
@@ -61,8 +64,10 @@ void init_numberformatter(py::module &, py::module &m2) {
   py::class_<UnlocalizedNumberFormatter, _UnlocalizedNumberFormatterSettings, UMemory> unf(
       m2, "UnlocalizedNumberFormatter");
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::CurrencyPrecision
   cp.def("with_currency", &CurrencyPrecision::withCurrency, py::arg("currency"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
   // icu::number::FormattedNumber
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
@@ -137,6 +142,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::FractionPrecision
   fp.def("with_max_digits", &FractionPrecision::withMaxDigits, py::arg("max_significant_digits"));
   fp.def("with_min_digits", &FractionPrecision::withMinDigits, py::arg("min_significant_digits"));
@@ -145,8 +151,12 @@ void init_numberformatter(py::module &, py::module &m2) {
          py::arg("max_significant_digits"), py::arg("priority"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::IncrementPrecision
   ip.def("with_min_fraction", &IncrementPrecision::withMinFraction, py::arg("min_frac"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
   // icu::number::IntegerWidth
   iw.def("truncate_at", &IntegerWidth::truncateAt, py::arg("max_int"));
@@ -473,31 +483,28 @@ void init_numberformatter(py::module &, py::module &m2) {
   no.def_static("scientific", &Notation::scientific);
   no.def_static("simple", &Notation::simple);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::Precision
   pre.def_static("currency", &Precision::currency, py::arg("currency_usage"));
   pre.def_static("fixed_fraction", &Precision::fixedFraction, py::arg("min_max_fraction_places"));
-#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   pre.def_static("fixed_significant_digits", &Precision::fixedSignificantDigits, py::arg("min_max_significant_digits"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
   pre.def_static("increment", &Precision::increment, py::arg("rounding_increment"));
   pre.def_static("integer", &Precision::integer);
   pre.def_static("max_fraction", &Precision::maxFraction, py::arg("max_fraction_places"));
-#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   pre.def_static("max_significant_digits", &Precision::maxSignificantDigits, py::arg("max_significant_digits"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
   pre.def_static("min_fraction", &Precision::minFraction, py::arg("min_fraction_places"));
   pre.def_static("min_max_fraction", &Precision::minMaxFraction, py::arg("min_fraction_places"),
                  py::arg("max_fraction_places"));
-#if (U_ICU_VERSION_MAJOR_NUM >= 62)
   pre.def_static("min_max_significant_digits", &Precision::minMaxSignificantDigits, py::arg("min_significant_digits"),
                  py::arg("max_significant_digits"));
   pre.def_static("min_significant_digits", &Precision::minSignificantDigits, py::arg("min_significant_digits"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   pre.def("trailing_zero_display", &Precision::trailingZeroDisplay, py::arg("trailing_zero_display"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
   pre.def_static("unlimited", &Precision::unlimited);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   // icu::number::Scale
