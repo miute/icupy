@@ -5,6 +5,7 @@
 #include <pybind11/stl.h>
 #include <sstream>
 #include <unicode/locid.h>
+#include <unicode/strenum.h>
 
 using namespace icu;
 

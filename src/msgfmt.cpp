@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include <pybind11/stl.h>
 #include <unicode/msgfmt.h>
+#include <unicode/strenum.h>
 
 using namespace icu;
 

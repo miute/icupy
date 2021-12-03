@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <unicode/numsys.h>
+#include <unicode/strenum.h>
 
 using namespace icu;
 

@@ -1,13 +1,17 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
 #include <unicode/numberformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
 #include <unicode/numberrangeformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
+
 #include <unicode/plurrule.h>
+#include <unicode/strenum.h>
 
 using namespace icu;
 

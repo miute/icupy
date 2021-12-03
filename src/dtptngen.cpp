@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
 #include <unicode/dtptngen.h>
+#include <unicode/strenum.h>
 
 using namespace icu;
 

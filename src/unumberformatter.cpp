@@ -1,6 +1,11 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
+#if (U_ICU_VERSION_MAJOR_NUM >= 62)
 #include <unicode/unumberformatter.h>
+#else
+#include <unicode/numberformatter.h>
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
 void init_unumberformatter(py::module &m) {

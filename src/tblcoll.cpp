@@ -4,6 +4,7 @@
 #include <unicode/chariter.h>
 #include <unicode/coleitr.h>
 #include <unicode/sortkey.h>
+#include <unicode/strenum.h>
 #include <unicode/tblcoll.h>
 
 using namespace icu;
