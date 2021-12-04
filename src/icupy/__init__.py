@@ -11,7 +11,11 @@ if sys.platform.startswith("win"):
     path = (Path(os.getenv("ICU_ROOT", "C:/icu"))
             / "bin64" if sys.maxsize > 2 ** 32 else "bin").resolve()
     assert path.is_dir(), path  # ICU4C not found
-    os.add_dll_directory(path)
+    if sys.version_info[:2] >= (3, 8):
+        os.add_dll_directory(path)
+    else:
+        os.environ["PATH"] = "{}{}{}".format(
+            path, os.pathsep, os.getenv("PATH", ""))
     del path
 
 from .icu import *  # noqa
