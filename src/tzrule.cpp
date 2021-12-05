@@ -44,7 +44,7 @@ void init_tzrule(py::module &m) {
         self.getName(dest);
         std::string name;
         dest.toUTF8String(name);
-        ss << "name=" << std::quoted(name);
+        ss << "name=" << std::quoted(name, '\'');
         ss << ", raw_offset=" << self.getRawOffset();
         ss << ", dst_savings=" << self.getDSTSavings();
         ss << ", start_year=" << self.getStartYear();
@@ -121,7 +121,7 @@ void init_tzrule(py::module &m) {
         self.getName(dest);
         std::string name;
         dest.toUTF8String(name);
-        ss << "name=" << std::quoted(name);
+        ss << "name=" << std::quoted(name, '\'');
         ss << ", raw_offset=" << self.getRawOffset();
         ss << ", dst_savings=" << self.getDSTSavings();
         ss << ")";
@@ -198,7 +198,7 @@ void init_tzrule(py::module &m) {
         self.getName(dest);
         std::string name;
         dest.toUTF8String(name);
-        ss << "name=" << std::quoted(name);
+        ss << "name=" << std::quoted(name, '\'');
         ss << ", raw_offset=" << self.getRawOffset();
         ss << ", dst_savings=" << self.getDSTSavings();
         ss << ", start_times=[";

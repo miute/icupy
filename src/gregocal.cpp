@@ -24,7 +24,7 @@ void init_gregocal(py::module &m) {
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
         UErrorCode error_code = U_ZERO_ERROR;
-        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ssXXXXX", error_code);
+        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ss.SSSXXX", error_code);
         fmt.setCalendar(self);
         UnicodeString dest;
         fmt.format(self.getTime(error_code), dest);
@@ -465,7 +465,7 @@ void init_gregocal(py::module &m) {
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
         UErrorCode error_code = U_ZERO_ERROR;
-        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ssXXXXX", error_code);
+        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ss.SSSXXX", error_code);
         fmt.setCalendar(self);
         UnicodeString dest;
         fmt.format(self.getTime(error_code), dest);

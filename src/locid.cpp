@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <iomanip>
 #include <iterator>
 #include <optional>
 #include <pybind11/operators.h>
@@ -23,7 +24,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       .def("__repr__",
            [](const Locale &self) {
              std::stringstream ss;
-             ss << "Locale(" << self.getName() << ")";
+             ss << "Locale(" << std::quoted(self.getName(), '\'') << ")";
              return ss.str();
            })
       .def("__str__", &Locale::getName);

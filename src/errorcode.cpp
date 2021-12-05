@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <sstream>
 #include <unicode/errorcode.h>
 
 using namespace icu;
@@ -10,7 +11,16 @@ void init_errorcode(py::module &m) {
   ec.def(
         "__eq__", [](const ErrorCode &self, UErrorCode error_code) { return self.get() == error_code; },
         py::arg("other"))
-      .def("__repr__", &ErrorCode::errorName);
+      .def("__repr__",
+           [](const ErrorCode &self) {
+             std::stringstream ss;
+             ss << "ErrorCode(<";
+             ss << self.errorName();
+             ss << ": " << self.get();
+             ss << ">)";
+             return ss.str();
+           })
+      .def("__str__", &ErrorCode::errorName);
   ec.def_property_readonly("error_name", &ErrorCode::errorName);
   ec.def("get", &ErrorCode::get);
   ec.def("is_failure", &ErrorCode::isFailure);

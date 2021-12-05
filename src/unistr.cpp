@@ -143,14 +143,14 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def("__repr__",
            [](const UnicodeString &self) {
              std::stringstream ss;
-             ss << "UnicodeString(\"";
+             ss << "UnicodeString('";
              auto it = UCharCharacterIterator(self.getBuffer(), self.length());
              const char *prefix;
              int w;
              for (auto c = it.first32(); it.hasNext(); c = it.next32()) {
                if (c >= 0x20 && c <= 0x7e) {
-                 if (c == '"') {
-                   ss << "\\\"";
+                 if (c == '\'') {
+                   ss << "\\'";
                  } else {
                    ss << static_cast<char>(c);
                  }
@@ -165,10 +165,10 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
                    prefix = "\\U";
                    w = 8;
                  }
-                 ss << prefix << std::uppercase << std::hex << std::setw(w) << std::setfill('0') << c;
+                 ss << prefix << std::nouppercase << std::hex << std::setw(w) << std::setfill('0') << c;
                }
              }
-             ss << "\")";
+             ss << "')";
              return ss.str();
            })
       .def("__str__", [](const UnicodeString &self) {

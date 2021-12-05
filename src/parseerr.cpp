@@ -17,8 +17,8 @@ void init_parseerr(py::module &m) {
     ss << "UParseError(";
     ss << "line=" << self.line;
     ss << ", offset=" << self.offset;
-    ss << ", pre_context=" << std::quoted(pre_context);
-    ss << ", post_context=" << std::quoted(post_context);
+    ss << ", pre_context=" << std::quoted(pre_context, '\'');
+    ss << ", post_context=" << std::quoted(post_context, '\'');
     ss << ")";
     return ss.str();
   });
