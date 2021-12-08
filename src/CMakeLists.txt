@@ -107,6 +107,7 @@ pybind11_add_module(
     uldnames.cpp
     ulistformatter.cpp
     uloc.cpp
+    ulocdata.cpp
     uniset.cpp
     unistr.cpp
     unorm2.cpp

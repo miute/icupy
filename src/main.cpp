@@ -105,6 +105,7 @@ void init_uidna(py::module &m);
 void init_uldnames(py::module &m);
 void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
+void init_ulocdata(py::module &m);
 void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unorm2(py::module &m);
@@ -304,6 +305,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uldnames(m);
   init_ulistformatter(m);
   init_uloc(m);
+  init_ulocdata(m);
   init_unorm2(m);
   init_unum(m);
   init_unumberformatter(m);
