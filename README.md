@@ -1,27 +1,69 @@
 # icupy
 
-Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
+Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/) using [pybind11](https://github.com/pybind/pybind11).
 
 ## Installation
 
 ### Prerequisites
 
-- [Python](https://www.python.org/) >=3.8
-- [ICU4C](https://icu.unicode.org/) (>=64 recommended)
-- C++17 compatible compiler (depends on [pybind11](https://github.com/pybind/pybind11))
-- [CMake](https://cmake.org/) >=3.7
+- [Python](https://www.python.org/downloads/) >=3.7
+- [ICU4C](https://icu.unicode.org/download) (>=64 recommended)
+- C++17 compatible compiler (See [supported compilers](https://github.com/pybind/pybind11#supported-compilers))
+  - Windows: Visual Studio 2015 Update 3 or newer. Visual Studio 2019 recommended.
+- [CMake](https://cmake.org/download/) >=3.7
+
+### Installing prerequisites
+
+To install dependencies, run the following command:
+
+- Ubuntu/Debian:
+
+    ```bash
+    sudo apt install g++ cmake libicu-dev python3-dev python3-pip
+    ```
+
+- Fedora:
+
+    ```bash
+    sudo dnf install gcc-c++ cmake icu libicu-devel python3-devel
+    ```
+
+- openSUSE:
+
+    If default Python version is 3.8:
+
+    ```bash
+    sudo zypper install gcc-c++ cmake icu libicu-devel python38-devel python38-pip
+    ```
 
 ### Building from source
 
 1. Configuring environment variables:
 
-    **Windows:**
+    - Windows:
 
-    * Set the `ICU_ROOT` environment variable to the root of the ICU installation. (default is `C:\icu`)
+        - Set the `ICU_ROOT` environment variable to the root of the ICU installation (default is `C:\icu`).
+        For example, if the ICU is located in `C:\icu4c`:
 
-    **Linux/POSIX:**
+            ```bat
+            set ICU_ROOT=C:\icu4c
+            ```
 
-    * If the ICU is located in a non-regular place, set the `PKG_CONFIG_PATH` and `LD_LIBRARY_PATH` environment variables.
+            or in PowerShell:
+
+            ```bat
+            $env:ICU_ROOT = "C:\icu4c"
+            ```
+
+    - Linux/POSIX:
+
+        - If the ICU is located in a non-regular place, set the `PKG_CONFIG_PATH` and `LD_LIBRARY_PATH` environment variables.
+        For example, if the ICU is located in `/usr/local`:
+
+            ```bash
+            export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+            export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+            ```
 
 2. Installing from PyPI:
 
@@ -29,20 +71,20 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
     pip install icupy
     ```
 
-    Alternatively, installing from the git repository:
+    Alternatively, installing development version from the git repository:
 
     ```bash
-    pip install git+https://github.com/miute/icupy.git
+    pip install git+https://github.com/miute/icupy.git@develop
     ```
-   
-    Optionally, the CMake environment variables are available.
-    For example, using the Ninja build system:
+
+    Optionally, CMake environment variables are available.
+    For example, using the Ninja build system and Clang:
 
     ```bash
-    CMAKE_GENERATOR=Ninja pip install icupy
+    CMAKE_GENERATOR=Ninja CXX=clang pip install icupy
     ```
 
-## Changes
+## Changes from ICU4C
 
 - **Naming Rules**
   - Renamed C functions and C++ class methods from mixed case to snake case. (e.g., `findAndReplace()` → `find_and_replace()`)
@@ -72,7 +114,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/).
     >>> dest = icu.UnicodeString()
     >>> info = icu.IDNAInfo()
     >>> uts46.name_to_ascii(icu.UnicodeString("faß.ExAmPlE"), dest, info)
-    UnicodeString("xn--fa-hia.example")
+    UnicodeString('xn--fa-hia.example')
     >>> str(dest)
     'xn--fa-hia.example'
     ```
