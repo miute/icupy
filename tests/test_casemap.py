@@ -1,15 +1,18 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 59:
     pytest.skip("ICU4C<59", allow_module_level=True)
 
+# fmt: off
 from icupy.icu import (
-    BreakIterator, CaseMap, Edits,
     U_EDITS_NO_RESET, U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_OMIT_UNCHANGED_TEXT,
-    U_TITLECASE_NO_BREAK_ADJUSTMENT, U_TITLECASE_NO_LOWERCASE,
-    UnicodeString,
+    U_TITLECASE_NO_BREAK_ADJUSTMENT, U_TITLECASE_NO_LOWERCASE, BreakIterator,
+    CaseMap, Edits, UnicodeString,
 )
+
+# fmt: on
 
 
 # From icu/source/test/intltest/strcase.cpp
@@ -23,9 +26,11 @@ def test_api():
     #       Edits *edits,
     #       UErrorCode &errorCode
     # )
-    options = (U_OMIT_UNCHANGED_TEXT
-               | U_EDITS_NO_RESET
-               | U_FOLD_CASE_EXCLUDE_SPECIAL_I)
+    options = (
+        U_OMIT_UNCHANGED_TEXT
+        | U_EDITS_NO_RESET
+        | U_FOLD_CASE_EXCLUDE_SPECIAL_I
+    )
     src = "IßtanBul"
     edits = Edits()
     dest = CaseMap.fold(options, src, -1, edits)
@@ -62,7 +67,9 @@ def test_api():
     assert isinstance(dest, str)
     assert dest == "ıb"
 
-    dest = CaseMap.to_lower(locale, options, src, -1, None)  # edits can be None
+    dest = CaseMap.to_lower(
+        locale, options, src, -1, None
+    )  # edits can be None
     assert isinstance(dest, str)
     assert dest == "ıb"
 
@@ -86,9 +93,11 @@ def test_api():
     #       UErrorCode &errorCode
     # )
     locale = "nl"
-    options = (U_OMIT_UNCHANGED_TEXT
-               | U_TITLECASE_NO_BREAK_ADJUSTMENT
-               | U_TITLECASE_NO_LOWERCASE)
+    options = (
+        U_OMIT_UNCHANGED_TEXT
+        | U_TITLECASE_NO_BREAK_ADJUSTMENT
+        | U_TITLECASE_NO_LOWERCASE
+    )
     it = BreakIterator.create_word_instance(locale)
     src = "IjssEL IglOo"
     it.set_text(UnicodeString(src))
@@ -99,16 +108,20 @@ def test_api():
     assert dest == "J"
 
     dest = CaseMap.to_title(
-        locale, options, None, src, -1, None)  # edits can be None
-    assert isinstance(dest, str)
-    assert dest == "J"
-
-    dest = CaseMap.to_title(locale, options, None, src, -1)  # edits is optional
+        locale, options, None, src, -1, None
+    )  # edits can be None
     assert isinstance(dest, str)
     assert dest == "J"
 
     dest = CaseMap.to_title(
-        locale, options, None, src)  # src_length is optional
+        locale, options, None, src, -1
+    )  # edits is optional
+    assert isinstance(dest, str)
+    assert dest == "J"
+
+    dest = CaseMap.to_title(
+        locale, options, None, src
+    )  # src_length is optional
     assert isinstance(dest, str)
     assert dest == "J"
 
@@ -130,7 +143,9 @@ def test_api():
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"
 
-    dest = CaseMap.to_upper(locale, options, src, -1, None)  # edits can be None
+    dest = CaseMap.to_upper(
+        locale, options, src, -1, None
+    )  # edits can be None
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"
 

@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
@@ -6,11 +7,14 @@ if U_ICU_VERSION_MAJOR_NUM < 50:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
     FieldPosition, FieldPositionIterator, Formattable, ICUError, Locale,
     NumberFormat, ParsePosition, PluralFormat, PluralRules, UErrorCode,
-    UPluralType, UnicodeString,
+    UnicodeString, UPluralType,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -73,9 +77,8 @@ def test_format():
     # From icu/source/test/intltest/plurfmts.cpp
     pattern = "one{#st file}two{#nd file}few{#rd file}other{#th file}"
     fmt = PluralFormat(
-        Locale.get_english(),
-        UPluralType.UPLURAL_TYPE_ORDINAL,
-        pattern)
+        Locale.get_english(), UPluralType.UPLURAL_TYPE_ORDINAL, pattern
+    )
     append_to = UnicodeString()
 
     # [1], [2]
@@ -173,9 +176,8 @@ def test_format():
 def test_parse_object():
     pattern = "one{#st file}two{#nd file}few{#rd file}other{#th file}"
     fmt = PluralFormat(
-        Locale.get_english(),
-        UPluralType.UPLURAL_TYPE_ORDINAL,
-        pattern)
+        Locale.get_english(), UPluralType.UPLURAL_TYPE_ORDINAL, pattern
+    )
 
     # *No effect in ICU 69*
     # void icu::PluralFormat::parseObject(
@@ -322,27 +324,21 @@ def test_plural_format():
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt10 = PluralFormat(
-        locale,
-        UPluralType.UPLURAL_TYPE_CARDINAL,
-        pattern)
+    fmt10 = PluralFormat(locale, UPluralType.UPLURAL_TYPE_CARDINAL, pattern)
 
     fmt10a = PluralFormat(
-        str(locale),
-        UPluralType.UPLURAL_TYPE_CARDINAL,
-        pattern)
+        str(locale), UPluralType.UPLURAL_TYPE_CARDINAL, pattern
+    )
     assert fmt10 == fmt10a
 
     fmt10b = PluralFormat(
-        locale,
-        UPluralType.UPLURAL_TYPE_CARDINAL,
-        str(pattern))
+        locale, UPluralType.UPLURAL_TYPE_CARDINAL, str(pattern)
+    )
     assert fmt10 == fmt10b
 
     fmt10c = PluralFormat(
-        str(locale),
-        UPluralType.UPLURAL_TYPE_CARDINAL,
-        str(pattern))
+        str(locale), UPluralType.UPLURAL_TYPE_CARDINAL, str(pattern)
+    )
     assert fmt10 == fmt10c
 
     # [11]

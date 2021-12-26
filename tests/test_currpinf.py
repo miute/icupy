@@ -1,8 +1,6 @@
 import copy
 
-from icupy.icu import (
-    CurrencyPluralInfo, Locale, PluralRules, UnicodeString,
-)
+from icupy.icu import CurrencyPluralInfo, Locale, PluralRules, UnicodeString
 
 
 def test_api():
@@ -50,8 +48,8 @@ def test_api():
     #       UErrorCode &status
     # )
     cpi2.set_currency_plural_pattern(
-        UnicodeString("one"),
-        UnicodeString("0 qwerty"))
+        UnicodeString("one"), UnicodeString("0 qwerty")
+    )
     cpi2.set_currency_plural_pattern("one", UnicodeString("0 qwerty"))
     cpi2.set_currency_plural_pattern(UnicodeString("one"), "0 qwerty")
     cpi2.set_currency_plural_pattern("one", "0 qwerty")

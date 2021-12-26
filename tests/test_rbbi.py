@@ -1,13 +1,16 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    BreakIterator, CharacterIterator, Locale, RuleBasedBreakIterator,
-    StringCharacterIterator, ULocDataLocaleType,
-    UParseError, UWordBreak, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
-    utext_close, utext_extract, utext_native_length,
-    utext_open_const_unicode_string,
+    U_ICU_VERSION_MAJOR_NUM, BreakIterator, CharacterIterator, Locale,
+    RuleBasedBreakIterator, StringCharacterIterator, ULocDataLocaleType,
+    UnicodeString, UParseError, UWordBreak, utext_close, utext_extract,
+    utext_native_length, utext_open_const_unicode_string,
 )
+
+# fmt: on
 
 
 def test_adopt_text():
@@ -252,7 +255,8 @@ def test_filtered_break_iterator_builder_60():
     #       UErrorCode &status
     # )
     bi = builder.wrap_iterator_with_filter(
-        BreakIterator.create_sentence_instance(Locale.get_english()))
+        BreakIterator.create_sentence_instance(Locale.get_english())
+    )
     assert isinstance(bi, BreakIterator)
 
     text = UnicodeString(
@@ -314,27 +318,20 @@ def test_get_display_name():
         #       UnicodeString &name
         # )
         result = BreakIterator.get_display_name(
-            Locale.get_france(),
-            us_locale,
-            name)
+            Locale.get_france(), us_locale, name
+        )
         assert isinstance(result, UnicodeString)
         assert id(result) == id(name)
         assert name == "French (France)"
 
         name.remove()
-        result = BreakIterator.get_display_name(
-            "fr_FR",
-            Locale("en_US"),
-            name)
+        result = BreakIterator.get_display_name("fr_FR", Locale("en_US"), name)
         assert isinstance(result, UnicodeString)
         assert id(result) == id(name)
         assert name == "French (France)"
 
         name.remove()
-        result = BreakIterator.get_display_name(
-            Locale("fr_FR"),
-            "en_US",
-            name)
+        result = BreakIterator.get_display_name(Locale("fr_FR"), "en_US", name)
         assert isinstance(result, UnicodeString)
         assert id(result) == id(name)
         assert name == "French (France)"
@@ -419,14 +416,16 @@ def test_get_rule_status():
 def test_get_rule_status_vec():
     # From icu/source/test/intltest/rbbiapts.cpp:
     # void RBBIAPITest::TestRuleStatusVec()
-    rules = UnicodeString("[A-N]{100}; \n"
-                          "[a-w]{200}; \n"
-                          "[\\p{L}]{300}; \n"
-                          "[\\p{N}]{400}; \n"
-                          "[0-5]{500}; \n"
-                          "!.*;\n",
-                          -1,
-                          UnicodeString.INVARIANT)
+    rules = UnicodeString(
+        "[A-N]{100}; \n"
+        "[a-w]{200}; \n"
+        "[\\p{L}]{300}; \n"
+        "[\\p{N}]{400}; \n"
+        "[0-5]{500}; \n"
+        "!.*;\n",
+        -1,
+        UnicodeString.INVARIANT,
+    )
     parse_error = UParseError()
     bi = RuleBasedBreakIterator(rules, parse_error)
     src = UnicodeString("Aapz5?")
@@ -665,11 +664,13 @@ def test_rule_based_break_iterator():
     #       UParseError &parseError,
     #       UErrorCode &status
     # )
-    rules = UnicodeString("$dictionary = [a-z]; \n"
-                          "!!forward; \n"
-                          "$dictionary $dictionary; \n"
-                          "!!reverse; \n"
-                          "$dictionary $dictionary; \n")
+    rules = UnicodeString(
+        "$dictionary = [a-z]; \n"
+        "!!forward; \n"
+        "$dictionary $dictionary; \n"
+        "!!reverse; \n"
+        "$dictionary $dictionary; \n"
+    )
     parse_error = UParseError()
     bi3 = RuleBasedBreakIterator(rules, parse_error)
     bi3.set_text(src)
@@ -686,7 +687,8 @@ def test_rule_based_break_iterator():
         "$dictionary $dictionary; \n"
         "!!reverse; \n"
         "$dictionary $dictionary; \n",
-        parse_error)
+        parse_error,
+    )
     bi3a.set_text(src)
     assert bi3a.first() == 0
     assert bi3a.next() == 2

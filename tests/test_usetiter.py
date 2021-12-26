@@ -1,7 +1,11 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
     U_ICU_VERSION_MAJOR_NUM, UnicodeSet, UnicodeSetIterator, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_next():
@@ -26,7 +30,7 @@ def test_next():
 
     assert it.next()
     assert not it.is_string()
-    assert it.get_codepoint() == 0x1abcd
+    assert it.get_codepoint() == 0x1ABCD
     assert it.get_string() == "\U0001abcd"
 
     assert it.next()

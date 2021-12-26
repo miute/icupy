@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
@@ -22,13 +23,14 @@ def test_api():
     # )
     assert gi.get_list_gender([], 0) == UGender.UGENDER_OTHER
 
-    assert gi.get_list_gender(
-        [UGender.UGENDER_MALE],
-        1) == UGender.UGENDER_MALE
+    assert (
+        gi.get_list_gender([UGender.UGENDER_MALE], 1) == UGender.UGENDER_MALE
+    )
 
-    assert gi.get_list_gender(
-        [UGender.UGENDER_FEMALE, UGender.UGENDER_MALE],
-        2) == UGender.UGENDER_OTHER
+    assert (
+        gi.get_list_gender([UGender.UGENDER_FEMALE, UGender.UGENDER_MALE], 2)
+        == UGender.UGENDER_OTHER
+    )
 
     gi = GenderInfo.get_instance("fr")
     assert isinstance(gi, GenderInfo)
@@ -36,9 +38,9 @@ def test_api():
     # length is optional
     assert gi.get_list_gender([]) == UGender.UGENDER_OTHER
 
-    assert gi.get_list_gender(
-        [UGender.UGENDER_MALE]) == UGender.UGENDER_MALE
+    assert gi.get_list_gender([UGender.UGENDER_MALE]) == UGender.UGENDER_MALE
 
-    assert gi.get_list_gender(
-        [UGender.UGENDER_FEMALE, UGender.UGENDER_MALE]
-    ) == UGender.UGENDER_MALE
+    assert (
+        gi.get_list_gender([UGender.UGENDER_FEMALE, UGender.UGENDER_MALE])
+        == UGender.UGENDER_MALE
+    )

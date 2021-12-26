@@ -1,16 +1,20 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 58:
     pytest.skip("ICU4C<58", allow_module_level=True)
 
+# fmt: off
 from icupy.icu import (
-    UBIDI_LTR, UBIDI_MIRRORING_OFF, UBIDI_MIRRORING_ON, UBiDiOrder,
-    U_SHAPE_DIGITS_ALEN2AN_INIT_LR, U_SHAPE_LETTERS_UNSHAPE,
-    u_shape_arabic, u_unescape, ubiditransform_close, ubiditransform_open,
+    U_SHAPE_DIGITS_ALEN2AN_INIT_LR, U_SHAPE_LETTERS_UNSHAPE, UBIDI_LTR,
+    UBIDI_MIRRORING_OFF, UBIDI_MIRRORING_ON, UBiDiOrder, u_shape_arabic,
+    u_unescape, ubiditransform_close, ubiditransform_open,
     ubiditransform_transform,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -52,7 +56,8 @@ def test_api():
             UBIDI_LTR,
             UBiDiOrder.UBIDI_VISUAL,
             UBIDI_MIRRORING_ON,
-            0)
+            0,
+        )
         assert isinstance(dest, str)
         assert dest == expected
 
@@ -64,7 +69,8 @@ def test_api():
         expected = u_shape_arabic(
             u_unescape(out_text),
             -1,
-            U_SHAPE_DIGITS_ALEN2AN_INIT_LR | U_SHAPE_LETTERS_UNSHAPE)
+            U_SHAPE_DIGITS_ALEN2AN_INIT_LR | U_SHAPE_LETTERS_UNSHAPE,
+        )
         dest = ubiditransform_transform(
             transform,
             src,
@@ -74,6 +80,7 @@ def test_api():
             UBIDI_LTR,
             UBiDiOrder.UBIDI_VISUAL,
             UBIDI_MIRRORING_OFF,
-            U_SHAPE_DIGITS_ALEN2AN_INIT_LR | U_SHAPE_LETTERS_UNSHAPE)
+            U_SHAPE_DIGITS_ALEN2AN_INIT_LR | U_SHAPE_LETTERS_UNSHAPE,
+        )
         assert isinstance(dest, str)
         assert dest == expected

@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 51:
@@ -6,11 +7,14 @@ if U_ICU_VERSION_MAJOR_NUM < 51:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
-    CompactDecimalFormat, DecimalFormat, FieldPosition, FieldPositionIterator,
-    Formattable, ICUError, INT32_MAX, INT64_MAX, Locale, ParsePosition,
-    UErrorCode, UNumberCompactStyle, UnicodeString,
+    INT32_MAX, INT64_MAX, CompactDecimalFormat, DecimalFormat, FieldPosition,
+    FieldPositionIterator, Formattable, ICUError, Locale, ParsePosition,
+    UErrorCode, UnicodeString, UNumberCompactStyle,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -22,13 +26,13 @@ def test_api():
     #       UErrorCode &status
     # )
     fmt = CompactDecimalFormat.create_instance(
-        Locale.get_us(),
-        UNumberCompactStyle.UNUM_SHORT)
+        Locale.get_us(), UNumberCompactStyle.UNUM_SHORT
+    )
     assert isinstance(fmt, CompactDecimalFormat)
 
     fmt2 = CompactDecimalFormat.create_instance(
-        "en-US",
-        UNumberCompactStyle.UNUM_SHORT)
+        "en-US", UNumberCompactStyle.UNUM_SHORT
+    )
     assert isinstance(fmt2, CompactDecimalFormat)
     assert fmt == fmt2
 
@@ -41,8 +45,8 @@ def test_api():
 
 def test_clone():
     fmt1 = CompactDecimalFormat.create_instance(
-        Locale.get_us(),
-        UNumberCompactStyle.UNUM_SHORT)
+        Locale.get_us(), UNumberCompactStyle.UNUM_SHORT
+    )
 
     # CompactDecimalFormat *icu::CompactDecimalFormat::clone()
     fmt2 = fmt1.clone()
@@ -58,8 +62,8 @@ def test_clone():
 
 def test_format():
     fmt = CompactDecimalFormat.create_instance(
-        Locale.get_us(),
-        UNumberCompactStyle.UNUM_SHORT)
+        Locale.get_us(), UNumberCompactStyle.UNUM_SHORT
+    )
     d = -10456.0037
     s = "-1.045600e+04"
     n32 = INT32_MAX
@@ -249,8 +253,8 @@ def test_format():
 
 def test_parse():
     fmt = CompactDecimalFormat.create_instance(
-        Locale.get_us(),
-        UNumberCompactStyle.UNUM_SHORT)
+        Locale.get_us(), UNumberCompactStyle.UNUM_SHORT
+    )
     # n = 1.2e+15
     s = "1200T"
 

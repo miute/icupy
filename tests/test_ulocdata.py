@@ -1,13 +1,16 @@
+# fmt: off
 from icupy.icu import (
-    ULocaleDataDelimiterType, ULocaleDataExemplarSetType, UMeasurementSystem,
-    USET_ADD_CASE_MAPPINGS, UnicodeSet,
-    ulocdata_close, ulocdata_get_cldr_version, ulocdata_get_delimiter,
+    USET_ADD_CASE_MAPPINGS, ULocaleDataDelimiterType,
+    ULocaleDataExemplarSetType, UMeasurementSystem, UnicodeSet, ulocdata_close,
+    ulocdata_get_cldr_version, ulocdata_get_delimiter,
     ulocdata_get_exemplar_set, ulocdata_get_locale_display_pattern,
     ulocdata_get_locale_separator, ulocdata_get_measurement_system,
     ulocdata_get_no_substitute, ulocdata_get_paper_size, ulocdata_open,
     ulocdata_set_no_substitute,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -24,8 +27,7 @@ def test_api():
     #       const char *localeID,
     #       UErrorCode *status
     # )
-    assert (ulocdata_get_measurement_system("en")
-            == UMeasurementSystem.UMS_US)
+    assert ulocdata_get_measurement_system("en") == UMeasurementSystem.UMS_US
 
     # void ulocdata_getPaperSize(
     #       const char *localeID,
@@ -50,8 +52,8 @@ def test_api():
         #       UErrorCode *status
         # )
         result = ulocdata_get_delimiter(
-            uld,
-            ULocaleDataDelimiterType.ULOCDATA_QUOTATION_START)
+            uld, ULocaleDataDelimiterType.ULOCDATA_QUOTATION_START
+        )
         assert isinstance(result, str)
         assert result == "\u201c"  # '“'
 
@@ -66,7 +68,8 @@ def test_api():
             uld,
             None,
             USET_ADD_CASE_MAPPINGS,
-            ULocaleDataExemplarSetType.ULOCDATA_ES_STANDARD)
+            ULocaleDataExemplarSetType.ULOCDATA_ES_STANDARD,
+        )
         uniset1 = UnicodeSet.from_uset(uset1)
         assert uniset1.size() > 0
 
@@ -76,7 +79,8 @@ def test_api():
             uld,
             fill_in,
             USET_ADD_CASE_MAPPINGS,
-            ULocaleDataExemplarSetType.ULOCDATA_ES_STANDARD)
+            ULocaleDataExemplarSetType.ULOCDATA_ES_STANDARD,
+        )
         uniset3 = UnicodeSet.from_uset(uset3)
         assert uniset1 == uniset2 == uniset3
 

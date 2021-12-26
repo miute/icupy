@@ -2,14 +2,16 @@ import copy
 from functools import cmp_to_key
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    CollationElementIterator, CollationKey, Collator, Locale,
-    RuleBasedCollator, StringCharacterIterator, StringEnumeration,
-    UColAttribute, UColAttributeValue, UColBoundMode, UColReorderCode,
-    UColRuleOption, UCollationResult, UScriptCode,
-    U_ICU_VERSION_MAJOR_NUM,
-    UnicodeSet, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, CollationElementIterator, CollationKey, Collator,
+    Locale, RuleBasedCollator, StringCharacterIterator, StringEnumeration,
+    UColAttribute, UColAttributeValue, UColBoundMode, UCollationResult,
+    UColReorderCode, UColRuleOption, UnicodeSet, UnicodeString, UScriptCode,
 )
+
+# fmt: on
 
 
 def test_clone():
@@ -69,8 +71,9 @@ def test_compare():
     assert coll.compare(source, "abc") == UCollationResult.UCOL_GREATER
     assert coll.compare("ABC", "abc") == UCollationResult.UCOL_GREATER
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
     assert coll.compare("ABC", -1, "abc", -1) == UCollationResult.UCOL_EQUAL
     assert coll.compare(source, target, 3) == UCollationResult.UCOL_EQUAL
     assert coll.compare(source, target) == UCollationResult.UCOL_EQUAL
@@ -173,8 +176,9 @@ def test_equals():
     assert not coll.equals(source, "abc")
     assert not coll.equals("ABC", "abc")
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
     assert coll.equals(source, target)
     assert coll.equals("ABC", target)
     assert coll.equals(source, "abc")
@@ -188,32 +192,51 @@ def test_get_attribute():
     #       UColAttribute attr,
     #       UErrorCode &status
     # )
-    assert (coll.get_attribute(UColAttribute.UCOL_FRENCH_COLLATION)
-            == UColAttributeValue.UCOL_ON)
-    assert (coll.get_attribute(UColAttribute.UCOL_ALTERNATE_HANDLING)
-            == UColAttributeValue.UCOL_NON_IGNORABLE)
-    assert (coll.get_attribute(UColAttribute.UCOL_CASE_FIRST)
-            == UColAttributeValue.UCOL_STRENGTH_LIMIT)
-    assert (coll.get_attribute(UColAttribute.UCOL_CASE_LEVEL)
-            == UColAttributeValue.UCOL_STRENGTH_LIMIT)
-    assert (coll.get_attribute(UColAttribute.UCOL_NORMALIZATION_MODE)
-            == UColAttributeValue.UCOL_STRENGTH_LIMIT)
-    assert (coll.get_attribute(UColAttribute.UCOL_DECOMPOSITION_MODE)
-            == UColAttributeValue.UCOL_STRENGTH_LIMIT)
-    assert (coll.get_attribute(UColAttribute.UCOL_STRENGTH)
-            == UColAttributeValue.UCOL_TERTIARY)
-    assert (coll.get_attribute(UColAttribute.UCOL_NUMERIC_COLLATION)
-            == UColAttributeValue.UCOL_STRENGTH_LIMIT)
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_FRENCH_COLLATION)
+        == UColAttributeValue.UCOL_ON
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_ALTERNATE_HANDLING)
+        == UColAttributeValue.UCOL_NON_IGNORABLE
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_CASE_FIRST)
+        == UColAttributeValue.UCOL_STRENGTH_LIMIT
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_CASE_LEVEL)
+        == UColAttributeValue.UCOL_STRENGTH_LIMIT
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_NORMALIZATION_MODE)
+        == UColAttributeValue.UCOL_STRENGTH_LIMIT
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_DECOMPOSITION_MODE)
+        == UColAttributeValue.UCOL_STRENGTH_LIMIT
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_STRENGTH)
+        == UColAttributeValue.UCOL_TERTIARY
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_NUMERIC_COLLATION)
+        == UColAttributeValue.UCOL_STRENGTH_LIMIT
+    )
 
     # void icu::RuleBasedCollator::setAttribute(
     #       UColAttribute attr,
     #       UColAttributeValue value,
     #       UErrorCode &status
     # )
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
-    assert (coll.get_attribute(UColAttribute.UCOL_STRENGTH)
-            == UColAttributeValue.UCOL_PRIMARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
+    assert (
+        coll.get_attribute(UColAttribute.UCOL_STRENGTH)
+        == UColAttributeValue.UCOL_PRIMARY
+    )
 
 
 def test_get_available_locales():
@@ -242,15 +265,11 @@ def test_get_bound():
     #       UErrorCode &status
     # )
     result1 = Collator.get_bound(
-        source,
-        len(source),
-        UColBoundMode.UCOL_BOUND_LOWER,
-        1)
+        source, len(source), UColBoundMode.UCOL_BOUND_LOWER, 1
+    )
     result2 = Collator.get_bound(
-        source,
-        len(source),
-        UColBoundMode.UCOL_BOUND_UPPER,
-        1)
+        source, len(source), UColBoundMode.UCOL_BOUND_UPPER, 1
+    )
     assert isinstance(result1, list)
     assert isinstance(result2, list)
     assert len(result1) > 0
@@ -311,9 +330,8 @@ def test_get_display_name():
         # )
         name1 = UnicodeString()
         result = Collator.get_display_name(
-            object_locale,
-            display_locale,
-            name1)
+            object_locale, display_locale, name1
+        )
         assert isinstance(result, UnicodeString)
         assert id(result) == id(name1)
         assert name1 == "Japanese"
@@ -357,8 +375,8 @@ def test_get_functional_equivalent():
     #       UErrorCode &status
     # )
     result, is_available = Collator.get_functional_equivalent(
-        "collation",
-        Locale.get_japanese())
+        "collation", Locale.get_japanese()
+    )
     assert isinstance(result, Locale)
     assert result == Locale.get_japanese()
     assert is_available
@@ -387,11 +405,10 @@ def test_get_keywords():
     #       UErrorCode &status
     # )
     it = Collator.get_keyword_values_for_locale(
-        "collation",
-        Locale.get_japanese(),
-        True)
+        "collation", Locale.get_japanese(), True
+    )
     assert isinstance(it, StringEnumeration)
-    assert list(it) == ['standard', 'unihan', 'emoji', 'eor', 'search']
+    assert list(it) == ["standard", "unihan", "emoji", "eor", "search"]
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
@@ -399,8 +416,10 @@ def test_get_max_variable():
     coll = Collator.create_instance(Locale.get_japanese())
 
     # UColReorderCode icu::Collator::getMaxVariable()
-    assert (coll.get_max_variable()
-            == UColReorderCode.UCOL_REORDER_CODE_PUNCTUATION)
+    assert (
+        coll.get_max_variable()
+        == UColReorderCode.UCOL_REORDER_CODE_PUNCTUATION
+    )
 
     # uint32_t icu::Collator::getVariableTop(UErrorCode &status)
     weight1 = coll.get_variable_top()
@@ -411,8 +430,9 @@ def test_get_max_variable():
     #       UErrorCode &errorCode
     # )
     coll.set_max_variable(UColReorderCode.UCOL_REORDER_CODE_CURRENCY)
-    assert (coll.get_max_variable()
-            == UColReorderCode.UCOL_REORDER_CODE_CURRENCY)
+    assert (
+        coll.get_max_variable() == UColReorderCode.UCOL_REORDER_CODE_CURRENCY
+    )
     weight2 = coll.get_variable_top()
     assert isinstance(weight2, int)
 
@@ -543,8 +563,9 @@ def test_greater():
     assert coll.greater(source, "abc")
     assert coll.greater("ABC", "abc")
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
     assert not coll.greater(source, target)
     assert not coll.greater("ABC", target)
     assert not coll.greater(source, "abc")
@@ -565,8 +586,9 @@ def test_greater_or_equal():
     assert coll.greater_or_equal(source, "abc")
     assert coll.greater_or_equal("ABC", "abc")
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
     assert coll.greater_or_equal(source, target)
     assert coll.greater_or_equal("ABC", target)
     assert coll.greater_or_equal(source, "abc")
@@ -621,14 +643,10 @@ def test_rule_based_collator():
     #       ECollationStrength collationStrength,
     #       UErrorCode &status
     # )
-    test2 = RuleBasedCollator(
-        rules,
-        Collator.ECollationStrength.TERTIARY)
+    test2 = RuleBasedCollator(rules, Collator.ECollationStrength.TERTIARY)
     assert test2.get_rules() == rules
 
-    test2a = RuleBasedCollator(
-        str(rules),
-        Collator.TERTIARY)
+    test2a = RuleBasedCollator(str(rules), Collator.TERTIARY)
     assert test2a.get_rules() == rules
 
     # [3]
@@ -637,14 +655,10 @@ def test_rule_based_collator():
     #       UColAttributeValue decompositionMode,
     #       UErrorCode &status
     # )
-    test3 = RuleBasedCollator(
-        rules,
-        UColAttributeValue.UCOL_ON)
+    test3 = RuleBasedCollator(rules, UColAttributeValue.UCOL_ON)
     assert test3.get_rules() == rules
 
-    test3a = RuleBasedCollator(
-        str(rules),
-        UColAttributeValue.UCOL_ON)
+    test3a = RuleBasedCollator(str(rules), UColAttributeValue.UCOL_ON)
     assert test3a.get_rules() == rules
 
     # [4]
@@ -655,15 +669,15 @@ def test_rule_based_collator():
     #       UErrorCode &status
     # )
     test4 = RuleBasedCollator(
-        rules,
-        Collator.ECollationStrength.TERTIARY,
-        UColAttributeValue.UCOL_ON)
+        rules, Collator.ECollationStrength.TERTIARY, UColAttributeValue.UCOL_ON
+    )
     assert test4.get_rules() == rules
 
     test4a = RuleBasedCollator(
         str(rules),
         Collator.ECollationStrength.TERTIARY,
-        UColAttributeValue.UCOL_ON)
+        UColAttributeValue.UCOL_ON,
+    )
     assert test4a.get_rules() == rules
 
     # [6]
@@ -689,10 +703,16 @@ def test_rule_based_collator():
 
 
 def test_sort():
-    # From https://unicode-org.github.io/icu/userguide/collation/customization/#simple-tailoring-examples
+    # From
+    #  https://unicode-org.github.io/icu/userguide/collation/customization/#simple-tailoring-examples
     src = [
-        "CUKIĆ RADOJICA", "ČUKIĆ SLOBODAN", "CUKIĆ SVETOZAR", "ČUKIĆ ZORAN",
-        "CURIĆ MILOŠ", "ĆURIĆ MILOŠ", "CVRKALJ ÐURO",
+        "CUKIĆ RADOJICA",
+        "ČUKIĆ SLOBODAN",
+        "CUKIĆ SVETOZAR",
+        "ČUKIĆ ZORAN",
+        "CURIĆ MILOŠ",
+        "ĆURIĆ MILOŠ",
+        "CVRKALJ ÐURO",
     ]
     base = Collator.create_instance(Locale("sr_Latn"))
     rules = base.get_rules() + UnicodeString("& C < č <<< Č < ć <<< Ć")
@@ -702,8 +722,10 @@ def test_sort():
         nonlocal coll
         _result = coll.compare(_a, -1, _b, -1)
         return (
-            -1 if _result == UCollationResult.UCOL_LESS
-            else 0 if _result == UCollationResult.UCOL_EQUAL
+            -1
+            if _result == UCollationResult.UCOL_LESS
+            else 0
+            if _result == UCollationResult.UCOL_EQUAL
             else 1
         )
 
@@ -714,6 +736,11 @@ def test_sort():
     assert result1 != result3
     assert result2 == result3
     assert result3 == [
-        "CUKIĆ RADOJICA", "CUKIĆ SVETOZAR", "CURIĆ MILOŠ", "CVRKALJ ÐURO",
-        "ČUKIĆ SLOBODAN", "ČUKIĆ ZORAN", "ĆURIĆ MILOŠ",
+        "CUKIĆ RADOJICA",
+        "CUKIĆ SVETOZAR",
+        "CURIĆ MILOŠ",
+        "CVRKALJ ÐURO",
+        "ČUKIĆ SLOBODAN",
+        "ČUKIĆ ZORAN",
+        "ĆURIĆ MILOŠ",
     ]

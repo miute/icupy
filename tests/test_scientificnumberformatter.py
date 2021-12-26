@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 55:
@@ -6,9 +7,13 @@ if U_ICU_VERSION_MAJOR_NUM < 55:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
-    Formattable, Locale, NumberFormat, ScientificNumberFormatter, UnicodeString,
+    Formattable, Locale, NumberFormat, ScientificNumberFormatter,
+    UnicodeString,
 )
+
+# fmt: on
 
 
 def test_clone():
@@ -46,51 +51,43 @@ def test_create_markup_instance():
     #       UErrorCode &status
     # )
     fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(),
-        UnicodeString("<sup>"),
-        UnicodeString("</sup>"))
+        Locale.get_english(), UnicodeString("<sup>"), UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        "en",
-        UnicodeString("<sup>"),
-        UnicodeString("</sup>"))
+        "en", UnicodeString("<sup>"), UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(),
-        "<sup>",
-        UnicodeString("</sup>"))
+        Locale.get_english(), "<sup>", UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(),
-        UnicodeString("<sup>"),
-        "</sup>")
+        Locale.get_english(), UnicodeString("<sup>"), "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        "en",
-        "<sup>",
-        UnicodeString("</sup>"))
+        "en", "<sup>", UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        "en",
-        UnicodeString("<sup>"),
-        "</sup>")
+        "en", UnicodeString("<sup>"), "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(),
-        "<sup>",
-        "</sup>")
+        Locale.get_english(), "<sup>", "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        "en",
-        "<sup>",
-        "</sup>")
+        "en", "<sup>", "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     decfmt = NumberFormat.create_scientific_instance("en")
@@ -105,27 +102,23 @@ def test_create_markup_instance():
     #       UErrorCode &status
     # )
     fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt,
-        UnicodeString("<sup>"),
-        UnicodeString("</sup>"))
+        decfmt, UnicodeString("<sup>"), UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt,
-        "<sup>",
-        UnicodeString("</sup>"))
+        decfmt, "<sup>", UnicodeString("</sup>")
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt,
-        UnicodeString("<sup>"),
-        "</sup>")
+        decfmt, UnicodeString("<sup>"), "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt,
-        "<sup>",
-        "</sup>")
+        decfmt, "<sup>", "</sup>"
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
 
@@ -137,7 +130,8 @@ def test_create_superscript_instance():
     #       UErrorCode &status
     # )
     fmt = ScientificNumberFormatter.create_superscript_instance(
-        Locale.get_english())
+        Locale.get_english()
+    )
     assert isinstance(fmt, ScientificNumberFormatter)
 
     fmt = ScientificNumberFormatter.create_superscript_instance("en")
@@ -158,9 +152,8 @@ def test_create_superscript_instance():
 
 def test_format():
     fmt = ScientificNumberFormatter.create_markup_instance(
-        "en",
-        "<sup>",
-        "</sup>")
+        "en", "<sup>", "</sup>"
+    )
 
     # UnicodeString &icu::ScientificNumberFormatter::format(
     #       const Formattable &number,

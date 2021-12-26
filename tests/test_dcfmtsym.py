@@ -1,9 +1,12 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    DecimalFormatSymbols, Locale, NumberingSystem, StringEnumeration,
-    UCurrencySpacing, ULocDataLocaleType, U_ICU_VERSION_MAJOR_NUM,
-    UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, DecimalFormatSymbols, Locale, NumberingSystem,
+    StringEnumeration, UCurrencySpacing, ULocDataLocaleType, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -47,8 +50,8 @@ def test_api():
     #       UErrorCode &status
     # )
     result = sym1.get_pattern_for_currency_spacing(
-        UCurrencySpacing.UNUM_CURRENCY_INSERT,
-        True)
+        UCurrencySpacing.UNUM_CURRENCY_INSERT, True
+    )
     assert isinstance(result, UnicodeString)
     assert result == "\xa0"
 
@@ -65,22 +68,20 @@ def test_api():
     #       const UnicodeString &pattern
     # )
     sym1.set_pattern_for_currency_spacing(
-        UCurrencySpacing.UNUM_CURRENCY_INSERT,
-        True,
-        UnicodeString())
+        UCurrencySpacing.UNUM_CURRENCY_INSERT, True, UnicodeString()
+    )
     result = sym1.get_pattern_for_currency_spacing(
-        UCurrencySpacing.UNUM_CURRENCY_INSERT,
-        True)
+        UCurrencySpacing.UNUM_CURRENCY_INSERT, True
+    )
     assert isinstance(result, UnicodeString)
     assert len(result) == 0
 
     sym1.set_pattern_for_currency_spacing(
-        UCurrencySpacing.UNUM_CURRENCY_INSERT,
-        True,
-        "\xa0")
+        UCurrencySpacing.UNUM_CURRENCY_INSERT, True, "\xa0"
+    )
     result = sym1.get_pattern_for_currency_spacing(
-        UCurrencySpacing.UNUM_CURRENCY_INSERT,
-        True)
+        UCurrencySpacing.UNUM_CURRENCY_INSERT, True
+    )
     assert isinstance(result, UnicodeString)
     assert result == "\xa0"
 
@@ -90,9 +91,8 @@ def test_api():
     #       const UBool propogateDigits = true
     # )
     sym1.set_symbol(
-        DecimalFormatSymbols.ZERO_DIGIT_SYMBOL,
-        UnicodeString("\uff10"),
-        False)
+        DecimalFormatSymbols.ZERO_DIGIT_SYMBOL, UnicodeString("\uff10"), False
+    )
     assert sym1.get_symbol(DecimalFormatSymbols.ZERO_DIGIT_SYMBOL) == "\uff10"
     assert sym1.get_symbol(DecimalFormatSymbols.ONE_DIGIT_SYMBOL) == "1"
     assert sym1.get_symbol(DecimalFormatSymbols.TWO_DIGIT_SYMBOL) == "2"
@@ -105,9 +105,8 @@ def test_api():
     assert sym1.get_symbol(DecimalFormatSymbols.NINE_DIGIT_SYMBOL) == "9"
 
     sym1.set_symbol(
-        DecimalFormatSymbols.ZERO_DIGIT_SYMBOL,
-        UnicodeString("\uff10"),
-        True)
+        DecimalFormatSymbols.ZERO_DIGIT_SYMBOL, UnicodeString("\uff10"), True
+    )
     assert sym1.get_symbol(DecimalFormatSymbols.ZERO_DIGIT_SYMBOL) == "\uff10"
     assert sym1.get_symbol(DecimalFormatSymbols.ONE_DIGIT_SYMBOL) == "\uff11"
     assert sym1.get_symbol(DecimalFormatSymbols.TWO_DIGIT_SYMBOL) == "\uff12"
@@ -119,9 +118,7 @@ def test_api():
     assert sym1.get_symbol(DecimalFormatSymbols.EIGHT_DIGIT_SYMBOL) == "\uff18"
     assert sym1.get_symbol(DecimalFormatSymbols.NINE_DIGIT_SYMBOL) == "\uff19"
 
-    sym1.set_symbol(
-        DecimalFormatSymbols.ZERO_DIGIT_SYMBOL,
-        "0")
+    sym1.set_symbol(DecimalFormatSymbols.ZERO_DIGIT_SYMBOL, "0")
     assert sym1.get_symbol(DecimalFormatSymbols.ZERO_DIGIT_SYMBOL) == "0"
     assert sym1.get_symbol(DecimalFormatSymbols.ONE_DIGIT_SYMBOL) == "1"
     assert sym1.get_symbol(DecimalFormatSymbols.TWO_DIGIT_SYMBOL) == "2"
@@ -161,11 +158,9 @@ def test_decimal_format_symbols():
     #       UErrorCode &status
     # )
     sym2 = DecimalFormatSymbols(
-        Locale.get_us(),
-        NumberingSystem.create_instance())
-    sym2a = DecimalFormatSymbols(
-        "en_US",
-        NumberingSystem.create_instance())
+        Locale.get_us(), NumberingSystem.create_instance()
+    )
+    sym2a = DecimalFormatSymbols("en_US", NumberingSystem.create_instance())
     assert sym2 == sym2a
 
     # [3]
@@ -202,15 +197,11 @@ def test_numbering_system():
     #       UErrorCode &status
     # )
     ns3 = NumberingSystem.create_instance(
-        10,
-        False,
-        UnicodeString("0123456789"))
+        10, False, UnicodeString("0123456789")
+    )
     assert isinstance(ns3, NumberingSystem)
 
-    ns4 = NumberingSystem.create_instance(
-        10,
-        False,
-        "0123456789")
+    ns4 = NumberingSystem.create_instance(10, False, "0123456789")
     assert isinstance(ns4, NumberingSystem)
 
     # [3]

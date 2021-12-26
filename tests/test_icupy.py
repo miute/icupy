@@ -1,9 +1,12 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    ErrorCode, ICUError, UErrorCode, U_ICU_VERSION_MAJOR_NUM,
-    u_failure, u_get_version, u_success, u_version_from_string,
-    u_version_to_string,
+    U_ICU_VERSION_MAJOR_NUM, ErrorCode, ICUError, UErrorCode, u_failure,
+    u_get_version, u_success, u_version_from_string, u_version_to_string,
 )
+
+# fmt: on
 
 
 def test_icu_error():

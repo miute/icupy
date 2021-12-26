@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 53:
@@ -6,12 +7,15 @@ if U_ICU_VERSION_MAJOR_NUM < 53:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
     CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,
     Formattable, ICUError, Locale, Measure, MeasureFormat, MeasureUnit,
     ParsePosition, TimeUnit, TimeUnitAmount, UErrorCode, UMeasureFormatWidth,
     UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -22,14 +26,12 @@ def test_api():
     #       UErrorCode &status
     # )
     fmt1 = MeasureFormat(
-        Locale.get_us(),
-        UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
-    fmt2 = MeasureFormat(
-        "en-US",
-        UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
+        Locale.get_us(), UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT
+    )
+    fmt2 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
     fmt3 = MeasureFormat(
-        Locale.get_us(),
-        UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW)
+        Locale.get_us(), UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW
+    )
 
     # [3]
     # icu::MeasureFormat::MeasureFormat(const MeasureFormat &other)
@@ -139,7 +141,8 @@ def test_format():
     result = fmt1.format(
         Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
         append_to,
-        pos)
+        pos,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "3.5 feet"
@@ -147,9 +150,8 @@ def test_format():
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt1.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")),
-        append_to,
-        pos)
+        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to, pos
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1.00 US dollars"
@@ -157,9 +159,8 @@ def test_format():
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt2.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")),
-        append_to,
-        pos)
+        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to, pos
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "$1.00"
@@ -169,7 +170,8 @@ def test_format():
     result = fmt1.format(
         Formattable(TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)),
         append_to,
-        pos)
+        pos,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2 days"
@@ -187,7 +189,8 @@ def test_format():
         _ = fmt1.format(
             Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
             append_to,
-            pos_iter)
+            pos_iter,
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
@@ -196,7 +199,8 @@ def test_format():
         _ = fmt1.format(
             Formattable(CurrencyAmount(Formattable(1), "USD")),
             append_to,
-            pos_iter)
+            pos_iter,
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
@@ -205,17 +209,20 @@ def test_format():
         _ = fmt2.format(
             Formattable(CurrencyAmount(Formattable(1), "USD")),
             append_to,
-            pos_iter)
+            pos_iter,
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
     pos_iter = FieldPositionIterator()
     with pytest.raises(ICUError) as exc_info:
         _ = fmt1.format(
-            Formattable(TimeUnitAmount(Formattable(2),
-                                       TimeUnit.UTIMEUNIT_DAY)),
+            Formattable(
+                TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)
+            ),
             append_to,
-            pos_iter)
+            pos_iter,
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
@@ -227,23 +234,24 @@ def test_format():
     append_to = UnicodeString()
     result = fmt1.format(
         Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
-        append_to)
+        append_to,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "3.5 feet"
 
     append_to.remove()
     result = fmt1.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")),
-        append_to)
+        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1.00 US dollars"
 
     append_to.remove()
     result = fmt2.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")),
-        append_to)
+        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "$1.00"
@@ -251,7 +259,8 @@ def test_format():
     append_to.remove()
     result = fmt1.format(
         Formattable(TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)),
-        append_to)
+        append_to,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2 days"
@@ -274,11 +283,11 @@ def test_format_measure_per_unit():
         Measure(Formattable(50), MeasureUnit.create_pound_force()),
         MeasureUnit.create_square_inch(),
         append_to,
-        pos)
+        pos,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result in ("50 lbf/in\xb2",  # 50 lbf/in²
-                      "50 psi")
+    assert result in ("50 lbf/in\xb2", "50 psi")  # 50 lbf/in²
 
 
 def test_format_measures():
@@ -451,7 +460,8 @@ def test_time_unit_amount():
     #       TimeUnit::UTimeUnitFields timeUnitField,
     #       UErrorCode &status
     # )
-    tuamt2 = TimeUnitAmount(1, TimeUnit.UTIMEUNIT_DAY)
+    # tuamt2 =
+    _ = TimeUnitAmount(1, TimeUnit.UTIMEUNIT_DAY)
     # FIXME: TimeUnitAmount.__eq__(self, other: UObject) is not work.
     # assert tuamt1 == tuamt2
 

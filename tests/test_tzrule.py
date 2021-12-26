@@ -1,9 +1,12 @@
+# fmt: off
+from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 from icupy.icu import (
     AnnualTimeZoneRule, DateTimeRule, InitialTimeZoneRule,
     TimeArrayTimeZoneRule, TimeZoneRule, TimeZoneTransition,
-    UCalendarDaysOfWeek, UCalendarMonths, U_MILLIS_PER_HOUR as HOUR,
-    UnicodeString,
+    UCalendarDaysOfWeek, UCalendarMonths, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_annual_time_zone_rule():
@@ -12,10 +15,8 @@ def test_annual_time_zone_rule():
     assert AnnualTimeZoneRule.MAX_YEAR > 0
 
     date_time_rule = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY,
-        11,
-        1 * HOUR,
-        DateTimeRule.WALL_TIME)
+        UCalendarMonths.UCAL_FEBRUARY, 11, 1 * HOUR, DateTimeRule.WALL_TIME
+    )
 
     # [1]
     # icu::AnnualTimeZoneRule::AnnualTimeZoneRule(
@@ -32,7 +33,8 @@ def test_annual_time_zone_rule():
         1 * HOUR,
         date_time_rule,
         1966,
-        AnnualTimeZoneRule.MAX_YEAR)
+        AnnualTimeZoneRule.MAX_YEAR,
+    )
 
     # [2]
     # icu::AnnualTimeZoneRule::AnnualTimeZoneRule(
@@ -49,7 +51,8 @@ def test_annual_time_zone_rule():
         1 * HOUR,
         date_time_rule.clone(),
         1966,
-        AnnualTimeZoneRule.MAX_YEAR)
+        AnnualTimeZoneRule.MAX_YEAR,
+    )
 
     # [3]
     # icu::AnnualTimeZoneRule::AnnualTimeZoneRule(
@@ -159,10 +162,8 @@ def test_date_time_rule():
     #       TimeRuleType timeType
     # )
     dr1 = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY,
-        11,
-        1 * HOUR,
-        DateTimeRule.WALL_TIME)
+        UCalendarMonths.UCAL_FEBRUARY, 11, 1 * HOUR, DateTimeRule.WALL_TIME
+    )
 
     # DateRuleType icu::DateTimeRule::getDateRuleType(void)
     assert dr1.get_date_rule_type() == DateTimeRule.DOM
@@ -198,7 +199,8 @@ def test_date_time_rule():
         -1,
         UCalendarDaysOfWeek.UCAL_SATURDAY,
         1 * HOUR,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     assert dr2.get_date_rule_type() == DateTimeRule.DOW
     assert dr2.get_rule_day_of_month() == 0
     assert dr2.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SATURDAY
@@ -222,7 +224,8 @@ def test_date_time_rule():
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         True,
         1 * HOUR,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     assert dr3.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
     assert dr3.get_rule_day_of_month() == 11
     assert dr3.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SUNDAY
@@ -373,7 +376,8 @@ def test_time_array_time_zone_rule():
         1 * HOUR,
         start_times,
         len(start_times),
-        DateTimeRule.UTC_TIME)
+        DateTimeRule.UTC_TIME,
+    )
 
     # [2]
     # icu::TimeArrayTimeZoneRule::TimeArrayTimeZoneRule(
@@ -478,27 +482,21 @@ def test_time_zone_transition():
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     date_time_rule2 = DateTimeRule(
         UCalendarMonths.UCAL_JANUARY,
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     from_ = AnnualTimeZoneRule(
-        "from",
-        0,
-        0,
-        date_time_rule1,
-        0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "from", 0, 0, date_time_rule1, 0, AnnualTimeZoneRule.MAX_YEAR
+    )
     to = AnnualTimeZoneRule(
-        "to",
-        0,
-        0,
-        date_time_rule2,
-        0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "to", 0, 0, date_time_rule2, 0, AnnualTimeZoneRule.MAX_YEAR
+    )
     time = 1230681600000.0  # 2008-12-31T00:00:00
 
     # [1]

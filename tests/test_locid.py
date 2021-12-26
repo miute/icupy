@@ -1,10 +1,14 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    ICUError, Locale, StringEnumeration, UErrorCode,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, ICUError, Locale, StringEnumeration, UErrorCode,
+    UnicodeString,
 )
+
+# fmt: on
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
@@ -411,15 +415,19 @@ def test_get_display_script():
         result = loc.get_display_script(display_locale, disp_script)
         assert isinstance(result, UnicodeString)
         assert id(result) == id(disp_script)
-        assert (disp_script
-                == UnicodeString("sinogrammes simplifi\\u00E9s").unescape())
+        assert (
+            disp_script
+            == UnicodeString("sinogrammes simplifi\\u00E9s").unescape()
+        )
 
         disp_script.remove()
         result = loc.get_display_script("fr", disp_script)
         assert isinstance(result, UnicodeString)
         assert id(result) == id(disp_script)
-        assert (disp_script
-                == UnicodeString("sinogrammes simplifi\\u00E9s").unescape())
+        assert (
+            disp_script
+            == UnicodeString("sinogrammes simplifi\\u00E9s").unescape()
+        )
 
         # [2]
         # UnicodeString &icu::Locale::getDisplayScript(

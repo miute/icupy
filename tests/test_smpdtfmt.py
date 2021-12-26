@@ -1,23 +1,26 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    DateFormat, DateFormatSymbols, FieldPosition, FieldPositionIterator,
-    Format, Formattable, GregorianCalendar, ICUError, Locale,
-    ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
-    UCalendarMonths, UDateFormatField, UErrorCode, U_ICU_VERSION_MAJOR_NUM,
-    UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, DateFormat, DateFormatSymbols, FieldPosition,
+    FieldPositionIterator, Format, Formattable, GregorianCalendar, ICUError,
+    Locale, ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
+    UCalendarMonths, UDateFormatField, UErrorCode, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
     fmt1 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_english())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
+    )
     fmt2 = fmt1.clone()
     fmt3 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_french())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_french()
+    )
 
     # UBool icu::Format::operator!=(const Format &other)
     assert not (fmt1 != fmt2)
@@ -88,8 +91,8 @@ def test_api():
 
 def test_clone():
     fmt1 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_english())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
+    )
 
     # SimpleDateFormat *icu::SimpleDateFormat::clone()
     fmt2 = fmt1.clone()
@@ -283,31 +286,36 @@ def test_get_context():
     from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_english())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
+    )
 
     # UDisplayContext icu::DateFormat::getContext(
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE
+    )
 
     # void icu::SimpleDateFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )
     fmt.set_context(
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
+        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
+    )
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
 def test_get_time_zone_format():
     fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_english())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
+    )
 
     # *ICU 49 technology preview*
     # const TimeZoneFormat *icu::SimpleDateFormat::getTimeZoneFormat(void)
@@ -387,8 +395,8 @@ def test_parse():
 
 def test_parse_object():
     fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        Locale.get_english())
+        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
+    )
     date = 837036536000.0  # 1996-07-10T15:08:56-07:00
 
     # void icu::DateFormat::parseObject(
@@ -399,19 +407,15 @@ def test_parse_object():
     result = Formattable()
     parse_pos = ParsePosition(0)
     fmt.parse_object(
-        UnicodeString("1996.07.10 AD at 15:08:56 PDT"),
-        result,
-        parse_pos)
+        UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result, parse_pos
+    )
     assert parse_pos.get_error_index() == -1
     assert result.get_type() == Formattable.DATE
     assert result.get_date() == date
 
     result = Formattable()
     parse_pos = ParsePosition(0)
-    fmt.parse_object(
-        "1996.07.10 AD at 15:08:56 PDT",
-        result,
-        parse_pos)
+    fmt.parse_object("1996.07.10 AD at 15:08:56 PDT", result, parse_pos)
     assert parse_pos.get_error_index() == -1
     assert result.get_type() == Formattable.DATE
     assert result.get_date() == date
@@ -423,16 +427,12 @@ def test_parse_object():
     #       UErrorCode &status
     # )
     result = Formattable()
-    fmt.parse_object(
-        UnicodeString("1996.07.10 AD at 15:08:56 PDT"),
-        result)
+    fmt.parse_object(UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result)
     assert result.get_type() == Formattable.DATE
     assert result.get_date() == date
 
     result = Formattable()
-    fmt.parse_object(
-        "1996.07.10 AD at 15:08:56 PDT",
-        result)
+    fmt.parse_object("1996.07.10 AD at 15:08:56 PDT", result)
     assert result.get_type() == Formattable.DATE
     assert result.get_date() == date
 
@@ -464,16 +464,17 @@ def test_simple_date_format():
     # )
     fmt3 = SimpleDateFormat(
         UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        UnicodeString("y=hebr;d=thai;s=arab"))
+        UnicodeString("y=hebr;d=thai;s=arab"),
+    )
     fmt3a = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        UnicodeString("y=hebr;d=thai;s=arab"))
+        "yyyy.MM.dd G 'at' HH:mm:ss z", UnicodeString("y=hebr;d=thai;s=arab")
+    )
     fmt3b = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        "y=hebr;d=thai;s=arab")
+        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), "y=hebr;d=thai;s=arab"
+    )
     fmt3c = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        "y=hebr;d=thai;s=arab")
+        "yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab"
+    )
     assert fmt3 == fmt3a == fmt3b == fmt3c
     assert fmt3 != fmt1
 
@@ -484,11 +485,9 @@ def test_simple_date_format():
     #       UErrorCode &status
     # )
     fmt4 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        locale)
-    fmt4a = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        locale)
+        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), locale
+    )
+    fmt4a = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
     assert fmt4 == fmt4a
     assert fmt4 != fmt1
 
@@ -502,19 +501,21 @@ def test_simple_date_format():
     fmt5 = SimpleDateFormat(
         UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
         UnicodeString("y=hebr;d=thai;s=arab"),
-        locale)
+        locale,
+    )
     fmt5a = SimpleDateFormat(
         "yyyy.MM.dd G 'at' HH:mm:ss z",
         UnicodeString("y=hebr;d=thai;s=arab"),
-        locale)
+        locale,
+    )
     fmt5b = SimpleDateFormat(
         UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
         "y=hebr;d=thai;s=arab",
-        locale)
+        locale,
+    )
     fmt5c = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        "y=hebr;d=thai;s=arab",
-        locale)
+        "yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab", locale
+    )
     assert fmt5 == fmt5a == fmt5b == fmt5c
     assert fmt5 != fmt1
 
@@ -526,11 +527,9 @@ def test_simple_date_format():
     # )
     format_data = DateFormatSymbols(locale)
     fmt7 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        format_data)
-    fmt7a = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z",
-        format_data)
+        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), format_data
+    )
+    fmt7a = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", format_data)
     assert fmt7 == fmt7a
     assert fmt7 != fmt1
 

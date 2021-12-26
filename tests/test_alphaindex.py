@@ -1,9 +1,12 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    AlphabeticIndex, ConstVoidPtr, Locale, RuleBasedCollator,
-    UAlphabeticIndexLabelType, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
-    UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, AlphabeticIndex, ConstVoidPtr, Locale,
+    RuleBasedCollator, UAlphabeticIndexLabelType, UnicodeSet, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_add_labels():
@@ -180,8 +183,10 @@ def test_api():
     assert result == "B"
 
     # UAlphabeticIndexLabelType icu::AlphabeticIndex::getBucketLabelType()
-    assert (index.get_bucket_label_type()
-            == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL)
+    assert (
+        index.get_bucket_label_type()
+        == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL
+    )
 
     # const RuleBasedCollator &icu::AlphabeticIndex::getCollator()
     result = index.get_collator()
@@ -313,5 +318,7 @@ def test_api_51():
     assert result == "A"
 
     # UAlphabeticIndexLabelType icu::AlphabeticIndex::Bucket::getLabelType()
-    assert (bucket.get_label_type()
-            == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL)
+    assert (
+        bucket.get_label_type()
+        == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL
+    )

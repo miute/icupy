@@ -1,11 +1,15 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    CurrencyPluralInfo, DecimalFormat, DecimalFormatSymbols, FieldPosition,
-    FieldPositionIterator, Formattable, INT32_MAX, Locale, NumberFormat,
-    ParsePosition, UParseError, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, CurrencyPluralInfo, DecimalFormat,
+    DecimalFormatSymbols, FieldPosition, FieldPositionIterator, Formattable,
+    Locale, NumberFormat, ParsePosition, UnicodeString, UParseError,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -288,9 +292,7 @@ def test_api_51():
     #       int32_t newValue,
     #       UErrorCode &status
     # )
-    result = fmt.set_attribute(
-        UNumberFormatAttribute.UNUM_SCALE,
-        -2)
+    result = fmt.set_attribute(UNumberFormatAttribute.UNUM_SCALE, -2)
     assert isinstance(result, DecimalFormat)
     assert id(result) == id(fmt)
     assert fmt.get_attribute(UNumberFormatAttribute.UNUM_SCALE) == -2

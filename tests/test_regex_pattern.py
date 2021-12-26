@@ -1,12 +1,16 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    RegexMatcher, RegexPattern, UParseError, URegexpFlag, UTextVector,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString, UnicodeStringVector,
-    utext_close, utext_extract, utext_native_length,
-    utext_open_const_unicode_string, utext_open_utf8,
+    U_ICU_VERSION_MAJOR_NUM, RegexMatcher, RegexPattern, UnicodeString,
+    UnicodeStringVector, UParseError, URegexpFlag, UTextVector, utext_close,
+    utext_extract, utext_native_length, utext_open_const_unicode_string,
+    utext_open_utf8,
 )
+
+# fmt: on
 
 
 def test_clone():
@@ -56,18 +60,14 @@ def test_compile():
     regex2 = UnicodeString(s)
     pe = UParseError()
     test2 = RegexPattern.compile(
-        regex2,
-        URegexpFlag.UREGEX_CASE_INSENSITIVE,
-        pe)
+        regex2, URegexpFlag.UREGEX_CASE_INSENSITIVE, pe
+    )
     assert isinstance(test2, RegexPattern)
     assert test2.pattern() == s
     assert test2.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
 
     pe = UParseError()
-    test2a = RegexPattern.compile(
-        s,
-        URegexpFlag.UREGEX_CASE_INSENSITIVE,
-        pe)
+    test2a = RegexPattern.compile(s, URegexpFlag.UREGEX_CASE_INSENSITIVE, pe)
     assert isinstance(test2a, RegexPattern)
     assert test2a.pattern() == s
     assert test2a.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
@@ -114,9 +114,8 @@ def test_compile():
     regex5 = utext_open_utf8(None, s, -1)
     pe = UParseError()
     test5 = RegexPattern.compile(
-        regex5,
-        URegexpFlag.UREGEX_CASE_INSENSITIVE,
-        pe)
+        regex5, URegexpFlag.UREGEX_CASE_INSENSITIVE, pe
+    )
     assert isinstance(test5, RegexPattern)
     assert test5.pattern() == s
     assert test5.flags() == URegexpFlag.UREGEX_CASE_INSENSITIVE
@@ -323,6 +322,7 @@ def test_split():
     result = pattern.split(src2, dest2, 2)
     assert result == 2
     assert utext_extract(dest2[0], 0, utext_native_length(dest2[0])) == "foo"
-    assert (utext_extract(dest2[1], 0, utext_native_length(dest2[1]))
-            == "bar baz")
+    assert (
+        utext_extract(dest2[1], 0, utext_native_length(dest2[1])) == "bar baz"
+    )
     utext_close(src2)

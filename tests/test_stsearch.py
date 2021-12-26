@@ -1,11 +1,15 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    BreakIterator, Collator, ICUError, Locale, RuleBasedCollator,
+    USEARCH_DONE, BreakIterator, Collator, ICUError, Locale, RuleBasedCollator,
     SearchIterator, StringCharacterIterator, StringSearch, UErrorCode,
-    USEARCH_DONE, USearchAttribute, USearchAttributeValue, UnicodeString,
+    UnicodeString, USearchAttribute, USearchAttributeValue,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -88,18 +92,23 @@ def test_api():
     # USearchAttributeValue icu::SearchIterator::getAttribute(
     #       USearchAttribute attribute
     # )
-    assert (it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
-            == USearchAttributeValue.USEARCH_OFF)
+    assert (
+        it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
+        == USearchAttributeValue.USEARCH_OFF
+    )
 
     # void icu::SearchIterator::setAttribute(
     #       USearchAttribute attribute,
     #       USearchAttributeValue value,
     #       UErrorCode &status
     # )
-    it.set_attribute(USearchAttribute.USEARCH_OVERLAP,
-                     USearchAttributeValue.USEARCH_ON)
-    assert (it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
-            == USearchAttributeValue.USEARCH_ON)
+    it.set_attribute(
+        USearchAttribute.USEARCH_OVERLAP, USearchAttributeValue.USEARCH_ON
+    )
+    assert (
+        it.get_attribute(USearchAttribute.USEARCH_OVERLAP)
+        == USearchAttributeValue.USEARCH_ON
+    )
 
     # const BreakIterator *icu::SearchIterator::getBreakIterator(void)
     result = it.get_break_iterator()

@@ -1,12 +1,16 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    DecimalFormat, FieldPosition, FieldPositionIterator, Formattable,
-    ICUError, Locale, MessageFormat, ParsePosition, SimpleDateFormat,
-    StringEnumeration, TimeZone, UErrorCode, UMessagePatternApostropheMode,
-    UParseError, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, DecimalFormat, FieldPosition,
+    FieldPositionIterator, Formattable, ICUError, Locale, MessageFormat,
+    ParsePosition, SimpleDateFormat, StringEnumeration, TimeZone, UErrorCode,
+    UMessagePatternApostropheMode, UnicodeString, UParseError,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -29,8 +33,10 @@ def test_api():
     fmt = MessageFormat(pattern, Locale.get_us())
 
     # UMessagePatternApostropheMode icu::MessageFormat::getApostropheMode()
-    assert (fmt.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL)
+    assert (
+        fmt.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+    )
 
     # Format *icu::MessageFormat::getFormat(
     #       const UnicodeString &formatName,
@@ -127,34 +133,46 @@ def test_apply_pattern():
     fmt1.apply_pattern(
         pattern,
         UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
-        parse_error)
-    assert (fmt1.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED)
+        parse_error,
+    )
+    assert (
+        fmt1.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+    )
     assert fmt1 != fmt2
 
     parse_error = UParseError()
     fmt2.apply_pattern(
         str(pattern),
         UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
-        parse_error)
-    assert (fmt2.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED)
+        parse_error,
+    )
+    assert (
+        fmt2.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+    )
     assert fmt1 == fmt2
 
     fmt1.apply_pattern(
         pattern,
         UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
-        None)
-    assert (fmt1.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL)
+        None,
+    )
+    assert (
+        fmt1.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+    )
     assert fmt1 != fmt2
 
     fmt2.apply_pattern(
         str(pattern),
         UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
-        None)
-    assert (fmt2.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL)
+        None,
+    )
+    assert (
+        fmt2.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+    )
     assert fmt1 == fmt2
 
     # [3]
@@ -191,7 +209,8 @@ def test_format():
     fmt = MessageFormat(
         "At {1,time,::jmm} on {1,date,::dMMMM}, "
         "there was {2} on planet {0,number}.",
-        Locale.get_us())
+        Locale.get_us(),
+    )
     formats = fmt.get_formats()
     tz = TimeZone.get_gmt()
     formats[0].set_time_zone(tz)
@@ -206,11 +225,13 @@ def test_format():
     #       FieldPosition &pos,
     #       UErrorCode &status
     # )
-    obj = Formattable([
-        Formattable(7),
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
-    ])
+    obj = Formattable(
+        [
+            Formattable(7),
+            Formattable(date, Formattable.IS_DATE),
+            Formattable(UnicodeString("a disturbance in the Force")),
+        ]
+    )
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt.format(obj, append_to, pos)
@@ -229,11 +250,13 @@ def test_format():
     #       FieldPositionIterator *posIter,
     #       UErrorCode &status
     # )
-    obj = Formattable([
-        Formattable(7),
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
-    ])
+    obj = Formattable(
+        [
+            Formattable(7),
+            Formattable(date, Formattable.IS_DATE),
+            Formattable(UnicodeString("a disturbance in the Force")),
+        ]
+    )
     append_to.remove()
     pos_iter = FieldPositionIterator()
     with pytest.raises(ICUError) as exc_info:
@@ -251,11 +274,13 @@ def test_format():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    obj = Formattable([
-        Formattable(7),
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
-    ])
+    obj = Formattable(
+        [
+            Formattable(7),
+            Formattable(date, Formattable.IS_DATE),
+            Formattable(UnicodeString("a disturbance in the Force")),
+        ]
+    )
     append_to.remove()
     result = fmt.format(obj, append_to)
     assert isinstance(result, UnicodeString)
@@ -328,10 +353,8 @@ def test_format():
     ]
     append_to.remove()
     result = fmt.format(
-        argument_names,
-        arguments,
-        len(argument_names),
-        append_to)
+        argument_names, arguments, len(argument_names), append_to
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == (
@@ -340,11 +363,7 @@ def test_format():
     )
 
     append_to.remove()
-    result = fmt.format(
-        argument_names,
-        arguments,
-        -1,
-        append_to)
+    result = fmt.format(argument_names, arguments, -1, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == (
@@ -533,10 +552,12 @@ def test_set_format():
     dtfmt0 = SimpleDateFormat("yyyy.MM.dd")
     dtfmt1 = SimpleDateFormat("HH:mm:ss z")
     date = 1637685775000.0  # 2021-11-23T16:42:55Z
-    obj = Formattable([
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(date, Formattable.IS_DATE),
-    ])
+    obj = Formattable(
+        [
+            Formattable(date, Formattable.IS_DATE),
+            Formattable(date, Formattable.IS_DATE),
+        ]
+    )
     append_to = UnicodeString()
 
     # [1]
@@ -568,8 +589,10 @@ def test_set_format():
     fmt.set_format(1, dtfmt1)
 
     append_to.remove()
-    assert fmt.format(obj, append_to) in ("2021.11.23 08:42:55 GMT-8",
-                                          "2021.11.23 08:42:55 PST")
+    assert fmt.format(obj, append_to) in (
+        "2021.11.23 08:42:55 GMT-8",
+        "2021.11.23 08:42:55 PST",
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
@@ -577,16 +600,14 @@ def test_set_format_62():
     from icupy.icu.number import NumberFormatter
 
     fmt = MessageFormat("{0,number,currency}", Locale.get_us())
-    obj = Formattable([
-        Formattable(444444.55)
-    ])
+    obj = Formattable([Formattable(444444.55)])
     append_to = UnicodeString()
     assert fmt.format(obj, append_to) == "$444,444.55"
 
     numfmt = (
         NumberFormatter.for_skeleton("currency/USD unit-width-iso-code")
-            .locale(Locale.get_us())
-            .to_format()
+        .locale(Locale.get_us())
+        .to_format()
     )
     fmt.set_format(0, numfmt)
     append_to.remove()
@@ -597,7 +618,8 @@ def test_set_formats():
     fmt = MessageFormat(
         "At {1,time,::jmm} on {1,date,::dMMMM}, "
         "there was {2} on planet {0,number}.",
-        Locale.get_us())
+        Locale.get_us(),
+    )
     formats = fmt.get_formats()
 
     # void icu::MessageFormat::setFormats(
@@ -616,11 +638,13 @@ def test_set_formats():
     fmt.set_formats(new_formats, len(new_formats))
 
     date = 1637685775000.0  # 2021-11-23T16:42:55Z
-    obj = Formattable([
-        Formattable(7),
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
-    ])
+    obj = Formattable(
+        [
+            Formattable(7),
+            Formattable(date, Formattable.IS_DATE),
+            Formattable(UnicodeString("a disturbance in the Force")),
+        ]
+    )
     append_to = UnicodeString()
     assert fmt.format(obj, append_to) == (
         "At 16:42:55 GMT on 2021.11.23, "

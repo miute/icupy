@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 60:
@@ -6,25 +7,30 @@ if U_ICU_VERSION_MAJOR_NUM < 60:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
-    CurrencyUnit, DecimalFormatSymbols, ErrorCode, Format, Formattable,
-    INT32_MAX, Locale, MeasureUnit, UCurrencyUsage, UErrorCode,
-    UNumberDecimalSeparatorDisplay, UNumberFormatRoundingMode,
-    UNumberSignDisplay, UNumberUnitWidth, UParseError, UnicodeString,
-    UnicodeStringAppendable,
+    INT32_MAX, CurrencyUnit, DecimalFormatSymbols, ErrorCode, Format,
+    Formattable, Locale, MeasureUnit, UCurrencyUsage, UErrorCode,
+    UnicodeString, UnicodeStringAppendable, UNumberDecimalSeparatorDisplay,
+    UNumberFormatRoundingMode, UNumberSignDisplay, UNumberUnitWidth,
+    UParseError,
 )
 from icupy.icu.number import (
     FormattedNumber, IntegerWidth, LocalizedNumberFormatter, Notation,
     NumberFormatter, ScientificNotation, UnlocalizedNumberFormatter,
 )
 
+# fmt: on
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_formatted_number_62():
-    fmt = (NumberFormatter.with_()
-           .notation(Notation.compact_short())
-           .unit(MeasureUnit.get_kelvin())
-           .locale("en-US"))
+    fmt = (
+        NumberFormatter.with_()
+        .notation(Notation.compact_short())
+        .unit(MeasureUnit.get_kelvin())
+        .locale("en-US")
+    )
     num = fmt.format_double(65000)
     assert isinstance(num, FormattedNumber)
 
@@ -47,17 +53,22 @@ def test_formatted_number_62():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_64():
+    # fmt: off
     from icupy.icu import (
         ConstrainedFieldPosition, FormattedValue, UFieldCategory,
         UNumberFormatFields,
     )
 
+    # fmt: on
+
     assert issubclass(FormattedNumber, FormattedValue)
 
-    fmt = (NumberFormatter.with_()
-           .notation(Notation.compact_short())
-           .unit(MeasureUnit.get_kelvin())
-           .locale("en-US"))
+    fmt = (
+        NumberFormatter.with_()
+        .notation(Notation.compact_short())
+        .unit(MeasureUnit.get_kelvin())
+        .locale("en-US")
+    )
     num = fmt.format_double(65000)
     assert isinstance(num, FormattedNumber)
 
@@ -93,10 +104,12 @@ def test_formatted_number_64():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
 def test_formatted_number_65():
-    fmt = (NumberFormatter.with_()
-           .notation(Notation.compact_short())
-           .unit(MeasureUnit.get_kelvin())
-           .locale("en-US"))
+    fmt = (
+        NumberFormatter.with_()
+        .notation(Notation.compact_short())
+        .unit(MeasureUnit.get_kelvin())
+        .locale("en-US")
+    )
     num = fmt.format_double(65000)
     assert isinstance(num, FormattedNumber)
 
@@ -111,10 +124,12 @@ def test_formatted_number_65():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_formatted_number_68():
-    fmt = (NumberFormatter.with_()
-           .usage("person")
-           .unit(MeasureUnit.get_kilogram())
-           .locale("en-GB"))
+    fmt = (
+        NumberFormatter.with_()
+        .usage("person")
+        .unit(MeasureUnit.get_kilogram())
+        .locale("en-GB")
+    )
     num = fmt.format_double(80)
     assert isinstance(num, FormattedNumber)
 
@@ -128,10 +143,10 @@ def test_formatted_number_68():
 
 def test_integer_width():
     # icu::number::IntegerWidth
-    assert isinstance(IntegerWidth.zero_fill_to(3),
-                      IntegerWidth)
-    assert isinstance(IntegerWidth.zero_fill_to(3).truncate_at(3),
-                      IntegerWidth)
+    assert isinstance(IntegerWidth.zero_fill_to(3), IntegerWidth)
+    assert isinstance(
+        IntegerWidth.zero_fill_to(3).truncate_at(3), IntegerWidth
+    )
 
 
 def test_localized_number_formatter_60():
@@ -155,7 +170,7 @@ def test_localized_number_formatter_60():
     #       double value,
     #       UErrorCode &status
     # )
-    num = fmt2.format_double(9.87E-3)
+    num = fmt2.format_double(9.87e-3)
     assert isinstance(num, FormattedNumber)
 
     # FormattedNumber icu::number::LocalizedNumberFormatter::formatInt(
@@ -177,7 +192,8 @@ def test_localized_number_formatter_60():
     #       UNumberDecimalSeparatorDisplay style
     # )
     result = fmt2.decimal(
-        UNumberDecimalSeparatorDisplay.UNUM_DECIMAL_SEPARATOR_AUTO)
+        UNumberDecimalSeparatorDisplay.UNUM_DECIMAL_SEPARATOR_AUTO
+    )
     assert isinstance(result, LocalizedNumberFormatter)
 
     # template<typename Derived>
@@ -249,9 +265,11 @@ def test_localized_number_formatter_62():
     # Format *icu::number::LocalizedNumberFormatter::toFormat(
     #       UErrorCode &status
     # )
-    fmt2 = (fmt.notation(Notation.engineering())
-            .unit(MeasureUnit.get_kelvin())
-            .to_format())
+    fmt2 = (
+        fmt.notation(Notation.engineering())
+        .unit(MeasureUnit.get_kelvin())
+        .to_format()
+    )
     assert isinstance(fmt2, Format)
 
     obj = Formattable(65000)
@@ -293,14 +311,17 @@ def test_localized_number_formatter_62():
     # )
     result = fmt.unit(MeasureUnit.get_meter_per_second()).to_skeleton()
     assert isinstance(result, UnicodeString)
-    assert result in ("unit/meter-per-second",
-                      "measure-unit/speed-meter-per-second")
+    assert result in (
+        "unit/meter-per-second",
+        "measure-unit/speed-meter-per-second",
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_localized_number_formatter_64():
-    fmt = (NumberFormatter.with_locale(Locale.get_us())
-           .notation(Notation.engineering()))
+    fmt = NumberFormatter.with_locale(Locale.get_us()).notation(
+        Notation.engineering()
+    )
     assert isinstance(fmt, LocalizedNumberFormatter)
     assert fmt.format_double(0.8765).to_string() == "876.5E-3"
 
@@ -374,11 +395,11 @@ def test_number_formatter_62():
     #       UErrorCode &status
     # )
     fmt = NumberFormatter.for_skeleton(
-        UnicodeString("measure-unit/speed-meter-per-second"))
+        UnicodeString("measure-unit/speed-meter-per-second")
+    )
     assert isinstance(fmt, UnlocalizedNumberFormatter)
 
-    fmt = NumberFormatter.for_skeleton(
-        "measure-unit/speed-meter-per-second")
+    fmt = NumberFormatter.for_skeleton("measure-unit/speed-meter-per-second")
     assert isinstance(fmt, UnlocalizedNumberFormatter)
 
 
@@ -393,14 +414,14 @@ def test_number_formatter_64():
     # )
     perror = UParseError()
     fmt = NumberFormatter.for_skeleton(
-        UnicodeString("measure-unit/speed-meter-per-second"),
-        perror)
+        UnicodeString("measure-unit/speed-meter-per-second"), perror
+    )
     assert isinstance(fmt, UnlocalizedNumberFormatter)
 
     perror = UParseError()
     fmt = NumberFormatter.for_skeleton(
-        "measure-unit/speed-meter-per-second",
-        perror)
+        "measure-unit/speed-meter-per-second", perror
+    )
     assert isinstance(fmt, UnlocalizedNumberFormatter)
 
 
@@ -416,23 +437,31 @@ def test_notation():
     assert issubclass(ScientificNotation, Notation)
 
     assert isinstance(
-        (Notation.engineering()
-         .with_exponent_sign_display(UNumberSignDisplay.UNUM_SIGN_ALWAYS)),
-        ScientificNotation)
+        (
+            Notation.engineering().with_exponent_sign_display(
+                UNumberSignDisplay.UNUM_SIGN_ALWAYS
+            )
+        ),
+        ScientificNotation,
+    )
     assert isinstance(
-        Notation.engineering().with_min_exponent_digits(2),
-        ScientificNotation)
+        Notation.engineering().with_min_exponent_digits(2), ScientificNotation
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_precision_60_62():
+    # fmt: off
     from icupy.icu.number import (
         CurrencyPrecision, FractionPrecision, IncrementPrecision, Precision,
     )
 
+    # fmt: on
     # icu::number::Precision
-    assert isinstance(Precision.currency(UCurrencyUsage.UCURR_USAGE_STANDARD),
-                      CurrencyPrecision)
+    assert isinstance(
+        Precision.currency(UCurrencyUsage.UCURR_USAGE_STANDARD),
+        CurrencyPrecision,
+    )
     assert isinstance(Precision.fixed_fraction(3), FractionPrecision)
     assert isinstance(Precision.increment(0.5), IncrementPrecision)
     assert isinstance(Precision.integer(), FractionPrecision)
@@ -445,23 +474,28 @@ def test_precision_60_62():
     assert issubclass(CurrencyPrecision, Precision)
 
     assert isinstance(
-        (Precision.currency(UCurrencyUsage.UCURR_USAGE_STANDARD)
-         .with_currency(CurrencyUnit("USD"))),
-        Precision)
+        (
+            Precision.currency(
+                UCurrencyUsage.UCURR_USAGE_STANDARD
+            ).with_currency(CurrencyUnit("USD"))
+        ),
+        Precision,
+    )
 
     # icu::number::FractionPrecision
     assert issubclass(FractionPrecision, Precision)
 
-    assert isinstance(Precision.fixed_fraction(2).with_max_digits(2),
-                      Precision)
-    assert isinstance(Precision.fixed_fraction(2).with_min_digits(3),
-                      Precision)
+    assert isinstance(
+        Precision.fixed_fraction(2).with_max_digits(2), Precision
+    )
+    assert isinstance(
+        Precision.fixed_fraction(2).with_min_digits(3), Precision
+    )
 
     # icu::number::IncrementPrecision
     assert issubclass(IncrementPrecision, Precision)
 
-    assert isinstance(Precision.increment(0.5).with_min_fraction(1),
-                      Precision)
+    assert isinstance(Precision.increment(0.5).with_min_fraction(1), Precision)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
@@ -482,19 +516,23 @@ def test_precision_69():
 
     # icu::number::Precision
     assert isinstance(
-        (Precision.fixed_fraction(2)
-            .trailing_zero_display(
-            UNumberTrailingZeroDisplay.UNUM_TRAILING_ZERO_AUTO)),
-        Precision)
+        (
+            Precision.fixed_fraction(2).trailing_zero_display(
+                UNumberTrailingZeroDisplay.UNUM_TRAILING_ZERO_AUTO
+            )
+        ),
+        Precision,
+    )
 
     # icu::number::FractionPrecision
     assert isinstance(
-        (Precision.fixed_fraction(1)
-            .with_significant_digits(
-            3,
-            3,
-            UNumberRoundingPriority.UNUM_ROUNDING_PRIORITY_RELAXED)),
-        Precision)
+        (
+            Precision.fixed_fraction(1).with_significant_digits(
+                3, 3, UNumberRoundingPriority.UNUM_ROUNDING_PRIORITY_RELAXED
+            )
+        ),
+        Precision,
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
@@ -540,7 +578,8 @@ def test_unlocalized_number_formatter_60():
     #       UNumberDecimalSeparatorDisplay style
     # )
     result = fmt2.decimal(
-        UNumberDecimalSeparatorDisplay.UNUM_DECIMAL_SEPARATOR_AUTO)
+        UNumberDecimalSeparatorDisplay.UNUM_DECIMAL_SEPARATOR_AUTO
+    )
     assert isinstance(result, UnlocalizedNumberFormatter)
 
     # template<typename Derived>
@@ -643,8 +682,10 @@ def test_unlocalized_number_formatter_62():
     # )
     result = fmt.unit(MeasureUnit.get_meter_per_second()).to_skeleton()
     assert isinstance(result, UnicodeString)
-    assert result in ("unit/meter-per-second",
-                      "measure-unit/speed-meter-per-second")
+    assert result in (
+        "unit/meter-per-second",
+        "measure-unit/speed-meter-per-second",
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")

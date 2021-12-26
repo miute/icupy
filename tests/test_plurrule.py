@@ -1,10 +1,14 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    Locale, PluralRules, StringEnumeration, U_ICU_VERSION_MAJOR_NUM,
+    U_ICU_VERSION_MAJOR_NUM, Locale, PluralRules, StringEnumeration,
     UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -103,13 +107,11 @@ def test_for_locale_50():
     #       UErrorCode &status
     # )
     rules2 = PluralRules.for_locale(
-        Locale("en"),
-        UPluralType.UPLURAL_TYPE_CARDINAL)
+        Locale("en"), UPluralType.UPLURAL_TYPE_CARDINAL
+    )
     assert isinstance(rules2, PluralRules)
 
-    rules2a = PluralRules.for_locale(
-        "en",
-        UPluralType.UPLURAL_TYPE_CARDINAL)
+    rules2a = PluralRules.for_locale("en", UPluralType.UPLURAL_TYPE_CARDINAL)
     assert isinstance(rules2a, PluralRules)
     assert rules2 == rules2a
 
@@ -182,9 +184,11 @@ def test_select_68():
     from icupy.icu.number import NumberFormatter, NumberRangeFormatter
 
     rules = PluralRules.for_locale("fr")
-    fmt = (NumberRangeFormatter.with_locale("fr")
-           .number_formatter_first(NumberFormatter.with_())
-           .number_formatter_second(NumberFormatter.with_()))
+    fmt = (
+        NumberRangeFormatter.with_locale("fr")
+        .number_formatter_first(NumberFormatter.with_())
+        .number_formatter_second(NumberFormatter.with_())
+    )
 
     # [3]
     # UnicodeString icu::PluralRules::select(
@@ -192,10 +196,14 @@ def test_select_68():
     #       UErrorCode &status
     # )
     result = rules.select(
-        fmt.format_formattable_range(Formattable(0), Formattable(2)))
+        fmt.format_formattable_range(Formattable(0), Formattable(2))
+    )
     assert isinstance(result, UnicodeString)
     assert result == "other"
 
-    assert rules.select(
-        fmt.format_formattable_range(Formattable(0), Formattable(1))
-    ) == "one"
+    assert (
+        rules.select(
+            fmt.format_formattable_range(Formattable(0), Formattable(1))
+        )
+        == "one"
+    )

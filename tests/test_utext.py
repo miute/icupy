@@ -1,18 +1,21 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    ICUError, StringCharacterIterator, UErrorCode, UTextVector,
-    U_SENTINEL, UnicodeString,
-    utext_char32_at, utext_clone, utext_close, utext_copy, utext_current32,
-    utext_equals, utext_extract, utext_freeze, utext_get_native_index,
-    utext_get_previous_native_index, utext_has_meta_data,
-    utext_is_length_expensive, utext_is_writable, utext_move_index32,
-    utext_native_length, utext_next32, utext_next32_from,
+    U_SENTINEL, ICUError, StringCharacterIterator, UErrorCode, UnicodeString,
+    UTextVector, utext_char32_at, utext_clone, utext_close, utext_copy,
+    utext_current32, utext_equals, utext_extract, utext_freeze,
+    utext_get_native_index, utext_get_previous_native_index,
+    utext_has_meta_data, utext_is_length_expensive, utext_is_writable,
+    utext_move_index32, utext_native_length, utext_next32, utext_next32_from,
     utext_open_character_iterator, utext_open_const_unicode_string,
     utext_open_replaceable, utext_open_uchars, utext_open_unicode_string,
     utext_open_utf8, utext_previous32, utext_previous32_from, utext_replace,
     utext_set_native_index,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -23,8 +26,8 @@ def test_api():
         assert ut.provider_properties
         assert ut.p_funcs
         assert utext_char32_at(ut, 0) == 0x41
-        assert utext_char32_at(ut, 1) == 0x1f338
-        assert utext_char32_at(ut, 2) == 0x1f338
+        assert utext_char32_at(ut, 1) == 0x1F338
+        assert utext_char32_at(ut, 2) == 0x1F338
         assert utext_char32_at(ut, 3) == 0x42
         assert utext_char32_at(ut, 4) == U_SENTINEL
 
@@ -50,19 +53,19 @@ def test_api():
 
         utext_move_index32(ut, 1)
         assert utext_native_length(ut) == 4
-        assert utext_next32(ut) == 0x1f338
+        assert utext_next32(ut) == 0x1F338
         assert utext_next32(ut) == 0x42
         assert utext_next32(ut) == U_SENTINEL
 
-        assert utext_next32_from(ut, 2) == 0x1f338
+        assert utext_next32_from(ut, 2) == 0x1F338
         assert utext_next32(ut) == 0x42
 
         assert utext_previous32(ut) == 0x42
-        assert utext_previous32(ut) == 0x1f338
+        assert utext_previous32(ut) == 0x1F338
         assert utext_previous32(ut) == 0x41
         assert utext_previous32(ut) == U_SENTINEL
 
-        assert utext_previous32_from(ut, 3) == 0x1f338
+        assert utext_previous32_from(ut, 3) == 0x1F338
         assert utext_previous32(ut) == 0x41
 
 

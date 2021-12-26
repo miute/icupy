@@ -1,12 +1,16 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    Calendar, DateFormat, DateInterval, DateIntervalFormat, DateIntervalInfo,
-    FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
-    Locale, TimeZone, UCalendarDateFields, UErrorCode,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, Calendar, DateFormat, DateInterval,
+    DateIntervalFormat, DateIntervalInfo, FieldPosition, FieldPositionIterator,
+    Format, Formattable, ICUError, Locale, TimeZone, UCalendarDateFields,
+    UErrorCode, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -78,14 +82,10 @@ def test_create_instance():
     #       const DateIntervalInfo &dtitvinf,
     #       UErrorCode &status
     # )
-    fmt1 = DateIntervalFormat.create_instance(
-        UnicodeString("yMMMd"),
-        dtitvinf)
+    fmt1 = DateIntervalFormat.create_instance(UnicodeString("yMMMd"), dtitvinf)
     assert isinstance(fmt1, DateIntervalFormat)
 
-    fmt1a = DateIntervalFormat.create_instance(
-        "yMMMd",
-        dtitvinf)
+    fmt1a = DateIntervalFormat.create_instance("yMMMd", dtitvinf)
     assert isinstance(fmt1a, DateIntervalFormat)
     assert fmt1 == fmt1a
 
@@ -97,27 +97,19 @@ def test_create_instance():
     #       UErrorCode &status
     # )
     fmt2 = DateIntervalFormat.create_instance(
-        UnicodeString("yMMMd"),
-        Locale("en"),
-        dtitvinf)
+        UnicodeString("yMMMd"), Locale("en"), dtitvinf
+    )
     assert isinstance(fmt2, DateIntervalFormat)
 
-    fmt2a = DateIntervalFormat.create_instance(
-        "yMMMd",
-        Locale("en"),
-        dtitvinf)
+    fmt2a = DateIntervalFormat.create_instance("yMMMd", Locale("en"), dtitvinf)
     assert isinstance(fmt2a, DateIntervalFormat)
 
     fmt2b = DateIntervalFormat.create_instance(
-        UnicodeString("yMMMd"),
-        "en",
-        dtitvinf)
+        UnicodeString("yMMMd"), "en", dtitvinf
+    )
     assert isinstance(fmt2b, DateIntervalFormat)
 
-    fmt2c = DateIntervalFormat.create_instance(
-        "yMMMd",
-        "en",
-        dtitvinf)
+    fmt2c = DateIntervalFormat.create_instance("yMMMd", "en", dtitvinf)
     assert isinstance(fmt2c, DateIntervalFormat)
     assert fmt2 == fmt2a == fmt2b == fmt2c
 
@@ -128,23 +120,17 @@ def test_create_instance():
     #       UErrorCode &status
     # )
     fmt3 = DateIntervalFormat.create_instance(
-        UnicodeString("yMMMd"),
-        Locale("en"))
+        UnicodeString("yMMMd"), Locale("en")
+    )
     assert isinstance(fmt3, DateIntervalFormat)
 
-    fmt3a = DateIntervalFormat.create_instance(
-        "yMMMd",
-        Locale("en"))
+    fmt3a = DateIntervalFormat.create_instance("yMMMd", Locale("en"))
     assert isinstance(fmt3a, DateIntervalFormat)
 
-    fmt3b = DateIntervalFormat.create_instance(
-        UnicodeString("yMMMd"),
-        "en")
+    fmt3b = DateIntervalFormat.create_instance(UnicodeString("yMMMd"), "en")
     assert isinstance(fmt3b, DateIntervalFormat)
 
-    fmt3c = DateIntervalFormat.create_instance(
-        "yMMMd",
-        "en")
+    fmt3c = DateIntervalFormat.create_instance("yMMMd", "en")
     assert isinstance(fmt3c, DateIntervalFormat)
     assert fmt3 == fmt3a == fmt3b == fmt3c
 
@@ -253,17 +239,15 @@ def test_date_interval_info():
     # )
     result = UnicodeString()
     pattern = dtitvinf3.get_interval_pattern(
-        UnicodeString("Hm"),
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result)
+        UnicodeString("Hm"), UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+    )
     assert isinstance(pattern, UnicodeString)
     assert id(result) == id(pattern)
     assert result == "HH:mm \u2013 HH:mm"
 
     pattern = dtitvinf3.get_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result)
+        "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+    )
     assert isinstance(pattern, UnicodeString)
     assert id(result) == id(pattern)
     assert result == "HH:mm \u2013 HH:mm"
@@ -277,38 +261,48 @@ def test_date_interval_info():
     dtitvinf3.set_interval_pattern(
         UnicodeString("Hm"),
         UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        UnicodeString("yyyy MMM d HH:mm ~ HH:mm"))
-    assert dtitvinf3.get_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result) == "yyyy MMM d HH:mm ~ HH:mm"
+        UnicodeString("yyyy MMM d HH:mm ~ HH:mm"),
+    )
+    assert (
+        dtitvinf3.get_interval_pattern(
+            "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+        )
+        == "yyyy MMM d HH:mm ~ HH:mm"
+    )
 
     dtitvinf3.set_interval_pattern(
         "Hm",
         UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        UnicodeString("HH:mm ~ HH:mm"))
-    assert dtitvinf3.get_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result) == "HH:mm ~ HH:mm"
+        UnicodeString("HH:mm ~ HH:mm"),
+    )
+    assert (
+        dtitvinf3.get_interval_pattern(
+            "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+        )
+        == "HH:mm ~ HH:mm"
+    )
 
     dtitvinf3.set_interval_pattern(
         UnicodeString("Hm"),
         UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        "yyyy MMM d HH:mm ~ HH:mm")
-    assert dtitvinf3.get_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result) == "yyyy MMM d HH:mm ~ HH:mm"
+        "yyyy MMM d HH:mm ~ HH:mm",
+    )
+    assert (
+        dtitvinf3.get_interval_pattern(
+            "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+        )
+        == "yyyy MMM d HH:mm ~ HH:mm"
+    )
 
     dtitvinf3.set_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        "HH:mm ~ HH:mm")
-    assert dtitvinf3.get_interval_pattern(
-        "Hm",
-        UCalendarDateFields.UCAL_HOUR_OF_DAY,
-        result) == "HH:mm ~ HH:mm"
+        "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, "HH:mm ~ HH:mm"
+    )
+    assert (
+        dtitvinf3.get_interval_pattern(
+            "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
+        )
+        == "HH:mm ~ HH:mm"
+    )
 
 
 def test_format():
@@ -332,11 +326,7 @@ def test_format():
     to_calendar.set_time(to_date)
     append_to = UnicodeString()
     field_position = FieldPosition(FieldPosition.DONT_CARE)
-    result = fmt.format(
-        from_calendar,
-        to_calendar,
-        append_to,
-        field_position)
+    result = fmt.format(from_calendar, to_calendar, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Apr 26 \u2013 28, 2013"
@@ -368,7 +358,8 @@ def test_format():
     result = fmt.format(
         Formattable(DateInterval(from_date, to_date)),
         append_to,
-        field_position)
+        field_position,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Apr 26 \u2013 28, 2013"
@@ -384,9 +375,8 @@ def test_format():
     pos_iter = FieldPositionIterator()
     with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(
-            Formattable(DateInterval(from_date, to_date)),
-            append_to,
-            pos_iter)
+            Formattable(DateInterval(from_date, to_date)), append_to, pos_iter
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # [6]
@@ -397,8 +387,8 @@ def test_format():
     # )
     append_to = UnicodeString()
     result = fmt.format(
-        Formattable(DateInterval(from_date, to_date)),
-        append_to)
+        Formattable(DateInterval(from_date, to_date)), append_to
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "Apr 26 \u2013 28, 2013"
@@ -442,10 +432,13 @@ def test_format_to_value():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_date_interval():
+    # fmt: off
     from icupy.icu import (
         ConstrainedFieldPosition, FormattedDateInterval, UDateFormatField,
         UFieldCategory, UnicodeStringAppendable,
     )
+
+    # fmt: on
 
     fmt = DateIntervalFormat.create_instance("yMMMd", Locale.get_english())
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
@@ -459,7 +452,7 @@ def test_formatted_date_interval():
     # )
     dest = UnicodeString()
     appendable = UnicodeStringAppendable(dest)
-    appendable.append_code_point(0x1f338)
+    appendable.append_code_point(0x1F338)
     result = dtitv.append_to(appendable)
     assert isinstance(result, UnicodeStringAppendable)
     assert id(result) == id(appendable)
@@ -476,8 +469,10 @@ def test_formatted_date_interval():
     assert (cfpos.get_start(), cfpos.get_limit()) == (0, 3)
 
     assert dtitv.next_position(cfpos)
-    assert (cfpos.get_category()
-            == UFieldCategory.UFIELD_CATEGORY_DATE_INTERVAL_SPAN)
+    assert (
+        cfpos.get_category()
+        == UFieldCategory.UFIELD_CATEGORY_DATE_INTERVAL_SPAN
+    )
     assert cfpos.get_field() == 0
 
     assert dtitv.next_position(cfpos)
@@ -486,8 +481,10 @@ def test_formatted_date_interval():
     assert (cfpos.get_start(), cfpos.get_limit()) == (4, 6)
 
     assert dtitv.next_position(cfpos)
-    assert (cfpos.get_category()
-            == UFieldCategory.UFIELD_CATEGORY_DATE_INTERVAL_SPAN)
+    assert (
+        cfpos.get_category()
+        == UFieldCategory.UFIELD_CATEGORY_DATE_INTERVAL_SPAN
+    )
     assert cfpos.get_field() == 1
 
     assert dtitv.next_position(cfpos)
@@ -525,17 +522,22 @@ def test_get_context():
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE
+    )
 
     # void icu::DateIntervalFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )
     fmt.set_context(
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
+        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
+    )
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
+    )
 
 
 def test_get_time_zone_upcasting():

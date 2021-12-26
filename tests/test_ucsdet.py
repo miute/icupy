@@ -1,14 +1,16 @@
 from functools import partial
 
+# fmt: off
 from icupy.icu import (
-    ucsdet_close, ucsdet_detect, ucsdet_detect_all,
-    ucsdet_enable_input_filter, ucsdet_get_all_detectable_charsets,
-    ucsdet_get_confidence, ucsdet_get_language, ucsdet_get_name,
-    ucsdet_get_uchars, ucsdet_is_input_filter_enabled, ucsdet_open,
-    ucsdet_set_declared_encoding, ucsdet_set_text,
-    uenum_close, uenum_count, uenum_next,
+    ucsdet_close, ucsdet_detect, ucsdet_detect_all, ucsdet_enable_input_filter,
+    ucsdet_get_all_detectable_charsets, ucsdet_get_confidence,
+    ucsdet_get_language, ucsdet_get_name, ucsdet_get_uchars,
+    ucsdet_is_input_filter_enabled, ucsdet_open, ucsdet_set_declared_encoding,
+    ucsdet_set_text, uenum_close, uenum_count, uenum_next,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -57,8 +59,9 @@ def test_api():
         assert len(matches) > 0
         assert ucsdet_get_confidence(matches[0]) == 100
         if len(matches) >= 2:
-            assert (ucsdet_get_confidence(matches[0])
-                    > ucsdet_get_confidence(matches[1]))
+            assert ucsdet_get_confidence(matches[0]) > ucsdet_get_confidence(
+                matches[1]
+            )
         assert ucsdet_get_language(matches[0]) == "ja"
         assert ucsdet_get_name(matches[0]) == "Shift_JIS"
 

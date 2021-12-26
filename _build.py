@@ -23,7 +23,8 @@ class CMakeExtension(Extension):
 class CMakeBuild(build_ext):
     def build_extension(self, ext):
         extdir = os.path.abspath(
-            os.path.dirname(self.get_ext_fullpath(ext.name)))
+            os.path.dirname(self.get_ext_fullpath(ext.name))
+        )
         extdir = os.path.join(extdir, ext.name)
 
         # required for auto-detection of auxiliary "native" libs
@@ -34,11 +35,14 @@ class CMakeBuild(build_ext):
         cmake_build_type = env.get("CMAKE_BUILD_TYPE", "Release")
         cfg = "Debug" if self.debug else cmake_build_type
 
-        env["CXXFLAGS"] = " ".join([
-            env.get("CXXFLAGS", "").strip(),
-            "-DVERSION_INFO=\\\"{}\\\"".format(
-                self.distribution.get_version()),
-        ]).strip()
+        env["CXXFLAGS"] = " ".join(
+            [
+                env.get("CXXFLAGS", "").strip(),
+                '-DVERSION_INFO=\\"{}\\"'.format(
+                    self.distribution.get_version()
+                ),
+            ]
+        ).strip()
 
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + extdir,
@@ -53,82 +57,101 @@ class CMakeBuild(build_ext):
                 env["ICU_ROOT"] = "C:\\icu"
                 self.warn(
                     "ICU_ROOT environment variable was not set. "
-                    "Using default '{}'.".format(env["ICU_ROOT"]))
+                    "Using default '{}'.".format(env["ICU_ROOT"])
+                )
             cmake_args += [
                 "-Wno-dev",
             ]
 
         cmake_generator = env.get("CMAKE_GENERATOR")
-        is_msbuild = (
-                self.compiler.compiler_type == "msvc"
-                and (cmake_generator is None
-                     or cmake_generator.startswith("Visual Studio"))
+        is_msbuild = self.compiler.compiler_type == "msvc" and (
+            cmake_generator is None
+            or cmake_generator.startswith("Visual Studio")
         )
-        is_multi_config = (
-                is_msbuild
-                or cmake_generator in ["Ninja Multi-Config", "Xcode"]
-        )
+        is_multi_config = is_msbuild or cmake_generator in [
+            "Ninja Multi-Config",
+            "Xcode",
+        ]
 
         if is_multi_config:
             cmake_args += [
                 "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(
-                    cfg.upper(), extdir),
+                    cfg.upper(), extdir
+                ),
             ]
             build_args += [
-                "--config", cfg,
+                "--config",
+                cfg,
             ]
 
         if is_msbuild:
             if "CMAKE_GENERATOR_PLATFORM" not in env:
                 cmake_args += [
-                    "-A", PLAT_TO_CMAKE[self.plat_name],
+                    "-A",
+                    PLAT_TO_CMAKE[self.plat_name],
                 ]
 
-        if ("CMAKE_BUILD_PARALLEL_LEVEL" not in env
-                and not is_msbuild
-                and (cmake_generator is None
-                     or not cmake_generator.startswith("Ninja"))):
-            jobs = ((hasattr(self, "parallel") and self.parallel)
-                    or os.cpu_count())
+        if (
+            "CMAKE_BUILD_PARALLEL_LEVEL" not in env
+            and not is_msbuild
+            and (
+                cmake_generator is None
+                or not cmake_generator.startswith("Ninja")
+            )
+        ):
+            jobs = (
+                hasattr(self, "parallel") and self.parallel
+            ) or os.cpu_count()
             if jobs:
                 build_args += [
-                    "--parallel", str(jobs),
+                    "-j",
+                    str(jobs),
                 ]
 
         self.announce(
             "-- CXXFLAGS environment variable: " + repr(env.get("CXXFLAGS")),
-            level=2)
+            level=2,
+        )
         self.announce(
-            "-- CMake environment variables: " + repr(
-                ["{}={}".format(k, v) for k, v in env.items()
-                 if k.upper().startswith("CMAKE")]),
-            level=2)
+            "-- CMake environment variables: "
+            + repr(
+                [
+                    "{}={}".format(k, v)
+                    for k, v in env.items()
+                    if k.upper().startswith("CMAKE")
+                ]
+            ),
+            level=2,
+        )
         self.announce(
-            "-- CMake build system options: " + repr(cmake_args),
-            level=2)
-        self.announce(
-            "-- CMake build options: " + repr(build_args),
-            level=2)
+            "-- CMake build system options: " + repr(cmake_args), level=2
+        )
+        self.announce("-- CMake build options: " + repr(build_args), level=2)
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
         subprocess.check_call(
-            ["cmake", ext.sourcedir] + cmake_args,
-            cwd=self.build_temp,
-            env=env)
+            ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env
+        )
         subprocess.check_call(
             ["cmake", "--build", "."] + build_args,
             cwd=self.build_temp,
-            env=env)
+            env=env,
+        )
 
 
 def build(setup_kwargs):
-    src = (setup_kwargs["package_dir"][""] if "package_dir" in setup_kwargs
-           else "")
+    src = (
+        setup_kwargs["package_dir"][""]
+        if "package_dir" in setup_kwargs
+        else ""
+    )
     ext_modules = [CMakeExtension(setup_kwargs["name"], src)]
     cmdclass = dict(build_ext=CMakeBuild)
-    setup_kwargs.update({
-        "ext_modules": ext_modules,
-        "cmdclass": cmdclass,
-    })
+    setup_kwargs.update(
+        {
+            "ext_modules": ext_modules,
+            "cmdclass": cmdclass,
+        }
+    )

@@ -1,10 +1,11 @@
 from pathlib import Path
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    UParseError, USpoofChecks, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
-    UnicodeString,
-    uspoof_are_confusable, uspoof_are_confusable_unicode_string,
+    U_ICU_VERSION_MAJOR_NUM, UnicodeSet, UnicodeString, UParseError,
+    USpoofChecks, uspoof_are_confusable, uspoof_are_confusable_unicode_string,
     uspoof_are_confusable_utf8, uspoof_check, uspoof_check_unicode_string,
     uspoof_check_utf8, uspoof_clone, uspoof_close, uspoof_get_allowed_chars,
     uspoof_get_allowed_locales, uspoof_get_allowed_unicode_set,
@@ -15,6 +16,8 @@ from icupy.icu import (
     uspoof_set_checks,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -34,8 +37,10 @@ def test_api():
         #       int32_t length2,
         #       UErrorCode *status
         # )
-        assert (uspoof_are_confusable(sc, sc_latin, -1, sc_mixed, -1)
-                == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE)
+        assert (
+            uspoof_are_confusable(sc, sc_latin, -1, sc_mixed, -1)
+            == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+        )
 
         s1 = UnicodeString("cxs")
         s2 = UnicodeString("\\u0441\\u0445\\u0455").unescape()
@@ -46,9 +51,10 @@ def test_api():
         #       const icu::UnicodeString &s2,
         #       UErrorCode *status
         # )
-        assert (uspoof_are_confusable_unicode_string(sc, s1, s2)
-                == (USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
-                    | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE))
+        assert uspoof_are_confusable_unicode_string(sc, s1, s2) == (
+            USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
+        )
 
         # int32_t uspoof_areConfusableUTF8(
         #       const USpoofChecker *sc,
@@ -58,8 +64,10 @@ def test_api():
         #       int32_t length2,
         #       UErrorCode *status
         # )
-        assert (uspoof_are_confusable_utf8(sc, sc_latin, -1, sc_mixed, -1)
-                == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE)
+        assert (
+            uspoof_are_confusable_utf8(sc, sc_latin, -1, sc_mixed, -1)
+            == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+        )
 
         # int32_t uspoof_check(
         #       const USpoofChecker *sc,
@@ -68,10 +76,13 @@ def test_api():
         #       int32_t *position,
         #       UErrorCode *status
         # )
-        assert (uspoof_check(sc, sc_mixed, -1)
-                == USpoofChecks.USPOOF_SINGLE_SCRIPT)
-        assert (uspoof_check(sc, sc_mixed)  # length is optional
-                == USpoofChecks.USPOOF_SINGLE_SCRIPT)
+        assert (
+            uspoof_check(sc, sc_mixed, -1) == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
+        assert (
+            uspoof_check(sc, sc_mixed)  # length is optional
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
 
         # int32_t uspoof_checkUnicodeString(
         #       const USpoofChecker *sc,
@@ -79,8 +90,10 @@ def test_api():
         #       int32_t *position,
         #       UErrorCode *status
         # )
-        assert (uspoof_check_unicode_string(sc, UnicodeString(sc_mixed))
-                == USpoofChecks.USPOOF_SINGLE_SCRIPT)
+        assert (
+            uspoof_check_unicode_string(sc, UnicodeString(sc_mixed))
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
 
         # int32_t uspoof_checkUTF8(
         #       const USpoofChecker *sc,
@@ -89,10 +102,14 @@ def test_api():
         #       int32_t *position,
         #       UErrorCode *status
         # )
-        assert (uspoof_check_utf8(sc, sc_mixed, -1)
-                == USpoofChecks.USPOOF_SINGLE_SCRIPT)
-        assert (uspoof_check_utf8(sc, sc_mixed)  # length is optional
-                == USpoofChecks.USPOOF_SINGLE_SCRIPT)
+        assert (
+            uspoof_check_utf8(sc, sc_mixed, -1)
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
+        assert (
+            uspoof_check_utf8(sc, sc_mixed)  # length is optional
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
 
         # USpoofChecker *uspoof_clone(
         #       const USpoofChecker *sc,
@@ -156,7 +173,8 @@ def test_api():
         # )
         dest = UnicodeString()
         result = uspoof_get_skeleton_unicode_string(
-            sc, type_, UnicodeString(lll_latin_a), dest)
+            sc, type_, UnicodeString(lll_latin_a), dest
+        )
         assert isinstance(result, UnicodeString)
         assert id(result) == id(dest)
         assert dest == lll_skel
@@ -179,7 +197,7 @@ def test_api():
         #       const USet *chars,
         #       UErrorCode *status
         # )
-        uniset3 = UnicodeSet(0x41, 0x5a)
+        uniset3 = UnicodeSet(0x41, 0x5A)
         chars = uniset3.to_uset()
         uspoof_set_allowed_chars(sc, chars)
         uniset4 = uspoof_get_allowed_unicode_set(sc)
@@ -198,8 +216,8 @@ def test_api():
         #       const icu::UnicodeSet *chars,
         #       UErrorCode *status
         # )
-        uspoof_set_allowed_unicode_set(sc, UnicodeSet(0, 0x10ffff))
-        assert uspoof_get_allowed_unicode_set(sc) == UnicodeSet(0, 0x10ffff)
+        uspoof_set_allowed_unicode_set(sc, UnicodeSet(0, 0x10FFFF))
+        assert uspoof_get_allowed_unicode_set(sc) == UnicodeSet(0, 0x10FFFF)
 
         # void uspoof_setChecks(
         #       USpoofChecker *sc,
@@ -210,22 +228,27 @@ def test_api():
             sc,
             USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
             | USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
-            | USpoofChecks.USPOOF_ANY_CASE)
-        assert (uspoof_get_checks(sc)
-                == USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
-                | USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
-                | USpoofChecks.USPOOF_ANY_CASE)
+            | USpoofChecks.USPOOF_ANY_CASE,
+        )
+        assert (
+            uspoof_get_checks(sc)
+            == USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_ANY_CASE
+        )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
+    # fmt: off
     from icupy.icu import (
-        URestrictionLevel,
-        uspoof_get_inclusion_set, uspoof_get_inclusion_unicode_set,
-        uspoof_get_recommended_set, uspoof_get_recommended_unicode_set,
-        uspoof_get_restriction_level, uspoof_set_restriction_level,
+        URestrictionLevel, uspoof_get_inclusion_set,
+        uspoof_get_inclusion_unicode_set, uspoof_get_recommended_set,
+        uspoof_get_recommended_unicode_set, uspoof_get_restriction_level,
+        uspoof_set_restriction_level,
     )
 
+    # fmt: on
     # const USet *uspoof_getInclusionSet(UErrorCode *status)
     uset = uspoof_get_inclusion_set()
     uniset1 = UnicodeSet.from_uset(uset)
@@ -250,35 +273,41 @@ def test_api_51():
 
     with gc(uspoof_open(), uspoof_close) as sc:
         # URestrictionLevel uspoof_getRestrictionLevel(const USpoofChecker *sc)
-        assert (uspoof_get_restriction_level(sc)
-                == URestrictionLevel.USPOOF_HIGHLY_RESTRICTIVE)
+        assert (
+            uspoof_get_restriction_level(sc)
+            == URestrictionLevel.USPOOF_HIGHLY_RESTRICTIVE
+        )
 
         # void uspoof_setRestrictionLevel(
         #       USpoofChecker *sc,
         #       URestrictionLevel restrictionLevel
         # )
         uspoof_set_restriction_level(
-            sc, URestrictionLevel.USPOOF_MODERATELY_RESTRICTIVE)
-        assert (uspoof_get_restriction_level(sc)
-                == URestrictionLevel.USPOOF_MODERATELY_RESTRICTIVE)
+            sc, URestrictionLevel.USPOOF_MODERATELY_RESTRICTIVE
+        )
+        assert (
+            uspoof_get_restriction_level(sc)
+            == URestrictionLevel.USPOOF_MODERATELY_RESTRICTIVE
+        )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
 def test_api_58():
     # From icu/source/test/intltest/itspoof.cpp
+    # fmt: off
     from icupy.icu import (
-        URestrictionLevel,
-        uspoof_check2, uspoof_check2_unicode_string, uspoof_check2_utf8,
-        uspoof_close_check_result, uspoof_get_check_result_checks,
-        uspoof_get_check_result_numerics,
+        URestrictionLevel, uspoof_check2, uspoof_check2_unicode_string,
+        uspoof_check2_utf8, uspoof_close_check_result,
+        uspoof_get_check_result_checks, uspoof_get_check_result_numerics,
         uspoof_get_check_result_restriction_level, uspoof_open_check_result,
     )
 
+    # fmt: on
     # USpoofCheckResult *uspoof_openCheckResult(UErrorCode *status)
     # void uspoof_closeCheckResult(USpoofCheckResult *checkResult)
     with gc(uspoof_open(), uspoof_close) as sc, gc(
-            uspoof_open_check_result(),
-            uspoof_close_check_result) as check_result:
+        uspoof_open_check_result(), uspoof_close_check_result
+    ) as check_result:
         # int32_t uspoof_check2(
         #       const USpoofChecker *sc,
         #       const UChar *id,
@@ -297,12 +326,19 @@ def test_api_58():
         #       USpoofCheckResult *checkResult,
         #       UErrorCode *status
         # )
-        assert uspoof_check2_unicode_string(
-            sc, UnicodeString("m\u0307"), check_result) == 0
-        assert uspoof_check2_unicode_string(
-            sc, UnicodeString("m\u0307"), None) == 0
-        assert uspoof_check2_unicode_string(
-            sc, UnicodeString("m\u0307")) == 0  # checkResult is optional
+        assert (
+            uspoof_check2_unicode_string(
+                sc, UnicodeString("m\u0307"), check_result
+            )
+            == 0
+        )
+        assert (
+            uspoof_check2_unicode_string(sc, UnicodeString("m\u0307"), None)
+            == 0
+        )
+        assert (
+            uspoof_check2_unicode_string(sc, UnicodeString("m\u0307")) == 0
+        )  # checkResult is optional
 
         # int32_t uspoof_check2UTF8(
         #       const USpoofChecker *sc,
@@ -313,8 +349,9 @@ def test_api_58():
         # )
         assert uspoof_check2_utf8(sc, "m\u0307", -1, check_result) == 0
         assert uspoof_check2_utf8(sc, "m\u0307", -1, None) == 0
-        assert uspoof_check2_utf8(
-            sc, "m\u0307", -1) == 0  # checkResult is optional
+        assert (
+            uspoof_check2_utf8(sc, "m\u0307", -1) == 0
+        )  # checkResult is optional
         assert uspoof_check2_utf8(sc, "m\u0307") == 0  # length is optional
 
         # int32_t uspoof_getCheckResultChecks(
@@ -323,10 +360,14 @@ def test_api_58():
         # )
         assert uspoof_get_check_result_checks(check_result) == 0
 
-        assert (uspoof_check2_utf8(sc, "i\u0307", -1, check_result)
-                == USpoofChecks.USPOOF_HIDDEN_OVERLAY)
-        assert (uspoof_get_check_result_checks(check_result)
-                == USpoofChecks.USPOOF_HIDDEN_OVERLAY)
+        assert (
+            uspoof_check2_utf8(sc, "i\u0307", -1, check_result)
+            == USpoofChecks.USPOOF_HIDDEN_OVERLAY
+        )
+        assert (
+            uspoof_get_check_result_checks(check_result)
+            == USpoofChecks.USPOOF_HIDDEN_OVERLAY
+        )
 
         # const USet *uspoof_getCheckResultNumerics(
         #       const USpoofCheckResult *checkResult,
@@ -335,9 +376,14 @@ def test_api_58():
         uspoof_set_checks(
             sc,
             USpoofChecks.USPOOF_MIXED_NUMBERS
-            | USpoofChecks.USPOOF_RESTRICTION_LEVEL)
-        assert uspoof_check2_unicode_string(
-            sc, UnicodeString("\u0967"), check_result) == 0
+            | USpoofChecks.USPOOF_RESTRICTION_LEVEL,
+        )
+        assert (
+            uspoof_check2_unicode_string(
+                sc, UnicodeString("\u0967"), check_result
+            )
+            == 0
+        )
         uset = uspoof_get_check_result_numerics(check_result)
         uniset = UnicodeSet.from_uset(uset)
         assert uniset == UnicodeSet("[\u0966]")
@@ -346,8 +392,10 @@ def test_api_58():
         #       const USpoofCheckResult *checkResult,
         #       UErrorCode *status
         # )
-        assert (uspoof_get_check_result_restriction_level(check_result)
-                == URestrictionLevel.USPOOF_SINGLE_SCRIPT_RESTRICTIVE)
+        assert (
+            uspoof_get_check_result_restriction_level(check_result)
+            == URestrictionLevel.USPOOF_SINGLE_SCRIPT_RESTRICTIVE
+        )
 
 
 def test_open_from_serialized():
@@ -368,14 +416,17 @@ def test_open_from_serialized():
         #       int32_t *pActualLength,
         #       UErrorCode *pErrorCode
         # )
-        with gc(uspoof_open_from_serialized(data, len(data)),
-                uspoof_close) as sc2:
+        with gc(
+            uspoof_open_from_serialized(data, len(data)), uspoof_close
+        ) as sc2:
             uniset1 = uspoof_get_allowed_unicode_set(sc)
             uniset2 = uspoof_get_allowed_unicode_set(sc2)
             assert uniset1 == uniset2
 
-        with gc(uspoof_open_from_serialized(data),  # length is optional
-                uspoof_close) as sc2:
+        with gc(
+            uspoof_open_from_serialized(data),  # length is optional
+            uspoof_close,
+        ) as sc2:
             uniset1 = uspoof_get_allowed_unicode_set(sc)
             uniset2 = uspoof_get_allowed_unicode_set(sc2)
             assert uniset1 == uniset2
@@ -401,33 +452,42 @@ def test_open_from_source():
             #       UErrorCode *status
             # )
             pe = UParseError()
-            with gc(uspoof_open_from_source(
-                    confusables, len(confusables),
-                    confusables_whole_script, len(confusables_whole_script),
-                    pe),
-                    uspoof_close) as sc:
+            with gc(
+                uspoof_open_from_source(
+                    confusables,
+                    len(confusables),
+                    confusables_whole_script,
+                    len(confusables_whole_script),
+                    pe,
+                ),
+                uspoof_close,
+            ) as sc:
                 assert pe.offset == 0
                 assert uspoof_check(sc, good_latin, -1) == 0
 
             pe = UParseError()
-            with gc(uspoof_open_from_source(
-                    confusables, -1,
-                    confusables_whole_script, -1,
-                    pe),
-                    uspoof_close) as sc:
+            with gc(
+                uspoof_open_from_source(
+                    confusables, -1, confusables_whole_script, -1, pe
+                ),
+                uspoof_close,
+            ) as sc:
                 assert pe.offset == 0
                 assert uspoof_check(sc, good_latin, -1) == 0
 
             pe = UParseError()
-            with gc(uspoof_open_from_source(
-                    confusables, -1,
-                    None, 0,  # Deprecated in ICU 58
-                    pe),
-                    uspoof_close) as sc:
+            with gc(
+                uspoof_open_from_source(
+                    confusables, -1, None, 0, pe  # Deprecated in ICU 58
+                ),
+                uspoof_close,
+            ) as sc:
                 assert pe.offset == 0
                 assert uspoof_check(sc, good_latin, -1) == 0
     except FileNotFoundError:
-        pytest.skip("confusables.txt or confusablesWholeScript.txt, "
-                    "or both files are not found (not an error). "
-                    "You need to copy them from "
-                    "<icu4c>/icu/source/data/unidata/")
+        pytest.skip(
+            "confusables.txt or confusablesWholeScript.txt, "
+            "or both files are not found (not an error). "
+            "You need to copy them from "
+            "<icu4c>/icu/source/data/unidata/"
+        )

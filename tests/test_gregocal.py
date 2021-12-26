@@ -1,12 +1,17 @@
 import copy
 
 import pytest
+
+# fmt: off
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 from icupy.icu import (
     Calendar, GregorianCalendar, Locale, SimpleTimeZone, StringEnumeration,
     TimeZone, UCalendarDateFields, UCalendarDaysOfWeek, UCalendarMonths,
     UCalendarWallTimeOption, UCalendarWeekdayType, ULocDataLocaleType,
-    U_ICU_VERSION_MAJOR_NUM, U_MILLIS_PER_HOUR as HOUR,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -25,16 +30,12 @@ def test_api():
     #       UErrorCode &status
     # )
     it1 = Calendar.get_keyword_values_for_locale(
-        "calendar",
-        Locale("he"),
-        True)
+        "calendar", Locale("he"), True
+    )
     assert isinstance(it1, StringEnumeration)
     assert "hebrew" in it1
 
-    it2 = Calendar.get_keyword_values_for_locale(
-        "calendar",
-        "he",
-        True)
+    it2 = Calendar.get_keyword_values_for_locale("calendar", "he", True)
     assert isinstance(it2, StringEnumeration)
     assert "hebrew" in it2
 
@@ -119,12 +120,10 @@ def test_api():
     #       UCalendarDateFields field,
     #       UErrorCode &status
     # )
-    assert cal.field_difference(
-        when2,
-        UCalendarDateFields.UCAL_HOUR_OF_DAY) == 1
-    assert cal.field_difference(
-        when2,
-        UCalendarDateFields.UCAL_MINUTE) == 0
+    assert (
+        cal.field_difference(when2, UCalendarDateFields.UCAL_HOUR_OF_DAY) == 1
+    )
+    assert cal.field_difference(when2, UCalendarDateFields.UCAL_MINUTE) == 0
 
     year = 2008
     month = UCalendarMonths.UCAL_JULY
@@ -230,8 +229,10 @@ def test_api():
     #       UCalendarDaysOfWeek dayOfWeek,
     #       UErrorCode &status
     # )
-    assert (cal.get_day_of_week_type(UCalendarDaysOfWeek.UCAL_SUNDAY)
-            == UCalendarWeekdayType.UCAL_WEEKEND)
+    assert (
+        cal.get_day_of_week_type(UCalendarDaysOfWeek.UCAL_SUNDAY)
+        == UCalendarWeekdayType.UCAL_WEEKEND
+    )
 
     # UCalendarDaysOfWeek icu::Calendar::getFirstDayOfWeek(UErrorCode &status)
     assert cal2.get_first_day_of_week() == UCalendarDaysOfWeek.UCAL_SUNDAY
@@ -259,8 +260,10 @@ def test_api():
     #       UCalendarDaysOfWeek dayOfWeek,
     #       UErrorCode &status
     # )
-    assert (cal.get_weekend_transition(UCalendarDaysOfWeek.UCAL_SUNDAY)
-            == 24 * HOUR)
+    assert (
+        cal.get_weekend_transition(UCalendarDaysOfWeek.UCAL_SUNDAY)
+        == 24 * HOUR
+    )
 
     # UBool icu::Calendar::inDaylightTime(UErrorCode &status)
     assert not cal.in_daylight_time()
@@ -322,7 +325,9 @@ def test_api():
     assert cal3.get_time() == 1215217815000.0  # 2008-07-05T00:30:15Z
 
     # UDate icu::GregorianCalendar::getGregorianChange(void)
-    assert cal4.get_gregorian_change() == -12219292800000.0  # 1582-10-15T00:00:00Z
+    assert (
+        cal4.get_gregorian_change() == -12219292800000.0
+    )  # 1582-10-15T00:00:00Z
 
     # void icu::GregorianCalendar::setGregorianChange(
     #       UDate date,
@@ -352,8 +357,12 @@ def test_calendar_create_instance():
     assert cal1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal1.get_time_zone() == zone2
 
-    assert Calendar.create_instance("en").get_locale(
-        ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    assert (
+        Calendar.create_instance("en").get_locale(
+            ULocDataLocaleType.ULOC_ACTUAL_LOCALE
+        )
+        == locale1
+    )
 
     # [2]
     # static Calendar *icu::Calendar::createInstance(
@@ -366,8 +375,12 @@ def test_calendar_create_instance():
     assert cal2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal2.get_time_zone() == zone1
 
-    assert Calendar.create_instance(zone1, "en").get_locale(
-        ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    assert (
+        Calendar.create_instance(zone1, "en").get_locale(
+            ULocDataLocaleType.ULOC_ACTUAL_LOCALE
+        )
+        == locale1
+    )
 
     # [3]
     # static Calendar *icu::Calendar::createInstance(
@@ -407,16 +420,21 @@ def test_get_repeated_wall_time_option():
     cal = Calendar.create_instance(zone)
 
     # UCalendarWallTimeOption icu::Calendar::getRepeatedWallTimeOption(void)
-    assert (cal.get_repeated_wall_time_option()
-            == UCalendarWallTimeOption.UCAL_WALLTIME_LAST)
+    assert (
+        cal.get_repeated_wall_time_option()
+        == UCalendarWallTimeOption.UCAL_WALLTIME_LAST
+    )
 
     # void icu::Calendar::setRepeatedWallTimeOption(
     #       UCalendarWallTimeOption option
     # )
     cal.set_repeated_wall_time_option(
-        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
-    assert (cal.get_repeated_wall_time_option()
-            == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
+        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
+    )
+    assert (
+        cal.get_repeated_wall_time_option()
+        == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
@@ -425,16 +443,21 @@ def test_get_skipped_wall_time_option():
     cal = Calendar.create_instance(zone)
 
     # UCalendarWallTimeOption icu::Calendar::getSkippedWallTimeOption(void)
-    assert (cal.get_skipped_wall_time_option()
-            == UCalendarWallTimeOption.UCAL_WALLTIME_LAST)
+    assert (
+        cal.get_skipped_wall_time_option()
+        == UCalendarWallTimeOption.UCAL_WALLTIME_LAST
+    )
 
     # void icu::Calendar::setSkippedWallTimeOption(
     #       UCalendarWallTimeOption option
     # )
     cal.set_skipped_wall_time_option(
-        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
-    assert (cal.get_skipped_wall_time_option()
-            == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
+        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
+    )
+    assert (
+        cal.get_skipped_wall_time_option()
+        == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
+    )
 
 
 def test_get_time_zone_upcasting():

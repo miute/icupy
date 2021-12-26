@@ -1,13 +1,17 @@
+# fmt: off
 from icupy.icu import (
-    CollationKey, Collator, Locale, UCollationResult, UColAttribute,
-    UColAttributeValue, UnicodeString
+    CollationKey, Collator, Locale, UColAttribute, UColAttributeValue,
+    UCollationResult, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
     coll = Collator.create_instance(Locale.get_english())
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_TERTIARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_TERTIARY
+    )
     source = UnicodeString("Abcd")
 
     # [1]

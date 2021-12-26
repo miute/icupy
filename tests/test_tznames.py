@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
@@ -6,10 +7,12 @@ if U_ICU_VERSION_MAJOR_NUM < 50:
 
 import copy
 
+# fmt: off
 from icupy.icu import (
-    Locale, StringEnumeration, TimeZoneNames, UTimeZoneNameType,
-    UnicodeString,
+    Locale, StringEnumeration, TimeZoneNames, UnicodeString, UTimeZoneNameType,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -41,13 +44,13 @@ def test_api():
     #       UErrorCode &status
     # )
     it1 = tzn1.get_available_meta_zone_ids(
-        UnicodeString("America/Los_Angeles"))
+        UnicodeString("America/Los_Angeles")
+    )
     assert isinstance(it1, StringEnumeration)
     assert len(it1) > 0
     assert "America_Pacific" in it1
 
-    it2 = tzn1.get_available_meta_zone_ids(
-        "America/Los_Angeles")
+    it2 = tzn1.get_available_meta_zone_ids("America/Los_Angeles")
     assert isinstance(it2, StringEnumeration)
     assert it2 == it1
 
@@ -73,7 +76,8 @@ def test_api():
         UnicodeString("America/Los_Angeles"),
         UTimeZoneNameType.UTZNM_LONG_STANDARD,
         date,
-        name)
+        name,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
@@ -82,7 +86,8 @@ def test_api():
         "America/Los_Angeles",
         UTimeZoneNameType.UTZNM_LONG_DAYLIGHT,
         date,
-        name)
+        name,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Daylight Time"
@@ -92,15 +97,13 @@ def test_api():
     #       UnicodeString &name
     # )
     result = tzn1.get_exemplar_location_name(
-        UnicodeString("America/Los_Angeles"),
-        name)
+        UnicodeString("America/Los_Angeles"), name
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Los Angeles"
 
-    result = tzn1.get_exemplar_location_name(
-        "Asia/Tokyo",
-        name)
+    result = tzn1.get_exemplar_location_name("Asia/Tokyo", name)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Tokyo"
@@ -113,15 +116,15 @@ def test_api():
     result = tzn1.get_meta_zone_display_name(
         UnicodeString("America_Pacific"),
         UTimeZoneNameType.UTZNM_LONG_STANDARD,
-        name)
+        name,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
 
     result = tzn1.get_meta_zone_display_name(
-        "America_Pacific",
-        UTimeZoneNameType.UTZNM_LONG_DAYLIGHT,
-        name)
+        "America_Pacific", UTimeZoneNameType.UTZNM_LONG_DAYLIGHT, name
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Daylight Time"
@@ -134,17 +137,13 @@ def test_api():
     #       UnicodeString &mzID
     # )
     result = tzn1.get_meta_zone_id(
-        UnicodeString("America/Los_Angeles"),
-        date,
-        mz_id)
+        UnicodeString("America/Los_Angeles"), date, mz_id
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(mz_id)
     assert result == "America_Pacific"
 
-    result = tzn1.get_meta_zone_id(
-        "America/Los_Angeles",
-        date,
-        mz_id)
+    result = tzn1.get_meta_zone_id("America/Los_Angeles", date, mz_id)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(mz_id)
     assert result == "America_Pacific"
@@ -157,17 +156,13 @@ def test_api():
     #       UnicodeString &tzID
     # )
     result = tzn1.get_reference_zone_id(
-        UnicodeString("America_Pacific"),
-        "001",
-        tz_id)
+        UnicodeString("America_Pacific"), "001", tz_id
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(tz_id)
     assert result == "America/Los_Angeles"
 
-    result = tzn1.get_reference_zone_id(
-        "America_Pacific",
-        "001",
-        tz_id)
+    result = tzn1.get_reference_zone_id("America_Pacific", "001", tz_id)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(tz_id)
     assert result == "America/Los_Angeles"
@@ -180,15 +175,15 @@ def test_api():
     result = tzn1.get_time_zone_display_name(
         UnicodeString("America/Los_Angeles"),
         UTimeZoneNameType.UTZNM_LONG_STANDARD,
-        name)
+        name,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result.is_bogus()
 
     result = tzn1.get_time_zone_display_name(
-        "America/Los_Angeles",
-        UTimeZoneNameType.UTZNM_LONG_STANDARD,
-        name)
+        "America/Los_Angeles", UTimeZoneNameType.UTZNM_LONG_STANDARD, name
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result.is_bogus()

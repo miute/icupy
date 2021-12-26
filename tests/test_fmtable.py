@@ -1,10 +1,14 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    Calendar, CurrencyAmount, DateInterval, Formattable, ICUError,
-    INT32_MAX, TimeUnit, TimeUnitAmount, TimeZone, UErrorCode, UnicodeString,
+    INT32_MAX, Calendar, CurrencyAmount, DateInterval, Formattable, ICUError,
+    TimeUnit, TimeUnitAmount, TimeZone, UErrorCode, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():

@@ -1,8 +1,11 @@
+# fmt: off
 from icupy.icu import (
-    MessagePattern, UMSGPAT_NO_NUMERIC_VALUE, UMessagePatternApostropheMode,
-    UMessagePatternArgType, UMessagePatternPartType, UParseError,
-    UnicodeString,
+    UMSGPAT_NO_NUMERIC_VALUE, MessagePattern, UMessagePatternApostropheMode,
+    UMessagePatternArgType, UMessagePatternPartType, UnicodeString,
+    UParseError,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -12,15 +15,19 @@ def test_api():
     # UnicodeString icu::MessagePattern::autoQuoteApostropheDeep()
     result = mp1.auto_quote_apostrophe_deep()
     assert isinstance(result, UnicodeString)
-    assert (result
-            == "I don''t '{know}' {gender,select,female{h''er}other{h''im}}.")
+    assert (
+        result
+        == "I don''t '{know}' {gender,select,female{h''er}other{h''im}}."
+    )
 
     # int32_t icu::MessagePattern::countParts()
     assert mp1.count_parts() == 16
 
     # UMessagePatternApostropheMode icu::MessagePattern::getApostropheMode()
-    assert (mp1.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL)
+    assert (
+        mp1.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+    )
 
     # void icu::MessagePattern::clear()
     mp1.clear()
@@ -31,10 +38,13 @@ def test_api():
     # )
     mp1 = MessagePattern(pattern, None)
     mp1.clear_pattern_and_set_apostrophe_mode(
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED)
+        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+    )
     assert mp1.count_parts() == 0
-    assert (mp1.get_apostrophe_mode()
-            == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED)
+    assert (
+        mp1.get_apostrophe_mode()
+        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+    )
 
     # int32_t icu::MessagePattern::getLimitPartIndex(int32_t start)
     mp1 = MessagePattern(pattern, None)
@@ -48,8 +58,10 @@ def test_api():
     assert mp1.get_numeric_value(part) == UMSGPAT_NO_NUMERIC_VALUE
 
     # UMessagePatternPartType icu::MessagePattern::getPartType(int32_t i)
-    assert (mp1.get_part_type(4)
-            == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START)
+    assert (
+        mp1.get_part_type(4)
+        == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START
+    )
 
     # int32_t icu::MessagePattern::getPatternIndex(int32_t partIndex)
     assert mp1.get_pattern_index(4) == 17
@@ -60,12 +72,16 @@ def test_api():
     assert result == pattern
 
     # double icu::MessagePattern::getPluralOffset(int32_t pluralStart)
-    pattern2 = ("{0,plural,offset:1 "
-                "one{another meter}"
-                "other{{0,number,00.#} meters}}")
+    pattern2 = (
+        "{0,plural,offset:1 "
+        "one{another meter}"
+        "other{{0,number,00.#} meters}}"
+    )
     mp2 = MessagePattern(pattern2, None)
-    assert (mp2.get_part_type(3)
-            == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT)
+    assert (
+        mp2.get_part_type(3)
+        == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT
+    )
     assert mp2.get_plural_offset(3) == 1
 
     # UnicodeString icu::MessagePattern::getSubstring(const Part &part)
@@ -123,12 +139,14 @@ def test_message_pattern():
     #       UErrorCode &errorCode
     # )
     mp2 = MessagePattern(
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL)
+        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+    )
     assert mp1 == mp2
     assert mp2.count_parts() == 0
 
     mp2a = MessagePattern(
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED)
+        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+    )
     assert mp1 != mp2a
 
     # [3]
@@ -164,7 +182,8 @@ def test_message_pattern():
 def test_parse():
     pattern = UnicodeString(
         "At {1,time,::jmm} on {1,date,::dMMMM}, "
-        "there was {2} on planet {0,number}.")
+        "there was {2} on planet {0,number}."
+    )
 
     # MessagePattern &icu::MessagePattern::parse(
     #       const UnicodeString &pattern,
@@ -202,7 +221,8 @@ def test_parse():
 
 def test_parse_choice_style():
     pattern = UnicodeString(
-        "0#are no files|1#is one file|1<are {0, number} files")
+        "0#are no files|1#is one file|1<are {0, number} files"
+    )
 
     # MessagePattern &icu::MessagePattern::parseChoiceStyle(
     #       const UnicodeString &pattern,
@@ -240,7 +260,8 @@ def test_parse_choice_style():
 
 def test_parse_plural_style():
     pattern = UnicodeString(
-        "one{#st file}two{#nd file}few{#rd file}other{#th file}")
+        "one{#st file}two{#nd file}few{#rd file}other{#th file}"
+    )
 
     # MessagePattern &icu::MessagePattern::parsePluralStyle(
     #       const UnicodeString &pattern,
@@ -321,8 +342,9 @@ def test_part():
     assert isinstance(part, MessagePattern.Part)
 
     # UMessagePatternArgType icu::MessagePattern::Part::getArgType()
-    assert (part.get_arg_type()
-            == UMessagePatternArgType.UMSGPAT_ARG_TYPE_SELECT)
+    assert (
+        part.get_arg_type() == UMessagePatternArgType.UMSGPAT_ARG_TYPE_SELECT
+    )
 
     # int32_t icu::MessagePattern::Part::getIndex(void)
     assert part.get_index() == 17
@@ -334,8 +356,9 @@ def test_part():
     assert part.get_limit() == 18
 
     # UMessagePatternPartType icu::MessagePattern::Part::getType()
-    assert (part.get_type()
-            == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START)
+    assert (
+        part.get_type() == UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START
+    )
 
     # int32_t icu::MessagePattern::Part::getValue()
     assert part.get_value() == 4
@@ -347,7 +370,9 @@ def test_part():
     #       UMessagePatternPartType type
     # )
     assert not MessagePattern.Part.has_numeric_value(
-        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START)
+        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START
+    )
 
     assert MessagePattern.Part.has_numeric_value(
-        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT)
+        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT
+    )

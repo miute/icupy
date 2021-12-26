@@ -1,18 +1,23 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    DateTimePatternGenerator, Locale, StringEnumeration,
-    UDateTimePatternConflict, UDateTimePatternField,
-    UDateTimePatternMatchOptions, U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, DateTimePatternGenerator, Locale,
+    StringEnumeration, UDateTimePatternConflict, UDateTimePatternField,
+    UDateTimePatternMatchOptions, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
     gen1 = DateTimePatternGenerator.create_instance(Locale("en_US"))
     gen2 = DateTimePatternGenerator.create_instance("en_US")
     gen3 = DateTimePatternGenerator.create_instance(
-        Locale("en_US@calendar=japanese"))
+        Locale("en_US@calendar=japanese")
+    )
 
     # UBool icu::DateTimePatternGenerator::operator!=(
     #       const DateTimePatternGenerator &other
@@ -32,7 +37,8 @@ def test_api():
     #       UDateTimePatternField field
     # )
     result = gen2.get_append_item_format(
-        UDateTimePatternField.UDATPG_ERA_FIELD)
+        UDateTimePatternField.UDATPG_ERA_FIELD
+    )
     assert isinstance(result, UnicodeString)
     assert result == "{0} {1}"
 
@@ -41,22 +47,25 @@ def test_api():
     #       const UnicodeString &value
     # )
     gen2.set_append_item_format(
-        UDateTimePatternField.UDATPG_ERA_FIELD,
-        UnicodeString("{0}, {1}"))
-    assert gen2.get_append_item_format(
-        UDateTimePatternField.UDATPG_ERA_FIELD) == "{0}, {1}"
+        UDateTimePatternField.UDATPG_ERA_FIELD, UnicodeString("{0}, {1}")
+    )
+    assert (
+        gen2.get_append_item_format(UDateTimePatternField.UDATPG_ERA_FIELD)
+        == "{0}, {1}"
+    )
 
     gen2.set_append_item_format(
-        UDateTimePatternField.UDATPG_ERA_FIELD,
-        "{0} {1}")
-    assert gen2.get_append_item_format(
-        UDateTimePatternField.UDATPG_ERA_FIELD) == "{0} {1}"
+        UDateTimePatternField.UDATPG_ERA_FIELD, "{0} {1}"
+    )
+    assert (
+        gen2.get_append_item_format(UDateTimePatternField.UDATPG_ERA_FIELD)
+        == "{0} {1}"
+    )
 
     # const UnicodeString &icu::DateTimePatternGenerator::getAppendItemName(
     #       UDateTimePatternField field
     # )
-    result = gen2.get_append_item_name(
-        UDateTimePatternField.UDATPG_ERA_FIELD)
+    result = gen2.get_append_item_name(UDateTimePatternField.UDATPG_ERA_FIELD)
     assert isinstance(result, UnicodeString)
     assert result == "era"
 
@@ -65,16 +74,18 @@ def test_api():
     #       const UnicodeString &value
     # )
     gen2.set_append_item_name(
-        UDateTimePatternField.UDATPG_ERA_FIELD,
-        UnicodeString("epoch"))
-    assert gen2.get_append_item_name(
-        UDateTimePatternField.UDATPG_ERA_FIELD) == "epoch"
+        UDateTimePatternField.UDATPG_ERA_FIELD, UnicodeString("epoch")
+    )
+    assert (
+        gen2.get_append_item_name(UDateTimePatternField.UDATPG_ERA_FIELD)
+        == "epoch"
+    )
 
-    gen2.set_append_item_name(
-        UDateTimePatternField.UDATPG_ERA_FIELD,
-        "era")
-    assert gen2.get_append_item_name(
-        UDateTimePatternField.UDATPG_ERA_FIELD) == "era"
+    gen2.set_append_item_name(UDateTimePatternField.UDATPG_ERA_FIELD, "era")
+    assert (
+        gen2.get_append_item_name(UDateTimePatternField.UDATPG_ERA_FIELD)
+        == "era"
+    )
 
     # UnicodeString icu::DateTimePatternGenerator::getBaseSkeleton(
     #       const UnicodeString &pattern,
@@ -103,13 +114,14 @@ def test_api():
     # )
     result = gen1.get_best_pattern(
         UnicodeString("MMMMdjmm"),
-        UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS)
+        UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "MMMM d, h:mm a"
 
     result = gen1.get_best_pattern(
-        "MMMMdjmm",
-        UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS)
+        "MMMMdjmm", UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS
+    )
     assert isinstance(result, UnicodeString)
     assert result == "MMMM d, h:mm a"
 
@@ -195,28 +207,32 @@ def test_api():
     result = gen1.replace_field_types(
         UnicodeString("d-M H:m"),
         UnicodeString("MMMMddHHmm"),
-        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH)
+        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM HH:mm"
 
     result = gen1.replace_field_types(
         "d-M H:m",
         UnicodeString("MMMMddHHmm"),
-        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH)
+        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM HH:mm"
 
     result = gen1.replace_field_types(
         UnicodeString("d-M H:m"),
         "MMMMddHHmm",
-        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH)
+        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM HH:mm"
 
     result = gen1.replace_field_types(
         "d-M H:m",
         "MMMMddHHmm",
-        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH)
+        UDateTimePatternMatchOptions.UDATPG_MATCH_ALL_FIELDS_LENGTH,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM HH:mm"
 
@@ -227,26 +243,20 @@ def test_api():
     #       UErrorCode &status
     # )
     result = gen1.replace_field_types(
-        UnicodeString("d-M H:m"),
-        UnicodeString("MMMMddHHmm"))
+        UnicodeString("d-M H:m"), UnicodeString("MMMMddHHmm")
+    )
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM H:m"
 
-    result = gen1.replace_field_types(
-        "d-M H:m",
-        UnicodeString("MMMMddHHmm"))
+    result = gen1.replace_field_types("d-M H:m", UnicodeString("MMMMddHHmm"))
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM H:m"
 
-    result = gen1.replace_field_types(
-        UnicodeString("d-M H:m"),
-        "MMMMddHHmm")
+    result = gen1.replace_field_types(UnicodeString("d-M H:m"), "MMMMddHHmm")
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM H:m"
 
-    result = gen1.replace_field_types(
-        "d-M H:m",
-        "MMMMddHHmm")
+    result = gen1.replace_field_types("d-M H:m", "MMMMddHHmm")
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM H:m"
 
@@ -279,21 +289,15 @@ def test_create_empty_instance():
     #       UErrorCode &status
     # )
     conflicting_pattern = UnicodeString()
-    result = gen.add_pattern(UnicodeString("MMMMd"),
-                             True,
-                             conflicting_pattern)
+    result = gen.add_pattern(UnicodeString("MMMMd"), True, conflicting_pattern)
     assert result == UDateTimePatternConflict.UDATPG_NO_CONFLICT
     assert len(conflicting_pattern) == 0
 
-    result = gen.add_pattern("HH:mm",
-                             True,
-                             conflicting_pattern)
+    result = gen.add_pattern("HH:mm", True, conflicting_pattern)
     assert result == UDateTimePatternConflict.UDATPG_NO_CONFLICT
     assert len(conflicting_pattern) == 0
 
-    result = gen.add_pattern("MMMMMdd",
-                             True,
-                             conflicting_pattern)
+    result = gen.add_pattern("MMMMMdd", True, conflicting_pattern)
     assert result == UDateTimePatternConflict.UDATPG_NO_CONFLICT
     assert len(conflicting_pattern) == 0
 
@@ -341,8 +345,9 @@ def test_get_default_hour_cycle():
     # UDateFormatHourCycle icu::DateTimePatternGenerator::getDefaultHourCycle(
     #       UErrorCode &status
     # )
-    assert (gen.get_default_hour_cycle()
-            == UDateFormatHourCycle.UDAT_HOUR_CYCLE_12)
+    assert (
+        gen.get_default_hour_cycle() == UDateFormatHourCycle.UDAT_HOUR_CYCLE_12
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
@@ -357,7 +362,8 @@ def test_get_field_display_name():
     # )
     result = gen.get_field_display_name(
         UDateTimePatternField.UDATPG_ERA_FIELD,
-        UDateTimePGDisplayWidth.UDATPG_ABBREVIATED)
+        UDateTimePGDisplayWidth.UDATPG_ABBREVIATED,
+    )
     assert isinstance(result, UnicodeString)
     assert result == "era"
 
@@ -370,12 +376,12 @@ def test_static_get_skeleton():
     #       UErrorCode &status
     # )
     result = DateTimePatternGenerator.static_get_base_skeleton(
-        UnicodeString("d-M H:m"))
+        UnicodeString("d-M H:m")
+    )
     assert isinstance(result, UnicodeString)
     assert result == "MdHm"
 
-    result = DateTimePatternGenerator.static_get_base_skeleton(
-        "d-M H:m")
+    result = DateTimePatternGenerator.static_get_base_skeleton("d-M H:m")
     assert isinstance(result, UnicodeString)
     assert result == "MdHm"
 
@@ -384,11 +390,11 @@ def test_static_get_skeleton():
     #       UErrorCode &status
     # )
     result = DateTimePatternGenerator.static_get_skeleton(
-        UnicodeString("d-M H:m"))
+        UnicodeString("d-M H:m")
+    )
     assert isinstance(result, UnicodeString)
     assert result == "MdHm"
 
-    result = DateTimePatternGenerator.static_get_skeleton(
-        "d-M H:m")
+    result = DateTimePatternGenerator.static_get_skeleton("d-M H:m")
     assert isinstance(result, UnicodeString)
     assert result == "MdHm"

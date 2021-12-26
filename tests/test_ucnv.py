@@ -2,40 +2,35 @@ from functools import partial
 from pathlib import Path
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    ConstVoidPtr, ICUError, Locale, UErrorCode, UnicodeSet, UnicodeString,
-    u_strlen,
-    # ucnv
-    UCNV_LOCALE_OPTION_STRING, UCNV_VERSION_OPTION_STRING,
-    UConverterPlatform, UConverterType, UConverterUnicodeSet,
-    ucnv_close, ucnv_compare_names, ucnv_count_aliases, ucnv_count_available,
-    ucnv_count_standards, ucnv_detect_unicode_signature,
-    ucnv_fix_file_separator, ucnv_flush_cache,
+    UCNV_ESCAPE_C, UCNV_ESCAPE_XML_HEX, UCNV_FROM_U_CALLBACK_ESCAPE,
+    UCNV_LOCALE_OPTION_STRING, UCNV_TO_U_CALLBACK_ESCAPE,
+    UCNV_VERSION_OPTION_STRING, ConstVoidPtr, ICUError, Locale,
+    UConverterCallbackReason, UConverterFromUCallbackPtr,
+    UConverterFromUnicodeArgs, UConverterPlatform, UConverterToUCallbackPtr,
+    UConverterToUnicodeArgs, UConverterType, UConverterUnicodeSet, UErrorCode,
+    UnicodeSet, UnicodeString, u_strlen, ucnv_cb_from_u_write_bytes,
+    ucnv_cb_from_u_write_sub, ucnv_cb_to_u_write_sub,
+    ucnv_cb_to_u_write_uchars, ucnv_close, ucnv_compare_names,
+    ucnv_count_aliases, ucnv_count_available, ucnv_count_standards,
+    ucnv_detect_unicode_signature, ucnv_fix_file_separator, ucnv_flush_cache,
     ucnv_get_alias, ucnv_get_aliases, ucnv_get_available_name,
     ucnv_get_canonical_name, ucnv_get_ccsid, ucnv_get_default_name,
     ucnv_get_display_name, ucnv_get_from_ucall_back, ucnv_get_name,
     ucnv_get_platform, ucnv_get_standard, ucnv_get_standard_name,
     ucnv_get_subst_chars, ucnv_get_to_ucall_back, ucnv_get_type,
-    ucnv_get_unicode_set,
-    ucnv_is_ambiguous, ucnv_is_fixed_width,
-    ucnv_open, ucnv_open_all_names, ucnv_open_ccsid, ucnv_open_package,
-    ucnv_open_standard_names, ucnv_reset,
-    ucnv_reset_from_unicode, ucnv_reset_to_unicode,
-    ucnv_set_fallback, ucnv_set_from_ucall_back, ucnv_set_subst_chars,
-    ucnv_set_subst_string, ucnv_set_to_ucall_back, ucnv_uses_fallback,
-    # ucnv_err
-    UCNV_ESCAPE_C, UCNV_ESCAPE_XML_HEX,
-    UCNV_FROM_U_CALLBACK_ESCAPE, UCNV_TO_U_CALLBACK_ESCAPE,
-    UConverterCallbackReason,
-    UConverterFromUCallbackPtr, UConverterFromUnicodeArgs,
-    UConverterToUCallbackPtr, UConverterToUnicodeArgs,
-    # ucnv_cb
-    ucnv_cb_from_u_write_bytes, ucnv_cb_from_u_write_sub,
-    ucnv_cb_to_u_write_sub, ucnv_cb_to_u_write_uchars,
-    # uenum
-    uenum_close, uenum_count, uenum_next,
+    ucnv_get_unicode_set, ucnv_is_ambiguous, ucnv_is_fixed_width, ucnv_open,
+    ucnv_open_all_names, ucnv_open_ccsid, ucnv_open_package,
+    ucnv_open_standard_names, ucnv_reset, ucnv_reset_from_unicode,
+    ucnv_reset_to_unicode, ucnv_set_fallback, ucnv_set_from_ucall_back,
+    ucnv_set_subst_chars, ucnv_set_subst_string, ucnv_set_to_ucall_back,
+    ucnv_uses_fallback, uenum_close, uenum_count, uenum_next,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -127,9 +122,9 @@ def test_api():
         assert ucnv_get_type(cnv) == UConverterType.UCNV_MBCS
 
         uniset = UnicodeSet()
-        ucnv_get_unicode_set(cnv,
-                             uniset.to_uset(),
-                             UConverterUnicodeSet.UCNV_ROUNDTRIP_SET)
+        ucnv_get_unicode_set(
+            cnv, uniset.to_uset(), UConverterUnicodeSet.UCNV_ROUNDTRIP_SET
+        )
         assert uniset.size() > 0
 
         assert ucnv_is_ambiguous(cnv)
@@ -173,8 +168,9 @@ def test_api():
     assert "Shift_JIS" in standards
     uenum_close(en)
 
-    with gc(ucnv_open_ccsid(943, UConverterPlatform.UCNV_IBM),
-            ucnv_close) as cnv:
+    with gc(
+        ucnv_open_ccsid(943, UConverterPlatform.UCNV_IBM), ucnv_close
+    ) as cnv:
         assert ucnv_get_ccsid(cnv) == 943
 
         result = ucnv_get_display_name(cnv, Locale.ENGLISH)
@@ -191,9 +187,11 @@ def test_open_package():
     except ICUError as ex:
         if ex.args[0] != UErrorCode.U_FILE_ACCESS_ERROR:
             raise
-        pytest.skip("testdata.dat is not found (not an error). "
-                    "You need to build a test data from the source. "
-                    "See also <icu4c>/icu/source/test/testdata/")
+        pytest.skip(
+            "testdata.dat is not found (not an error). "
+            "You need to build a test data from the source. "
+            "See also <icu4c>/icu/source/test/testdata/"
+        )
 
     with gc(cnv, ucnv_close) as cnv:
         assert ucnv_get_name(cnv) == "test3"
@@ -210,10 +208,15 @@ def test_set_from_ucall_back():
     #                                  UChar32 codePoint,
     #                                  UConverterCallbackReason reason,
     #                                  UErrorCode *pErrorCode)
-    def _from_u_callback1(_context: object, _args: UConverterFromUnicodeArgs,
-                          _code_units: str, _length: int, _code_point: int,
-                          _reason: UConverterCallbackReason,
-                          _error_code: UErrorCode) -> UErrorCode:
+    def _from_u_callback1(
+        _context: object,
+        _args: UConverterFromUnicodeArgs,
+        _code_units: str,
+        _length: int,
+        _code_point: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert _context is None
         nonlocal result1
         result1.append((_reason, _error_code, _code_units))
@@ -224,10 +227,15 @@ def test_set_from_ucall_back():
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
-    def _from_u_callback2(_context: object, _args: UConverterFromUnicodeArgs,
-                          _code_units: str, _length: int, _code_point: int,
-                          _reason: UConverterCallbackReason,
-                          _error_code: UErrorCode) -> UErrorCode:
+    def _from_u_callback2(
+        _context: object,
+        _args: UConverterFromUnicodeArgs,
+        _code_units: str,
+        _length: int,
+        _code_point: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert isinstance(_context, str)
         assert _context == "foo bar baz"
         nonlocal result2
@@ -238,19 +246,24 @@ def test_set_from_ucall_back():
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
-    def _from_u_callback3(_context: object, _args: UConverterFromUnicodeArgs,
-                          _code_units: str, _length: int, _code_point: int,
-                          _reason: UConverterCallbackReason,
-                          _error_code: UErrorCode) -> UErrorCode:
+    def _from_u_callback3(
+        _context: object,
+        _args: UConverterFromUnicodeArgs,
+        _code_units: str,
+        _length: int,
+        _code_point: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert isinstance(_context, dict)
         assert _context["key"] == "foo bar baz"
         nonlocal result3
         result3.append((_reason, _error_code, _code_units))
         assert ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
         if _reason == UConverterCallbackReason.UCNV_UNASSIGNED:
-            if _code_point >= 0xffff:
+            if _code_point >= 0xFFFF:
                 _fmt = "\\U{:08x}"
-            elif _code_point >= 0xff:
+            elif _code_point >= 0xFF:
                 _fmt = "\\u{:04x}"
             else:
                 _fmt = "\\x{:02x}"
@@ -282,44 +295,35 @@ def test_set_from_ucall_back():
         # )
         context2 = ConstVoidPtr(None)
         ucnv_set_from_ucall_back(
-            cnv,
-            UCNV_FROM_U_CALLBACK_ESCAPE,
-            context2)  # %UXXXX
+            cnv, UCNV_FROM_U_CALLBACK_ESCAPE, context2
+        )  # %UXXXX
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b%UD83C%UDF38c"
 
         context3 = ConstVoidPtr(UCNV_ESCAPE_C)
         old_action3, old_context3 = ucnv_set_from_ucall_back(
-            cnv,
-            UCNV_FROM_U_CALLBACK_ESCAPE,
-            context3)  # \\uXXXX
+            cnv, UCNV_FROM_U_CALLBACK_ESCAPE, context3
+        )  # \\uXXXX
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b\\U0001F338c"
 
         context4 = ConstVoidPtr(UCNV_ESCAPE_XML_HEX)
         ucnv_set_from_ucall_back(
-            cnv,
-            UCNV_FROM_U_CALLBACK_ESCAPE,
-            context4)  # &#xXXXX;
+            cnv, UCNV_FROM_U_CALLBACK_ESCAPE, context4
+        )  # &#xXXXX;
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b&#x1F338;c"
 
         action5 = UConverterFromUCallbackPtr(_from_u_callback1)
         context5 = ConstVoidPtr(None)
-        ucnv_set_from_ucall_back(
-            cnv,
-            action5,
-            context5)
+        ucnv_set_from_ucall_back(cnv, action5, context5)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert len(result1) > 0
         assert dest == b"a\xb1b?c"
 
         action6 = UConverterFromUCallbackPtr(_from_u_callback2)
         context6 = ConstVoidPtr("foo bar baz")
-        ucnv_set_from_ucall_back(
-            cnv,
-            action6,
-            context6)
+        ucnv_set_from_ucall_back(cnv, action6, context6)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert len(result2) > 0
         assert dest == b"a\xb1b\xfc\xfcc"
@@ -328,17 +332,13 @@ def test_set_from_ucall_back():
         d = {"key": "foo bar baz"}
         context7 = ConstVoidPtr(d)
         old_action7, old_context7 = ucnv_set_from_ucall_back(
-            cnv,
-            action7,
-            context7)
+            cnv, action7, context7
+        )
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert len(result3) > 0
         assert dest == b"a\xb1b\\U0001f338c"
 
-        ucnv_set_from_ucall_back(
-            cnv,
-            old_action7,
-            old_context7)
+        ucnv_set_from_ucall_back(cnv, old_action7, old_context7)
         result1.clear()
         result2.clear()
         result3.clear()
@@ -346,17 +346,11 @@ def test_set_from_ucall_back():
         assert len(result2) > 0
         assert dest == b"a\xb1b\xfc\xfcc"
 
-        ucnv_set_from_ucall_back(
-            cnv,
-            old_action3,
-            old_context3)
+        ucnv_set_from_ucall_back(cnv, old_action3, old_context3)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b%UD83C%UDF38c"
 
-        ucnv_set_from_ucall_back(
-            cnv,
-            old_action1,
-            old_context1)
+        ucnv_set_from_ucall_back(cnv, old_action1, old_context1)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b\xfc\xfcc"
 
@@ -370,10 +364,14 @@ def test_set_to_ucall_back():
     #                                int32_t length,
     #                                UConverterCallbackReason reason,
     #                                UErrorCode *pErrorCode)
-    def _to_u_callback1(_context: object, _args: UConverterToUnicodeArgs,
-                        _code_units: bytes, _length: int,
-                        _reason: UConverterCallbackReason,
-                        _error_code: UErrorCode) -> UErrorCode:
+    def _to_u_callback1(
+        _context: object,
+        _args: UConverterToUnicodeArgs,
+        _code_units: bytes,
+        _length: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert _context is None
         nonlocal result1
         result1.append((_reason, _error_code, _code_units))
@@ -383,10 +381,14 @@ def test_set_to_ucall_back():
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
-    def _to_u_callback2(_context: object, _args: UConverterToUnicodeArgs,
-                        _code_units: bytes, _length: int,
-                        _reason: UConverterCallbackReason,
-                        _error_code: UErrorCode) -> UErrorCode:
+    def _to_u_callback2(
+        _context: object,
+        _args: UConverterToUnicodeArgs,
+        _code_units: bytes,
+        _length: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert isinstance(_context, str)
         assert _context == "foo bar baz"
         nonlocal result2
@@ -398,10 +400,14 @@ def test_set_to_ucall_back():
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
-    def _to_u_callback3(_context: object, _args: UConverterToUnicodeArgs,
-                        _code_units: bytes, _length: int,
-                        _reason: UConverterCallbackReason,
-                        _error_code: UErrorCode) -> UErrorCode:
+    def _to_u_callback3(
+        _context: object,
+        _args: UConverterToUnicodeArgs,
+        _code_units: bytes,
+        _length: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
         assert isinstance(_context, dict)
         assert _context["key"] == "foo bar baz"
         nonlocal result3
@@ -417,19 +423,23 @@ def test_set_to_ucall_back():
         assert ucnv_get_subst_chars(cnv) == b"\xef\xbf\xbd"
 
         # Illegal UTF-8 characters
-        utf8 = (b"\x61"
-                b"\xfe"  # Impossible bytes
-                b"\xc0\xaf"  # Overlong sequences
-                b"\xed\xa0\x80"  # Illegal code positions
-                b"\x62")
+        utf8 = (
+            b"\x61"
+            b"\xfe"  # Impossible bytes
+            b"\xc0\xaf"  # Overlong sequences
+            b"\xed\xa0\x80"  # Illegal code positions
+            b"\x62"
+        )
 
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest.encode() == b"a"
-                                 b"\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"b")
+        assert (
+            dest.encode() == b"a"
+            b"\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+            b"b"
+        )
 
         # void ucnv_getToUCallBack(const UConverter *converter,
         #                          UConverterToUCallback *action,
@@ -446,125 +456,82 @@ def test_set_to_ucall_back():
         # )
         context2 = ConstVoidPtr(None)
         ucnv_set_to_ucall_back(
-            cnv,
-            UCNV_TO_U_CALLBACK_ESCAPE,
-            context2)  # %XNN
+            cnv, UCNV_TO_U_CALLBACK_ESCAPE, context2
+        )  # %XNN
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest == "a"
-                        "%XFE"
-                        "%XC0%XAF"
-                        "%XED%XA0%X80"
-                        "b")
+        assert dest == "a" "%XFE" "%XC0%XAF" "%XED%XA0%X80" "b"
 
         context3 = ConstVoidPtr(UCNV_ESCAPE_C)
         old_action3, old_context3 = ucnv_set_to_ucall_back(
-            cnv,
-            UCNV_TO_U_CALLBACK_ESCAPE,
-            context3)  # \\xXX
+            cnv, UCNV_TO_U_CALLBACK_ESCAPE, context3
+        )  # \\xXX
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest == "a"
-                        "\\xFE"
-                        "\\xC0\\xAF"
-                        "\\xED\\xA0\\x80"
-                        "b")
+        assert dest == "a" "\\xFE" "\\xC0\\xAF" "\\xED\\xA0\\x80" "b"
 
         context4 = ConstVoidPtr(UCNV_ESCAPE_XML_HEX)
         ucnv_set_to_ucall_back(
-            cnv,
-            UCNV_TO_U_CALLBACK_ESCAPE,
-            context4)  # &#xXX;
+            cnv, UCNV_TO_U_CALLBACK_ESCAPE, context4
+        )  # &#xXX;
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest == "a"
-                        "&#xFE;"
-                        "&#xC0;&#xAF;"
-                        "&#xED;&#xA0;&#x80;"
-                        "b")
+        assert dest == "a" "&#xFE;" "&#xC0;&#xAF;" "&#xED;&#xA0;&#x80;" "b"
 
         action5 = UConverterToUCallbackPtr(_to_u_callback1)
         context5 = ConstVoidPtr(None)
-        ucnv_set_to_ucall_back(
-            cnv,
-            action5,
-            context5)
+        ucnv_set_to_ucall_back(cnv, action5, context5)
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         assert len(result1) > 0
         dest = test1.extract()
-        assert (dest.encode() == b"a"
-                                 b"\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"b")
+        assert (
+            dest.encode() == b"a"
+            b"\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+            b"b"
+        )
 
         action6 = UConverterToUCallbackPtr(_to_u_callback2)
         context6 = ConstVoidPtr("foo bar baz")
-        ucnv_set_to_ucall_back(
-            cnv,
-            action6,
-            context6)
+        ucnv_set_to_ucall_back(cnv, action6, context6)
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         assert len(result2) > 0
         dest = test1.extract()
-        assert (dest == "a"
-                        "\\xfe"
-                        "\\xc0\\xaf"
-                        "\\xed\\xa0\\x80"
-                        "b")
+        assert dest == "a" "\\xfe" "\\xc0\\xaf" "\\xed\\xa0\\x80" "b"
 
         action7 = UConverterToUCallbackPtr(_to_u_callback3)
         d = {"key": "foo bar baz"}
         context7 = ConstVoidPtr(d)
         old_action7, old_context7 = ucnv_set_to_ucall_back(
-            cnv,
-            action7,
-            context7)
+            cnv, action7, context7
+        )
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         assert len(result3) > 0
         dest = test1.extract()
-        assert (dest == "a"
-                        "%xFE"
-                        "%xC0%xAF"
-                        "%xED%xA0%x80"
-                        "b")
+        assert dest == "a" "%xFE" "%xC0%xAF" "%xED%xA0%x80" "b"
 
-        ucnv_set_to_ucall_back(
-            cnv,
-            old_action7,
-            old_context7)
+        ucnv_set_to_ucall_back(cnv, old_action7, old_context7)
         result1.clear()
         result2.clear()
         result3.clear()
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         assert len(result2) > 0
         dest = test1.extract()
-        assert (dest == "a"
-                        "\\xfe"
-                        "\\xc0\\xaf"
-                        "\\xed\\xa0\\x80"
-                        "b")
+        assert dest == "a" "\\xfe" "\\xc0\\xaf" "\\xed\\xa0\\x80" "b"
 
-        ucnv_set_to_ucall_back(
-            cnv,
-            old_action3,
-            old_context3)
+        ucnv_set_to_ucall_back(cnv, old_action3, old_context3)
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest == "a"
-                        "%XFE"
-                        "%XC0%XAF"
-                        "%XED%XA0%X80"
-                        "b")
+        assert dest == "a" "%XFE" "%XC0%XAF" "%XED%XA0%X80" "b"
 
-        ucnv_set_to_ucall_back(
-            cnv,
-            old_action1,
-            old_context1)
+        ucnv_set_to_ucall_back(cnv, old_action1, old_context1)
         test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
         dest = test1.extract()
-        assert (dest.encode() == b"a"
-                                 b"\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
-                                 b"b")
+        assert (
+            dest.encode() == b"a"
+            b"\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd"
+            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+            b"b"
+        )

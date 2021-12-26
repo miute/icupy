@@ -1,13 +1,18 @@
 import copy
 
 import pytest
+
+# fmt: off
+from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 from icupy.icu import (
     AnnualTimeZoneRule, BasicTimeZone, DateTimeRule, GregorianCalendar,
     InitialTimeZoneRule, Locale, RuleBasedTimeZone, SimpleTimeZone,
     StringEnumeration, TimeZone, TimeZoneTransition, UCalendarDaysOfWeek,
-    UCalendarMonths, USystemTimeZoneType, U_ICU_VERSION_MAJOR_NUM,
-    U_MILLIS_PER_HOUR as HOUR, UnicodeString, VTimeZone,
+    UCalendarMonths, UnicodeString, USystemTimeZoneType, VTimeZone,
 )
+
+# fmt: on
 
 
 def test_basic_time_zone():
@@ -126,7 +131,8 @@ def test_basic_time_zone_get_offset_from_local():
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
         UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+    )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
@@ -148,28 +154,22 @@ def test_rule_based_time_zone():
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     tzr11 = AnnualTimeZoneRule(
-        "r1(STD)",
-        0,
-        0,
-        dr11,
-        0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "r1(STD)", 0, 0, dr11, 0, AnnualTimeZoneRule.MAX_YEAR
+    )
     zone1.add_transition_rule(tzr11)
     dr12 = DateTimeRule(
         UCalendarMonths.UCAL_JANUARY,
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     tzr12 = AnnualTimeZoneRule(
-        "r1(DST)",
-        0,
-        1 * HOUR,
-        dr12,
-        0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "r1(DST)", 0, 1 * HOUR, dr12, 0, AnnualTimeZoneRule.MAX_YEAR
+    )
     zone1.add_transition_rule(tzr12)
     zone1.complete()
 
@@ -179,54 +179,32 @@ def test_rule_based_time_zone():
         -1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         5 * HOUR,
-        DateTimeRule.WALL_TIME)
-    tzr21 = AnnualTimeZoneRule(
-        "r2(STD)",
-        5 * HOUR,
-        0,
-        dr21,
-        2000,
-        2010)
+        DateTimeRule.WALL_TIME,
+    )
+    tzr21 = AnnualTimeZoneRule("r2(STD)", 5 * HOUR, 0, dr21, 2000, 2010)
     zone2.add_transition_rule(tzr21)
     dr22 = DateTimeRule(
         UCalendarMonths.UCAL_MARCH,
         -1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
-        DateTimeRule.WALL_TIME)
-    tzr22 = AnnualTimeZoneRule(
-        "r2(DST)",
-        5 * HOUR,
-        1 * HOUR,
-        dr22,
-        2000,
-        2010)
+        DateTimeRule.WALL_TIME,
+    )
+    tzr22 = AnnualTimeZoneRule("r2(DST)", 5 * HOUR, 1 * HOUR, dr22, 2000, 2010)
     zone2.add_transition_rule(tzr22)
     dr23 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY,
-        1,
-        0,
-        DateTimeRule.WALL_TIME)
+        UCalendarMonths.UCAL_JANUARY, 1, 0, DateTimeRule.WALL_TIME
+    )
     tzr23 = AnnualTimeZoneRule(
-        "r2(STD)",
-        6 * HOUR,
-        0,
-        dr23,
-        2011,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "r2(STD)", 6 * HOUR, 0, dr23, 2011, AnnualTimeZoneRule.MAX_YEAR
+    )
     zone2.add_transition_rule(tzr23)
     dr24 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY,
-        1,
-        1,
-        DateTimeRule.WALL_TIME)
+        UCalendarMonths.UCAL_JANUARY, 1, 1, DateTimeRule.WALL_TIME
+    )
     tzr24 = AnnualTimeZoneRule(
-        "r2(DST)",
-        6 * HOUR,
-        0,
-        dr24,
-        2011,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "r2(DST)", 6 * HOUR, 0, dr24, 2011, AnnualTimeZoneRule.MAX_YEAR
+    )
     zone2.add_transition_rule(tzr24)
     zone2.complete()
 
@@ -368,24 +346,18 @@ def test_rule_based_time_zone():
 
 
 def test_rule_based_time_zone_get_offset():
-    initial_rule = InitialTimeZoneRule(
-        "r1(STD)",
-        8 * HOUR,
-        0)
+    initial_rule = InitialTimeZoneRule("r1(STD)", 8 * HOUR, 0)
     zone = RuleBasedTimeZone("r1", initial_rule)
     dr1 = DateTimeRule(
         UCalendarMonths.UCAL_OCTOBER,
         -1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     tzr1 = AnnualTimeZoneRule(
-        "r1(STD)",
-        8 * HOUR,
-        0,
-        dr1,
-        0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        "r1(STD)", 8 * HOUR, 0, dr1, 0, AnnualTimeZoneRule.MAX_YEAR
+    )
     zone.add_transition_rule(tzr1)
     dr2 = DateTimeRule(
         UCalendarMonths.UCAL_APRIL,
@@ -393,14 +365,16 @@ def test_rule_based_time_zone_get_offset():
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         True,
         2 * HOUR,
-        DateTimeRule.WALL_TIME)
+        DateTimeRule.WALL_TIME,
+    )
     tzr2 = AnnualTimeZoneRule(
         "r1(DST)",
         8 * HOUR,
         int(0.5 * HOUR),
         dr2,
         0,
-        AnnualTimeZoneRule.MAX_YEAR)
+        AnnualTimeZoneRule.MAX_YEAR,
+    )
     zone.add_transition_rule(tzr2)
     zone.complete()
 
@@ -427,14 +401,18 @@ def test_rule_based_time_zone_get_offset():
     #       int32_t monthLength,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0,
-        28) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+            28,
+        )
+        == 8.5 * HOUR
+    )
 
     # [3]
     # int32_t icu::RuleBasedTimeZone::getOffset(
@@ -446,13 +424,17 @@ def test_rule_based_time_zone_get_offset():
     #       int32_t millis,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+        )
+        == 8.5 * HOUR
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
@@ -463,7 +445,7 @@ def test_rule_based_time_zone_get_offset_from_local():
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
     zone = RuleBasedTimeZone(
         "Rule based Pacific Time",
-        InitialTimeZoneRule("Pacific Standard Time", -8 * HOUR, 0)
+        InitialTimeZoneRule("Pacific Standard Time", -8 * HOUR, 0),
     )
     zone.add_transition_rule(
         AnnualTimeZoneRule(
@@ -475,10 +457,10 @@ def test_rule_based_time_zone_get_offset_from_local():
                 1,
                 UCalendarDaysOfWeek.UCAL_SUNDAY,
                 2 * HOUR,
-                DateTimeRule.WALL_TIME
+                DateTimeRule.WALL_TIME,
             ),
             2000,
-            AnnualTimeZoneRule.MAX_YEAR
+            AnnualTimeZoneRule.MAX_YEAR,
         )
     )
     zone.add_transition_rule(
@@ -491,10 +473,10 @@ def test_rule_based_time_zone_get_offset_from_local():
                 -1,
                 UCalendarDaysOfWeek.UCAL_SUNDAY,
                 2 * HOUR,
-                DateTimeRule.WALL_TIME
+                DateTimeRule.WALL_TIME,
             ),
             2000,
-            AnnualTimeZoneRule.MAX_YEAR
+            AnnualTimeZoneRule.MAX_YEAR,
         )
     )
     zone.complete()
@@ -511,7 +493,8 @@ def test_rule_based_time_zone_get_offset_from_local():
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
         UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+    )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
@@ -551,7 +534,8 @@ def test_simple_time_zone():
         UCalendarMonths.UCAL_JULY,
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0)
+        0,
+    )
 
     # [4]
     # icu::SimpleTimeZone::SimpleTimeZone(
@@ -579,7 +563,8 @@ def test_simple_time_zone():
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
 
     # [5]
     # icu::SimpleTimeZone::SimpleTimeZone(
@@ -611,7 +596,8 @@ def test_simple_time_zone():
         1,
         2 * HOUR,
         SimpleTimeZone.WALL_TIME,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
 
     # [1]
     # icu::SimpleTimeZone::SimpleTimeZone(const SimpleTimeZone &source)
@@ -831,7 +817,8 @@ def test_simple_time_zone_get_offset():
         1,
         2 * HOUR,
         SimpleTimeZone.WALL_TIME,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
 
     # [1]
     # void icu::SimpleTimeZone::getOffset(
@@ -855,13 +842,17 @@ def test_simple_time_zone_get_offset():
     #       int32_t millis,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+        )
+        == 8.5 * HOUR
+    )
 
     # [3]
     # int32_t icu::SimpleTimeZone::getOffset(
@@ -875,15 +866,19 @@ def test_simple_time_zone_get_offset():
     #       int32_t prevMonthLength,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0,
-        28,
-        28) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+            28,
+            28,
+        )
+        == 8.5 * HOUR
+    )
 
     # [4]
     # int32_t icu::SimpleTimeZone::getOffset(
@@ -896,14 +891,18 @@ def test_simple_time_zone_get_offset():
     #       int32_t monthLength,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0,
-        28) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+            28,
+        )
+        == 8.5 * HOUR
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
@@ -922,7 +921,8 @@ def test_simple_time_zone_get_offset_from_local():
         UCalendarMonths.UCAL_OCTOBER,
         -1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
-        2 * HOUR)
+        2 * HOUR,
+    )
 
     # void icu::SimpleTimeZone::getOffsetFromLocal(
     #       UDate date,
@@ -936,7 +936,8 @@ def test_simple_time_zone_get_offset_from_local():
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
         UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+    )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
@@ -955,7 +956,8 @@ def test_simple_time_zone_set_end_rule():
         1,
         2 * HOUR,
         SimpleTimeZone.WALL_TIME,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
 
     # [1]
     # void icu::SimpleTimeZone::setEndRule(
@@ -973,7 +975,8 @@ def test_simple_time_zone_set_end_rule():
         UCalendarDaysOfWeek.UCAL_SATURDAY,
         6 * HOUR,
         SimpleTimeZone.UTC_TIME,
-        True)
+        True,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1000,7 +1003,8 @@ def test_simple_time_zone_set_end_rule():
         31,
         UCalendarDaysOfWeek.UCAL_FRIDAY,
         5 * HOUR,
-        True)
+        True,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1022,10 +1026,8 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_SEPTEMBER,
-        30,
-        4 * HOUR,
-        SimpleTimeZone.UTC_TIME)
+        UCalendarMonths.UCAL_SEPTEMBER, 30, 4 * HOUR, SimpleTimeZone.UTC_TIME
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1045,10 +1047,7 @@ def test_simple_time_zone_set_end_rule():
     #       int32_t time,
     #       UErrorCode &status
     # )
-    zone.set_end_rule(
-        UCalendarMonths.UCAL_AUGUST,
-        31,
-        3 * HOUR)
+    zone.set_end_rule(UCalendarMonths.UCAL_AUGUST, 31, 3 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1075,7 +1074,8 @@ def test_simple_time_zone_set_end_rule():
         -1,
         UCalendarDaysOfWeek.UCAL_THURSDAY,
         2 * HOUR,
-        SimpleTimeZone.UTC_TIME)
+        SimpleTimeZone.UTC_TIME,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1100,7 +1100,8 @@ def test_simple_time_zone_set_end_rule():
         UCalendarMonths.UCAL_JUNE,
         2,
         UCalendarDaysOfWeek.UCAL_WEDNESDAY,
-        1 * HOUR)
+        1 * HOUR,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1128,7 +1129,8 @@ def test_simple_time_zone_set_start_rule():
         1,
         2 * HOUR,
         SimpleTimeZone.WALL_TIME,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
 
     # [1]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1146,7 +1148,8 @@ def test_simple_time_zone_set_start_rule():
         UCalendarDaysOfWeek.UCAL_SATURDAY,
         1 * HOUR,
         SimpleTimeZone.UTC_TIME,
-        True)
+        True,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1173,7 +1176,8 @@ def test_simple_time_zone_set_start_rule():
         28,
         UCalendarDaysOfWeek.UCAL_FRIDAY,
         2 * HOUR,
-        True)
+        True,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1195,10 +1199,8 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_MARCH,
-        31,
-        3 * HOUR,
-        SimpleTimeZone.UTC_TIME)
+        UCalendarMonths.UCAL_MARCH, 31, 3 * HOUR, SimpleTimeZone.UTC_TIME
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1218,10 +1220,7 @@ def test_simple_time_zone_set_start_rule():
     #       int32_t time,
     #       UErrorCode &status
     # )
-    zone.set_start_rule(
-        UCalendarMonths.UCAL_APRIL,
-        30,
-        4 * HOUR)
+    zone.set_start_rule(UCalendarMonths.UCAL_APRIL, 30, 4 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1248,7 +1247,8 @@ def test_simple_time_zone_set_start_rule():
         -1,
         UCalendarDaysOfWeek.UCAL_THURSDAY,
         5 * HOUR,
-        SimpleTimeZone.UTC_TIME)
+        SimpleTimeZone.UTC_TIME,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1273,7 +1273,8 @@ def test_simple_time_zone_set_start_rule():
         UCalendarMonths.UCAL_JUNE,
         2,
         UCalendarDaysOfWeek.UCAL_WEDNESDAY,
-        6 * HOUR)
+        6 * HOUR,
+    )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
@@ -1328,31 +1329,27 @@ def test_time_zone():
     #       UErrorCode &ec
     # )
     it5 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY,
-        None,
-        None)
+        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, None
+    )
     assert isinstance(it5, StringEnumeration)
     assert len(it5) > 0
 
     it6 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY,
-        "US",
-        None)
+        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", None
+    )
     assert isinstance(it6, StringEnumeration)
     assert len(it6) > 0
 
     raw_offset = -8 * HOUR
     it7 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY,
-        None,
-        raw_offset)
+        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, raw_offset
+    )
     assert isinstance(it7, StringEnumeration)
     assert len(it7) > 0
 
     it8 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY,
-        "US",
-        raw_offset)
+        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", raw_offset
+    )
     assert isinstance(it8, StringEnumeration)
     assert len(it8) > 0
 
@@ -1404,8 +1401,10 @@ def test_time_zone():
     assert isinstance(output, UnicodeString)
     assert id(output) == id(result)
     assert result == "Pacific Daylight Time"
-    assert (zone2.get_display_name(True, TimeZone.LONG, "en", result)
-            == "Pacific Daylight Time")
+    assert (
+        zone2.get_display_name(True, TimeZone.LONG, "en", result)
+        == "Pacific Daylight Time"
+    )
 
     # [3]
     # UnicodeString &icu::TimeZone::getDisplayName(
@@ -1559,8 +1558,10 @@ def test_time_zone_get_windows_id():
     assert isinstance(result, UnicodeString)
     assert id(result) == id(winid)
     assert winid == "Eastern Standard Time"
-    assert (TimeZone.get_windows_id("America/New_York", winid)
-            == "Eastern Standard Time")
+    assert (
+        TimeZone.get_windows_id("America/New_York", winid)
+        == "Eastern Standard Time"
+    )
 
     # static UnicodeString &icu::TimeZone::getIDForWindowsID(
     #       const UnicodeString &winid,
@@ -1573,16 +1574,20 @@ def test_time_zone_get_windows_id():
     assert isinstance(result, UnicodeString)
     assert id(result) == id(id_)
     assert id_ == "America/New_York"
-    assert (TimeZone.get_id_for_windows_id("Eastern Standard Time", None, id_)
-            == "America/New_York")
+    assert (
+        TimeZone.get_id_for_windows_id("Eastern Standard Time", None, id_)
+        == "America/New_York"
+    )
 
     id_ = UnicodeString()
     result = TimeZone.get_id_for_windows_id(winid, "CA", id_)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(id_)
     assert id_ == "America/Toronto"
-    assert (TimeZone.get_id_for_windows_id("Eastern Standard Time", "CA", id_)
-            == "America/Toronto")
+    assert (
+        TimeZone.get_id_for_windows_id("Eastern Standard Time", "CA", id_)
+        == "America/Toronto"
+    )
 
 
 def test_time_zone_has_same_rules():
@@ -1638,7 +1643,8 @@ def test_vtime_zone():
         UCalendarMonths.UCAL_JULY,
         1,
         UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0)
+        0,
+    )
     zone3 = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
     assert isinstance(zone3, VTimeZone)
 
@@ -1852,7 +1858,8 @@ def test_vtime_zone_get_offset():
         1,
         2 * HOUR,
         SimpleTimeZone.WALL_TIME,
-        int(0.5 * HOUR))
+        int(0.5 * HOUR),
+    )
     zone = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
 
     # [1]
@@ -1878,14 +1885,18 @@ def test_vtime_zone_get_offset():
     #       int32_t monthLength,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0,
-        28) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+            28,
+        )
+        == 8.5 * HOUR
+    )
 
     # [3]
     # int32_t icu::VTimeZone::getOffset(
@@ -1897,13 +1908,17 @@ def test_vtime_zone_get_offset():
     #       int32_t millis,
     #       UErrorCode &status
     # )
-    assert zone.get_offset(
-        GregorianCalendar.AD,
-        2008,
-        UCalendarMonths.UCAL_JULY,
-        6,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
-        0) == 8.5 * HOUR
+    assert (
+        zone.get_offset(
+            GregorianCalendar.AD,
+            2008,
+            UCalendarMonths.UCAL_JULY,
+            6,
+            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            0,
+        )
+        == 8.5 * HOUR
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
@@ -1926,6 +1941,7 @@ def test_vtime_zone_get_offset_from_local():
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
         UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER)
+        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+    )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0

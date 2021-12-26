@@ -1,13 +1,17 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 65:
     pytest.skip("ICU4C<65", allow_module_level=True)
 
+# fmt: off
 from icupy.icu import (
     ErrorCode, Locale, LocaleMatcher, UErrorCode, ULocMatchDemotion,
     ULocMatchFavorSubtag,
 )
+
+# fmt: on
 
 
 def test_builder():
@@ -20,11 +24,13 @@ def test_builder():
     # )
     #
     # LocaleMatcher icu::LocaleMatcher::Builder::build(UErrorCode &errorCode)
-    matcher = (LocaleMatcher.Builder()
-               .add_supported_locale(locales[0])
-               .add_supported_locale("en_GB")
-               .add_supported_locale(locales[2])
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .add_supported_locale(locales[0])
+        .add_supported_locale("en_GB")
+        .add_supported_locale(locales[2])
+        .build()
+    )
     assert isinstance(matcher, LocaleMatcher)
 
     # [1]
@@ -43,10 +49,12 @@ def test_builder():
     # Builder &icu::LocaleMatcher::Builder::setDefaultLocale(
     #       const Locale *defaultLocale
     # )
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(locales)
-               .set_default_locale(Locale.get_german())
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(locales)
+        .set_default_locale(Locale.get_german())
+        .build()
+    )
     assert matcher.get_best_match(Locale("ja_JP")) == Locale("de")
     assert matcher.get_best_match("ja_JP") == Locale("de")
 
@@ -55,11 +63,14 @@ def test_builder():
     # )
     supported = [Locale("fr"), Locale("de-CH"), Locale("it")]
     desired = [Locale("fr-CH"), Locale("de-CH"), Locale("it")]
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(supported)
-               .set_demotion_per_desired_locale(
-        ULocMatchDemotion.ULOCMATCH_DEMOTION_NONE)
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(supported)
+        .set_demotion_per_desired_locale(
+            ULocMatchDemotion.ULOCMATCH_DEMOTION_NONE
+        )
+        .build()
+    )
 
     # [2]
     # const Locale *icu::LocaleMatcher::getBestMatch(
@@ -71,22 +82,28 @@ def test_builder():
     # Builder &icu::LocaleMatcher::Builder::setFavorSubtag(
     #       ULocMatchFavorSubtag subtag
     # )
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(locales)
-               .set_favor_subtag(ULocMatchFavorSubtag.ULOCMATCH_FAVOR_SCRIPT)
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(locales)
+        .set_favor_subtag(ULocMatchFavorSubtag.ULOCMATCH_FAVOR_SCRIPT)
+        .build()
+    )
     assert matcher.get_best_match(Locale("ja")) == Locale("fr")
     assert matcher.get_best_match("ja") == Locale("fr")
 
     # Builder &icu::LocaleMatcher::Builder::setSupportedLocalesFromListString(
     #       StringPiece locales
     # )
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales_from_list_string(
-        " el, fr;q=0.555555, en-GB ; q = 0.88  , el; q =0, en;q=0.88 , fr ")
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales_from_list_string(
+            " el, fr;q=0.555555, en-GB ; q = 0.88  , el; q =0, en;q=0.88 , fr "
+        )
+        .build()
+    )
     assert matcher.get_best_match_for_list_string(
-        "el, fr, fr;q=0, en-GB") == Locale("en_GB")
+        "el, fr, fr;q=0, en-GB"
+    ) == Locale("en_GB")
     assert matcher.get_best_match(Locale("en_US")) == Locale("en")
 
     # UBool icu::LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode)
@@ -106,11 +123,12 @@ def test_builder_set_direction():
     # )
     supported = [Locale("ar"), Locale("nn")]
     desired = [Locale("arz-EG"), Locale("nb-DK")]
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(supported)
-               .set_direction(
-        ULocMatchDirection.ULOCMATCH_DIRECTION_ONLY_TWO_WAY)
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(supported)
+        .set_direction(ULocMatchDirection.ULOCMATCH_DIRECTION_ONLY_TWO_WAY)
+        .build()
+    )
     assert matcher.get_best_match(desired) == Locale("nn")
 
 
@@ -120,27 +138,28 @@ def test_builder_set_max_distance():
     #       const Locale &desired,
     #       const Locale &supported
     # )
-    matcher = (LocaleMatcher.Builder()
-               .set_max_distance(Locale("de-AT"), Locale.get_german())
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_max_distance(Locale("de-AT"), Locale.get_german())
+        .build()
+    )
     assert matcher.is_match(Locale("de-LU"), Locale.get_german())
     assert not matcher.is_match(Locale("da"), Locale("no"))
-    assert not matcher.is_match(Locale.get_chinese(),
-                                Locale.get_traditional_chinese())
+    assert not matcher.is_match(
+        Locale.get_chinese(), Locale.get_traditional_chinese()
+    )
 
-    matcher = (LocaleMatcher.Builder()
-               .set_max_distance("de-AT", Locale("de"))
-               .build())
+    matcher = (
+        LocaleMatcher.Builder().set_max_distance("de-AT", Locale("de")).build()
+    )
     assert not matcher.is_match("da", Locale("no"))
 
-    matcher = (LocaleMatcher.Builder()
-               .set_max_distance(Locale("de-AT"), "de")
-               .build())
+    matcher = (
+        LocaleMatcher.Builder().set_max_distance(Locale("de-AT"), "de").build()
+    )
     assert matcher.is_match(Locale("de-LU"), "de")
 
-    matcher = (LocaleMatcher.Builder()
-               .set_max_distance("de-AT", "de")
-               .build())
+    matcher = LocaleMatcher.Builder().set_max_distance("de-AT", "de").build()
     assert not matcher.is_match("zh", "zh_TW")
 
 
@@ -148,10 +167,12 @@ def test_builder_set_max_distance():
 def test_builder_set_no_default_locale():
     # Builder &icu::LocaleMatcher::Builder::setNoDefaultLocale()
     locales = [Locale("fr"), Locale("en_GB"), Locale("en")]
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(locales)
-               .set_no_default_locale()
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(locales)
+        .set_no_default_locale()
+        .build()
+    )
     assert matcher.get_best_match(Locale("en_GB")) == Locale("en_GB")
     assert matcher.get_best_match("en_GB") == Locale("en_GB")
     assert matcher.get_best_match(Locale("ja_JP")) is None
@@ -160,11 +181,13 @@ def test_builder_set_no_default_locale():
 
 def test_get_best_match_result():
     locales = [Locale("fr"), Locale("en-GB")]
-    matcher = (LocaleMatcher.Builder()
-               .set_supported_locales(locales)
-               .add_supported_locale(Locale.get_english())
-               .set_default_locale(Locale.get_german())
-               .build())
+    matcher = (
+        LocaleMatcher.Builder()
+        .set_supported_locales(locales)
+        .add_supported_locale(Locale.get_english())
+        .set_default_locale(Locale.get_german())
+        .build()
+    )
 
     # [1]
     # Result icu::LocaleMatcher::getBestMatchResult(

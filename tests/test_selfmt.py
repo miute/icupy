@@ -1,10 +1,14 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUError,
-    ParsePosition, SelectFormat, UErrorCode, UnicodeString,
+    FieldPosition, FieldPositionIterator, Formattable, ICUError, ParsePosition,
+    SelectFormat, UErrorCode, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -16,7 +20,8 @@ def test_api():
     #       UErrorCode &status
     # )
     pattern = UnicodeString(
-        "masculine{masculineVerbValue} other{otherVerbValue}")
+        "masculine{masculineVerbValue} other{otherVerbValue}"
+    )
     fmt.apply_pattern(pattern)
     fmt.apply_pattern(str(pattern))
 
@@ -69,10 +74,7 @@ def test_format():
     # )
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = fmt.format(
-        Formattable(UnicodeString("feminine")),
-        append_to,
-        pos)
+    result = fmt.format(Formattable(UnicodeString("feminine")), append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
     assert result == "feminineVerbValue"
@@ -89,17 +91,13 @@ def test_format():
     pos_iter = FieldPositionIterator()
     with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(
-            Formattable(UnicodeString("feminine")),
-            append_to,
-            pos_iter)
+            Formattable(UnicodeString("feminine")), append_to, pos_iter
+        )
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
     with pytest.raises(ICUError) as exc_info:
-        _ = fmt.format(
-            Formattable(UnicodeString("feminine")),
-            append_to,
-            None)
+        _ = fmt.format(Formattable(UnicodeString("feminine")), append_to, None)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
@@ -175,7 +173,8 @@ def test_parse_object():
 
 def test_select_format():
     pattern = UnicodeString(
-        "feminine {feminineVerbValue} other{otherVerbValue}")
+        "feminine {feminineVerbValue} other{otherVerbValue}"
+    )
 
     # [1]
     # icu::SelectFormat::SelectFormat(

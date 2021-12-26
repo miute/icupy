@@ -1,27 +1,28 @@
+# fmt: off
 from icupy.icu import (
-    ConstVoidPtr,
     UBIDI_DEFAULT_LTR, UBIDI_DO_MIRRORING, UBIDI_INSERT_LRM_FOR_NUMERIC,
-    UBIDI_LEVEL_OVERRIDE, UBIDI_MAP_NOWHERE,
+    UBIDI_LEVEL_OVERRIDE, UBIDI_MAP_NOWHERE, ConstVoidPtr,
     UBiDiClassCallbackPtr, UBiDiDirection, UBiDiReorderingMode,
     UBiDiReorderingOption, UCharDirection, UProperty,
-    u_get_int_property_max_value, u_strlen,
-    ubidi_close, ubidi_count_paragraphs, ubidi_count_runs,
-    ubidi_get_base_direction, ubidi_get_class_callback,
-    ubidi_get_customized_class, ubidi_get_direction, ubidi_get_length,
-    ubidi_get_level_at, ubidi_get_levels,
+    u_get_int_property_max_value, u_strlen, ubidi_close,
+    ubidi_count_paragraphs, ubidi_count_runs, ubidi_get_base_direction,
+    ubidi_get_class_callback, ubidi_get_customized_class, ubidi_get_direction,
+    ubidi_get_length, ubidi_get_level_at, ubidi_get_levels,
     ubidi_get_logical_index, ubidi_get_logical_map, ubidi_get_logical_run,
-    ubidi_get_paragraph, ubidi_get_paragraph_by_index, ubidi_get_para_level,
+    ubidi_get_para_level, ubidi_get_paragraph, ubidi_get_paragraph_by_index,
     ubidi_get_processed_length, ubidi_get_reordering_mode,
     ubidi_get_reordering_options, ubidi_get_result_length, ubidi_get_text,
     ubidi_get_visual_index, ubidi_get_visual_map, ubidi_get_visual_run,
     ubidi_invert_map, ubidi_is_inverse, ubidi_is_order_paragraphs_ltr,
-    ubidi_open, ubidi_open_sized,
-    ubidi_order_paragraphs_ltr, ubidi_reorder_logical, ubidi_reorder_visual,
-    ubidi_set_class_callback, ubidi_set_context, ubidi_set_inverse,
-    ubidi_set_line, ubidi_set_para, ubidi_set_reordering_mode,
-    ubidi_set_reordering_options, ubidi_write_reordered, ubidi_write_reverse,
+    ubidi_open, ubidi_open_sized, ubidi_order_paragraphs_ltr,
+    ubidi_reorder_logical, ubidi_reorder_visual, ubidi_set_class_callback,
+    ubidi_set_context, ubidi_set_inverse, ubidi_set_line, ubidi_set_para,
+    ubidi_set_reordering_mode, ubidi_set_reordering_options,
+    ubidi_write_reordered, ubidi_write_reverse,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -83,7 +84,7 @@ def test_api():
             0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1,
             0, 0, 0, 0, 0, 0, 0,
-        ]
+        ]  # fmt: skip
 
         # int32_t ubidi_getLogicalIndex(UBiDi *pBiDi,
         #                               int32_t visualIndex,
@@ -108,7 +109,7 @@ def test_api():
             0, 1, 2, 3, 4, 5, 6, 7,
             10, 9, 8,
             11, 12, 13, 14, 15, 16, 17,
-        ]
+        ]  # fmt: skip
 
         # void ubidi_getLogicalRun(const UBiDi *pBiDi,
         #                          int32_t logicalPosition,
@@ -152,12 +153,16 @@ def test_api():
         assert ubidi_get_processed_length(bidi) == 18
 
         # UBiDiReorderingMode ubidi_getReorderingMode(UBiDi *pBiDi)
-        assert (ubidi_get_reordering_mode(bidi)
-                == UBiDiReorderingMode.UBIDI_REORDER_DEFAULT)
+        assert (
+            ubidi_get_reordering_mode(bidi)
+            == UBiDiReorderingMode.UBIDI_REORDER_DEFAULT
+        )
 
         # uint32_t ubidi_getReorderingOptions(UBiDi *pBiDi)
-        assert (ubidi_get_reordering_options(bidi)
-                == UBiDiReorderingOption.UBIDI_OPTION_DEFAULT)
+        assert (
+            ubidi_get_reordering_options(bidi)
+            == UBiDiReorderingOption.UBIDI_OPTION_DEFAULT
+        )
 
         # int32_t ubidi_getResultLength(const UBiDi *pBiDi)
         assert ubidi_get_result_length(bidi) == 18
@@ -189,7 +194,7 @@ def test_api():
             0, 1, 2, 3, 4, 5, 6, 7,
             10, 9, 8,
             11, 12, 13, 14, 15, 16, 17,
-        ]
+        ]  # fmt: skip
 
         # UBiDiDirection ubidi_getVisualRun(UBiDi *pBiDi,
         #                                   int32_t runIndex,
@@ -249,42 +254,48 @@ def test_api():
         # )
         ubidi_set_inverse(bidi, True)
         ubidi_set_para(bidi, text, -1, UBIDI_DEFAULT_LTR)
-        assert (ubidi_get_reordering_mode(bidi)
-                == UBiDiReorderingMode.UBIDI_REORDER_INVERSE_NUMBERS_AS_L)
+        assert (
+            ubidi_get_reordering_mode(bidi)
+            == UBiDiReorderingMode.UBIDI_REORDER_INVERSE_NUMBERS_AS_L
+        )
 
         # void ubidi_setReorderingMode(UBiDi *pBiDi,
         #                              UBiDiReorderingMode reorderingMode
         # )
         ubidi_set_reordering_mode(
-            bidi,
-            UBiDiReorderingMode.UBIDI_REORDER_DEFAULT)
-        assert (ubidi_get_reordering_mode(bidi)
-                == UBiDiReorderingMode.UBIDI_REORDER_DEFAULT)
+            bidi, UBiDiReorderingMode.UBIDI_REORDER_DEFAULT
+        )
+        assert (
+            ubidi_get_reordering_mode(bidi)
+            == UBiDiReorderingMode.UBIDI_REORDER_DEFAULT
+        )
 
         # void ubidi_setReorderingOptions(UBiDi *pBiDi,
         #                                 uint32_t reorderingOptions
         # )
         ubidi_set_reordering_options(
-            bidi,
-            UBiDiReorderingOption.UBIDI_OPTION_INSERT_MARKS)
-        assert (ubidi_get_reordering_options(bidi)
-                == UBiDiReorderingOption.UBIDI_OPTION_INSERT_MARKS)
+            bidi, UBiDiReorderingOption.UBIDI_OPTION_INSERT_MARKS
+        )
+        assert (
+            ubidi_get_reordering_options(bidi)
+            == UBiDiReorderingOption.UBIDI_OPTION_INSERT_MARKS
+        )
 
 
 def test_set_class_callback():
     # From icu/source/test/intltest/bidiconf.cpp
     char_from_bidi_class = [
-        0x6c,  # U_LEFT_TO_RIGHT
+        0x6C,  # U_LEFT_TO_RIGHT
         0x52,  # U_RIGHT_TO_LEFT
         0x33,  # U_EUROPEAN_NUMBER
-        0x2d,  # U_EUROPEAN_NUMBER_SEPARATOR
+        0x2D,  # U_EUROPEAN_NUMBER_SEPARATOR
         0x25,  # U_EUROPEAN_NUMBER_TERMINATOR
         0x39,  # U_ARABIC_NUMBER
-        0x2c,  # U_COMMON_NUMBER_SEPARATOR
-        0x2f,  # U_BLOCK_SEPARATOR
-        0x5f,  # U_SEGMENT_SEPARATOR
+        0x2C,  # U_COMMON_NUMBER_SEPARATOR
+        0x2F,  # U_BLOCK_SEPARATOR
+        0x5F,  # U_SEGMENT_SEPARATOR
         0x20,  # U_WHITE_SPACE_NEUTRAL
-        0x3d,  # U_OTHER_NEUTRAL
+        0x3D,  # U_OTHER_NEUTRAL
     ]
 
     # UCharDirection UBiDiClassCallback(const void *context,
@@ -328,9 +339,9 @@ def test_set_class_callback():
         result = ubidi_get_customized_class(bidi, 0x39)
         assert result == UCharDirection.U_ARABIC_NUMBER
 
-        old_fn3, old_context3 = ubidi_set_class_callback(bidi,
-                                                         old_fn1,
-                                                         old_context1)
+        old_fn3, old_context3 = ubidi_set_class_callback(
+            bidi, old_fn1, old_context1
+        )
         result = ubidi_get_customized_class(bidi, 0x52)
         assert result == UCharDirection.U_LEFT_TO_RIGHT
         result = ubidi_get_customized_class(bidi, 0x39)
@@ -389,7 +400,8 @@ def test_set_line():
     # )
     # void ubidi_close(UBiDi *pBiDi)
     with gc(ubidi_open_sized(length, 0), ubidi_close) as para, gc(
-            ubidi_open_sized(length, 0), ubidi_close) as line:
+        ubidi_open_sized(length, 0), ubidi_close
+    ) as line:
         ubidi_set_para(para, text, -1, UBIDI_DEFAULT_LTR)
         assert ubidi_get_direction(para) == UBiDiDirection.UBIDI_MIXED
 
@@ -433,6 +445,7 @@ def test_set_para():
         #                    UBiDiLevel *embeddingLevels,
         #                    UErrorCode *pErrorCode
         # )
+        # fmt: off
         embedding_levels = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             1 | UBIDI_LEVEL_OVERRIDE,
@@ -440,6 +453,7 @@ def test_set_para():
             1 | UBIDI_LEVEL_OVERRIDE,
             0,
         ]
+        # fmt: on
         ubidi_set_para(bidi, text, length, UBIDI_DEFAULT_LTR, embedding_levels)
 
         levels = ubidi_get_levels(bidi)
@@ -447,21 +461,21 @@ def test_set_para():
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1,
             0,
-        ]
+        ]  # fmt: skip
 
         result = ubidi_get_logical_map(bidi)
         assert result == [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
             12, 11, 10,
             13,
-        ]
+        ]  # fmt: skip
 
         result = ubidi_get_visual_map(bidi)
         assert result == [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
             12, 11, 10,
             13,
-        ]
+        ]  # fmt: skip
 
 
 def test_write_reordered():

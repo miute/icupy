@@ -1,4 +1,6 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
     ICUError, UErrorCode, UnicodeString, UScriptCode, UScriptUsage,
     uscript_breaks_between_letters, uscript_get_code, uscript_get_name,
@@ -7,6 +9,8 @@ from icupy.icu import (
     uscript_get_usage, uscript_has_script, uscript_is_cased,
     uscript_is_right_to_left,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -43,7 +47,7 @@ def test_api():
     assert dest == result
 
     # UScriptCode uscript_getScript(UChar32 codepoint, UErrorCode *err)
-    assert uscript_get_script(0x0d02) == UScriptCode.USCRIPT_MALAYALAM
+    assert uscript_get_script(0x0D02) == UScriptCode.USCRIPT_MALAYALAM
     assert uscript_get_script(0) == UScriptCode.USCRIPT_COMMON
     with pytest.raises(ICUError) as exc_info:
         _ = uscript_get_script(-1)
@@ -69,12 +73,14 @@ def test_api():
     assert uscript_get_short_name(UScriptCode.USCRIPT_MALAYALAM) == "Mlym"
     assert uscript_get_short_name(UScriptCode.USCRIPT_INVALID_CODE) is None
 
-    assert uscript_get_usage(
-        UScriptCode.USCRIPT_HIRAGANA
-    ) == UScriptUsage.USCRIPT_USAGE_RECOMMENDED
-    assert uscript_get_usage(
-        UScriptCode.USCRIPT_ADLAM
-    ) == UScriptUsage.USCRIPT_USAGE_LIMITED_USE
+    assert (
+        uscript_get_usage(UScriptCode.USCRIPT_HIRAGANA)
+        == UScriptUsage.USCRIPT_USAGE_RECOMMENDED
+    )
+    assert (
+        uscript_get_usage(UScriptCode.USCRIPT_ADLAM)
+        == UScriptUsage.USCRIPT_USAGE_LIMITED_USE
+    )
 
     assert uscript_has_script(0x3031, UScriptCode.USCRIPT_HIRAGANA)
     assert not uscript_has_script(0x3031, UScriptCode.USCRIPT_HAN)

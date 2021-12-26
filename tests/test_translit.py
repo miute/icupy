@@ -1,51 +1,49 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
     ICUError, Locale, StringEnumeration, Transliterator, UErrorCode,
     UnicodeSet, UnicodeString, UParseError, UTransDirection, UTransPosition,
 )
 
+# fmt: on
+
 
 def test_adopt_filter():
     id1 = UnicodeString("Halfwidth-Fullwidth", -1)
-    test1 = Transliterator.create_instance(
-        id1,
-        UTransDirection.UTRANS_FORWARD)
-    src = UnicodeString(
-        "123"
-        "abc"
-        "\uFF71\uFF72\uFF73\uFF74\uFF75",
-        -1)
+    test1 = Transliterator.create_instance(id1, UTransDirection.UTRANS_FORWARD)
+    src = UnicodeString("123" "abc" "\uFF71\uFF72\uFF73\uFF74\uFF75", -1)
 
     text = src.clone()
     test1.transliterate(text)
-    assert (text == "\uFF11\uFF12\uFF13"
-                    "\uFF41\uFF42\uFF43"
-                    "\u30A2\u30A4\u30A6\u30A8\u30AA")
+    assert (
+        text == "\uFF11\uFF12\uFF13"
+        "\uFF41\uFF42\uFF43"
+        "\u30A2\u30A4\u30A6\u30A8\u30AA"
+    )
 
     # void icu::Transliterator::adoptFilter(UnicodeFilter *adoptedFilter)
     uniset = UnicodeSet(UnicodeString("[^0-9]", -1))
     test1.adopt_filter(uniset)
     text = src.clone()
     test1.transliterate(text)
-    assert (text == "123"
-                    "\uFF41\uFF42\uFF43"
-                    "\u30A2\u30A4\u30A6\u30A8\u30AA")
+    assert text == "123" "\uFF41\uFF42\uFF43" "\u30A2\u30A4\u30A6\u30A8\u30AA"
 
     test1.adopt_filter(None)
     text = src.clone()
     test1.transliterate(text)
-    assert (text == "\uFF11\uFF12\uFF13"
-                    "\uFF41\uFF42\uFF43"
-                    "\u30A2\u30A4\u30A6\u30A8\u30AA")
+    assert (
+        text == "\uFF11\uFF12\uFF13"
+        "\uFF41\uFF42\uFF43"
+        "\u30A2\u30A4\u30A6\u30A8\u30AA"
+    )
 
 
 def test_api():
     id4 = UnicodeString("Katakana-Latin", -1)
-    trans = Transliterator.create_instance(
-        id4,
-        UTransDirection.UTRANS_FORWARD)
+    trans = Transliterator.create_instance(id4, UTransDirection.UTRANS_FORWARD)
 
     # int32_t icu::Transliterator::countElements()
     assert trans.count_elements() == 3
@@ -112,9 +110,7 @@ def test_api():
 
 def test_clone():
     id1 = UnicodeString("NFD;Jamo-Latin;Latin-Greek", -1)
-    test1 = Transliterator.create_instance(
-        id1,
-        UTransDirection.UTRANS_FORWARD)
+    test1 = Transliterator.create_instance(id1, UTransDirection.UTRANS_FORWARD)
 
     # Transliterator *icu::Transliterator::clone()
     test2 = test1.clone()
@@ -142,43 +138,36 @@ def test_create_instance():
         "eALPHA > beta ;"
         "pre {beta} post > BETA @@ | ;"
         "post > xyz",
-        -1)
+        -1,
+    )
     parse_error = UParseError()
     test3 = Transliterator.create_from_rules(
-        id3,
-        rules3,
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        id3, rules3, UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test3, Transliterator)
     assert test3.get_id() == id3
     parsed_rules3 = UnicodeString()
     test3.to_rules(parsed_rules3, True)
 
     test3a = Transliterator.create_from_rules(
-        str(id3),
-        rules3,
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        str(id3), rules3, UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test3a, Transliterator)
     assert test3a.get_id() == id3
     rules = UnicodeString()
     assert test3a.to_rules(rules, True) == parsed_rules3
 
     test3b = Transliterator.create_from_rules(
-        id3,
-        str(rules3),
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        id3, str(rules3), UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test3b, Transliterator)
     assert test3b.get_id() == id3
     rules = UnicodeString()
     assert test3b.to_rules(rules, True) == parsed_rules3
 
     test3c = Transliterator.create_from_rules(
-        str(id3),
-        str(rules3),
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        str(id3), str(rules3), UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test3c, Transliterator)
     assert test3c.get_id() == id3
     rules = UnicodeString()
@@ -191,17 +180,15 @@ def test_create_instance():
     #       UErrorCode &status
     # )
     id1 = UnicodeString("NFD;Jamo-Latin;Latin-Greek", -1)
-    test1 = Transliterator.create_instance(
-        id1,
-        UTransDirection.UTRANS_FORWARD)
+    test1 = Transliterator.create_instance(id1, UTransDirection.UTRANS_FORWARD)
     assert isinstance(test1, Transliterator)
     assert test1.get_id() == id1
     parsed_rules1 = UnicodeString()
     test1.to_rules(parsed_rules1, True)
 
     test1a = Transliterator.create_instance(
-        str(id1),
-        UTransDirection.UTRANS_FORWARD)
+        str(id1), UTransDirection.UTRANS_FORWARD
+    )
     assert isinstance(test1a, Transliterator)
     assert test1a.get_id() == id1
     rules = UnicodeString()
@@ -216,18 +203,16 @@ def test_create_instance():
     # )
     parse_error = UParseError()
     test2 = Transliterator.create_instance(
-        id1,
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        id1, UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test2, Transliterator)
     assert test2.get_id() == id1
     parsed_rules1 = UnicodeString()
     test2.to_rules(parsed_rules1, True)
 
     test2a = Transliterator.create_instance(
-        str(id1),
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        str(id1), UTransDirection.UTRANS_FORWARD, parse_error
+    )
     assert isinstance(test2a, Transliterator)
     assert test2a.get_id() == id1
     rules = UnicodeString()
@@ -235,9 +220,7 @@ def test_create_instance():
 
     # Transliterator *icu::Transliterator::createInverse(UErrorCode &status)
     id4 = UnicodeString("Hiragana-Katakana", -1)
-    test4 = Transliterator.create_instance(
-        id4,
-        UTransDirection.UTRANS_FORWARD)
+    test4 = Transliterator.create_instance(id4, UTransDirection.UTRANS_FORWARD)
     test5 = test4.create_inverse()
     assert isinstance(test5, Transliterator)
     assert test5.get_id() == "Katakana-Hiragana"
@@ -287,24 +270,23 @@ def test_get_available_variant():
             assert len(target) > 0
 
             assert result == Transliterator.get_available_target(
-                j, str(source), target)
+                j, str(source), target
+            )
 
             # static int32_t icu::Transliterator::countAvailableVariants(
             #       const UnicodeString &source,
             #       const UnicodeString &target
             # )
-            variants = Transliterator.count_available_variants(
-                source,
-                target)
+            variants = Transliterator.count_available_variants(source, target)
             assert variants == Transliterator.count_available_variants(
-                str(source),
-                target)
+                str(source), target
+            )
             assert variants == Transliterator.count_available_variants(
-                source,
-                str(target))
+                source, str(target)
+            )
             assert variants == Transliterator.count_available_variants(
-                str(source),
-                str(target))
+                str(source), str(target)
+            )
 
             for k in range(variants):
                 # static UnicodeString &
@@ -315,29 +297,21 @@ def test_get_available_variant():
                 #       UnicodeString &result
                 # )
                 result = Transliterator.get_available_variant(
-                    k,
-                    source,
-                    target,
-                    variant)
+                    k, source, target, variant
+                )
                 assert isinstance(result, UnicodeString)
                 assert id(result) == id(variant)
                 assert len(variant) >= 0
 
                 assert result == Transliterator.get_available_variant(
-                    k,
-                    str(source),
-                    target,
-                    variant)
+                    k, str(source), target, variant
+                )
                 assert result == Transliterator.get_available_variant(
-                    k,
-                    source,
-                    str(target),
-                    variant)
+                    k, source, str(target), variant
+                )
                 assert result == Transliterator.get_available_variant(
-                    k,
-                    str(source),
-                    str(target),
-                    variant)
+                    k, str(source), str(target), variant
+                )
                 count += 1
     assert count > 0
 
@@ -351,33 +325,29 @@ def test_get_display_name():
     # )
     display_name = UnicodeString()
     result = Transliterator.get_display_name(
-        UnicodeString("Hiragana-Katakana", -1),
-        Locale.get_us(),
-        display_name)
+        UnicodeString("Hiragana-Katakana", -1), Locale.get_us(), display_name
+    )
     assert result == display_name
     assert result == "Hiragana to Katakana"
 
     display_name.remove()
     result = Transliterator.get_display_name(
-        "Hiragana-Katakana",
-        Locale.get_us(),
-        display_name)
+        "Hiragana-Katakana", Locale.get_us(), display_name
+    )
     assert result == display_name
     assert result == "Hiragana to Katakana"
 
     display_name.remove()
     result = Transliterator.get_display_name(
-        UnicodeString("Hiragana-Katakana", -1),
-        "en_US",
-        display_name)
+        UnicodeString("Hiragana-Katakana", -1), "en_US", display_name
+    )
     assert result == display_name
     assert result == "Hiragana to Katakana"
 
     display_name.remove()
     result = Transliterator.get_display_name(
-        "Hiragana-Katakana",
-        "en_US",
-        display_name)
+        "Hiragana-Katakana", "en_US", display_name
+    )
     assert result == display_name
     assert result == "Hiragana to Katakana"
 
@@ -387,15 +357,13 @@ def test_get_display_name():
     #       UnicodeString &result
     # )
     result = Transliterator.get_display_name(
-        UnicodeString("Hiragana-Katakana", -1),
-        display_name)
+        UnicodeString("Hiragana-Katakana", -1), display_name
+    )
     assert result == display_name
     assert len(result) > 0
 
     display_name.remove()
-    result = Transliterator.get_display_name(
-        "Hiragana-Katakana",
-        display_name)
+    result = Transliterator.get_display_name("Hiragana-Katakana", display_name)
     assert result == display_name
     assert len(result) > 0
 
@@ -407,13 +375,12 @@ def test_register_instance():
         "eALPHA > beta ;"
         "pre {beta} post > BETA @@ | ;"
         "post > xyz",
-        -1)
+        -1,
+    )
     parse_error = UParseError()
     test3 = Transliterator.create_from_rules(
-        id3,
-        rules3,
-        UTransDirection.UTRANS_FORWARD,
-        parse_error)
+        id3, rules3, UTransDirection.UTRANS_FORWARD, parse_error
+    )
 
     ids = Transliterator.get_available_ids()
     assert str(id3) not in ids
@@ -435,8 +402,8 @@ def test_register_instance():
     assert str(id3a) in ids
 
     test3a = Transliterator.create_instance(
-        id3a,
-        UTransDirection.UTRANS_FORWARD)
+        id3a, UTransDirection.UTRANS_FORWARD
+    )
     assert test3a.get_id() == id3a
 
     text = UnicodeString("prealphapost prebetapost", -1)
@@ -462,9 +429,7 @@ def test_register_instance():
 
 def test_transliterate():
     id4 = UnicodeString("Hiragana-Katakana", -1)
-    test4 = Transliterator.create_instance(
-        id4,
-        UTransDirection.UTRANS_FORWARD)
+    test4 = Transliterator.create_instance(id4, UTransDirection.UTRANS_FORWARD)
     src = UnicodeString("\u3042\u3044\u3046\u3048\u304A", -1)
 
     # [1]

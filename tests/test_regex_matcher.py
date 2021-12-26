@@ -1,13 +1,17 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
     ConstVoidPtr, ICUError, RegexMatcher, RegexPattern, UErrorCode,
-    URegexFindProgressCallbackPtr, URegexMatchCallbackPtr, URegexpFlag,
-    UTextVector, UnicodeString, UnicodeStringVector,
-    utext_close, utext_extract, utext_get_native_index, utext_native_length,
+    UnicodeString, UnicodeStringVector, URegexFindProgressCallbackPtr,
+    URegexMatchCallbackPtr, URegexpFlag, UTextVector, utext_close,
+    utext_extract, utext_get_native_index, utext_native_length,
     utext_open_const_unicode_string, utext_open_unicode_string,
     utext_open_utf8, utext_replace,
 )
 from icupy.utils import gc
+
+# fmt: on
 
 
 def test_api():
@@ -414,10 +418,7 @@ def test_regex_matcher():
     assert pattern3.pattern() == s
     assert test3.input() == "foo bar baz"
 
-    test3a = RegexMatcher(
-        s,
-        src3,
-        URegexpFlag.UREGEX_CASE_INSENSITIVE)
+    test3a = RegexMatcher(s, src3, URegexpFlag.UREGEX_CASE_INSENSITIVE)
     assert test3a.pattern().pattern() == s
     assert test3a.input() == "foo bar baz"
 
@@ -779,8 +780,9 @@ def test_split():
     result = matcher.split(src2, dest2, 2)
     assert result == 2
     assert utext_extract(dest2[0], 0, utext_native_length(dest2[0])) == "foo"
-    assert (utext_extract(dest2[1], 0, utext_native_length(dest2[1]))
-            == "bar baz")
+    assert (
+        utext_extract(dest2[1], 0, utext_native_length(dest2[1])) == "bar baz"
+    )
     utext_close(src2)
 
 

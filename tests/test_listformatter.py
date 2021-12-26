@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
@@ -70,22 +71,27 @@ def test_create_instance_67():
     fmt2 = ListFormatter.create_instance(
         Locale("en", "US"),
         UListFormatterType.ULISTFMT_TYPE_UNITS,
-        UListFormatterWidth.ULISTFMT_WIDTH_SHORT)
+        UListFormatterWidth.ULISTFMT_WIDTH_SHORT,
+    )
     assert isinstance(fmt2, ListFormatter)
 
     fmt2a = ListFormatter.create_instance(
         "en-US",
         UListFormatterType.ULISTFMT_TYPE_UNITS,
-        UListFormatterWidth.ULISTFMT_WIDTH_SHORT)
+        UListFormatterWidth.ULISTFMT_WIDTH_SHORT,
+    )
     assert isinstance(fmt2a, ListFormatter)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_strings_to_value():
+    # fmt: off
     from icupy.icu import (
         ConstrainedFieldPosition, FormattedList, FormattedValue,
         UFieldCategory, UListFormatterField, UnicodeStringAppendable,
     )
+
+    # fmt: on
 
     assert issubclass(FormattedList, FormattedValue)
     fmt = ListFormatter.create_instance("en")

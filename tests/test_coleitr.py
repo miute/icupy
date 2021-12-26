@@ -1,7 +1,10 @@
+# fmt: off
 from icupy.icu import (
-    Collator, CollationElementIterator, Locale, StringCharacterIterator,
+    CollationElementIterator, Collator, Locale, StringCharacterIterator,
     UColAttribute, UColAttributeValue, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -93,46 +96,58 @@ def test_api():
     assert not (it1 != it2)
 
     # int32_t icu::CollationElementIterator::primaryOrder(int32_t order)
-    assert (CollationElementIterator.primary_order(order1)
-            == CollationElementIterator.primary_order(it2.next()))
-    assert (CollationElementIterator.primary_order(order2)
-            == CollationElementIterator.primary_order(it2.next()))
-    assert (CollationElementIterator.primary_order(order3)
-            == CollationElementIterator.primary_order(it2.next()))
+    assert CollationElementIterator.primary_order(
+        order1
+    ) == CollationElementIterator.primary_order(it2.next())
+    assert CollationElementIterator.primary_order(
+        order2
+    ) == CollationElementIterator.primary_order(it2.next())
+    assert CollationElementIterator.primary_order(
+        order3
+    ) == CollationElementIterator.primary_order(it2.next())
 
     # int32_t icu::CollationElementIterator::secondaryOrder(int32_t order)
     it2.reset()
-    assert (CollationElementIterator.secondary_order(order1)
-            == CollationElementIterator.secondary_order(it2.next()))
-    assert (CollationElementIterator.secondary_order(order2)
-            == CollationElementIterator.secondary_order(it2.next()))
-    assert (CollationElementIterator.secondary_order(order3)
-            == CollationElementIterator.secondary_order(it2.next()))
+    assert CollationElementIterator.secondary_order(
+        order1
+    ) == CollationElementIterator.secondary_order(it2.next())
+    assert CollationElementIterator.secondary_order(
+        order2
+    ) == CollationElementIterator.secondary_order(it2.next())
+    assert CollationElementIterator.secondary_order(
+        order3
+    ) == CollationElementIterator.secondary_order(it2.next())
 
     # int32_t icu::CollationElementIterator::tertiaryOrder(int32_t order)
     it2.reset()
-    assert (CollationElementIterator.tertiary_order(order1)
-            == CollationElementIterator.tertiary_order(it2.next()))
-    assert (CollationElementIterator.tertiary_order(order2)
-            == CollationElementIterator.tertiary_order(it2.next()))
-    assert (CollationElementIterator.tertiary_order(order3)
-            == CollationElementIterator.tertiary_order(it2.next()))
+    assert CollationElementIterator.tertiary_order(
+        order1
+    ) == CollationElementIterator.tertiary_order(it2.next())
+    assert CollationElementIterator.tertiary_order(
+        order2
+    ) == CollationElementIterator.tertiary_order(it2.next())
+    assert CollationElementIterator.tertiary_order(
+        order3
+    ) == CollationElementIterator.tertiary_order(it2.next())
 
     # int32_t icu::CollationElementIterator::strengthOrder(int32_t order)
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_PRIMARY)
-    assert it1.strength_order(order1) == order1 & 0xffff0000
-    assert it1.strength_order(order2) == order2 & 0xffff0000
-    assert it1.strength_order(order3) == order3 & 0xffff0000
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
+    assert it1.strength_order(order1) == order1 & 0xFFFF0000
+    assert it1.strength_order(order2) == order2 & 0xFFFF0000
+    assert it1.strength_order(order3) == order3 & 0xFFFF0000
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_SECONDARY)
-    assert it1.strength_order(order1) == order1 & 0xffffff00
-    assert it1.strength_order(order2) == order2 & 0xffffff00
-    assert it1.strength_order(order3) == order3 & 0xffffff00
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_SECONDARY
+    )
+    assert it1.strength_order(order1) == order1 & 0xFFFFFF00
+    assert it1.strength_order(order2) == order2 & 0xFFFFFF00
+    assert it1.strength_order(order3) == order3 & 0xFFFFFF00
 
-    coll.set_attribute(UColAttribute.UCOL_STRENGTH,
-                       UColAttributeValue.UCOL_TERTIARY)
+    coll.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_TERTIARY
+    )
     assert it1.strength_order(order1) == order1
     assert it1.strength_order(order2) == order2
     assert it1.strength_order(order3) == order3

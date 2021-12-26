@@ -1,8 +1,12 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    DecimalFormat, Format, Locale, NumberFormat, UNumberFormatStyle,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, DecimalFormat, Format, Locale, NumberFormat,
+    UnicodeString, UNumberFormatStyle,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -29,7 +33,7 @@ def test_api():
     assert fmt.get_maximum_fraction_digits() == 2
 
     # int32_t icu::NumberFormat::getMaximumIntegerDigits(void)
-    assert fmt.get_maximum_integer_digits() == 2e+9
+    assert fmt.get_maximum_integer_digits() == 2e9
 
     # int32_t icu::NumberFormat::getMinimumFractionDigits(void)
     assert fmt.get_minimum_fraction_digits() == 2
@@ -94,13 +98,13 @@ def test_create_instance():
         #       UErrorCode &errorCode
         # )
         fmt1 = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_DEFAULT)
+            in_locale, UNumberFormatStyle.UNUM_DEFAULT
+        )
         assert isinstance(fmt1, DecimalFormat)
 
         fmt1a = NumberFormat.create_instance(
-            "en-US",
-            UNumberFormatStyle.UNUM_DEFAULT)
+            "en-US", UNumberFormatStyle.UNUM_DEFAULT
+        )
         assert isinstance(fmt1a, DecimalFormat)
         assert fmt1 == fmt1a
 
@@ -114,26 +118,26 @@ def test_create_instance():
 
         # UNUM_DECIMAL
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_DECIMAL)
+            in_locale, UNumberFormatStyle.UNUM_DECIMAL
+        )
         assert isinstance(test, DecimalFormat)
 
         # UNUM_CURRENCY
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_CURRENCY)
+            in_locale, UNumberFormatStyle.UNUM_CURRENCY
+        )
         assert isinstance(test, DecimalFormat)
 
         # UNUM_PERCENT
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_PERCENT)
+            in_locale, UNumberFormatStyle.UNUM_PERCENT
+        )
         assert isinstance(test, DecimalFormat)
 
         # UNUM_SCIENTIFIC
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_SCIENTIFIC)
+            in_locale, UNumberFormatStyle.UNUM_SCIENTIFIC
+        )
         assert isinstance(test, DecimalFormat)
 
         # UNUM_SPELLOUT -> U_UNSUPPORTED_ERROR
@@ -163,14 +167,14 @@ def test_create_instance():
 
         # UNUM_CURRENCY_ISO
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_CURRENCY_ISO)
+            in_locale, UNumberFormatStyle.UNUM_CURRENCY_ISO
+        )
         assert isinstance(test, DecimalFormat)
 
         # UNUM_CURRENCY_PLURAL
         test = NumberFormat.create_instance(
-            in_locale,
-            UNumberFormatStyle.UNUM_CURRENCY_PLURAL)
+            in_locale, UNumberFormatStyle.UNUM_CURRENCY_PLURAL
+        )
         assert isinstance(test, DecimalFormat)
 
         # [2]
@@ -204,8 +208,8 @@ def test_create_instance():
 def test_create_instance_53():
     # UNUM_CURRENCY_ACCOUNTING
     test = NumberFormat.create_instance(
-        Locale.get_us(),
-        UNumberFormatStyle.UNUM_CURRENCY_ACCOUNTING)
+        Locale.get_us(), UNumberFormatStyle.UNUM_CURRENCY_ACCOUNTING
+    )
     assert isinstance(test, DecimalFormat)
 
 
@@ -213,8 +217,8 @@ def test_create_instance_53():
 def test_create_instance_54():
     # UNUM_CASH_CURRENCY
     test = NumberFormat.create_instance(
-        Locale.get_us(),
-        UNumberFormatStyle.UNUM_CASH_CURRENCY)
+        Locale.get_us(), UNumberFormatStyle.UNUM_CASH_CURRENCY
+    )
     assert isinstance(test, DecimalFormat)
 
 
@@ -232,8 +236,8 @@ def test_create_instance_56():
 
     # UNUM_CURRENCY_STANDARD
     test = NumberFormat.create_instance(
-        Locale.get_us(),
-        UNumberFormatStyle.UNUM_CURRENCY_STANDARD)
+        Locale.get_us(), UNumberFormatStyle.UNUM_CURRENCY_STANDARD
+    )
     assert isinstance(test, DecimalFormat)
 
 

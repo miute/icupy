@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 50:
@@ -6,13 +7,16 @@ if U_ICU_VERSION_MAJOR_NUM < 50:
 
 import copy
 
+# fmt: off
+from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 from icupy.icu import (
     FieldPosition, FieldPositionIterator, Format, Formattable, ICUError,
-    Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames,
-    UErrorCode, UTimeZoneFormatGMTOffsetPatternType,
+    Locale, ParsePosition, TimeZone, TimeZoneFormat, TimeZoneNames, UErrorCode,
+    UnicodeString, UTimeZoneFormatGMTOffsetPatternType,
     UTimeZoneFormatParseOption, UTimeZoneFormatStyle, UTimeZoneFormatTimeType,
-    U_MILLIS_PER_HOUR as HOUR, UnicodeString,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -51,14 +55,19 @@ def test_api():
     assert result == "GMT-08:30"
 
     # uint32_t icu::TimeZoneFormat::getDefaultParseOptions(void)
-    assert (fmt2.get_default_parse_options()
-            == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
+    assert (
+        fmt2.get_default_parse_options()
+        == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE
+    )
 
     # void icu::TimeZoneFormat::setDefaultParseOptions(uint32_t flags)
     fmt2.set_default_parse_options(
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
-    assert (fmt2.get_default_parse_options()
-            == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES
+    )
+    assert (
+        fmt2.get_default_parse_options()
+        == UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES
+    )
 
     # UnicodeString &icu::TimeZoneFormat::getGMTOffsetDigits(
     #       UnicodeString &digits
@@ -85,8 +94,8 @@ def test_api():
     # )
     pattern = UnicodeString()
     result = fmt2.get_gmt_offset_pattern(
-        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
-        pattern)
+        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM, pattern
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(pattern)
     assert result == "+HH:mm"
@@ -98,17 +107,24 @@ def test_api():
     # )
     fmt2.set_gmt_offset_pattern(
         UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
-        UnicodeString("+H:mm"))
-    assert fmt2.get_gmt_offset_pattern(
-        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
-        pattern) == "+H:mm"
+        UnicodeString("+H:mm"),
+    )
+    assert (
+        fmt2.get_gmt_offset_pattern(
+            UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM, pattern
+        )
+        == "+H:mm"
+    )
 
     fmt2.set_gmt_offset_pattern(
-        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
-        "+HH:mm")
-    assert fmt2.get_gmt_offset_pattern(
-        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM,
-        pattern) == "+HH:mm"
+        UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM, "+HH:mm"
+    )
+    assert (
+        fmt2.get_gmt_offset_pattern(
+            UTimeZoneFormatGMTOffsetPatternType.UTZFMT_PAT_POSITIVE_HM, pattern
+        )
+        == "+HH:mm"
+    )
 
     # UnicodeString &icu::TimeZoneFormat::getGMTPattern(UnicodeString &pattern)
     result = fmt2.get_gmt_pattern(pattern)
@@ -262,7 +278,8 @@ def test_format():
         tz,
         date,
         name,
-        time_type)
+        time_type,
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
@@ -270,21 +287,16 @@ def test_format():
 
     name.remove()
     result = fmt.format(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG,
-        tz,
-        date,
-        name,
-        None)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG, tz, date, name, None
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
 
     name.remove()
     result = fmt.format(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG,
-        tz,
-        date,
-        name)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG, tz, date, name
+    )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
@@ -304,12 +316,7 @@ def test_icu_51():
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    string = fmt.format_offset_iso8601_basic(
-        offset,
-        True,
-        False,
-        True,
-        result)
+    string = fmt.format_offset_iso8601_basic(offset, True, False, True, result)
     assert isinstance(string, UnicodeString)
     assert id(result) == id(string)
     assert result == "-0830"
@@ -323,11 +330,8 @@ def test_icu_51():
     #       UErrorCode &status
     # )
     string = fmt.format_offset_iso8601_extended(
-        offset,
-        True,
-        False,
-        True,
-        result)
+        offset, True, False, True, result
+    )
     assert isinstance(string, UnicodeString)
     assert id(result) == id(string)
     assert result == "-08:30"
@@ -337,9 +341,7 @@ def test_icu_51():
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    string = fmt.format_offset_short_localized_gmt(
-        offset,
-        result)
+    string = fmt.format_offset_short_localized_gmt(offset, result)
     assert isinstance(string, UnicodeString)
     assert id(result) == id(string)
     assert result == "GMT-8:30"
@@ -350,15 +352,13 @@ def test_icu_51():
     # )
     pos = ParsePosition(0)
     result = fmt.parse_offset_short_localized_gmt(
-        UnicodeString("GMT-8:30"),
-        pos)
+        UnicodeString("GMT-8:30"), pos
+    )
     assert pos.get_error_index() == -1
     assert result == offset
 
     pos = ParsePosition(0)
-    result = fmt.parse_offset_short_localized_gmt(
-        "GMT-8:30",
-        pos)
+    result = fmt.parse_offset_short_localized_gmt("GMT-8:30", pos)
     assert pos.get_error_index() == -1
     assert result == offset
 
@@ -382,7 +382,8 @@ def test_parse():
         UnicodeString("EST"),
         pos,
         UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
-        time_type)
+        time_type,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/New_York"
@@ -396,7 +397,8 @@ def test_parse():
         UnicodeString("EST"),
         pos,
         UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
-        None)
+        None,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/New_York"
@@ -408,7 +410,8 @@ def test_parse():
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         UnicodeString("EST"),
         pos,
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/New_York"
@@ -420,7 +423,8 @@ def test_parse():
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         "EST",
         pos,
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/New_York"
@@ -432,7 +436,8 @@ def test_parse():
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         "AQTST",
         pos,
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
+    )
     assert pos.get_error_index() != -1
     assert tz is None
 
@@ -449,7 +454,8 @@ def test_parse():
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         UnicodeString("CST"),
         pos,
-        time_type)
+        time_type,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/Chicago"
@@ -462,7 +468,8 @@ def test_parse():
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         UnicodeString("CST"),
         pos,
-        None)
+        None,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/Chicago"
@@ -473,7 +480,8 @@ def test_parse():
     tz = fmt.parse(
         UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         UnicodeString("CST"),
-        pos)
+        pos,
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/Chicago"
@@ -482,9 +490,8 @@ def test_parse():
 
     pos = ParsePosition(0)
     tz = fmt.parse(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        "CST",
-        pos)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "CST", pos
+    )
     assert pos.get_error_index() == -1
     assert isinstance(tz, TimeZone)
     assert tz.get_id(tzid) == "America/Chicago"
@@ -493,9 +500,8 @@ def test_parse():
 
     pos = ParsePosition(0)
     tz = fmt.parse(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        "AQTST",
-        pos)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "AQTST", pos
+    )
     assert pos.get_error_index() != -1
     assert tz is None
 
@@ -510,15 +516,15 @@ def test_parse_upcasting():
         UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
         "GMT+900",
         pos,
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE,
+    )
     assert pos.get_index() != 0
     assert isinstance(zone, SimpleTimeZone)
 
     pos = ParsePosition(0)
     zone = fmt.parse(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
-        "GMT+900",
-        pos)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT+900", pos
+    )
     assert pos.get_index() != 0
     assert isinstance(zone, SimpleTimeZone)
 
@@ -528,16 +534,16 @@ def test_parse_upcasting():
         UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
         "GMT",
         pos,
-        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE)
+        UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_NONE,
+    )
     assert pos.get_index() != 0
     assert not isinstance(zone, SimpleTimeZone)
     assert isinstance(zone, BasicTimeZone)
 
     pos = ParsePosition(0)
     zone = fmt.parse(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
-        "GMT",
-        pos)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT", pos
+    )
     assert pos.get_index() != 0
     assert not isinstance(zone, SimpleTimeZone)
     assert isinstance(zone, BasicTimeZone)
@@ -545,9 +551,8 @@ def test_parse_upcasting():
     # NULL
     pos = ParsePosition(0)
     zone = fmt.parse(
-        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
-        "EST",
-        pos)
+        UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "EST", pos
+    )
     assert pos.get_index() == 0
     assert zone is None
 
@@ -562,9 +567,7 @@ def test_parse_object():
     # )
     result = Formattable()
     parse_pos = ParsePosition(0)
-    fmt.parse_object(UnicodeString("America/Los_Angeles"),
-                     result,
-                     parse_pos)
+    fmt.parse_object(UnicodeString("America/Los_Angeles"), result, parse_pos)
     assert parse_pos.get_error_index() == -1
     assert result.get_type() == Formattable.OBJECT
     tz = result.get_object()
@@ -574,9 +577,7 @@ def test_parse_object():
 
     result = Formattable()
     parse_pos = ParsePosition(0)
-    fmt.parse_object("America/Los_Angeles",
-                     result,
-                     parse_pos)
+    fmt.parse_object("America/Los_Angeles", result, parse_pos)
     assert parse_pos.get_error_index() == -1
     assert result.get_type() == Formattable.OBJECT
     tz = result.get_object()

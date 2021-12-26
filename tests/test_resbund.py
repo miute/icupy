@@ -2,11 +2,14 @@ import copy
 from pathlib import Path
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
     ICUError, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
-    UnicodeString, UResType,
-    ures_close, ures_open, ures_open_direct,
+    UnicodeString, UResType, ures_close, ures_open, ures_open_direct,
 )
+
+# fmt: on
 
 
 def _int28_to_uint28(n: int) -> int:
@@ -100,9 +103,11 @@ def test_api2():
     except ICUError as ex:
         if ex.args[0] != UErrorCode.U_MISSING_RESOURCE_ERROR:
             raise
-        pytest.skip("testdata.dat is not found (not an error). "
-                    "You need to build a test data from the source. "
-                    "See also <icu4c>/icu/source/test/testdata/")
+        pytest.skip(
+            "testdata.dat is not found (not an error). "
+            "You need to build a test data from the source. "
+            "See also <icu4c>/icu/source/test/testdata/"
+        )
 
     test1 = ResourceBundle(rb)
     ures_close(rb)
@@ -161,8 +166,21 @@ def test_api2():
     assert isinstance(result, list)
     assert len(result) == 15
     assert result == [
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
-        0x0b, 0x0c, 0x0d, 0x0e
+        0x00,
+        0x01,
+        0x02,
+        0x03,
+        0x04,
+        0x05,
+        0x06,
+        0x07,
+        0x08,
+        0x09,
+        0x0A,
+        0x0B,
+        0x0C,
+        0x0D,
+        0x0E,
     ]
 
     # "testtypes" > "emptybin"
@@ -319,20 +337,22 @@ def test_resource_bundle():
     assert test1.get_type() == UResType.URES_TABLE
     assert test1.get_size() >= 0
     assert test1.get_key() is None
-    assert (test1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert test1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test1.get_name() == res_locale.get_name()
 
     test1b = ResourceBundle(UnicodeString(), str(res_locale))
     assert test1b.get_type() == UResType.URES_TABLE
     assert test1b.get_size() >= 0
     assert test1b.get_key() is None
-    assert (test1b.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test1b.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test1b.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert (
+        test1b.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    )
     assert test1b.get_name() == res_locale.get_name()
 
     # [2]
@@ -344,20 +364,28 @@ def test_resource_bundle():
     assert test2.get_type() == UResType.URES_TABLE
     assert test2.get_size() >= 0
     assert test2.get_key() is None
-    assert (test2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == default_locale)
-    assert (test2.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == default_locale)
+    assert (
+        test2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+        == default_locale
+    )
+    assert (
+        test2.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+        == default_locale
+    )
     assert test2.get_name() == default_locale.get_name()
 
     test2a = ResourceBundle("")
     assert test2a.get_type() == UResType.URES_TABLE
     assert test2a.get_size() >= 0
     assert test2a.get_key() is None
-    assert (test2a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == default_locale)
-    assert (test2a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == default_locale)
+    assert (
+        test2a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+        == default_locale
+    )
+    assert (
+        test2a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+        == default_locale
+    )
     assert test2a.get_name() == default_locale.get_name()
 
     # [3]
@@ -366,10 +394,14 @@ def test_resource_bundle():
     assert test3.get_type() == UResType.URES_TABLE
     assert test3.get_size() >= 0
     assert test3.get_key() is None
-    assert (test3.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == default_locale)
-    assert (test3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == default_locale)
+    assert (
+        test3.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+        == default_locale
+    )
+    assert (
+        test3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+        == default_locale
+    )
     assert test3.get_name() == default_locale.get_name()
 
     # [4]
@@ -382,20 +414,22 @@ def test_resource_bundle():
     assert test4.get_type() == UResType.URES_TABLE
     assert test4.get_size() >= 0
     assert test4.get_key() is None
-    assert (test4.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test4.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test4.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert test4.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test4.get_name() == res_locale.get_name()
 
     test4a = ResourceBundle(None, str(res_locale))
     assert test4a.get_type() == UResType.URES_TABLE
     assert test4a.get_size() >= 0
     assert test4a.get_key() is None
-    assert (test4a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test4a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test4a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert (
+        test4a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    )
     assert test4a.get_name() == res_locale.get_name()
 
     # [5]
@@ -404,10 +438,10 @@ def test_resource_bundle():
     assert test5.get_type() == UResType.URES_TABLE
     assert test5.get_size() >= 0
     assert test5.get_key() is None
-    assert (test5.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test5.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test5.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert test5.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test5.get_name() == res_locale.get_name()
 
     # [6]
@@ -421,8 +455,8 @@ def test_resource_bundle():
     assert test6.get_type() == UResType.URES_TABLE
     assert test6.get_size() >= 0
     assert test6.get_key() is None
-    assert (test6.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-            == res_locale)
-    assert (test6.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-            == res_locale)
+    assert (
+        test6.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    )
+    assert test6.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test6.get_name() == res_locale.get_name()

@@ -1,9 +1,12 @@
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    FilteredNormalizer2, Normalizer2, UNormalization2Mode,
-    UNormalizationCheckResult, US_INV, U_ICU_VERSION_MAJOR_NUM, UnicodeSet,
-    UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, US_INV, FilteredNormalizer2, Normalizer2,
+    UnicodeSet, UnicodeString, UNormalization2Mode, UNormalizationCheckResult,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -14,9 +17,8 @@ def test_api():
     #       UErrorCode &errorCode
     # )
     n2 = Normalizer2.get_instance(
-        None,
-        "nfc",
-        UNormalization2Mode.UNORM2_COMPOSE)
+        None, "nfc", UNormalization2Mode.UNORM2_COMPOSE
+    )
 
     # UnicodeString &icu::Normalizer2::append(
     #       UnicodeString &first,
@@ -40,15 +42,15 @@ def test_api():
     #       UnicodeString &decomposition
     # )
     decomposition = UnicodeString()
-    assert n2.get_decomposition(0xc5, decomposition)
+    assert n2.get_decomposition(0xC5, decomposition)
     assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()
 
     # UBool icu::Normalizer2::hasBoundaryAfter(UChar32 c)
     # U+304C: Hiragana Letter Ga
     # U+304B: Hiragana Letter Ka
     # U+3099: Combining Katakana-Hiragana Voiced Sound Mark
-    assert n2.has_boundary_after(0x304c)
-    assert not n2.has_boundary_after(0x304b)
+    assert n2.has_boundary_after(0x304C)
+    assert not n2.has_boundary_after(0x304B)
     assert not n2.has_boundary_after(0x3099)
 
     # UBool icu::Normalizer2::hasBoundaryBefore(UChar32 c)
@@ -59,17 +61,18 @@ def test_api():
     assert not n2.has_boundary_before(0x0306)
 
     # UBool icu::Normalizer2::isInert(UChar32 c)
-    assert n2.is_inert(0x304c)
-    assert not n2.is_inert(0x304b)
+    assert n2.is_inert(0x304C)
+    assert not n2.is_inert(0x304B)
     assert not n2.is_inert(0x3099)
 
     # UBool icu::Normalizer2::isNormalized(
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    assert n2.is_normalized(UnicodeString(0x304c))
+    assert n2.is_normalized(UnicodeString(0x304C))
     assert not n2.is_normalized(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
+        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
+    )
 
     assert n2.is_normalized("\u304c")
     assert not n2.is_normalized("\u304B\u3099")
@@ -124,10 +127,11 @@ def test_api():
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    result = n2.quick_check(UnicodeString(0x304c))
+    result = n2.quick_check(UnicodeString(0x304C))
     assert result == UNormalizationCheckResult.UNORM_YES
     result = n2.quick_check(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
+        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
+    )
     assert result == UNormalizationCheckResult.UNORM_MAYBE
 
     result = n2.quick_check("\u304c")
@@ -139,9 +143,10 @@ def test_api():
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    assert n2.span_quick_check_yes(UnicodeString(0x304c))
+    assert n2.span_quick_check_yes(UnicodeString(0x304C))
     assert not n2.span_quick_check_yes(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape())
+        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
+    )
 
     assert n2.span_quick_check_yes("\u304c")
     assert not n2.span_quick_check_yes("\u304B\u3099")
@@ -153,20 +158,19 @@ def test_filtered_normalizer2():
     #       const UnicodeSet &filterSet
     # )
     n2 = Normalizer2.get_instance(
-        None,
-        "nfc",
-        UNormalization2Mode.UNORM2_COMPOSE)
+        None, "nfc", UNormalization2Mode.UNORM2_COMPOSE
+    )
     filter_set = UnicodeSet(UnicodeString("[^\\u00a0-\\u00ff]", -1, US_INV))
     fn2 = FilteredNormalizer2(n2, filter_set)
 
     decomposition = UnicodeString()
-    assert n2.get_decomposition(0xe4, decomposition)
+    assert n2.get_decomposition(0xE4, decomposition)
     assert decomposition == UnicodeString("a\\u0308", -1, US_INV).unescape()
 
     assert n2.get_decomposition(0x100, decomposition)
     assert decomposition == UnicodeString("A\\u0304", -1, US_INV).unescape()
 
-    assert not fn2.get_decomposition(0xe4, decomposition)
+    assert not fn2.get_decomposition(0xE4, decomposition)
 
     assert fn2.get_decomposition(0x100, decomposition)
     assert decomposition == UnicodeString("A\\u0304", -1, US_INV).unescape()
@@ -181,9 +185,8 @@ def test_get_instance():
     #       UErrorCode &errorCode
     # )
     nfkc1 = Normalizer2.get_instance(
-        None,
-        "nfkc",
-        UNormalization2Mode.UNORM2_COMPOSE)
+        None, "nfkc", UNormalization2Mode.UNORM2_COMPOSE
+    )
     assert isinstance(nfkc1, Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFCInstance(
@@ -228,22 +231,20 @@ def test_get_instance():
     assert result == UnicodeString("\\u1E69ss", -1, US_INV).unescape()
 
     result = nfc.normalize(source)
-    assert result == UnicodeString(
-        "\\u1E9B\\u0323\\xDF",
-        -1,
-        US_INV).unescape()
+    assert (
+        result == UnicodeString("\\u1E9B\\u0323\\xDF", -1, US_INV).unescape()
+    )
 
     result = nfd.normalize(source)
-    assert result == UnicodeString(
-        "\\u017F\\u0323\\u0307\\xDF",
-        -1,
-        US_INV).unescape()
+    assert (
+        result
+        == UnicodeString("\\u017F\\u0323\\u0307\\xDF", -1, US_INV).unescape()
+    )
 
     result = nfkd.normalize(source)
-    assert result == UnicodeString(
-        "s\\u0323\\u0307\\xDF",
-        -1,
-        US_INV).unescape()
+    assert (
+        result == UnicodeString("s\\u0323\\u0307\\xDF", -1, US_INV).unescape()
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
@@ -254,7 +255,7 @@ def test_icu_49():
     #       UChar32 a,
     #       UChar32 b
     # )
-    assert n2.compose_pair(ord("A"), 0x030a) == 0xc5
+    assert n2.compose_pair(ord("A"), 0x030A) == 0xC5
 
     # uint8_t icu::Normalizer2::getCombiningClass(UChar32 c)
     assert n2.get_combining_class(0x3099) == 8
@@ -264,5 +265,5 @@ def test_icu_49():
     #       UnicodeString &decomposition
     # )
     decomposition = UnicodeString()
-    assert n2.get_raw_decomposition(0xc5, decomposition)
+    assert n2.get_raw_decomposition(0xC5, decomposition)
     assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()

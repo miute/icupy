@@ -6,7 +6,8 @@ if sys.version_info[:2] >= (3, 9):
     from collections.abc import Callable
     from contextlib import AbstractContextManager
 else:
-    from typing import Callable, ContextManager as AbstractContextManager
+    from typing import Callable
+    from typing import ContextManager as AbstractContextManager
 
 __all__ = ["gc"]
 

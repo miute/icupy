@@ -1,4 +1,5 @@
 import pytest
+
 from icupy.icu import U_ICU_VERSION_MAJOR_NUM
 
 if U_ICU_VERSION_MAJOR_NUM < 64:
@@ -62,44 +63,47 @@ def test_api():
     assert id(result) == id(bld)
 
     # Locale icu::LocaleBuilder::build(UErrorCode &status)
-    loc = (bld
-           .set_language("zh")
-           .set_script("Hant")
-           .set_region("SG")
-           .set_region("HK")
-           .set_script("Hans")
-           .set_variant("revised")
-           .set_unicode_locale_keyword("nu", "thai")
-           .set_extension("U", "co-pinyin")
-           .set_unicode_locale_keyword("nu", "latn")
-           .build())
+    loc = (
+        bld.set_language("zh")
+        .set_script("Hant")
+        .set_region("SG")
+        .set_region("HK")
+        .set_script("Hans")
+        .set_variant("revised")
+        .set_unicode_locale_keyword("nu", "thai")
+        .set_extension("U", "co-pinyin")
+        .set_unicode_locale_keyword("nu", "latn")
+        .build()
+    )
     assert isinstance(loc, Locale)
     assert loc.to_language_tag() == "zh-Hans-HK-revised-u-co-pinyin-nu-latn"
 
-    loc = (bld
-           .set_unicode_locale_keyword("nu", None)
-           .set_unicode_locale_keyword("co", None)
-           .set_script("")
-           .set_variant("")
-           .set_region("")
-           .build())
+    loc = (
+        bld.set_unicode_locale_keyword("nu", None)
+        .set_unicode_locale_keyword("co", None)
+        .set_script("")
+        .set_variant("")
+        .set_region("")
+        .build()
+    )
     assert loc.to_language_tag() == "zh"
 
     bld = LocaleBuilder()
-    loc = (bld
-           .set_language("fr")
-           .add_unicode_locale_attribute("abc")
-           .add_unicode_locale_attribute("aBc")
-           .add_unicode_locale_attribute("EFG")
-           .add_unicode_locale_attribute("efghi")
-           .add_unicode_locale_attribute("efgh")
-           .add_unicode_locale_attribute("efGhi")
-           .add_unicode_locale_attribute("EFg")
-           .add_unicode_locale_attribute("hijk")
-           .add_unicode_locale_attribute("EFG")
-           .add_unicode_locale_attribute("HiJK")
-           .add_unicode_locale_attribute("aBc")
-           .build())
+    loc = (
+        bld.set_language("fr")
+        .add_unicode_locale_attribute("abc")
+        .add_unicode_locale_attribute("aBc")
+        .add_unicode_locale_attribute("EFG")
+        .add_unicode_locale_attribute("efghi")
+        .add_unicode_locale_attribute("efgh")
+        .add_unicode_locale_attribute("efGhi")
+        .add_unicode_locale_attribute("EFg")
+        .add_unicode_locale_attribute("hijk")
+        .add_unicode_locale_attribute("EFG")
+        .add_unicode_locale_attribute("HiJK")
+        .add_unicode_locale_attribute("aBc")
+        .build()
+    )
     assert loc.to_language_tag() == "fr-u-abc-efg-efgh-efghi-hijk"
 
     # LocaleBuilder &icu::LocaleBuilder::setLanguageTag(StringPiece tag)

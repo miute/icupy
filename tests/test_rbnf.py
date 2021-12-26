@@ -1,12 +1,16 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUError,
-    INT32_MAX, INT64_MAX, Locale, NumberFormat, ParsePosition,
-    RuleBasedNumberFormat, UErrorCode, UParseError, URBNFRuleSetTag,
-    U_ICU_VERSION_MAJOR_NUM, UnicodeString,
+    INT32_MAX, INT64_MAX, U_ICU_VERSION_MAJOR_NUM, FieldPosition,
+    FieldPositionIterator, Formattable, ICUError, Locale, NumberFormat,
+    ParsePosition, RuleBasedNumberFormat, UErrorCode, UnicodeString,
+    UParseError, URBNFRuleSetTag,
 )
+
+# fmt: on
 
 
 def test_api():
@@ -77,8 +81,8 @@ def test_api():
     # UBool icu::RuleBasedNumberFormat::operator==(const Format &other)
     fmt2 = fmt.clone()
     fmt3 = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
     assert fmt == fmt2
     assert not (fmt == fmt3)
     assert not (fmt2 == fmt3)
@@ -88,9 +92,7 @@ def test_api():
 def test_api_49():
     from icupy.icu import DecimalFormatSymbols
 
-    fmt = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_ORDINAL,
-        Locale.get_us())
+    fmt = RuleBasedNumberFormat(URBNFRuleSetTag.URBNF_ORDINAL, Locale.get_us())
 
     # void icu::RuleBasedNumberFormat::setDecimalFormatSymbols(
     #       const DecimalFormatSymbols &symbols
@@ -99,7 +101,8 @@ def test_api_49():
     symbols.set_symbol(
         DecimalFormatSymbols.GROUPING_SEPARATOR_SYMBOL,
         UnicodeString("&"),
-        True)
+        True,
+    )
     fmt.set_decimal_format_symbols(symbols)
     append_to = UnicodeString()
     assert fmt.format(1001, append_to) == "1&001st"
@@ -110,30 +113,34 @@ def test_api_53():
     from icupy.icu import UDisplayContext, UDisplayContextType
 
     fmt = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
 
     # UDisplayContext icu::NumberFormat::getContext(
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE)
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE
+    )
 
     # void icu::RuleBasedNumberFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )
     fmt.set_context(UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_STANDALONE)
-    assert (fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-            == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_STANDALONE)
+    assert (
+        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_STANDALONE
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
 def test_api_60():
     fmt = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
 
     # ERoundingMode icu::RuleBasedNumberFormat::getRoundingMode(void)
     assert fmt.get_rounding_mode() == RuleBasedNumberFormat.ROUND_UNNECESSARY
@@ -147,8 +154,8 @@ def test_api_60():
 
 def test_clone():
     fmt1 = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
 
     # RuleBasedNumberFormat *icu::RuleBasedNumberFormat::clone()
     fmt2 = fmt1.clone()
@@ -164,8 +171,8 @@ def test_clone():
 
 def test_format():
     fmt = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
     d = -10456.0037
     s = "-1.045600e+04"
     n32 = INT32_MAX
@@ -185,8 +192,10 @@ def test_format():
     result = fmt.format(Formattable(d), append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # *U_UNSUPPORTED_ERROR in ICU 69*
     # [3], [4]
@@ -212,8 +221,10 @@ def test_format():
     result = fmt.format(Formattable(d), append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # [9]
     # UnicodeString &icu::RuleBasedNumberFormat::format(
@@ -228,16 +239,20 @@ def test_format():
     result = fmt.format(d, rule_set_name, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt.format(d, str(rule_set_name), append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # [10]
     # UnicodeString &icu::NumberFormat::format(
@@ -248,8 +263,10 @@ def test_format():
     result = fmt.format(d, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # [11], [14]
     # UnicodeString &icu::RuleBasedNumberFormat::format(
@@ -262,8 +279,10 @@ def test_format():
     result = fmt.format(d, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("minus ten thousand four hundred fifty-six"
-                      " point zero zero three seven")
+    assert result == (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # *U_UNSUPPORTED_ERROR in ICU 69*
     # [13]
@@ -292,18 +311,22 @@ def test_format():
     result = fmt.format(n32, rule_set_name, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("two billion one hundred forty-seven million"
-                      " four hundred eighty-three thousand"
-                      " six hundred forty-seven")
+    assert result == (
+        "two billion one hundred forty-seven million"
+        " four hundred eighty-three thousand"
+        " six hundred forty-seven"
+    )
 
     append_to.remove()
     pos = FieldPosition(FieldPosition.DONT_CARE)
     result = fmt.format(n32, str(rule_set_name), append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("two billion one hundred forty-seven million"
-                      " four hundred eighty-three thousand"
-                      " six hundred forty-seven")
+    assert result == (
+        "two billion one hundred forty-seven million"
+        " four hundred eighty-three thousand"
+        " six hundred forty-seven"
+    )
 
     # [16]
     # UnicodeString &icu::NumberFormat::format(
@@ -314,9 +337,11 @@ def test_format():
     result = fmt.format(n32, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("two billion one hundred forty-seven million"
-                      " four hundred eighty-three thousand"
-                      " six hundred forty-seven")
+    assert result == (
+        "two billion one hundred forty-seven million"
+        " four hundred eighty-three thousand"
+        " six hundred forty-seven"
+    )
 
     # [17], [20]
     # UnicodeString &icu::RuleBasedNumberFormat::format(
@@ -329,9 +354,11 @@ def test_format():
     result = fmt.format(n32, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == ("two billion one hundred forty-seven million"
-                      " four hundred eighty-three thousand"
-                      " six hundred forty-seven")
+    assert result == (
+        "two billion one hundred forty-seven million"
+        " four hundred eighty-three thousand"
+        " six hundred forty-seven"
+    )
 
     # *U_UNSUPPORTED_ERROR in ICU 69*
     # [19]
@@ -453,26 +480,20 @@ def test_get_rule_set_display_name():
     assert result in ["%main", "Main", "leMain", "das Main"]
 
     result = fmt.get_rule_set_display_name(
-        UnicodeString("%main"),
-        Locale("de_DE_FOO"))
+        UnicodeString("%main"), Locale("de_DE_FOO")
+    )
     assert isinstance(result, UnicodeString)
     assert result == "das Main"
 
-    result = fmt.get_rule_set_display_name(
-        "%main",
-        Locale("de_DE_FOO"))
+    result = fmt.get_rule_set_display_name("%main", Locale("de_DE_FOO"))
     assert isinstance(result, UnicodeString)
     assert result == "das Main"
 
-    result = fmt.get_rule_set_display_name(
-        UnicodeString("%main"),
-        "de_DE_FOO")
+    result = fmt.get_rule_set_display_name(UnicodeString("%main"), "de_DE_FOO")
     assert isinstance(result, UnicodeString)
     assert result == "das Main"
 
-    result = fmt.get_rule_set_display_name(
-        "%main",
-        "de_DE_FOO")
+    result = fmt.get_rule_set_display_name("%main", "de_DE_FOO")
     assert isinstance(result, UnicodeString)
     assert result == "das Main"
 
@@ -496,11 +517,13 @@ def test_get_rule_set_display_name():
 
 def test_parse():
     fmt = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
     d = -10456.0037
-    s = ("minus ten thousand four hundred fifty-six"
-         " point zero zero three seven")
+    s = (
+        "minus ten thousand four hundred fifty-six"
+        " point zero zero three seven"
+    )
 
     # [1], [2]
     # void icu::RuleBasedNumberFormat::parse(
@@ -593,18 +616,12 @@ def test_rule_based_number_format():
     #       UErrorCode &status
     # )
     perror = UParseError()
-    fmt3 = RuleBasedNumberFormat(
-        rules,
-        Locale.get_default(),
-        perror)
+    fmt3 = RuleBasedNumberFormat(rules, Locale.get_default(), perror)
     assert perror.offset == 0
     assert fmt1 == fmt3
 
     perror = UParseError()
-    fmt3a = RuleBasedNumberFormat(
-        str(rules),
-        Locale.get_default(),
-        perror)
+    fmt3a = RuleBasedNumberFormat(str(rules), Locale.get_default(), perror)
     assert perror.offset == 0
     assert fmt3 == fmt3a
 
@@ -618,67 +635,45 @@ def test_rule_based_number_format():
     # )
     perror = UParseError()
     fmt4 = RuleBasedNumberFormat(
-        rules,
-        UnicodeString(),
-        Locale.get_default(),
-        perror)
+        rules, UnicodeString(), Locale.get_default(), perror
+    )
     assert perror.offset == 0
     assert fmt2 == fmt4
 
     perror = UParseError()
     fmt4a = RuleBasedNumberFormat(
-        str(rules),
-        UnicodeString(),
-        Locale.get_default(),
-        perror)
+        str(rules), UnicodeString(), Locale.get_default(), perror
+    )
     assert perror.offset == 0
 
     perror = UParseError()
-    fmt4b = RuleBasedNumberFormat(
-        rules,
-        "",
-        Locale.get_default(),
-        perror)
+    fmt4b = RuleBasedNumberFormat(rules, "", Locale.get_default(), perror)
     assert perror.offset == 0
 
     perror = UParseError()
     fmt4c = RuleBasedNumberFormat(
-        rules,
-        UnicodeString(),
-        str(Locale.get_default()),
-        perror)
+        rules, UnicodeString(), str(Locale.get_default()), perror
+    )
     assert perror.offset == 0
 
     perror = UParseError()
-    fmt4d = RuleBasedNumberFormat(
-        str(rules),
-        "",
-        Locale.get_default(),
-        perror)
+    fmt4d = RuleBasedNumberFormat(str(rules), "", Locale.get_default(), perror)
     assert perror.offset == 0
 
     perror = UParseError()
-    fmt4e = RuleBasedNumberFormat(
-        rules,
-        "",
-        str(Locale.get_default()),
-        perror)
+    fmt4e = RuleBasedNumberFormat(rules, "", str(Locale.get_default()), perror)
     assert perror.offset == 0
 
     perror = UParseError()
     fmt4f = RuleBasedNumberFormat(
-        str(rules),
-        UnicodeString(),
-        str(Locale.get_default()),
-        perror)
+        str(rules), UnicodeString(), str(Locale.get_default()), perror
+    )
     assert perror.offset == 0
 
     perror = UParseError()
     fmt4g = RuleBasedNumberFormat(
-        str(rules),
-        "",
-        str(Locale.get_default()),
-        perror)
+        str(rules), "", str(Locale.get_default()), perror
+    )
     assert perror.offset == 0
     assert fmt4 == fmt4a == fmt4b == fmt4c == fmt4d == fmt4e == fmt4f == fmt4g
 
@@ -689,12 +684,10 @@ def test_rule_based_number_format():
     #       UErrorCode &status
     # )
     fmt5 = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        Locale.get_us())
+        URBNFRuleSetTag.URBNF_SPELLOUT, Locale.get_us()
+    )
 
-    fmt5a = RuleBasedNumberFormat(
-        URBNFRuleSetTag.URBNF_SPELLOUT,
-        "en-US")
+    fmt5a = RuleBasedNumberFormat(URBNFRuleSetTag.URBNF_SPELLOUT, "en-US")
     assert fmt5 == fmt5a
 
     # [6]

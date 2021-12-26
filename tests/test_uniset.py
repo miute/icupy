@@ -1,11 +1,15 @@
 import copy
 
 import pytest
+
+# fmt: off
 from icupy.icu import (
-    ICUError, INT32_MAX, ParsePosition, UErrorCode, UMatchDegree,
-    UProperty, USET_IGNORE_SPACE, USetSpanCondition, U_ICU_VERSION_MAJOR_NUM,
-    UnicodeSet, UnicodeString,
+    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, USET_IGNORE_SPACE, ICUError,
+    ParsePosition, UErrorCode, UMatchDegree, UnicodeSet, UnicodeString,
+    UProperty, USetSpanCondition,
 )
+
+# fmt: on
 
 
 def test_add():
@@ -20,7 +24,7 @@ def test_add():
     #
     # [3]
     # UnicodeSet &icu::UnicodeSet::add(UChar32 start, UChar32 end)
-    result = test1.add(UnicodeString("ab")).add(0xdf).add(0x30, 0x39)
+    result = test1.add(UnicodeString("ab")).add(0xDF).add(0x30, 0x39)
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 12  # [0-9\u00DF{ab}]
@@ -65,7 +69,7 @@ def test_add_match_set_to():
     assert test1.contains(0x30, 0x39)
     assert test2.size() == 10 + 26  # [0-9a-z]
     assert test2.contains(0x30, 0x39)
-    assert test2.contains(0x61, 0x7a)
+    assert test2.contains(0x61, 0x7A)
 
 
 def test_api():
@@ -183,13 +187,13 @@ def test_apply_int_property_value():
     #       UErrorCode &ec
     # )
     result = test1.apply_int_property_value(
-        UProperty.UCHAR_CANONICAL_COMBINING_CLASS,
-        8)  # 8 = Kana Voicing
+        UProperty.UCHAR_CANONICAL_COMBINING_CLASS, 8
+    )  # 8 = Kana Voicing
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 2  # [\u3099\u309A]
     assert test1.contains(0x3099)
-    assert test1.contains(0x309a)
+    assert test1.contains(0x309A)
 
     with pytest.raises(ICUError) as exc_info:
         test1.apply_int_property_value(UProperty.UCHAR_INT_LIMIT, 0)
@@ -214,8 +218,8 @@ def test_apply_pattern():
     assert id(result) == id(test1)
     assert pos.get_index() == pattern.length()
     assert test1.size() == 26 * 2 + 3  # [A-Za-z\u017F\u212A{ab}]
-    assert test1.contains(0x41, 0x5a)
-    assert test1.contains(0x61, 0x7a)
+    assert test1.contains(0x41, 0x5A)
+    assert test1.contains(0x61, 0x7A)
 
     pos = ParsePosition()
     result = test1.apply_pattern("[0-9]", pos, options, None)
@@ -239,7 +243,7 @@ def test_apply_pattern():
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 26 + 1  # [a-z{ab}]
-    assert test2.contains(0x61, 0x7a)
+    assert test2.contains(0x61, 0x7A)
 
     result = test2.apply_pattern("[0-9]")
     assert isinstance(result, UnicodeSet)
@@ -262,16 +266,16 @@ def test_apply_property_alias():
     # )
     result = test1.apply_property_alias(
         UnicodeString("Canonical_Combining_Class"),
-        UnicodeString("Kana_Voicing"))
+        UnicodeString("Kana_Voicing"),
+    )
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 2  # [\u3099\u309A]
     assert test1.contains(0x3099)
-    assert test1.contains(0x309a)
+    assert test1.contains(0x309A)
 
     with pytest.raises(ICUError) as exc_info:
-        test1.apply_property_alias(UnicodeString("ccc"),
-                                   UnicodeString("-"))
+        test1.apply_property_alias(UnicodeString("ccc"), UnicodeString("-"))
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     result = test1.apply_property_alias("ccc", UnicodeString("10"))
@@ -317,7 +321,17 @@ def test_char_at():
     test1.add(UnicodeString("ab"))
     t = [c for c in test1]
     assert t == [
-        0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, -1,
+        0x30,
+        0x31,
+        0x32,
+        0x33,
+        0x34,
+        0x35,
+        0x36,
+        0x37,
+        0x38,
+        0x39,
+        -1,
     ]
 
 
@@ -359,8 +373,9 @@ def test_close_over():
     test2 = test1.clone()
 
     # UnicodeSet &icu::UnicodeSet::closeOver(int32_t attribute)
-    result = test2.close_over(UnicodeSet.CASE_INSENSITIVE |
-                              UnicodeSet.ADD_CASE_MAPPINGS)
+    result = test2.close_over(
+        UnicodeSet.CASE_INSENSITIVE | UnicodeSet.ADD_CASE_MAPPINGS
+    )
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
 
@@ -379,16 +394,18 @@ def test_complement():
     #
     # [4]
     # UnicodeSet &icu::UnicodeSet::complement()
-    result = (test1.complement(UnicodeString("ab"))
-              .complement("cd")
-              .complement(0xdf)
-              .complement(0x30, 0x39)
-              .complement())
+    result = (
+        test1.complement(UnicodeString("ab"))
+        .complement("cd")
+        .complement(0xDF)
+        .complement(0x30, 0x39)
+        .complement()
+    )
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 13  # [0-9\u00DF{ab}{cd}]
     assert test1.contains(0x30, 0x39)
-    assert test1.contains(0xdf)
+    assert test1.contains(0xDF)
     assert test1.contains("ab")
     assert test1.contains("cd")
 
@@ -404,14 +421,16 @@ def test_complement_all():
     #
     # [2]
     # UnicodeSet &icu::UnicodeSet::complementAll(const UnicodeString &s)
-    result = (test1.complement_all(test2)
-              .complement_all(UnicodeString("ab"))
-              .complement_all("cd"))
+    result = (
+        test1.complement_all(test2)
+        .complement_all(UnicodeString("ab"))
+        .complement_all("cd")
+    )
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 12 - 10 + 2 + 2  # [a-d\u00DF{ab}]
     assert test1.contains(0x61, 0x64)
-    assert test1.contains(0xdf)
+    assert test1.contains(0xDF)
     assert test1.contains("ab")
 
 
@@ -452,7 +471,7 @@ def test_contains_all():
     # [1]
     # UBool icu::UnicodeSet::containsAll(const UnicodeSet &c)
     assert test1.contains_all(UnicodeSet(0x30, 0x39))
-    assert not test1.contains_all(UnicodeSet(0x2f, 0x3a))
+    assert not test1.contains_all(UnicodeSet(0x2F, 0x3A))
 
     # [2]
     # UBool icu::UnicodeSet::containsAll(const UnicodeString &s)
@@ -468,8 +487,8 @@ def test_contains_none():
 
     # [1]
     # UBool icu::UnicodeSet::containsNone(const UnicodeSet &c)
-    assert not test1.contains_none(UnicodeSet(0x2f, 0x3a))
-    assert test1.contains_none(UnicodeSet(0x2f, 0x2f))
+    assert not test1.contains_none(UnicodeSet(0x2F, 0x3A))
+    assert test1.contains_none(UnicodeSet(0x2F, 0x2F))
 
     # [2]
     # UBool icu::UnicodeSet::containsNone(const UnicodeString &s)
@@ -481,8 +500,8 @@ def test_contains_none():
 
     # [3]
     # UBool icu::UnicodeSet::containsNone(UChar32 start, UChar32 end)
-    assert not test1.contains_none(0x2f, 0x3a)
-    assert test1.contains_none(0x2f, 0x2f)
+    assert not test1.contains_none(0x2F, 0x3A)
+    assert test1.contains_none(0x2F, 0x2F)
 
 
 def test_contains_some():
@@ -503,8 +522,8 @@ def test_contains_some():
 
     # [3]
     # UBool icu::UnicodeSet::containsSome(UChar32 start, UChar32 end)
-    assert test1.contains_some(0x2f, 0x3a)
-    assert not test1.contains_some(0x2f, 0x2f)
+    assert test1.contains_some(0x2F, 0x3A)
+    assert not test1.contains_some(0x2F, 0x2F)
 
 
 def test_create_from():
@@ -629,13 +648,13 @@ def test_remove():
     #
     # [3]
     # UnicodeSet &icu::UnicodeSet::remove(UChar32 start, UChar32 end)
-    result = test1.remove(UnicodeString("ab")).remove(0xdf).remove(0x30, 0x39)
+    result = test1.remove(UnicodeString("ab")).remove(0xDF).remove(0x30, 0x39)
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 0
 
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
-    result = test1.remove("ab").remove(0xdf).remove(0x30, 0x39)
+    result = test1.remove("ab").remove(0xDF).remove(0x30, 0x39)
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 0
@@ -656,7 +675,7 @@ def test_remove_all():
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 12 - 10  # [\u00DF{ab}]
-    assert test2.contains(0xdf)
+    assert test2.contains(0xDF)
     assert test2.contains(UnicodeString("ab"))
 
     test2 = test1.clone()
@@ -664,7 +683,7 @@ def test_remove_all():
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 12 - 10  # [\u00DF{ab}]
-    assert test2.contains(0xdf)
+    assert test2.contains(0xDF)
     assert test2.contains(UnicodeString("ab"))
 
 
@@ -678,7 +697,7 @@ def test_remove_all_strings():
     assert id(result) == id(test1)
     assert test1.size() == 11  # [0-9\u00DF]
     assert test1.contains(0x30, 0x39)
-    assert test1.contains(0xdf)
+    assert test1.contains(0xDF)
     assert not test1.contains("ab")
 
 
@@ -690,11 +709,11 @@ def test_retain():
 
     # [1]
     # UnicodeSet &icu::UnicodeSet::retain(UChar32 c)
-    result = test2.retain(0xdf)
+    result = test2.retain(0xDF)
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 1 + 1  # [\u00DF{ab}]
-    assert test1.contains(0xdf)
+    assert test1.contains(0xDF)
 
     # [2]
     # UnicodeSet &icu::UnicodeSet::retain(UChar32 start, UChar32 end)
@@ -719,7 +738,7 @@ def test_retain_69():
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 1 + 1  # [\u00DF{ab}]
-    assert test2.contains(0xdf)
+    assert test2.contains(0xDF)
     assert test2.contains("ab")
 
     result = test3.retain("ab")
@@ -737,11 +756,11 @@ def test_retain_all():
 
     # [1]
     # UnicodeSet &icu::UnicodeSet::retainAll(const UnicodeSet &c)
-    result = test2.retain_all(UnicodeSet(0xdf, 0xdf))
+    result = test2.retain_all(UnicodeSet(0xDF, 0xDF))
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
     assert test2.size() == 1  # [\u00DF]
-    assert test2.contains(0xdf)
+    assert test2.contains(0xDF)
 
     # [2]
     # UnicodeSet &icu::UnicodeSet::retainAll(const UnicodeString &s)
@@ -768,8 +787,10 @@ def test_serialize():
     assert isinstance(dest, list)
     assert dest == [
         4,  # length=((n+2*m)|(m!=0?0x8000:0)) (n=4, m=0)
-        ord("0"), ord("9") + 1,  # bmp code points
-        0xdf, 0xdf + 1,
+        ord("0"),
+        ord("9") + 1,  # bmp code points
+        0xDF,
+        0xDF + 1,
     ]
 
     test2 = UnicodeSet(UnicodeString("[\U0001F000-\U0001F003]"))
@@ -778,8 +799,10 @@ def test_serialize():
     assert dest == [
         (0 + 2 * 2) | 0x8000,  # length=((n+2*m)|(m!=0?0x8000:0)) (n=0, m=2)
         0,  # bmpLength
-        1, 0xf000,  # supplementary code points
-        (0x1f003 + 1) >> 16, (0x1f003 + 1) & 0xffff,
+        1,
+        0xF000,  # supplementary code points
+        (0x1F003 + 1) >> 16,
+        (0x1F003 + 1) & 0xFFFF,
     ]
 
 
@@ -792,10 +815,7 @@ def test_span():
     #       int32_t length,
     #       USetSpanCondition spanCondition
     # )
-    assert test1.span(
-        "abcde",
-        -1,
-        USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    assert test1.span("abcde", -1, USetSpanCondition.USET_SPAN_CONTAINED) == 2
 
     # [2]
     # int32_t icu::UnicodeSet::span(
@@ -803,10 +823,12 @@ def test_span():
     #       int32_t start,
     #       USetSpanCondition spanCondition
     # )
-    assert test1.span(
-        UnicodeString("abcde"),
-        0,
-        USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    assert (
+        test1.span(
+            UnicodeString("abcde"), 0, USetSpanCondition.USET_SPAN_CONTAINED
+        )
+        == 2
+    )
 
 
 def test_span_back():
@@ -818,10 +840,10 @@ def test_span_back():
     #       int32_t length,
     #       USetSpanCondition spanCondition
     # )
-    assert test1.span_back(
-        "aaaab",
-        -1,
-        USetSpanCondition.USET_SPAN_CONTAINED) == 3
+    assert (
+        test1.span_back("aaaab", -1, USetSpanCondition.USET_SPAN_CONTAINED)
+        == 3
+    )
 
     # [2]
     # int32_t icu::UnicodeSet::spanBack(
@@ -829,10 +851,14 @@ def test_span_back():
     #       int32_t limit,
     #       USetSpanCondition spanCondition
     # )
-    assert test1.span_back(
-        UnicodeString("aaaab"),
-        INT32_MAX,
-        USetSpanCondition.USET_SPAN_CONTAINED) == 3
+    assert (
+        test1.span_back(
+            UnicodeString("aaaab"),
+            INT32_MAX,
+            USetSpanCondition.USET_SPAN_CONTAINED,
+        )
+        == 3
+    )
 
 
 def test_unicode_set():
