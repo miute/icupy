@@ -13,7 +13,12 @@ if sys.platform.startswith("win"):
         if sys.maxsize > 2 ** 32
         else "bin"
     ).resolve()
-    assert path.is_dir(), path  # ICU4C not found
+    if not path.is_dir():
+        raise FileNotFoundError(
+            "%s is not a valid directory. "
+            "Check the ICU_ROOT environment variable setting (ICU_ROOT=%s)"
+            % (path, os.getenv("ICU_ROOT", ""))
+        )
     if sys.version_info[:2] >= (3, 8):
         os.add_dll_directory(path)
     else:
