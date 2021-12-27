@@ -1,9 +1,12 @@
-recursive-exclude src/build* *
-exclude src/icupy/*.pyd src/icupy/*.so
+include LICENSE
+include _build.py
+include src/.clang-format
+include src/CMakeLists.txt
+include src/*.cpp
+include src/*.hpp
+include tests/*.py
 
-include _build.py LICENSE src/CMakeLists.txt src/*.cpp src/*.hpp tests/*.py
-
-recursive-include src/third_party LICENSE* README*
+recursive-include src/third_party LICEN[CS]E* README*
 
 include src/third_party/pybind11/CMakeLists.txt
 graft src/third_party/pybind11/include
