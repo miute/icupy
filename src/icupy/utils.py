@@ -1,19 +1,17 @@
 import sys
 from contextlib import contextmanager
-from typing import Any
+from typing import Any, Iterator
 
 if sys.version_info[:2] >= (3, 9):
     from collections.abc import Callable
-    from contextlib import AbstractContextManager
 else:
     from typing import Callable
-    from typing import ContextManager as AbstractContextManager
 
 __all__ = ["gc"]
 
 
 @contextmanager
-def gc(obj: Any, closer: Callable[[Any], Any]) -> AbstractContextManager[Any]:
+def gc(obj: Any, closer: Callable[[Any], Any]) -> Iterator[Any]:
     """Context to automatically close something at the end of a block.
 
     Code like this:
@@ -31,7 +29,7 @@ def gc(obj: Any, closer: Callable[[Any], Any]) -> AbstractContextManager[Any]:
         try:
             <block>
         finally:
-            <module>.close(<f>)
+            <module>.close(f)
     """
     assert callable(closer)
     try:

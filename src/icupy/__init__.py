@@ -8,7 +8,7 @@ if sys.platform.startswith("win"):
     import os
     from pathlib import Path
 
-    path = (
+    path = (  # type: ignore
         Path(os.getenv("ICU_ROOT", "C:/icu")) / "bin64"
         if sys.maxsize > 2 ** 32
         else "bin"
@@ -27,10 +27,10 @@ if sys.platform.startswith("win"):
         )
     del path
 
-from . import icu  # noqa
+from . import icu  # type: ignore
 
-__version__ = icu.VERSION_INFO  # noqa
+__version__ = icu.VERSION_INFO
 
 # DEPRECATED: ICUException is deprecated. Use ICUError instead.
 # TODO: Remove ICUException in a future release.
-ICUException = icu.ICUError  # noqa
+ICUException = icu.ICUError
