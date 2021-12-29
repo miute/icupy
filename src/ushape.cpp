@@ -1,16 +1,18 @@
 #include "main.hpp"
 #include <unicode/ushape.h>
 
+using namespace icu;
+
 void init_ushape(py::module &m) {
   m.def(
       "u_shape_arabic",
       [](const char16_t *source, int32_t source_length, uint32_t options) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto dest_size = u_shapeArabic(source, source_length, nullptr, 0, options, &error_code);
+        ErrorCode error_code;
+        auto dest_size = u_shapeArabic(source, source_length, nullptr, 0, options, error_code);
         std::u16string result(dest_size, u'\0');
-        error_code = U_ZERO_ERROR;
-        u_shapeArabic(source, source_length, result.data(), dest_size, options, &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        u_shapeArabic(source, source_length, result.data(), dest_size, options, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

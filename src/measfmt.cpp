@@ -26,9 +26,9 @@ void init_measfmt(py::module &m) {
   py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat");
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   fmt.def(py::init([](const Locale &locale, UMeasureFormatWidth width) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<MeasureFormat>(locale, width, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -37,9 +37,9 @@ void init_measfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, UMeasureFormatWidth width) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<MeasureFormat>(locale, width, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -60,9 +60,9 @@ void init_measfmt(py::module &m) {
   fmt.def_static(
          "create_currency_format",
          [](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = MeasureFormat::createCurrencyFormat(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -72,18 +72,18 @@ void init_measfmt(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_currency_format",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = MeasureFormat::createCurrencyFormat(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("locale"))
       .def_static("create_currency_format", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = MeasureFormat::createCurrencyFormat(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -93,9 +93,9 @@ void init_measfmt(py::module &m) {
          "format",
          [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to,
             FieldPosition &pos) -> UnicodeString & {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto &result = self.format(obj, append_to, pos, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -106,9 +106,9 @@ void init_measfmt(py::module &m) {
           "format",
           [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -118,9 +118,9 @@ void init_measfmt(py::module &m) {
           // [4] icu::Format::format
           "format",
           [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -131,9 +131,9 @@ void init_measfmt(py::module &m) {
       "format_measure_per_unit",
       [](const MeasureFormat &self, const Measure &measure, const MeasureUnit &per_unit, UnicodeString &append_to,
          FieldPosition &pos) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.formatMeasurePerUnit(measure, per_unit, append_to, pos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -146,12 +146,12 @@ void init_measfmt(py::module &m) {
       "format_measures",
       [](const MeasureFormat &self, const std::vector<Measure> &measures, int32_t measure_count,
          UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         if (measure_count == -1) {
           measure_count = static_cast<int32_t>(measures.size());
         }
         auto &result = self.formatMeasures(measures.data(), measure_count, append_to, pos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -163,9 +163,9 @@ void init_measfmt(py::module &m) {
   fmt.def(
       "get_unit_display_name",
       [](const MeasureFormat &self, const MeasureUnit &unit) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getUnitDisplayName(unit, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -189,9 +189,9 @@ void init_measfmt(py::module &m) {
           // [3] icu::Format::parseObject
           "parse_object",
           [](const MeasureFormat &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -200,9 +200,9 @@ void init_measfmt(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const MeasureFormat &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

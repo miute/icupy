@@ -1,4 +1,5 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
 #include <sstream>
 #include <unicode/formattedvalue.h>
@@ -39,9 +40,9 @@ void init_formattedvalue(py::module &m) {
   fv.def(
       "append_to",
       [](FormattedValue &self, Appendable &appendable) -> Appendable & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -50,26 +51,26 @@ void init_formattedvalue(py::module &m) {
   fv.def(
       "next_position",
       [](const FormattedValue &self, ConstrainedFieldPosition &cfpos) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("cfpos"));
   fv.def("to_string", [](const FormattedValue &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   fv.def("to_temp_string", [](const FormattedValue &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toTempString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

@@ -56,9 +56,9 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .def(
           // [7] Formattable::Formattable(StringPiece number, UErrorCode &status)
           py::init([](const char *number) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<Formattable>(number, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -95,10 +95,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .def(
           "__getitem__",
           [](Formattable &self, int32_t index) -> Formattable & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             int32_t count;
             self.getArray(count, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             if (index < 0) {
@@ -117,10 +117,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   // TODO: Implement "const Formattable *icu::Formattable::fromUFormattable(const UFormattable *fmt)".
   // TODO: Implement "Formattable *icu::Formattable::fromUFormattable(UFormattable *fmt)".
   fmt.def("get_array", [](const Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     int32_t count;
     auto array = self.getArray(count, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     std::vector<Formattable> result(count);
@@ -130,41 +130,41 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     return result;
   });
   fmt.def("get_date", [](const Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getDate(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   fmt.def("get_decimal_number", [](Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto str = self.getDecimalNumber(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return py::str(str.data());
   });
   fmt.def("get_double", [](const Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getDouble(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   fmt.def("get_int64", [](const Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getInt64(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   fmt.def("get_long", [](const Formattable &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto result = self.getLong(error_code);
-    if (U_FAILURE(error_code)) {
+    ErrorCode error_code;
+    auto result = self.getLong(static_cast<UErrorCode &>(error_code));
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -206,9 +206,9 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       py::return_value_policy::reference);
   fmt.def("get_string",
           [](const Formattable &self) -> const UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.getString(error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -216,9 +216,9 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .def(
           "get_string",
           [](const Formattable &self, UnicodeString &result) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &value = self.getString(result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return value;
@@ -239,9 +239,9 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   fmt.def(
       "set_decimal_number",
       [](Formattable &self, const char *number_string) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setDecimalNumber(number_string, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },

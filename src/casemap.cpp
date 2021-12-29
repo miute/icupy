@@ -4,7 +4,6 @@
 #include <unicode/brkiter.h>
 #include <unicode/casemap.h>
 #include <unicode/edits.h>
-#include <unicode/errorcode.h>
 
 using namespace icu;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 59)

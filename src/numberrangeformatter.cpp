@@ -1,7 +1,7 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
 #include <pybind11/stl.h>
-#include <unicode/errorcode.h>
 #include <unicode/numberrangeformatter.h>
 
 using namespace icu;
@@ -38,9 +38,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   fnr.def(
       "append_to",
       [](const FormattedNumberRange &self, Appendable &appendable) -> Appendable & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -48,18 +48,18 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       py::arg("appendable"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fnr.def("get_decimal_numbers", [](const FormattedNumberRange &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getDecimalNumbers<std::string>(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
   fnr.def("get_identity_result", [](const FormattedNumberRange &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getIdentityResult(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -68,9 +68,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   fnr.def(
       "next_position",
       [](const FormattedNumberRange &self, ConstrainedFieldPosition &cfpos) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -78,18 +78,18 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       py::arg("cfpos"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
   fnr.def("to_string", [](const FormattedNumberRange &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   fnr.def("to_temp_string", [](const FormattedNumberRange &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toTempString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -101,9 +101,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   lnrf.def(
       "format_formattable_range",
       [](const LocalizedNumberRangeFormatter &self, const Formattable &first, const Formattable &second) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatFormattableRange(first, second, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

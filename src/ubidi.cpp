@@ -4,6 +4,8 @@
 #include <pybind11/stl.h>
 #include <unicode/ustring.h>
 
+using namespace icu;
+
 _UBiDiPtr::_UBiDiPtr(UBiDi *p) : p_(p) {}
 _UBiDiPtr::~_UBiDiPtr() {}
 UBiDi *_UBiDiPtr::get() const { return p_; }
@@ -155,9 +157,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_count_runs",
       [](_UBiDiPtr &bidi) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ubidi_countRuns(bidi, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ubidi_countRuns(bidi, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -193,9 +195,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_levels",
       [](_UBiDiPtr &bidi) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = ubidi_getLevels(bidi, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = ubidi_getLevels(bidi, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         const auto length = ubidi_getProcessedLength(bidi);
@@ -206,9 +208,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_logical_index",
       [](_UBiDiPtr &bidi, int32_t visual_index) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ubidi_getLogicalIndex(bidi, visual_index, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ubidi_getLogicalIndex(bidi, visual_index, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -217,13 +219,13 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_logical_map",
       [](_UBiDiPtr &bidi) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         const int32_t length = ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_INSERT_MARKS
                                    ? ubidi_getResultLength(bidi)
                                    : ubidi_getProcessedLength(bidi);
         std::vector<int32_t> result(length);
-        ubidi_getLogicalMap(bidi, result.data(), &error_code);
-        if (U_FAILURE(error_code)) {
+        ubidi_getLogicalMap(bidi, result.data(), error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -241,12 +243,12 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_paragraph",
       [](_UBiDiPtr &bidi, int32_t char_index) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         int32_t para_start;
         int32_t para_limit;
         UBiDiLevel para_level;
-        auto result = ubidi_getParagraph(bidi, char_index, &para_start, &para_limit, &para_level, &error_code);
-        if (U_FAILURE(error_code)) {
+        auto result = ubidi_getParagraph(bidi, char_index, &para_start, &para_limit, &para_level, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return py::make_tuple(result, para_start, para_limit, para_level);
@@ -255,12 +257,12 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_paragraph_by_index",
       [](_UBiDiPtr &bidi, int32_t para_index) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         int32_t para_start;
         int32_t para_limit;
         UBiDiLevel para_level;
-        ubidi_getParagraphByIndex(bidi, para_index, &para_start, &para_limit, &para_level, &error_code);
-        if (U_FAILURE(error_code)) {
+        ubidi_getParagraphByIndex(bidi, para_index, &para_start, &para_limit, &para_level, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return py::make_tuple(para_start, para_limit, para_level);
@@ -283,9 +285,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_visual_index",
       [](_UBiDiPtr &bidi, int32_t logical_index) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ubidi_getVisualIndex(bidi, logical_index, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ubidi_getVisualIndex(bidi, logical_index, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -294,13 +296,13 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_get_visual_map",
       [](_UBiDiPtr &bidi) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         const int32_t length = ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_REMOVE_CONTROLS
                                    ? ubidi_getProcessedLength(bidi)
                                    : ubidi_getResultLength(bidi);
         std::vector<int32_t> result(length);
-        ubidi_getVisualMap(bidi, result.data(), &error_code);
-        if (U_FAILURE(error_code)) {
+        ubidi_getVisualMap(bidi, result.data(), error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -335,9 +337,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_open_sized",
       [](int32_t max_length, int32_t max_run_count) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto bidi = ubidi_openSized(max_length, max_run_count, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto bidi = ubidi_openSized(max_length, max_run_count, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UBiDiPtr>(bidi);
@@ -380,9 +382,9 @@ void init_ubidi(py::module &m) {
 
         UBiDiClassCallback *old_fn;
         const void *old_context;
-        UErrorCode error_code = U_ZERO_ERROR;
-        ubidi_setClassCallback(bidi, fp, cp, &old_fn, &old_context, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        ubidi_setClassCallback(bidi, fp, cp, &old_fn, &old_context, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         if (old_fn == new_fn.callback) {
@@ -399,7 +401,7 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_set_context",
       [](_UBiDiPtr &bidi, const UChar *prologue, int32_t pro_length, const UChar *epilogue, int32_t epi_length) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         std::shared_ptr<UChar[]> prologue_ptr;
         if (prologue) {
           int32_t n = pro_length == -1 ? u_strlen(prologue) : std::max(0, pro_length);
@@ -416,8 +418,8 @@ void init_ubidi(py::module &m) {
           u_memset(dest, 0, n + 1);
           u_strncpy(dest, epilogue, n);
         }
-        ubidi_setContext(bidi, prologue_ptr.get(), pro_length, epilogue_ptr.get(), epi_length, &error_code);
-        if (U_FAILURE(error_code)) {
+        ubidi_setContext(bidi, prologue_ptr.get(), pro_length, epilogue_ptr.get(), epi_length, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         bidi.set_prologue(prologue_ptr);
@@ -430,9 +432,9 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_set_line",
       [](_UBiDiPtr &para_bidi, int32_t start, int32_t limit, _UBiDiPtr &line_bidi) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        ubidi_setLine(para_bidi, start, limit, line_bidi, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        ubidi_setLine(para_bidi, start, limit, line_bidi, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -441,7 +443,7 @@ void init_ubidi(py::module &m) {
       "ubidi_set_para",
       [](_UBiDiPtr &bidi, const UChar *text, int32_t length, UBiDiLevel para_level,
          std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         std::shared_ptr<UChar[]> text_ptr;
         if (text) {
           int32_t n = length == -1 ? u_strlen(text) : std::max(0, length);
@@ -455,8 +457,8 @@ void init_ubidi(py::module &m) {
           embedding_levels_ptr = std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels->size()]);
           std::copy(embedding_levels->begin(), embedding_levels->end(), embedding_levels_ptr.get());
         }
-        ubidi_setPara(bidi, text_ptr.get(), length, para_level, embedding_levels_ptr.get(), &error_code);
-        if (U_FAILURE(error_code)) {
+        ubidi_setPara(bidi, text_ptr.get(), length, para_level, embedding_levels_ptr.get(), error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         bidi.set_text(text_ptr);
@@ -475,19 +477,19 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_write_reordered",
       [](_UBiDiPtr &bidi, uint16_t options) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         int32_t length = 0;
         if (options & UBIDI_INSERT_LRM_FOR_NUMERIC) {
-          length = ubidi_getLength(bidi) + 2 * ubidi_countRuns(bidi, &error_code);
+          length = ubidi_getLength(bidi) + 2 * ubidi_countRuns(bidi, error_code);
         } else if (options & UBIDI_REMOVE_BIDI_CONTROLS) {
           length = ubidi_getLength(bidi);
         } else {
           length = ubidi_getProcessedLength(bidi);
         }
-        error_code = U_ZERO_ERROR;
+        error_code.reset();
         std::u16string result(length, u'\0');
-        length = ubidi_writeReordered(bidi, result.data(), static_cast<int32_t>(result.size()), options, &error_code);
-        if (U_FAILURE(error_code)) {
+        length = ubidi_writeReordered(bidi, result.data(), static_cast<int32_t>(result.size()), options, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         result.resize(length);
@@ -497,11 +499,11 @@ void init_ubidi(py::module &m) {
   m.def(
       "ubidi_write_reverse",
       [](const UChar *src, int32_t src_length, uint16_t options) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         std::u16string result(src_length, u'\0');
         const auto length = ubidi_writeReverse(src, src_length, result.data(), static_cast<int32_t>(result.size()),
-                                               options, &error_code);
-        if (U_FAILURE(error_code)) {
+                                               options, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         result.resize(length);

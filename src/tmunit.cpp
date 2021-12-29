@@ -26,9 +26,9 @@ void init_tmunit(py::module &m) {
   tu.def_static(
       "create_instance",
       [](TimeUnit::UTimeUnitFields time_unit_field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = TimeUnit::createInstance(time_unit_field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

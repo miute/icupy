@@ -16,9 +16,9 @@ void init_dtptngen(py::module &m) {
           "add_pattern",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern, UBool override,
              UnicodeString &conflicting_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.addPattern(pattern, override, conflicting_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -29,9 +29,9 @@ void init_dtptngen(py::module &m) {
           "add_pattern",
           [](DateTimePatternGenerator &self, const char16_t *pattern, UBool override,
              UnicodeString &conflicting_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.addPattern(pattern, override, conflicting_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -39,9 +39,9 @@ void init_dtptngen(py::module &m) {
           py::arg("pattern"), py::arg("override"), py::arg("conflicting_pattern"));
   dtpg.def("clone", &DateTimePatternGenerator::clone);
   dtpg.def_static("create_empty_instance", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = DateTimePatternGenerator::createEmptyInstance(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -49,9 +49,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def_static(
           "create_instance",
           [](const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -61,18 +61,18 @@ void init_dtptngen(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("locale"))
       .def_static("create_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = DateTimePatternGenerator::createInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -82,9 +82,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def(
           "get_base_skeleton",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBaseSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -94,18 +94,18 @@ void init_dtptngen(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "get_base_skeleton",
           [](DateTimePatternGenerator &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBaseSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("pattern"));
   dtpg.def("get_base_skeletons", [](const DateTimePatternGenerator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getBaseSkeletons(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -113,9 +113,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def(
           "get_best_pattern",
           [](DateTimePatternGenerator &self, const UnicodeString &skeleton, UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBestPattern(skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -125,9 +125,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "get_best_pattern",
           [](DateTimePatternGenerator &self, const char16_t *skeleton, UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBestPattern(skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -136,9 +136,9 @@ void init_dtptngen(py::module &m) {
       .def(
           "get_best_pattern",
           [](DateTimePatternGenerator &self, const UnicodeString &skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBestPattern(skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -148,9 +148,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "get_best_pattern",
           [](DateTimePatternGenerator &self, const char16_t *skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBestPattern(skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -160,9 +160,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def("get_decimal", &DateTimePatternGenerator::getDecimal);
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   dtpg.def("get_default_hour_cycle", [](const DateTimePatternGenerator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getDefaultHourCycle(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -184,9 +184,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def(
           "get_skeleton",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -196,18 +196,18 @@ void init_dtptngen(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "get_skeleton",
           [](DateTimePatternGenerator &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("pattern"));
   dtpg.def("get_skeletons", [](const DateTimePatternGenerator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getSkeletons(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -217,9 +217,9 @@ void init_dtptngen(py::module &m) {
           "replace_field_types",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern, const UnicodeString &skeleton,
              UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -230,9 +230,9 @@ void init_dtptngen(py::module &m) {
           "replace_field_types",
           [](DateTimePatternGenerator &self, const char16_t *pattern, const UnicodeString &skeleton,
              UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -243,9 +243,9 @@ void init_dtptngen(py::module &m) {
           "replace_field_types",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern, const char16_t *skeleton,
              UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -257,9 +257,9 @@ void init_dtptngen(py::module &m) {
           "replace_field_types",
           [](DateTimePatternGenerator &self, const char16_t *pattern, const char16_t *skeleton,
              UDateTimePatternMatchOptions options) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, options, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -269,9 +269,9 @@ void init_dtptngen(py::module &m) {
           // [2] DateTimePatternGenerator::replaceFieldTypes
           "replace_field_types",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern, const UnicodeString &skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -281,9 +281,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "replace_field_types",
           [](DateTimePatternGenerator &self, const char16_t *pattern, const UnicodeString &skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -293,9 +293,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "replace_field_types",
           [](DateTimePatternGenerator &self, const UnicodeString &pattern, const char16_t *skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -306,9 +306,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "replace_field_types",
           [](DateTimePatternGenerator &self, const char16_t *pattern, const char16_t *skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.replaceFieldTypes(pattern, skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -347,9 +347,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def_static(
           "static_get_base_skeleton",
           [](const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::staticGetBaseSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -359,9 +359,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "static_get_base_skeleton",
           [](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::staticGetBaseSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -370,9 +370,9 @@ void init_dtptngen(py::module &m) {
   dtpg.def_static(
           "static_get_skeleton",
           [](const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::staticGetSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -382,9 +382,9 @@ void init_dtptngen(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "static_get_skeleton",
           [](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateTimePatternGenerator::staticGetSkeleton(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;

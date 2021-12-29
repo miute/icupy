@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include <sstream>
-#include <unicode/errorcode.h>
 
 using namespace icu;
 

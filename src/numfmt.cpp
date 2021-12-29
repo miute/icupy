@@ -62,9 +62,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def_static(
         "create_currency_instance",
         [](const Locale &in_locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormat::createCurrencyInstance(in_locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -74,18 +74,18 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char *in_locale -> const Locale &in_locale
           "create_currency_instance",
           [](const char *in_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createCurrencyInstance(in_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("in_locale"))
       .def_static("create_currency_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = NumberFormat::createCurrencyInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -93,9 +93,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def_static(
         "create_instance",
         [](const Locale &desired_locale, UNumberFormatStyle style) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormat::createInstance(desired_locale, style, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -105,9 +105,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char *desired_locale -> const Locale &desired_locale
           "create_instance",
           [](const char *desired_locale, UNumberFormatStyle style) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createInstance(desired_locale, style, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -116,9 +116,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       .def_static(
           "create_instance",
           [](const Locale &in_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createInstance(in_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -128,18 +128,18 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char *in_locale -> const Locale &in_locale
           "create_instance",
           [](const char *in_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createInstance(in_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("in_locale"))
       .def_static("create_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = NumberFormat::createInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -147,9 +147,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def_static(
         "create_percent_instance",
         [](const Locale &in_locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormat::createPercentInstance(in_locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -159,9 +159,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char *in_locale -> const Locale &in_locale
           "create_percent_instance",
           [](const char *in_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createPercentInstance(in_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -170,9 +170,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       .def_static(
           // const char *in_locale -> const Locale &in_locale
           "create_percent_instance", []() {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createPercentInstance(error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -180,9 +180,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def_static(
         "create_scientific_instance",
         [](const Locale &in_locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormat::createScientificInstance(in_locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -192,18 +192,18 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char *in_locale -> const Locale &in_locale
           "create_scientific_instance",
           [](const char *in_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormat::createScientificInstance(in_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("in_locale"))
       .def_static("create_scientific_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = NumberFormat::createScientificInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -214,9 +214,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         "format",
         [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
            FieldPosition &pos) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -228,9 +228,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -240,9 +240,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // [5] Format::format
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -252,9 +252,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // [8] NumberFormat::format
           "format",
           [](const NumberFormat &self, double number, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -269,9 +269,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           "format",
           [](const NumberFormat &self, double number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -290,9 +290,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           "format",
           [](const NumberFormat &self, int32_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -311,9 +311,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           "format",
           [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -324,9 +324,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           "format",
           [](const NumberFormat &self, const char *number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -347,9 +347,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def(
       "get_context",
       [](const NumberFormat &self, UDisplayContextType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getContext(type, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -379,9 +379,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       .def(
           "parse",
           [](const NumberFormat &self, const UnicodeString &text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -390,9 +390,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const NumberFormat &self, const char16_t *text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -423,9 +423,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       .def(
           "parse_object",
           [](const Format &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -434,9 +434,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const Format &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

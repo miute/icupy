@@ -132,15 +132,16 @@ void init_utypes(py::module &m);
 void init_uversion(py::module &m);
 void init_voidptr(py::module &m);
 
-ICUError::ICUError(UErrorCode error_code, const char *message) {
-  error_code_ = error_code;
-  what_.append(u_errorName(error_code));
+ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_code_(error_code) {
+  what_.append(error_code.errorName());
   if (message != nullptr && *message != 0) {
     message_.append(message);
     what_.append(": ");
     what_.append(message);
   }
 }
+
+ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 
 PYBIND11_MODULE(MODULE_NAME, m) {
   static py::exception<ICUError> ex(m, "ICUError");
@@ -150,8 +151,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
         std::rethrow_exception(p);
       }
     } catch (const ICUError &e) {
-      ErrorCode error_code;
-      error_code.set(e.get_error_code());
+      const ErrorCode error_code(e.get_error_code());
       auto message = e.get_message();
       if (message == nullptr || strlen(message) == 0) {
         PyErr_SetObject(ex.ptr(), py::cast(error_code).ptr());

@@ -2,7 +2,6 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
 #include <unicode/decimfmt.h>
-#include <unicode/errorcode.h>
 #include <unicode/locid.h>
 #include <unicode/scientificnumberformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)

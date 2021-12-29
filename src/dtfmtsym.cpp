@@ -35,17 +35,17 @@ void init_dtfmtsym(py::module &m) {
       .export_values();
 
   dfs.def(py::init([]() {
-       UErrorCode error_code = U_ZERO_ERROR;
+       ErrorCode error_code;
        auto result = std::make_unique<DateFormatSymbols>(error_code);
-       if (U_FAILURE(error_code)) {
+       if (error_code.isFailure()) {
          throw ICUError(error_code);
        }
        return result;
      }))
       .def(py::init([](const Locale &locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<DateFormatSymbols>(locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -93,9 +93,9 @@ void init_dtfmtsym(py::module &m) {
   dfs.def(
       "get_locale",
       [](const DateFormatSymbols &self, ULocDataLocaleType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

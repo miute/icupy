@@ -1,6 +1,8 @@
 #include "main.hpp"
 #include <unicode/utmscale.h>
 
+using namespace icu;
+
 void init_utmscale(py::module &m) {
   py::enum_<UDateTimeScale>(
       m, "UDateTimeScale", py::arithmetic(),
@@ -63,9 +65,9 @@ void init_utmscale(py::module &m) {
   m.def(
       "utmscale_from_int64",
       [](int64_t other_time, UDateTimeScale time_scale) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = utmscale_fromInt64(other_time, time_scale, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = utmscale_fromInt64(other_time, time_scale, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -74,9 +76,9 @@ void init_utmscale(py::module &m) {
   m.def(
       "utmscale_get_time_scale_value",
       [](UDateTimeScale time_scale, UTimeScaleValue value) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = utmscale_getTimeScaleValue(time_scale, value, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = utmscale_getTimeScaleValue(time_scale, value, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -85,9 +87,9 @@ void init_utmscale(py::module &m) {
   m.def(
       "utmscale_to_int64",
       [](int64_t universal_time, UDateTimeScale time_scale) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = utmscale_toInt64(universal_time, time_scale, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = utmscale_toInt64(universal_time, time_scale, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

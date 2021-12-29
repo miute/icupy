@@ -9,17 +9,17 @@ void init_currpinf(py::module &m) {
   // icu::CurrencyPluralInfo
   py::class_<CurrencyPluralInfo, UObject> cpi(m, "CurrencyPluralInfo");
   cpi.def(py::init([]() {
-       UErrorCode error_code = U_ZERO_ERROR;
+       ErrorCode error_code;
        auto result = std::make_unique<CurrencyPluralInfo>(error_code);
-       if (U_FAILURE(error_code)) {
+       if (error_code.isFailure()) {
          throw ICUError(error_code);
        }
        return result;
      }))
       .def(py::init([](const Locale &locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -28,9 +28,9 @@ void init_currpinf(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -57,9 +57,9 @@ void init_currpinf(py::module &m) {
   cpi.def(
          "set_currency_plural_pattern",
          [](CurrencyPluralInfo &self, const UnicodeString &plural_count, const UnicodeString &pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -68,9 +68,9 @@ void init_currpinf(py::module &m) {
           // const char16_t *plural_count -> const UnicodeString &plural_count
           "set_currency_plural_pattern",
           [](CurrencyPluralInfo &self, const char16_t *plural_count, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -79,9 +79,9 @@ void init_currpinf(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "set_currency_plural_pattern",
           [](CurrencyPluralInfo &self, const UnicodeString &plural_count, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -91,9 +91,9 @@ void init_currpinf(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "set_currency_plural_pattern",
           [](CurrencyPluralInfo &self, const char16_t *plural_count, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -101,9 +101,9 @@ void init_currpinf(py::module &m) {
   cpi.def(
          "set_locale",
          [](CurrencyPluralInfo &self, const Locale &loc) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setLocale(loc, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -112,9 +112,9 @@ void init_currpinf(py::module &m) {
           // const char *loc -> const Locale &loc
           "set_locale",
           [](CurrencyPluralInfo &self, const char *loc) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setLocale(loc, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -122,9 +122,9 @@ void init_currpinf(py::module &m) {
   cpi.def(
          "set_plural_rules",
          [](CurrencyPluralInfo &self, const UnicodeString &rule_description) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setPluralRules(rule_description, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -133,9 +133,9 @@ void init_currpinf(py::module &m) {
           // const char16_t *rule_description -> const UnicodeString &rule_description
           "set_plural_rules",
           [](CurrencyPluralInfo &self, const char16_t *rule_description) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setPluralRules(rule_description, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

@@ -7,9 +7,9 @@ void init_selfmt(py::module &m) {
   // icu::SelectFormat
   py::class_<SelectFormat, Format> sf(m, "SelectFormat");
   sf.def(py::init([](const UnicodeString &pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = std::make_unique<SelectFormat>(pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -18,9 +18,9 @@ void init_selfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SelectFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -39,9 +39,9 @@ void init_selfmt(py::module &m) {
   sf.def(
         "apply_pattern",
         [](SelectFormat &self, const UnicodeString &pattern) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           self.applyPattern(pattern, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
@@ -50,9 +50,9 @@ void init_selfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
           [](SelectFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -64,9 +64,9 @@ void init_selfmt(py::module &m) {
         "format",
         [](const SelectFormat &self, const Formattable &obj, UnicodeString &append_to,
            FieldPosition &pos) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -77,9 +77,9 @@ void init_selfmt(py::module &m) {
           "format",
           [](const SelectFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -89,9 +89,9 @@ void init_selfmt(py::module &m) {
           // [4] Format::format
           "format",
           [](const SelectFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -102,9 +102,9 @@ void init_selfmt(py::module &m) {
           "format",
           [](const SelectFormat &self, const UnicodeString &keyword, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(keyword, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -115,9 +115,9 @@ void init_selfmt(py::module &m) {
           "format",
           [](const SelectFormat &self, const char16_t *keyword, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(keyword, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -134,9 +134,9 @@ void init_selfmt(py::module &m) {
       .def(
           "parse_object",
           [](const Format &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -145,9 +145,9 @@ void init_selfmt(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const Format &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

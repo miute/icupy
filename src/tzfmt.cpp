@@ -1,4 +1,5 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
@@ -123,9 +124,9 @@ void init_tzfmt(py::module &m) {
   tzf.def_static(
          "create_instance",
          [](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = TimeZoneFormat::createInstance(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -135,9 +136,9 @@ void init_tzfmt(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = TimeZoneFormat::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -148,9 +149,9 @@ void init_tzfmt(py::module &m) {
          "format",
          [](const TimeZoneFormat &self, const Formattable &obj, UnicodeString &append_to,
             FieldPosition &pos) -> UnicodeString & {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto &result = self.format(obj, append_to, pos, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -161,9 +162,9 @@ void init_tzfmt(py::module &m) {
           "format",
           [](const TimeZoneFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -173,9 +174,9 @@ void init_tzfmt(py::module &m) {
           // [4] TimeZoneFormat::format
           "format",
           [](const TimeZoneFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -192,10 +193,10 @@ void init_tzfmt(py::module &m) {
       "format_offset_iso8601_basic",
       [](const TimeZoneFormat &self, int32_t offset, UBool use_utc_indicator, UBool is_short, UBool ignore_seconds,
          UnicodeString &result) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &string =
             self.formatOffsetISO8601Basic(offset, use_utc_indicator, is_short, ignore_seconds, result, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return string;
@@ -206,10 +207,10 @@ void init_tzfmt(py::module &m) {
       "format_offset_iso8601_extended",
       [](const TimeZoneFormat &self, int32_t offset, UBool use_utc_indicator, UBool is_short, UBool ignore_seconds,
          UnicodeString &result) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &string =
             self.formatOffsetISO8601Extended(offset, use_utc_indicator, is_short, ignore_seconds, result, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return string;
@@ -220,9 +221,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
       "format_offset_localized_gmt",
       [](const TimeZoneFormat &self, int32_t offset, UnicodeString &result) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &string = self.formatOffsetLocalizedGMT(offset, result, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return string;
@@ -232,9 +233,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
       "format_offset_short_localized_gmt",
       [](const TimeZoneFormat &self, int32_t offset, UnicodeString &result) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &string = self.formatOffsetShortLocalizedGMT(offset, result, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return string;
@@ -312,9 +313,9 @@ void init_tzfmt(py::module &m) {
           // [2] Format::parseObject
           "parse_object",
           [](const Format &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -323,9 +324,9 @@ void init_tzfmt(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const Format &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -366,9 +367,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
          "set_gmt_offset_digits",
          [](TimeZoneFormat &self, const UnicodeString &digits) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setGMTOffsetDigits(digits, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -377,9 +378,9 @@ void init_tzfmt(py::module &m) {
           // const char16_t *digits -> const UnicodeString &digits
           "set_gmt_offset_digits",
           [](TimeZoneFormat &self, const char16_t *digits) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setGMTOffsetDigits(digits, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -387,9 +388,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
          "set_gmt_offset_pattern",
          [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const UnicodeString &pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setGMTOffsetPattern(type, pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -398,9 +399,9 @@ void init_tzfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "set_gmt_offset_pattern",
           [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setGMTOffsetPattern(type, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -408,9 +409,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
          "set_gmt_pattern",
          [](TimeZoneFormat &self, const UnicodeString &pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setGMTPattern(pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -419,9 +420,9 @@ void init_tzfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "set_gmt_pattern",
           [](TimeZoneFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setGMTPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -429,9 +430,9 @@ void init_tzfmt(py::module &m) {
   tzf.def(
          "set_gmt_zero_format",
          [](TimeZoneFormat &self, const UnicodeString &gmt_zero_format) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setGMTZeroFormat(gmt_zero_format, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -440,9 +441,9 @@ void init_tzfmt(py::module &m) {
           // const char16_t *gmt_zero_format -> const UnicodeString &gmt_zero_format
           "set_gmt_zero_format",
           [](TimeZoneFormat &self, const char16_t *gmt_zero_format) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setGMTZeroFormat(gmt_zero_format, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

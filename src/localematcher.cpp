@@ -1,7 +1,7 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
 #include <pybind11/stl.h>
-#include <unicode/errorcode.h>
 #include <unicode/localematcher.h>
 
 using namespace icu;
@@ -71,9 +71,9 @@ void init_localematcher(py::module &m) {
   lm.def(
         "get_best_match",
         [](const LocaleMatcher &self, const Locale &desired_locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.getBestMatch(desired_locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -83,9 +83,9 @@ void init_localematcher(py::module &m) {
           // const char *desired_locale -> const Locale &desired_locale
           "get_best_match",
           [](const LocaleMatcher &self, const char *desired_locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getBestMatch(desired_locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -94,11 +94,11 @@ void init_localematcher(py::module &m) {
       .def(
           "get_best_match",
           [](const LocaleMatcher &self, const std::vector<Locale> &desired_locales) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto first = desired_locales.data();
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatch(iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -107,9 +107,9 @@ void init_localematcher(py::module &m) {
   lm.def(
       "get_best_match_for_list_string",
       [](const LocaleMatcher &self, const char *desired_locale_list) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getBestMatchForListString(desired_locale_list, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -118,9 +118,9 @@ void init_localematcher(py::module &m) {
   lm.def(
         "get_best_match_result",
         [](const LocaleMatcher &self, const Locale &desired_locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.getBestMatchResult(desired_locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -129,11 +129,11 @@ void init_localematcher(py::module &m) {
       .def(
           "get_best_match_result",
           [](const LocaleMatcher &self, const std::vector<Locale> &desired_locales) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto first = desired_locales.data();
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatchResult(iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -143,9 +143,9 @@ void init_localematcher(py::module &m) {
   lm.def(
         "is_match",
         [](const LocaleMatcher &self, const Locale &desired, const Locale &supported) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.isMatch(desired, supported, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -155,9 +155,9 @@ void init_localematcher(py::module &m) {
           // const char *desired -> const Locale &desired
           "is_match",
           [](const LocaleMatcher &self, const char *desired, const Locale &supported) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.isMatch(desired, supported, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -167,9 +167,9 @@ void init_localematcher(py::module &m) {
           // const char *supported -> const Locale &supported
           "is_match",
           [](const LocaleMatcher &self, const Locale &desired, const char *supported) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.isMatch(desired, supported, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -180,9 +180,9 @@ void init_localematcher(py::module &m) {
           // const char *supported -> const Locale &supported
           "is_match",
           [](const LocaleMatcher &self, const char *desired, const char *supported) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.isMatch(desired, supported, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -199,9 +199,9 @@ void init_localematcher(py::module &m) {
           [](Builder &self, const char *locale) -> Builder & { return self.addSupportedLocale(locale); },
           py::arg("locale"));
   lmb.def("build", [](const Builder &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.build(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -260,9 +260,9 @@ void init_localematcher(py::module &m) {
   lmr.def("get_supported_index", &Result::getSupportedIndex);
   lmr.def("get_supported_locale", &Result::getSupportedLocale, py::return_value_policy::reference);
   lmr.def("make_resolved_locale", [](const Result &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.makeResolvedLocale(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

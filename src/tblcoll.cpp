@@ -50,18 +50,18 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
           "create_instance",
           [](const Locale &loc) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Collator::createInstance(loc, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("loc"))
       .def_static("create_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Collator::createInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -104,14 +104,14 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
       "get_bound",
       [](const std::vector<uint8_t> &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         const auto result_length =
             Collator::getBound(source.data(), source_length, bound_type, no_of_levels, nullptr, 0, error_code);
         std::vector<uint8_t> result(result_length);
-        error_code = U_ZERO_ERROR;
+        error_code.reset();
         Collator::getBound(source.data(), source_length, bound_type, no_of_levels, result.data(), result_length,
                            error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -125,12 +125,12 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
       "get_equivalent_reorder_codes",
       [](int32_t reorder_code) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         const auto dest_capacity = Collator::getEquivalentReorderCodes(reorder_code, nullptr, 0, error_code);
         std::vector<int32_t> result(dest_capacity);
-        error_code = U_ZERO_ERROR;
+        error_code.reset();
         Collator::getEquivalentReorderCodes(reorder_code, result.data(), dest_capacity, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -139,19 +139,19 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
       "get_functional_equivalent",
       [](const char *keyword, const Locale &locale) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         UBool is_available = true;
         auto result = Collator::getFunctionalEquivalent(keyword, locale, is_available, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return py::make_tuple(result, is_available);
       },
       py::arg("keyword"), py::arg("locale"));
   coll.def_static("get_keywords", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = Collator::getKeywords(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -159,9 +159,9 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
       "get_keyword_values",
       [](const char *keyword) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Collator::getKeywordValues(keyword, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -170,9 +170,9 @@ void init_tblcoll(py::module &m) {
   coll.def_static(
       "get_keyword_values_for_locale",
       [](const char *keyword, const Locale &locale, UBool commonly_used) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Collator::getKeywordValuesForLocale(keyword, locale, commonly_used, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -232,9 +232,9 @@ void init_tblcoll(py::module &m) {
   // icu::RuleBasedCollator
   py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator");
   rbc.def(py::init([](const UnicodeString &rules) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -243,18 +243,18 @@ void init_tblcoll(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"))
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -263,18 +263,18 @@ void init_tblcoll(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"), py::arg("collation_strength"))
       .def(py::init([](const UnicodeString &rules, UColAttributeValue decomposition_mode) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -283,9 +283,9 @@ void init_tblcoll(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, UColAttributeValue decomposition_mode) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -293,10 +293,10 @@ void init_tblcoll(py::module &m) {
           py::arg("rules"), py::arg("decomposition_mode"))
       .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength,
                        UColAttributeValue decomposition_mode) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result =
                  std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -306,10 +306,10 @@ void init_tblcoll(py::module &m) {
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength,
                       UColAttributeValue decomposition_mode) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result =
                 std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -320,9 +320,9 @@ void init_tblcoll(py::module &m) {
       // int32_t length, const RuleBasedCollator *base, UErrorCode &status)".
       /*
       .def(py::init([](const std::vector<uint8_t> &bin, int32_t length, const RuleBasedCollator *base) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<RuleBasedCollator>(bin.data(), length, base, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -336,12 +336,12 @@ void init_tblcoll(py::module &m) {
           "__deepcopy__", [](const RuleBasedCollator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   rbc.def("clone", &RuleBasedCollator::clone);
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     const auto capacity = self.cloneBinary(nullptr, 0, error_code);
     std::vector<uint8_t> result(capacity);
-    error_code = U_ZERO_ERROR;
+    error_code.reset();
     self.cloneBinary(result.data(), capacity, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -350,9 +350,9 @@ void init_tblcoll(py::module &m) {
          "compare",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length, const char16_t *target,
             int32_t target_length) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = self.compare(source, source_length, target, target_length, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -361,9 +361,9 @@ void init_tblcoll(py::module &m) {
       .def(
           "compare",
           [](const RuleBasedCollator &self, const UnicodeString &source, const UnicodeString &target, int32_t length) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, length, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -373,9 +373,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "compare",
           [](const RuleBasedCollator &self, const char16_t *source, const UnicodeString &target, int32_t length) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, length, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -385,9 +385,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *target -> const UnicodeString &target
           "compare",
           [](const RuleBasedCollator &self, const UnicodeString &source, const char16_t *target, int32_t length) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, length, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -398,9 +398,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *target -> const UnicodeString &target
           "compare",
           [](const RuleBasedCollator &self, const char16_t *source, const char16_t *target, int32_t length) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, length, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -409,9 +409,9 @@ void init_tblcoll(py::module &m) {
       .def(
           "compare",
           [](const RuleBasedCollator &self, const UnicodeString &source, const UnicodeString &target) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -421,9 +421,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "compare",
           [](const RuleBasedCollator &self, const char16_t *source, const UnicodeString &target) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -433,9 +433,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *target -> const UnicodeString &target
           "compare",
           [](const RuleBasedCollator &self, const UnicodeString &source, const char16_t *target) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -446,9 +446,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *target -> const UnicodeString &target
           "compare",
           [](const RuleBasedCollator &self, const char16_t *source, const char16_t *target) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(source, target, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -459,9 +459,9 @@ void init_tblcoll(py::module &m) {
       .def(
           "compare",
           [](const RuleBasedCollator &self, UCharIterator &s_iter, UCharIterator &t_iter) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.compare(s_iter, t_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -485,9 +485,9 @@ void init_tblcoll(py::module &m) {
   rbc.def(
       "get_attribute",
       [](const RuleBasedCollator &self, UColAttribute attr) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getAttribute(attr, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -497,9 +497,9 @@ void init_tblcoll(py::module &m) {
          "get_collation_key",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length,
             CollationKey &key) -> CollationKey & {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto &result = self.getCollationKey(source, source_length, key, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -508,9 +508,9 @@ void init_tblcoll(py::module &m) {
       .def(
           "get_collation_key",
           [](const RuleBasedCollator &self, const UnicodeString &source, CollationKey &key) -> CollationKey & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.getCollationKey(source, key, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -520,9 +520,9 @@ void init_tblcoll(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "get_collation_key",
           [](const RuleBasedCollator &self, const char16_t *source, CollationKey &key) -> CollationKey & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.getCollationKey(source, key, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -532,12 +532,12 @@ void init_tblcoll(py::module &m) {
   rbc.def("get_max_variable", &RuleBasedCollator::getMaxVariable);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   rbc.def("get_reorder_codes", [](const RuleBasedCollator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
-    error_code = U_ZERO_ERROR;
+    error_code.reset();
     std::vector<int32_t> result(dest_capacity);
     self.getReorderCodes(result.data(), dest_capacity, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -574,17 +574,17 @@ void init_tblcoll(py::module &m) {
           },
           py::arg("source"));
   rbc.def("get_tailored_set", [](const RuleBasedCollator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getTailoredSet(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   rbc.def("get_variable_top", [](const RuleBasedCollator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getVariableTop(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -599,9 +599,9 @@ void init_tblcoll(py::module &m) {
   rbc.def(
       "set_attribute",
       [](RuleBasedCollator &self, UColAttribute attr, UColAttributeValue value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setAttribute(attr, value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -609,9 +609,9 @@ void init_tblcoll(py::module &m) {
   rbc.def(
       "set_max_variable",
       [](RuleBasedCollator &self, UColReorderCode group) -> Collator & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.setMaxVariable(group, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -620,9 +620,9 @@ void init_tblcoll(py::module &m) {
   rbc.def(
       "set_reorder_codes",
       [](RuleBasedCollator &self, const std::vector<int32_t> &reorder_codes, int32_t reorder_codes_length) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setReorderCodes(reorder_codes.data(), reorder_codes_length, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },

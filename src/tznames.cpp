@@ -42,9 +42,9 @@ void init_tznames(py::module &m) {
   tzn.def_static(
          "create_instance",
          [](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = TimeZoneNames::createInstance(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -54,9 +54,9 @@ void init_tznames(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = TimeZoneNames::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -66,9 +66,9 @@ void init_tznames(py::module &m) {
   tzn.def_static(
          "create_tzdb_instance",
          [](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = TimeZoneNames::createTZDBInstance(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -78,9 +78,9 @@ void init_tznames(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_tzdb_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = TimeZoneNames::createTZDBInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -90,9 +90,9 @@ void init_tznames(py::module &m) {
   tzn.def(
          "get_available_meta_zone_ids",
          [](const TimeZoneNames &self, const UnicodeString &tz_id) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = self.getAvailableMetaZoneIDs(tz_id, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -102,18 +102,18 @@ void init_tznames(py::module &m) {
           // const char16_t *tz_id -> const UnicodeString &tz_id
           "get_available_meta_zone_ids",
           [](const TimeZoneNames &self, const char16_t *tz_id) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getAvailableMetaZoneIDs(tz_id, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("tz_id"))
       .def("get_available_meta_zone_ids", [](const TimeZoneNames &self) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getAvailableMetaZoneIDs(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

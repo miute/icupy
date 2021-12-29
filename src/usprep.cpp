@@ -1,6 +1,8 @@
 #include "main.hpp"
 #include "usprepptr.hpp"
 
+using namespace icu;
+
 _UStringPrepProfilePtr::_UStringPrepProfilePtr(UStringPrepProfile *p) : p_(p) {}
 _UStringPrepProfilePtr::~_UStringPrepProfilePtr() {}
 UStringPrepProfile *_UStringPrepProfilePtr::get() const { return p_; }
@@ -36,9 +38,9 @@ void init_usprep(py::module &m) {
   m.def(
       "usprep_open",
       [](const char *path, const char *file_name) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto profile = usprep_open(path, file_name, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto profile = usprep_open(path, file_name, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UStringPrepProfilePtr>(profile);
@@ -47,9 +49,9 @@ void init_usprep(py::module &m) {
   m.def(
       "usprep_open_by_type",
       [](UStringPrepProfileType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto profile = usprep_openByType(type, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto profile = usprep_openByType(type, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UStringPrepProfilePtr>(profile);
@@ -59,12 +61,12 @@ void init_usprep(py::module &m) {
       "usprep_prepare",
       [](_UStringPrepProfilePtr &prep, const char16_t *src, int32_t src_length, int32_t options,
          UParseError *parse_error) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto dest_size = usprep_prepare(prep, src, src_length, nullptr, 0, options, parse_error, &error_code);
+        ErrorCode error_code;
+        auto dest_size = usprep_prepare(prep, src, src_length, nullptr, 0, options, parse_error, error_code);
         std::u16string result(dest_size, '\0');
-        error_code = U_ZERO_ERROR;
-        usprep_prepare(prep, src, src_length, result.data(), dest_size, options, parse_error, &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        usprep_prepare(prep, src, src_length, result.data(), dest_size, options, parse_error, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

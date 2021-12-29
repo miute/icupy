@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include <unicode/caniter.h>
-#include <unicode/errorcode.h>
 
 using namespace icu;
 

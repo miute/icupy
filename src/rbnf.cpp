@@ -16,9 +16,9 @@ void init_rbnf(py::module &m) {
   rbnf.def(
           // [1] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](const UnicodeString &rules, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -27,9 +27,9 @@ void init_rbnf(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -38,9 +38,9 @@ void init_rbnf(py::module &m) {
       .def(
           // [2] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](const UnicodeString &rules, const UnicodeString &localizations, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -49,9 +49,9 @@ void init_rbnf(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, const UnicodeString &localizations, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -60,9 +60,9 @@ void init_rbnf(py::module &m) {
       .def(
           // const char16_t *localizations -> const UnicodeString &localizations
           py::init([](const UnicodeString &rules, const char16_t *localizations, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -72,9 +72,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *rules -> const UnicodeString &rules
           // const char16_t *localizations -> const UnicodeString &localizations
           py::init([](const char16_t *rules, const char16_t *localizations, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -83,9 +83,9 @@ void init_rbnf(py::module &m) {
       .def(
           // [3] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](const UnicodeString &rules, const Locale &locale, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -94,9 +94,9 @@ void init_rbnf(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, const Locale &locale, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -106,9 +106,9 @@ void init_rbnf(py::module &m) {
           // [4] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](const UnicodeString &rules, const UnicodeString &localizations, const Locale &locale,
                       UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -118,9 +118,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *rules -> const UnicodeString &rules
           py::init(
               [](const char16_t *rules, const UnicodeString &localizations, const Locale &locale, UParseError &perror) {
-                UErrorCode error_code = U_ZERO_ERROR;
+                ErrorCode error_code;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-                if (U_FAILURE(error_code)) {
+                if (error_code.isFailure()) {
                   throw ICUError(error_code);
                 }
                 return result;
@@ -130,9 +130,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *localizations -> const UnicodeString &localizations
           py::init(
               [](const UnicodeString &rules, const char16_t *localizations, const Locale &locale, UParseError &perror) {
-                UErrorCode error_code = U_ZERO_ERROR;
+                ErrorCode error_code;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-                if (U_FAILURE(error_code)) {
+                if (error_code.isFailure()) {
                   throw ICUError(error_code);
                 }
                 return result;
@@ -142,9 +142,9 @@ void init_rbnf(py::module &m) {
           // const char *locale -> const Locale &locale
           py::init([](const UnicodeString &rules, const UnicodeString &localizations, const char *locale,
                       UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -154,9 +154,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *rules -> const UnicodeString &rules
           // const char16_t *localizations -> const UnicodeString &localizations
           py::init([](const char16_t *rules, const char16_t *localizations, const Locale &locale, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -167,9 +167,9 @@ void init_rbnf(py::module &m) {
           // const char *locale -> const Locale &locale
           py::init(
               [](const UnicodeString &rules, const char16_t *localizations, const char *locale, UParseError &perror) {
-                UErrorCode error_code = U_ZERO_ERROR;
+                ErrorCode error_code;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-                if (U_FAILURE(error_code)) {
+                if (error_code.isFailure()) {
                   throw ICUError(error_code);
                 }
                 return result;
@@ -180,9 +180,9 @@ void init_rbnf(py::module &m) {
           // const char *locale -> const Locale &locale
           py::init(
               [](const char16_t *rules, const UnicodeString &localizations, const char *locale, UParseError &perror) {
-                UErrorCode error_code = U_ZERO_ERROR;
+                ErrorCode error_code;
                 auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-                if (U_FAILURE(error_code)) {
+                if (error_code.isFailure()) {
                   throw ICUError(error_code);
                 }
                 return result;
@@ -193,9 +193,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *localizations -> const UnicodeString &localizations
           // const char *locale -> const Locale &locale
           py::init([](const char16_t *rules, const char16_t *localizations, const char *locale, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(rules, localizations, locale, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -204,9 +204,9 @@ void init_rbnf(py::module &m) {
       .def(
           // [5] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](URBNFRuleSetTag tag, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(tag, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -215,9 +215,9 @@ void init_rbnf(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](URBNFRuleSetTag tag, const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedNumberFormat>(tag, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -241,9 +241,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -255,9 +255,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -267,9 +267,9 @@ void init_rbnf(py::module &m) {
           // [5] Format::format
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -280,9 +280,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, double number, const UnicodeString &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -293,9 +293,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, double number, const char16_t *rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -316,9 +316,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, double number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -329,9 +329,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, int32_t number, const UnicodeString &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -342,9 +342,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, int32_t number, const char16_t *rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -365,9 +365,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, int32_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -378,9 +378,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, int64_t number, const UnicodeString &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -391,9 +391,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const RuleBasedNumberFormat &self, int64_t number, const char16_t *rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, rule_set_name, to_append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -414,9 +414,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -427,9 +427,9 @@ void init_rbnf(py::module &m) {
           "format",
           [](const NumberFormat &self, char *number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -480,9 +480,9 @@ void init_rbnf(py::module &m) {
   rbnf.def(
       "get_rule_set_display_name_locale",
       [](const RuleBasedNumberFormat &self, int32_t index) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getRuleSetDisplayNameLocale(index, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -507,9 +507,9 @@ void init_rbnf(py::module &m) {
           // [3] NumberFormat::parse
           "parse",
           [](const NumberFormat &self, const UnicodeString &text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -518,9 +518,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const NumberFormat &self, const char16_t *text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -529,9 +529,9 @@ void init_rbnf(py::module &m) {
   rbnf.def(
       "set_context",
       [](RuleBasedNumberFormat &self, UDisplayContext value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setContext(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -544,9 +544,9 @@ void init_rbnf(py::module &m) {
   rbnf.def(
           "set_default_rule_set",
           [](RuleBasedNumberFormat &self, const UnicodeString &rule_set_name) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setDefaultRuleSet(rule_set_name, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -555,9 +555,9 @@ void init_rbnf(py::module &m) {
           // const char16_t *rule_set_name -> const UnicodeString &rule_set_name
           "set_default_rule_set",
           [](RuleBasedNumberFormat &self, const char16_t *rule_set_name) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setDefaultRuleSet(rule_set_name, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

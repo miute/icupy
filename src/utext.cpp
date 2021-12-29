@@ -20,11 +20,11 @@ const std::shared_ptr<void> &_UTextPtr::get_source() const { return source_; }
 _UTextVector::_UTextVector(size_t n) {
   values_ = std::vector<_UTextPtr>(n);
   sources_ = std::vector<UnicodeString>(n);
-  UErrorCode error_code;
+  ErrorCode error_code;
   for (size_t i = 0; i < n; ++i) {
-    error_code = U_ZERO_ERROR;
-    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], &error_code);
-    if (U_FAILURE(error_code)) {
+    error_code.reset();
+    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], error_code);
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
   }
@@ -34,11 +34,11 @@ _UTextVector::_UTextVector(const _UnicodeStringList &iterable) {
   const auto size = iterable.size();
   values_ = std::vector<_UTextPtr>(size);
   sources_ = std::vector<UnicodeString>(iterable.begin(), iterable.end());
-  UErrorCode error_code;
+  ErrorCode error_code;
   for (size_t i = 0; i < size; ++i) {
-    error_code = U_ZERO_ERROR;
-    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], &error_code);
-    if (U_FAILURE(error_code)) {
+    error_code.reset();
+    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], error_code);
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
   }
@@ -101,9 +101,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_clone",
       [](std::optional<_UTextPtr> &dest, const _UTextPtr &src, UBool deep, UBool read_only) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, src.get_source());
@@ -123,9 +123,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_copy",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, int64_t dest_index, UBool move) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        utext_copy(ut, native_start, native_limit, dest_index, move, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        utext_copy(ut, native_start, native_limit, dest_index, move, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -137,12 +137,12 @@ void init_utext(py::module &m) {
   m.def(
       "utext_extract",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        const auto dest_capacity = utext_extract(ut, native_start, native_limit, nullptr, 0, &error_code);
+        ErrorCode error_code;
+        const auto dest_capacity = utext_extract(ut, native_start, native_limit, nullptr, 0, error_code);
         std::u16string result(dest_capacity, u'\0');
-        error_code = U_ZERO_ERROR;
-        utext_extract(ut, native_start, native_limit, result.data(), dest_capacity, &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        utext_extract(ut, native_start, native_limit, result.data(), dest_capacity, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -173,9 +173,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_character_iterator",
       [](std::optional<_UTextPtr> &ut, CharacterIterator *ci) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_openCharacterIterator(ut.value_or(nullptr), ci, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_openCharacterIterator(ut.value_or(nullptr), ci, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -184,9 +184,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_const_unicode_string",
       [](std::optional<_UTextPtr> &ut, const UnicodeString *s) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_openConstUnicodeString(ut.value_or(nullptr), s, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_openConstUnicodeString(ut.value_or(nullptr), s, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -195,9 +195,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_replaceable",
       [](std::optional<_UTextPtr> &ut, Replaceable *rep) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_openReplaceable(ut.value_or(nullptr), rep, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_openReplaceable(ut.value_or(nullptr), rep, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -206,10 +206,10 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_uchars",
       [](std::optional<_UTextPtr> &ut, const UChar *s, int64_t length) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max(int64_t{0}, length));
-        auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, &error_code);
-        if (U_FAILURE(error_code)) {
+        auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
@@ -218,9 +218,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_unicode_string",
       [](std::optional<_UTextPtr> &ut, UnicodeString *s) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_openUnicodeString(ut.value_or(nullptr), s, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_openUnicodeString(ut.value_or(nullptr), s, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -229,10 +229,10 @@ void init_utext(py::module &m) {
   m.def(
       "utext_open_utf8",
       [](std::optional<_UTextPtr> &ut, const char *s, int64_t length) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max(int64_t{0}, length));
-        auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, &error_code);
-        if (U_FAILURE(error_code)) {
+        auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
@@ -248,9 +248,9 @@ void init_utext(py::module &m) {
       "utext_replace",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, const UChar *replacement_text,
          int32_t replacement_length) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = utext_replace(ut, native_start, native_limit, replacement_text, replacement_length, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = utext_replace(ut, native_start, native_limit, replacement_text, replacement_length, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -265,9 +265,9 @@ void init_utext(py::module &m) {
   m.def(
       "utext_setup",
       [](std::optional<_UTextPtr> &ut, int32_t extra_space) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = utext_setup(ut.value_or(nullptr), extra_space, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = utext_setup(ut.value_or(nullptr), extra_space, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);

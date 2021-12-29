@@ -11,9 +11,9 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
          // [1] SimpleDateFormat::SimpleDateFormat
          py::init([]() {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = std::make_unique<SimpleDateFormat>(error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -21,9 +21,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // [2] SimpleDateFormat::SimpleDateFormat
           py::init([](const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -32,9 +32,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -43,9 +43,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // [3] SimpleDateFormat::SimpleDateFormat
           py::init([](const UnicodeString &pattern, const UnicodeString &override) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -54,9 +54,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, const UnicodeString &override) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -65,9 +65,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *override -> const UnicodeString &override
           py::init([](const UnicodeString &pattern, const char16_t *override) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -77,9 +77,9 @@ void init_smpdtfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           // const char16_t *override -> const UnicodeString &override
           py::init([](const char16_t *pattern, const char16_t *override) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -88,9 +88,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // [4] SimpleDateFormat::SimpleDateFormat
           py::init([](const UnicodeString &pattern, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -99,9 +99,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -110,9 +110,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // [5] SimpleDateFormat::SimpleDateFormat
           py::init([](const UnicodeString &pattern, const UnicodeString &override, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -121,9 +121,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, const UnicodeString &override, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -132,9 +132,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *override -> const UnicodeString &override
           py::init([](const UnicodeString &pattern, const char16_t *override, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -144,9 +144,9 @@ void init_smpdtfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           // const char16_t *override -> const UnicodeString &override
           py::init([](const char16_t *pattern, const char16_t *override, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -155,9 +155,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // [7] SimpleDateFormat::SimpleDateFormat
           py::init([](const UnicodeString &pattern, const DateFormatSymbols &format_data) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -166,9 +166,9 @@ void init_smpdtfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, const DateFormatSymbols &format_data) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -189,9 +189,9 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
          "apply_localized_pattern",
          [](SimpleDateFormat &self, const UnicodeString &pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.applyLocalizedPattern(pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -200,9 +200,9 @@ void init_smpdtfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_localized_pattern",
           [](SimpleDateFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyLocalizedPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -225,9 +225,9 @@ void init_smpdtfmt(py::module &m) {
           "format",
           [](const SimpleDateFormat &self, Calendar &cal, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(cal, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -239,9 +239,9 @@ void init_smpdtfmt(py::module &m) {
           "format",
           [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -253,9 +253,9 @@ void init_smpdtfmt(py::module &m) {
           "format",
           [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -265,9 +265,9 @@ void init_smpdtfmt(py::module &m) {
           // [3] Format::format
           "format",
           [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -286,18 +286,18 @@ void init_smpdtfmt(py::module &m) {
           "format",
           [](const DateFormat &self, UDate date, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(date, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("date"), py::arg("append_to"), py::arg("pos_iter"));
   sdf.def("get_2digit_year_start", [](const SimpleDateFormat &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.get2DigitYearStart(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -332,9 +332,9 @@ void init_smpdtfmt(py::module &m) {
           // [3] DateFormat::parse
           "parse",
           [](const DateFormat &self, const UnicodeString &text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.parse(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -344,9 +344,9 @@ void init_smpdtfmt(py::module &m) {
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const DateFormat &self, const char16_t *text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.parse(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -355,9 +355,9 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
       "set_2digit_year_start",
       [](SimpleDateFormat &self, UDate d) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.set2DigitYearStart(d, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -366,9 +366,9 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
       "set_context",
       [](SimpleDateFormat &self, UDisplayContext value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setContext(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -381,9 +381,9 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
       "to_localized_pattern",
       [](const SimpleDateFormat &self, UnicodeString &result) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &string = self.toLocalizedPattern(result, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return string;

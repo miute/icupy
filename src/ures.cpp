@@ -2,6 +2,8 @@
 #include "uresptr.hpp"
 #include <memory>
 
+using namespace icu;
+
 _UResourceBundlePtr::_UResourceBundlePtr(UResourceBundle *p) : p_(p) {}
 _UResourceBundlePtr::~_UResourceBundlePtr() {}
 UResourceBundle *_UResourceBundlePtr::get() const { return p_; }
@@ -44,9 +46,9 @@ void init_ures(py::module &m) {
   m.def(
       "ures_open",
       [](const char *package_name, const char *locale) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto resource_bundle = ures_open(package_name, locale, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto resource_bundle = ures_open(package_name, locale, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
@@ -55,9 +57,9 @@ void init_ures(py::module &m) {
   m.def(
       "ures_open_direct",
       [](const char *package_name, const char *locale) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto resource_bundle = ures_openDirect(package_name, locale, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto resource_bundle = ures_openDirect(package_name, locale, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);

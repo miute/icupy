@@ -9,9 +9,9 @@ void init_plurfmt(py::module &m) {
   pf.def(
         // [1] PluralFormat::PluralFormat
         py::init([]() {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = std::make_unique<PluralFormat>(error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -19,9 +19,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [2] PluralFormat::PluralFormat
           py::init([](const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -31,9 +31,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -43,9 +43,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [3] icu::PluralFormat
           py::init([](const PluralRules &rules) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(rules, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -54,9 +54,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [4] icu::PluralFormat
           py::init([](const Locale &locale, const PluralRules &rules) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -65,9 +65,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, const PluralRules &rules) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -76,9 +76,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [5] icu::PluralFormat
           py::init([](const Locale &locale, UPluralType type) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -87,9 +87,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, UPluralType type) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -98,9 +98,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [6] icu::PluralFormat
           py::init([](const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -109,9 +109,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -120,9 +120,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [7] icu::PluralFormat
           py::init([](const Locale &locale, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -131,9 +131,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -142,9 +142,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const Locale &locale, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -154,9 +154,9 @@ void init_plurfmt(py::module &m) {
           // const char *locale -> const Locale &locale
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char *locale, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -165,9 +165,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [8] icu::PluralFormat
           py::init([](const PluralRules &rules, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -176,9 +176,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const PluralRules &rules, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -187,9 +187,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [9] icu::PluralFormat
           py::init([](const Locale &locale, const PluralRules &rules, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -198,9 +198,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, const PluralRules &rules, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -209,9 +209,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const Locale &locale, const PluralRules &rules, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -221,9 +221,9 @@ void init_plurfmt(py::module &m) {
           // const char *locale -> const Locale &locale
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char *locale, const PluralRules &rules, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -232,9 +232,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // [10] icu::PluralFormat
           py::init([](const Locale &locale, UPluralType type, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -243,9 +243,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, UPluralType type, const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -254,9 +254,9 @@ void init_plurfmt(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const Locale &locale, UPluralType type, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -266,9 +266,9 @@ void init_plurfmt(py::module &m) {
           // const char *locale -> const Locale &locale
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char *locale, UPluralType type, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -289,9 +289,9 @@ void init_plurfmt(py::module &m) {
   pf.def(
         "apply_pattern",
         [](PluralFormat &self, const UnicodeString &pattern) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           self.applyPattern(pattern, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
@@ -300,9 +300,9 @@ void init_plurfmt(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
           [](PluralFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -314,9 +314,9 @@ void init_plurfmt(py::module &m) {
         "format",
         [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
            FieldPosition &pos) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -327,9 +327,9 @@ void init_plurfmt(py::module &m) {
           "format",
           [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -339,9 +339,9 @@ void init_plurfmt(py::module &m) {
           // [4] Format::format
           "format",
           [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -351,9 +351,9 @@ void init_plurfmt(py::module &m) {
           // [5] PluralFormat::format
           "format",
           [](const PluralFormat &self, double number) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.format(number, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -363,9 +363,9 @@ void init_plurfmt(py::module &m) {
           // [6] PluralFormat::format
           "format",
           [](const PluralFormat &self, double number, UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -375,9 +375,9 @@ void init_plurfmt(py::module &m) {
           // [7] PluralFormat::format
           "format",
           [](const PluralFormat &self, int32_t number) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.format(number, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -388,9 +388,9 @@ void init_plurfmt(py::module &m) {
           "format",
           [](const PluralFormat &self, int32_t number, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -407,9 +407,9 @@ void init_plurfmt(py::module &m) {
       .def(
           "parse_object",
           [](const Format &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -418,9 +418,9 @@ void init_plurfmt(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const Format &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -428,9 +428,9 @@ void init_plurfmt(py::module &m) {
   pf.def(
       "set_number_format",
       [](PluralFormat &self, const NumberFormat *format) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setNumberFormat(format, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },

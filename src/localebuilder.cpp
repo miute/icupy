@@ -1,6 +1,6 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-#include <unicode/errorcode.h>
 #include <unicode/localebuilder.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -18,9 +18,9 @@ void init_localebuilder(py::module &m) {
       },
       py::arg("attribute"));
   lb.def("build", [](LocaleBuilder &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.build(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

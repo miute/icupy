@@ -22,9 +22,9 @@ void init_coleitr(py::module &m) {
             return self;
           })
       .def("__next__", [](CollationElementIterator &self) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.next(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         } else if (result == CollationElementIterator::NULLORDER) {
           throw py::stop_iteration();
@@ -36,17 +36,17 @@ void init_coleitr(py::module &m) {
   cei.def("get_offset", &CollationElementIterator::getOffset);
   cei.def_static("is_ignorable", &CollationElementIterator::isIgnorable, py::arg("order"));
   cei.def("next", [](CollationElementIterator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.next(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   cei.def("previous", [](CollationElementIterator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.previous(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -57,9 +57,9 @@ void init_coleitr(py::module &m) {
   cei.def(
       "set_offset",
       [](CollationElementIterator &self, int32_t new_offset) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setOffset(new_offset, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -67,9 +67,9 @@ void init_coleitr(py::module &m) {
   cei.def(
          "set_text",
          [](CollationElementIterator &self, CharacterIterator &str) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setText(str, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -77,9 +77,9 @@ void init_coleitr(py::module &m) {
       .def(
           "set_text",
           [](CollationElementIterator &self, const UnicodeString &str) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setText(str, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -88,9 +88,9 @@ void init_coleitr(py::module &m) {
           // const char16_t *str -> const UnicodeString &str
           "set_text",
           [](CollationElementIterator &self, const char16_t *str) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setText(str, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

@@ -1,7 +1,6 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
-#include <unicode/errorcode.h>
 #include <unicode/numberformatter.h>
 
 using namespace icu;
@@ -74,9 +73,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   fn.def(
       "append_to",
       [](const FormattedNumber &self, Appendable &appendable) -> Appendable & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -86,9 +85,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fn.def("get_output_unit", [](const FormattedNumber &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getOutputUnit(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -99,9 +98,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   fn.def(
       "next_position",
       [](const FormattedNumber &self, ConstrainedFieldPosition &cfpos) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -111,9 +110,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   fn.def("to_decimal_number", [](const FormattedNumber &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toDecimalNumber<std::string>(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -122,9 +121,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   fn.def("to_string", [](const FormattedNumber &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -133,9 +132,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   fn.def("to_temp_string", [](const FormattedNumber &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toTempString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -170,9 +169,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   lnf.def(
       "format_decimal",
       [](const LocalizedNumberFormatter &self, const char *value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatDecimal(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -181,9 +180,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   lnf.def(
       "format_double",
       [](const LocalizedNumberFormatter &self, double value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatDouble(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -192,9 +191,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   lnf.def(
       "format_int",
       [](const LocalizedNumberFormatter &self, int64_t value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatInt(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -202,9 +201,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       py::arg("value"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   lnf.def("to_format", [](const LocalizedNumberFormatter &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toFormat(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -216,9 +215,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   nf.def_static(
         "for_skeleton",
         [](const UnicodeString &skeleton) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormatter::forSkeleton(skeleton, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -228,9 +227,9 @@ void init_numberformatter(py::module &, py::module &m2) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "for_skeleton",
           [](const char16_t *skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormatter::forSkeleton(skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -242,9 +241,9 @@ void init_numberformatter(py::module &, py::module &m2) {
   nf.def_static(
         "for_skeleton",
         [](const UnicodeString &skeleton, UParseError &perror) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -254,9 +253,9 @@ void init_numberformatter(py::module &, py::module &m2) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "for_skeleton",
           [](const char16_t *skeleton, UParseError &perror) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -349,9 +348,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       py::arg("symbols"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   nfs_lnf.def("to_skeleton", [](const _LocalizedNumberFormatterSettings &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toSkeleton(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -455,9 +454,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       py::arg("symbols"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   nfs_unf.def("to_skeleton", [](const _UnlocalizedNumberFormatterSettings &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toSkeleton(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

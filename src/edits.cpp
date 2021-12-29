@@ -2,7 +2,6 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 59)
 #include <unicode/edits.h>
-#include <unicode/errorcode.h>
 
 using namespace icu;
 using Iterator = Edits::Iterator;

@@ -53,9 +53,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(py::init<const char *, int32_t, const char *>(), py::arg("codepage_data"), py::arg("data_length"),
            py::arg("codepage"))
       .def(py::init([](const char *src, int32_t src_length, _UConverterPtr &cnv) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<UnicodeString>(src, src_length, cnv, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -356,12 +356,12 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         // int32_t extract(char *dest, int32_t destCapacity, UConverter *cnv, UErrorCode &errorCode)
         "extract",
         [](const UnicodeString &self, _UConverterPtr &cnv) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           const auto length = self.extract(nullptr, 0, cnv, error_code);
           std::string dest(length, '\0');
-          error_code = U_ZERO_ERROR;
+          error_code.reset();
           self.extract(dest.data(), static_cast<int32_t>(dest.size()), cnv, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return py::bytes(dest.data(), length);
@@ -372,9 +372,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           "extract",
           [](const UnicodeString &self) {
             std::u16string result(self.length(), u'\0');
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.extract(result.data(), static_cast<int32_t>(result.size()), error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -828,12 +828,12 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           py::arg("locale"))
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper));
   us.def("to_utf32", [](const UnicodeString &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     const auto length = self.toUTF32(nullptr, 0, error_code);
     std::vector<UChar32> dest(length);
-    error_code = U_ZERO_ERROR;
+    error_code.reset();
     self.toUTF32(dest.data(), length, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return std::u32string(dest.begin(), dest.end());

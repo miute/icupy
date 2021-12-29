@@ -77,9 +77,9 @@ void init_reldatefmt(py::module &m) {
   frdt.def(
       "append_to",
       [](const FormattedRelativeDateTime &self, Appendable &appendable) -> Appendable & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -88,26 +88,26 @@ void init_reldatefmt(py::module &m) {
   frdt.def(
       "next_position",
       [](const FormattedRelativeDateTime &self, ConstrainedFieldPosition &cfpos) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("cfpos"));
   frdt.def("to_string", [](const FormattedRelativeDateTime &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   frdt.def("to_temp_string", [](const FormattedRelativeDateTime &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toTempString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -119,9 +119,9 @@ void init_reldatefmt(py::module &m) {
   rdtf.def(
           // [1] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([]() {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -129,9 +129,9 @@ void init_reldatefmt(py::module &m) {
       .def(
           // [2] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([](const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -140,9 +140,9 @@ void init_reldatefmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -151,10 +151,10 @@ void init_reldatefmt(py::module &m) {
       .def(
           // [3] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([](const Locale &locale, NumberFormat *nf_to_adopt) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
                 locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -163,10 +163,10 @@ void init_reldatefmt(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, NumberFormat *nf_to_adopt) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
                 locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -177,11 +177,11 @@ void init_reldatefmt(py::module &m) {
           // [4] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([](const Locale &locale, NumberFormat *nf_to_adopt, UDateRelativeDateTimeFormatterStyle style,
                       UDisplayContext capitalization_context) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
                 locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), style,
                 capitalization_context, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -191,11 +191,11 @@ void init_reldatefmt(py::module &m) {
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, NumberFormat *nf_to_adopt, UDateRelativeDateTimeFormatterStyle style,
                       UDisplayContext capitalization_context) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
                 locale, reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), style,
                 capitalization_context, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -209,9 +209,9 @@ void init_reldatefmt(py::module &m) {
           "combine_date_and_time",
           [](const RelativeDateTimeFormatter &self, const UnicodeString &relative_date_string,
              const UnicodeString &time_string, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.combineDateAndTime(relative_date_string, time_string, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -222,9 +222,9 @@ void init_reldatefmt(py::module &m) {
           "combine_date_and_time",
           [](const RelativeDateTimeFormatter &self, const char16_t *relative_date_string,
              const UnicodeString &time_string, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.combineDateAndTime(relative_date_string, time_string, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -235,9 +235,9 @@ void init_reldatefmt(py::module &m) {
           "combine_date_and_time",
           [](const RelativeDateTimeFormatter &self, const UnicodeString &relative_date_string,
              const char16_t *time_string, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.combineDateAndTime(relative_date_string, time_string, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -249,9 +249,9 @@ void init_reldatefmt(py::module &m) {
           "combine_date_and_time",
           [](const RelativeDateTimeFormatter &self, const char16_t *relative_date_string, const char16_t *time_string,
              UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.combineDateAndTime(relative_date_string, time_string, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -263,9 +263,9 @@ void init_reldatefmt(py::module &m) {
       "format",
       [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit,
          UnicodeString &append_to) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.format(offset, unit, append_to, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -277,9 +277,9 @@ void init_reldatefmt(py::module &m) {
           "format",
           [](const RelativeDateTimeFormatter &self, double quantity, UDateDirection direction, UDateRelativeUnit unit,
              UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(quantity, direction, unit, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -290,9 +290,9 @@ void init_reldatefmt(py::module &m) {
           "format",
           [](const RelativeDateTimeFormatter &self, UDateDirection direction, UDateAbsoluteUnit unit,
              UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(direction, unit, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -303,9 +303,9 @@ void init_reldatefmt(py::module &m) {
       "format_numeric",
       [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit,
          UnicodeString &append_to) -> UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.formatNumeric(offset, unit, append_to, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -317,9 +317,9 @@ void init_reldatefmt(py::module &m) {
   rdtf.def(
       "format_numeric_to_value",
       [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatNumericToValue(offset, unit, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -329,9 +329,9 @@ void init_reldatefmt(py::module &m) {
           // [1] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
           [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.formatToValue(offset, unit, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -341,9 +341,9 @@ void init_reldatefmt(py::module &m) {
           // [2] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
           [](const RelativeDateTimeFormatter &self, double quantity, UDateDirection direction, UDateRelativeUnit unit) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.formatToValue(quantity, direction, unit, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -353,9 +353,9 @@ void init_reldatefmt(py::module &m) {
           // [3] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
           [](const RelativeDateTimeFormatter &self, UDateDirection direction, UDateAbsoluteUnit unit) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.formatToValue(direction, unit, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;

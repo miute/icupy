@@ -26,18 +26,18 @@ void init_strenum(py::module &m) {
           py::is_operator(), py::arg("other"))
       .def("__iter__",
            [](StringEnumeration &self) -> StringEnumeration & {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              self.reset(error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return self;
            })
       .def("__len__",
            [](const StringEnumeration &self) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = self.count(error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -46,9 +46,9 @@ void init_strenum(py::module &m) {
           "__ne__", [](const StringEnumeration &self, const StringEnumeration &other) { return self != other; },
           py::is_operator(), py::arg("other"))
       .def("__next__", [](StringEnumeration &self) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.next(nullptr, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         } else if (result == nullptr) {
           throw py::stop_iteration();
@@ -57,43 +57,43 @@ void init_strenum(py::module &m) {
       });
   se.def("clone", &StringEnumeration::clone);
   se.def("count", [](const StringEnumeration &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.count(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   se.def("next", [](StringEnumeration &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.next(nullptr, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   se.def("reset", [](StringEnumeration &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     self.reset(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
   });
   se.def(
       "snext",
       [](StringEnumeration &self) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.snext(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::return_value_policy::reference);
   se.def("unext", [](StringEnumeration &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.unext(nullptr, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

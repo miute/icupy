@@ -2,7 +2,6 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
 #include <pybind11/operators.h>
-#include <unicode/errorcode.h>
 #include <unicode/region.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 

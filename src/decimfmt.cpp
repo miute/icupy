@@ -20,9 +20,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
         // [1] DecimalFormat::DecimalFormat
         py::init([]() {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = std::make_unique<DecimalFormat>(error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -30,9 +30,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           // [2] DecimalFormat::DecimalFormat
           py::init([](const UnicodeString &pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -41,9 +41,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormat>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -52,9 +52,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           // [6] DecimalFormat::DecimalFormat
           py::init([](const UnicodeString &pattern, const DecimalFormatSymbols &symbols) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormat>(pattern, symbols, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -63,9 +63,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, const DecimalFormatSymbols &symbols) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormat>(pattern, symbols, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -85,9 +85,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
         "apply_localized_pattern",
         [](DecimalFormat &self, const UnicodeString &pattern) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           self.applyLocalizedPattern(pattern, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
@@ -96,9 +96,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_localized_pattern",
           [](DecimalFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyLocalizedPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -106,9 +106,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           "apply_localized_pattern",
           [](DecimalFormat &self, const UnicodeString &pattern, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyLocalizedPattern(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -117,9 +117,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_localized_pattern",
           [](DecimalFormat &self, const char16_t *pattern, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyLocalizedPattern(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -127,9 +127,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
         "apply_pattern",
         [](DecimalFormat &self, const UnicodeString &pattern) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           self.applyPattern(pattern, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
@@ -138,9 +138,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
           [](DecimalFormat &self, const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -148,9 +148,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           "apply_pattern",
           [](DecimalFormat &self, const UnicodeString &pattern, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyPattern(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -159,9 +159,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
           [](DecimalFormat &self, const char16_t *pattern, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.applyPattern(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -173,9 +173,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         "format",
         [](const DecimalFormat &self, const Formattable &obj, UnicodeString &append_to,
            FieldPosition &pos) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -186,9 +186,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           "format",
           [](const DecimalFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -210,9 +210,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           "format",
           [](const DecimalFormat &self, double number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -233,9 +233,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           "format",
           [](const DecimalFormat &self, int32_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -256,9 +256,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           "format",
           [](const DecimalFormat &self, int64_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -270,9 +270,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           "format",
           [](const DecimalFormat &self, const char *number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -281,9 +281,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -293,9 +293,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "get_attribute",
       [](const DecimalFormat &self, UNumberFormatAttribute attr) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getAttribute(attr, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -355,9 +355,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       .def(
           "parse",
           [](const NumberFormat &self, const UnicodeString &text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -366,9 +366,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const NumberFormat &self, const char16_t *text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -390,9 +390,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "set_attribute",
       [](DecimalFormat &self, UNumberFormatAttribute attr, int32_t new_value) -> DecimalFormat & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.setAttribute(attr, new_value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -402,9 +402,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "set_currency",
       [](DecimalFormat &self, const char16_t *the_currency) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setCurrency(the_currency, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -414,9 +414,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "set_currency_usage",
       [](DecimalFormat &self, UCurrencyUsage new_usage) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        self.setCurrencyUsage(new_usage, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        self.setCurrencyUsage(new_usage, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -501,9 +501,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "to_number_formatter",
       [](const DecimalFormat &self) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.toNumberFormatter(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

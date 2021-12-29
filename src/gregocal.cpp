@@ -23,7 +23,7 @@ void init_gregocal(py::module &m) {
           py::arg("other"))
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ss.SSSXXX", error_code);
         fmt.setCalendar(self);
         UnicodeString dest;
@@ -36,9 +36,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "add",
       [](Calendar &self, UCalendarDateFields field, int32_t amount) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.add(field, amount, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -52,9 +52,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "after",
       [](const Calendar &self, const Calendar &when) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.after(when, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -63,9 +63,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "before",
       [](const Calendar &self, const Calendar &when) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.before(when, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -77,9 +77,9 @@ void init_gregocal(py::module &m) {
   cal.def_static(
          "create_instance",
          [](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = Calendar::createInstance(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -88,9 +88,9 @@ void init_gregocal(py::module &m) {
       .def_static(
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Calendar::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -99,9 +99,9 @@ void init_gregocal(py::module &m) {
       .def_static(
           "create_instance",
           [](const TimeZone &zone, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Calendar::createInstance(zone, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -110,9 +110,9 @@ void init_gregocal(py::module &m) {
       .def_static(
           "create_instance",
           [](const TimeZone &zone, const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Calendar::createInstance(zone, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -121,18 +121,18 @@ void init_gregocal(py::module &m) {
       .def_static(
           "create_instance",
           [](const TimeZone &zone) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Calendar::createInstance(zone, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("zone"))
       .def_static("create_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Calendar::createInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -140,9 +140,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "equals",
       [](const Calendar &self, const Calendar &when) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.equals(when, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -151,9 +151,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "field_difference",
       [](Calendar &self, UDate when, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.fieldDifference(when, field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -162,9 +162,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get",
       [](const Calendar &self, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.get(field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -173,9 +173,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get_actual_maximum",
       [](const Calendar &self, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getActualMaximum(field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -184,9 +184,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get_actual_minimum",
       [](const Calendar &self, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getActualMinimum(field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -207,18 +207,18 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get_day_of_week_type",
       [](const Calendar &self, UCalendarDaysOfWeek day_of_week) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getDayOfWeekType(day_of_week, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("day_of_week"));
   cal.def("get_first_day_of_week", [](const Calendar &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getFirstDayOfWeek(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -228,9 +228,9 @@ void init_gregocal(py::module &m) {
   cal.def_static(
          "get_keyword_values_for_locale",
          [](const char *key, const Locale &locale, UBool commonly_used) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = Calendar::getKeywordValuesForLocale(key, locale, commonly_used, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -239,9 +239,9 @@ void init_gregocal(py::module &m) {
       .def_static(
           "get_keyword_values_for_locale",
           [](const char *key, const char *locale, UBool commonly_used) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = Calendar::getKeywordValuesForLocale(key, locale, commonly_used, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -252,9 +252,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get_locale",
       [](const Calendar &self, ULocDataLocaleType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -269,9 +269,9 @@ void init_gregocal(py::module &m) {
   cal.def("get_skipped_wall_time_option", &Calendar::getSkippedWallTimeOption);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
   cal.def("get_time", [](const Calendar &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.getTime(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -293,18 +293,18 @@ void init_gregocal(py::module &m) {
   cal.def(
       "get_weekend_transition",
       [](const Calendar &self, UCalendarDaysOfWeek day_of_week) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getWeekendTransition(day_of_week, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("day_of_week"));
   cal.def("in_daylight_time", [](const Calendar &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.inDaylightTime(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -315,9 +315,9 @@ void init_gregocal(py::module &m) {
   cal.def(
          "is_weekend",
          [](const Calendar &self, UDate date) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = self.isWeekend(date, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -335,9 +335,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "roll",
       [](Calendar &self, UCalendarDateFields field, int32_t amount) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.roll(field, amount, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -360,9 +360,9 @@ void init_gregocal(py::module &m) {
   cal.def(
       "set_time",
       [](Calendar &self, UDate date) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setTime(date, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -379,80 +379,80 @@ void init_gregocal(py::module &m) {
       .export_values();
 
   gc.def(py::init([]() {
-      UErrorCode error_code = U_ZERO_ERROR;
+      ErrorCode error_code;
       auto result = std::make_unique<GregorianCalendar>(error_code);
-      if (U_FAILURE(error_code)) {
+      if (error_code.isFailure()) {
         throw ICUError(error_code);
       }
       return result;
     }))
       .def(py::init([](const TimeZone &zone) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(zone, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("zone"))
       .def(py::init([](const Locale &locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
       .def(py::init([](const char *locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
       .def(py::init([](const TimeZone &zone, const Locale &locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(zone, locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("zone"), py::arg("locale"))
       .def(py::init([](const TimeZone &zone, const char *locale) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(zone, locale, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("zone"), py::arg("locale"))
       .def(py::init([](int32_t year, int32_t month, int32_t date) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("year"), py::arg("month"), py::arg("date"))
       .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour, int32_t minute) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"), py::arg("minute"))
       .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour, int32_t minute, int32_t second) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, second, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -464,7 +464,7 @@ void init_gregocal(py::module &m) {
           "__deepcopy__", [](const GregorianCalendar &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def("__repr__", [](const Calendar &self) {
         std::stringstream ss;
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ss.SSSXXX", error_code);
         fmt.setCalendar(self);
         UnicodeString dest;
@@ -478,9 +478,9 @@ void init_gregocal(py::module &m) {
   gc.def(
       "get_actual_maximum",
       [](const GregorianCalendar &self, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getActualMaximum(field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -489,9 +489,9 @@ void init_gregocal(py::module &m) {
   gc.def(
       "get_actual_minimum",
       [](const GregorianCalendar &self, UCalendarDateFields field) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getActualMinimum(field, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -502,9 +502,9 @@ void init_gregocal(py::module &m) {
   gc.def("get_type", &GregorianCalendar::getType);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
   gc.def("in_daylight_time", [](const GregorianCalendar &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.inDaylightTime(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -514,9 +514,9 @@ void init_gregocal(py::module &m) {
   gc.def(
       "roll",
       [](GregorianCalendar &self, UCalendarDateFields field, int32_t amount) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.roll(field, amount, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -524,9 +524,9 @@ void init_gregocal(py::module &m) {
   gc.def(
       "set_gregorian_change",
       [](GregorianCalendar &self, UDate date) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setGregorianChange(date, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },

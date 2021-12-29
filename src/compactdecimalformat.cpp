@@ -18,9 +18,9 @@ void init_compactdecimalformat(py::module &m) {
   cdf.def_static(
          "create_instance",
          [](const Locale &in_locale, UNumberCompactStyle style) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = CompactDecimalFormat::createInstance(in_locale, style, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -30,9 +30,9 @@ void init_compactdecimalformat(py::module &m) {
           // const char *in_locale -> const Locale &in_locale
           "create_instance",
           [](const char *in_locale, UNumberCompactStyle style) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = CompactDecimalFormat::createInstance(in_locale, style, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -47,9 +47,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const DecimalFormat &self, double number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -64,9 +64,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const DecimalFormat &self, int32_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -81,9 +81,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const DecimalFormat &self, int64_t number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -94,9 +94,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const DecimalFormat &self, const char *number, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -106,9 +106,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -118,9 +118,9 @@ void init_compactdecimalformat(py::module &m) {
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -135,9 +135,9 @@ void init_compactdecimalformat(py::module &m) {
       .def(
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -159,9 +159,9 @@ void init_compactdecimalformat(py::module &m) {
           // [2] CompactDecimalFormat::parse
           "parse",
           [](const CompactDecimalFormat &self, const UnicodeString &text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -170,9 +170,9 @@ void init_compactdecimalformat(py::module &m) {
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const CompactDecimalFormat &self, const char16_t *text, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parse(text, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

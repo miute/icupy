@@ -12,9 +12,9 @@ void init_numsys(py::module &m) {
         // [1] NumberingSystem::createInstance
         "create_instance",
         [](const Locale &locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = NumberingSystem::createInstance(locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -24,9 +24,9 @@ void init_numsys(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberingSystem::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -36,9 +36,9 @@ void init_numsys(py::module &m) {
           // [2] NumberingSystem::createInstance
           "create_instance",
           [](int32_t radix, UBool is_algorithmic, const UnicodeString &description) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberingSystem::createInstance(radix, is_algorithmic, description, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -48,9 +48,9 @@ void init_numsys(py::module &m) {
           // const char16_t *description -> const UnicodeString &description
           "create_instance",
           [](int32_t radix, UBool is_algorithmic, const char16_t *description) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberingSystem::createInstance(radix, is_algorithmic, description, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -59,9 +59,9 @@ void init_numsys(py::module &m) {
       .def_static(
           // [3] NumberingSystem::createInstance
           "create_instance", []() {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = NumberingSystem::createInstance(error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -69,18 +69,18 @@ void init_numsys(py::module &m) {
   ns.def_static(
       "create_instance_by_name",
       [](const char *name) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = NumberingSystem::createInstanceByName(name, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("name"));
   ns.def_static("get_available_names", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = NumberingSystem::getAvailableNames(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

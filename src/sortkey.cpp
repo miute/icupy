@@ -19,9 +19,9 @@ void init_sortkey(py::module &m) {
   ck.def(
       "compare_to",
       [](const CollationKey &self, const CollationKey &target) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.compareTo(target, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

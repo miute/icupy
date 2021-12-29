@@ -123,9 +123,9 @@ void init_messagepattern(py::module &m) {
   mp.def(
         // [1] MessagePattern::MessagePattern
         py::init([]() {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = std::make_unique<MessagePattern>(error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -133,9 +133,9 @@ void init_messagepattern(py::module &m) {
       .def(
           // [2] MessagePattern::MessagePattern
           py::init([](UMessagePatternApostropheMode mode) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<MessagePattern>(mode, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -144,9 +144,9 @@ void init_messagepattern(py::module &m) {
       .def(
           // [3] MessagePattern::MessagePattern
           py::init([](const UnicodeString &pattern, UParseError *parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<MessagePattern>(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -155,9 +155,9 @@ void init_messagepattern(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, UParseError *parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<MessagePattern>(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -187,9 +187,9 @@ void init_messagepattern(py::module &m) {
   mp.def(
         "parse",
         [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.parse(pattern, parse_error, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -199,9 +199,9 @@ void init_messagepattern(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "parse",
           [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.parse(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -210,9 +210,9 @@ void init_messagepattern(py::module &m) {
   mp.def(
         "parse_choice_style",
         [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.parseChoiceStyle(pattern, parse_error, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -222,9 +222,9 @@ void init_messagepattern(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "parse_choice_style",
           [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.parseChoiceStyle(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -233,9 +233,9 @@ void init_messagepattern(py::module &m) {
   mp.def(
         "parse_plural_style",
         [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.parsePluralStyle(pattern, parse_error, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -245,9 +245,9 @@ void init_messagepattern(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "parse_plural_style",
           [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.parsePluralStyle(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -256,9 +256,9 @@ void init_messagepattern(py::module &m) {
   mp.def(
         "parse_select_style",
         [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.parseSelectStyle(pattern, parse_error, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -268,9 +268,9 @@ void init_messagepattern(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "parse_select_style",
           [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.parseSelectStyle(pattern, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;

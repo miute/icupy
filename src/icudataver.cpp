@@ -2,7 +2,6 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
 #include <pybind11/stl.h>
-#include <unicode/errorcode.h>
 #include <unicode/icudataver.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 

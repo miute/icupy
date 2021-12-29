@@ -57,9 +57,9 @@ void init_idna(py::module &m) {
   idna.def_static(
       "create_uts46_instance",
       [](int options) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = IDNA::createUTS46Instance(options, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -68,9 +68,9 @@ void init_idna(py::module &m) {
   idna.def(
           "label_to_ascii",
           [](const IDNA &self, const UnicodeString &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.labelToASCII(label, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -80,9 +80,9 @@ void init_idna(py::module &m) {
           // const char16_t *label -> const UnicodeString &label
           "label_to_ascii",
           [](const IDNA &self, const char16_t *label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.labelToASCII(label, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -91,9 +91,9 @@ void init_idna(py::module &m) {
   idna.def(
           "label_to_unicode",
           [](const IDNA &self, const UnicodeString &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.labelToUnicode(label, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -103,9 +103,9 @@ void init_idna(py::module &m) {
           // const char16_t *label -> const UnicodeString &label
           "label_to_unicode",
           [](const IDNA &self, const char16_t *label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.labelToUnicode(label, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -114,9 +114,9 @@ void init_idna(py::module &m) {
   idna.def(
           "name_to_ascii",
           [](const IDNA &self, const UnicodeString &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.nameToASCII(name, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -126,9 +126,9 @@ void init_idna(py::module &m) {
           // const char16_t *name -> const UnicodeString &name
           "name_to_ascii",
           [](const IDNA &self, const char16_t *name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.nameToASCII(name, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -137,9 +137,9 @@ void init_idna(py::module &m) {
   idna.def(
           "name_to_unicode",
           [](const IDNA &self, const UnicodeString &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.nameToUnicode(name, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -149,9 +149,9 @@ void init_idna(py::module &m) {
           // const char16_t *name -> const UnicodeString &name
           "name_to_unicode",
           [](const IDNA &self, const char16_t *name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.nameToUnicode(name, dest, info, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;

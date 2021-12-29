@@ -5,6 +5,8 @@
 #include <optional>
 #include <pybind11/stl.h>
 
+using namespace icu;
+
 _ConstUCharsetMatchPtr::_ConstUCharsetMatchPtr(const UCharsetMatch *p) : p_(p) {}
 _ConstUCharsetMatchPtr::~_ConstUCharsetMatchPtr() {}
 const UCharsetMatch *_ConstUCharsetMatchPtr::get() const { return p_; }
@@ -25,9 +27,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_detect",
       [](_UCharsetDetectorPtr &ucsd) -> std::optional<std::unique_ptr<_ConstUCharsetMatchPtr>> {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = ucsdet_detect(ucsd, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = ucsdet_detect(ucsd, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         } else if (p == nullptr) {
           return std::nullopt;
@@ -38,10 +40,10 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_detect_all",
       [](_UCharsetDetectorPtr &ucsd) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         int32_t matches_found;
-        auto p = ucsdet_detectAll(ucsd, &matches_found, &error_code);
-        if (U_FAILURE(error_code)) {
+        auto p = ucsdet_detectAll(ucsd, &matches_found, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         std::vector<std::unique_ptr<_ConstUCharsetMatchPtr>> result(matches_found);
@@ -58,9 +60,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_get_all_detectable_charsets",
       [](const _UCharsetDetectorPtr &ucsd) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto p = ucsdet_getAllDetectableCharsets(ucsd, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto p = ucsdet_getAllDetectableCharsets(ucsd, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
@@ -69,9 +71,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_get_confidence",
       [](_ConstUCharsetMatchPtr &ucsm) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ucsdet_getConfidence(ucsm, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ucsdet_getConfidence(ucsm, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -80,9 +82,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_get_language",
       [](_ConstUCharsetMatchPtr &ucsm) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ucsdet_getLanguage(ucsm, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ucsdet_getLanguage(ucsm, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -91,9 +93,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_get_name",
       [](_ConstUCharsetMatchPtr &ucsm) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = ucsdet_getName(ucsm, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = ucsdet_getName(ucsm, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -102,12 +104,12 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_get_uchars",
       [](_ConstUCharsetMatchPtr &ucsm) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        const auto cap = ucsdet_getUChars(ucsm, nullptr, 0, &error_code);
+        ErrorCode error_code;
+        const auto cap = ucsdet_getUChars(ucsm, nullptr, 0, error_code);
         std::u16string result(cap, '\0');
-        error_code = U_ZERO_ERROR;
-        ucsdet_getUChars(ucsm, result.data(), cap, &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        ucsdet_getUChars(ucsm, result.data(), cap, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -117,9 +119,9 @@ void init_ucsdet(py::module &m) {
       "ucsdet_is_input_filter_enabled",
       [](const _UCharsetDetectorPtr &ucsd) { return ucsdet_isInputFilterEnabled(ucsd); }, py::arg("ucsd"));
   m.def("ucsdet_open", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto p = ucsdet_open(&error_code);
-    if (U_FAILURE(error_code)) {
+    ErrorCode error_code;
+    auto p = ucsdet_open(error_code);
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return std::make_unique<_UCharsetDetectorPtr>(p);
@@ -127,9 +129,9 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_set_declared_encoding",
       [](_UCharsetDetectorPtr &ucsd, const char *encoding, int32_t length) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        ucsdet_setDeclaredEncoding(ucsd, encoding, length, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        ucsdet_setDeclaredEncoding(ucsd, encoding, length, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },
@@ -137,14 +139,14 @@ void init_ucsdet(py::module &m) {
   m.def(
       "ucsdet_set_text",
       [](_UCharsetDetectorPtr &ucsd, const char *text_in, int32_t len) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         size_t size = text_in && len == -1 ? std::strlen(text_in) : std::max(0, len);
         auto source = std::shared_ptr<char[]>(new char[size + 1]);
         auto s = source.get();
         std::memset(s, 0, size + 1);
         std::memcpy(s, text_in, size);
-        ucsdet_setText(ucsd, s, len, &error_code);
-        if (U_FAILURE(error_code)) {
+        ucsdet_setText(ucsd, s, len, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         ucsd.set_source(source);

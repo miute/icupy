@@ -1,7 +1,6 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
-#include <unicode/errorcode.h>
 #include <unicode/filteredbrk.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 

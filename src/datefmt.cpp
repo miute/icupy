@@ -52,9 +52,9 @@ void init_datefmt(py::module &m) {
   df.def_static(
         "create_instance_for_skeleton",
         [](const UnicodeString &skeleton, const Locale &locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -64,9 +64,9 @@ void init_datefmt(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "create_instance_for_skeleton",
           [](const char16_t *skeleton, const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -76,9 +76,9 @@ void init_datefmt(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance_for_skeleton",
           [](const UnicodeString &skeleton, const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -89,9 +89,9 @@ void init_datefmt(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance_for_skeleton",
           [](const char16_t *skeleton, const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -100,9 +100,9 @@ void init_datefmt(py::module &m) {
       .def_static(
           "create_instance_for_skeleton",
           [](const UnicodeString &skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateFormat::createInstanceForSkeleton(skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -112,9 +112,9 @@ void init_datefmt(py::module &m) {
           // const char16_t *skeleton -> const UnicodeString &skeleton
           "create_instance_for_skeleton",
           [](const char16_t *skeleton) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = DateFormat::createInstanceForSkeleton(skeleton, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -132,9 +132,9 @@ void init_datefmt(py::module &m) {
           "format",
           [](const DateFormat &self, Calendar &cal, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(cal, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -145,9 +145,9 @@ void init_datefmt(py::module &m) {
           "format",
           [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -158,9 +158,9 @@ void init_datefmt(py::module &m) {
           "format",
           [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -179,9 +179,9 @@ void init_datefmt(py::module &m) {
           "format",
           [](const DateFormat &self, UDate date, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(date, append_to, pos_iter, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -191,9 +191,9 @@ void init_datefmt(py::module &m) {
           // [3] Format::format
           "format",
           [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -215,9 +215,9 @@ void init_datefmt(py::module &m) {
   df.def(
       "get_boolean_attribute",
       [](const DateFormat &self, UDateFormatBooleanAttribute attr) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getBooleanAttribute(attr, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -229,9 +229,9 @@ void init_datefmt(py::module &m) {
   df.def(
       "get_context",
       [](const DateFormat &self, UDisplayContextType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getContext(type, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -273,9 +273,9 @@ void init_datefmt(py::module &m) {
       .def(
           "parse",
           [](const DateFormat &self, const UnicodeString &text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.parse(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -285,9 +285,9 @@ void init_datefmt(py::module &m) {
           // const char16_t *text -> const UnicodeString &text
           "parse",
           [](const DateFormat &self, const char16_t *text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.parse(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -305,9 +305,9 @@ void init_datefmt(py::module &m) {
           // [2] Format::parseObject
           "parse_object",
           [](const Format &self, const UnicodeString &source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -317,9 +317,9 @@ void init_datefmt(py::module &m) {
           // const char16_t *source -> const UnicodeString &source
           "parse_object",
           [](const Format &self, const char16_t *source, Formattable &result) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.parseObject(source, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -328,9 +328,9 @@ void init_datefmt(py::module &m) {
   df.def(
       "set_boolean_attribute",
       [](DateFormat &self, UDateFormatBooleanAttribute attr, UBool new_value) -> DateFormat & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.setBooleanAttribute(attr, new_value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -343,9 +343,9 @@ void init_datefmt(py::module &m) {
   df.def(
       "set_context",
       [](DateFormat &self, UDisplayContext value) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         self.setContext(value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
       },

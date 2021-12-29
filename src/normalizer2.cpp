@@ -8,9 +8,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "append",
         [](const Normalizer2 &self, UnicodeString &first, const UnicodeString &second) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.append(first, second, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -20,9 +20,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *second -> const UnicodeString &second
           "append",
           [](const Normalizer2 &self, UnicodeString &first, const char16_t *second) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.append(first, second, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -36,9 +36,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_instance",
       [](const char *package_name, const char *name, UNormalization2Mode mode) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getInstance(package_name, name, mode, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -48,9 +48,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_nfc_instance",
       []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getNFCInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -59,9 +59,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_nfd_instance",
       []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getNFDInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -70,9 +70,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_nfkc_casefold_instance",
       []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getNFKCCasefoldInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -81,9 +81,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_nfkc_instance",
       []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getNFKCInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -92,9 +92,9 @@ void init_normalizer2(py::module &m) {
   n2.def_static(
       "get_nfkd_instance",
       []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = Normalizer2::getNFKDInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -108,9 +108,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "is_normalized",
         [](const Normalizer2 &self, const UnicodeString &s) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.isNormalized(s, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -120,9 +120,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *s -> const UnicodeString &s
           "is_normalized",
           [](const Normalizer2 &self, const char16_t *s) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.isNormalized(s, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -131,9 +131,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "normalize",
         [](const Normalizer2 &self, const UnicodeString &src) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.normalize(src, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -143,9 +143,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *src -> const UnicodeString &src
           "normalize",
           [](const Normalizer2 &self, const char16_t *src) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.normalize(src, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -154,9 +154,9 @@ void init_normalizer2(py::module &m) {
       .def(
           "normalize",
           [](const Normalizer2 &self, const UnicodeString &src, UnicodeString &dest) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.normalize(src, dest, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -166,9 +166,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *src -> const UnicodeString &src
           "normalize",
           [](const Normalizer2 &self, const char16_t *src, UnicodeString &dest) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.normalize(src, dest, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -177,9 +177,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "normalize_second_and_append",
         [](const Normalizer2 &self, UnicodeString &first, const UnicodeString &second) -> UnicodeString & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.normalizeSecondAndAppend(first, second, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -189,9 +189,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *second -> const UnicodeString &second
           "normalize_second_and_append",
           [](const Normalizer2 &self, UnicodeString &first, const char16_t *second) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.normalizeSecondAndAppend(first, second, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -200,9 +200,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "quick_check",
         [](const Normalizer2 &self, const UnicodeString &s) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.quickCheck(s, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -212,9 +212,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *s -> const UnicodeString &s
           "quick_check",
           [](const Normalizer2 &self, const char16_t *s) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.quickCheck(s, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -223,9 +223,9 @@ void init_normalizer2(py::module &m) {
   n2.def(
         "span_quick_check_yes",
         [](const Normalizer2 &self, const UnicodeString &s) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = self.spanQuickCheckYes(s, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -235,9 +235,9 @@ void init_normalizer2(py::module &m) {
           // const char16_t *s -> const UnicodeString &s
           "span_quick_check_yes",
           [](const Normalizer2 &self, const char16_t *s) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.spanQuickCheckYes(s, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;

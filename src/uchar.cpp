@@ -1,11 +1,15 @@
 #include "main.hpp"
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
 #include "ucpmapptr.hpp"
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
+
 #include "usetptr.hpp"
 #include <memory>
 #include <pybind11/stl.h>
 #include <unicode/uchar.h>
+
+using namespace icu;
 
 void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
@@ -1350,9 +1354,9 @@ void init_uchar(py::module &m) {
   m.def(
       "u_char_from_name",
       [](UCharNameChoice name_choice, const char *name) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto result = u_charFromName(name_choice, name, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto result = u_charFromName(name_choice, name, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -1362,12 +1366,12 @@ void init_uchar(py::module &m) {
   m.def(
       "u_char_name",
       [](UChar32 code, UCharNameChoice name_choice) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = u_charName(code, name_choice, nullptr, 0, &error_code);
+        ErrorCode error_code;
+        const auto length = u_charName(code, name_choice, nullptr, 0, error_code);
         std::string result(length, '\0');
-        error_code = U_ZERO_ERROR;
-        u_charName(code, name_choice, result.data(), static_cast<int32_t>(result.size()), &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        u_charName(code, name_choice, result.data(), static_cast<int32_t>(result.size()), error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -1384,9 +1388,9 @@ void init_uchar(py::module &m) {
   m.def(
       "u_get_binary_property_set",
       [](UProperty property) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto uset = u_getBinaryPropertySet(property, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto uset = u_getBinaryPropertySet(property, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_ConstUSetPtr>(uset);
@@ -1397,12 +1401,12 @@ void init_uchar(py::module &m) {
   m.def(
       "u_get_fc_nfkc_closure",
       [](UChar32 c) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        const auto length = u_getFC_NFKC_Closure(c, nullptr, 0, &error_code);
+        ErrorCode error_code;
+        const auto length = u_getFC_NFKC_Closure(c, nullptr, 0, error_code);
         std::u16string result(length, u'\0');
-        error_code = U_ZERO_ERROR;
-        u_getFC_NFKC_Closure(c, result.data(), static_cast<int32_t>(result.size()), &error_code);
-        if (U_FAILURE(error_code)) {
+        error_code.reset();
+        u_getFC_NFKC_Closure(c, result.data(), static_cast<int32_t>(result.size()), error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -1412,9 +1416,9 @@ void init_uchar(py::module &m) {
   m.def(
       "u_get_int_property_map",
       [](UProperty property) {
-        UErrorCode error_code = U_ZERO_ERROR;
-        auto map = u_getIntPropertyMap(property, &error_code);
-        if (U_FAILURE(error_code)) {
+        ErrorCode error_code;
+        auto map = u_getIntPropertyMap(property, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_ConstUCPMapPtr>(map);

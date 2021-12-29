@@ -2,7 +2,6 @@
 #include "ulocdataptr.hpp"
 #include "usetptr.hpp"
 #include <pybind11/stl.h>
-#include <unicode/errorcode.h>
 
 using namespace icu;
 

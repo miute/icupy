@@ -48,9 +48,9 @@ void init_dcfmtsym(py::module &m) {
   dfs.def(
          // [1] DecimalFormatSymbols::DecimalFormatSymbols
          py::init([](const Locale &locale) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto result = std::make_unique<DecimalFormatSymbols>(locale, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
@@ -59,9 +59,9 @@ void init_dcfmtsym(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormatSymbols>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -70,9 +70,9 @@ void init_dcfmtsym(py::module &m) {
       .def(
           // [2] DecimalFormatSymbols::DecimalFormatSymbols
           py::init([](const Locale &locale, const NumberingSystem &ns) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormatSymbols>(locale, ns, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -81,9 +81,9 @@ void init_dcfmtsym(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale, const NumberingSystem &ns) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormatSymbols>(locale, ns, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -92,9 +92,9 @@ void init_dcfmtsym(py::module &m) {
       .def(
           // [3] DecimalFormatSymbols::DecimalFormatSymbols
           py::init([]() {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DecimalFormatSymbols>(error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -106,9 +106,9 @@ void init_dcfmtsym(py::module &m) {
       .def(py::self == py::self, py::arg("other"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   dfs.def_static("create_with_last_resort_data", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = DecimalFormatSymbols::createWithLastResortData(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -118,9 +118,9 @@ void init_dcfmtsym(py::module &m) {
       .def(
           "get_locale",
           [](const DecimalFormatSymbols &self, ULocDataLocaleType type) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = self.getLocale(type, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -129,9 +129,9 @@ void init_dcfmtsym(py::module &m) {
   dfs.def(
       "get_pattern_for_currency_spacing",
       [](const DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency) -> const UnicodeString & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.getPatternForCurrencySpacing(type, before_currency, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

@@ -53,9 +53,9 @@ void init_rbbi(py::module &m) {
   bi.def_static(
         "create_character_instance",
         [](const Locale &where) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto it = BreakIterator::createCharacterInstance(where, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return it;
@@ -65,9 +65,9 @@ void init_rbbi(py::module &m) {
           // const char *where -> const Locale &where
           "create_character_instance",
           [](const char *where) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto it = BreakIterator::createCharacterInstance(where, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return it;
@@ -76,9 +76,9 @@ void init_rbbi(py::module &m) {
   bi.def_static(
         "create_line_instance",
         [](const Locale &where) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto it = BreakIterator::createLineInstance(where, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return it;
@@ -88,9 +88,9 @@ void init_rbbi(py::module &m) {
           // const char *where -> const Locale &where
           "create_line_instance",
           [](const char *where) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto it = BreakIterator::createLineInstance(where, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return it;
@@ -99,9 +99,9 @@ void init_rbbi(py::module &m) {
   bi.def_static(
         "create_sentence_instance",
         [](const Locale &where) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto it = BreakIterator::createSentenceInstance(where, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return it;
@@ -111,9 +111,9 @@ void init_rbbi(py::module &m) {
           // const char *where -> const Locale &where
           "create_sentence_instance",
           [](const char *where) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto it = BreakIterator::createSentenceInstance(where, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return it;
@@ -123,9 +123,9 @@ void init_rbbi(py::module &m) {
   bi.def_static(
         "create_title_instance",
         [](const Locale &where) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto it = BreakIterator::createTitleInstance(where, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return it;
@@ -135,9 +135,9 @@ void init_rbbi(py::module &m) {
           // const char *where -> const Locale &where
           "create_title_instance",
           [](const char *where) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto it = BreakIterator::createTitleInstance(where, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return it;
@@ -147,9 +147,9 @@ void init_rbbi(py::module &m) {
   bi.def_static(
         "create_word_instance",
         [](const Locale &where) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto it = BreakIterator::createWordInstance(where, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return it;
@@ -159,9 +159,9 @@ void init_rbbi(py::module &m) {
           // const char *where -> const Locale &where
           "create_word_instance",
           [](const char *where) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto it = BreakIterator::createWordInstance(where, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return it;
@@ -220,9 +220,9 @@ void init_rbbi(py::module &m) {
   bi.def(
       "get_locale",
       [](const BreakIterator &self, ULocDataLocaleType type) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -231,11 +231,11 @@ void init_rbbi(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   bi.def("get_rule_status", &BreakIterator::getRuleStatus);
   bi.def("get_rule_status_vec", [](BreakIterator &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     std::vector<int32_t> result(self.getRuleStatusVec(nullptr, 0, error_code));
-    error_code = U_ZERO_ERROR;
+    error_code.reset();
     self.getRuleStatusVec(result.data(), static_cast<int32_t>(result.size()), error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -245,9 +245,9 @@ void init_rbbi(py::module &m) {
   bi.def(
       "get_utext",
       [](const BreakIterator &self, std::optional<_UTextPtr> &fill_in) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto p = self.getUText(fill_in.value_or(nullptr), error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -266,9 +266,9 @@ void init_rbbi(py::module &m) {
       .def(
           "set_text",
           [](BreakIterator &self, _UTextPtr &text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setText(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -283,9 +283,9 @@ void init_rbbi(py::module &m) {
       .def(
           // [3] RuleBasedBreakIterator::RuleBasedBreakIterator
           py::init([](const UnicodeString &rules, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedBreakIterator>(rules, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -294,9 +294,9 @@ void init_rbbi(py::module &m) {
       .def(
           // const char16_t *rules -> const UnicodeString &rules
           py::init([](const char16_t *rules, UParseError &parse_error) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedBreakIterator>(rules, parse_error, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -305,9 +305,9 @@ void init_rbbi(py::module &m) {
       .def(
           // [4] RuleBasedBreakIterator::RuleBasedBreakIterator
           py::init([](const std::vector<uint8_t> &compiled_rules, uint32_t rule_length) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<RuleBasedBreakIterator>(compiled_rules.data(), rule_length, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -334,9 +334,9 @@ void init_rbbi(py::module &m) {
   rbbi.def(
       "get_utext",
       [](const RuleBasedBreakIterator &self, std::optional<_UTextPtr> &fill_in) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto p = self.getUText(fill_in.value_or(nullptr), error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
@@ -354,9 +354,9 @@ void init_rbbi(py::module &m) {
       .def(
           "set_text",
           [](RuleBasedBreakIterator &self, _UTextPtr &text) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setText(text, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

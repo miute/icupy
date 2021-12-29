@@ -51,9 +51,9 @@ void init_uniset(py::module &m) {
   us.def(py::init<>())
       .def(py::init<UChar32, UChar32>(), py::arg("start"), py::arg("end"))
       .def(py::init([](const UnicodeString &pattern) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<UnicodeSet>(pattern, error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -62,9 +62,9 @@ void init_uniset(py::module &m) {
       .def(
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<UnicodeSet>(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -72,9 +72,9 @@ void init_uniset(py::module &m) {
           py::arg("pattern"))
       .def(py::init([](const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
                        std::optional<const SymbolTable *> symbols) {
-             UErrorCode error_code = U_ZERO_ERROR;
+             ErrorCode error_code;
              auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
-             if (U_FAILURE(error_code)) {
+             if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
@@ -84,9 +84,9 @@ void init_uniset(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           py::init([](const char16_t *pattern, ParsePosition &pos, uint32_t options,
                       std::optional<const SymbolTable *> symbols) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -164,9 +164,9 @@ void init_uniset(py::module &m) {
   us.def(
       "apply_int_property_value",
       [](UnicodeSet &self, UProperty prop, int32_t value) -> UnicodeSet & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.applyIntPropertyValue(prop, value, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -176,9 +176,9 @@ void init_uniset(py::module &m) {
         "apply_pattern",
         [](UnicodeSet &self, const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
            std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -189,9 +189,9 @@ void init_uniset(py::module &m) {
           "apply_pattern",
           [](UnicodeSet &self, const char16_t *pattern, ParsePosition &pos, uint32_t options,
              std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -200,9 +200,9 @@ void init_uniset(py::module &m) {
       .def(
           "apply_pattern",
           [](UnicodeSet &self, const UnicodeString &pattern) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -212,9 +212,9 @@ void init_uniset(py::module &m) {
           // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
           [](UnicodeSet &self, const char16_t *pattern) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPattern(pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -223,9 +223,9 @@ void init_uniset(py::module &m) {
   us.def(
         "apply_property_alias",
         [](UnicodeSet &self, const UnicodeString &prop, const UnicodeString &value) -> UnicodeSet & {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto &result = self.applyPropertyAlias(prop, value, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -235,9 +235,9 @@ void init_uniset(py::module &m) {
           // const char16_t *prop -> const UnicodeString &prop
           "apply_property_alias",
           [](UnicodeSet &self, const char16_t *prop, const UnicodeString &value) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -247,9 +247,9 @@ void init_uniset(py::module &m) {
           // const char16_t *value -> const UnicodeString &value
           "apply_property_alias",
           [](UnicodeSet &self, const UnicodeString &prop, const char16_t *value) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -260,9 +260,9 @@ void init_uniset(py::module &m) {
           // const char16_t *value -> const UnicodeString &value
           "apply_property_alias",
           [](UnicodeSet &self, const char16_t *prop, const char16_t *value) -> UnicodeSet & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -382,12 +382,12 @@ void init_uniset(py::module &m) {
           "retain_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.retainAll(s); },
           py::arg("s"));
   us.def("serialize", [](const UnicodeSet &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     const auto length = self.serialize(nullptr, 0, error_code);
     std::vector<uint16_t> result(length);
-    error_code = U_ZERO_ERROR;
+    error_code.reset();
     self.serialize(result.data(), length, error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;

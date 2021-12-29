@@ -8,9 +8,9 @@ void init_dtitvinf(py::module &m) {
   // icu::DateIntervalInfo
   py::class_<DateIntervalInfo> dii(m, "DateIntervalInfo");
   dii.def(py::init([](const Locale &locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -19,9 +19,9 @@ void init_dtitvinf(py::module &m) {
       .def(
           // const char *locale -> const Locale &locale
           py::init([](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -40,9 +40,9 @@ void init_dtitvinf(py::module &m) {
          "get_interval_pattern",
          [](const DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields field,
             UnicodeString &result) -> UnicodeString & {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return string;
@@ -53,9 +53,9 @@ void init_dtitvinf(py::module &m) {
           "get_interval_pattern",
           [](const DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields field,
              UnicodeString &result) -> UnicodeString & {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return string;
@@ -64,9 +64,9 @@ void init_dtitvinf(py::module &m) {
   dii.def(
          "set_fallback_interval_pattern",
          [](DateIntervalInfo &self, const UnicodeString &fallback_pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setFallbackIntervalPattern(fallback_pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -75,9 +75,9 @@ void init_dtitvinf(py::module &m) {
           // const char16_t *fallback_pattern -> const UnicodeString &fallback_pattern
           "set_fallback_interval_pattern",
           [](DateIntervalInfo &self, const char16_t *fallback_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setFallbackIntervalPattern(fallback_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -86,9 +86,9 @@ void init_dtitvinf(py::module &m) {
          "set_interval_pattern",
          [](DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields lrg_diff_cal_unit,
             const UnicodeString &interval_pattern) {
-           UErrorCode error_code = U_ZERO_ERROR;
+           ErrorCode error_code;
            self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-           if (U_FAILURE(error_code)) {
+           if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
          },
@@ -98,9 +98,9 @@ void init_dtitvinf(py::module &m) {
           "set_interval_pattern",
           [](DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields lrg_diff_cal_unit,
              const UnicodeString &interval_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -110,9 +110,9 @@ void init_dtitvinf(py::module &m) {
           "set_interval_pattern",
           [](DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields lrg_diff_cal_unit,
              const char16_t *interval_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
@@ -123,9 +123,9 @@ void init_dtitvinf(py::module &m) {
           "set_interval_pattern",
           [](DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields lrg_diff_cal_unit,
              const char16_t *interval_pattern) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },

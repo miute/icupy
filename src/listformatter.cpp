@@ -1,7 +1,7 @@
 #include "main.hpp"
-#include <pybind11/stl.h>
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+#include <pybind11/stl.h>
 #include <unicode/listformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
@@ -16,9 +16,9 @@ void init_listformatter(py::module &m) {
   fl.def(
       "append_to",
       [](const FormattedList &self, Appendable &appendable) -> Appendable & {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -27,26 +27,26 @@ void init_listformatter(py::module &m) {
   fl.def(
       "next_position",
       [](const FormattedList &self, ConstrainedFieldPosition &cfpos) {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("cfpos"));
   fl.def("to_string", [](const FormattedList &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
   });
   fl.def("to_temp_string", [](const FormattedList &self) {
-    UErrorCode error_code = U_ZERO_ERROR;
+    ErrorCode error_code;
     auto result = self.toTempString(error_code);
-    if (U_FAILURE(error_code)) {
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return result;
@@ -62,9 +62,9 @@ void init_listformatter(py::module &m) {
   lf.def_static(
         "create_instance",
         [](const Locale &locale) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = ListFormatter::createInstance(locale, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -74,18 +74,18 @@ void init_listformatter(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = ListFormatter::createInstance(locale, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("locale"))
       .def_static("create_instance", []() {
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = ListFormatter::createInstance(error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -94,9 +94,9 @@ void init_listformatter(py::module &m) {
   lf.def_static(
         "create_instance",
         [](const Locale &locale, UListFormatterType type, UListFormatterWidth width) {
-          UErrorCode error_code = U_ZERO_ERROR;
+          ErrorCode error_code;
           auto result = ListFormatter::createInstance(locale, type, width, error_code);
-          if (U_FAILURE(error_code)) {
+          if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
@@ -106,9 +106,9 @@ void init_listformatter(py::module &m) {
           // const char *locale -> const Locale &locale
           "create_instance",
           [](const char *locale, UListFormatterType type, UListFormatterWidth width) {
-            UErrorCode error_code = U_ZERO_ERROR;
+            ErrorCode error_code;
             auto result = ListFormatter::createInstance(locale, type, width, error_code);
-            if (U_FAILURE(error_code)) {
+            if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
@@ -123,9 +123,9 @@ void init_listformatter(py::module &m) {
         if (count == -1) {
           count = static_cast<int32_t>(items.size());
         }
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto &result = self.format(_items.data(), count, append_to, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
@@ -139,9 +139,9 @@ void init_listformatter(py::module &m) {
         if (count == -1) {
           count = static_cast<int32_t>(items.size());
         }
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         auto result = self.formatStringsToValue(_items.data(), count, error_code);
-        if (U_FAILURE(error_code)) {
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;

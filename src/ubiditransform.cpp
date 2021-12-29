@@ -4,6 +4,8 @@
 #include "ubiditransformptr.hpp"
 #include <unicode/ushape.h>
 
+using namespace icu;
+
 _UBiDiTransformPtr::_UBiDiTransformPtr(UBiDiTransform *p) : p_(p) {}
 _UBiDiTransformPtr::~_UBiDiTransformPtr() {}
 UBiDiTransform *_UBiDiTransformPtr::get() const { return p_; }
@@ -56,9 +58,9 @@ void init_ubiditransform(py::module &m) {
       "ubiditransform_close", [](_UBiDiTransformPtr &bidi_transform) { ubiditransform_close(bidi_transform); },
       py::arg("bidi_transform"));
   m.def("ubiditransform_open", []() {
-    UErrorCode error_code = U_ZERO_ERROR;
-    auto bidi_transform = ubiditransform_open(&error_code);
-    if (U_FAILURE(error_code)) {
+    ErrorCode error_code;
+    auto bidi_transform = ubiditransform_open(error_code);
+    if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
     return std::make_unique<_UBiDiTransformPtr>(bidi_transform);
@@ -73,11 +75,11 @@ void init_ubiditransform(py::module &m) {
           dest_size *= 2;
         }
         std::u16string result(dest_size, u'\0');
-        UErrorCode error_code = U_ZERO_ERROR;
+        ErrorCode error_code;
         dest_size =
             ubiditransform_transform(bidi_transform, src, src_length, result.data(), dest_size, in_para_level, in_order,
-                                     out_para_level, out_order, do_mirroring, shaping_options, &error_code);
-        if (U_FAILURE(error_code)) {
+                                     out_para_level, out_order, do_mirroring, shaping_options, error_code);
+        if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         result.resize(dest_size);

@@ -10,6 +10,7 @@
 #include <list>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
+#include <unicode/errorcode.h>
 #include <unicode/unistr.h>
 #include <vector>
 
@@ -22,13 +23,14 @@ PYBIND11_MAKE_OPAQUE(_UnicodeStringVector);
 
 class ICUError : public std::exception {
 public:
-  explicit ICUError(UErrorCode error_code, const char *message = "");
+  explicit ICUError(const icu::ErrorCode &error_code, const char *message = "");
+  explicit ICUError(UErrorCode error_code);
   const char *what() const noexcept override { return what_.c_str(); };
-  UErrorCode get_error_code() const { return error_code_; };
+  const icu::ErrorCode &get_error_code() const { return error_code_; };
   const char *get_message() const { return message_.c_str(); };
 
 private:
-  UErrorCode error_code_;
+  icu::ErrorCode error_code_;
   std::string message_;
   std::string what_;
 };
