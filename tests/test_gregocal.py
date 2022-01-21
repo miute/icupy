@@ -503,6 +503,8 @@ def test_gregorian_calendar():
     locale2 = Locale.get_default()
     zone1 = SimpleTimeZone(8 * HOUR, "s2")
     zone2 = TimeZone.create_default()
+    zone3 = TimeZone.create_time_zone("Asia/Tokyo")
+    offset = zone3.get_raw_offset() - zone2.get_raw_offset()
 
     # [1]
     # icu::GregorianCalendar::GregorianCalendar(UErrorCode &success)
@@ -548,7 +550,7 @@ def test_gregorian_calendar():
     cal7 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5)
     assert cal7.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal7.get_time_zone() == zone2
-    assert cal7.get_time() == 1215183600000.0  # 2008-07-05T00:00:00Z
+    assert cal7.get_time() - offset == 1215183600000.0  # 2008-07-05T00:00:00Z
 
     # [8]
     # icu::GregorianCalendar::GregorianCalendar(
@@ -562,7 +564,7 @@ def test_gregorian_calendar():
     cal8 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5, 23, 30)
     assert cal8.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal8.get_time_zone() == zone2
-    assert cal8.get_time() == 1215268200000.0  # 2008-07-05T23:30:00Z
+    assert cal8.get_time() - offset == 1215268200000.0  # 2008-07-05T23:30:00Z
 
     # [9]
     # icu::GregorianCalendar::GregorianCalendar(
@@ -577,7 +579,7 @@ def test_gregorian_calendar():
     cal9 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5, 23, 30, 15)
     assert cal9.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal9.get_time_zone() == zone2
-    assert cal9.get_time() == 1215268215000.0  # 2008-07-05T23:30:15Z
+    assert cal9.get_time() - offset == 1215268215000.0  # 2008-07-05T23:30:15Z
 
     # [10]
     # icu::GregorianCalendar::GregorianCalendar(
@@ -586,4 +588,4 @@ def test_gregorian_calendar():
     cal10 = GregorianCalendar(cal9)
     assert cal10.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal10.get_time_zone() == zone2
-    assert cal10.get_time() == 1215268215000.0  # 2008-07-05T23:30:15Z
+    assert cal10.get_time() - offset == 1215268215000.0  # 2008-07-05T23:30:15Z
