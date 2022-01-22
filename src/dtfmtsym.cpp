@@ -52,7 +52,7 @@ void init_dtfmtsym(py::module &m) {
            }),
            py::arg("locale"))
       .def(py::init<const DateFormatSymbols &>(), py::arg("other"))
-      // .def(py::self != py::self, py::arg("other"))
+      .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
   dfs.def(
       "get_am_pm_strings",
