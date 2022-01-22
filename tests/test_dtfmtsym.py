@@ -48,6 +48,12 @@ def test_api():
 
 
 def test_date_format_symbols():
+    locale = (
+        Locale("en_US")
+        if str(Locale.get_default()) == "ja_JP"
+        else Locale("ja_JP")
+    )
+
     # [1]
     # icu::DateFormatSymbols::DateFormatSymbols(UErrorCode &status)
     sym1 = DateFormatSymbols()
@@ -57,7 +63,7 @@ def test_date_format_symbols():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    sym2 = DateFormatSymbols(Locale.get_us())
+    sym2 = DateFormatSymbols(locale)
 
     # [5]
     # icu::DateFormatSymbols::DateFormatSymbols(const DateFormatSymbols &)
