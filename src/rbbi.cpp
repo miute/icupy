@@ -312,7 +312,7 @@ void init_rbbi(py::module &m) {
             }
             return result;
           }),
-          py::arg("compiled_rules"), py::arg("rule_length"))
+          py::keep_alive<0, 1>(), py::arg("compiled_rules"), py::arg("rule_length"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
   rbbi.def(
