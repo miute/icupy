@@ -13,7 +13,7 @@ from icupy.icu import (
 
 
 def _int28_to_uint28(n: int) -> int:
-    return n if n >= 0 else 2 ** 28 + n
+    return n if n >= 0 else 2**28 + n
 
 
 def test_api():
