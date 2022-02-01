@@ -10,7 +10,7 @@ if sys.platform.startswith("win"):
 
     path = (  # type: ignore
         Path(os.getenv("ICU_ROOT", "C:/icu")) / "bin64"
-        if sys.maxsize > 2 ** 32
+        if sys.maxsize > 2**32
         else "bin"
     ).resolve()
     if not path.is_dir():
