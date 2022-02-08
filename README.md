@@ -257,7 +257,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
    For example, using the Ninja build system and Clang:
 
    ```bash
-   CMAKE_GENERATOR=Ninja CXX=clang pip install icupy
+   CMAKE_GENERATOR=Ninja CXX=clang++ pip install icupy
    ```
 
    Alternatively, installing development version from the git repository:
