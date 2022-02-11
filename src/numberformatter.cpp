@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
+#include <pybind11/stl.h>
 #include <unicode/numberformatter.h>
 
 using namespace icu;
@@ -213,60 +214,36 @@ void init_numberformatter(py::module &, py::module &m2) {
   // icu::number::NumberFormatter
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   nf.def_static(
-        "for_skeleton",
-        [](const UnicodeString &skeleton) {
-          ErrorCode error_code;
-          auto result = NumberFormatter::forSkeleton(skeleton, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("skeleton"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "for_skeleton",
-          [](const char16_t *skeleton) {
-            ErrorCode error_code;
-            auto result = NumberFormatter::forSkeleton(skeleton, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"));
+      "for_skeleton",
+      [](const _UnicodeStringVariant &skeleton) {
+        ErrorCode error_code;
+        auto result = NumberFormatter::forSkeleton(VARIANT_TO_UNISTR(skeleton), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("skeleton"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   nf.def_static(
-        "for_skeleton",
-        [](const UnicodeString &skeleton, UParseError &perror) {
-          ErrorCode error_code;
-          auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("skeleton"), py::arg("perror"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "for_skeleton",
-          [](const char16_t *skeleton, UParseError &perror) {
-            ErrorCode error_code;
-            auto result = NumberFormatter::forSkeleton(skeleton, perror, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("perror"));
+      "for_skeleton",
+      [](const _UnicodeStringVariant &skeleton, UParseError &perror) {
+        ErrorCode error_code;
+        auto result = NumberFormatter::forSkeleton(VARIANT_TO_UNISTR(skeleton), perror, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("skeleton"), py::arg("perror"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
   nf.def_static("with_", &NumberFormatter::with);
-  nf.def_static("with_locale", &NumberFormatter::withLocale, py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "with_locale", [](const char *locale) { return NumberFormatter::withLocale(locale); }, py::arg("locale"));
+  nf.def_static(
+      "with_locale",
+      [](const _LocaleVariant &locale) { return NumberFormatter::withLocale(VARIANT_TO_LOCALE(locale)); },
+      py::arg("locale"));
 
   // icu::number::NumberFormatterSettings<LocalizedNumberFormatter>
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -527,10 +504,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
   unf.def(py::init<const UnlocalizedNumberFormatter &>(), py::arg("other"));
   unf.def(
-         "locale", [](const UnlocalizedNumberFormatter &self, const Locale &locale) { return self.locale(locale); },
-         py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "locale", [](const UnlocalizedNumberFormatter &self, const char *locale) { return self.locale(locale); },
-          py::arg("locale"));
+      "locale",
+      [](const UnlocalizedNumberFormatter &self, const _LocaleVariant &locale) {
+        return self.locale(VARIANT_TO_LOCALE(locale));
+      },
+      py::arg("locale"));
 }

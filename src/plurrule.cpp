@@ -43,69 +43,33 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     return result;
   });
   pr.def_static(
-        "create_rules",
-        [](const UnicodeString &description) {
-          ErrorCode error_code;
-          auto result = PluralRules::createRules(description, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("description"))
-      .def_static(
-          // const char16_t *description -> const UnicodeString &description
-          "create_rules",
-          [](const char16_t *description) {
-            ErrorCode error_code;
-            auto result = PluralRules::createRules(description, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("description"));
+      "create_rules",
+      [](const _UnicodeStringVariant &description) {
+        ErrorCode error_code;
+        auto result = PluralRules::createRules(VARIANT_TO_UNISTR(description), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("description"));
   pr.def_static(
         "for_locale",
-        [](const Locale &locale) {
+        [](const _LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = PluralRules::forLocale(locale, error_code);
+          auto result = PluralRules::forLocale(VARIANT_TO_LOCALE(locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "for_locale",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = PluralRules::forLocale(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .def_static(
           "for_locale",
-          [](const Locale &locale, UPluralType type) {
+          [](const _LocaleVariant &locale, UPluralType type) {
             ErrorCode error_code;
-            auto result = PluralRules::forLocale(locale, type, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"), py::arg("type_"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "for_locale",
-          [](const char *locale, UPluralType type) {
-            ErrorCode error_code;
-            auto result = PluralRules::forLocale(locale, type, error_code);
+            auto result = PluralRules::forLocale(VARIANT_TO_LOCALE(locale), type, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -124,39 +88,25 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     return result;
   });
   pr.def(
-        "get_samples",
-        [](PluralRules &self, const UnicodeString &keyword) {
-          ErrorCode error_code;
-          auto dest_capacity = self.getSamples(keyword, (double *)nullptr, 0, error_code);
-          std::vector<double> result(dest_capacity);
-          error_code.reset();
-          self.getSamples(keyword, result.data(), dest_capacity, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("keyword"))
-      .def(
-          // const char16_t *keyword -> const UnicodeString &keyword
-          "get_samples",
-          [](PluralRules &self, const char16_t *keyword) {
-            ErrorCode error_code;
-            auto dest_capacity = self.getSamples(keyword, (double *)nullptr, 0, error_code);
-            std::vector<double> result(dest_capacity);
-            error_code.reset();
-            self.getSamples(keyword, result.data(), dest_capacity, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("keyword"));
-  pr.def("is_keyword", &PluralRules::isKeyword, py::arg("keyword"))
-      .def(
-          // const char16_t *keyword -> const UnicodeString &keyword
-          "is_keyword", [](const PluralRules &self, const char16_t *keyword) { return self.isKeyword(keyword); },
-          py::arg("keyword"));
+      "get_samples",
+      [](PluralRules &self, const _UnicodeStringVariant &keyword) {
+        ErrorCode error_code;
+        auto dest_capacity = self.getSamples(VARIANT_TO_UNISTR(keyword), (double *)nullptr, 0, error_code);
+        std::vector<double> result(dest_capacity);
+        error_code.reset();
+        self.getSamples(VARIANT_TO_UNISTR(keyword), result.data(), dest_capacity, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("keyword"));
+  pr.def(
+      "is_keyword",
+      [](const PluralRules &self, const _UnicodeStringVariant &keyword) {
+        return self.isKeyword(VARIANT_TO_UNISTR(keyword));
+      },
+      py::arg("keyword"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   pr.def(
       "select",

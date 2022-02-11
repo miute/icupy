@@ -61,27 +61,15 @@ void init_listformatter(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
   lf.def_static(
         "create_instance",
-        [](const Locale &locale) {
+        [](const _LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = ListFormatter::createInstance(locale, error_code);
+          auto result = ListFormatter::createInstance(VARIANT_TO_LOCALE(locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = ListFormatter::createInstance(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
       .def_static("create_instance", []() {
         ErrorCode error_code;
         auto result = ListFormatter::createInstance(error_code);
@@ -92,28 +80,16 @@ void init_listformatter(py::module &m) {
       });
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   lf.def_static(
-        "create_instance",
-        [](const Locale &locale, UListFormatterType type, UListFormatterWidth width) {
-          ErrorCode error_code;
-          auto result = ListFormatter::createInstance(locale, type, width, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("locale"), py::arg("type_"), py::arg("width"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char *locale, UListFormatterType type, UListFormatterWidth width) {
-            ErrorCode error_code;
-            auto result = ListFormatter::createInstance(locale, type, width, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"), py::arg("type_"), py::arg("width"));
+      "create_instance",
+      [](const _LocaleVariant &locale, UListFormatterType type, UListFormatterWidth width) {
+        ErrorCode error_code;
+        auto result = ListFormatter::createInstance(VARIANT_TO_LOCALE(locale), type, width, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("locale"), py::arg("type_"), py::arg("width"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
   lf.def(
       "format",

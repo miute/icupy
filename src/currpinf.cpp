@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/currpinf.h>
 #include <unicode/plurrule.h>
 
@@ -16,26 +17,15 @@ void init_currpinf(py::module &m) {
        }
        return result;
      }))
-      .def(py::init([](const Locale &locale) {
+      .def(py::init([](const _LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
+             auto result = std::make_unique<CurrencyPluralInfo>(VARIANT_TO_LOCALE(locale), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<CurrencyPluralInfo>(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"))
       .def(py::init<const CurrencyPluralInfo &>(), py::arg("info"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
@@ -43,101 +33,41 @@ void init_currpinf(py::module &m) {
       .def(
           "__deepcopy__", [](const CurrencyPluralInfo &self, py::dict) { return self.clone(); }, py::arg("memo"));
   cpi.def("clone", &CurrencyPluralInfo::clone);
-  cpi.def("get_currency_plural_pattern", &CurrencyPluralInfo::getCurrencyPluralPattern, py::arg("plural_count"),
-          py::arg("result"))
-      .def(
-          // const char16_t *plural_count -> const UnicodeString &plural_count
-          "get_currency_plural_pattern",
-          [](const CurrencyPluralInfo &self, const char16_t *plural_count, UnicodeString &result) -> UnicodeString & {
-            return self.getCurrencyPluralPattern(plural_count, result);
-          },
-          py::arg("plural_count"), py::arg("result"));
+  cpi.def(
+      "get_currency_plural_pattern",
+      [](const CurrencyPluralInfo &self, const _UnicodeStringVariant &plural_count, UnicodeString &result)
+          -> UnicodeString & { return self.getCurrencyPluralPattern(VARIANT_TO_UNISTR(plural_count), result); },
+      py::arg("plural_count"), py::arg("result"));
   cpi.def("get_locale", &CurrencyPluralInfo::getLocale);
   cpi.def("get_plural_rules", &CurrencyPluralInfo::getPluralRules, py::return_value_policy::reference);
   cpi.def(
-         "set_currency_plural_pattern",
-         [](CurrencyPluralInfo &self, const UnicodeString &plural_count, const UnicodeString &pattern) {
-           ErrorCode error_code;
-           self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("plural_count"), py::arg("pattern"))
-      .def(
-          // const char16_t *plural_count -> const UnicodeString &plural_count
-          "set_currency_plural_pattern",
-          [](CurrencyPluralInfo &self, const char16_t *plural_count, const UnicodeString &pattern) {
-            ErrorCode error_code;
-            self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("plural_count"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "set_currency_plural_pattern",
-          [](CurrencyPluralInfo &self, const UnicodeString &plural_count, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("plural_count"), py::arg("pattern"))
-      .def(
-          // const char16_t *plural_count -> const UnicodeString &plural_count
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "set_currency_plural_pattern",
-          [](CurrencyPluralInfo &self, const char16_t *plural_count, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.setCurrencyPluralPattern(plural_count, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("plural_count"), py::arg("pattern"));
+      "set_currency_plural_pattern",
+      [](CurrencyPluralInfo &self, const _UnicodeStringVariant &plural_count, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.setCurrencyPluralPattern(VARIANT_TO_UNISTR(plural_count), VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("plural_count"), py::arg("pattern"));
   cpi.def(
-         "set_locale",
-         [](CurrencyPluralInfo &self, const Locale &loc) {
-           ErrorCode error_code;
-           self.setLocale(loc, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("loc"))
-      .def(
-          // const char *loc -> const Locale &loc
-          "set_locale",
-          [](CurrencyPluralInfo &self, const char *loc) {
-            ErrorCode error_code;
-            self.setLocale(loc, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("loc"));
+      "set_locale",
+      [](CurrencyPluralInfo &self, const _LocaleVariant &loc) {
+        ErrorCode error_code;
+        self.setLocale(VARIANT_TO_LOCALE(loc), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("loc"));
   cpi.def(
-         "set_plural_rules",
-         [](CurrencyPluralInfo &self, const UnicodeString &rule_description) {
-           ErrorCode error_code;
-           self.setPluralRules(rule_description, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("rule_description"))
-      .def(
-          // const char16_t *rule_description -> const UnicodeString &rule_description
-          "set_plural_rules",
-          [](CurrencyPluralInfo &self, const char16_t *rule_description) {
-            ErrorCode error_code;
-            self.setPluralRules(rule_description, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("rule_description"));
+      "set_plural_rules",
+      [](CurrencyPluralInfo &self, const _UnicodeStringVariant &rule_description) {
+        ErrorCode error_code;
+        self.setPluralRules(VARIANT_TO_UNISTR(rule_description), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("rule_description"));
 }

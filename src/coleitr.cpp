@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/chariter.h>
 #include <unicode/coleitr.h>
 
@@ -76,20 +77,9 @@ void init_coleitr(py::module &m) {
          py::arg("str_"))
       .def(
           "set_text",
-          [](CollationElementIterator &self, const UnicodeString &str) {
+          [](CollationElementIterator &self, const _UnicodeStringVariant &str) {
             ErrorCode error_code;
-            self.setText(str, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("str_"))
-      .def(
-          // const char16_t *str -> const UnicodeString &str
-          "set_text",
-          [](CollationElementIterator &self, const char16_t *str) {
-            ErrorCode error_code;
-            self.setText(str, error_code);
+            self.setText(VARIANT_TO_UNISTR(str), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

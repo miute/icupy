@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/dtitvinf.h>
 
 using namespace icu;
@@ -7,20 +8,9 @@ using namespace icu;
 void init_dtitvinf(py::module &m) {
   // icu::DateIntervalInfo
   py::class_<DateIntervalInfo> dii(m, "DateIntervalInfo");
-  dii.def(py::init([](const Locale &locale) {
+  dii.def(py::init([](const _LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<DateIntervalInfo>(locale, error_code);
+            auto result = std::make_unique<DateIntervalInfo>(VARIANT_TO_LOCALE(locale), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -37,97 +27,37 @@ void init_dtitvinf(py::module &m) {
   dii.def("get_default_order", &DateIntervalInfo::getDefaultOrder);
   dii.def("get_fallback_interval_pattern", &DateIntervalInfo::getFallbackIntervalPattern, py::arg("result"));
   dii.def(
-         "get_interval_pattern",
-         [](const DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields field,
-            UnicodeString &result) -> UnicodeString & {
-           ErrorCode error_code;
-           auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-           return string;
-         },
-         py::arg("skeleton"), py::arg("field"), py::arg("result"))
-      .def(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "get_interval_pattern",
-          [](const DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields field,
-             UnicodeString &result) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &string = self.getIntervalPattern(skeleton, field, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return string;
-          },
-          py::arg("skeleton"), py::arg("field"), py::arg("result"));
+      "get_interval_pattern",
+      [](const DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields field,
+         UnicodeString &result) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &string = self.getIntervalPattern(VARIANT_TO_UNISTR(skeleton), field, result, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return string;
+      },
+      py::arg("skeleton"), py::arg("field"), py::arg("result"));
   dii.def(
-         "set_fallback_interval_pattern",
-         [](DateIntervalInfo &self, const UnicodeString &fallback_pattern) {
-           ErrorCode error_code;
-           self.setFallbackIntervalPattern(fallback_pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("fallback_pattern"))
-      .def(
-          // const char16_t *fallback_pattern -> const UnicodeString &fallback_pattern
-          "set_fallback_interval_pattern",
-          [](DateIntervalInfo &self, const char16_t *fallback_pattern) {
-            ErrorCode error_code;
-            self.setFallbackIntervalPattern(fallback_pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("fallback_pattern"));
+      "set_fallback_interval_pattern",
+      [](DateIntervalInfo &self, const _UnicodeStringVariant &fallback_pattern) {
+        ErrorCode error_code;
+        self.setFallbackIntervalPattern(VARIANT_TO_UNISTR(fallback_pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("fallback_pattern"));
   dii.def(
-         "set_interval_pattern",
-         [](DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields lrg_diff_cal_unit,
-            const UnicodeString &interval_pattern) {
-           ErrorCode error_code;
-           self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
-      .def(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "set_interval_pattern",
-          [](DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields lrg_diff_cal_unit,
-             const UnicodeString &interval_pattern) {
-            ErrorCode error_code;
-            self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
-      .def(
-          // const char16_t *interval_pattern -> const UnicodeString &interval_pattern
-          "set_interval_pattern",
-          [](DateIntervalInfo &self, const UnicodeString &skeleton, UCalendarDateFields lrg_diff_cal_unit,
-             const char16_t *interval_pattern) {
-            ErrorCode error_code;
-            self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"))
-      .def(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          // const char16_t *interval_pattern -> const UnicodeString &interval_pattern
-          "set_interval_pattern",
-          [](DateIntervalInfo &self, const char16_t *skeleton, UCalendarDateFields lrg_diff_cal_unit,
-             const char16_t *interval_pattern) {
-            ErrorCode error_code;
-            self.setIntervalPattern(skeleton, lrg_diff_cal_unit, interval_pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"));
+      "set_interval_pattern",
+      [](DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields lrg_diff_cal_unit,
+         const _UnicodeStringVariant &interval_pattern) {
+        ErrorCode error_code;
+        self.setIntervalPattern(VARIANT_TO_UNISTR(skeleton), lrg_diff_cal_unit, VARIANT_TO_UNISTR(interval_pattern),
+                                error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"));
 }

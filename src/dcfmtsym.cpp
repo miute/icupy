@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/dcfmtsym.h>
 
 using namespace icu;
@@ -47,9 +48,9 @@ void init_dcfmtsym(py::module &m) {
 
   dfs.def(
          // [1] DecimalFormatSymbols::DecimalFormatSymbols
-         py::init([](const Locale &locale) {
+         py::init([](const _LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<DecimalFormatSymbols>(locale, error_code);
+           auto result = std::make_unique<DecimalFormatSymbols>(VARIANT_TO_LOCALE(locale), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
@@ -57,32 +58,10 @@ void init_dcfmtsym(py::module &m) {
          }),
          py::arg("locale"))
       .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormatSymbols>(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"))
-      .def(
           // [2] DecimalFormatSymbols::DecimalFormatSymbols
-          py::init([](const Locale &locale, const NumberingSystem &ns) {
+          py::init([](const _LocaleVariant &locale, const NumberingSystem &ns) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormatSymbols>(locale, ns, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("ns"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, const NumberingSystem &ns) {
-            ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormatSymbols>(locale, ns, error_code);
+            auto result = std::make_unique<DecimalFormatSymbols>(VARIANT_TO_LOCALE(locale), ns, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -138,21 +117,17 @@ void init_dcfmtsym(py::module &m) {
       },
       py::arg("type_"), py::arg("before_currency"));
   dfs.def("get_symbol", &DecimalFormatSymbols::getSymbol, py::arg("symbol"));
-  dfs.def("set_pattern_for_currency_spacing", &DecimalFormatSymbols::setPatternForCurrencySpacing, py::arg("type_"),
-          py::arg("before_currency"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "set_pattern_for_currency_spacing",
-          [](DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency, const char16_t *pattern) {
-            self.setPatternForCurrencySpacing(type, before_currency, pattern);
-          },
-          py::arg("type_"), py::arg("before_currency"), py::arg("pattern"));
-  dfs.def("set_symbol", &DecimalFormatSymbols::setSymbol, py::arg("symbol"), py::arg("value"),
-          py::arg("propogate_digits") = true)
-      .def(
-          // const char16_t *value -> const UnicodeString &value
-          "set_symbol",
-          [](DecimalFormatSymbols &self, DecimalFormatSymbols::ENumberFormatSymbol symbol, const char16_t *value,
-             const UBool propogate_digits) { self.setSymbol(symbol, value, propogate_digits); },
-          py::arg("symbol"), py::arg("value"), py::arg("propogate_digits") = true);
+  dfs.def(
+      "set_pattern_for_currency_spacing",
+      [](DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency,
+         const _UnicodeStringVariant &pattern) {
+        self.setPatternForCurrencySpacing(type, before_currency, VARIANT_TO_UNISTR(pattern));
+      },
+      py::arg("type_"), py::arg("before_currency"), py::arg("pattern"));
+  dfs.def(
+      "set_symbol",
+      [](DecimalFormatSymbols &self, DecimalFormatSymbols::ENumberFormatSymbol symbol,
+         const _UnicodeStringVariant &value,
+         const UBool propogate_digits) { self.setSymbol(symbol, VARIANT_TO_UNISTR(value), propogate_digits); },
+      py::arg("symbol"), py::arg("value"), py::arg("propogate_digits") = true);
 }

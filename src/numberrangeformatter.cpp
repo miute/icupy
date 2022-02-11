@@ -112,11 +112,10 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
   // icu::number::NumberRangeFormatter
   nrf.def_static("with_", &NumberRangeFormatter::with);
-  nrf.def_static("with_locale", &NumberRangeFormatter::withLocale, py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "with_locale", [](const char *locale) { return NumberRangeFormatter::withLocale(locale); },
-          py::arg("locale"));
+  nrf.def_static(
+      "with_locale",
+      [](const _LocaleVariant &locale) { return NumberRangeFormatter::withLocale(VARIANT_TO_LOCALE(locale)); },
+      py::arg("locale"));
 
   // icu::number::NumberRangeFormatterSettings<LocalizedNumberRangeFormatter>
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -229,12 +228,10 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   // icu::number::UnlocalizedNumberRangeFormatter
   unrf.def(py::init<>()).def(py::init<const UnlocalizedNumberRangeFormatter &>(), py::arg("other"));
   unrf.def(
-          "locale",
-          [](const UnlocalizedNumberRangeFormatter &self, const Locale &locale) { return self.locale(locale); },
-          py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "locale", [](const UnlocalizedNumberRangeFormatter &self, const char *locale) { return self.locale(locale); },
-          py::arg("locale"));
+      "locale",
+      [](const UnlocalizedNumberRangeFormatter &self, const _LocaleVariant &locale) {
+        return self.locale(VARIANT_TO_LOCALE(locale));
+      },
+      py::arg("locale"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 }

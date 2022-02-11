@@ -260,14 +260,12 @@ void init_dtfmtsym(py::module &m) {
         self.setEras(_eras.data(), count);
       },
       py::arg("eras"), py::arg("count") = -1);
-  dfs.def("set_local_pattern_chars", &DateFormatSymbols::setLocalPatternChars, py::arg("new_local_pattern_chars"))
-      .def(
-          // const char16_t *new_local_pattern_chars -> const UnicodeString &new_local_pattern_chars
-          "set_local_pattern_chars",
-          [](DateFormatSymbols &self, const char16_t *new_local_pattern_chars) {
-            self.setLocalPatternChars(new_local_pattern_chars);
-          },
-          py::arg("new_local_pattern_chars"));
+  dfs.def(
+      "set_local_pattern_chars",
+      [](DateFormatSymbols &self, const _UnicodeStringVariant &new_local_pattern_chars) {
+        self.setLocalPatternChars(VARIANT_TO_UNISTR(new_local_pattern_chars));
+      },
+      py::arg("new_local_pattern_chars"));
   dfs.def(
          "set_months",
          [](DateFormatSymbols &self, const std::list<UnicodeString> &months, int32_t count) {

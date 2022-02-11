@@ -70,27 +70,15 @@ void init_localematcher(py::module &m) {
   // icu::LocaleMatcher
   lm.def(
         "get_best_match",
-        [](const LocaleMatcher &self, const Locale &desired_locale) {
+        [](const LocaleMatcher &self, const _LocaleVariant &desired_locale) {
           ErrorCode error_code;
-          auto result = self.getBestMatch(desired_locale, error_code);
+          auto result = self.getBestMatch(VARIANT_TO_LOCALE(desired_locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::return_value_policy::reference, py::arg("desired_locale"))
-      .def(
-          // const char *desired_locale -> const Locale &desired_locale
-          "get_best_match",
-          [](const LocaleMatcher &self, const char *desired_locale) {
-            ErrorCode error_code;
-            auto result = self.getBestMatch(desired_locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::return_value_policy::reference, py::arg("desired_locale"))
       .def(
           "get_best_match",
           [](const LocaleMatcher &self, const std::vector<Locale> &desired_locales) {
@@ -141,63 +129,26 @@ void init_localematcher(py::module &m) {
           py::arg("desired_locales"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lm.def(
-        "is_match",
-        [](const LocaleMatcher &self, const Locale &desired, const Locale &supported) {
-          ErrorCode error_code;
-          auto result = self.isMatch(desired, supported, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *desired -> const Locale &desired
-          "is_match",
-          [](const LocaleMatcher &self, const char *desired, const Locale &supported) {
-            ErrorCode error_code;
-            auto result = self.isMatch(desired, supported, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *supported -> const Locale &supported
-          "is_match",
-          [](const LocaleMatcher &self, const Locale &desired, const char *supported) {
-            ErrorCode error_code;
-            auto result = self.isMatch(desired, supported, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *desired -> const Locale &desired
-          // const char *supported -> const Locale &supported
-          "is_match",
-          [](const LocaleMatcher &self, const char *desired, const char *supported) {
-            ErrorCode error_code;
-            auto result = self.isMatch(desired, supported, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("desired"), py::arg("supported"));
+      "is_match",
+      [](const LocaleMatcher &self, const _LocaleVariant &desired, const _LocaleVariant &supported) {
+        ErrorCode error_code;
+        auto result = self.isMatch(VARIANT_TO_LOCALE(desired), VARIANT_TO_LOCALE(supported), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("desired"), py::arg("supported"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
   // icu::LocaleMatcher::Builder
   lmb.def(py::init<>());
-  lmb.def("add_supported_locale", &Builder::addSupportedLocale, py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "add_supported_locale",
-          [](Builder &self, const char *locale) -> Builder & { return self.addSupportedLocale(locale); },
-          py::arg("locale"));
+  lmb.def(
+      "add_supported_locale",
+      [](Builder &self, const _LocaleVariant &locale) -> Builder & {
+        return self.addSupportedLocale(VARIANT_TO_LOCALE(locale));
+      },
+      py::arg("locale"));
   lmb.def("build", [](const Builder &self) {
     ErrorCode error_code;
     auto result = self.build(error_code);
@@ -216,29 +167,12 @@ void init_localematcher(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
   lmb.def("set_favor_subtag", &Builder::setFavorSubtag, py::arg("subtag"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
-  lmb.def("set_max_distance", &Builder::setMaxDistance, py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *desired -> const Locale &desired
-          "set_max_distance",
-          [](Builder &self, const char *desired, const Locale &supported) -> Builder & {
-            return self.setMaxDistance(desired, supported);
-          },
-          py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *supported -> const Locale &supported
-          "set_max_distance",
-          [](Builder &self, const Locale &desired, const char *supported) -> Builder & {
-            return self.setMaxDistance(desired, supported);
-          },
-          py::arg("desired"), py::arg("supported"))
-      .def(
-          // const char *desired -> const Locale &desired
-          // const char *supported -> const Locale &supported
-          "set_max_distance",
-          [](Builder &self, const char *desired, const char *supported) -> Builder & {
-            return self.setMaxDistance(desired, supported);
-          },
-          py::arg("desired"), py::arg("supported"));
+  lmb.def(
+      "set_max_distance",
+      [](Builder &self, const _LocaleVariant &desired, const _LocaleVariant &supported) -> Builder & {
+        return self.setMaxDistance(VARIANT_TO_LOCALE(desired), VARIANT_TO_LOCALE(supported));
+      },
+      py::arg("desired"), py::arg("supported"));
   lmb.def("set_no_default_locale", &Builder::setNoDefaultLocale);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
   lmb.def(

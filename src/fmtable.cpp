@@ -249,11 +249,12 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   fmt.def("set_double", &Formattable::setDouble, py::arg("d"));
   fmt.def("set_int64", &Formattable::setInt64, py::arg("ll"));
   fmt.def("set_long", &Formattable::setLong, py::arg("l"));
-  fmt.def("set_string", &Formattable::setString, py::arg("string_to_copy"))
-      .def(
-          // const char16_t *string_to_copy -> const UnicodeString &string_to_copy
-          "set_string", [](Formattable &self, const char16_t *string_to_copy) { self.setString(string_to_copy); },
-          py::arg("string_to_copy"));
+  fmt.def(
+      "set_string",
+      [](Formattable &self, const _UnicodeStringVariant &string_to_copy) {
+        self.setString(VARIANT_TO_UNISTR(string_to_copy));
+      },
+      py::arg("string_to_copy"));
   // TODO: Implement "UFormattable *icu::Formattable::toUFormattable()".
   // TODO: Implement "const UFormattable *icu::Formattable::toUFormattable() const".
 }

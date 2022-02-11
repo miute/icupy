@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/plurfmt.h>
 
 using namespace icu;
@@ -27,19 +28,6 @@ void init_plurfmt(py::module &m) {
             return result;
           }),
           py::arg("locale"))
-      /*
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"))
-      */
       .def(
           // [3] icu::PluralFormat
           py::init([](const PluralRules &rules) {
@@ -53,20 +41,9 @@ void init_plurfmt(py::module &m) {
           py::arg("rules"))
       .def(
           // [4] icu::PluralFormat
-          py::init([](const Locale &locale, const PluralRules &rules) {
+          py::init([](const _LocaleVariant &locale, const PluralRules &rules) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("rules"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, const PluralRules &rules) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, error_code);
+            auto result = std::make_unique<PluralFormat>(VARIANT_TO_LOCALE(locale), rules, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -75,20 +52,9 @@ void init_plurfmt(py::module &m) {
           py::arg("locale"), py::arg("rules"))
       .def(
           // [5] icu::PluralFormat
-          py::init([](const Locale &locale, UPluralType type) {
+          py::init([](const _LocaleVariant &locale, UPluralType type) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("type_"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, UPluralType type) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, error_code);
+            auto result = std::make_unique<PluralFormat>(VARIANT_TO_LOCALE(locale), type, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -97,20 +63,9 @@ void init_plurfmt(py::module &m) {
           py::arg("locale"), py::arg("type_"))
       .def(
           // [6] icu::PluralFormat
-          py::init([](const UnicodeString &pattern) {
+          py::init([](const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(pattern, error_code);
+            auto result = std::make_unique<PluralFormat>(VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -119,43 +74,10 @@ void init_plurfmt(py::module &m) {
           py::arg("pattern"))
       .def(
           // [7] icu::PluralFormat
-          py::init([](const Locale &locale, const UnicodeString &pattern) {
+          py::init([](const _LocaleVariant &locale, const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, const UnicodeString &pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const Locale &locale, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char *locale, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, pattern, error_code);
+            auto result =
+                std::make_unique<PluralFormat>(VARIANT_TO_LOCALE(locale), VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -164,20 +86,9 @@ void init_plurfmt(py::module &m) {
           py::arg("locale"), py::arg("pattern"))
       .def(
           // [8] icu::PluralFormat
-          py::init([](const PluralRules &rules, const UnicodeString &pattern) {
+          py::init([](const PluralRules &rules, const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(rules, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("rules"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const PluralRules &rules, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(rules, pattern, error_code);
+            auto result = std::make_unique<PluralFormat>(rules, VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -186,43 +97,10 @@ void init_plurfmt(py::module &m) {
           py::arg("rules"), py::arg("pattern"))
       .def(
           // [9] icu::PluralFormat
-          py::init([](const Locale &locale, const PluralRules &rules, const UnicodeString &pattern) {
+          py::init([](const _LocaleVariant &locale, const PluralRules &rules, const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("rules"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, const PluralRules &rules, const UnicodeString &pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("rules"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const Locale &locale, const PluralRules &rules, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("rules"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char *locale, const PluralRules &rules, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, rules, pattern, error_code);
+            auto result = std::make_unique<PluralFormat>(VARIANT_TO_LOCALE(locale), rules, VARIANT_TO_UNISTR(pattern),
+                                                         error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -231,43 +109,10 @@ void init_plurfmt(py::module &m) {
           py::arg("locale"), py::arg("rules"), py::arg("pattern"))
       .def(
           // [10] icu::PluralFormat
-          py::init([](const Locale &locale, UPluralType type, const UnicodeString &pattern) {
+          py::init([](const _LocaleVariant &locale, UPluralType type, const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("type_"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, UPluralType type, const UnicodeString &pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("type_"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const Locale &locale, UPluralType type, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("type_"), py::arg("pattern"))
-      .def(
-          // const char *locale -> const Locale &locale
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char *locale, UPluralType type, const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(locale, type, pattern, error_code);
+            auto result =
+                std::make_unique<PluralFormat>(VARIANT_TO_LOCALE(locale), type, VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -287,26 +132,15 @@ void init_plurfmt(py::module &m) {
           "__ne__", [](const PluralFormat &self, const Format &other) { return self != other; }, py::is_operator(),
           py::arg("other"));
   pf.def(
-        "apply_pattern",
-        [](PluralFormat &self, const UnicodeString &pattern) {
-          ErrorCode error_code;
-          self.applyPattern(pattern, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-        },
-        py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](PluralFormat &self, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"));
+      "apply_pattern",
+      [](PluralFormat &self, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("pattern"));
   pf.def("clone", &PluralFormat::clone);
   pf.def(
         // [1] PluralFormat::format
@@ -396,30 +230,16 @@ void init_plurfmt(py::module &m) {
             return result;
           },
           py::arg("number"), py::arg("append_to"), py::arg("pos"));
-  pf.def("parse_object", &PluralFormat::parseObject, py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const PluralFormat &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+  pf.def(
+        "parse_object",
+        [](const PluralFormat &self, const _UnicodeStringVariant &source, Formattable &result,
+           ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
+        py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

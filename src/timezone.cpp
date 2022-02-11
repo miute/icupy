@@ -57,10 +57,10 @@ void init_timezone(py::module &m) {
       "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : nullptr); }, py::arg("zone"));
   */
   tz.def("clone", &TimeZone::clone);
-  tz.def_static("count_equivalent_ids", &TimeZone::countEquivalentIDs, py::arg("id_"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "count_equivalent_ids", [](const char16_t *id) { return TimeZone::countEquivalentIDs(id); }, py::arg("id_"));
+  tz.def_static(
+      "count_equivalent_ids",
+      [](const _UnicodeStringVariant &id) { return TimeZone::countEquivalentIDs(VARIANT_TO_UNISTR(id)); },
+      py::arg("id_"));
   tz.def_static("create_default", []() -> std::variant<BasicTimeZone *, TimeZone *> {
     auto tz = TimeZone::createDefault();
     auto btz = dynamic_cast<BasicTimeZone *>(tz);
@@ -116,28 +116,16 @@ void init_timezone(py::module &m) {
       py::arg("region"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   tz.def_static(
-        "create_time_zone",
-        [](const UnicodeString &id) -> std::variant<BasicTimeZone *, TimeZone *> {
-          auto tz = TimeZone::createTimeZone(id);
-          auto btz = dynamic_cast<BasicTimeZone *>(tz);
-          if (btz) {
-            return btz;
-          }
-          return tz;
-        },
-        py::arg("id_"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "create_time_zone",
-          [](const char16_t *id) -> std::variant<BasicTimeZone *, TimeZone *> {
-            auto tz = TimeZone::createTimeZone(id);
-            auto btz = dynamic_cast<BasicTimeZone *>(tz);
-            if (btz) {
-              return btz;
-            }
-            return tz;
-          },
-          py::arg("id_"));
+      "create_time_zone",
+      [](const _UnicodeStringVariant &id) -> std::variant<BasicTimeZone *, TimeZone *> {
+        auto tz = TimeZone::createTimeZone(VARIANT_TO_UNISTR(id));
+        auto btz = dynamic_cast<BasicTimeZone *>(tz);
+        if (btz) {
+          return btz;
+        }
+        return tz;
+      },
+      py::arg("id_"));
   tz.def_static(
       "create_time_zone_id_enumeration",
       [](USystemTimeZoneType zone_type, const char *region, const std::optional<int32_t> &raw_offset) {
@@ -161,48 +149,29 @@ void init_timezone(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
   tz.def_static(
-        "get_canonical_id",
-        [](const UnicodeString &id, UnicodeString &canonical_id) {
-          ErrorCode error_code;
-          UBool is_system_id;
-          auto &result = TimeZone::getCanonicalID(id, canonical_id, is_system_id, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return py::make_tuple(result, is_system_id);
+      "get_canonical_id",
+      [](const _UnicodeStringVariant &id, UnicodeString &canonical_id) {
+        ErrorCode error_code;
+        UBool is_system_id;
+        auto &result = TimeZone::getCanonicalID(VARIANT_TO_UNISTR(id), canonical_id, is_system_id, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return py::make_tuple(result, is_system_id);
+      },
+      py::arg("id_"), py::arg("canonical_id"));
+  tz.def(
+        "get_display_name",
+        [](const TimeZone &self, const _LocaleVariant &locale, UnicodeString &result) -> UnicodeString & {
+          return self.getDisplayName(VARIANT_TO_LOCALE(locale), result);
         },
-        py::arg("id_"), py::arg("canonical_id"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "get_canonical_id",
-          [](const char16_t *id, UnicodeString &canonical_id) {
-            ErrorCode error_code;
-            UBool is_system_id;
-            auto &result = TimeZone::getCanonicalID(id, canonical_id, is_system_id, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return py::make_tuple(result, is_system_id);
-          },
-          py::arg("id_"), py::arg("canonical_id"));
-  tz.def("get_display_name", py::overload_cast<const Locale &, UnicodeString &>(&TimeZone::getDisplayName, py::const_),
-         py::arg("locale"), py::arg("result"))
+        py::arg("locale"), py::arg("result"))
       .def(
-          // const char *locale -> const Locale &locale
           "get_display_name",
-          [](const TimeZone &self, const char *locale, UnicodeString &result) {
-            return self.getDisplayName(locale, result);
+          [](const TimeZone &self, UBool in_daylight, TimeZone::EDisplayType style, const _LocaleVariant &locale,
+             UnicodeString &result) -> UnicodeString & {
+            return self.getDisplayName(in_daylight, style, VARIANT_TO_LOCALE(locale), result);
           },
-          py::arg("locale"), py::arg("result"))
-      .def("get_display_name",
-           py::overload_cast<UBool, TimeZone::EDisplayType, const Locale &, UnicodeString &>(&TimeZone::getDisplayName,
-                                                                                             py::const_),
-           py::arg("in_daylight"), py::arg("style"), py::arg("locale"), py::arg("result"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "get_display_name",
-          [](const TimeZone &self, UBool in_daylight, TimeZone::EDisplayType style, const char *locale,
-             UnicodeString &result) { return self.getDisplayName(in_daylight, style, locale, result); },
           py::arg("in_daylight"), py::arg("style"), py::arg("locale"), py::arg("result"))
       .def("get_display_name",
            py::overload_cast<UBool, TimeZone::EDisplayType, UnicodeString &>(&TimeZone::getDisplayName, py::const_),
@@ -210,37 +179,26 @@ void init_timezone(py::module &m) {
       .def("get_display_name", py::overload_cast<UnicodeString &>(&TimeZone::getDisplayName, py::const_),
            py::arg("result"));
   tz.def("get_dst_savings", &TimeZone::getDSTSavings);
-  tz.def_static("get_equivalent_id", &TimeZone::getEquivalentID, py::arg("id_"), py::arg("index"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "get_equivalent_id", [](const char16_t *id, int32_t index) { return TimeZone::getEquivalentID(id, index); },
-          py::arg("id_"), py::arg("index"));
+  tz.def_static(
+      "get_equivalent_id",
+      [](const _UnicodeStringVariant &id, int32_t index) {
+        return TimeZone::getEquivalentID(VARIANT_TO_UNISTR(id), index);
+      },
+      py::arg("id_"), py::arg("index"));
   tz.def_static("get_gmt", &TimeZone::getGMT, py::return_value_policy::reference);
   tz.def("get_id", &TimeZone::getID, py::arg("id_"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
-        "get_id_for_windows_id",
-        [](const UnicodeString &winid, const char *region, UnicodeString &id) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = TimeZone::getIDForWindowsID(winid, region, id, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("winid"), py::arg("region"), py::arg("id_"))
-      .def_static(
-          // const char16_t *winid -> const UnicodeString &winid
-          "get_id_for_windows_id",
-          [](const char16_t *winid, const char *region, UnicodeString &id) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = TimeZone::getIDForWindowsID(winid, region, id, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("winid"), py::arg("region"), py::arg("id_"));
+      "get_id_for_windows_id",
+      [](const _UnicodeStringVariant &winid, const char *region, UnicodeString &id) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = TimeZone::getIDForWindowsID(VARIANT_TO_UNISTR(winid), region, id, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("winid"), py::arg("region"), py::arg("id_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def(
       "get_offset",
@@ -256,32 +214,19 @@ void init_timezone(py::module &m) {
       py::arg("date"), py::arg("local"));
   tz.def("get_raw_offset", &TimeZone::getRawOffset);
   tz.def_static(
-        "get_region",
-        [](const UnicodeString &id) {
-          ErrorCode error_code;
-          std::string result(8, '\0');
-          auto length = TimeZone::getRegion(id, result.data(), static_cast<int32_t>(result.size()), error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          result.resize(length);
-          return result;
-        },
-        py::arg("id_"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "get_region",
-          [](const char16_t *id) {
-            ErrorCode error_code;
-            std::string result(8, '\0');
-            auto length = TimeZone::getRegion(id, result.data(), static_cast<int32_t>(result.size()), error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            result.resize(length);
-            return result;
-          },
-          py::arg("id_"));
+      "get_region",
+      [](const _UnicodeStringVariant &id) {
+        ErrorCode error_code;
+        std::string result(8, '\0');
+        auto length =
+            TimeZone::getRegion(VARIANT_TO_UNISTR(id), result.data(), static_cast<int32_t>(result.size()), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        result.resize(length);
+        return result;
+      },
+      py::arg("id_"));
   tz.def_static("get_tz_data_version", []() {
     ErrorCode error_code;
     auto result = TimeZone::getTZDataVersion(error_code);
@@ -295,35 +240,22 @@ void init_timezone(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
-        "get_windows_id",
-        [](const UnicodeString &id, UnicodeString &winid) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = TimeZone::getWindowsID(id, winid, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("id_"), py::arg("winid"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "get_windows_id",
-          [](const char16_t *id, UnicodeString &winid) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = TimeZone::getWindowsID(id, winid, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("winid"));
+      "get_windows_id",
+      [](const _UnicodeStringVariant &id, UnicodeString &winid) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = TimeZone::getWindowsID(VARIANT_TO_UNISTR(id), winid, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("id_"), py::arg("winid"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def("has_same_rules", &TimeZone::hasSameRules, py::arg("other"));
   tz.def_static("set_default", &TimeZone::setDefault, py::arg("zone"));
-  tz.def("set_id", &TimeZone::setID, py::arg("id_"))
-      .def(
-          // const char16_t *id -> const UnicodeString &id
-          "set_id", [](TimeZone &self, const char16_t *id) { self.setID(id); }, py::arg("id_"));
+  tz.def(
+      "set_id", [](TimeZone &self, const _UnicodeStringVariant &id) { self.setID(VARIANT_TO_UNISTR(id)); },
+      py::arg("id_"));
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
   tz.def("use_daylight_time", &TimeZone::useDaylightTime);
 
@@ -399,12 +331,9 @@ void init_timezone(py::module &m) {
       py::arg("tz"), py::arg("start"), py::arg("end"), py::arg("ignore_dst_amount"));
 
   // icu::RuleBasedTimeZone
-  rbtz.def(py::init([](const UnicodeString &id, InitialTimeZoneRule *initial_rule) {
-             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : nullptr);
-           }),
-           py::arg("id_"), py::arg("initial_rule"))
-      .def(py::init([](const char *id, InitialTimeZoneRule *initial_rule) {
-             return std::make_unique<RuleBasedTimeZone>(id, initial_rule ? initial_rule->clone() : nullptr);
+  rbtz.def(py::init([](const _UnicodeStringVariant &id, InitialTimeZoneRule *initial_rule) {
+             return std::make_unique<RuleBasedTimeZone>(VARIANT_TO_UNISTR(id),
+                                                        initial_rule ? initial_rule->clone() : nullptr);
            }),
            py::arg("id_"), py::arg("initial_rule"))
       .def(py::init<const RuleBasedTimeZone &>(), py::arg("source"))
@@ -528,17 +457,19 @@ void init_timezone(py::module &m) {
       .export_values();
 
   stz.def(py::init<const SimpleTimeZone &>(), py::arg("source"))
-      .def(py::init<int32_t, const UnicodeString &>(), py::arg("raw_offset_gmt"), py::arg("id_"))
-      .def(py::init<int32_t, const char *>(), py::arg("raw_offset_gmt"), py::arg("id_"))
-      .def(py::init([](int32_t raw_offset_gmt, const UnicodeString &id, int8_t savings_start_month,
+      .def(py::init([](int32_t raw_offset_gmt, const _UnicodeStringVariant &id) {
+             return std::make_unique<SimpleTimeZone>(raw_offset_gmt, VARIANT_TO_UNISTR(id));
+           }),
+           py::arg("raw_offset_gmt"), py::arg("id_"))
+      .def(py::init([](int32_t raw_offset_gmt, const _UnicodeStringVariant &id, int8_t savings_start_month,
                        int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
                        int32_t savings_start_time, int8_t savings_end_month, int8_t savings_end_day_of_week_in_month,
                        int8_t savings_end_day_of_week, int32_t savings_end_time) {
              ErrorCode error_code;
              auto result = std::make_unique<SimpleTimeZone>(
-                 raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                 savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
-                 savings_end_time, error_code);
+                 raw_offset_gmt, VARIANT_TO_UNISTR(id), savings_start_month, savings_start_day_of_week_in_month,
+                 savings_start_day_of_week, savings_start_time, savings_end_month, savings_end_day_of_week_in_month,
+                 savings_end_day_of_week, savings_end_time, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
@@ -548,51 +479,15 @@ void init_timezone(py::module &m) {
            py::arg("savings_start_day_of_week_in_month"), py::arg("savings_start_day_of_week"),
            py::arg("savings_start_time"), py::arg("savings_end_month"), py::arg("savings_end_day_of_week_in_month"),
            py::arg("savings_end_day_of_week"), py::arg("savings_end_time"))
-      .def(py::init([](int32_t raw_offset_gmt, const char *id, int8_t savings_start_month,
-                       int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
-                       int32_t savings_start_time, int8_t savings_end_month, int8_t savings_end_day_of_week_in_month,
-                       int8_t savings_end_day_of_week, int32_t savings_end_time) {
-             ErrorCode error_code;
-             auto result = std::make_unique<SimpleTimeZone>(
-                 raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                 savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
-                 savings_end_time, error_code);
-             if (error_code.isFailure()) {
-               throw ICUError(error_code);
-             }
-             return result;
-           }),
-           py::arg("raw_offset_gmt"), py::arg("id_"), py::arg("savings_start_month"),
-           py::arg("savings_start_day_of_week_in_month"), py::arg("savings_start_day_of_week"),
-           py::arg("savings_start_time"), py::arg("savings_end_month"), py::arg("savings_end_day_of_week_in_month"),
-           py::arg("savings_end_day_of_week"), py::arg("savings_end_time"))
-      .def(py::init([](int32_t raw_offset_gmt, const UnicodeString &id, int8_t savings_start_month,
+      .def(py::init([](int32_t raw_offset_gmt, const _UnicodeStringVariant &id, int8_t savings_start_month,
                        int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
                        int32_t savings_start_time, int8_t savings_end_month, int8_t savings_end_day_of_week_in_month,
                        int8_t savings_end_day_of_week, int32_t savings_end_time, int32_t savings_dst) {
              ErrorCode error_code;
              auto result = std::make_unique<SimpleTimeZone>(
-                 raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                 savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
-                 savings_end_time, savings_dst, error_code);
-             if (error_code.isFailure()) {
-               throw ICUError(error_code);
-             }
-             return result;
-           }),
-           py::arg("raw_offset_gmt"), py::arg("id_"), py::arg("savings_start_month"),
-           py::arg("savings_start_day_of_week_in_month"), py::arg("savings_start_day_of_week"),
-           py::arg("savings_start_time"), py::arg("savings_end_month"), py::arg("savings_end_day_of_week_in_month"),
-           py::arg("savings_end_day_of_week"), py::arg("savings_end_time"), py::arg("savings_dst"))
-      .def(py::init([](int32_t raw_offset_gmt, const char *id, int8_t savings_start_month,
-                       int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
-                       int32_t savings_start_time, int8_t savings_end_month, int8_t savings_end_day_of_week_in_month,
-                       int8_t savings_end_day_of_week, int32_t savings_end_time, int32_t savings_dst) {
-             ErrorCode error_code;
-             auto result = std::make_unique<SimpleTimeZone>(
-                 raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                 savings_start_time, savings_end_month, savings_end_day_of_week_in_month, savings_end_day_of_week,
-                 savings_end_time, savings_dst, error_code);
+                 raw_offset_gmt, VARIANT_TO_UNISTR(id), savings_start_month, savings_start_day_of_week_in_month,
+                 savings_start_day_of_week, savings_start_time, savings_end_month, savings_end_day_of_week_in_month,
+                 savings_end_day_of_week, savings_end_time, savings_dst, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
@@ -603,37 +498,17 @@ void init_timezone(py::module &m) {
            py::arg("savings_start_time"), py::arg("savings_end_month"), py::arg("savings_end_day_of_week_in_month"),
            py::arg("savings_end_day_of_week"), py::arg("savings_end_time"), py::arg("savings_dst"))
       .def(
-          py::init([](int32_t raw_offset_gmt, const UnicodeString &id, int8_t savings_start_month,
+          py::init([](int32_t raw_offset_gmt, const _UnicodeStringVariant &id, int8_t savings_start_month,
                       int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
                       int32_t savings_start_time, SimpleTimeZone::TimeMode savings_start_time_mode,
                       int8_t savings_end_month, int8_t savings_end_day_of_week_in_month, int8_t savings_end_day_of_week,
                       int32_t savings_end_time, SimpleTimeZone::TimeMode savings_end_time_mode, int32_t savings_dst) {
             ErrorCode error_code;
             auto result = std::make_unique<SimpleTimeZone>(
-                raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                savings_start_time, savings_start_time_mode, savings_end_month, savings_end_day_of_week_in_month,
-                savings_end_day_of_week, savings_end_time, savings_end_time_mode, savings_dst, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("raw_offset_gmt"), py::arg("id_"), py::arg("savings_start_month"),
-          py::arg("savings_start_day_of_week_in_month"), py::arg("savings_start_day_of_week"),
-          py::arg("savings_start_time"), py::arg("savings_start_time_mode"), py::arg("savings_end_month"),
-          py::arg("savings_end_day_of_week_in_month"), py::arg("savings_end_day_of_week"), py::arg("savings_end_time"),
-          py::arg("savings_end_time_mode"), py::arg("savings_dst"))
-      .def(
-          py::init([](int32_t raw_offset_gmt, const char *id, int8_t savings_start_month,
-                      int8_t savings_start_day_of_week_in_month, int8_t savings_start_day_of_week,
-                      int32_t savings_start_time, SimpleTimeZone::TimeMode savings_start_time_mode,
-                      int8_t savings_end_month, int8_t savings_end_day_of_week_in_month, int8_t savings_end_day_of_week,
-                      int32_t savings_end_time, SimpleTimeZone::TimeMode savings_end_time_mode, int32_t savings_dst) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleTimeZone>(
-                raw_offset_gmt, id, savings_start_month, savings_start_day_of_week_in_month, savings_start_day_of_week,
-                savings_start_time, savings_start_time_mode, savings_end_month, savings_end_day_of_week_in_month,
-                savings_end_day_of_week, savings_end_time, savings_end_time_mode, savings_dst, error_code);
+                raw_offset_gmt, VARIANT_TO_UNISTR(id), savings_start_month, savings_start_day_of_week_in_month,
+                savings_start_day_of_week, savings_start_time, savings_start_time_mode, savings_end_month,
+                savings_end_day_of_week_in_month, savings_end_day_of_week, savings_end_time, savings_end_time_mode,
+                savings_dst, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -924,30 +799,20 @@ void init_timezone(py::module &m) {
     return result;
   });
   vtz.def_static(
-         "create_vtime_zone",
-         [](const UnicodeString &vtzdata) {
-           ErrorCode error_code;
-           auto result = VTimeZone::createVTimeZone(vtzdata, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("vtzdata"))
-      .def_static(
-          "create_vtime_zone",
-          [](const char *vtzdata) {
-            ErrorCode error_code;
-            auto result = VTimeZone::createVTimeZone(vtzdata, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("vtzdata"));
-  vtz.def_static("create_vtime_zone_by_id", &VTimeZone::createVTimeZoneByID, py::arg("id_"))
-      .def_static(
-          "create_vtime_zone_by_id", [](const char *id) { return VTimeZone::createVTimeZoneByID(id); }, py::arg("id_"));
+      "create_vtime_zone",
+      [](const _UnicodeStringVariant &vtzdata) {
+        ErrorCode error_code;
+        auto result = VTimeZone::createVTimeZone(VARIANT_TO_UNISTR(vtzdata), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("vtzdata"));
+  vtz.def_static(
+      "create_vtime_zone_by_id",
+      [](const _UnicodeStringVariant &id) { return VTimeZone::createVTimeZoneByID(VARIANT_TO_UNISTR(id)); },
+      py::arg("id_"));
   vtz.def_static(
       "create_vtime_zone_from_basic_time_zone",
       [](const BasicTimeZone &basic_tz) {
@@ -1039,9 +904,9 @@ void init_timezone(py::module &m) {
   vtz.def("has_same_rules", &VTimeZone::hasSameRules, py::arg("other"));
   vtz.def("set_last_modified", &VTimeZone::setLastModified, py::arg("last_modified"));
   vtz.def("set_raw_offset", &VTimeZone::setRawOffset, py::arg("offset_millis"));
-  vtz.def("set_tzurl", &VTimeZone::setTZURL, py::arg("url"))
-      .def(
-          "set_tzurl", [](VTimeZone &self, const char *url) { self.setTZURL(url); }, py::arg("url"));
+  vtz.def(
+      "set_tzurl", [](VTimeZone &self, const _UnicodeStringVariant &url) { self.setTZURL(VARIANT_TO_UNISTR(url)); },
+      py::arg("url"));
   vtz.def("use_daylight_time", &VTimeZone::useDaylightTime);
   vtz.def(
          "write",

@@ -10,9 +10,9 @@ void init_msgfmt(py::module &m) {
   py::class_<MessageFormat, Format> mf(m, "MessageFormat");
   mf.def(
         // [1] MessageFormat::MessageFormat
-        py::init([](const UnicodeString &pattern) {
+        py::init([](const _UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          auto result = std::make_unique<MessageFormat>(pattern, error_code);
+          auto result = std::make_unique<MessageFormat>(VARIANT_TO_UNISTR(pattern), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -20,55 +20,11 @@ void init_msgfmt(py::module &m) {
         }),
         py::arg("pattern"))
       .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
-      .def(
           // [2] MessageFormat::MessageFormat
-          py::init([](const UnicodeString &pattern, const Locale &new_locale) {
+          py::init([](const _UnicodeStringVariant &pattern, const _LocaleVariant &new_locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const Locale &new_locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"))
-      .def(
-          // const char *new_locale -> const Locale &new_locale
-          py::init([](const UnicodeString &pattern, const char *new_locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          // const char *new_locale -> const Locale &new_locale
-          py::init([](const char16_t *pattern, const char *new_locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, error_code);
+            auto result =
+                std::make_unique<MessageFormat>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_LOCALE(new_locale), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -77,48 +33,16 @@ void init_msgfmt(py::module &m) {
           py::arg("pattern"), py::arg("new_locale"))
       .def(
           // [3] MessageFormat::MessageFormat
-          py::init([](const UnicodeString &pattern, const Locale &new_locale, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const Locale &new_locale, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"), py::arg("parse_error"))
-      .def(
-          // const char *new_locale -> const Locale &new_locale
-          py::init([](const UnicodeString &pattern, const char *new_locale, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("new_locale"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          // const char *new_locale -> const Locale &new_locale
-          py::init([](const char16_t *pattern, const char *new_locale, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessageFormat>(pattern, new_locale, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
+          py::init(
+              [](const _UnicodeStringVariant &pattern, const _LocaleVariant &new_locale, UParseError &parse_error) {
+                ErrorCode error_code;
+                auto result = std::make_unique<MessageFormat>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_LOCALE(new_locale),
+                                                              parse_error, error_code);
+                if (error_code.isFailure()) {
+                  throw ICUError(error_code);
+                }
+                return result;
+              }),
           py::arg("pattern"), py::arg("new_locale"), py::arg("parse_error"))
       .def(
           // [4] MessageFormat::MessageFormat
@@ -136,44 +60,21 @@ void init_msgfmt(py::module &m) {
   mf.def(
         // [1] MessageFormat::applyPattern
         "apply_pattern",
-        [](MessageFormat &self, const UnicodeString &pattern) {
+        [](MessageFormat &self, const _UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          self.applyPattern(pattern, error_code);
+          self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
         py::arg("pattern"))
       .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](MessageFormat &self, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"))
-      .def(
           // [2] MessageFormat::applyPattern
           "apply_pattern",
-          [](MessageFormat &self, const UnicodeString &pattern, UMessagePatternApostropheMode apos_mode,
+          [](MessageFormat &self, const _UnicodeStringVariant &pattern, UMessagePatternApostropheMode apos_mode,
              UParseError *parse_error) {
             ErrorCode error_code;
-            self.applyPattern(pattern, apos_mode, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"), py::arg("apos_mode"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](MessageFormat &self, const char16_t *pattern, UMessagePatternApostropheMode apos_mode,
-             UParseError *parse_error) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, apos_mode, parse_error, error_code);
+            self.applyPattern(VARIANT_TO_UNISTR(pattern), apos_mode, parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -182,48 +83,25 @@ void init_msgfmt(py::module &m) {
       .def(
           // [3] MessageFormat::applyPattern
           "apply_pattern",
-          [](MessageFormat &self, const UnicodeString &pattern, UParseError &parse_error) {
+          [](MessageFormat &self, const _UnicodeStringVariant &pattern, UParseError &parse_error) {
             ErrorCode error_code;
-            self.applyPattern(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](MessageFormat &self, const char16_t *pattern, UParseError &parse_error) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, parse_error, error_code);
+            self.applyPattern(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("parse_error"));
   mf.def_static(
-        "auto_quote_apostrophe",
-        [](const UnicodeString &pattern) {
-          ErrorCode error_code;
-          auto result = MessageFormat::autoQuoteApostrophe(pattern, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("pattern"))
-      .def_static(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "auto_quote_apostrophe",
-          [](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = MessageFormat::autoQuoteApostrophe(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"));
+      "auto_quote_apostrophe",
+      [](const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        auto result = MessageFormat::autoQuoteApostrophe(VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("pattern"));
   mf.def("clone", &MessageFormat::clone);
   mf.def(
         // [1] MessageFormat::format
@@ -335,28 +213,16 @@ void init_msgfmt(py::module &m) {
           py::arg("argument_names"), py::arg("arguments"), py::arg("count"), py::arg("append_to"));
   mf.def("get_apostrophe_mode", &MessageFormat::getApostropheMode);
   mf.def(
-        "get_format",
-        [](MessageFormat &self, const UnicodeString &format_name) {
-          ErrorCode error_code;
-          auto result = self.getFormat(format_name, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::return_value_policy::reference, py::arg("format_name"))
-      .def(
-          // const char16_t *format_name -> const UnicodeString &format_name
-          "get_format",
-          [](MessageFormat &self, const char16_t *format_name) {
-            ErrorCode error_code;
-            auto result = self.getFormat(format_name, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::return_value_policy::reference, py::arg("format_name"));
+      "get_format",
+      [](MessageFormat &self, const _UnicodeStringVariant &format_name) {
+        ErrorCode error_code;
+        auto result = self.getFormat(VARIANT_TO_UNISTR(format_name), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::return_value_policy::reference, py::arg("format_name"));
   mf.def("get_format_names", [](MessageFormat &self) {
     ErrorCode error_code;
     auto result = self.getFormatNames(error_code);
@@ -381,10 +247,10 @@ void init_msgfmt(py::module &m) {
   mf.def(
         // [1] MessageFormat::parse
         "parse",
-        [](const MessageFormat &self, const UnicodeString &source) {
+        [](const MessageFormat &self, const _UnicodeStringVariant &source) {
           int32_t count;
           ErrorCode error_code;
-          auto p = self.parse(source, count, error_code);
+          auto p = self.parse(VARIANT_TO_UNISTR(source), count, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -396,41 +262,11 @@ void init_msgfmt(py::module &m) {
         },
         py::return_value_policy::reference, py::arg("source"))
       .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse",
-          [](const MessageFormat &self, const char16_t *source) {
-            int32_t count;
-            ErrorCode error_code;
-            auto p = self.parse(source, count, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            std::vector<Formattable *> result(count);
-            for (int32_t i = 0; i < count; ++i) {
-              result[i] = p + i;
-            }
-            return result;
-          },
-          py::return_value_policy::reference, py::arg("source"))
-      .def(
           // [2] MessageFormat::parse
           "parse",
-          [](const MessageFormat &self, const UnicodeString &source, ParsePosition &pos) {
+          [](const MessageFormat &self, const _UnicodeStringVariant &source, ParsePosition &pos) {
             int32_t count = 0;
-            auto p = self.parse(source, pos, count);
-            std::vector<Formattable *> result(count);
-            for (int32_t i = 0; i < count; ++i) {
-              result[i] = p + i;
-            }
-            return result;
-          },
-          py::return_value_policy::reference, py::arg("source"), py::arg("pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse",
-          [](const MessageFormat &self, const char16_t *source, ParsePosition &pos) {
-            int32_t count = 0;
-            auto p = self.parse(source, pos, count);
+            auto p = self.parse(VARIANT_TO_UNISTR(source), pos, count);
             std::vector<Formattable *> result(count);
             for (int32_t i = 0; i < count; ++i) {
               result[i] = p + i;
@@ -438,30 +274,17 @@ void init_msgfmt(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("source"), py::arg("pos"));
-  mf.def("parse_object", &MessageFormat::parseObject, py::arg("source"), py::arg("result"), py::arg("pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const MessageFormat &self, const char16_t *source, Formattable &result, ParsePosition &pos) {
-            self.parseObject(source, result, pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("pos"))
+  mf.def(
+        "parse_object",
+        [](const MessageFormat &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &pos) {
+          self.parseObject(VARIANT_TO_UNISTR(source), result, pos);
+        },
+        py::arg("source"), py::arg("result"), py::arg("pos"))
       .def(
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -470,25 +293,14 @@ void init_msgfmt(py::module &m) {
   mf.def(
         // [1] MessageFormat::setFormat
         "set_format",
-        [](MessageFormat &self, const UnicodeString &format_name, const Format &format) {
+        [](MessageFormat &self, const _UnicodeStringVariant &format_name, const Format &format) {
           ErrorCode error_code;
-          self.setFormat(format_name, format, error_code);
+          self.setFormat(VARIANT_TO_UNISTR(format_name), format, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
         py::arg("format_name"), py::arg("format_"))
-      .def(
-          // const char16_t *format_name -> const UnicodeString &format_name
-          "set_format",
-          [](MessageFormat &self, const char16_t *format_name, const Format &format) {
-            ErrorCode error_code;
-            self.setFormat(format_name, format, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("format_name"), py::arg("format_"))
       .def(
           // [2] MessageFormat::setFormat
           "set_format", py::overload_cast<int32_t, const Format &>(&MessageFormat::setFormat), py::arg("format_number"),
@@ -502,10 +314,10 @@ void init_msgfmt(py::module &m) {
         self.setFormats(new_formats.data(), count);
       },
       py::arg("new_formats"), py::arg("count") = -1);
-  mf.def("set_locale", &MessageFormat::setLocale, py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "set_locale", [](MessageFormat &self, const char *locale) { self.setLocale(locale); }, py::arg("locale"));
+  mf.def(
+      "set_locale",
+      [](MessageFormat &self, const _LocaleVariant &locale) { self.setLocale(VARIANT_TO_LOCALE(locale)); },
+      py::arg("locale"));
   mf.def("to_pattern", &MessageFormat::toPattern, py::arg("append_to"));
   mf.def("uses_named_arguments", &MessageFormat::usesNamedArguments);
 }

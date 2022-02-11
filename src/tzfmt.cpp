@@ -122,28 +122,16 @@ void init_tzfmt(py::module &m) {
   // FIXME: Implement "void icu::TimeZoneFormat::adoptTimeZoneNames(TimeZoneNames *tznames)".
   tzf.def("clone", &TimeZoneFormat::clone);
   tzf.def_static(
-         "create_instance",
-         [](const Locale &locale) {
-           ErrorCode error_code;
-           auto result = TimeZoneFormat::createInstance(locale, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = TimeZoneFormat::createInstance(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"));
+      "create_instance",
+      [](const _LocaleVariant &locale) {
+        ErrorCode error_code;
+        auto result = TimeZoneFormat::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("locale"));
   tzf.def(
          // [1] TimeZoneFormat::format
          "format",
@@ -250,9 +238,10 @@ void init_tzfmt(py::module &m) {
   tzf.def("get_time_zone_names", &TimeZoneFormat::getTimeZoneNames, py::return_value_policy::reference);
   tzf.def(
          "parse",
-         [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const UnicodeString &text, ParsePosition &pos,
-            int32_t parse_options, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-           auto tz = self.parse(style, text, pos, parse_options, time_type);
+         [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const _UnicodeStringVariant &text,
+            ParsePosition &pos, int32_t parse_options,
+            UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+           auto tz = self.parse(style, VARIANT_TO_UNISTR(text), pos, parse_options, time_type);
            auto btz = dynamic_cast<BasicTimeZone *>(tz);
            if (btz) {
              return btz;
@@ -261,36 +250,10 @@ void init_tzfmt(py::module &m) {
          },
          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
       .def(
-          // const char16_t *text -> const UnicodeString &text
           "parse",
-          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const char16_t *text, ParsePosition &pos,
-             int32_t parse_options, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-            auto tz = self.parse(style, text, pos, parse_options, time_type);
-            auto btz = dynamic_cast<BasicTimeZone *>(tz);
-            if (btz) {
-              return btz;
-            }
-            return tz;
-          },
-          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
-      .def(
-          "parse",
-          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const UnicodeString &text, ParsePosition &pos,
-             UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-            auto tz = self.parse(style, text, pos, time_type);
-            auto btz = dynamic_cast<BasicTimeZone *>(tz);
-            if (btz) {
-              return btz;
-            }
-            return tz;
-          },
-          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr)
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const char16_t *text, ParsePosition &pos,
-             UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-            auto tz = self.parse(style, text, pos, time_type);
+          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const _UnicodeStringVariant &text,
+             ParsePosition &pos, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.parse(style, VARIANT_TO_UNISTR(text), pos, time_type);
             auto btz = dynamic_cast<BasicTimeZone *>(tz);
             if (btz) {
               return btz;
@@ -298,156 +261,83 @@ void init_tzfmt(py::module &m) {
             return tz;
           },
           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr);
-  tzf.def("parse_object",
-          py::overload_cast<const UnicodeString &, Formattable &, ParsePosition &>(&TimeZoneFormat::parseObject,
-                                                                                   py::const_),
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const TimeZoneFormat &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+  tzf.def(
+         "parse_object",
+         [](const TimeZoneFormat &self, const _UnicodeStringVariant &source, Formattable &result,
+            ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
+         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           // [2] Format::parseObject
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));
-  tzf.def("parse_offset_iso8601",
-          py::overload_cast<const UnicodeString &, ParsePosition &>(&TimeZoneFormat::parseOffsetISO8601, py::const_),
-          py::arg("text"), py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse_offset_iso8601",
-          [](const TimeZoneFormat &self, const char16_t *text, ParsePosition &pos) {
-            return self.parseOffsetISO8601(text, pos);
-          },
-          py::arg("text"), py::arg("pos"));
-  tzf.def("parse_offset_localized_gmt",
-          py::overload_cast<const UnicodeString &, ParsePosition &>(&TimeZoneFormat::parseOffsetLocalizedGMT,
-                                                                    py::const_),
-          py::arg("text"), py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse_offset_localized_gmt",
-          [](const TimeZoneFormat &self, const char16_t *text, ParsePosition &pos) {
-            return self.parseOffsetLocalizedGMT(text, pos);
-          },
-          py::arg("text"), py::arg("pos"));
+  tzf.def(
+      "parse_offset_iso8601",
+      [](const TimeZoneFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseOffsetISO8601(VARIANT_TO_UNISTR(text), pos);
+      },
+      py::arg("text"), py::arg("pos"));
+  tzf.def(
+      "parse_offset_localized_gmt",
+      [](const TimeZoneFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseOffsetLocalizedGMT(VARIANT_TO_UNISTR(text), pos);
+      },
+      py::arg("text"), py::arg("pos"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-  tzf.def("parse_offset_short_localized_gmt", &TimeZoneFormat::parseOffsetShortLocalizedGMT, py::arg("text"),
-          py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse_offset_short_localized_gmt",
-          [](const TimeZoneFormat &self, const char16_t *text, ParsePosition &pos) {
-            return self.parseOffsetShortLocalizedGMT(text, pos);
-          },
-          py::arg("text"), py::arg("pos"));
+  tzf.def(
+      "parse_offset_short_localized_gmt",
+      [](const TimeZoneFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseOffsetShortLocalizedGMT(VARIANT_TO_UNISTR(text), pos);
+      },
+      py::arg("text"), py::arg("pos"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def("set_default_parse_options", &TimeZoneFormat::setDefaultParseOptions, py::arg("flags"));
   tzf.def(
-         "set_gmt_offset_digits",
-         [](TimeZoneFormat &self, const UnicodeString &digits) {
-           ErrorCode error_code;
-           self.setGMTOffsetDigits(digits, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("digits"))
-      .def(
-          // const char16_t *digits -> const UnicodeString &digits
-          "set_gmt_offset_digits",
-          [](TimeZoneFormat &self, const char16_t *digits) {
-            ErrorCode error_code;
-            self.setGMTOffsetDigits(digits, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("digits"));
+      "set_gmt_offset_digits",
+      [](TimeZoneFormat &self, const _UnicodeStringVariant &digits) {
+        ErrorCode error_code;
+        self.setGMTOffsetDigits(VARIANT_TO_UNISTR(digits), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("digits"));
   tzf.def(
-         "set_gmt_offset_pattern",
-         [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const UnicodeString &pattern) {
-           ErrorCode error_code;
-           self.setGMTOffsetPattern(type, pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("type_"), py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "set_gmt_offset_pattern",
-          [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.setGMTOffsetPattern(type, pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("type_"), py::arg("pattern"));
+      "set_gmt_offset_pattern",
+      [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.setGMTOffsetPattern(type, VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("type_"), py::arg("pattern"));
   tzf.def(
-         "set_gmt_pattern",
-         [](TimeZoneFormat &self, const UnicodeString &pattern) {
-           ErrorCode error_code;
-           self.setGMTPattern(pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "set_gmt_pattern",
-          [](TimeZoneFormat &self, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.setGMTPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"));
+      "set_gmt_pattern",
+      [](TimeZoneFormat &self, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.setGMTPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("pattern"));
   tzf.def(
-         "set_gmt_zero_format",
-         [](TimeZoneFormat &self, const UnicodeString &gmt_zero_format) {
-           ErrorCode error_code;
-           self.setGMTZeroFormat(gmt_zero_format, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("gmt_zero_format"))
-      .def(
-          // const char16_t *gmt_zero_format -> const UnicodeString &gmt_zero_format
-          "set_gmt_zero_format",
-          [](TimeZoneFormat &self, const char16_t *gmt_zero_format) {
-            ErrorCode error_code;
-            self.setGMTZeroFormat(gmt_zero_format, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("gmt_zero_format"));
+      "set_gmt_zero_format",
+      [](TimeZoneFormat &self, const _UnicodeStringVariant &gmt_zero_format) {
+        ErrorCode error_code;
+        self.setGMTZeroFormat(VARIANT_TO_UNISTR(gmt_zero_format), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("gmt_zero_format"));
   tzf.def("set_time_zone_names", &TimeZoneFormat::setTimeZoneNames, py::arg("tznames"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

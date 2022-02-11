@@ -85,26 +85,19 @@ void init_schriter(py::module &m) {
 
   // icu::StringCharacterIterator
   py::class_<StringCharacterIterator, UCharCharacterIterator> sci(m, "StringCharacterIterator");
-  sci.def(py::init<const UnicodeString &>(), py::arg("text_str"))
-      .def(
-          // const char16_t *text_str -> const UnicodeString &text_str
-          py::init([](const char16_t *text_str) { return std::make_unique<StringCharacterIterator>(text_str); }),
+  sci.def(py::init([](const _UnicodeStringVariant &text_str) {
+            return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str));
+          }),
           py::arg("text_str"))
-      .def(py::init<const UnicodeString &, int32_t>(), py::arg("text_str"), py::arg("text_pos"))
-      .def(
-          // const char16_t *text_str -> const UnicodeString &text_str
-          py::init([](const char16_t *text_str, int32_t text_pos) {
-            return std::make_unique<StringCharacterIterator>(text_str, text_pos);
-          }),
-          py::arg("text_str"), py::arg("text_pos"))
-      .def(py::init<const UnicodeString &, int32_t, int32_t, int32_t>(), py::arg("text_str"), py::arg("text_begin"),
-           py::arg("text_end"), py::arg("text_pos"))
-      .def(
-          // const char16_t *text_str -> const UnicodeString &text_str
-          py::init([](const char16_t *text_str, int32_t text_begin, int32_t text_end, int32_t text_pos) {
-            return std::make_unique<StringCharacterIterator>(text_str, text_begin, text_end, text_pos);
-          }),
-          py::arg("text_str"), py::arg("text_begin"), py::arg("text_end"), py::arg("text_pos"))
+      .def(py::init([](const _UnicodeStringVariant &text_str, int32_t text_pos) {
+             return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str), text_pos);
+           }),
+           py::arg("text_str"), py::arg("text_pos"))
+      .def(py::init([](const _UnicodeStringVariant &text_str, int32_t text_begin, int32_t text_end, int32_t text_pos) {
+             return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str), text_begin, text_end,
+                                                              text_pos);
+           }),
+           py::arg("text_str"), py::arg("text_begin"), py::arg("text_end"), py::arg("text_pos"))
       .def(py::init<const StringCharacterIterator &>(), py::arg("that"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
@@ -132,9 +125,10 @@ void init_schriter(py::module &m) {
       });
   sci.def("clone", &StringCharacterIterator::clone);
   sci.def("get_text", &StringCharacterIterator::getText, py::arg("result"));
-  sci.def("set_text", py::overload_cast<const UnicodeString &>(&StringCharacterIterator::setText), py::arg("new_text"))
-      .def(
-          // const char16_t *new_text -> const UnicodeString &new_text
-          "set_text", [](StringCharacterIterator &self, const char16_t *new_text) { self.setText(new_text); },
-          py::arg("new_text"));
+  sci.def(
+      "set_text",
+      [](StringCharacterIterator &self, const _UnicodeStringVariant &new_text) {
+        self.setText(VARIANT_TO_UNISTR(new_text));
+      },
+      py::arg("new_text"));
 }

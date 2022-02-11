@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/idna.h>
 
 using namespace icu;
@@ -66,97 +67,49 @@ void init_idna(py::module &m) {
       },
       py::arg("options"));
   idna.def(
-          "label_to_ascii",
-          [](const IDNA &self, const UnicodeString &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.labelToASCII(label, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("label"), py::arg("dest"), py::arg("info"))
-      .def(
-          // const char16_t *label -> const UnicodeString &label
-          "label_to_ascii",
-          [](const IDNA &self, const char16_t *label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.labelToASCII(label, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("label"), py::arg("dest"), py::arg("info"));
+      "label_to_ascii",
+      [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.labelToASCII(VARIANT_TO_UNISTR(label), dest, info, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("label"), py::arg("dest"), py::arg("info"));
   idna.def(
-          "label_to_unicode",
-          [](const IDNA &self, const UnicodeString &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.labelToUnicode(label, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("label"), py::arg("dest"), py::arg("info"))
-      .def(
-          // const char16_t *label -> const UnicodeString &label
-          "label_to_unicode",
-          [](const IDNA &self, const char16_t *label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.labelToUnicode(label, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("label"), py::arg("dest"), py::arg("info"));
+      "label_to_unicode",
+      [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.labelToUnicode(VARIANT_TO_UNISTR(label), dest, info, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("label"), py::arg("dest"), py::arg("info"));
   idna.def(
-          "name_to_ascii",
-          [](const IDNA &self, const UnicodeString &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.nameToASCII(name, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"), py::arg("dest"), py::arg("info"))
-      .def(
-          // const char16_t *name -> const UnicodeString &name
-          "name_to_ascii",
-          [](const IDNA &self, const char16_t *name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.nameToASCII(name, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"), py::arg("dest"), py::arg("info"));
+      "name_to_ascii",
+      [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.nameToASCII(VARIANT_TO_UNISTR(name), dest, info, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("name"), py::arg("dest"), py::arg("info"));
   idna.def(
-          "name_to_unicode",
-          [](const IDNA &self, const UnicodeString &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.nameToUnicode(name, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"), py::arg("dest"), py::arg("info"))
-      .def(
-          // const char16_t *name -> const UnicodeString &name
-          "name_to_unicode",
-          [](const IDNA &self, const char16_t *name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.nameToUnicode(name, dest, info, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"), py::arg("dest"), py::arg("info"));
+      "name_to_unicode",
+      [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.nameToUnicode(VARIANT_TO_UNISTR(name), dest, info, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("name"), py::arg("dest"), py::arg("info"));
 
   idna.def_property_readonly_static("ERROR_EMPTY_LABEL", [](py::object) -> int32_t { return UIDNA_ERROR_EMPTY_LABEL; });
   idna.def_property_readonly_static("ERROR_LABEL_TOO_LONG",

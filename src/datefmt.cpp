@@ -41,19 +41,20 @@ void init_datefmt(py::module &m) {
   // FIXME: Implement "void icu::DateFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
   df.def("clone", &DateFormat::clone);
   df.def_static("create_date_instance", &DateFormat::createDateInstance, py::arg("style") = DateFormat::kDefault,
-                py::arg("locale") = Locale::getDefault());
+                py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
   df.def_static("create_date_time_instance", &DateFormat::createDateTimeInstance,
                 py::arg("date_style") = DateFormat::kDefault, py::arg("time_style") = DateFormat::kDefault,
-                py::arg("locale") = Locale::getDefault());
+                py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
   df.def_static("create_instance", &DateFormat::createInstance);
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   // FIXME: Implement "static DateFormat *icu::DateFormat::createInstanceForSkeleton(Calendar *calendarToAdopt,
   // const UnicodeString &skeleton, const Locale &locale, UErrorCode &status)".
   df.def_static(
         "create_instance_for_skeleton",
-        [](const UnicodeString &skeleton, const Locale &locale) {
+        [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
+          auto result =
+              DateFormat::createInstanceForSkeleton(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -61,59 +62,10 @@ void init_datefmt(py::module &m) {
         },
         py::arg("skeleton"), py::arg("locale"))
       .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
           "create_instance_for_skeleton",
-          [](const char16_t *skeleton, const Locale &locale) {
+          [](const _UnicodeStringVariant &skeleton) {
             ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance_for_skeleton",
-          [](const UnicodeString &skeleton, const char *locale) {
-            ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          // const char *locale -> const Locale &locale
-          "create_instance_for_skeleton",
-          [](const char16_t *skeleton, const char *locale) {
-            ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          "create_instance_for_skeleton",
-          [](const UnicodeString &skeleton) {
-            ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(skeleton, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "create_instance_for_skeleton",
-          [](const char16_t *skeleton) {
-            ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(skeleton, error_code);
+            auto result = DateFormat::createInstanceForSkeleton(VARIANT_TO_UNISTR(skeleton), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -122,7 +74,7 @@ void init_datefmt(py::module &m) {
           py::arg("skeleton"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
   df.def_static("create_time_instance", &DateFormat::createTimeInstance, py::arg("style") = DateFormat::kDefault,
-                py::arg("locale") = Locale::getDefault());
+                py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
   df.def(
         // [1] DateFormat::format
         "format", py::overload_cast<Calendar &, UnicodeString &, FieldPosition &>(&DateFormat::format, py::const_),
@@ -254,71 +206,41 @@ void init_datefmt(py::module &m) {
   df.def("is_calendar_lenient", &DateFormat::isCalendarLenient);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("is_lenient", &DateFormat::isLenient);
-  df.def("parse", py::overload_cast<const UnicodeString &, Calendar &, ParsePosition &>(&DateFormat::parse, py::const_),
-         py::arg("text"), py::arg("cal"), py::arg("pos"))
+  df.def(
+        "parse",
+        [](const DateFormat &self, const _UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
+          return self.parse(VARIANT_TO_UNISTR(text), cal, pos);
+        },
+        py::arg("text"), py::arg("cal"), py::arg("pos"))
       .def(
-          // const char16_t *text -> const UnicodeString &text
           "parse",
-          [](const DateFormat &self, const char16_t *text, Calendar &cal, ParsePosition &pos) {
-            return self.parse(text, cal, pos);
+          [](const DateFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+            return self.parse(VARIANT_TO_UNISTR(text), pos);
           },
-          py::arg("text"), py::arg("cal"), py::arg("pos"))
-      .def("parse", py::overload_cast<const UnicodeString &, ParsePosition &>(&DateFormat::parse, py::const_),
-           py::arg("text"), py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const DateFormat &self, const char16_t *text, ParsePosition &pos) { return self.parse(text, pos); },
           py::arg("text"), py::arg("pos"))
       .def(
           "parse",
-          [](const DateFormat &self, const UnicodeString &text) {
+          [](const DateFormat &self, const _UnicodeStringVariant &text) {
             ErrorCode error_code;
-            auto result = self.parse(text, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("text"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const DateFormat &self, const char16_t *text) {
-            ErrorCode error_code;
-            auto result = self.parse(text, error_code);
+            auto result = self.parse(VARIANT_TO_UNISTR(text), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("text"));
-  df.def("parse_object", &DateFormat::parseObject, py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const DateFormat &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+  df.def(
+        "parse_object",
+        [](const DateFormat &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {
+          self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos);
+        },
+        py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           // [2] Format::parseObject
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // [2] Format::parseObject
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

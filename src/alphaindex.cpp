@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "voidptr.hpp"
+#include <pybind11/stl.h>
 #include <unicode/alphaindex.h>
 #include <unicode/tblcoll.h>
 #include <unicode/uniset.h>
@@ -47,51 +48,28 @@ void init_alphaindex(py::module &m) {
   ii.def("get_bucket", &ImmutableIndex::getBucket, py::return_value_policy::reference, py::arg("index"));
   ii.def("get_bucket_count", &ImmutableIndex::getBucketCount);
   ii.def(
-        "get_bucket_index",
-        [](const ImmutableIndex &self, const UnicodeString &name) {
-          ErrorCode error_code;
-          auto result = self.getBucketIndex(name, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("name"))
-      .def(
-          // const char16_t *name -> const UnicodeString &name
-          "get_bucket_index",
-          [](const ImmutableIndex &self, const char16_t *name) {
-            ErrorCode error_code;
-            auto result = self.getBucketIndex(name, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"));
+      "get_bucket_index",
+      [](const ImmutableIndex &self, const _UnicodeStringVariant &name) {
+        ErrorCode error_code;
+        auto result = self.getBucketIndex(VARIANT_TO_UNISTR(name), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("name"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   // icu::AlphabeticIndex
-  ai.def(py::init([](const Locale &locale) {
+  ai.def(py::init([](const _LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<AlphabeticIndex>(locale, error_code);
+           auto result = std::make_unique<AlphabeticIndex>(VARIANT_TO_LOCALE(locale), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
          }),
          py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<AlphabeticIndex>(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"))
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .def(py::init([](RuleBasedCollator *collator) {
              ErrorCode error_code;
@@ -108,27 +86,15 @@ void init_alphaindex(py::module &m) {
   ai.def(
         // [1] AlphabeticIndex::addLabels
         "add_labels",
-        [](AlphabeticIndex &self, const Locale &locale) -> AlphabeticIndex & {
+        [](AlphabeticIndex &self, const _LocaleVariant &locale) -> AlphabeticIndex & {
           ErrorCode error_code;
-          auto &result = self.addLabels(locale, error_code);
+          auto &result = self.addLabels(VARIANT_TO_LOCALE(locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          "add_labels",
-          [](AlphabeticIndex &self, const char *locale) -> AlphabeticIndex & {
-            ErrorCode error_code;
-            auto &result = self.addLabels(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
       .def(
           // [2] AlphabeticIndex::addLabels
           "add_labels",
@@ -142,28 +108,16 @@ void init_alphaindex(py::module &m) {
           },
           py::arg("additions"));
   ai.def(
-        "add_record",
-        [](AlphabeticIndex &self, const UnicodeString &name, _ConstVoidPtr *data) -> AlphabeticIndex & {
-          ErrorCode error_code;
-          auto &result = self.addRecord(name, data, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("name"), py::arg("data"))
-      .def(
-          // const char16_t *name -> const UnicodeString &name
-          "add_record",
-          [](AlphabeticIndex &self, const char16_t *name, _ConstVoidPtr *data) -> AlphabeticIndex & {
-            ErrorCode error_code;
-            auto &result = self.addRecord(name, data, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("name"), py::arg("data"));
+      "add_record",
+      [](AlphabeticIndex &self, const _UnicodeStringVariant &name, _ConstVoidPtr *data) -> AlphabeticIndex & {
+        ErrorCode error_code;
+        auto &result = self.addRecord(VARIANT_TO_UNISTR(name), data, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("name"), py::arg("data"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   ai.def("build_immutable_index", [](AlphabeticIndex &self) {
     ErrorCode error_code;
@@ -193,21 +147,9 @@ void init_alphaindex(py::module &m) {
   ai.def("get_bucket_index", py::overload_cast<>(&AlphabeticIndex::getBucketIndex, py::const_))
       .def(
           "get_bucket_index",
-          [](AlphabeticIndex &self, const UnicodeString &item_name) {
+          [](AlphabeticIndex &self, const _UnicodeStringVariant &item_name) {
             ErrorCode error_code;
-            auto result = self.getBucketIndex(item_name, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("item_name"))
-      .def(
-          // const char16_t *item_name -> const UnicodeString &item_name
-          "get_bucket_index",
-          [](AlphabeticIndex &self, const char16_t *item_name) {
-            ErrorCode error_code;
-            auto result = self.getBucketIndex(item_name, error_code);
+            auto result = self.getBucketIndex(VARIANT_TO_UNISTR(item_name), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -260,28 +202,16 @@ void init_alphaindex(py::module &m) {
   });
   ai.def("reset_record_iterator", &AlphabeticIndex::resetRecordIterator);
   ai.def(
-        "set_inflow_label",
-        [](AlphabeticIndex &self, const UnicodeString &inflow_label) -> AlphabeticIndex & {
-          ErrorCode error_code;
-          auto &result = self.setInflowLabel(inflow_label, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("inflow_label"))
-      .def(
-          // const char16_t *inflow_label -> const UnicodeString &inflow_label
-          "set_inflow_label",
-          [](AlphabeticIndex &self, const char16_t *inflow_label) -> AlphabeticIndex & {
-            ErrorCode error_code;
-            auto &result = self.setInflowLabel(inflow_label, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("inflow_label"));
+      "set_inflow_label",
+      [](AlphabeticIndex &self, const _UnicodeStringVariant &inflow_label) -> AlphabeticIndex & {
+        ErrorCode error_code;
+        auto &result = self.setInflowLabel(VARIANT_TO_UNISTR(inflow_label), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("inflow_label"));
   ai.def(
       "set_max_label_count",
       [](AlphabeticIndex &self, int32_t max_label_count) -> AlphabeticIndex & {
@@ -294,49 +224,25 @@ void init_alphaindex(py::module &m) {
       },
       py::arg("max_label_count"));
   ai.def(
-        "set_overflow_label",
-        [](AlphabeticIndex &self, const UnicodeString &overflow_label) -> AlphabeticIndex & {
-          ErrorCode error_code;
-          auto &result = self.setOverflowLabel(overflow_label, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("overflow_label"))
-      .def(
-          // const char16_t *overflow_label -> const UnicodeString &overflow_label
-          "set_overflow_label",
-          [](AlphabeticIndex &self, const char16_t *overflow_label) -> AlphabeticIndex & {
-            ErrorCode error_code;
-            auto &result = self.setOverflowLabel(overflow_label, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("overflow_label"));
+      "set_overflow_label",
+      [](AlphabeticIndex &self, const _UnicodeStringVariant &overflow_label) -> AlphabeticIndex & {
+        ErrorCode error_code;
+        auto &result = self.setOverflowLabel(VARIANT_TO_UNISTR(overflow_label), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("overflow_label"));
   ai.def(
-        "set_underflow_label",
-        [](AlphabeticIndex &self, const UnicodeString &underflow_label) -> AlphabeticIndex & {
-          ErrorCode error_code;
-          auto &result = self.setUnderflowLabel(underflow_label, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("underflow_label"))
-      .def(
-          // const char16_t *underflow_label -> const UnicodeString &underflow_label
-          "set_underflow_label",
-          [](AlphabeticIndex &self, const char16_t *underflow_label) -> AlphabeticIndex & {
-            ErrorCode error_code;
-            auto &result = self.setUnderflowLabel(underflow_label, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("underflow_label"));
+      "set_underflow_label",
+      [](AlphabeticIndex &self, const _UnicodeStringVariant &underflow_label) -> AlphabeticIndex & {
+        ErrorCode error_code;
+        auto &result = self.setUnderflowLabel(VARIANT_TO_UNISTR(underflow_label), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("underflow_label"));
 }

@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/dtfmtsym.h>
 #include <unicode/smpdtfmt.h>
 
@@ -20,20 +21,9 @@ void init_smpdtfmt(py::module &m) {
          }))
       .def(
           // [2] SimpleDateFormat::SimpleDateFormat
-          py::init([](const UnicodeString &pattern) {
+          py::init([](const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -42,43 +32,10 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"))
       .def(
           // [3] SimpleDateFormat::SimpleDateFormat
-          py::init([](const UnicodeString &pattern, const UnicodeString &override) {
+          py::init([](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &override) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const UnicodeString &override) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"))
-      .def(
-          // const char16_t *override -> const UnicodeString &override
-          py::init([](const UnicodeString &pattern, const char16_t *override) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          // const char16_t *override -> const UnicodeString &override
-          py::init([](const char16_t *pattern, const char16_t *override) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, error_code);
+            auto result =
+                std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(override), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -87,20 +44,9 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"), py::arg("override"))
       .def(
           // [4] SimpleDateFormat::SimpleDateFormat
-          py::init([](const UnicodeString &pattern, const Locale &locale) {
+          py::init([](const _UnicodeStringVariant &pattern, const Locale &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("locale"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, locale, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), locale, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -109,65 +55,22 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"), py::arg("locale"))
       .def(
           // [5] SimpleDateFormat::SimpleDateFormat
-          py::init([](const UnicodeString &pattern, const UnicodeString &override, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"), py::arg("locale"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const UnicodeString &override, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"), py::arg("locale"))
-      .def(
-          // const char16_t *override -> const UnicodeString &override
-          py::init([](const UnicodeString &pattern, const char16_t *override, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("override"), py::arg("locale"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          // const char16_t *override -> const UnicodeString &override
-          py::init([](const char16_t *pattern, const char16_t *override, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, override, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
+          py::init(
+              [](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &override, const Locale &locale) {
+                ErrorCode error_code;
+                auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern),
+                                                                 VARIANT_TO_UNISTR(override), locale, error_code);
+                if (error_code.isFailure()) {
+                  throw ICUError(error_code);
+                }
+                return result;
+              }),
           py::arg("pattern"), py::arg("override"), py::arg("locale"))
       .def(
           // [7] SimpleDateFormat::SimpleDateFormat
-          py::init([](const UnicodeString &pattern, const DateFormatSymbols &format_data) {
+          py::init([](const _UnicodeStringVariant &pattern, const DateFormatSymbols &format_data) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("format_data"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const DateFormatSymbols &format_data) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(pattern, format_data, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), format_data, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -187,31 +90,21 @@ void init_smpdtfmt(py::module &m) {
   // NumberFormat *formatToAdopt, UErrorCode &status)".
   // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(NumberFormat *formatToAdopt)".
   sdf.def(
-         "apply_localized_pattern",
-         [](SimpleDateFormat &self, const UnicodeString &pattern) {
-           ErrorCode error_code;
-           self.applyLocalizedPattern(pattern, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-         },
-         py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_localized_pattern",
-          [](SimpleDateFormat &self, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.applyLocalizedPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"));
-  sdf.def("apply_pattern", &SimpleDateFormat::applyPattern, py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern", [](SimpleDateFormat &self, const char16_t *pattern) { self.applyPattern(pattern); },
-          py::arg("pattern"));
+      "apply_localized_pattern",
+      [](SimpleDateFormat &self, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("pattern"));
+  sdf.def(
+      "apply_pattern",
+      [](SimpleDateFormat &self, const _UnicodeStringVariant &pattern) {
+        self.applyPattern(VARIANT_TO_UNISTR(pattern));
+      },
+      py::arg("pattern"));
   sdf.def("clone", &SimpleDateFormat::clone);
   sdf.def(
          // [2] SimpleDateFormat::format
@@ -310,42 +203,23 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
          // [1] SimpleDateFormat::parse
          "parse",
-         py::overload_cast<const UnicodeString &, Calendar &, ParsePosition &>(&SimpleDateFormat::parse, py::const_),
+         [](const SimpleDateFormat &self, const _UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
+           self.parse(VARIANT_TO_UNISTR(text), cal, pos);
+         },
          py::arg("text"), py::arg("cal"), py::arg("pos"))
       .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const SimpleDateFormat &self, const char16_t *text, Calendar &cal, ParsePosition &pos) {
-            self.parse(text, cal, pos);
-          },
-          py::arg("text"), py::arg("cal"), py::arg("pos"))
-      .def(
           // [2] DateFormat::parse
-          "parse", py::overload_cast<const UnicodeString &, ParsePosition &>(&DateFormat::parse, py::const_),
-          py::arg("text"), py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
           "parse",
-          [](const DateFormat &self, const char16_t *text, ParsePosition &pos) { return self.parse(text, pos); },
+          [](const DateFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+            return self.parse(VARIANT_TO_UNISTR(text), pos);
+          },
           py::arg("text"), py::arg("pos"))
       .def(
           // [3] DateFormat::parse
           "parse",
-          [](const DateFormat &self, const UnicodeString &text) {
+          [](const DateFormat &self, const _UnicodeStringVariant &text) {
             ErrorCode error_code;
-            auto result = self.parse(text, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("text"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const DateFormat &self, const char16_t *text) {
-            ErrorCode error_code;
-            auto result = self.parse(text, error_code);
+            auto result = self.parse(VARIANT_TO_UNISTR(text), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

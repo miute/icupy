@@ -76,9 +76,9 @@ void init_gregocal(py::module &m) {
   cal.def("clone", &Calendar::clone);
   cal.def_static(
          "create_instance",
-         [](const Locale &locale) {
+         [](const _LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = Calendar::createInstance(locale, error_code);
+           auto result = Calendar::createInstance(VARIANT_TO_LOCALE(locale), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
@@ -87,31 +87,9 @@ void init_gregocal(py::module &m) {
          py::arg("locale"))
       .def_static(
           "create_instance",
-          [](const char *locale) {
+          [](const TimeZone &zone, const _LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = Calendar::createInstance(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
-      .def_static(
-          "create_instance",
-          [](const TimeZone &zone, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = Calendar::createInstance(zone, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("zone"), py::arg("locale"))
-      .def_static(
-          "create_instance",
-          [](const TimeZone &zone, const char *locale) {
-            ErrorCode error_code;
-            auto result = Calendar::createInstance(zone, locale, error_code);
+            auto result = Calendar::createInstance(zone, VARIANT_TO_LOCALE(locale), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -226,27 +204,16 @@ void init_gregocal(py::module &m) {
   cal.def("get_greatest_minimum", py::overload_cast<UCalendarDateFields>(&Calendar::getGreatestMinimum, py::const_),
           py::arg("field"));
   cal.def_static(
-         "get_keyword_values_for_locale",
-         [](const char *key, const Locale &locale, UBool commonly_used) {
-           ErrorCode error_code;
-           auto result = Calendar::getKeywordValuesForLocale(key, locale, commonly_used, error_code);
-           if (error_code.isFailure()) {
-             throw ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("key"), py::arg("locale"), py::arg("commonly_used"))
-      .def_static(
-          "get_keyword_values_for_locale",
-          [](const char *key, const char *locale, UBool commonly_used) {
-            ErrorCode error_code;
-            auto result = Calendar::getKeywordValuesForLocale(key, locale, commonly_used, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("key"), py::arg("locale"), py::arg("commonly_used"));
+      "get_keyword_values_for_locale",
+      [](const char *key, const _LocaleVariant &locale, UBool commonly_used) {
+        ErrorCode error_code;
+        auto result = Calendar::getKeywordValuesForLocale(key, VARIANT_TO_LOCALE(locale), commonly_used, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("key"), py::arg("locale"), py::arg("commonly_used"));
   cal.def("get_least_maximum", py::overload_cast<UCalendarDateFields>(&Calendar::getLeastMaximum, py::const_),
           py::arg("field"));
   cal.def(
@@ -395,36 +362,18 @@ void init_gregocal(py::module &m) {
              return result;
            }),
            py::arg("zone"))
-      .def(py::init([](const Locale &locale) {
+      .def(py::init([](const _LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(locale, error_code);
+             auto result = std::make_unique<GregorianCalendar>(VARIANT_TO_LOCALE(locale), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
-      .def(py::init([](const char *locale) {
+      .def(py::init([](const TimeZone &zone, const _LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(locale, error_code);
-             if (error_code.isFailure()) {
-               throw ICUError(error_code);
-             }
-             return result;
-           }),
-           py::arg("locale"))
-      .def(py::init([](const TimeZone &zone, const Locale &locale) {
-             ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(zone, locale, error_code);
-             if (error_code.isFailure()) {
-               throw ICUError(error_code);
-             }
-             return result;
-           }),
-           py::arg("zone"), py::arg("locale"))
-      .def(py::init([](const TimeZone &zone, const char *locale) {
-             ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(zone, locale, error_code);
+             auto result = std::make_unique<GregorianCalendar>(zone, VARIANT_TO_LOCALE(locale), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }

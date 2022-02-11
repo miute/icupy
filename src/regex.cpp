@@ -21,26 +21,15 @@ void init_regex(py::module &m) {
   // icu::RegexMatcher
   rm.def(
         // [1] RegexMatcher::RegexMatcher
-        py::init([](const UnicodeString &regexp, uint32_t flags) {
+        py::init([](const _UnicodeStringVariant &regexp, uint32_t flags) {
           ErrorCode error_code;
-          auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
+          auto result = std::make_unique<RegexMatcher>(VARIANT_TO_UNISTR(regexp), flags, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         }),
         py::arg("regexp"), py::arg("flags"))
-      .def(
-          // const char16_t *regexp -> const UnicodeString &regexp
-          py::init([](const char16_t *regexp, uint32_t flags) {
-            ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("regexp"), py::arg("flags"))
       .def(
           // [2] RegexMatcher::RegexMatcher
           py::init([](_UTextPtr &regexp, uint32_t flags) {
@@ -54,20 +43,9 @@ void init_regex(py::module &m) {
           py::arg("regexp"), py::arg("flags"))
       .def(
           // [3] RegexMatcher::RegexMatcher
-          py::init([](const UnicodeString &regexp, const UnicodeString &input, uint32_t flags) {
+          py::init([](const _UnicodeStringVariant &regexp, const UnicodeString &input, uint32_t flags) {
             ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("regexp"), py::arg("input_"), py::arg("flags"))
-      .def(
-          // const char16_t *regexp -> const UnicodeString &regexp
-          py::init([](const char16_t *regexp, const UnicodeString &input, uint32_t flags) {
-            ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
+            auto result = std::make_unique<RegexMatcher>(VARIANT_TO_UNISTR(regexp), input, flags, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -87,27 +65,15 @@ void init_regex(py::module &m) {
           py::arg("regexp"), py::arg("input_"), py::arg("flags"));
   rm.def(
         "append_replacement",
-        [](RegexMatcher &self, UnicodeString &dest, const UnicodeString &replacement) -> RegexMatcher & {
+        [](RegexMatcher &self, UnicodeString &dest, const _UnicodeStringVariant &replacement) -> RegexMatcher & {
           ErrorCode error_code;
-          auto &result = self.appendReplacement(dest, replacement, error_code);
+          auto &result = self.appendReplacement(dest, VARIANT_TO_UNISTR(replacement), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("dest"), py::arg("replacement"))
-      .def(
-          // const char16_t *replacement -> const UnicodeString &replacement
-          "append_replacement",
-          [](RegexMatcher &self, UnicodeString &dest, const char16_t *replacement) -> RegexMatcher & {
-            ErrorCode error_code;
-            auto &result = self.appendReplacement(dest, replacement, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("dest"), py::arg("replacement"))
       .def(
           "append_replacement",
           [](RegexMatcher &self, _UTextPtr &dest, _UTextPtr &replacement) -> RegexMatcher & {
@@ -363,27 +329,15 @@ void init_regex(py::module &m) {
   rm.def("region_start64", &RegexMatcher::regionStart64);
   rm.def(
         "replace_all",
-        [](RegexMatcher &self, const UnicodeString &replacement) {
+        [](RegexMatcher &self, const _UnicodeStringVariant &replacement) {
           ErrorCode error_code;
-          auto result = self.replaceAll(replacement, error_code);
+          auto result = self.replaceAll(VARIANT_TO_UNISTR(replacement), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("replacement"))
-      .def(
-          // const char16_t *replacement -> const UnicodeString &replacement
-          "replace_all",
-          [](RegexMatcher &self, const char16_t *replacement) {
-            ErrorCode error_code;
-            auto result = self.replaceAll(replacement, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("replacement"))
       .def(
           "replace_all",
           [](RegexMatcher &self, _UTextPtr &replacement, std::optional<_UTextPtr> &dest) {
@@ -397,27 +351,15 @@ void init_regex(py::module &m) {
           py::arg("replacement"), py::arg("dest"));
   rm.def(
         "replace_first",
-        [](RegexMatcher &self, const UnicodeString &replacement) {
+        [](RegexMatcher &self, const _UnicodeStringVariant &replacement) {
           ErrorCode error_code;
-          auto result = self.replaceFirst(replacement, error_code);
+          auto result = self.replaceFirst(VARIANT_TO_UNISTR(replacement), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("replacement"))
-      .def(
-          // const char16_t *replacement -> const UnicodeString &replacement
-          "replace_first",
-          [](RegexMatcher &self, const char16_t *replacement) {
-            ErrorCode error_code;
-            auto result = self.replaceFirst(replacement, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("replacement"))
       .def(
           "replace_first",
           [](RegexMatcher &self, _UTextPtr &replacement, std::optional<_UTextPtr> &dest) {
@@ -590,9 +532,9 @@ void init_regex(py::module &m) {
   rp.def("clone", &RegexPattern::clone);
   rp.def_static(
         "compile",
-        [](const UnicodeString &regex, uint32_t flags) {
+        [](const _UnicodeStringVariant &regex, uint32_t flags) {
           ErrorCode error_code;
-          auto result = RegexPattern::compile(regex, flags, error_code);
+          auto result = RegexPattern::compile(VARIANT_TO_UNISTR(regex), flags, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -600,34 +542,10 @@ void init_regex(py::module &m) {
         },
         py::arg("regex"), py::arg("flags"))
       .def_static(
-          // const char16_t *regex -> const UnicodeString &regex
           "compile",
-          [](const char16_t *regex, uint32_t flags) {
+          [](const _UnicodeStringVariant &regex, uint32_t flags, UParseError &pe) {
             ErrorCode error_code;
-            auto result = RegexPattern::compile(regex, flags, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("regex"), py::arg("flags"))
-      .def_static(
-          "compile",
-          [](const UnicodeString &regex, uint32_t flags, UParseError &pe) {
-            ErrorCode error_code;
-            auto result = RegexPattern::compile(regex, flags, pe, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("regex"), py::arg("flags"), py::arg("pe"))
-      .def_static(
-          // const char16_t *regex -> const UnicodeString &regex
-          "compile",
-          [](const char16_t *regex, uint32_t flags, UParseError &pe) {
-            ErrorCode error_code;
-            auto result = RegexPattern::compile(regex, flags, pe, error_code);
+            auto result = RegexPattern::compile(VARIANT_TO_UNISTR(regex), flags, pe, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -636,21 +554,9 @@ void init_regex(py::module &m) {
           py::arg("regex"), py::arg("flags"), py::arg("pe"))
       .def_static(
           "compile",
-          [](const UnicodeString &regex, UParseError &pe) {
+          [](const _UnicodeStringVariant &regex, UParseError &pe) {
             ErrorCode error_code;
-            auto result = RegexPattern::compile(regex, pe, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("regex"), py::arg("pe"))
-      .def_static(
-          // const char16_t *regex -> const UnicodeString &regex
-          "compile",
-          [](const char16_t *regex, UParseError &pe) {
-            ErrorCode error_code;
-            auto result = RegexPattern::compile(regex, pe, error_code);
+            auto result = RegexPattern::compile(VARIANT_TO_UNISTR(regex), pe, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -705,21 +611,9 @@ void init_regex(py::module &m) {
         py::arg("group_name"), py::arg("name_length"))
       .def(
           "group_number_from_name",
-          [](const RegexPattern &self, const UnicodeString &group_name) {
+          [](const RegexPattern &self, const _UnicodeStringVariant &group_name) {
             ErrorCode error_code;
-            auto result = self.groupNumberFromName(group_name, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("group_name"))
-      .def(
-          // const char16_t *group_name -> const UnicodeString &group_name
-          "group_number_from_name",
-          [](const RegexPattern &self, const char16_t *group_name) {
-            ErrorCode error_code;
-            auto result = self.groupNumberFromName(group_name, error_code);
+            auto result = self.groupNumberFromName(VARIANT_TO_UNISTR(group_name), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -748,27 +642,15 @@ void init_regex(py::module &m) {
       });
   rp.def_static(
         "matches",
-        [](const UnicodeString &regex, const UnicodeString &input, UParseError &pe) {
+        [](const _UnicodeStringVariant &regex, const UnicodeString &input, UParseError &pe) {
           ErrorCode error_code;
-          auto result = RegexPattern::matches(regex, input, pe, error_code);
+          auto result = RegexPattern::matches(VARIANT_TO_UNISTR(regex), input, pe, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
           return result;
         },
         py::arg("regex"), py::arg("input_"), py::arg("pe"))
-      .def_static(
-          // const char16_t *regex -> const UnicodeString &regex
-          "matches",
-          [](const char16_t *regex, const UnicodeString &input, UParseError &pe) {
-            ErrorCode error_code;
-            auto result = RegexPattern::matches(regex, input, pe, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("regex"), py::arg("input_"), py::arg("pe"))
       .def_static(
           "matches",
           [](_UTextPtr &regex, _UTextPtr &input, UParseError &pe) {

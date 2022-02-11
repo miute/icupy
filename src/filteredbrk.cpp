@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
+#include <pybind11/stl.h>
 #include <unicode/filteredbrk.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 
@@ -35,28 +36,16 @@ void init_filteredbrk(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
   fbib.def_static(
-          "create_instance",
-          [](const Locale &where) {
-            ErrorCode error_code;
-            auto result = FilteredBreakIteratorBuilder::createInstance(where, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("where"))
-      .def_static(
-          // const char *where -> const Locale &where
-          "create_instance",
-          [](const char *where) {
-            ErrorCode error_code;
-            auto result = FilteredBreakIteratorBuilder::createInstance(where, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("where"));
+      "create_instance",
+      [](const _LocaleVariant &where) {
+        ErrorCode error_code;
+        auto result = FilteredBreakIteratorBuilder::createInstance(VARIANT_TO_LOCALE(where), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("where"));
 #ifndef U_HIDE_DEPRECATED_API
   fbib.def_static("create_instance", []() {
     ErrorCode error_code;
@@ -68,51 +57,27 @@ void init_filteredbrk(py::module &m) {
   });
 #endif // U_HIDE_DEPRECATED_API
   fbib.def(
-          "suppress_break_after",
-          [](FilteredBreakIteratorBuilder &self, const UnicodeString &string) {
-            ErrorCode error_code;
-            auto result = self.suppressBreakAfter(string, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("string"))
-      .def(
-          // const char16_t *string -> const UnicodeString &string
-          "suppress_break_after",
-          [](FilteredBreakIteratorBuilder &self, const char16_t *string) {
-            ErrorCode error_code;
-            auto result = self.suppressBreakAfter(string, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("string"));
+      "suppress_break_after",
+      [](FilteredBreakIteratorBuilder &self, const _UnicodeStringVariant &string) {
+        ErrorCode error_code;
+        auto result = self.suppressBreakAfter(VARIANT_TO_UNISTR(string), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("string"));
   fbib.def(
-          "unsuppress_break_after",
-          [](FilteredBreakIteratorBuilder &self, const UnicodeString &string) {
-            ErrorCode error_code;
-            auto result = self.unsuppressBreakAfter(string, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("string"))
-      .def(
-          // const char16_t *string -> const UnicodeString &string
-          "unsuppress_break_after",
-          [](FilteredBreakIteratorBuilder &self, const char16_t *string) {
-            ErrorCode error_code;
-            auto result = self.unsuppressBreakAfter(string, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("string"));
+      "unsuppress_break_after",
+      [](FilteredBreakIteratorBuilder &self, const _UnicodeStringVariant &string) {
+        ErrorCode error_code;
+        auto result = self.unsuppressBreakAfter(VARIANT_TO_UNISTR(string), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("string"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   fbib.def(
       "wrap_iterator_with_filter",

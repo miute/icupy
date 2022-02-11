@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <unicode/messagepattern.h>
 
 using namespace icu;
@@ -143,20 +144,9 @@ void init_messagepattern(py::module &m) {
           py::arg("mode"))
       .def(
           // [3] MessagePattern::MessagePattern
-          py::init([](const UnicodeString &pattern, UParseError *parse_error) {
+          py::init([](const _UnicodeStringVariant &pattern, UParseError *parse_error) {
             ErrorCode error_code;
-            auto result = std::make_unique<MessagePattern>(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, UParseError *parse_error) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MessagePattern>(pattern, parse_error, error_code);
+            auto result = std::make_unique<MessagePattern>(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -185,110 +175,59 @@ void init_messagepattern(py::module &m) {
   mp.def("has_named_arguments", &MessagePattern::hasNamedArguments);
   mp.def("has_numbered_arguments", &MessagePattern::hasNumberedArguments);
   mp.def(
-        "parse",
-        [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          ErrorCode error_code;
-          auto &result = self.parse(pattern, parse_error, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "parse",
-          [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            ErrorCode error_code;
-            auto &result = self.parse(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"), py::arg("parse_error"));
+      "parse",
+      [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
+        ErrorCode error_code;
+        auto &result = self.parse(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("pattern"), py::arg("parse_error"));
   mp.def(
-        "parse_choice_style",
-        [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          ErrorCode error_code;
-          auto &result = self.parseChoiceStyle(pattern, parse_error, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "parse_choice_style",
-          [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            ErrorCode error_code;
-            auto &result = self.parseChoiceStyle(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"), py::arg("parse_error"));
+      "parse_choice_style",
+      [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
+        ErrorCode error_code;
+        auto &result = self.parseChoiceStyle(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("pattern"), py::arg("parse_error"));
   mp.def(
-        "parse_plural_style",
-        [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          ErrorCode error_code;
-          auto &result = self.parsePluralStyle(pattern, parse_error, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "parse_plural_style",
-          [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            ErrorCode error_code;
-            auto &result = self.parsePluralStyle(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"), py::arg("parse_error"));
+      "parse_plural_style",
+      [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
+        ErrorCode error_code;
+        auto &result = self.parsePluralStyle(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("pattern"), py::arg("parse_error"));
   mp.def(
-        "parse_select_style",
-        [](MessagePattern &self, const UnicodeString &pattern, UParseError *parse_error) -> MessagePattern & {
-          ErrorCode error_code;
-          auto &result = self.parseSelectStyle(pattern, parse_error, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "parse_select_style",
-          [](MessagePattern &self, const char16_t *pattern, UParseError *parse_error) -> MessagePattern & {
-            ErrorCode error_code;
-            auto &result = self.parseSelectStyle(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"), py::arg("parse_error"));
-  mp.def("part_substring_matches", &MessagePattern::partSubstringMatches, py::arg("part"), py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "part_substring_matches",
-          [](const MessagePattern &self, const Part &part, const char16_t *s) {
-            return self.partSubstringMatches(part, s);
-          },
-          py::arg("part"), py::arg("s"));
-  mp.def_static("validate_argument_name", &MessagePattern::validateArgumentName, py::arg("name"))
-      .def_static(
-          // const char16_t *name -> const UnicodeString &name
-          "validate_argument_name", [](const char16_t *name) { return MessagePattern::validateArgumentName(name); },
-          py::arg("name"));
+      "parse_select_style",
+      [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
+        ErrorCode error_code;
+        auto &result = self.parseSelectStyle(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("pattern"), py::arg("parse_error"));
+  mp.def(
+      "part_substring_matches",
+      [](const MessagePattern &self, const Part &part, const _UnicodeStringVariant &s) {
+        return self.partSubstringMatches(part, VARIANT_TO_UNISTR(s));
+      },
+      py::arg("part"), py::arg("s"));
+  mp.def_static(
+      "validate_argument_name",
+      [](const _UnicodeStringVariant &name) { return MessagePattern::validateArgumentName(VARIANT_TO_UNISTR(name)); },
+      py::arg("name"));
 
   m.attr("UMSGPAT_ARG_NAME_NOT_NUMBER") = int32_t{UMSGPAT_ARG_NAME_NOT_NUMBER};
   m.attr("UMSGPAT_ARG_NAME_NOT_VALID") = int32_t{UMSGPAT_ARG_NAME_NOT_VALID};

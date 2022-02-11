@@ -9,9 +9,9 @@ void init_resbund(py::module &m) {
   py::class_<ResourceBundle, UObject> res(m, "ResourceBundle");
   res.def(
          // [1] ResourceBundle::ResourceBundle
-         py::init([](const UnicodeString &package_name, const Locale &locale) {
+         py::init([](const UnicodeString &package_name, const _LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
+           auto result = std::make_unique<ResourceBundle>(package_name, VARIANT_TO_LOCALE(locale), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
@@ -19,32 +19,10 @@ void init_resbund(py::module &m) {
          }),
          py::arg("package_name"), py::arg("locale"))
       .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const UnicodeString &package_name, const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("package_name"), py::arg("locale"))
-      .def(
           // [2] ResourceBundle::ResourceBundle
-          py::init([](const UnicodeString &package_name) {
+          py::init([](const _UnicodeStringVariant &package_name) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("package_name"))
-      .def(
-          // const char16_t *package_name -> const UnicodeString &package_name
-          py::init([](const char16_t *package_name) {
-            ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, error_code);
+            auto result = std::make_unique<ResourceBundle>(VARIANT_TO_UNISTR(package_name), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -63,20 +41,9 @@ void init_resbund(py::module &m) {
           }))
       .def(
           // [4] ResourceBundle::ResourceBundle
-          py::init([](const char *package_name, const Locale &locale) {
+          py::init([](const char *package_name, const _LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("package_name"), py::arg("locale"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *package_name, const char *locale) {
-            ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, locale, error_code);
+            auto result = std::make_unique<ResourceBundle>(package_name, VARIANT_TO_LOCALE(locale), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

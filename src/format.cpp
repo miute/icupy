@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/format.h>
 
 using namespace icu;
@@ -62,32 +63,17 @@ void init_format(py::module &m) {
         return result;
       },
       py::arg("type_"));
-  fmt.def("parse_object",
-          py::overload_cast<const UnicodeString &, Formattable &, ParsePosition &>(&Format::parseObject, py::const_),
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+  fmt.def(
+         "parse_object",
+         [](const Format &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {
+           self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos);
+         },
+         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

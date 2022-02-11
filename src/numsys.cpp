@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/numsys.h>
 #include <unicode/strenum.h>
 
@@ -11,9 +12,9 @@ void init_numsys(py::module &m) {
   ns.def_static(
         // [1] NumberingSystem::createInstance
         "create_instance",
-        [](const Locale &locale) {
+        [](const _LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = NumberingSystem::createInstance(locale, error_code);
+          auto result = NumberingSystem::createInstance(VARIANT_TO_LOCALE(locale), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -21,35 +22,12 @@ void init_numsys(py::module &m) {
         },
         py::arg("locale"))
       .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = NumberingSystem::createInstance(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
-      .def_static(
           // [2] NumberingSystem::createInstance
           "create_instance",
-          [](int32_t radix, UBool is_algorithmic, const UnicodeString &description) {
+          [](int32_t radix, UBool is_algorithmic, const _UnicodeStringVariant &description) {
             ErrorCode error_code;
-            auto result = NumberingSystem::createInstance(radix, is_algorithmic, description, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("radix"), py::arg("is_algorithmic"), py::arg("description"))
-      .def_static(
-          // const char16_t *description -> const UnicodeString &description
-          "create_instance",
-          [](int32_t radix, UBool is_algorithmic, const char16_t *description) {
-            ErrorCode error_code;
-            auto result = NumberingSystem::createInstance(radix, is_algorithmic, description, error_code);
+            auto result =
+                NumberingSystem::createInstance(radix, is_algorithmic, VARIANT_TO_UNISTR(description), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

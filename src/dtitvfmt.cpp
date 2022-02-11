@@ -63,9 +63,9 @@ void init_dtitvfmt(py::module &m) {
   fmt.def_static(
          // [1] DateIntervalFormat::createInstance
          "create_instance",
-         [](const UnicodeString &skeleton, const DateIntervalInfo &dtitvinf) {
+         [](const _UnicodeStringVariant &skeleton, const DateIntervalInfo &dtitvinf) {
            ErrorCode error_code;
-           auto result = DateIntervalFormat::createInstance(skeleton, dtitvinf, error_code);
+           auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), dtitvinf, error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
@@ -73,60 +73,12 @@ void init_dtitvfmt(py::module &m) {
          },
          py::arg("skeleton"), py::arg("dtitvinf"))
       .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "create_instance",
-          [](const char16_t *skeleton, const DateIntervalInfo &dtitvinf) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, dtitvinf, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("dtitvinf"))
-      .def_static(
           // [2] DateIntervalFormat::createInstance
           "create_instance",
-          [](const UnicodeString &skeleton, const Locale &locale, const DateIntervalInfo &dtitvinf) {
+          [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale, const DateIntervalInfo &dtitvinf) {
             ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, dtitvinf, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"), py::arg("dtitvinf"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "create_instance",
-          [](const char16_t *skeleton, const Locale &locale, const DateIntervalInfo &dtitvinf) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, dtitvinf, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"), py::arg("dtitvinf"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const UnicodeString &skeleton, const char *locale, const DateIntervalInfo &dtitvinf) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, dtitvinf, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"), py::arg("dtitvinf"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char16_t *skeleton, const char *locale, const DateIntervalInfo &dtitvinf) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, dtitvinf, error_code);
+            auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale),
+                                                             dtitvinf, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -136,46 +88,10 @@ void init_dtitvfmt(py::module &m) {
       .def_static(
           // [3] DateIntervalFormat::createInstance
           "create_instance",
-          [](const UnicodeString &skeleton, const Locale &locale) {
+          [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "create_instance",
-          [](const char16_t *skeleton, const Locale &locale) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const UnicodeString &skeleton, const char *locale) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"), py::arg("locale"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          // const char *locale -> const Locale &locale
-          "create_instance",
-          [](const char16_t *skeleton, const char *locale) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skeleton, locale, error_code);
+            auto result =
+                DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -185,21 +101,9 @@ void init_dtitvfmt(py::module &m) {
       .def_static(
           // [4] DateIntervalFormat::createInstance
           "create_instance",
-          [](const UnicodeString &skelton) {
+          [](const _UnicodeStringVariant &skelton) {
             ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skelton, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("skeleton"))
-      .def_static(
-          // const char16_t *skeleton -> const UnicodeString &skeleton
-          "create_instance",
-          [](const char16_t *skelton) {
-            ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(skelton, error_code);
+            auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skelton), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

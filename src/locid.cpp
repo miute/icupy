@@ -97,63 +97,44 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def_static("get_chinese", &Locale::getChinese);
   loc.def("get_country", &Locale::getCountry);
   loc.def_static("get_default", &Locale::getDefault);
-  loc.def("get_display_country",
-          py::overload_cast<const Locale &, UnicodeString &>(&Locale::getDisplayCountry, py::const_),
-          py::arg("display_locale"), py::arg("disp_country"))
-      .def(
-          // const char *display_locale -> const Locale &display_locale
-          "get_display_country",
-          [](const Locale &self, const char *display_locale, UnicodeString &disp_country) -> UnicodeString & {
-            return self.getDisplayCountry(display_locale, disp_country);
-          },
-          py::arg("display_locale"), py::arg("disp_country"))
+  loc.def(
+         "get_display_country",
+         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_country) -> UnicodeString & {
+           return self.getDisplayCountry(VARIANT_TO_LOCALE(display_locale), disp_country);
+         },
+         py::arg("display_locale"), py::arg("disp_country"))
       .def("get_display_country", py::overload_cast<UnicodeString &>(&Locale::getDisplayCountry, py::const_),
            py::arg("disp_country"));
-  loc.def("get_display_language",
-          py::overload_cast<const Locale &, UnicodeString &>(&Locale::getDisplayLanguage, py::const_),
-          py::arg("display_locale"), py::arg("disp_lang"))
-      .def(
-          // const char *display_locale -> const Locale &display_locale
-          "get_display_language",
-          [](const Locale &self, const char *display_locale, UnicodeString &disp_lang) -> UnicodeString & {
-            return self.getDisplayLanguage(display_locale, disp_lang);
-          },
-          py::arg("display_locale"), py::arg("disp_lang"))
+  loc.def(
+         "get_display_language",
+         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_lang) -> UnicodeString & {
+           return self.getDisplayLanguage(VARIANT_TO_LOCALE(display_locale), disp_lang);
+         },
+         py::arg("display_locale"), py::arg("disp_lang"))
       .def("get_display_language", py::overload_cast<UnicodeString &>(&Locale::getDisplayLanguage, py::const_),
            py::arg("disp_lang"));
-  loc.def("get_display_name", py::overload_cast<const Locale &, UnicodeString &>(&Locale::getDisplayName, py::const_),
-          py::arg("display_locale"), py::arg("name"))
-      .def(
-          // const char *display_locale -> const Locale &display_locale
-          "get_display_name",
-          [](const Locale &self, const char *display_locale, UnicodeString &name) -> UnicodeString & {
-            return self.getDisplayName(display_locale, name);
-          },
-          py::arg("display_locale"), py::arg("name"))
+  loc.def(
+         "get_display_name",
+         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &name) -> UnicodeString & {
+           return self.getDisplayName(VARIANT_TO_LOCALE(display_locale), name);
+         },
+         py::arg("display_locale"), py::arg("name"))
       .def("get_display_name", py::overload_cast<UnicodeString &>(&Locale::getDisplayName, py::const_),
            py::arg("name"));
-  loc.def("get_display_script",
-          py::overload_cast<const Locale &, UnicodeString &>(&Locale::getDisplayScript, py::const_),
-          py::arg("display_locale"), py::arg("disp_script"))
-      .def(
-          // const char *display_locale -> const Locale &display_locale
-          "get_display_script",
-          [](const Locale &self, const char *display_locale, UnicodeString &disp_script) -> UnicodeString & {
-            return self.getDisplayScript(display_locale, disp_script);
-          },
-          py::arg("display_locale"), py::arg("disp_script"))
+  loc.def(
+         "get_display_script",
+         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_script) -> UnicodeString & {
+           return self.getDisplayScript(VARIANT_TO_LOCALE(display_locale), disp_script);
+         },
+         py::arg("display_locale"), py::arg("disp_script"))
       .def("get_display_script", py::overload_cast<UnicodeString &>(&Locale::getDisplayScript, py::const_),
            py::arg("disp_script"));
-  loc.def("get_display_variant",
-          py::overload_cast<const Locale &, UnicodeString &>(&Locale::getDisplayVariant, py::const_),
-          py::arg("display_locale"), py::arg("disp_var"))
-      .def(
-          // const char *display_locale -> const Locale &display_locale
-          "get_display_variant",
-          [](const Locale &self, const char *display_locale, UnicodeString &disp_var) -> UnicodeString & {
-            return self.getDisplayVariant(display_locale, disp_var);
-          },
-          py::arg("display_locale"), py::arg("disp_var"))
+  loc.def(
+         "get_display_variant",
+         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_var) -> UnicodeString & {
+           return self.getDisplayVariant(VARIANT_TO_LOCALE(display_locale), disp_var);
+         },
+         py::arg("display_locale"), py::arg("disp_var"))
       .def("get_display_variant", py::overload_cast<UnicodeString &>(&Locale::getDisplayVariant, py::const_),
            py::arg("disp_var"));
   loc.def_static("get_english", &Locale::getEnglish);

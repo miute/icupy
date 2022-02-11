@@ -12,28 +12,16 @@ void init_gender(py::module &m) {
   // icu::GenderInfo
   py::class_<GenderInfo, UObject> gi(m, "GenderInfo");
   gi.def_static(
-        "get_instance",
-        [](const Locale &locale) {
-          ErrorCode error_code;
-          auto result = GenderInfo::getInstance(locale, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::return_value_policy::reference, py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "get_instance",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = GenderInfo::getInstance(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::return_value_policy::reference, py::arg("locale"));
+      "get_instance",
+      [](const _LocaleVariant &locale) {
+        ErrorCode error_code;
+        auto result = GenderInfo::getInstance(VARIANT_TO_LOCALE(locale), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::return_value_policy::reference, py::arg("locale"));
   gi.def(
       "get_list_gender",
       [](const GenderInfo &self, const std::vector<UGender> &genders, int32_t length) {

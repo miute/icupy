@@ -410,6 +410,10 @@ def test_get_keywords():
     assert isinstance(it, StringEnumeration)
     assert list(it) == ["standard", "unihan", "emoji", "eor", "search"]
 
+    it = Collator.get_keyword_values_for_locale("collation", "ja-JP", True)
+    assert isinstance(it, StringEnumeration)
+    assert list(it) == ["standard", "unihan", "emoji", "eor", "search"]
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_get_max_variable():

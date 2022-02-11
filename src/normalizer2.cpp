@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/normalizer2.h>
 
 using namespace icu;
@@ -6,28 +7,16 @@ using namespace icu;
 void init_normalizer2(py::module &m) {
   py::class_<Normalizer2, UObject> n2(m, "Normalizer2");
   n2.def(
-        "append",
-        [](const Normalizer2 &self, UnicodeString &first, const UnicodeString &second) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = self.append(first, second, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("first"), py::arg("second"))
-      .def(
-          // const char16_t *second -> const UnicodeString &second
-          "append",
-          [](const Normalizer2 &self, UnicodeString &first, const char16_t *second) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.append(first, second, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("first"), py::arg("second"));
+      "append",
+      [](const Normalizer2 &self, UnicodeString &first, const _UnicodeStringVariant &second) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.append(first, VARIANT_TO_UNISTR(second), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("first"), py::arg("second"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   n2.def("compose_pair", &Normalizer2::composePair, py::arg("a"), py::arg("b"));
   n2.def("get_combining_class", &Normalizer2::getCombiningClass, py::arg("c"));
@@ -106,33 +95,21 @@ void init_normalizer2(py::module &m) {
   n2.def("has_boundary_before", &Normalizer2::hasBoundaryBefore, py::arg("c"));
   n2.def("is_inert", &Normalizer2::isInert, py::arg("c"));
   n2.def(
-        "is_normalized",
-        [](const Normalizer2 &self, const UnicodeString &s) {
-          ErrorCode error_code;
-          auto result = self.isNormalized(s, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "is_normalized",
-          [](const Normalizer2 &self, const char16_t *s) {
-            ErrorCode error_code;
-            auto result = self.isNormalized(s, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("s"));
+      "is_normalized",
+      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+        ErrorCode error_code;
+        auto result = self.isNormalized(VARIANT_TO_UNISTR(s), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("s"));
   n2.def(
         "normalize",
-        [](const Normalizer2 &self, const UnicodeString &src) {
+        [](const Normalizer2 &self, const _UnicodeStringVariant &src) {
           ErrorCode error_code;
-          auto result = self.normalize(src, error_code);
+          auto result = self.normalize(VARIANT_TO_UNISTR(src), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -140,34 +117,10 @@ void init_normalizer2(py::module &m) {
         },
         py::arg("src"))
       .def(
-          // const char16_t *src -> const UnicodeString &src
           "normalize",
-          [](const Normalizer2 &self, const char16_t *src) {
+          [](const Normalizer2 &self, const _UnicodeStringVariant &src, UnicodeString &dest) -> UnicodeString & {
             ErrorCode error_code;
-            auto result = self.normalize(src, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("src"))
-      .def(
-          "normalize",
-          [](const Normalizer2 &self, const UnicodeString &src, UnicodeString &dest) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.normalize(src, dest, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("src"), py::arg("dest"))
-      .def(
-          // const char16_t *src -> const UnicodeString &src
-          "normalize",
-          [](const Normalizer2 &self, const char16_t *src, UnicodeString &dest) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.normalize(src, dest, error_code);
+            auto &result = self.normalize(VARIANT_TO_UNISTR(src), dest, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -175,74 +128,38 @@ void init_normalizer2(py::module &m) {
           },
           py::arg("src"), py::arg("dest"));
   n2.def(
-        "normalize_second_and_append",
-        [](const Normalizer2 &self, UnicodeString &first, const UnicodeString &second) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = self.normalizeSecondAndAppend(first, second, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("first"), py::arg("second"))
-      .def(
-          // const char16_t *second -> const UnicodeString &second
-          "normalize_second_and_append",
-          [](const Normalizer2 &self, UnicodeString &first, const char16_t *second) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.normalizeSecondAndAppend(first, second, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("first"), py::arg("second"));
+      "normalize_second_and_append",
+      [](const Normalizer2 &self, UnicodeString &first, const _UnicodeStringVariant &second) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = self.normalizeSecondAndAppend(first, VARIANT_TO_UNISTR(second), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("first"), py::arg("second"));
   n2.def(
-        "quick_check",
-        [](const Normalizer2 &self, const UnicodeString &s) {
-          ErrorCode error_code;
-          auto result = self.quickCheck(s, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "quick_check",
-          [](const Normalizer2 &self, const char16_t *s) {
-            ErrorCode error_code;
-            auto result = self.quickCheck(s, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("s"));
+      "quick_check",
+      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+        ErrorCode error_code;
+        auto result = self.quickCheck(VARIANT_TO_UNISTR(s), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("s"));
   n2.def(
-        "span_quick_check_yes",
-        [](const Normalizer2 &self, const UnicodeString &s) {
-          ErrorCode error_code;
-          auto result = self.spanQuickCheckYes(s, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "span_quick_check_yes",
-          [](const Normalizer2 &self, const char16_t *s) {
-            ErrorCode error_code;
-            auto result = self.spanQuickCheckYes(s, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("s"));
+      "span_quick_check_yes",
+      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+        ErrorCode error_code;
+        auto result = self.spanQuickCheckYes(VARIANT_TO_UNISTR(s), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("s"));
 
   py::class_<FilteredNormalizer2, Normalizer2> fn2(m, "FilteredNormalizer2");
   fn2.def(py::init<const Normalizer2 &, const UnicodeSet &>(), py::arg("n2"), py::arg("filter_set"));

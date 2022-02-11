@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/selfmt.h>
 
 using namespace icu;
@@ -6,26 +7,15 @@ using namespace icu;
 void init_selfmt(py::module &m) {
   // icu::SelectFormat
   py::class_<SelectFormat, Format> sf(m, "SelectFormat");
-  sf.def(py::init([](const UnicodeString &pattern) {
+  sf.def(py::init([](const _UnicodeStringVariant &pattern) {
            ErrorCode error_code;
-           auto result = std::make_unique<SelectFormat>(pattern, error_code);
+           auto result = std::make_unique<SelectFormat>(VARIANT_TO_UNISTR(pattern), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
          }),
          py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<SelectFormat>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
       .def(py::init<const SelectFormat &>(), py::arg("other"));
   sf.def("__copy__", &SelectFormat::clone)
       .def(
@@ -37,26 +27,15 @@ void init_selfmt(py::module &m) {
           "__ne__", [](const SelectFormat &self, const Format &other) { return self != other; }, py::is_operator(),
           py::arg("other"));
   sf.def(
-        "apply_pattern",
-        [](SelectFormat &self, const UnicodeString &pattern) {
-          ErrorCode error_code;
-          self.applyPattern(pattern, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-        },
-        py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](SelectFormat &self, const char16_t *pattern) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"));
+      "apply_pattern",
+      [](SelectFormat &self, const _UnicodeStringVariant &pattern) {
+        ErrorCode error_code;
+        self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+      },
+      py::arg("pattern"));
   sf.def("clone", &SelectFormat::clone);
   sf.def(
         // [1] SelectFormat::format
@@ -100,53 +79,26 @@ void init_selfmt(py::module &m) {
       .def(
           // [5] SelectFormat::format
           "format",
-          [](const SelectFormat &self, const UnicodeString &keyword, UnicodeString &append_to,
+          [](const SelectFormat &self, const _UnicodeStringVariant &keyword, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(keyword, append_to, pos, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("keyword"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // const char16_t *keyword -> const UnicodeString &keyword
-          "format",
-          [](const SelectFormat &self, const char16_t *keyword, UnicodeString &append_to,
-             FieldPosition &pos) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(keyword, append_to, pos, error_code);
+            auto &result = self.format(VARIANT_TO_UNISTR(keyword), append_to, pos, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           },
           py::arg("keyword"), py::arg("append_to"), py::arg("pos"));
-  sf.def("parse_object", &SelectFormat::parseObject, py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const SelectFormat &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+  sf.def(
+        "parse_object",
+        [](const SelectFormat &self, const _UnicodeStringVariant &source, Formattable &result,
+           ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
+        py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const UnicodeString &source, Formattable &result) {
+          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const Format &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

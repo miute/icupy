@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/currpinf.h>
 #include <unicode/decimfmt.h>
 
@@ -29,20 +30,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         }))
       .def(
           // [2] DecimalFormat::DecimalFormat
-          py::init([](const UnicodeString &pattern) {
+          py::init([](const _UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(pattern, error_code);
+            auto result = std::make_unique<DecimalFormat>(VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -51,20 +41,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           py::arg("pattern"))
       .def(
           // [6] DecimalFormat::DecimalFormat
-          py::init([](const UnicodeString &pattern, const DecimalFormatSymbols &symbols) {
+          py::init([](const _UnicodeStringVariant &pattern, const DecimalFormatSymbols &symbols) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(pattern, symbols, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("symbols"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, const DecimalFormatSymbols &symbols) {
-            ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(pattern, symbols, error_code);
+            auto result = std::make_unique<DecimalFormat>(VARIANT_TO_UNISTR(pattern), symbols, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -84,41 +63,19 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   // FIXME: Implement "void icu::DecimalFormat::adoptDecimalFormatSymbols(DecimalFormatSymbols *symbolsToAdopt)".
   df.def(
         "apply_localized_pattern",
-        [](DecimalFormat &self, const UnicodeString &pattern) {
+        [](DecimalFormat &self, const _UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          self.applyLocalizedPattern(pattern, error_code);
+          self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
         py::arg("pattern"))
       .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
           "apply_localized_pattern",
-          [](DecimalFormat &self, const char16_t *pattern) {
+          [](DecimalFormat &self, const _UnicodeStringVariant &pattern, UParseError &parse_error) {
             ErrorCode error_code;
-            self.applyLocalizedPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"))
-      .def(
-          "apply_localized_pattern",
-          [](DecimalFormat &self, const UnicodeString &pattern, UParseError &parse_error) {
-            ErrorCode error_code;
-            self.applyLocalizedPattern(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_localized_pattern",
-          [](DecimalFormat &self, const char16_t *pattern, UParseError &parse_error) {
-            ErrorCode error_code;
-            self.applyLocalizedPattern(pattern, parse_error, error_code);
+            self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -126,41 +83,19 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           py::arg("pattern"), py::arg("parse_error"));
   df.def(
         "apply_pattern",
-        [](DecimalFormat &self, const UnicodeString &pattern) {
+        [](DecimalFormat &self, const _UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          self.applyPattern(pattern, error_code);
+          self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
         },
         py::arg("pattern"))
       .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
-          [](DecimalFormat &self, const char16_t *pattern) {
+          [](DecimalFormat &self, const _UnicodeStringVariant &pattern, UParseError &parse_error) {
             ErrorCode error_code;
-            self.applyPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"))
-      .def(
-          "apply_pattern",
-          [](DecimalFormat &self, const UnicodeString &pattern, UParseError &parse_error) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("pattern"), py::arg("parse_error"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](DecimalFormat &self, const char16_t *pattern, UParseError &parse_error) {
-            ErrorCode error_code;
-            self.applyPattern(pattern, parse_error, error_code);
+            self.applyPattern(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -342,48 +277,28 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("is_sign_always_shown", &DecimalFormat::isSignAlwaysShown);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("parse",
-         py::overload_cast<const UnicodeString &, Formattable &, ParsePosition &>(&DecimalFormat::parse, py::const_),
-         py::arg("text"), py::arg("result"), py::arg("parse_position"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const DecimalFormat &self, const char16_t *text, Formattable &result, ParsePosition &parse_position) {
-            self.parse(text, result, parse_position);
-          },
-          py::arg("text"), py::arg("result"), py::arg("parse_position"))
+  df.def(
+        "parse",
+        [](const DecimalFormat &self, const _UnicodeStringVariant &text, Formattable &result,
+           ParsePosition &parse_position) { self.parse(VARIANT_TO_UNISTR(text), result, parse_position); },
+        py::arg("text"), py::arg("result"), py::arg("parse_position"))
       .def(
           "parse",
-          [](const NumberFormat &self, const UnicodeString &text, Formattable &result) {
+          [](const NumberFormat &self, const _UnicodeStringVariant &text, Formattable &result) {
             ErrorCode error_code;
-            self.parse(text, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("text"), py::arg("result"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse",
-          [](const NumberFormat &self, const char16_t *text, Formattable &result) {
-            ErrorCode error_code;
-            self.parse(text, result, error_code);
+            self.parse(VARIANT_TO_UNISTR(text), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  df.def("parse_currency",
-         py::overload_cast<const UnicodeString &, ParsePosition &>(&DecimalFormat::parseCurrency, py::const_),
-         py::arg("text"), py::arg("pos"))
-      .def(
-          // const char16_t *text -> const UnicodeString &text
-          "parse_currency",
-          [](const DecimalFormat &self, const char16_t *text, ParsePosition &pos) {
-            return self.parseCurrency(text, pos);
-          },
-          py::arg("text"), py::arg("pos"));
+  df.def(
+      "parse_currency",
+      [](const DecimalFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseCurrency(VARIANT_TO_UNISTR(text), pos);
+      },
+      py::arg("text"), py::arg("pos"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
@@ -451,21 +366,24 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   df.def("set_multiplier_scale", &DecimalFormat::setMultiplierScale, py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-  df.def("set_negative_prefix", &DecimalFormat::setNegativePrefix, py::arg("new_value"))
-      .def(
-          "set_negative_prefix",
-          [](DecimalFormat &self, const char16_t *new_value) { self.setNegativePrefix(new_value); },
-          py::arg("new_value"));
-  df.def("set_negative_suffix", &DecimalFormat::setNegativeSuffix, py::arg("new_value"))
-      .def(
-          "set_negative_suffix",
-          [](DecimalFormat &self, const char16_t *new_value) { self.setNegativeSuffix(new_value); },
-          py::arg("new_value"));
-  df.def("set_pad_character", &DecimalFormat::setPadCharacter, py::arg("pad_char"))
-      .def(
-          // const char16_t *pad_char -> const UnicodeString &pad_char
-          "set_pad_character", [](DecimalFormat &self, const char16_t *pad_char) { self.setPadCharacter(pad_char); },
-          py::arg("pad_char"));
+  df.def(
+      "set_negative_prefix",
+      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
+        self.setNegativePrefix(VARIANT_TO_UNISTR(new_value));
+      },
+      py::arg("new_value"));
+  df.def(
+      "set_negative_suffix",
+      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
+        self.setNegativeSuffix(VARIANT_TO_UNISTR(new_value));
+      },
+      py::arg("new_value"));
+  df.def(
+      "set_pad_character",
+      [](DecimalFormat &self, const _UnicodeStringVariant &pad_char) {
+        self.setPadCharacter(VARIANT_TO_UNISTR(pad_char));
+      },
+      py::arg("pad_char"));
   df.def("set_pad_position", &DecimalFormat::setPadPosition, py::arg("pad_pos"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("set_parse_case_sensitive", &DecimalFormat::setParseCaseSensitive, py::arg("value"));
@@ -478,16 +396,18 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("set_parse_no_exponent", &DecimalFormat::setParseNoExponent, py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("set_positive_prefix", &DecimalFormat::setPositivePrefix, py::arg("new_value"))
-      .def(
-          "set_positive_prefix",
-          [](DecimalFormat &self, const char16_t *new_value) { self.setPositivePrefix(new_value); },
-          py::arg("new_value"));
-  df.def("set_positive_suffix", &DecimalFormat::setPositiveSuffix, py::arg("new_value"))
-      .def(
-          "set_positive_suffix",
-          [](DecimalFormat &self, const char16_t *new_value) { self.setPositiveSuffix(new_value); },
-          py::arg("new_value"));
+  df.def(
+      "set_positive_prefix",
+      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
+        self.setPositivePrefix(VARIANT_TO_UNISTR(new_value));
+      },
+      py::arg("new_value"));
+  df.def(
+      "set_positive_suffix",
+      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
+        self.setPositiveSuffix(VARIANT_TO_UNISTR(new_value));
+      },
+      py::arg("new_value"));
   df.def("set_rounding_increment", &DecimalFormat::setRoundingIncrement, py::arg("new_value"));
   df.def("set_rounding_mode", &DecimalFormat::setRoundingMode, py::arg("rounding_mode"));
   df.def("set_scientific_notation", &DecimalFormat::setScientificNotation, py::arg("use_scientific"));

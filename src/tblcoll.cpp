@@ -66,29 +66,12 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       });
-  coll.def("equals", &Collator::equals, py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "equals",
-          [](const Collator &self, const char16_t *source, const UnicodeString &target) {
-            return self.equals(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *target -> const UnicodeString &target
-          "equals",
-          [](const Collator &self, const UnicodeString &source, const char16_t *target) {
-            return self.equals(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "equals",
-          [](const Collator &self, const char16_t *source, const char16_t *target) {
-            return self.equals(source, target);
-          },
-          py::arg("source"), py::arg("target"));
+  coll.def(
+      "equals",
+      [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
+        return self.equals(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
+      },
+      py::arg("source"), py::arg("target"));
   coll.def_static(
       "get_available_locales",
       []() {
@@ -169,61 +152,28 @@ void init_tblcoll(py::module &m) {
       py::arg("keyword"));
   coll.def_static(
       "get_keyword_values_for_locale",
-      [](const char *keyword, const Locale &locale, UBool commonly_used) {
+      [](const char *keyword, const _LocaleVariant &locale, UBool commonly_used) {
         ErrorCode error_code;
-        auto result = Collator::getKeywordValuesForLocale(keyword, locale, commonly_used, error_code);
+        auto result =
+            Collator::getKeywordValuesForLocale(keyword, VARIANT_TO_LOCALE(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
         return result;
       },
       py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"));
-  coll.def("greater", &Collator::greater, py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "greater",
-          [](const Collator &self, const char16_t *source, const UnicodeString &target) {
-            return self.greater(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *target -> const UnicodeString &target
-          "greater",
-          [](const Collator &self, const UnicodeString &source, const char16_t *target) {
-            return self.greater(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "greater",
-          [](const Collator &self, const char16_t *source, const char16_t *target) {
-            return self.greater(source, target);
-          },
-          py::arg("source"), py::arg("target"));
-  coll.def("greater_or_equal", &Collator::greaterOrEqual, py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "greater_or_equal",
-          [](const Collator &self, const char16_t *source, const UnicodeString &target) {
-            return self.greaterOrEqual(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *target -> const UnicodeString &target
-          "greater_or_equal",
-          [](const Collator &self, const UnicodeString &source, const char16_t *target) {
-            return self.greaterOrEqual(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "greater_or_equal",
-          [](const Collator &self, const char16_t *source, const char16_t *target) {
-            return self.greaterOrEqual(source, target);
-          },
-          py::arg("source"), py::arg("target"));
+  coll.def(
+      "greater",
+      [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
+        return self.greater(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
+      },
+      py::arg("source"), py::arg("target"));
+  coll.def(
+      "greater_or_equal",
+      [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
+        return self.greaterOrEqual(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
+      },
+      py::arg("source"), py::arg("target"));
   // TODO: Implement "static URegistryKey icu::Collator::registerFactory(CollatorFactory *toAdopt, UErrorCode &status)".
   // TODO: Implement "static URegistryKey icu::Collator::registerInstance(Collator *toAdopt, const Locale &locale,
   // UErrorCode &status)".
@@ -231,90 +181,46 @@ void init_tblcoll(py::module &m) {
 
   // icu::RuleBasedCollator
   py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator");
-  rbc.def(py::init([](const UnicodeString &rules) {
+  rbc.def(py::init([](const _UnicodeStringVariant &rules) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
+            auto result = std::make_unique<RuleBasedCollator>(VARIANT_TO_UNISTR(rules), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"))
-      .def(
-          // const char16_t *rules -> const UnicodeString &rules
-          py::init([](const char16_t *rules) {
-            ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedCollator>(rules, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("rules"))
-      .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength) {
+      .def(py::init([](const _UnicodeStringVariant &rules, Collator::ECollationStrength collation_strength) {
              ErrorCode error_code;
-             auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
+             auto result =
+                 std::make_unique<RuleBasedCollator>(VARIANT_TO_UNISTR(rules), collation_strength, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("rules"), py::arg("collation_strength"))
-      .def(
-          // const char16_t *rules -> const UnicodeString &rules
-          py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength) {
-            ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedCollator>(rules, collation_strength, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("rules"), py::arg("collation_strength"))
-      .def(py::init([](const UnicodeString &rules, UColAttributeValue decomposition_mode) {
+      .def(py::init([](const _UnicodeStringVariant &rules, UColAttributeValue decomposition_mode) {
              ErrorCode error_code;
-             auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
+             auto result =
+                 std::make_unique<RuleBasedCollator>(VARIANT_TO_UNISTR(rules), decomposition_mode, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("rules"), py::arg("decomposition_mode"))
-      .def(
-          // const char16_t *rules -> const UnicodeString &rules
-          py::init([](const char16_t *rules, UColAttributeValue decomposition_mode) {
-            ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedCollator>(rules, decomposition_mode, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("rules"), py::arg("decomposition_mode"))
-      .def(py::init([](const UnicodeString &rules, Collator::ECollationStrength collation_strength,
+      .def(py::init([](const _UnicodeStringVariant &rules, Collator::ECollationStrength collation_strength,
                        UColAttributeValue decomposition_mode) {
              ErrorCode error_code;
-             auto result =
-                 std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
+             auto result = std::make_unique<RuleBasedCollator>(VARIANT_TO_UNISTR(rules), collation_strength,
+                                                               decomposition_mode, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("rules"), py::arg("collation_strength"), py::arg("decomposition_mode"))
-      .def(
-          // const char16_t *rules -> const UnicodeString &rules
-          py::init([](const char16_t *rules, Collator::ECollationStrength collation_strength,
-                      UColAttributeValue decomposition_mode) {
-            ErrorCode error_code;
-            auto result =
-                std::make_unique<RuleBasedCollator>(rules, collation_strength, decomposition_mode, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("rules"), py::arg("collation_strength"), py::arg("decomposition_mode"))
       .def(py::init<const RuleBasedCollator &>(), py::arg("other"))
       // FIXME: Implement "icu::RuleBasedCollator::RuleBasedCollator(const uint8_t *bin,
       // int32_t length, const RuleBasedCollator *base, UErrorCode &status)".
@@ -360,46 +266,10 @@ void init_tblcoll(py::module &m) {
          py::arg("source"), py::arg("source_length"), py::arg("target"), py::arg("target_length"))
       .def(
           "compare",
-          [](const RuleBasedCollator &self, const UnicodeString &source, const UnicodeString &target, int32_t length) {
+          [](const RuleBasedCollator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target,
+             int32_t length) {
             ErrorCode error_code;
-            auto result = self.compare(source, target, length, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"), py::arg("length"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "compare",
-          [](const RuleBasedCollator &self, const char16_t *source, const UnicodeString &target, int32_t length) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, length, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"), py::arg("length"))
-      .def(
-          // const char16_t *target -> const UnicodeString &target
-          "compare",
-          [](const RuleBasedCollator &self, const UnicodeString &source, const char16_t *target, int32_t length) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, length, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"), py::arg("length"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "compare",
-          [](const RuleBasedCollator &self, const char16_t *source, const char16_t *target, int32_t length) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, length, error_code);
+            auto result = self.compare(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target), length, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -408,46 +278,9 @@ void init_tblcoll(py::module &m) {
           py::arg("source"), py::arg("target"), py::arg("length"))
       .def(
           "compare",
-          [](const RuleBasedCollator &self, const UnicodeString &source, const UnicodeString &target) {
+          [](const RuleBasedCollator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
             ErrorCode error_code;
-            auto result = self.compare(source, target, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "compare",
-          [](const RuleBasedCollator &self, const char16_t *source, const UnicodeString &target) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *target -> const UnicodeString &target
-          "compare",
-          [](const RuleBasedCollator &self, const UnicodeString &source, const char16_t *target) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "compare",
-          [](const RuleBasedCollator &self, const char16_t *source, const char16_t *target) {
-            ErrorCode error_code;
-            auto result = self.compare(source, target, error_code);
+            auto result = self.compare(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -472,14 +305,10 @@ void init_tblcoll(py::module &m) {
   rbc.def("create_collation_element_iterator",
           py::overload_cast<const CharacterIterator &>(&RuleBasedCollator::createCollationElementIterator, py::const_),
           py::arg("source"))
-      .def("create_collation_element_iterator",
-           py::overload_cast<const UnicodeString &>(&RuleBasedCollator::createCollationElementIterator, py::const_),
-           py::arg("source"))
       .def(
-          // const char16_t *source -> const UnicodeString &source
           "create_collation_element_iterator",
-          [](const RuleBasedCollator &self, const char16_t *source) {
-            return self.createCollationElementIterator(source);
+          [](const RuleBasedCollator &self, const _UnicodeStringVariant &source) {
+            return self.createCollationElementIterator(VARIANT_TO_UNISTR(source));
           },
           py::arg("source"));
   rbc.def(
@@ -507,21 +336,9 @@ void init_tblcoll(py::module &m) {
          py::arg("source"), py::arg("source_length"), py::arg("key"))
       .def(
           "get_collation_key",
-          [](const RuleBasedCollator &self, const UnicodeString &source, CollationKey &key) -> CollationKey & {
+          [](const RuleBasedCollator &self, const _UnicodeStringVariant &source, CollationKey &key) -> CollationKey & {
             ErrorCode error_code;
-            auto &result = self.getCollationKey(source, key, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("key"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "get_collation_key",
-          [](const RuleBasedCollator &self, const char16_t *source, CollationKey &key) -> CollationKey & {
-            ErrorCode error_code;
-            auto &result = self.getCollationKey(source, key, error_code);
+            auto &result = self.getCollationKey(VARIANT_TO_UNISTR(source), key, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -556,20 +373,10 @@ void init_tblcoll(py::module &m) {
          py::arg("source"), py::arg("source_length"))
       .def(
           "get_sort_key",
-          [](const RuleBasedCollator &self, const UnicodeString &source) {
-            const auto result_length = self.getSortKey(source, nullptr, 0);
+          [](const RuleBasedCollator &self, const _UnicodeStringVariant &source) {
+            const auto result_length = self.getSortKey(VARIANT_TO_UNISTR(source), nullptr, 0);
             std::vector<uint8_t> result(result_length);
-            self.getSortKey(source, result.data(), result_length);
-            return result;
-          },
-          py::arg("source"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "get_sort_key",
-          [](const RuleBasedCollator &self, const char16_t *source) {
-            const auto result_length = self.getSortKey(source, nullptr, 0);
-            std::vector<uint8_t> result(result_length);
-            self.getSortKey(source, result.data(), result_length);
+            self.getSortKey(VARIANT_TO_UNISTR(source), result.data(), result_length);
             return result;
           },
           py::arg("source"));

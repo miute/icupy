@@ -50,57 +50,35 @@ void init_uniset(py::module &m) {
 
   us.def(py::init<>())
       .def(py::init<UChar32, UChar32>(), py::arg("start"), py::arg("end"))
-      .def(py::init([](const UnicodeString &pattern) {
+      .def(py::init([](const _UnicodeStringVariant &pattern) {
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeSet>(pattern, error_code);
+             auto result = std::make_unique<UnicodeSet>(VARIANT_TO_UNISTR(pattern), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern) {
-            ErrorCode error_code;
-            auto result = std::make_unique<UnicodeSet>(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"))
-      .def(py::init([](const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
+      .def(py::init([](const _UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
                        std::optional<const SymbolTable *> symbols) {
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
+             auto result = std::make_unique<UnicodeSet>(VARIANT_TO_UNISTR(pattern), pos, options,
+                                                        symbols.value_or(nullptr), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
            py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          py::init([](const char16_t *pattern, ParsePosition &pos, uint32_t options,
-                      std::optional<const SymbolTable *> symbols) {
-            ErrorCode error_code;
-            auto result = std::make_unique<UnicodeSet>(pattern, pos, options, symbols.value_or(nullptr), error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
-      .def(py::init<const UnicodeSet &>(), py::arg("o"))
+      .def(py::init<const UnicodeSet &>(), py::arg("other"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
   us.def(
-        "__contains__", [](const UnicodeSet &self, const UnicodeString &item) { return self.contains(item); },
+        "__contains__",
+        [](const UnicodeSet &self, const _UnicodeStringVariant &item) {
+          return self.contains(VARIANT_TO_UNISTR(item));
+        },
         py::arg("item"))
-      .def(
-          "__contains__", [](const UnicodeSet &self, const char16_t *item) { return self.contains(item); },
-          py::arg("item"))
       .def(
           "__contains__", [](const UnicodeSet &self, UChar32 item) { return self.contains(item); }, py::arg("item"))
       .def("__copy__", &UnicodeSet::clone)
@@ -149,17 +127,19 @@ void init_uniset(py::module &m) {
         ss << ")";
         return ss.str();
       });
-  us.def("add", py::overload_cast<const UnicodeString &>(&UnicodeSet::add), py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "add", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.add(s); }, py::arg("s"))
+  us.def(
+        "add",
+        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & { return self.add(VARIANT_TO_UNISTR(s)); },
+        py::arg("s"))
       .def("add", py::overload_cast<UChar32>(&UnicodeSet::add), py::arg("c"))
       .def("add", py::overload_cast<UChar32, UChar32>(&UnicodeSet::add), py::arg("start"), py::arg("end"));
   us.def("add_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::addAll), py::arg("c"))
-      .def("add_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::addAll), py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "add_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.addAll(s); }, py::arg("s"));
+          "add_all",
+          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.addAll(VARIANT_TO_UNISTR(s));
+          },
+          py::arg("s"));
   us.def("add_match_set_to", &UnicodeSet::addMatchSetTo, py::arg("to_union_to"));
   us.def(
       "apply_int_property_value",
@@ -174,10 +154,11 @@ void init_uniset(py::module &m) {
       py::arg("prop"), py::arg("value"));
   us.def(
         "apply_pattern",
-        [](UnicodeSet &self, const UnicodeString &pattern, ParsePosition &pos, uint32_t options,
+        [](UnicodeSet &self, const _UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
            std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
           ErrorCode error_code;
-          auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
+          auto &result =
+              self.applyPattern(VARIANT_TO_UNISTR(pattern), pos, options, symbols.value_or(nullptr), error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -185,35 +166,10 @@ void init_uniset(py::module &m) {
         },
         py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
           "apply_pattern",
-          [](UnicodeSet &self, const char16_t *pattern, ParsePosition &pos, uint32_t options,
-             std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
+          [](UnicodeSet &self, const _UnicodeStringVariant &pattern) -> UnicodeSet & {
             ErrorCode error_code;
-            auto &result = self.applyPattern(pattern, pos, options, symbols.value_or(nullptr), error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
-      .def(
-          "apply_pattern",
-          [](UnicodeSet &self, const UnicodeString &pattern) -> UnicodeSet & {
-            ErrorCode error_code;
-            auto &result = self.applyPattern(pattern, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("pattern"))
-      .def(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "apply_pattern",
-          [](UnicodeSet &self, const char16_t *pattern) -> UnicodeSet & {
-            ErrorCode error_code;
-            auto &result = self.applyPattern(pattern, error_code);
+            auto &result = self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -221,109 +177,74 @@ void init_uniset(py::module &m) {
           },
           py::arg("pattern"));
   us.def(
-        "apply_property_alias",
-        [](UnicodeSet &self, const UnicodeString &prop, const UnicodeString &value) -> UnicodeSet & {
-          ErrorCode error_code;
-          auto &result = self.applyPropertyAlias(prop, value, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("prop"), py::arg("value"))
-      .def(
-          // const char16_t *prop -> const UnicodeString &prop
-          "apply_property_alias",
-          [](UnicodeSet &self, const char16_t *prop, const UnicodeString &value) -> UnicodeSet & {
-            ErrorCode error_code;
-            auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("prop"), py::arg("value"))
-      .def(
-          // const char16_t *value -> const UnicodeString &value
-          "apply_property_alias",
-          [](UnicodeSet &self, const UnicodeString &prop, const char16_t *value) -> UnicodeSet & {
-            ErrorCode error_code;
-            auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("prop"), py::arg("value"))
-      .def(
-          // const char16_t *prop -> const UnicodeString &prop
-          // const char16_t *value -> const UnicodeString &value
-          "apply_property_alias",
-          [](UnicodeSet &self, const char16_t *prop, const char16_t *value) -> UnicodeSet & {
-            ErrorCode error_code;
-            auto &result = self.applyPropertyAlias(prop, value, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("prop"), py::arg("value"));
+      "apply_property_alias",
+      [](UnicodeSet &self, const _UnicodeStringVariant &prop, const _UnicodeStringVariant &value) -> UnicodeSet & {
+        ErrorCode error_code;
+        auto &result = self.applyPropertyAlias(VARIANT_TO_UNISTR(prop), VARIANT_TO_UNISTR(value), error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("prop"), py::arg("value"));
   us.def("char_at", &UnicodeSet::charAt, py::arg("index"));
   us.def("clear", &UnicodeSet::clear);
   us.def("clone", &UnicodeSet::clone);
   us.def("clone_as_thawed", &UnicodeSet::cloneAsThawed);
   us.def("close_over", &UnicodeSet::closeOver, py::arg("attribute"));
   us.def("compact", &UnicodeSet::compact);
-  us.def("complement", py::overload_cast<const UnicodeString &>(&UnicodeSet::complement), py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "complement", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.complement(s); },
-          py::arg("s"))
+  us.def(
+        "complement",
+        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+          return self.complement(VARIANT_TO_UNISTR(s));
+        },
+        py::arg("s"))
       .def("complement", py::overload_cast<UChar32>(&UnicodeSet::complement), py::arg("c"))
       .def("complement", py::overload_cast<UChar32, UChar32>(&UnicodeSet::complement), py::arg("start"), py::arg("end"))
       .def("complement", py::overload_cast<>(&UnicodeSet::complement));
   us.def("complement_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::complementAll), py::arg("c"))
-      .def("complement_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::complementAll), py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "complement_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.complementAll(s); },
+          "complement_all",
+          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.complementAll(VARIANT_TO_UNISTR(s));
+          },
           py::arg("s"));
-  us.def("contains", py::overload_cast<const UnicodeString &>(&UnicodeSet::contains, py::const_), py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "contains", [](const UnicodeSet &self, const char16_t *s) { return self.contains(s); }, py::arg("s"))
+  us.def(
+        "contains",
+        [](const UnicodeSet &self, const _UnicodeStringVariant &s) { return self.contains(VARIANT_TO_UNISTR(s)); },
+        py::arg("s"))
       .def("contains", py::overload_cast<UChar32>(&UnicodeSet::contains, py::const_), py::arg("c"))
       .def("contains", py::overload_cast<UChar32, UChar32>(&UnicodeSet::contains, py::const_), py::arg("start"),
            py::arg("end"));
   us.def("contains_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsAll, py::const_), py::arg("c"))
-      .def("contains_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::containsAll, py::const_), py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "contains_all", [](const UnicodeSet &self, const char16_t *s) { return self.containsAll(s); }, py::arg("s"));
+          "contains_all",
+          [](const UnicodeSet &self, const _UnicodeStringVariant &s) { return self.containsAll(VARIANT_TO_UNISTR(s)); },
+          py::arg("s"));
   us.def("contains_none", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsNone, py::const_), py::arg("c"))
-      .def("contains_none", py::overload_cast<const UnicodeString &>(&UnicodeSet::containsNone, py::const_),
-           py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "contains_none", [](const UnicodeSet &self, const char16_t *s) { return self.containsNone(s); }, py::arg("s"))
+          "contains_none",
+          [](const UnicodeSet &self, const _UnicodeStringVariant &s) {
+            return self.containsNone(VARIANT_TO_UNISTR(s));
+          },
+          py::arg("s"))
       .def("contains_none", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsNone, py::const_),
            py::arg("start"), py::arg("end"));
   us.def("contains_some", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsSome, py::const_), py::arg("c"))
-      .def("contains_some", py::overload_cast<const UnicodeString &>(&UnicodeSet::containsSome, py::const_),
-           py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "contains_some", [](const UnicodeSet &self, const char16_t *s) { return self.containsSome(s); }, py::arg("s"))
+          "contains_some",
+          [](const UnicodeSet &self, const _UnicodeStringVariant &s) {
+            return self.containsSome(VARIANT_TO_UNISTR(s));
+          },
+          py::arg("s"))
       .def("contains_some", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsSome, py::const_),
            py::arg("start"), py::arg("end"));
-  us.def_static("create_from", &UnicodeSet::createFrom, py::arg("s"))
-      .def_static(
-          // const char16_t *s -> const UnicodeString &s
-          "create_from", [](const char16_t *s) { return UnicodeSet::createFrom(s); }, py::arg("s"));
-  us.def_static("create_from_all", &UnicodeSet::createFromAll, py::arg("s"))
-      .def_static(
-          // const char16_t *s -> const UnicodeString &s
-          "create_from_all", [](const char16_t *s) { return UnicodeSet::createFromAll(s); }, py::arg("s"));
+  us.def_static(
+      "create_from", [](const _UnicodeStringVariant &s) { return UnicodeSet::createFrom(VARIANT_TO_UNISTR(s)); },
+      py::arg("s"));
+  us.def_static(
+      "create_from_all", [](const _UnicodeStringVariant &s) { return UnicodeSet::createFromAll(VARIANT_TO_UNISTR(s)); },
+      py::arg("s"));
   us.def("freeze", &UnicodeSet::freeze);
   us.def_static(
         "from_uset", [](_ConstUSetPtr &uset) { return UnicodeSet::fromUSet(uset); }, py::return_value_policy::reference,
@@ -349,37 +270,44 @@ void init_uniset(py::module &m) {
         return py::make_tuple(result, offset);
       },
       py::arg("text"), py::arg("offset"), py::arg("limit"), py::arg("incremental"));
-  us.def("remove", py::overload_cast<const UnicodeString &>(&UnicodeSet::remove), py::arg("s"))
-      .def(
-          // const char16_t *s -> const UnicodeString &s
-          "remove", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.remove(s); }, py::arg("s"))
+  us.def(
+        "remove",
+        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+          return self.remove(VARIANT_TO_UNISTR(s));
+        },
+        py::arg("s"))
       .def("remove", py::overload_cast<UChar32>(&UnicodeSet::remove), py::arg("c"))
       .def("remove", py::overload_cast<UChar32, UChar32>(&UnicodeSet::remove), py::arg("start"), py::arg("end"));
   us.def("remove_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::removeAll), py::arg("c"))
-      .def("remove_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::removeAll), py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "remove_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.removeAll(s); },
+          "remove_all",
+          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.removeAll(VARIANT_TO_UNISTR(s));
+          },
           py::arg("s"));
   us.def("remove_all_strings", &UnicodeSet::removeAllStrings);
-  us.def_static("resembles_pattern", &UnicodeSet::resemblesPattern, py::arg("pattern"), py::arg("pos"))
-      .def_static(
-          // const char16_t *pattern -> const UnicodeString &pattern
-          "resembles_pattern",
-          [](const char16_t *pattern, int32_t pos) { return UnicodeSet::resemblesPattern(pattern, pos); },
-          py::arg("pattern"), py::arg("pos"));
+  us.def_static(
+      "resembles_pattern",
+      [](const _UnicodeStringVariant &pattern, int32_t pos) {
+        return UnicodeSet::resemblesPattern(VARIANT_TO_UNISTR(pattern), pos);
+      },
+      py::arg("pattern"), py::arg("pos"));
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  us.def("retain", py::overload_cast<const UnicodeString &>(&UnicodeSet::retain), py::arg("s"))
-      .def(
-          "retain", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.retain(s); }, py::arg("s"));
+  us.def(
+      "retain",
+      [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+        return self.retain(VARIANT_TO_UNISTR(s));
+      },
+      py::arg("s"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
   us.def("retain", py::overload_cast<UChar32>(&UnicodeSet::retain), py::arg("c"))
       .def("retain", py::overload_cast<UChar32, UChar32>(&UnicodeSet::retain), py::arg("start"), py::arg("end"));
   us.def("retain_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::retainAll), py::arg("c"))
-      .def("retain_all", py::overload_cast<const UnicodeString &>(&UnicodeSet::retainAll), py::arg("s"))
       .def(
-          // const char16_t *s -> const UnicodeString &s
-          "retain_all", [](UnicodeSet &self, const char16_t *s) -> UnicodeSet & { return self.retainAll(s); },
+          "retain_all",
+          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.retainAll(VARIANT_TO_UNISTR(s));
+          },
           py::arg("s"));
   us.def("serialize", [](const UnicodeSet &self) {
     ErrorCode error_code;

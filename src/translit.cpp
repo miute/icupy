@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/stl.h>
 #include <unicode/locid.h>
 #include <unicode/translit.h>
 #include <unicode/uniset.h>
@@ -21,89 +22,37 @@ void init_translit(py::module &m) {
       py::arg("adopted_filter"));
   tl.def("clone", &Transliterator::clone);
   tl.def_static("count_available_sources", &Transliterator::countAvailableSources);
-  tl.def_static("count_available_targets", &Transliterator::countAvailableTargets, py::arg("source"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          "count_available_targets",
-          [](const char16_t *source) { return Transliterator::countAvailableTargets(source); }, py::arg("source"));
-  tl.def_static("count_available_variants", &Transliterator::countAvailableVariants, py::arg("source"),
-                py::arg("target"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          "count_available_variants",
-          [](const char16_t *source, const UnicodeString &target) {
-            return Transliterator::countAvailableVariants(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def_static(
-          // const char16_t *target -> const UnicodeString &target
-          "count_available_variants",
-          [](const UnicodeString &source, const char16_t *target) {
-            return Transliterator::countAvailableVariants(source, target);
-          },
-          py::arg("source"), py::arg("target"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "count_available_variants",
-          [](const char16_t *source, const char16_t *target) {
-            return Transliterator::countAvailableVariants(source, target);
-          },
-          py::arg("source"), py::arg("target"));
+  tl.def_static(
+      "count_available_targets",
+      [](const _UnicodeStringVariant &source) {
+        return Transliterator::countAvailableTargets(VARIANT_TO_UNISTR(source));
+      },
+      py::arg("source"));
+  tl.def_static(
+      "count_available_variants",
+      [](const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
+        return Transliterator::countAvailableVariants(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
+      },
+      py::arg("source"), py::arg("target"));
   tl.def("count_elements", &Transliterator::countElements);
   tl.def_static(
-        "create_from_rules",
-        [](const UnicodeString &id, const UnicodeString &rules, UTransDirection dir, UParseError &parse_error) {
-          ErrorCode error_code;
-          auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "create_from_rules",
-          [](const char16_t *id, const UnicodeString &rules, UTransDirection dir, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
-      .def_static(
-          // const char16_t *rules -> const UnicodeString &rules
-          "create_from_rules",
-          [](const UnicodeString &id, const char16_t *rules, UTransDirection dir, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          // const char16_t *rules -> const UnicodeString &rules
-          "create_from_rules",
-          [](const char16_t *id, const char16_t *rules, UTransDirection dir, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = Transliterator::createFromRules(id, rules, dir, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"));
+      "create_from_rules",
+      [](const _UnicodeStringVariant &id, const _UnicodeStringVariant &rules, UTransDirection dir,
+         UParseError &parse_error) {
+        ErrorCode error_code;
+        auto result = Transliterator::createFromRules(VARIANT_TO_UNISTR(id), VARIANT_TO_UNISTR(rules), dir, parse_error,
+                                                      error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("id_"), py::arg("rules"), py::arg("dir_"), py::arg("parse_error"));
   tl.def_static(
         "create_instance",
-        [](const UnicodeString &id, UTransDirection dir) {
+        [](const _UnicodeStringVariant &id, UTransDirection dir) {
           ErrorCode error_code;
-          auto result = Transliterator::createInstance(id, dir, error_code);
+          auto result = Transliterator::createInstance(VARIANT_TO_UNISTR(id), dir, error_code);
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
@@ -111,34 +60,10 @@ void init_translit(py::module &m) {
         },
         py::arg("id_"), py::arg("dir_"))
       .def_static(
-          // const char16_t *id -> const UnicodeString &id
           "create_instance",
-          [](const char16_t *id, UTransDirection dir) {
+          [](const _UnicodeStringVariant &id, UTransDirection dir, UParseError &parse_error) {
             ErrorCode error_code;
-            auto result = Transliterator::createInstance(id, dir, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("dir_"))
-      .def_static(
-          "create_instance",
-          [](const UnicodeString &id, UTransDirection dir, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("id_"), py::arg("dir_"), py::arg("parse_error"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "create_instance",
-          [](const char16_t *id, UTransDirection dir, UParseError &parse_error) {
-            ErrorCode error_code;
-            auto result = Transliterator::createInstance(id, dir, parse_error, error_code);
+            auto result = Transliterator::createInstance(VARIANT_TO_UNISTR(id), dir, parse_error, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -168,71 +93,29 @@ void init_translit(py::module &m) {
     return result;
   });
   tl.def_static("get_available_source", &Transliterator::getAvailableSource, py::arg("index"), py::arg("result"));
-  tl.def_static("get_available_target", &Transliterator::getAvailableTarget, py::arg("index"), py::arg("source"),
-                py::arg("result"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          "get_available_target",
-          [](int32_t index, const char16_t *source, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getAvailableTarget(index, source, result);
-          },
-          py::arg("index"), py::arg("source"), py::arg("result"));
-  tl.def_static("get_available_variant", &Transliterator::getAvailableVariant, py::arg("index"), py::arg("source"),
-                py::arg("target"), py::arg("result"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          "get_available_variant",
-          [](int32_t index, const char16_t *source, const UnicodeString &target, UnicodeString &result)
-              -> UnicodeString & { return Transliterator::getAvailableVariant(index, source, target, result); },
-          py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"))
-      .def_static(
-          // const char16_t *target -> const UnicodeString &target
-          "get_available_variant",
-          [](int32_t index, const UnicodeString &source, const char16_t *target, UnicodeString &result)
-              -> UnicodeString & { return Transliterator::getAvailableVariant(index, source, target, result); },
-          py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"))
-      .def_static(
-          // const char16_t *source -> const UnicodeString &source
-          // const char16_t *target -> const UnicodeString &target
-          "get_available_variant",
-          [](int32_t index, const char16_t *source, const char16_t *target, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getAvailableVariant(index, source, target, result);
-          },
-          py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"));
+  tl.def_static(
+      "get_available_target",
+      [](int32_t index, const _UnicodeStringVariant &source, UnicodeString &result) -> UnicodeString & {
+        return Transliterator::getAvailableTarget(index, VARIANT_TO_UNISTR(source), result);
+      },
+      py::arg("index"), py::arg("source"), py::arg("result"));
+  tl.def_static(
+      "get_available_variant",
+      [](int32_t index, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target,
+         UnicodeString &result) -> UnicodeString & {
+        return Transliterator::getAvailableVariant(index, VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target), result);
+      },
+      py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"));
   tl.def_static(
         "get_display_name",
-        py::overload_cast<const UnicodeString &, const Locale &, UnicodeString &>(&Transliterator::getDisplayName),
+        [](const _UnicodeStringVariant &id, const _LocaleVariant &in_locale, UnicodeString &result) -> UnicodeString & {
+          return Transliterator::getDisplayName(VARIANT_TO_UNISTR(id), VARIANT_TO_LOCALE(in_locale), result);
+        },
         py::arg("id_"), py::arg("in_locale"), py::arg("result"))
       .def_static(
-          // const char16_t *id -> const UnicodeString &id
           "get_display_name",
-          [](const char16_t *id, const Locale &in_locale, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getDisplayName(id, in_locale, result);
-          },
-          py::arg("id_"), py::arg("in_locale"), py::arg("result"))
-      .def_static(
-          // const char *in_locale -> const Locale &in_locale
-          "get_display_name",
-          [](const UnicodeString &id, const char *in_locale, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getDisplayName(id, in_locale, result);
-          },
-          py::arg("id_"), py::arg("in_locale"), py::arg("result"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          // const char *in_locale -> const Locale &in_locale
-          "get_display_name",
-          [](const char16_t *id, const char *in_locale, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getDisplayName(id, in_locale, result);
-          },
-          py::arg("id_"), py::arg("in_locale"), py::arg("result"))
-      .def_static("get_display_name",
-                  py::overload_cast<const UnicodeString &, UnicodeString &>(&Transliterator::getDisplayName),
-                  py::arg("id_"), py::arg("result"))
-      .def_static(
-          // const char16_t *id -> const UnicodeString &id
-          "get_display_name",
-          [](const char16_t *id, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getDisplayName(id, result);
+          [](const _UnicodeStringVariant &id, UnicodeString &result) -> UnicodeString & {
+            return Transliterator::getDisplayName(VARIANT_TO_UNISTR(id), result);
           },
           py::arg("id_"), py::arg("result"));
   tl.def(
@@ -256,27 +139,12 @@ void init_translit(py::module &m) {
   // FIXME: Implement "void handleTransliterate(Replaceable &text, UTransPosition &pos, UBool incremental)".
   */
   tl.def("orphan_filter", &Transliterator::orphanFilter, py::return_value_policy::reference);
-  tl.def_static("register_alias", &Transliterator::registerAlias, py::arg("alias_id"), py::arg("real_id"))
-      .def_static(
-          // const char16_t *alias_id -> const UnicodeString &alias_id
-          "register_alias",
-          [](const char16_t *alias_id, const UnicodeString &real_id) {
-            Transliterator::registerAlias(alias_id, real_id);
-          },
-          py::arg("alias_id"), py::arg("real_id"))
-      .def_static(
-          // const char16_t *real_id -> const UnicodeString &real_id
-          "register_alias",
-          [](const UnicodeString &alias_id, const char16_t *real_id) {
-            Transliterator::registerAlias(alias_id, real_id);
-          },
-          py::arg("alias_id"), py::arg("real_id"))
-      .def_static(
-          // const char16_t *alias_id -> const UnicodeString &alias_id
-          // const char16_t *real_id -> const UnicodeString &real_id
-          "register_alias",
-          [](const char16_t *alias_id, const char16_t *real_id) { Transliterator::registerAlias(alias_id, real_id); },
-          py::arg("alias_id"), py::arg("real_id"));
+  tl.def_static(
+      "register_alias",
+      [](const _UnicodeStringVariant &alias_id, const _UnicodeStringVariant &real_id) {
+        Transliterator::registerAlias(VARIANT_TO_UNISTR(alias_id), VARIANT_TO_UNISTR(real_id));
+      },
+      py::arg("alias_id"), py::arg("real_id"));
   // FIXME: Implement "static void registerFactory(const UnicodeString &id, Factory factory, Token context)".
   tl.def_static(
       "register_instance",
@@ -291,20 +159,10 @@ void init_translit(py::module &m) {
            py::arg("text"), py::arg("start"), py::arg("limit"))
       .def(
           "transliterate",
-          [](const Transliterator &self, Replaceable &text, UTransPosition &index, const UnicodeString &insertion) {
+          [](const Transliterator &self, Replaceable &text, UTransPosition &index,
+             const _UnicodeStringVariant &insertion) {
             ErrorCode error_code;
-            self.transliterate(text, index, insertion, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("text"), py::arg("index"), py::arg("insertion"))
-      .def(
-          // const char16_t *insertion -> const UnicodeString &insertion
-          "transliterate",
-          [](const Transliterator &self, Replaceable &text, UTransPosition &index, const char16_t *insertion) {
-            ErrorCode error_code;
-            self.transliterate(text, index, insertion, error_code);
+            self.transliterate(text, index, VARIANT_TO_UNISTR(insertion), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }

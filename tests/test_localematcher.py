@@ -196,6 +196,7 @@ def test_get_best_match_result():
     # )
     desired_locale = Locale("en_GB")
     result = matcher.get_best_match_result(desired_locale)
+    assert isinstance(result, LocaleMatcher.Result)
     assert result.get_desired_index() == 0
     assert result.get_desired_locale() == desired_locale
     assert result.get_supported_index() == 1
@@ -206,6 +207,7 @@ def test_get_best_match_result():
 
     desired_locale = Locale("ja_JP")
     result = matcher.get_best_match_result(desired_locale)
+    assert isinstance(result, LocaleMatcher.Result)
     assert result.get_desired_index() == -1
     assert result.get_desired_locale() is None
     assert result.get_supported_index() == -1
@@ -219,6 +221,7 @@ def test_get_best_match_result():
     # )
     desired_locales = [Locale("ja-JP"), Locale("en-US")]
     result = matcher.get_best_match_result(desired_locales)
+    assert isinstance(result, LocaleMatcher.Result)
     assert result.get_desired_index() == 1
     assert result.get_desired_locale() == desired_locales[1]
     assert result.get_supported_index() == 2

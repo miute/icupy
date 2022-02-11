@@ -25,20 +25,9 @@ void init_measfmt(py::module &m) {
   // icu::MeasureFormat
   py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat");
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  fmt.def(py::init([](const Locale &locale, UMeasureFormatWidth width) {
+  fmt.def(py::init([](const _LocaleVariant &locale, UMeasureFormatWidth width) {
             ErrorCode error_code;
-            auto result = std::make_unique<MeasureFormat>(locale, width, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("locale"), py::arg("width_"))
-      .def(
-          // const char *locale -> const Locale &locale
-          py::init([](const char *locale, UMeasureFormatWidth width) {
-            ErrorCode error_code;
-            auto result = std::make_unique<MeasureFormat>(locale, width, error_code);
+            auto result = std::make_unique<MeasureFormat>(VARIANT_TO_LOCALE(locale), width, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -59,27 +48,15 @@ void init_measfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   fmt.def_static(
          "create_currency_format",
-         [](const Locale &locale) {
+         [](const _LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = MeasureFormat::createCurrencyFormat(locale, error_code);
+           auto result = MeasureFormat::createCurrencyFormat(VARIANT_TO_LOCALE(locale), error_code);
            if (error_code.isFailure()) {
              throw ICUError(error_code);
            }
            return result;
          },
          py::arg("locale"))
-      .def_static(
-          // const char *locale -> const Locale &locale
-          "create_currency_format",
-          [](const char *locale) {
-            ErrorCode error_code;
-            auto result = MeasureFormat::createCurrencyFormat(locale, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("locale"))
       .def_static("create_currency_format", []() {
         ErrorCode error_code;
         auto result = MeasureFormat::createCurrencyFormat(error_code);
@@ -175,33 +152,15 @@ void init_measfmt(py::module &m) {
   fmt.def(
          // [2] icu::Format::parseObject
          "parse_object",
-         py::overload_cast<const UnicodeString &, Formattable &, ParsePosition &>(&MeasureFormat::parseObject,
-                                                                                  py::const_),
+         [](const MeasureFormat &self, const _UnicodeStringVariant &source, Formattable &result,
+            ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const MeasureFormat &self, const char16_t *source, Formattable &result, ParsePosition &parse_pos) {
-            self.parseObject(source, result, parse_pos);
-          },
-          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           // [3] icu::Format::parseObject
           "parse_object",
-          [](const MeasureFormat &self, const UnicodeString &source, Formattable &result) {
+          [](const MeasureFormat &self, const _UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(source, result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"))
-      .def(
-          // const char16_t *source -> const UnicodeString &source
-          "parse_object",
-          [](const MeasureFormat &self, const char16_t *source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(source, result, error_code);
+            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
