@@ -25,11 +25,10 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
     ```python
     from icupy import icu
     try:
-        # static Locale icu::Locale::forLanguageTag(StringPiece tag, UErrorCode &status)
-        _ = icu.Locale.for_language_tag('x')
+        ...
     except icu.ICUError as e:
-        print(repr(e.args[0]))  # → ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)
-        print(e.args[0].get())  # → UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+        print(e.args[0])  # → icupy.icu.ErrorCode
+        print(e.args[0].get())  # → icupy.icu.UErrorCode
     ```
 
 ## Examples
@@ -69,7 +68,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ) -> icu.UErrorCode:
       if _reason == icu.UCNV_ILLEGAL:
           _source = ''.join(['%{:02X}'.format(x) for x in _code_units])
-          icu.ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
+          icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
           _error_code = icu.U_ZERO_ERROR
       return _error_code
 
