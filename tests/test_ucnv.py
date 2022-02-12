@@ -12,20 +12,23 @@ from icupy.icu import (
     UConverterFromUnicodeArgs, UConverterPlatform, UConverterToUCallbackPtr,
     UConverterToUnicodeArgs, UConverterType, UConverterUnicodeSet, UErrorCode,
     UnicodeSet, UnicodeString, u_strlen, ucnv_cb_from_u_write_bytes,
-    ucnv_cb_from_u_write_sub, ucnv_cb_to_u_write_sub,
-    ucnv_cb_to_u_write_uchars, ucnv_close, ucnv_compare_names,
-    ucnv_count_aliases, ucnv_count_available, ucnv_count_standards,
-    ucnv_detect_unicode_signature, ucnv_fix_file_separator, ucnv_flush_cache,
-    ucnv_get_alias, ucnv_get_aliases, ucnv_get_available_name,
-    ucnv_get_canonical_name, ucnv_get_ccsid, ucnv_get_default_name,
-    ucnv_get_display_name, ucnv_get_from_ucall_back, ucnv_get_name,
+    ucnv_cb_from_u_write_sub, ucnv_cb_from_uwrite_bytes,
+    ucnv_cb_from_uwrite_sub, ucnv_cb_to_u_write_sub, ucnv_cb_to_u_write_uchars,
+    ucnv_cb_to_uwrite_sub, ucnv_cb_to_uwrite_uchars, ucnv_close,
+    ucnv_compare_names, ucnv_count_aliases, ucnv_count_available,
+    ucnv_count_standards, ucnv_detect_unicode_signature,
+    ucnv_fix_file_separator, ucnv_flush_cache, ucnv_get_alias,
+    ucnv_get_aliases, ucnv_get_available_name, ucnv_get_canonical_name,
+    ucnv_get_ccsid, ucnv_get_default_name, ucnv_get_display_name,
+    ucnv_get_from_u_call_back, ucnv_get_from_ucall_back, ucnv_get_name,
     ucnv_get_platform, ucnv_get_standard, ucnv_get_standard_name,
-    ucnv_get_subst_chars, ucnv_get_to_ucall_back, ucnv_get_type,
-    ucnv_get_unicode_set, ucnv_is_ambiguous, ucnv_is_fixed_width, ucnv_open,
-    ucnv_open_all_names, ucnv_open_ccsid, ucnv_open_package,
-    ucnv_open_standard_names, ucnv_reset, ucnv_reset_from_unicode,
-    ucnv_reset_to_unicode, ucnv_set_fallback, ucnv_set_from_ucall_back,
-    ucnv_set_subst_chars, ucnv_set_subst_string, ucnv_set_to_ucall_back,
+    ucnv_get_subst_chars, ucnv_get_to_u_call_back, ucnv_get_to_ucall_back,
+    ucnv_get_type, ucnv_get_unicode_set, ucnv_is_ambiguous,
+    ucnv_is_fixed_width, ucnv_open, ucnv_open_all_names, ucnv_open_ccsid,
+    ucnv_open_package, ucnv_open_standard_names, ucnv_reset,
+    ucnv_reset_from_unicode, ucnv_reset_to_unicode, ucnv_set_fallback,
+    ucnv_set_from_u_call_back, ucnv_set_from_ucall_back, ucnv_set_subst_chars,
+    ucnv_set_subst_string, ucnv_set_to_u_call_back, ucnv_set_to_ucall_back,
     ucnv_uses_fallback, uenum_close, uenum_count, uenum_next,
 )
 from icupy.utils import gc
@@ -179,6 +182,120 @@ def test_api():
     ucnv_flush_cache()
 
 
+def test_deprecated_api():
+    def _from_u_callback1(
+        _context: object,
+        _args: UConverterFromUnicodeArgs,
+        _code_units: str,
+        _length: int,
+        _code_point: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
+        if _reason == UConverterCallbackReason.UCNV_UNASSIGNED:
+            _source = "?"
+            ucnv_cb_from_u_write_bytes(_args, _source, len(_source), 0)
+            _error_code = UErrorCode.U_ZERO_ERROR
+        return _error_code
+
+    def _from_u_callback2(
+        _context: object,
+        _args: UConverterFromUnicodeArgs,
+        _code_units: str,
+        _length: int,
+        _code_point: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
+        if _reason == UConverterCallbackReason.UCNV_UNASSIGNED:
+            ucnv_cb_from_u_write_sub(_args, 0)
+            _error_code = UErrorCode.U_ZERO_ERROR
+        return _error_code
+
+    def _to_u_callback1(
+        _context: object,
+        _args: UConverterToUnicodeArgs,
+        _code_units: bytes,
+        _length: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
+        if _reason == UConverterCallbackReason.UCNV_ILLEGAL:
+            ucnv_cb_to_u_write_sub(_args, 0)
+            _error_code = UErrorCode.U_ZERO_ERROR
+        return _error_code
+
+    def _to_u_callback2(
+        _context: object,
+        _args: UConverterToUnicodeArgs,
+        _code_units: bytes,
+        _length: int,
+        _reason: UConverterCallbackReason,
+        _error_code: UErrorCode,
+    ) -> UErrorCode:
+        if _reason == UConverterCallbackReason.UCNV_ILLEGAL:
+            _source = "".join(["\\x{:02x}".format(x) for x in _code_units])
+            ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
+            _error_code = UErrorCode.U_ZERO_ERROR
+        return _error_code
+
+    with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
+        test1 = UnicodeString("a\uFF71b\U0001f338c", -1)
+
+        # ucnv_get_from_u_call_back() is deprecated
+        with pytest.warns(RuntimeWarning):
+            old_action1, old_context1 = ucnv_get_from_u_call_back(cnv)
+
+        # ucnv_cb_from_u_write_bytes() is deprecated
+        action5 = UConverterFromUCallbackPtr(_from_u_callback1)
+        context5 = ConstVoidPtr(None)
+        ucnv_set_from_ucall_back(cnv, action5, context5)
+        with pytest.warns(RuntimeWarning):
+            _ = test1.extract(cnv)  # utf-8 to ibm-943c
+
+        # ucnv_cb_from_u_write_sub() is deprecated
+        action6 = UConverterFromUCallbackPtr(_from_u_callback2)
+        context6 = ConstVoidPtr("foo bar baz")
+        ucnv_set_from_ucall_back(cnv, action6, context6)
+        with pytest.warns(RuntimeWarning):
+            _ = test1.extract(cnv)  # utf-8 to ibm-943c
+
+        # ucnv_set_from_u_call_back() is deprecated
+        with pytest.warns(RuntimeWarning):
+            ucnv_set_from_u_call_back(cnv, old_action1, old_context1)
+
+    with gc(ucnv_open("utf-8"), ucnv_close) as cnv:
+        utf8 = (
+            b"\x61"
+            b"\xfe"  # Impossible bytes
+            b"\xc0\xaf"  # Overlong sequences
+            b"\xed\xa0\x80"  # Illegal code positions
+            b"\x62"
+        )
+
+        # ucnv_get_to_u_call_back() is deprecated
+        with pytest.warns(RuntimeWarning):
+            old_action1, old_context1 = ucnv_get_to_u_call_back(cnv)
+
+        # ucnv_cb_to_u_write_sub() is deprecated
+        action5 = UConverterToUCallbackPtr(_to_u_callback1)
+        context5 = ConstVoidPtr(None)
+        ucnv_set_to_ucall_back(cnv, action5, context5)
+        with pytest.warns(RuntimeWarning):
+            _ = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
+
+        # ucnv_cb_to_u_write_uchars() is deprecated
+        action6 = UConverterToUCallbackPtr(_to_u_callback2)
+        context6 = ConstVoidPtr("foo bar baz")
+        ucnv_set_to_ucall_back(cnv, action6, context6)
+        with pytest.warns(RuntimeWarning):
+            _ = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
+
+        # ucnv_set_to_u_call_back() is deprecated
+        with pytest.warns(RuntimeWarning):
+            ucnv_set_to_u_call_back(cnv, old_action1, old_context1)
+
+
 def test_open_package():
     path = Path(__file__).joinpath("..", "testdata").resolve()
     cnv = None
@@ -223,7 +340,7 @@ def test_set_from_ucall_back():
         assert ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
         if _reason == UConverterCallbackReason.UCNV_UNASSIGNED:
             _source = "?"
-            ucnv_cb_from_u_write_bytes(_args, _source, len(_source), 0)
+            ucnv_cb_from_uwrite_bytes(_args, _source, len(_source), 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
@@ -242,7 +359,7 @@ def test_set_from_ucall_back():
         result2.append((_reason, _error_code, _code_units))
         assert ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
         if _reason == UConverterCallbackReason.UCNV_UNASSIGNED:
-            ucnv_cb_from_u_write_sub(_args, 0)
+            ucnv_cb_from_uwrite_sub(_args, 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
@@ -268,7 +385,7 @@ def test_set_from_ucall_back():
             else:
                 _fmt = "\\x{:02x}"
             _source = _fmt.format(_code_point)
-            ucnv_cb_from_u_write_bytes(_args, _source, len(_source), 0)
+            ucnv_cb_from_uwrite_bytes(_args, _source, len(_source), 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
@@ -377,7 +494,7 @@ def test_set_to_ucall_back():
         result1.append((_reason, _error_code, _code_units))
         assert ucnv_get_name(_args.converter) == "UTF-8"
         if _reason == UConverterCallbackReason.UCNV_ILLEGAL:
-            ucnv_cb_to_u_write_sub(_args, 0)
+            ucnv_cb_to_uwrite_sub(_args, 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
@@ -396,7 +513,7 @@ def test_set_to_ucall_back():
         assert ucnv_get_name(_args.converter) == "UTF-8"
         if _reason == UConverterCallbackReason.UCNV_ILLEGAL:
             _source = "".join(["\\x{:02x}".format(x) for x in _code_units])
-            ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
+            ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
@@ -415,7 +532,7 @@ def test_set_to_ucall_back():
         assert ucnv_get_name(_args.converter) == "UTF-8"
         if _reason == UConverterCallbackReason.UCNV_ILLEGAL:
             _source = "".join(["%x{:02X}".format(x) for x in _code_units])
-            ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
+            ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
             _error_code = UErrorCode.U_ZERO_ERROR
         return _error_code
 
