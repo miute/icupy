@@ -11,6 +11,17 @@ testpaths = [
     "tests",
 ]
 
+[tool.coverage.run]
+source = [
+    "icupy",
+]
+
+[tool.coverage.paths]
+source = [
+    "src/icupy",
+    "*/icupy",
+]
+
 [tool.black]
 line-length = 79
 target-version = ["py310"]

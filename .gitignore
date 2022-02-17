@@ -180,3 +180,6 @@ dmypy.json
 build*/
 tests/**/*.dat
 tests/**/*.txt
+
+coverage*.info
+htmlcov-cpp/
