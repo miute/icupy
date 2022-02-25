@@ -85,11 +85,11 @@ void init_uniset(py::module &m) {
       .def(
           "__deepcopy__", [](const UnicodeSet &self, py::dict) { return self.clone(); }, py::arg("memo"))
       .def(
-          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return self.toUSet() == other; },
+          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return uset_equals(self.toUSet(), other); },
           py::is_operator(), py::arg("other"))
       .def(
-          "__eq__", [](const UnicodeSet &self, _USetPtr &other) { return self.toUSet() == other; }, py::is_operator(),
-          py::arg("other"))
+          "__eq__", [](const UnicodeSet &self, _USetPtr &other) { return uset_equals(self.toUSet(), other); },
+          py::is_operator(), py::arg("other"))
       .def(
           "__getitem__",
           [](const UnicodeSet &self, int32_t index) {

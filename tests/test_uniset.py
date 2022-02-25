@@ -635,6 +635,11 @@ def test_operator():
     assert not (test1 == test3)
     assert not (test2 == test3)
 
+    # UnicodeSet.__eq__(other) -> bool
+    assert test1 == test2.to_uset()
+    assert not (test1 == test3.to_uset())
+    assert not (test2 == test3.to_uset())
+
 
 def test_remove():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
