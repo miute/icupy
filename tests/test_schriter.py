@@ -1,3 +1,5 @@
+import copy
+
 # fmt: off
 from icupy.icu import (
     CharacterIterator, ForwardCharacterIterator, StringCharacterIterator,
@@ -5,6 +7,22 @@ from icupy.icu import (
 )
 
 # fmt: on
+
+
+def test_clone():
+    src = UnicodeString("a\\uD83C\\uDF38b").unescape()
+    it1 = StringCharacterIterator(src)
+
+    # StringCharacterIterator *icu::StringCharacterIterator::clone()
+    it2 = it1.clone()
+    assert isinstance(it2, StringCharacterIterator)
+
+    # StringCharacterIterator.__copy__() -> StringCharacterIterator
+    # StringCharacterIterator.__deepcopy__(Optional[memo])
+    #  -> StringCharacterIterator
+    it3 = copy.copy(it1)
+    it4 = copy.deepcopy(it1)
+    assert it1 == it2 == it3 == it4
 
 
 def test_iter():
@@ -249,10 +267,15 @@ def test_set_text():
     it.get_text(result)
     assert result == "foo bar baz"
 
+    # CharacterIterator.__str__() -> str
+    assert str(it) == "foo bar baz"
+
     new_text = "a\U0001f338b"
     it.set_text(new_text)
     it.get_text(result)
     assert result == new_text
+
+    assert str(it) == "a\U0001f338b"
 
 
 def test_string_character_iterator():

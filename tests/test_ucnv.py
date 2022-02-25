@@ -438,6 +438,8 @@ def test_set_from_ucall_back():
         assert len(result1) > 0
         assert dest == b"a\xb1b?c"
 
+        action5a, context5a = ucnv_get_from_ucall_back(cnv)
+
         action6 = UConverterFromUCallbackPtr(_from_u_callback2)
         context6 = ConstVoidPtr("foo bar baz")
         ucnv_set_from_ucall_back(cnv, action6, context6)
@@ -470,6 +472,11 @@ def test_set_from_ucall_back():
         ucnv_set_from_ucall_back(cnv, old_action1, old_context1)
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b\xfc\xfcc"
+
+        ucnv_set_from_ucall_back(cnv, action5a, context5a)
+        dest = test1.extract(cnv)  # utf-8 to ibm-943c
+        assert len(result1) > 0
+        assert dest == b"a\xb1b?c"
 
 
 def test_set_to_ucall_back():
@@ -617,6 +624,8 @@ def test_set_to_ucall_back():
         dest = test1.extract()
         assert dest == "a" "\\xfe" "\\xc0\\xaf" "\\xed\\xa0\\x80" "b"
 
+        action6a, context6a = ucnv_get_to_ucall_back(cnv)
+
         action7 = UConverterToUCallbackPtr(_to_u_callback3)
         d = {"key": "foo bar baz"}
         context7 = ConstVoidPtr(d)
@@ -652,3 +661,9 @@ def test_set_to_ucall_back():
             b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
             b"b"
         )
+
+        ucnv_set_to_ucall_back(cnv, action6a, context6a)
+        test1 = UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
+        assert len(result2) > 0
+        dest = test1.extract()
+        assert dest == "a" "\\xfe" "\\xc0\\xaf" "\\xed\\xa0\\x80" "b"

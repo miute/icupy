@@ -659,6 +659,10 @@ def test_set_find_progress_callback():
     assert not matcher.find()
     assert result1 == [1, 5, 6]
 
+    callback1a, context1a = matcher.get_find_progress_callback()
+    assert isinstance(callback1a, URegexFindProgressCallbackPtr)
+    assert isinstance(context1a, ConstVoidPtr)
+
     result2 = []
     callback2 = URegexFindProgressCallbackPtr(_find_progress_callback2)
     context2 = ConstVoidPtr(result2)
@@ -676,6 +680,15 @@ def test_set_find_progress_callback():
     assert matcher.find()
     assert not matcher.find()
     assert len(result1) == len(result2) == 0
+
+    result1.clear()
+    result2.clear()
+    matcher.set_find_progress_callback(callback1a, context1a)
+    assert matcher.find(0)
+    assert matcher.find()
+    assert not matcher.find()
+    assert result1 == [1, 5, 6]
+    assert len(result2) == 0
 
 
 def test_set_match_callback():
@@ -720,6 +733,10 @@ def test_set_match_callback():
     assert not matcher.matches()
     assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
+    callback1a, context1a = matcher.get_match_callback()
+    assert isinstance(callback1a, URegexMatchCallbackPtr)
+    assert isinstance(context1a, ConstVoidPtr)
+
     result2 = []
     callback2 = URegexMatchCallbackPtr(_match_callback2)
     context2 = ConstVoidPtr(result2)
@@ -736,6 +753,13 @@ def test_set_match_callback():
     matcher.reset(src)
     assert not matcher.matches()
     assert len(result1) == len(result2) == 0
+
+    result1.clear()
+    result2.clear()
+    matcher.set_match_callback(callback1a, context1a)
+    matcher.reset(src)
+    assert not matcher.matches()
+    assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
 def test_split():

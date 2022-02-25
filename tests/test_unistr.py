@@ -4,9 +4,12 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, US_INV, Appendable, ICUError, Locale,
-    UErrorCode, UnicodeString, UnicodeStringAppendable, UnicodeStringVector,
-    u_unescape, ucnv_close, ucnv_open,
+    INT32_MAX, U_COMPARE_CODE_POINT_ORDER, U_FOLD_CASE_DEFAULT,
+    U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_ICU_VERSION_MAJOR_NUM, U_SENTINEL,
+    U_TITLECASE_NO_BREAK_ADJUSTMENT, U_TITLECASE_NO_LOWERCASE, US_INV,
+    Appendable, ICUError, Locale, UErrorCode, UnicodeString,
+    UnicodeStringAppendable, UnicodeStringVector, u_unescape, ucnv_close,
+    ucnv_open,
 )
 from icupy.utils import gc
 
@@ -443,6 +446,38 @@ def test_compare_code_point_order():
     )
 
 
+def test_constants():
+    assert UnicodeString.SENTINEL == U_SENTINEL
+    assert UnicodeString.COMPARE_CODE_POINT_ORDER == U_COMPARE_CODE_POINT_ORDER
+    assert UnicodeString.FOLD_CASE_DEFAULT == U_FOLD_CASE_DEFAULT
+    assert (
+        UnicodeString.FOLD_CASE_EXCLUDE_SPECIAL_I
+        == U_FOLD_CASE_EXCLUDE_SPECIAL_I
+    )
+    assert (
+        UnicodeString.TITLECASE_NO_BREAK_ADJUSTMENT
+        == U_TITLECASE_NO_BREAK_ADJUSTMENT
+    )
+    assert UnicodeString.TITLECASE_NO_LOWERCASE == U_TITLECASE_NO_LOWERCASE
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+def test_constants_60():
+    # fmt: off
+    from icupy.icu import (
+        U_TITLECASE_ADJUST_TO_CASED, U_TITLECASE_SENTENCES,
+        U_TITLECASE_WHOLE_STRING,
+    )
+
+    # fmt: on
+
+    assert (
+        UnicodeString.TITLECASE_ADJUST_TO_CASED == U_TITLECASE_ADJUST_TO_CASED
+    )
+    assert UnicodeString.TITLECASE_SENTENCES == U_TITLECASE_SENTENCES
+    assert UnicodeString.TITLECASE_WHOLE_STRING == U_TITLECASE_WHOLE_STRING
+
+
 def test_copy():
     # void icu::UnicodeString::copy(
     #       int32_t start,
@@ -850,6 +885,12 @@ def test_from_utf8():
     assert isinstance(s3, str)
     assert s3 == expected
     assert str(test1) == s3
+
+    # UnicodeString.__repr__() -> str
+    assert repr(test1) == "UnicodeString('a\\U0001f338b')"
+
+    test2 = UnicodeString.from_utf8(b"'Julius\tC\xd3\x95sar'")
+    assert repr(test2) == "UnicodeString('\\'Julius\\x09C\\u04d5sar\\'')"
 
 
 def test_get_buffer():

@@ -68,6 +68,15 @@ def test_api():
         assert utext_previous32_from(ut, 3) == 0x1F338
         assert utext_previous32(ut) == 0x41
 
+        result = repr(ut)
+        assert result.startswith("_UTextPtr(UText(magic=0x")
+        start = result.find(",")
+        assert start != -1
+        assert result.startswith(
+            ", flags=0x5, providerProperties=0x4, pFuncs=0x", start
+        )
+        assert result.endswith("))")
+
 
 def test_clone_uchars():
     s1 = "ABC"
@@ -451,3 +460,10 @@ def test_utext_vector():
     assert utext_is_writable(t[0])
     assert utext_is_writable(t[1])
     assert utext_is_writable(t[2])
+
+    # UTextVector.__getitem__(index) -> _UTextPtr
+    with pytest.raises(IndexError):
+        _ = t[3]
+
+    # UTextVector.__iter__() -> Iterable[_UTextPtr]
+    _ = iter(t)

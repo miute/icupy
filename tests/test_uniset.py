@@ -176,6 +176,9 @@ def test_api():
     test2.set_to_bogus()
     assert test2.is_bogus()
 
+    # UnicodeSet.__repr__() -> str
+    assert repr(test1) == "UnicodeSet([0-9])"
+
 
 def test_apply_int_property_value():
     test1 = UnicodeSet()

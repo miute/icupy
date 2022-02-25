@@ -1,3 +1,5 @@
+import copy
+
 # fmt: off
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 from icupy.icu import (
@@ -63,6 +65,12 @@ def test_annual_time_zone_rule():
     # AnnualTimeZoneRule *icu::AnnualTimeZoneRule::clone()
     ar4 = ar1.clone()
     assert isinstance(ar4, AnnualTimeZoneRule)
+
+    # AnnualTimeZoneRule.__copy__() -> AnnualTimeZoneRule
+    # AnnualTimeZoneRule.__deepcopy__(Optional[memo]) -> AnnualTimeZoneRule
+    ar4a = copy.copy(ar4)
+    ar4b = copy.deepcopy(ar4)
+    assert ar4 == ar4a == ar4b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
     name = UnicodeString()
@@ -151,6 +159,14 @@ def test_annual_time_zone_rule():
 
     # UBool icu::AnnualTimeZoneRule::operator==(const TimeZoneRule &that)
     assert ar1 == ar2 == ar3 == ar4
+
+    # AnnualTimeZoneRule.__repr__() -> str
+    assert repr(ar1) == (
+        "AnnualTimeZoneRule("
+        "name='a1', raw_offset=-3600000, dst_savings=3600000, "
+        "start_year=1966, end_year=2147483647"
+        ")"
+    )
 
 
 def test_date_time_rule():
@@ -249,6 +265,12 @@ def test_date_time_rule():
     dr5 = dr1.clone()
     assert isinstance(dr5, DateTimeRule)
 
+    # DateTimeRule.__copy__() -> DateTimeRule
+    # DateTimeRule.__deepcopy__(Optional[memo]) -> DateTimeRule
+    dr5a = copy.copy(dr1)
+    dr5b = copy.deepcopy(dr1)
+    assert dr5 == dr5a == dr5b
+
     # UBool icu::DateTimeRule::operator!=(const DateTimeRule &that)
     assert dr1 != dr2
     assert dr1 != dr3
@@ -273,6 +295,15 @@ def test_date_time_rule():
     assert not (dr3 == dr5)
     assert dr4 == dr5
 
+    # DateTimeRule.__repr__() -> str
+    assert repr(dr1) == (
+        "DateTimeRule("
+        "date_rule_type=0, rule_month=1, rule_day_of_month=11, "
+        "rule_week_in_month=0, rule_day_of_week=0, rule_millis_in_day=3600000, "
+        "time_rule_type=0"
+        ")"
+    )
+
 
 def test_initial_time_zone_rule():
     assert issubclass(InitialTimeZoneRule, TimeZoneRule)
@@ -294,6 +325,12 @@ def test_initial_time_zone_rule():
     # InitialTimeZoneRule *icu::InitialTimeZoneRule::clone()
     ir3 = ir1.clone()
     assert isinstance(ir3, InitialTimeZoneRule)
+
+    # InitialTimeZoneRule.__copy__() -> InitialTimeZoneRule
+    # InitialTimeZoneRule.__deepcopy__(Optional[memo]) -> InitialTimeZoneRule
+    ir3a = copy.copy(ir3)
+    ir3b = copy.deepcopy(ir3)
+    assert ir3 == ir3a == ir3b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
     name = UnicodeString()
@@ -356,6 +393,13 @@ def test_initial_time_zone_rule():
     # UBool icu::InitialTimeZoneRule::operator==(const TimeZoneRule &that)
     assert ir1 == ir2 == ir3
 
+    # InitialTimeZoneRule.__repr__() -> str
+    assert repr(ir1) == (
+        "InitialTimeZoneRule("
+        "name='i1', raw_offset=-3600000, dst_savings=3600000"
+        ")"
+    )
+
 
 def test_time_array_time_zone_rule():
     assert issubclass(TimeArrayTimeZoneRule, TimeZoneRule)
@@ -388,6 +432,13 @@ def test_time_array_time_zone_rule():
     # TimeArrayTimeZoneRule *icu::TimeArrayTimeZoneRule::clone()
     tr3 = tr1.clone()
     assert isinstance(tr3, TimeArrayTimeZoneRule)
+
+    # TimeArrayTimeZoneRule.__copy__() -> TimeArrayTimeZoneRule
+    # TimeArrayTimeZoneRule.__deepcopy__(Optional[memo])
+    #  -> TimeArrayTimeZoneRule
+    tr3a = copy.copy(tr3)
+    tr3b = copy.deepcopy(tr3)
+    assert tr3 == tr3a == tr3b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
     name = UnicodeString()
@@ -475,6 +526,14 @@ def test_time_array_time_zone_rule():
     # UBool icu::TimeArrayTimeZoneRule::operator==(const TimeZoneRule &that)
     assert tr1 == tr2 == tr3
 
+    # TimeArrayTimeZoneRule.__repr__() -> str
+    assert repr(tr1) == (
+        "TimeArrayTimeZoneRule("
+        "name='t1', raw_offset=-3600000, dst_savings=3600000, "
+        "start_times=[0, 1e+07]"
+        ")"
+    )
+
 
 def test_time_zone_transition():
     date_time_rule1 = DateTimeRule(
@@ -520,6 +579,12 @@ def test_time_zone_transition():
     # TimeZoneTransition *icu::TimeZoneTransition::clone()
     tzt4 = tzt1.clone()
     assert isinstance(tzt4, TimeZoneTransition)
+
+    # TimeZoneTransition.__copy__() -> TimeZoneTransition
+    # TimeZoneTransition.__deepcopy__(Optional[memo]) -> TimeZoneTransition
+    tzt4a = copy.copy(tzt4)
+    tzt4b = copy.deepcopy(tzt4)
+    assert tzt4 == tzt4a == tzt4b
 
     # const TimeZoneRule *icu::TimeZoneTransition::getFrom(void)
     result = tzt1.get_from()

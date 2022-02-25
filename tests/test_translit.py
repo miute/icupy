@@ -519,3 +519,8 @@ def test_transliterate():
     assert index.start == 4
     assert index.limit == 4
     assert text == "\u3042\u30A4\u30A6\u30A8\u304A"
+
+    # UTransPosition.__repr__() -> str
+    assert repr(index) == (
+        "UTransPosition(context_start=0, start=4, limit=4, context_limit=5)"
+    )

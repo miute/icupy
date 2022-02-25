@@ -291,3 +291,44 @@ def test_parse():
     with pytest.raises(ICUError) as exc_info:
         fmt.parse(s, result)
     assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+
+
+def test_parse_object():
+    fmt = CompactDecimalFormat.create_instance(
+        Locale.get_us(), UNumberCompactStyle.UNUM_SHORT
+    )
+    fmt.set_maximum_significant_digits(20)
+    # n = 1.2e+15
+    s = "-10K"
+
+    # *No effect in ICU 69+*
+    # void icu::NumberFormat::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       ParsePosition &parse_pos
+    # )
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt.parse_object(UnicodeString(s), result, parse_pos)
+    assert parse_pos.get_index() == 0
+
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt.parse_object(s, result, parse_pos)
+    assert parse_pos.get_index() == 0
+
+    # *U_INVALID_FORMAT_ERROR in ICU 69+*
+    # void icu::Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       UErrorCode &status
+    # )
+    result = Formattable()
+    with pytest.raises(ICUError) as exc_info:
+        fmt.parse_object(UnicodeString(s), result)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+
+    result = Formattable()
+    with pytest.raises(ICUError) as exc_info:
+        fmt.parse_object(s, result)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR

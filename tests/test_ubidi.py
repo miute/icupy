@@ -339,6 +339,8 @@ def test_set_class_callback():
         result = ubidi_get_customized_class(bidi, 0x39)
         assert result == UCharDirection.U_ARABIC_NUMBER
 
+        fn2a, context2a = ubidi_get_class_callback(bidi)
+
         old_fn3, old_context3 = ubidi_set_class_callback(
             bidi, old_fn1, old_context1
         )
@@ -346,6 +348,12 @@ def test_set_class_callback():
         assert result == UCharDirection.U_LEFT_TO_RIGHT
         result = ubidi_get_customized_class(bidi, 0x39)
         assert result == UCharDirection.U_EUROPEAN_NUMBER
+
+        ubidi_set_class_callback(bidi, fn2a, context2a)
+        result = ubidi_get_customized_class(bidi, 0x52)
+        assert result == UCharDirection.U_RIGHT_TO_LEFT
+        result = ubidi_get_customized_class(bidi, 0x39)
+        assert result == UCharDirection.U_ARABIC_NUMBER
 
         fn4 = UBiDiClassCallbackPtr(_callback2)
         context4 = ConstVoidPtr(char_from_bidi_class)
@@ -366,6 +374,14 @@ def test_set_class_callback():
         assert result == UCharDirection.U_RIGHT_TO_LEFT
         result = ubidi_get_customized_class(bidi, 0x39)
         assert result == UCharDirection.U_ARABIC_NUMBER
+
+        fn5 = UBiDiClassCallbackPtr(None)
+        context5 = ConstVoidPtr(None)
+        ubidi_set_class_callback(bidi, fn5, context5)
+        result = ubidi_get_customized_class(bidi, 0x52)
+        assert result == UCharDirection.U_LEFT_TO_RIGHT
+        result = ubidi_get_customized_class(bidi, 0x39)
+        assert result == UCharDirection.U_EUROPEAN_NUMBER
 
 
 def test_set_context():
@@ -388,6 +404,26 @@ def test_set_context():
         ubidi_set_para(bidi, text, -1, para_level)
         result2 = ubidi_get_logical_map(bidi)
         assert result1 != result2
+
+        prologue = "a"
+        epilogue = "b"
+        text = ".-=\u05da\u05db\u05dc-+*"
+        expected = ".-=\u05dc\u05db\u05da-+*"
+        para_level = UBiDiDirection.UBIDI_LTR
+        ubidi_set_context(bidi, prologue, -1, epilogue, -1)
+        ubidi_set_para(bidi, text, -1, para_level)
+        dest = ubidi_write_reordered(bidi, UBIDI_DO_MIRRORING)
+        assert dest == expected
+
+        prologue = "\u0634"
+        epilogue = "\u05d7"
+        text = ".-=abc-+*"
+        expected = "*+-abc=-."
+        para_level = UBiDiDirection.UBIDI_RTL
+        ubidi_set_context(bidi, prologue, -1, epilogue, -1)
+        ubidi_set_para(bidi, text, -1, para_level)
+        dest = ubidi_write_reordered(bidi, UBIDI_DO_MIRRORING)
+        assert dest == expected
 
 
 def test_set_line():

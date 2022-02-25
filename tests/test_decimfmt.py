@@ -777,3 +777,44 @@ def test_parse():
     fmt.parse(s, result)
     assert result.get_type() == Formattable.DOUBLE
     assert result.get_double() == d
+
+
+def test_parse_object():
+    symbols = DecimalFormatSymbols(Locale.get_us())
+    fmt = DecimalFormat("#,##0.#", symbols)
+    d = -10456.0037
+    s = "-10,456.0037"
+
+    # void icu::NumberFormat::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       ParsePosition &parse_pos
+    # )
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt.parse_object(UnicodeString(s), result, parse_pos)
+    assert parse_pos.get_error_index() == -1
+    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_double() == d
+
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt.parse_object(s, result, parse_pos)
+    assert parse_pos.get_error_index() == -1
+    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_double() == d
+
+    # void icu::Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       UErrorCode &status
+    # )
+    result = Formattable()
+    fmt.parse_object(UnicodeString(s), result)
+    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_double() == d
+
+    result = Formattable()
+    fmt.parse_object(s, result)
+    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_double() == d

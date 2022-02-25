@@ -67,6 +67,9 @@ def test_api():
     # )
     cal.set_time(when)
 
+    # GregorianCalendar.__repr__() -> str
+    assert repr(cal) == "GregorianCalendar(2008-07-05T23:30:15.000Z)"
+
     # UDate icu::Calendar::getTime(UErrorCode &status)
     assert cal.get_time() == when
 

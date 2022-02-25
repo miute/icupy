@@ -166,6 +166,12 @@ def test_date_interval():
     itv3 = itv1.clone()
     assert isinstance(itv3, DateInterval)
 
+    # DateInterval.__copy__() -> DateInterval
+    # DateInterval.__deepcopy__(Optional[memo]) -> DateInterval
+    itv3a = copy.copy(itv3)
+    itv3b = copy.deepcopy(itv3)
+    assert itv3 == itv3a == itv3b
+
     # UBool icu::DateInterval::operator!=(const DateInterval &)
     assert not (itv1 != itv2)
     assert not (itv1 != itv3)
@@ -198,6 +204,12 @@ def test_date_interval_info():
     # icu::DateIntervalInfo *DateIntervalInfo::clone()
     dtitvinf4 = dtitvinf2.clone()
     assert isinstance(dtitvinf4, DateIntervalInfo)
+
+    # DateIntervalInfo.__copy__() -> DateIntervalInfo
+    # DateIntervalInfo.__deepcopy__(Optional[memo]) -> DateIntervalInfo
+    dtitvinf4a = copy.copy(dtitvinf2)
+    dtitvinf4b = copy.deepcopy(dtitvinf2)
+    assert dtitvinf4 == dtitvinf4a == dtitvinf4b
 
     # UBool icu::DateIntervalInfo::operator!=(const DateIntervalInfo &)
     assert not (dtitvinf2 != dtitvinf2a)

@@ -114,6 +114,12 @@ def test_currency_amount():
     assert isinstance(camt5, CurrencyAmount)
     assert camt1 == camt5
 
+    # CurrencyAmount.__copy__() -> CurrencyAmount
+    # CurrencyAmount.__deepcopy__(Optional[memo]) -> CurrencyAmount
+    camt5a = copy.copy(camt1)
+    camt5b = copy.deepcopy(camt1)
+    assert camt5 == camt5a == camt5b
+
     # const CurrencyUnit &icu::CurrencyAmount::getCurrency()
     unit = camt1.get_currency()
     assert isinstance(unit, CurrencyUnit)
@@ -311,6 +317,13 @@ def test_format_measures():
     assert id(result) == id(append_to)
     assert result == "5h 10min"
 
+    append_to.remove()
+    pos = FieldPosition(FieldPosition.DONT_CARE)
+    result = fmt.format_measures(measures, -1, append_to, pos)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert result == "5h 10min"
+
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
 def test_get_unit_display_name():
@@ -475,6 +488,12 @@ def test_time_unit_amount():
     assert isinstance(tuamt4, TimeUnitAmount)
     assert tuamt1 == tuamt4
     # assert tuamt2 == tuamt4
+
+    # TimeUnitAmount.__copy__() -> TimeUnitAmount
+    # TimeUnitAmount.__deepcopy__(Optional[memo]) -> TimeUnitAmount
+    tuamt4a = copy.copy(tuamt1)
+    tuamt4b = copy.deepcopy(tuamt1)
+    assert tuamt4 == tuamt4a == tuamt4b
 
     # const TimeUnit &icu::TimeUnitAmount::getTimeUnit()
     unit = tuamt1.get_time_unit()

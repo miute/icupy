@@ -579,6 +579,9 @@ def test_get_name():
     assert loc.get_name() == "de_DE@calendar=buddhist;collation=phonebook"
     assert str(loc) == loc.get_name()
 
+    # Locale.__repr__() -> str
+    assert repr(loc) == "Locale('de_DE@calendar=buddhist;collation=phonebook')"
+
 
 def test_get_script():
     # const char *icu::Locale::getScript()
