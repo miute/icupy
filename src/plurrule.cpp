@@ -89,18 +89,17 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
   });
   pr.def(
       "get_samples",
-      [](PluralRules &self, const _UnicodeStringVariant &keyword) {
+      [](PluralRules &self, const _UnicodeStringVariant &keyword, int32_t dest_capacity) {
         ErrorCode error_code;
-        auto dest_capacity = self.getSamples(VARIANT_TO_UNISTR(keyword), (double *)nullptr, 0, error_code);
         std::vector<double> result(dest_capacity);
-        error_code.reset();
-        self.getSamples(VARIANT_TO_UNISTR(keyword), result.data(), dest_capacity, error_code);
+        auto count = self.getSamples(VARIANT_TO_UNISTR(keyword), result.data(), dest_capacity, error_code);
         if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
+        result.resize(count);
         return result;
       },
-      py::arg("keyword"));
+      py::arg("keyword"), py::arg("dest_capacity"));
   pr.def(
       "is_keyword",
       [](const PluralRules &self, const _UnicodeStringVariant &keyword) {

@@ -4,8 +4,8 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, Locale, PluralRules, StringEnumeration,
-    UnicodeString,
+    U_ICU_VERSION_MAJOR_NUM, ICUError, Locale, PluralRules, StringEnumeration,
+    UErrorCode, UnicodeString,
 )
 
 # fmt: on
@@ -116,9 +116,7 @@ def test_for_locale_50():
     assert rules2 == rules2a
 
 
-@pytest.mark.skip("FIXME: Enable test_get_samples().")
 def test_get_samples():
-    # FIXME: Enable test_get_samples().
     rules = PluralRules.for_locale(Locale("fr"))
 
     # [1]
@@ -128,15 +126,22 @@ def test_get_samples():
     #       int32_t destCapacity,
     #       UErrorCode &status
     # )
-    dest = rules.get_samples(UnicodeString("other"))
+    dest = rules.get_samples(UnicodeString("other"), 100)
     assert isinstance(dest, list)
     assert len(dest) > 0
     assert all(isinstance(x, float) for x in dest)
 
-    dest = rules.get_samples("other")
+    dest = rules.get_samples("other", 100)
     assert isinstance(dest, list)
     assert len(dest) > 0
     assert all(isinstance(x, float) for x in dest)
+
+    with pytest.raises(ICUError) as exc_info:
+        _ = rules.get_samples(UnicodeString("other"), 0)
+    assert exc_info.value.args[0] == UErrorCode.U_INTERNAL_PROGRAM_ERROR
+
+    with pytest.raises(ValueError):
+        _ = rules.get_samples(UnicodeString("other"), -1)
 
 
 def test_select():
