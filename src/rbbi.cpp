@@ -160,7 +160,7 @@ void init_rbbi(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
-  bi.def("get_text", &BreakIterator::getText);
+  bi.def("get_text", &BreakIterator::getText, py::return_value_policy::reference);
   bi.def(
       "get_utext",
       [](const BreakIterator &self, std::optional<_UTextPtr> &fill_in) {
