@@ -171,9 +171,8 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   });
   fmt.def(
       "get_object",
-      [](const Formattable &self)
-          -> std::variant<const BasicTimeZone *, const Calendar *, const CurrencyAmount *, const DateInterval *,
-                          const TimeUnitAmount *, const TimeZone *, const UObject *> {
+      [](const Formattable &self) -> std::variant<const BasicTimeZone *, const Calendar *, const CurrencyAmount *,
+                                                  const DateInterval *, const TimeUnitAmount *, const UObject *> {
         auto obj = self.getObject();
         if (obj) {
           auto cal = dynamic_cast<const Calendar *>(obj);
@@ -195,10 +194,6 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           auto btz = dynamic_cast<const BasicTimeZone *>(obj);
           if (btz) {
             return btz;
-          }
-          auto tz = dynamic_cast<const TimeZone *>(obj);
-          if (tz) {
-            return tz;
           }
         }
         return obj;
