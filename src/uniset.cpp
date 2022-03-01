@@ -118,6 +118,12 @@ void init_uniset(py::module &m) {
           },
           py::arg("slice"))
       .def("__len__", &UnicodeSet::size)
+      .def(
+          "__ne__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return !uset_equals(self.toUSet(), other); },
+          py::is_operator(), py::arg("other"))
+      .def(
+          "__ne__", [](const UnicodeSet &self, _USetPtr &other) { return !uset_equals(self.toUSet(), other); },
+          py::is_operator(), py::arg("other"))
       .def("__repr__", [](const UnicodeSet &self) {
         std::stringstream ss;
         ss << "UnicodeSet(";
