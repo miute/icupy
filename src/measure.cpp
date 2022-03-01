@@ -80,11 +80,7 @@ void init_measure(py::module &m) {
       .def(py::init<const TimeUnitAmount &>(), py::arg("other"));
   tua.def("__copy__", &TimeUnitAmount::clone)
       .def(
-          "__deepcopy__", [](const TimeUnitAmount &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const TimeUnitAmount &self, const UObject &other) { return self == other; }, py::arg("other"))
-      .def(
-          "__ne__", [](const TimeUnitAmount &self, const UObject &other) { return self != other; }, py::arg("other"));
+          "__deepcopy__", [](const TimeUnitAmount &self, py::dict) { return self.clone(); }, py::arg("memo"));
   tua.def("clone", &TimeUnitAmount::clone);
   tua.def("get_time_unit", &TimeUnitAmount::getTimeUnit);
   tua.def("get_time_unit_field", &TimeUnitAmount::getTimeUnitField);

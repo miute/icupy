@@ -25,17 +25,13 @@ void init_schriter(py::module &m) {
       .value("END", CharacterIterator::kEnd)
       .export_values();
 
-  ci.def("__copy__", &CharacterIterator::clone)
-      .def(
-          "__deepcopy__", [](const CharacterIterator &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def("__len__", &CharacterIterator::getLength)
-      .def("__str__", [](CharacterIterator &self) {
-        UnicodeString dest;
-        self.getText(dest);
-        std::string result;
-        dest.toUTF8String(result);
-        return result;
-      });
+  ci.def("__len__", &CharacterIterator::getLength).def("__str__", [](CharacterIterator &self) {
+    UnicodeString dest;
+    self.getText(dest);
+    std::string result;
+    dest.toUTF8String(result);
+    return result;
+  });
   ci.def("end_index", &CharacterIterator::endIndex);
   ci.def("first32_post_inc", &CharacterIterator::first32PostInc);
   ci.def("first_post_inc", [](CharacterIterator &self) -> uint16_t { return self.firstPostInc(); });
@@ -56,10 +52,11 @@ void init_schriter(py::module &m) {
   uci.def("set_text", &UCharCharacterIterator::setText, py::arg("new_text"), py::arg("new_text_length"));
   */
   uci.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
-  uci.def("__copy__", &UCharCharacterIterator::clone)
-      .def(
-          "__deepcopy__", [](const UCharCharacterIterator &self, py::dict) { return self.clone(); }, py::arg("memo"));
-  uci.def("clone", &UCharCharacterIterator::clone);
+  // uci.def("__copy__", &UCharCharacterIterator::clone)
+  //     .def(
+  //         "__deepcopy__", [](const UCharCharacterIterator &self, py::dict) { return self.clone(); },
+  //         py::arg("memo"));
+  // uci.def("clone", &UCharCharacterIterator::clone);
   uci.def("current", [](const UCharCharacterIterator &self) -> uint16_t { return self.current(); });
   uci.def("current32", &UCharCharacterIterator::current32);
   uci.def("first", [](UCharCharacterIterator &self) -> uint16_t { return self.first(); });

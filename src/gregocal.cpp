@@ -12,27 +12,12 @@ using namespace icu;
 void init_gregocal(py::module &m) {
   // icu::Calendar
   py::class_<Calendar, UObject> cal(m, "Calendar");
-  cal.def("__copy__", &Calendar::clone)
-      .def(
-          "__deepcopy__", [](const Calendar &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const Calendar &self, const Calendar &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
+  cal.def(
+         "__eq__", [](const Calendar &self, const Calendar &other) { return self == other; }, py::is_operator(),
+         py::arg("other"))
       .def(
           "__ne__", [](const Calendar &self, const Calendar &other) { return self != other; }, py::is_operator(),
-          py::arg("other"))
-      .def("__repr__", [](const Calendar &self) {
-        std::stringstream ss;
-        ErrorCode error_code;
-        auto fmt = SimpleDateFormat(u"yyyy-MM-dd'T'HH:mm:ss.SSSXXX", error_code);
-        fmt.setCalendar(self);
-        UnicodeString dest;
-        fmt.format(self.getTime(error_code), dest);
-        std::string s;
-        dest.toUTF8String(s);
-        ss << "Calendar(" << s << ")";
-        return ss.str();
-      });
+          py::arg("other"));
   cal.def(
       "add",
       [](Calendar &self, UCalendarDateFields field, int32_t amount) {
@@ -148,28 +133,6 @@ void init_gregocal(py::module &m) {
         return result;
       },
       py::arg("field"));
-  cal.def(
-      "get_actual_maximum",
-      [](const Calendar &self, UCalendarDateFields field) {
-        ErrorCode error_code;
-        auto result = self.getActualMaximum(field, error_code);
-        if (error_code.isFailure()) {
-          throw ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("field"));
-  cal.def(
-      "get_actual_minimum",
-      [](const Calendar &self, UCalendarDateFields field) {
-        ErrorCode error_code;
-        auto result = self.getActualMinimum(field, error_code);
-        if (error_code.isFailure()) {
-          throw ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("field"));
   cal.def_static(
       "get_available_locales",
       []() {
@@ -268,14 +231,6 @@ void init_gregocal(py::module &m) {
         return result;
       },
       py::arg("day_of_week"));
-  cal.def("in_daylight_time", [](const Calendar &self) {
-    ErrorCode error_code;
-    auto result = self.inDaylightTime(error_code);
-    if (error_code.isFailure()) {
-      throw ICUError(error_code);
-    }
-    return result;
-  });
   cal.def("is_equivalent_to", &Calendar::isEquivalentTo, py::arg("other"));
   cal.def("is_lenient", &Calendar::isLenient);
   cal.def("is_set", py::overload_cast<UCalendarDateFields>(&Calendar::isSet, py::const_), py::arg("field"));
@@ -299,16 +254,6 @@ void init_gregocal(py::module &m) {
     }
     return tz;
   });
-  cal.def(
-      "roll",
-      [](Calendar &self, UCalendarDateFields field, int32_t amount) {
-        ErrorCode error_code;
-        self.roll(field, amount, error_code);
-        if (error_code.isFailure()) {
-          throw ICUError(error_code);
-        }
-      },
-      py::arg("field"), py::arg("amount"));
   cal.def("set", py::overload_cast<int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"), py::arg("month"),
           py::arg("date"))
       .def("set", py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"),

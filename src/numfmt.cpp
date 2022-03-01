@@ -52,13 +52,6 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
              "Return *U_FORMAT_INEXACT_ERROR* if number does not format exactly.")
       .export_values();
 
-  nf.def(
-      "__eq__", [](const NumberFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-  nf.def("__copy__", &NumberFormat::clone)
-      .def(
-          "__deepcopy__", [](const NumberFormat &self, py::dict) { return self.clone(); }, py::arg("memo"));
-  nf.def("clone", &NumberFormat::clone);
   nf.def_static(
         "create_currency_instance",
         [](const _LocaleVariant &in_locale) {
@@ -146,130 +139,6 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       });
-  nf.def(
-        // [1] NumberFormat::format
-        // [2] Format::format
-        "format",
-        [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
-           FieldPosition &pos) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = self.format(obj, append_to, pos, error_code);
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("obj"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [3] Format::format
-          // [4] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [5] Format::format
-          "format",
-          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"))
-      .def(
-          // [8] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, double number, UnicodeString &append_to) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number").noconvert(), py::arg("append_to"))
-      .def(
-          // [9] NumberFormat::format
-          "format", py::overload_cast<double, UnicodeString &, FieldPosition &>(&NumberFormat::format, py::const_),
-          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [11] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, double number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [12] NumberFormat::format
-          "format", py::overload_cast<int32_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
-          py::arg("append_to"))
-      .def(
-          // [13] NumberFormat::format
-          "format", py::overload_cast<int32_t, UnicodeString &, FieldPosition &>(&NumberFormat::format, py::const_),
-          py::arg("number"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [15] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, int32_t number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [16] NumberFormat::format
-          "format", py::overload_cast<int64_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
-          py::arg("append_to"))
-      .def(
-          // [17] NumberFormat::format
-          "format", py::overload_cast<int64_t, UnicodeString &, FieldPosition &>(&NumberFormat::format, py::const_),
-          py::arg("number"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [19] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [20] NumberFormat::format
-          "format",
-          [](const NumberFormat &self, const char *number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"));
   nf.def_static(
       "get_available_locales",
       []() {
@@ -304,29 +173,6 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def("is_grouping_used", &NumberFormat::isGroupingUsed);
   nf.def("is_lenient", &NumberFormat::isLenient);
   nf.def("is_parse_integer_only", &NumberFormat::isParseIntegerOnly);
-  nf.def(
-        "parse",
-        [](const NumberFormat &self, const _UnicodeStringVariant &text, Formattable &result,
-           ParsePosition &parse_position) { self.parse(VARIANT_TO_UNISTR(text), result, parse_position); },
-        py::arg("text"), py::arg("result"), py::arg("parse_position"))
-      .def(
-          "parse",
-          [](const NumberFormat &self, const _UnicodeStringVariant &text, Formattable &result) {
-            ErrorCode error_code;
-            self.parse(VARIANT_TO_UNISTR(text), result, error_code);
-            if (error_code.isFailure()) {
-              throw ICUError(error_code);
-            }
-          },
-          py::arg("text"), py::arg("result"));
-#if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  nf.def(
-      "parse_currency",
-      [](const NumberFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
-        return self.parseCurrency(VARIANT_TO_UNISTR(text), pos);
-      },
-      py::arg("text"), py::arg("pos"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
   nf.def(
         "parse_object",
         [](const NumberFormat &self, const _UnicodeStringVariant &source, Formattable &result,

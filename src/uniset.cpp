@@ -341,11 +341,8 @@ void init_uniset(py::module &m) {
            py::arg("s"), py::arg("limit"), py::arg("span_condition"));
   us.def("to_pattern", &UnicodeSet::toPattern, py::arg("result"), py::arg("escape_unprintable") = false);
   us.def("to_uset", [](UnicodeSet &self) {
-      auto uset = self.toUSet();
-      return std::make_unique<_USetPtr>(uset);
-    }).def("to_uset", [](const UnicodeSet &self) {
     auto uset = self.toUSet();
-    return std::make_unique<_ConstUSetPtr>(uset);
+    return std::make_unique<_USetPtr>(uset);
   });
 
   us.def_property_readonly_static("IGNORE_SPACE", [](py::object) -> int32_t { return USET_IGNORE_SPACE; });

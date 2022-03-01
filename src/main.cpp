@@ -133,11 +133,8 @@ void init_uversion(py::module &m);
 void init_voidptr(py::module &m);
 
 ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_code_(error_code) {
-  what_.append(error_code.errorName());
   if (message != nullptr && *message != 0) {
     message_.append(message);
-    what_.append(": ");
-    what_.append(message);
   }
 }
 

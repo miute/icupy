@@ -42,12 +42,9 @@ void init_timezone(py::module &m) {
              "Selector for long display name derived from the time zone's fallback name.")
       .export_values();
 
-  tz.def("__copy__", &TimeZone::clone)
-      .def(
-          "__deepcopy__", [](const TimeZone &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
+  tz.def(
+        "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
+        py::arg("other"))
       .def(
           "__ne__", [](const TimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
           py::arg("other"));
@@ -56,7 +53,6 @@ void init_timezone(py::module &m) {
   tz.def_static(
       "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : nullptr); }, py::arg("zone"));
   */
-  tz.def("clone", &TimeZone::clone);
   tz.def_static(
       "count_equivalent_ids",
       [](const _UnicodeStringVariant &id) { return TimeZone::countEquivalentIDs(VARIANT_TO_UNISTR(id)); },

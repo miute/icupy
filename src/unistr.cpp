@@ -741,13 +741,14 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           // [6] setTo(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
           "set_to", py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::setTo),
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
-      .def(
-          // [7] setTo(UBool isTerminated, ConstChar16Ptr text, int32_t textLength)
-          "set_to",
-          [](UnicodeString &self, UBool is_terminated, const char16_t *text, int32_t text_length) -> UnicodeString & {
-            return self.setTo(is_terminated, text, text_length);
-          },
-          py::arg("is_terminated"), py::arg("text"), py::arg("text_length"))
+      // .def(
+      //     // [7] setTo(UBool isTerminated, ConstChar16Ptr text, int32_t textLength)
+      //     "set_to",
+      //     [](UnicodeString &self, UBool is_terminated, const char16_t *text, int32_t text_length) -> UnicodeString &
+      //     {
+      //       return self.setTo(is_terminated, text, text_length);
+      //     },
+      //     py::arg("is_terminated"), py::arg("text"), py::arg("text_length"))
       .def(
           // [8] setTo(UChar32 srcChar)
           "set_to", py::overload_cast<UChar32>(&UnicodeString::setTo), py::arg("src_char"));

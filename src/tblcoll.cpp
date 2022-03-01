@@ -44,9 +44,6 @@ void init_tblcoll(py::module &m) {
       .export_values();
 #endif // U_FORCE_HIDE_DEPRECATED_API
 
-  coll.def("__copy__", &Collator::clone)
-      .def(
-          "__deepcopy__", [](const Collator &self, py::dict) { return self.clone(); }, py::arg("memo"));
   coll.def_static(
           "create_instance",
           [](const Locale &loc) {
