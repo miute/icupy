@@ -192,17 +192,6 @@ def test_api():
         assert isinstance(dest, str)
         assert dest == lll_skel
 
-        # void uspoof_setAllowedChars(
-        #       USpoofChecker *sc,
-        #       const USet *chars,
-        #       UErrorCode *status
-        # )
-        uniset3 = UnicodeSet(0x41, 0x5A)
-        chars = uniset3.to_uset()
-        uspoof_set_allowed_chars(sc, chars)
-        uniset4 = uspoof_get_allowed_unicode_set(sc)
-        assert uniset4 == UnicodeSet("[A-Z]")
-
         # void uspoof_setAllowedLocales(
         #       USpoofChecker *sc,
         #       const char *localesList,
@@ -490,4 +479,43 @@ def test_open_from_source():
             "or both files are not found (not an error). "
             "You need to copy them from "
             "<icu4c>/icu/source/data/unidata/"
+        )
+
+
+def test_set_allowed_chars():
+    with gc(uspoof_open(), uspoof_close) as sc:
+        # void uspoof_setAllowedChars(
+        #       USpoofChecker *sc,
+        #       const USet *chars,
+        #       UErrorCode *status
+        # )
+        uniset = UnicodeSet(0x41, 0x5A)
+        chars = uniset.to_uset()
+        uspoof_set_allowed_chars(sc, chars)  # USet*
+        uniset4 = uspoof_get_allowed_unicode_set(sc)
+        assert uniset4 == UnicodeSet("[A-Z]")
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
+def test_set_allowed_chars_63():
+    from icupy.icu import UProperty, u_get_binary_property_set
+
+    with gc(uspoof_open(), uspoof_close) as sc:
+        # const USet *u_getBinaryPropertySet(
+        #       UProperty property,
+        #       UErrorCode *pErrorCode
+        # )
+        chars = u_get_binary_property_set(UProperty.UCHAR_POSIX_BLANK)
+
+        # void uspoof_setAllowedChars(
+        #       USpoofChecker *sc,
+        #       const USet *chars,
+        #       UErrorCode *status
+        # )
+        uspoof_set_allowed_chars(sc, chars)  # const USet*
+        uniset = uspoof_get_allowed_unicode_set(sc)
+        assert repr(uniset) == (
+            "UnicodeSet(["
+            "\\u0009\\ \\u00A0\\u1680\\u2000-\\u200A\\u202F\\u205F\\u3000"
+            "])"
         )

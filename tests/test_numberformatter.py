@@ -352,6 +352,126 @@ def test_localized_number_formatter_68():
     assert isinstance(result, LocalizedNumberFormatter)
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
+def test_localized_number_formatter_to_format():
+    # fmt: off
+    from icupy.icu import (
+        FieldPosition, FieldPositionIterator, ICUError, ParsePosition,
+    )
+
+    # fmt: on
+    # [1]
+    # icu::number::LocalizedNumberFormatter::LocalizedNumberFormatter()
+    fmt = LocalizedNumberFormatter()
+
+    # Format *icu::number::LocalizedNumberFormatter::toFormat(
+    #       UErrorCode &status
+    # )
+    fmt2 = (
+        fmt.notation(Notation.engineering())
+        .unit(MeasureUnit.get_kelvin())
+        .to_format()
+    )
+    assert isinstance(fmt2, Format)
+
+    # bool icu::Format::operator!=(const Format &other)
+    fmt3 = fmt2.clone()
+    assert fmt2 != fmt
+    assert not (fmt2 != fmt3)
+
+    # bool icu::Format::operator==(const Format &other)
+    assert not (fmt2 == fmt)
+    assert fmt2 == fmt3
+
+    # [1]
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPosition &pos,
+    #       UErrorCode &status
+    # )
+    obj = Formattable(65000)
+    append_to = UnicodeString()
+    pos = FieldPosition(FieldPosition.DONT_CARE)
+    result = fmt2.format(obj, append_to, pos)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert append_to == "65E3 K"
+
+    # [2]
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       FieldPositionIterator *posIter,
+    #       UErrorCode &status
+    # )
+    obj = Formattable(65000)
+    append_to.remove()
+    pos_iter = FieldPositionIterator()
+    result = fmt2.format(obj, append_to, pos_iter)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert append_to == "65E3 K"
+
+    append_to.remove()
+    pos_iter = None
+    result = fmt2.format(obj, append_to, pos_iter)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert append_to == "65E3 K"
+
+    # [3]
+    # UnicodeString &icu::Format::format(
+    #       const Formattable &obj,
+    #       UnicodeString &appendTo,
+    #       UErrorCode &status
+    # )
+    obj = Formattable(65000)
+    append_to.remove()
+    result = fmt2.format(obj, append_to)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(append_to)
+    assert append_to == "65E3 K"
+
+    # [1]
+    # void icu::Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       ParsePosition &parse_pos
+    # )
+    source = UnicodeString("65E3 K")
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt2.parse_object(source, result, parse_pos)
+    assert parse_pos.get_index() == 0
+    assert parse_pos.get_error_index() == 0
+
+    source = "65E3 K"
+    result = Formattable()
+    parse_pos = ParsePosition()
+    fmt2.parse_object(source, result, parse_pos)
+    assert parse_pos.get_index() == 0
+    assert parse_pos.get_error_index() == 0
+
+    # [2]
+    # void icu::Format::parseObject(
+    #       const UnicodeString &source,
+    #       Formattable &result,
+    #       UErrorCode &status
+    # )
+    source = UnicodeString("65E3 K")
+    result = Formattable()
+    with pytest.raises(ICUError) as exc_info:
+        fmt2.parse_object(source, result)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+
+    source = "65E3 K"
+    result = Formattable()
+    with pytest.raises(ICUError) as exc_info:
+        fmt2.parse_object(source, result)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
 def test_no_unit():
     from icupy.icu import NoUnit

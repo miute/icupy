@@ -2,8 +2,8 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, DecimalFormat, Format, Locale, NumberFormat,
-    UnicodeString, UNumberFormatStyle,
+    U_ICU_VERSION_MAJOR_NUM, DecimalFormat, Format, ICUError, Locale,
+    NumberFormat, UErrorCode, UnicodeString, UNumberFormatStyle,
 )
 
 # fmt: on
@@ -111,10 +111,12 @@ def test_create_instance():
         append_to = UnicodeString()
         assert fmt1.format(1000, append_to) == "1,000"
 
-        # UNUM_PATTERN_DECIMAL -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_PATTERN_DECIMAL)
+        # UNUM_PATTERN_DECIMAL -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_PATTERN_DECIMAL
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
         # UNUM_DECIMAL
         test = NumberFormat.create_instance(
@@ -140,30 +142,40 @@ def test_create_instance():
         )
         assert isinstance(test, DecimalFormat)
 
-        # UNUM_SPELLOUT -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_SPELLOUT)
+        # UNUM_SPELLOUT -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_SPELLOUT
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
-        # UNUM_ORDINAL -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_ORDINAL)
+        # UNUM_ORDINAL -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_ORDINAL
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
-        # UNUM_DURATION -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_DURATION)
+        # UNUM_DURATION -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_DURATION
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
-        # UNUM_NUMBERING_SYSTEM -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_NUMBERING_SYSTEM)
+        # UNUM_NUMBERING_SYSTEM -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_NUMBERING_SYSTEM
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
-        # UNUM_PATTERN_RULEBASED -> U_UNSUPPORTED_ERROR
-        # test = NumberFormat.create_instance(
-        #     in_locale,
-        #     UNumberFormatStyle.UNUM_PATTERN_RULEBASED)
+        # UNUM_PATTERN_RULEBASED -> U_UNSUPPORTED_ERROR (ICU 69+)
+        with pytest.raises(ICUError) as exc_info:
+            _ = NumberFormat.create_instance(
+                in_locale, UNumberFormatStyle.UNUM_PATTERN_RULEBASED
+            )
+        assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
         # UNUM_CURRENCY_ISO
         test = NumberFormat.create_instance(
@@ -224,15 +236,19 @@ def test_create_instance_54():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
 def test_create_instance_56():
-    # UNUM_DECIMAL_COMPACT_SHORT -> U_UNSUPPORTED_ERROR
-    # test = NumberFormat.create_instance(
-    #     Locale.get_us(),
-    #     UNumberFormatStyle.UNUM_DECIMAL_COMPACT_SHORT)
+    # UNUM_DECIMAL_COMPACT_SHORT -> U_UNSUPPORTED_ERROR (ICU 69+)
+    with pytest.raises(ICUError) as exc_info:
+        _ = NumberFormat.create_instance(
+            Locale.get_us(), UNumberFormatStyle.UNUM_DECIMAL_COMPACT_SHORT
+        )
+    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
-    # UNUM_DECIMAL_COMPACT_LONG -> U_UNSUPPORTED_ERROR
-    # test = NumberFormat.create_instance(
-    #     Locale.get_us(),
-    #     UNumberFormatStyle.UNUM_DECIMAL_COMPACT_LONG)
+    # UNUM_DECIMAL_COMPACT_LONG -> U_UNSUPPORTED_ERROR (ICU 69+)
+    with pytest.raises(ICUError) as exc_info:
+        _ = NumberFormat.create_instance(
+            Locale.get_us(), UNumberFormatStyle.UNUM_DECIMAL_COMPACT_LONG
+        )
+    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
 
     # UNUM_CURRENCY_STANDARD
     test = NumberFormat.create_instance(

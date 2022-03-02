@@ -443,7 +443,12 @@ def test_measure():
     # Measure *icu::Measure::clone()
     meas5 = meas4.clone()
     assert isinstance(meas5, Measure)
-    assert meas1 == meas5
+
+    # Measure.__copy__() -> Measure
+    # Measure.__deepcopy__(Optional[memo]) -> Measure
+    meas5a = copy.copy(meas4)
+    meas5b = copy.deepcopy(meas4)
+    assert meas1 == meas5 == meas5a == meas5b
 
     # const Formattable &icu::Measure::getNumber()
     num = meas1.get_number()

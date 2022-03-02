@@ -4,9 +4,10 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, USET_IGNORE_SPACE, ICUError,
-    ParsePosition, UErrorCode, UMatchDegree, UnicodeSet, UnicodeString,
-    UProperty, USetSpanCondition,
+    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, USET_ADD_CASE_MAPPINGS,
+    USET_CASE_INSENSITIVE, USET_IGNORE_SPACE,
+    USET_SERIALIZED_STATIC_ARRAY_CAPACITY, ICUError, ParsePosition, UErrorCode,
+    UMatchDegree, UnicodeSet, UnicodeString, UProperty, USetSpanCondition,
 )
 
 # fmt: on
@@ -73,6 +74,14 @@ def test_add_match_set_to():
 
 
 def test_api():
+    assert UnicodeSet.IGNORE_SPACE == USET_IGNORE_SPACE
+    assert UnicodeSet.CASE_INSENSITIVE == USET_CASE_INSENSITIVE
+    assert UnicodeSet.ADD_CASE_MAPPINGS == USET_ADD_CASE_MAPPINGS
+    assert (
+        UnicodeSet.SERIALIZED_STATIC_ARRAY_CAPACITY
+        == USET_SERIALIZED_STATIC_ARRAY_CAPACITY
+    )
+
     test1 = UnicodeSet(0x30, 0x39)
 
     # int32_t icu::UnicodeSet::getRangeCount(void)
@@ -638,10 +647,25 @@ def test_operator():
     assert not (test1 == test3)
     assert not (test2 == test3)
 
-    # UnicodeSet.__eq__(other) -> bool
+    # UnicodeSet.__eq__(_USetPtr) -> bool
     assert test1 == test2.to_uset()
     assert not (test1 == test3.to_uset())
     assert not (test2 == test3.to_uset())
+
+    assert not (test1 != test2.to_uset())
+    assert test1 != test3.to_uset()
+    assert test2 != test3.to_uset()
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
+def test_operator_63():
+    from icupy.icu import u_get_binary_property_set
+
+    # UnicodeSet.__eq__(_ConstUSetPtr) -> bool
+    uset = u_get_binary_property_set(UProperty.UCHAR_POSIX_BLANK)
+    test1 = UnicodeSet.from_uset(uset)
+    assert test1 == uset
+    assert not (test1 != uset)
 
 
 def test_remove():

@@ -59,7 +59,7 @@ def test_create_character_instance():
     #       UErrorCode &status
     # )
     bi = BreakIterator.create_character_instance(Locale.get_us())
-    assert isinstance(bi, BreakIterator)
+    assert isinstance(bi, RuleBasedBreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -96,7 +96,7 @@ def test_create_line_instance():
     #       UErrorCode &status
     # )
     bi = BreakIterator.create_line_instance(Locale.get_us())
-    assert isinstance(bi, BreakIterator)
+    assert isinstance(bi, RuleBasedBreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -124,7 +124,7 @@ def test_create_sentence_instance():
     #       UErrorCode &status
     # )
     bi = BreakIterator.create_sentence_instance(Locale.get_us())
-    assert isinstance(bi, BreakIterator)
+    assert isinstance(bi, RuleBasedBreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -144,13 +144,42 @@ def test_create_sentence_instance():
     assert loc.get_name() == "en_US"
 
 
+def test_create_title_instance():
+    # **Deprecated in ICU 64**
+    # static BreakIterator *icu::BreakIterator::createTitleInstance(
+    #       const Locale &where,
+    #       UErrorCode &status
+    # )
+    bi = BreakIterator.create_title_instance(Locale.get_us())
+    assert isinstance(bi, RuleBasedBreakIterator)
+    src = UnicodeString("foo bar baz.")
+    bi.set_text(src)
+
+    assert bi.first() == 0
+    assert bi.next() == 4
+    assert bi.next() == 8
+    assert bi.next() == 12
+    assert bi.next() == BreakIterator.DONE
+
+    assert list(bi) == [4, 8, 12]
+    assert reversed(bi) == [12, 8, 4]
+
+    bi = BreakIterator.create_title_instance("en_US")
+    bi.set_text(src)
+    assert list(bi) == [4, 8, 12]
+    assert reversed(bi) == [12, 8, 4]
+
+    loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert loc.get_name() == "en_US"
+
+
 def test_create_word_instance():
     # static BreakIterator *icu::BreakIterator::createWordInstance(
     #       const Locale &where,
     #       UErrorCode &status
     # )
     bi = BreakIterator.create_word_instance(Locale.get_us())
-    assert isinstance(bi, BreakIterator)
+    assert isinstance(bi, RuleBasedBreakIterator)
     src = UnicodeString("foo bar baz.")
     bi.set_text(src)
 
@@ -173,106 +202,6 @@ def test_create_word_instance():
 
     loc = bi.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
     assert loc.get_name() == "en_US"
-
-
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
-def test_filtered_break_iterator_builder_56():
-    from icupy.icu import FilteredBreakIteratorBuilder
-
-    # [1]
-    # static FilteredBreakIteratorBuilder *
-    # icu::FilteredBreakIteratorBuilder::createInstance(
-    #       const Locale &where,
-    #       UErrorCode &status
-    # )
-    where = Locale.get_english()
-    builder1 = FilteredBreakIteratorBuilder.create_instance(where)
-    assert isinstance(builder1, FilteredBreakIteratorBuilder)
-
-    builder1a = FilteredBreakIteratorBuilder.create_instance("en")
-    assert isinstance(builder1a, FilteredBreakIteratorBuilder)
-
-    # **Deprecated in ICU 60**
-    # [2]
-    # static FilteredBreakIteratorBuilder *
-    # icu::FilteredBreakIteratorBuilder::createInstance(UErrorCode &status)
-    builder2 = FilteredBreakIteratorBuilder.create_instance()
-    assert isinstance(builder2, FilteredBreakIteratorBuilder)
-
-    # UBool icu::FilteredBreakIteratorBuilder::suppressBreakAfter(
-    #       const UnicodeString &string,
-    #       UErrorCode &status
-    # )
-    assert builder2.suppress_break_after(UnicodeString("Mr."))
-    assert builder2.suppress_break_after("Capt.")
-    assert not builder2.suppress_break_after("Mr.")
-    assert not builder2.suppress_break_after(UnicodeString("Capt."))
-
-    # UBool icu::FilteredBreakIteratorBuilder::unsuppressBreakAfter(
-    #       const UnicodeString &string,
-    #       UErrorCode &status
-    # )
-    assert builder2.unsuppress_break_after(UnicodeString("Capt."))
-    assert builder2.unsuppress_break_after("Mr.")
-    assert not builder2.unsuppress_break_after("Capt.")
-    assert not builder2.unsuppress_break_after(UnicodeString("Mr."))
-
-    # **Deprecated in ICU 60**
-    # BreakIterator *icu::FilteredBreakIteratorBuilder::build(
-    #       BreakIterator *adoptBreakIterator,
-    #       UErrorCode &status
-    # )
-    builder2.suppress_break_after("Mr.")
-    bi = builder2.build(BreakIterator.create_sentence_instance(where))
-    assert isinstance(bi, BreakIterator)
-
-    text = UnicodeString(
-        "In the meantime Mr. Weston arrived with his small ship, which he had "
-        "now recovered. Capt. Gorges, who informed the Sgt. here that one "
-        "purpose of his going east was to meet with Mr. Weston, took this "
-        "opportunity to call him to account for some abuses he had to lay to "
-        "his charge."
-    )
-    bi.set_text(text)
-    assert bi.next() == 84
-    assert bi.next() == 90
-    assert bi.next() == 278
-    assert bi.next() == BreakIterator.DONE
-
-
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_filtered_break_iterator_builder_60():
-    from icupy.icu import FilteredBreakIteratorBuilder
-
-    # static FilteredBreakIteratorBuilder *
-    # icu::FilteredBreakIteratorBuilder::createEmptyInstance(UErrorCode &status)
-    builder = FilteredBreakIteratorBuilder.create_empty_instance()
-    assert isinstance(builder, FilteredBreakIteratorBuilder)
-
-    # BreakIterator *
-    # icu::FilteredBreakIteratorBuilder::wrapIteratorWithFilter(
-    #       BreakIterator *adoptBreakIterator,
-    #       UErrorCode &status
-    # )
-    bi = builder.wrap_iterator_with_filter(
-        BreakIterator.create_sentence_instance(Locale.get_english())
-    )
-    assert isinstance(bi, BreakIterator)
-
-    text = UnicodeString(
-        "In the meantime Mr. Weston arrived with his small ship, which he had "
-        "now recovered. Capt. Gorges, who informed the Sgt. here that one "
-        "purpose of his going east was to meet with Mr. Weston, took this "
-        "opportunity to call him to account for some abuses he had to lay to "
-        "his charge."
-    )
-    bi.set_text(text)
-    assert bi.next() == 20
-    assert bi.next() == 84
-    assert bi.next() == 90
-    assert bi.next() == 181
-    assert bi.next() == 278
-    assert bi.next() == BreakIterator.DONE
 
 
 def test_following():

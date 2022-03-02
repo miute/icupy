@@ -2,14 +2,15 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    U_FOLD_CASE_DEFAULT, U_FOLD_CASE_EXCLUDE_SPECIAL_I,
+    U_FOLD_CASE_DEFAULT, U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_GC_CF_MASK,
+    U_GC_LU_MASK, U_GC_ND_MASK, U_GC_PS_MASK, U_GC_SM_MASK, U_GC_ZS_MASK,
     U_ICU_VERSION_MAJOR_NUM, U_NO_NUMERIC_VALUE, ConstVoidPtr, ICUError,
     UBlockCode, UCharCategory, UCharDirection, UCharNameChoice,
     UDecompositionType, UEastAsianWidth, UErrorCode, UnicodeSet, UProperty,
     UPropertyNameChoice, u_char_age, u_char_digit_value, u_char_direction,
     u_char_from_name, u_char_mirror, u_char_name, u_char_type, u_digit,
     u_fold_case, u_for_digit, u_get_bidi_paired_bracket, u_get_combining_class,
-    u_get_fc_nfkc_closure, u_get_int_property_max_value,
+    u_get_fc_nfkc_closure, u_get_gc_mask, u_get_int_property_max_value,
     u_get_int_property_min_value, u_get_int_property_value,
     u_get_numeric_value, u_get_property_enum, u_get_property_name,
     u_get_property_value_enum, u_get_property_value_name,
@@ -19,7 +20,7 @@ from icupy.icu import (
     u_is_ulowercase, u_is_uuppercase, u_is_uwhite_space, u_is_whitespace,
     u_isalnum, u_isalpha, u_isbase, u_isblank, u_iscntrl, u_isdefined,
     u_isdigit, u_isgraph, u_islower, u_isprint, u_ispunct, u_isspace,
-    u_istitle, u_isupper, u_isxdigit, u_tolower, u_totitle, u_toupper,
+    u_istitle, u_isupper, u_isxdigit, u_mask, u_tolower, u_totitle, u_toupper,
     ublock_get_code,
 )
 
@@ -27,6 +28,17 @@ from icupy.icu import (
 
 
 def test_api():
+    # U_GET_GC_MASK(c)
+    # U_MASK(x)
+    assert u_get_gc_mask(0x41) == U_GC_LU_MASK == u_mask(u_char_type(0x41))
+    assert u_get_gc_mask(0x662) == U_GC_ND_MASK == u_mask(u_char_type(0x662))
+    assert u_get_gc_mask(0xA0) == U_GC_ZS_MASK == u_mask(u_char_type(0xA0))
+    assert u_get_gc_mask(0x28) == U_GC_PS_MASK == u_mask(u_char_type(0x28))
+    assert u_get_gc_mask(0x2044) == U_GC_SM_MASK == u_mask(u_char_type(0x2044))
+    assert (
+        u_get_gc_mask(0xE0063) == U_GC_CF_MASK == u_mask(u_char_type(0xE0063))
+    )
+
     # U+FF11: Fullwidth Digit One
     assert u_char_digit_value(ord("1")) == 1
     assert u_char_digit_value(0xFF11) == 1

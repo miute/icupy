@@ -110,6 +110,23 @@ def test_basic_time_zone():
     assert zone5.has_equivalent_transitions(zone6, start, end, True)
 
 
+def test_basic_time_zone_get_offset():
+    zone = TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone, BasicTimeZone)
+
+    # [1]
+    # void icu::TimeZone::getOffset(
+    #       UDate date,
+    #       UBool local,
+    #       int32_t &rawOffset,
+    #       int32_t &dstOffset,
+    #       UErrorCode &ec
+    # )
+    raw_offset, dst_offset = zone.get_offset(0, False)
+    assert raw_offset == -8 * HOUR
+    assert dst_offset == 0
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_basic_time_zone_get_offset_from_local():
     from icupy.icu import UTimeZoneLocalOption
