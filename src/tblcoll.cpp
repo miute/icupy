@@ -241,13 +241,13 @@ void init_tblcoll(py::module &m) {
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
     ErrorCode error_code;
     const auto capacity = self.cloneBinary(nullptr, 0, error_code);
-    std::vector<uint8_t> result(capacity);
+    std::vector<uint8_t> buffer(capacity);
     error_code.reset();
-    self.cloneBinary(result.data(), capacity, error_code);
+    self.cloneBinary(buffer.data(), capacity, error_code);
     if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
-    return result;
+    return py::bytes(reinterpret_cast<char *>(buffer.data()), capacity);
   });
   rbc.def(
          "compare",
