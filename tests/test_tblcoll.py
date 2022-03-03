@@ -689,6 +689,18 @@ def test_rule_based_collator():
     test6 = RuleBasedCollator(test1)
     assert test6.get_rules() == rules
 
+    # int32_t icu::RuleBasedCollator::cloneBinary(
+    #       uint8_t *buffer,
+    #       int32_t capacity,
+    #       UErrorCode &status
+    # )
+    test1.set_attribute(
+        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
+    )
+    buffer = test1.clone_binary()
+    assert isinstance(buffer, bytes)
+    assert len(buffer) > 0
+
     # [7]
     # icu::RuleBasedCollator::RuleBasedCollator(
     #       const uint8_t *bin,
@@ -696,14 +708,28 @@ def test_rule_based_collator():
     #       const RuleBasedCollator *base,
     #       UErrorCode &status
     # )
-    # buffer = test1.clone_binary()
-    # assert isinstance(buffer, list)
-    # assert len(buffer) > 0
-    # root = Collator.create_instance(Locale.get_root())
-    # test7 = RuleBasedCollator(buffer, len(buffer), root)
-    # rules7 = test7.get_rules()
-    # assert rules7 == rules
-    pass  # NotImplemented
+    root = Collator.create_instance(Locale.get_root())
+    test7 = RuleBasedCollator(buffer, len(buffer), root)
+    assert test1 == test7
+    assert (
+        test7.get_attribute(UColAttribute.UCOL_STRENGTH)
+        == UColAttributeValue.UCOL_PRIMARY
+    )
+
+    buffer2 = test7.clone_binary()
+    assert len(buffer) == len(buffer2)
+    assert buffer == buffer2
+
+    test7a = RuleBasedCollator(buffer2, -1, root)
+    assert test1 == test7 == test7a
+    assert (
+        test7a.get_attribute(UColAttribute.UCOL_STRENGTH)
+        == UColAttributeValue.UCOL_PRIMARY
+    )
+
+    buffer3 = test7a.clone_binary()
+    assert len(buffer) == len(buffer3)
+    assert buffer == buffer3
 
 
 def test_sort():

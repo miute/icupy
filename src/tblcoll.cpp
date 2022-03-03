@@ -219,19 +219,20 @@ void init_tblcoll(py::module &m) {
            }),
            py::arg("rules"), py::arg("collation_strength"), py::arg("decomposition_mode"))
       .def(py::init<const RuleBasedCollator &>(), py::arg("other"))
-      // FIXME: Implement "icu::RuleBasedCollator::RuleBasedCollator(const uint8_t *bin,
-      // int32_t length, const RuleBasedCollator *base, UErrorCode &status)".
-      /*
-      .def(py::init([](const std::vector<uint8_t> &bin, int32_t length, const RuleBasedCollator *base) {
+      .def(py::init([](const py::buffer &bin, int32_t length, const RuleBasedCollator *base) {
+             auto info = bin.request();
+             if (length == -1) {
+               length = static_cast<int32_t>(info.size);
+             }
              ErrorCode error_code;
-             auto result = std::make_unique<RuleBasedCollator>(bin.data(), length, base, error_code);
+             auto result =
+                 std::make_unique<RuleBasedCollator>(reinterpret_cast<uint8_t *>(info.ptr), length, base, error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
              return result;
            }),
-           py::arg("bin"), py::arg("length"), py::arg("base"));
-      */
+           py::keep_alive<0, 1>(), py::keep_alive<0, 3>(), py::arg("bin"), py::arg("length"), py::arg("base"))
       .def(py::self != py::self, py::arg("other"))
       .def(py::self == py::self, py::arg("other"));
   rbc.def("__copy__", &RuleBasedCollator::clone)
