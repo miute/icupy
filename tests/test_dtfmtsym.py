@@ -12,6 +12,7 @@ from icupy.icu import (
 def test_api():
     sym = DateFormatSymbols(Locale.get_japan())
     sym2 = DateFormatSymbols(Locale("und"))
+    sym3 = DateFormatSymbols("ja_JP")
 
     # Locale icu::DateFormatSymbols::getLocale(
     #       ULocDataLocaleType type,
@@ -20,6 +21,9 @@ def test_api():
     locale = sym.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
     assert isinstance(locale, Locale)
     assert locale == Locale("ja_JP")
+
+    locale2 = sym3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert locale2 == locale
 
     # UnicodeString &icu::DateFormatSymbols::getLocalPatternChars(
     #       UnicodeString &result

@@ -42,9 +42,9 @@ void init_dtfmtsym(py::module &m) {
        }
        return result;
      }))
-      .def(py::init([](const Locale &locale) {
+      .def(py::init([](const _LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<DateFormatSymbols>(locale, error_code);
+             auto result = std::make_unique<DateFormatSymbols>(VARIANT_TO_LOCALE(locale), error_code);
              if (error_code.isFailure()) {
                throw ICUError(error_code);
              }
