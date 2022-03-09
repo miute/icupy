@@ -46,9 +46,9 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
           "create_instance",
-          [](const Locale &loc) {
+          [](const _LocaleVariant &loc) {
             ErrorCode error_code;
-            auto result = Collator::createInstance(loc, error_code);
+            auto result = Collator::createInstance(VARIANT_TO_LOCALE(loc), error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -97,11 +97,19 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"), py::arg("no_of_levels"));
-  coll.def_static("get_display_name",
-                  py::overload_cast<const Locale &, const Locale &, UnicodeString &>(&Collator::getDisplayName),
-                  py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))
-      .def_static("get_display_name", py::overload_cast<const Locale &, UnicodeString &>(&Collator::getDisplayName),
-                  py::arg("object_locale"), py::arg("name"));
+  coll.def_static(
+          "get_display_name",
+          [](const _LocaleVariant &object_locale, const _LocaleVariant &display_locale,
+             UnicodeString &name) -> UnicodeString & {
+            return Collator::getDisplayName(VARIANT_TO_LOCALE(object_locale), VARIANT_TO_LOCALE(display_locale), name);
+          },
+          py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))
+      .def_static(
+          "get_display_name",
+          [](const _LocaleVariant &object_locale, UnicodeString &name) -> UnicodeString & {
+            return Collator::getDisplayName(VARIANT_TO_LOCALE(object_locale), name);
+          },
+          py::arg("object_locale"), py::arg("name"));
   coll.def_static(
       "get_equivalent_reorder_codes",
       [](int32_t reorder_code) {
@@ -118,10 +126,10 @@ void init_tblcoll(py::module &m) {
       py::arg("reorder_code"));
   coll.def_static(
       "get_functional_equivalent",
-      [](const char *keyword, const Locale &locale) {
+      [](const char *keyword, const _LocaleVariant &locale) {
         ErrorCode error_code;
         UBool is_available = true;
-        auto result = Collator::getFunctionalEquivalent(keyword, locale, is_available, error_code);
+        auto result = Collator::getFunctionalEquivalent(keyword, VARIANT_TO_LOCALE(locale), is_available, error_code);
         if (error_code.isFailure()) {
           throw ICUError(error_code);
         }

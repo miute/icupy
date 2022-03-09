@@ -153,12 +153,16 @@ def test_create_instance():
     assert isinstance(test1, RuleBasedCollator)
     rules1 = test1.get_rules()
 
+    test1a = Collator.create_instance(str(Locale.get_default()))
+    assert isinstance(test1a, RuleBasedCollator)
+    rules1a = test1a.get_rules()
+    assert rules1 == rules1a
+
     # [2]
     # static Collator *icu::Collator::createInstance(UErrorCode &err)
     test2 = Collator.create_instance()
     assert isinstance(test2, RuleBasedCollator)
     rules2 = test2.get_rules()
-
     assert rules1 == rules2
 
 
@@ -336,6 +340,24 @@ def test_get_display_name():
         assert id(result) == id(name1)
         assert name1 == "Japanese"
 
+        name1.remove()
+        result = Collator.get_display_name("ja", display_locale, name1)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name1)
+        assert name1 == "Japanese"
+
+        name1.remove()
+        result = Collator.get_display_name(object_locale, "en_US", name1)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name1)
+        assert name1 == "Japanese"
+
+        name1.remove()
+        result = Collator.get_display_name("ja", "en_US", name1)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name1)
+        assert name1 == "Japanese"
+
         # [2]
         # static UnicodeString &icu::Collator::getDisplayName(
         #       const Locale &objectLocale,
@@ -343,6 +365,12 @@ def test_get_display_name():
         # )
         name2 = UnicodeString()
         result = Collator.get_display_name(object_locale, name2)
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(name2)
+        assert name2 == "Japanese"
+
+        name2.remove()
+        result = Collator.get_display_name("ja", name2)
         assert isinstance(result, UnicodeString)
         assert id(result) == id(name2)
         assert name2 == "Japanese"
@@ -376,6 +404,13 @@ def test_get_functional_equivalent():
     # )
     result, is_available = Collator.get_functional_equivalent(
         "collation", Locale.get_japanese()
+    )
+    assert isinstance(result, Locale)
+    assert result == Locale.get_japanese()
+    assert is_available
+
+    result, is_available = Collator.get_functional_equivalent(
+        "collation", "ja"
     )
     assert isinstance(result, Locale)
     assert result == Locale.get_japanese()
