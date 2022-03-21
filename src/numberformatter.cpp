@@ -4,6 +4,10 @@
 #include <pybind11/stl.h>
 #include <unicode/numberformatter.h>
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+#include <unicode/unounclass.h>
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+
 using namespace icu;
 using namespace icu::number;
 
@@ -83,6 +87,17 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("appendable"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+  fn.def("get_noun_class", [](const FormattedNumber &self) {
+    ErrorCode error_code;
+    auto result = self.getNounClass(error_code);
+    if (error_code.isFailure()) {
+      throw ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fn.def("get_output_unit", [](const FormattedNumber &self) {
@@ -465,6 +480,11 @@ void init_numberformatter(py::module &, py::module &m2) {
   pre.def_static("fixed_fraction", &Precision::fixedFraction, py::arg("min_max_fraction_places"));
   pre.def_static("fixed_significant_digits", &Precision::fixedSignificantDigits, py::arg("min_max_significant_digits"));
   pre.def_static("increment", &Precision::increment, py::arg("rounding_increment"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+  pre.def_static("increment_exact", Precision::incrementExact, py::arg("mantissa"), py::arg("magnitude"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+
   pre.def_static("integer", &Precision::integer);
   pre.def_static("max_fraction", &Precision::maxFraction, py::arg("max_fraction_places"));
   pre.def_static("max_significant_digits", &Precision::maxSignificantDigits, py::arg("max_significant_digits"));

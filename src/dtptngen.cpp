@@ -97,7 +97,24 @@ void init_dtptngen(py::module &m) {
             return result;
           },
           py::arg("skeleton"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+  dtpg.def("get_date_time_format", py::overload_cast<>(&DateTimePatternGenerator::getDateTimeFormat, py::const_))
+      .def(
+          "get_date_time_format",
+          [](const DateTimePatternGenerator &self, UDateFormatStyle style) -> const UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.getDateTimeFormat(style, error_code);
+            if (error_code.isFailure()) {
+              throw ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("style"));
+#else  // U_ICU_VERSION_MAJOR_NUM <= 70
   dtpg.def("get_date_time_format", &DateTimePatternGenerator::getDateTimeFormat);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+
   dtpg.def("get_decimal", &DateTimePatternGenerator::getDecimal);
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   dtpg.def("get_default_hour_cycle", [](const DateTimePatternGenerator &self) {
@@ -179,11 +196,24 @@ void init_dtptngen(py::module &m) {
       },
       py::arg("field"), py::arg("value"));
   dtpg.def(
-      "set_date_time_format",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &date_time_format) {
-        self.setDateTimeFormat(VARIANT_TO_UNISTR(date_time_format));
-      },
-      py::arg("date_time_format"));
+          "set_date_time_format",
+          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &date_time_format) {
+            self.setDateTimeFormat(VARIANT_TO_UNISTR(date_time_format));
+          },
+          py::arg("date_time_format"))
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+      .def(
+          "set_date_time_format",
+          [](DateTimePatternGenerator &self, UDateFormatStyle style, const _UnicodeStringVariant &date_time_format) {
+            ErrorCode error_code;
+            self.setDateTimeFormat(style, VARIANT_TO_UNISTR(date_time_format), error_code);
+            if (error_code.isFailure()) {
+              throw ICUError(error_code);
+            }
+          },
+          py::arg("style"), py::arg("date_time_format"))
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+      ;
   dtpg.def(
       "set_decimal",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &decimal) {

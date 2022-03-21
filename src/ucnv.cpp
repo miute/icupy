@@ -67,6 +67,20 @@ void init_ucnv(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+  m.def(
+      "ucnv_clone",
+      [](_UConverterPtr &cnv) {
+        ErrorCode error_code;
+        auto p = ucnv_clone(cnv, error_code);
+        if (error_code.isFailure()) {
+          throw ICUError(error_code);
+        }
+        return std::make_unique<_UConverterPtr>(p);
+      },
+      py::arg("cnv"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+
   m.def(
       "ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); }, py::arg("converter"));
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"), py::arg("name2"));

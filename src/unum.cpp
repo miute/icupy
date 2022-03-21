@@ -110,6 +110,11 @@ void init_unum(py::module &m) {
       .value("UNUM_MEASURE_UNIT_FIELD", UNUM_MEASURE_UNIT_FIELD)
       .value("UNUM_COMPACT_FIELD", UNUM_COMPACT_FIELD)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+      .value("UNUM_APPROXIMATELY_SIGN_FIELD", UNUM_APPROXIMATELY_SIGN_FIELD,
+             "Approximately sign. In ICU 70, this was categorized under the generic SIGN field.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 

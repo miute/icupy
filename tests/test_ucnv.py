@@ -5,10 +5,10 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    UCNV_ESCAPE_C, UCNV_ESCAPE_XML_HEX, UCNV_FROM_U_CALLBACK_ESCAPE,
-    UCNV_LOCALE_OPTION_STRING, UCNV_TO_U_CALLBACK_ESCAPE,
-    UCNV_VERSION_OPTION_STRING, ConstVoidPtr, ICUError, Locale,
-    UConverterCallbackReason, UConverterFromUCallbackPtr,
+    U_ICU_VERSION_MAJOR_NUM, UCNV_ESCAPE_C, UCNV_ESCAPE_XML_HEX,
+    UCNV_FROM_U_CALLBACK_ESCAPE, UCNV_LOCALE_OPTION_STRING,
+    UCNV_TO_U_CALLBACK_ESCAPE, UCNV_VERSION_OPTION_STRING, ConstVoidPtr,
+    ICUError, Locale, UConverterCallbackReason, UConverterFromUCallbackPtr,
     UConverterFromUnicodeArgs, UConverterPlatform, UConverterToUCallbackPtr,
     UConverterToUnicodeArgs, UConverterType, UConverterUnicodeSet, UErrorCode,
     UnicodeSet, UnicodeString, u_strlen, ucnv_cb_from_u_write_bytes,
@@ -180,6 +180,28 @@ def test_api():
         assert result == "ibm-943_P130-1999"
 
     ucnv_flush_cache()
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
+def test_clone():
+    from icupy.icu import UCNV_ESCAPE_XML_DEC, ucnv_clone
+
+    with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv1:
+        test1 = UnicodeString("a\uff71b\U0001f338c", -1)
+
+        context = ConstVoidPtr(UCNV_ESCAPE_XML_DEC)
+        ucnv_set_from_ucall_back(cnv1, UCNV_FROM_U_CALLBACK_ESCAPE, context)
+
+        # UConverter *ucnv_clone(
+        #       const UConverter *cnv,
+        #       UErrorCode *status
+        # )
+        with gc(ucnv_clone(cnv1), ucnv_close) as cnv2:
+            dest = test1.extract(cnv1)  # utf-8 to ibm-943c
+            assert dest == b"a\xb1b&#127800;c"
+
+            dest = test1.extract(cnv2)  # utf-8 to ibm-943c
+            assert dest == b"a\xb1b&#127800;c"
 
 
 def test_deprecated_api():

@@ -117,13 +117,19 @@ def test_api():
         UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS,
     )
     assert isinstance(result, UnicodeString)
-    assert result == "MMMM d, h:mm a"
+    assert result in [
+        "MMMM d, h:mm a",  # ICU<=70
+        "MMMM d 'at' h:mm a",  # ICU>=71
+    ]
 
     result = gen1.get_best_pattern(
         "MMMMdjmm", UDateTimePatternMatchOptions.UDATPG_MATCH_NO_OPTIONS
     )
     assert isinstance(result, UnicodeString)
-    assert result == "MMMM d, h:mm a"
+    assert result in [
+        "MMMM d, h:mm a",  # ICU<=70
+        "MMMM d 'at' h:mm a",  # ICU>=71
+    ]
 
     # [2]
     # UnicodeString icu::DateTimePatternGenerator::getBestPattern(
@@ -132,11 +138,17 @@ def test_api():
     # )
     result = gen1.get_best_pattern(UnicodeString("MMMMdjmm"))
     assert isinstance(result, UnicodeString)
-    assert result == "MMMM d, h:mm a"
+    assert result in [
+        "MMMM d, h:mm a",  # ICU<=70
+        "MMMM d 'at' h:mm a",  # ICU>=71
+    ]
 
     result = gen1.get_best_pattern("MMMMdjmm")
     assert isinstance(result, UnicodeString)
-    assert result == "MMMM d, h:mm a"
+    assert result in [
+        "MMMM d, h:mm a",  # ICU<=70
+        "MMMM d 'at' h:mm a",  # ICU>=71
+    ]
 
     # const UnicodeString &icu::DateTimePatternGenerator::getDateTimeFormat()
     result = gen2.get_date_time_format()
@@ -259,6 +271,36 @@ def test_api():
     result = gen1.replace_field_types("d-M H:m", "MMMMddHHmm")
     assert isinstance(result, UnicodeString)
     assert result == "dd-MMMM H:m"
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
+def test_api_71():
+    from icupy.icu import UDateFormatStyle
+
+    dtpg = DateTimePatternGenerator.create_instance(Locale("en_US"))
+
+    # const UnicodeString &icu::DateTimePatternGenerator::getDateTimeFormat(
+    #       UDateFormatStyle style,
+    #       UErrorCode &status
+    # )
+    result = dtpg.get_date_time_format(UDateFormatStyle.UDAT_FULL)
+    assert isinstance(result, UnicodeString)
+    assert result == "{1} 'at' {0}"
+
+    # void icu::DateTimePatternGenerator::setDateTimeFormat(
+    #       UDateFormatStyle style,
+    #       const UnicodeString &dateTimeFormat,
+    #       UErrorCode &status
+    # )
+    dtpg.set_date_time_format(
+        UDateFormatStyle.UDAT_FULL, UnicodeString("{1}, {0}")
+    )
+    assert dtpg.get_date_time_format(UDateFormatStyle.UDAT_FULL) == "{1}, {0}"
+
+    dtpg.set_date_time_format(UDateFormatStyle.UDAT_FULL, "{1} 'at' {0}")
+    assert (
+        dtpg.get_date_time_format(UDateFormatStyle.UDAT_FULL) == "{1} 'at' {0}"
+    )
 
 
 def test_clone():

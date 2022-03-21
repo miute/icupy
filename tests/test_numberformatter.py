@@ -141,6 +141,23 @@ def test_formatted_number_68():
     assert unit.get_identifier() == "stone-and-pound"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
+def test_formatted_number_71():
+    from icupy.icu import NounClass
+
+    fmt = (
+        NumberFormatter.with_()
+        .usage("person")
+        .unit(MeasureUnit.get_kilogram())
+        .locale("en-GB")
+    )
+    num = fmt.format_double(80)
+    assert isinstance(num, FormattedNumber)
+
+    # NounClass icu::number::FormattedNumber::getNounClass(UErrorCode &status)
+    assert num.get_noun_class() == NounClass.OTHER
+
+
 def test_integer_width():
     # icu::number::IntegerWidth
     assert isinstance(IntegerWidth.zero_fill_to(3), IntegerWidth)
@@ -653,6 +670,17 @@ def test_precision_69():
         ),
         Precision,
     )
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
+def test_precision_71():
+    from icupy.icu.number import IncrementPrecision, Precision
+
+    # static IncrementPrecision icu::number::Precision::incrementExact(
+    #       uint64_t mantissa,
+    #       int16_t magnitude
+    # )
+    assert isinstance(Precision.increment_exact(50, -2), IncrementPrecision)
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")

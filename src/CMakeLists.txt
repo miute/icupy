@@ -111,6 +111,7 @@ pybind11_add_module(
     uniset.cpp
     unistr.cpp
     unorm2.cpp
+    unounclass.cpp
     unum.cpp
     unumberformatter.cpp
     unumberrangeformatter.cpp
