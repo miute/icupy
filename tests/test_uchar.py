@@ -189,6 +189,19 @@ def test_api():
     assert ublock_get_code(0x01C5) == UBlockCode.UBLOCK_LATIN_EXTENDED_B
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_api_70():
+    from icupy.icu import UCHAR_BASIC_EMOJI, u_string_has_binary_property
+
+    # UBool u_stringHasBinaryProperty(
+    #       const UChar *s,
+    #       int32_t length,
+    #       UProperty which
+    # )
+    assert u_string_has_binary_property("\U0001f338", UCHAR_BASIC_EMOJI)
+    assert not u_string_has_binary_property("\uff11", UCHAR_BASIC_EMOJI)
+
+
 def test_u_char_age():
     # void u_charAge(UChar32 c,
     #                UVersionInfo versionArray

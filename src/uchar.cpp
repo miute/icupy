@@ -1470,6 +1470,12 @@ void init_uchar(py::module &m) {
   m.def("u_is_uwhite_space", &u_isUWhiteSpace, py::arg("c"));
   m.def("u_is_whitespace", &u_isWhitespace, py::arg("c"));
   m.def("u_isxdigit", &u_isxdigit, py::arg("c"));
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  m.def(
+      "u_string_has_binary_property",
+      [](const char16_t *s, UProperty which) { return u_stringHasBinaryProperty(s, -1, which); }, py::arg("s"),
+      py::arg("which"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
   m.def("u_tolower", &u_tolower, py::arg("c"));
   m.def("u_totitle", &u_totitle, py::arg("c"));
   m.def("u_toupper", &u_toupper, py::arg("c"));
