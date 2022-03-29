@@ -30,7 +30,3 @@ if sys.platform.startswith("win"):
 from . import icu  # type: ignore
 
 __version__ = icu.VERSION_INFO
-
-# DEPRECATED: ICUException is deprecated. Use ICUError instead.
-# TODO: Remove ICUException in a future release.
-ICUException = icu.ICUError
