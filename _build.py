@@ -37,15 +37,6 @@ class CMakeBuild(build_ext):
         cmake_build_type = env.get("CMAKE_BUILD_TYPE", "Release")
         cfg = "Debug" if self.debug else cmake_build_type
 
-        env["CXXFLAGS"] = " ".join(
-            [
-                env.get("CXXFLAGS", "").strip(),
-                '-DVERSION_INFO=\\"{}\\"'.format(
-                    self.distribution.get_version()
-                ),
-            ]
-        ).strip()
-
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + extdir,
             "-DPYTHON_EXECUTABLE=" + sys.executable,

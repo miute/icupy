@@ -27,6 +27,4 @@ if sys.platform.startswith("win"):
         )
     del path
 
-from . import icu  # type: ignore
-
-__version__ = icu.VERSION_INFO
+from . import icu  # noqa: F401

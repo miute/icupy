@@ -327,8 +327,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utypes(m);
   init_uversion(m);
 
-  m.attr("VERSION_INFO") = VERSION_INFO; // VERSION_INFO is defined by _build.py or CMakeLists.txt
-
   // <unicode/umachine.h>
   m.attr("INT16_MAX") = INT16_MAX;
   m.attr("INT16_MIN") = INT16_MIN;
