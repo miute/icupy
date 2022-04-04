@@ -1,6 +1,8 @@
 import os
 import subprocess
 import sys
+from configparser import ConfigParser
+from pathlib import Path
 
 from setuptools import Extension
 from setuptools.command.build_ext import build_ext
@@ -142,12 +144,12 @@ class CMakeBuild(build_ext):
 
 
 def build(setup_kwargs):
-    src = (
-        setup_kwargs["package_dir"][""]
-        if "package_dir" in setup_kwargs
-        else ""
-    )
-    ext_modules = [CMakeExtension(setup_kwargs["name"], src)]
+    config = ConfigParser()
+    here = Path(__file__).parent.resolve()
+    config.read(here / "setup.cfg")
+    pairs = [x for x in config["options"]["package_dir"].split("\n") if x]
+    package_dir = dict([map(str.strip, x.split("=")) for x in pairs])
+    ext_modules = [CMakeExtension(config["metadata"]["name"], package_dir[""])]
     cmdclass = dict(build_ext=CMakeBuild)
     setup_kwargs.update(
         {
