@@ -1,4 +1,4 @@
-name: build wheels
+name: build wheels w/ ICU 71.1
 
 on:
   push:
