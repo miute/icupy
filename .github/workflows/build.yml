@@ -47,7 +47,7 @@ jobs:
         working-directory: build
         env:
           INSTALL_PREFIX: "${{github.workspace}}/build"
-          ICU4C_DIR: "extra.icu4c"
+          ICU4C_DIR: "icu4c"
         run: |
           curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}}
           7z x ${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
