@@ -42,7 +42,6 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE=" + sys.executable,
             "-DCMAKE_BUILD_TYPE=" + cfg,
         ]
-
         build_args = []
 
         if sys.platform.startswith("win"):
@@ -50,7 +49,7 @@ class CMakeBuild(build_ext):
                 env["ICU_ROOT"] = "C:\\icu"
                 self.warn(
                     "ICU_ROOT environment variable was not set. "
-                    "Using default '{}'.".format(env["ICU_ROOT"])
+                    "Using default {!r}.".format(env["ICU_ROOT"])
                 )
             cmake_args += [
                 "-Wno-dev",
@@ -102,12 +101,17 @@ class CMakeBuild(build_ext):
                 ]
 
         self.announce(
-            "-- CXXFLAGS environment variable: " + repr(env.get("CXXFLAGS")),
+            "-- CXX environment variable: {!r}".format(env.get("CXX")),
             level=2,
         )
         self.announce(
-            "-- CMake environment variables: "
-            + repr(
+            "-- CXXFLAGS environment variable: {!r}".format(
+                env.get("CXXFLAGS")
+            ),
+            level=2,
+        )
+        self.announce(
+            "-- CMake environment variables: {!r}".format(
                 [
                     "{}={}".format(k, v)
                     for k, v in env.items()
@@ -117,9 +121,11 @@ class CMakeBuild(build_ext):
             level=2,
         )
         self.announce(
-            "-- CMake build system options: " + repr(cmake_args), level=2
+            "-- CMake build system options: {!r}".format(cmake_args), level=2
         )
-        self.announce("-- CMake build options: " + repr(build_args), level=2)
+        self.announce(
+            "-- CMake build options: {!r}".format(build_args), level=2
+        )
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
