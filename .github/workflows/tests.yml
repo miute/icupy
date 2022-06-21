@@ -2,22 +2,12 @@ name: tests
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - 'main'
+    tags-ignore:
+      - '**'
   pull_request:
   workflow_dispatch:
-
-env:
-  # ICU 70.1
-  ICU_70_DL_PATH: "https://github.com/unicode-org/icu/releases/download/release-70-1"
-  ICU4C_70_UBUNTU_TGZ: "icu4c-70_1-Ubuntu-20.04-x64.tgz"
-  ICU4C_70_WIN64_ZIP: "icu4c-70_1-Win64-MSVC2019.zip"
-
-  # ICU 71.1
-  ICU_71_DL_PATH: "https://github.com/unicode-org/icu/releases/download/release-71-1"
-  ICU4C_71_UBUNTU_TGZ: "icu4c-71_1-Ubuntu20.04-x64.tgz"
-  ICU4C_71_WIN64_ZIP: "icu4c-71_1-Win64-MSVC2019.zip"
-
-  ICU4C_DIR: "icu4c"
 
 jobs:
   test:
@@ -26,128 +16,119 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, windows-2019]
-        icu: [icu-70.1, icu-71.1]
+        icu-version: ["70.1", "71.1"]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: "recursive"
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
 
-    - run: mkdir -p build
+      - run: mkdir -p build
 
-    - name: Set up requirements (Ubuntu)
-      if: startsWith(matrix.os, 'ubuntu')
-      run: |
-        sudo apt-get install -y lcov
-        echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" >> $GITHUB_ENV
-        echo "LD_LIBRARY_PATH=/usr/local/lib" >> $GITHUB_ENV
-        echo "CMAKE_GENERATOR=Unix Makefiles" >> $GITHUB_ENV
+      - name: Parse icu-versions.json
+        id: icu
+        shell: bash
+        run: |
+          latest=`cat ./icu-versions.json | jq -r .latest`
+          echo "latest=$latest"
+          echo "::set-output name=latest::$latest"
+          content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"${{matrix.icu-version}}\")"`
+          echo "icu4c=$content"
+          echo "::set-output name=icu4c::$content"
 
-    - name: Set up requirements (Windows)
-      if: startsWith(matrix.os, 'windows')
-      env:
-        INSTALL_PREFIX: "${{github.workspace}}/build"
-      run: |
-        echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
+      - name: Set up requirements (Ubuntu)
+        if: startsWith(matrix.os, 'ubuntu')
+        working-directory: build
+        run: |
+          sudo apt-get install -y lcov
+          curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}}
+          sudo tar zxf ${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
+          echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=/usr/local/lib" >> $GITHUB_ENV
+          echo "CMAKE_GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
-    - name: Set up ICU-70-Ubuntu
-      if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.icu, 'icu-70')
-      working-directory: build
-      run: |
-        curl -LO ${{env.ICU_70_DL_PATH}}/${{env.ICU4C_70_UBUNTU_TGZ}}
-        sudo tar zxf ${{env.ICU4C_70_UBUNTU_TGZ}} -C / --strip-components=2
+      - name: Set up requirements (Windows)
+        if: startsWith(matrix.os, 'windows')
+        working-directory: build
+        env:
+          INSTALL_PREFIX: "${{github.workspace}}/build"
+          ICU4C_DIR: "icu4c"
+        run: |
+          curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}}
+          7z x ${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
+          echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
-    - name: Set up ICU-71-Ubuntu
-      if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.icu, 'icu-71')
-      working-directory: build
-      run: |
-        curl -LO ${{env.ICU_71_DL_PATH}}/${{env.ICU4C_71_UBUNTU_TGZ}}
-        sudo tar zxf ${{env.ICU4C_71_UBUNTU_TGZ}} -C / --strip-components=2
+      - name: Set up Python ${{matrix.python-version}}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{matrix.python-version}}
 
-    - name: Set up ICU-70-Windows
-      if: startsWith(matrix.os, 'windows') && startsWith(matrix.icu, 'icu-70')
-      working-directory: build
-      run: |
-        curl -LO ${{env.ICU_70_DL_PATH}}/${{env.ICU4C_70_WIN64_ZIP}}
-        7z x ${{env.ICU4C_70_WIN64_ZIP}} -o${{env.ICU4C_DIR}}
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
 
-    - name: Set up ICU-71-Windows
-      if: startsWith(matrix.os, 'windows') && startsWith(matrix.icu, 'icu-71')
-      working-directory: build
-      run: |
-        curl -LO ${{env.ICU_71_DL_PATH}}/${{env.ICU4C_71_WIN64_ZIP}}
-        7z x ${{env.ICU4C_71_WIN64_ZIP}} -o${{env.ICU4C_DIR}}
+      - name: Install dependencies
+        run: |
+          python -m pip install tox tox-gh-actions
 
-    - name: Set up Python ${{matrix.python-version}}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{matrix.python-version}}
+      - name: Run tests
+        env:
+          PLATFORM: ${{matrix.os}}
+        run: |
+          python -m tox -c tox-coverage.ini
 
-    - name: Upgrade pip
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade setuptools
-
-    - name: Install dependencies
-      run: |
-        python -m pip install tox tox-gh-actions
-
-    - name: Run the tests after installing extension locally
-      env:
-        PLATFORM: ${{matrix.os}}
-      run: |
-        python -m tox -c tox-coverage.ini
-
-    - name: Store coverage data
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-data
-        path: |
-          coverage*.info
-          .coverage*
+      - name: Store coverage data
+        if: matrix.icu-version == steps.icu.outputs.latest
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-data
+          path: |
+            coverage*.info
+            .coverage*
 
   report:
     needs: test
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up requirements
-      run: |
-        sudo apt-get install -y lcov
+      - name: Set up requirements
+        run: |
+          sudo apt-get install -y lcov
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
 
-    - name: Upgrade pip
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade setuptools
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
 
-    - name: Install dependencies
-      run: |
-        python -m pip install tox
+      - name: Install dependencies
+        run: |
+          python -m pip install tox
 
-    - name: Restore coverage data
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-data
+      - name: Restore coverage data
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-data
 
-    - name: Report coverage statistics
-      run: |
-        python -m tox -c tox-coverage.ini -e cov,cov-cpp
+      - name: Report coverage statistics
+        run: |
+          python -m tox -c tox-coverage.ini -e cov,cov-cpp
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
 
-    - name: Store coverage report
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-report
-        path: |
-          coverage.xml
-          coverage-cpp.info
+      - name: Store coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            coverage-cpp.info
