@@ -8,6 +8,9 @@ using namespace icu;
 
 void init_measfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
+  //
+  // UMeasureFormatWidth
+  //
   py::enum_<UMeasureFormatWidth>(
       m, "UMeasureFormatWidth", py::arithmetic(),
       "Constants for various widths.\n\n"
@@ -22,8 +25,11 @@ void init_measfmt(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
+  //
   // icu::MeasureFormat
+  //
   py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat");
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   fmt.def(py::init([](const _LocaleVariant &locale, UMeasureFormatWidth width) {
             ErrorCode error_code;
@@ -34,18 +40,24 @@ void init_measfmt(py::module &m) {
             return result;
           }),
           py::arg("locale"), py::arg("width_"));
+
   // FIXME: Implement "icu::MeasureFormat::MeasureFormat(const Locale &locale, UMeasureFormatWidth width,
-  // NumberFormat *nfToAdopt, UErrorCode &status)".
+  //  NumberFormat *nfToAdopt, UErrorCode &status)".
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
   fmt.def(py::init<const MeasureFormat &>(), py::arg("other"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  fmt.def("__copy__", &MeasureFormat::clone)
-      .def(
-          "__deepcopy__", [](const MeasureFormat &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const MeasureFormat &self, const Format &other) { return self == other; }, py::arg("other"));
+  fmt.def("__copy__", &MeasureFormat::clone);
+
+  fmt.def(
+      "__deepcopy__", [](const MeasureFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  fmt.def(
+      "__eq__", [](const MeasureFormat &self, const Format &other) { return self == other; }, py::arg("other"));
+
   fmt.def("clone", &MeasureFormat::clone);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   fmt.def_static(
          "create_currency_format",
          [](const _LocaleVariant &locale) {
@@ -65,6 +77,7 @@ void init_measfmt(py::module &m) {
         }
         return result;
       });
+
   fmt.def(
          // [2] icu::MeasureFormat::format
          "format",
@@ -103,6 +116,7 @@ void init_measfmt(py::module &m) {
             return result;
           },
           py::arg("obj"), py::arg("append_to"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   fmt.def(
       "format_measure_per_unit",
@@ -149,6 +163,7 @@ void init_measfmt(py::module &m) {
       },
       py::arg("unit"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
+
   fmt.def(
          // [2] icu::Format::parseObject
          "parse_object",

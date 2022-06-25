@@ -9,6 +9,9 @@
 
 void init_unumberrangeformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UNumberRangeCollapse
+  //
   py::enum_<UNumberRangeCollapse>(m, "UNumberRangeCollapse", py::arithmetic(),
                                   "Defines how to merge fields that are identical across the range sign.")
       .value("UNUM_RANGE_COLLAPSE_AUTO", UNUM_RANGE_COLLAPSE_AUTO,
@@ -27,6 +30,9 @@ void init_unumberrangeformatter(py::module &m) {
              "kilograms\"")
       .export_values();
 
+  //
+  // UNumberRangeIdentityFallback
+  //
   py::enum_<UNumberRangeIdentityFallback>(
       m, "UNumberRangeIdentityFallback", py::arithmetic(),
       "Defines the behavior when the two numbers in the range are identical after rounding.\n\n"
@@ -48,6 +54,9 @@ void init_unumberrangeformatter(py::module &m) {
              "\xe2\x80\x93 $5\"")
       .export_values();
 
+  //
+  // UNumberRangeIdentityResult
+  //
   py::enum_<UNumberRangeIdentityResult>(
       m, "UNumberRangeIdentityResult", py::arithmetic(),
       "Used in the result class *FormattedNumberRange* to indicate to the user whether the numbers formatted in the "

@@ -4,6 +4,9 @@
 using namespace icu;
 
 void init_utmscale(py::module &m) {
+  //
+  // UDateTimeScale
+  //
   py::enum_<UDateTimeScale>(
       m, "UDateTimeScale", py::arithmetic(),
       "*UDateTimeScale* values are used to specify the time scale used for conversion into or out "
@@ -37,6 +40,9 @@ void init_utmscale(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UTimeScaleValue
+  //
   py::enum_<UTimeScaleValue>(
       m, "UTimeScaleValue", py::arithmetic(),
       "*UTimeScaleValue* values are used to specify the time scale values to *utmscale_get_time_scale_value*.")
@@ -62,6 +68,9 @@ void init_utmscale(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // Functions
+  //
   m.def(
       "utmscale_from_int64",
       [](int64_t other_time, UDateTimeScale time_scale) {
@@ -73,6 +82,7 @@ void init_utmscale(py::module &m) {
         return result;
       },
       py::arg("other_time"), py::arg("time_scale"));
+
   m.def(
       "utmscale_get_time_scale_value",
       [](UDateTimeScale time_scale, UTimeScaleValue value) {
@@ -84,6 +94,7 @@ void init_utmscale(py::module &m) {
         return result;
       },
       py::arg("time_scale"), py::arg("value"));
+
   m.def(
       "utmscale_to_int64",
       [](int64_t universal_time, UDateTimeScale time_scale) {

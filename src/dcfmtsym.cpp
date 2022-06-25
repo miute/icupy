@@ -6,9 +6,14 @@
 using namespace icu;
 
 void init_dcfmtsym(py::module &m) {
+  //
   // icu::DecimalFormatSymbols
+  //
   py::class_<DecimalFormatSymbols, UObject> dfs(m, "DecimalFormatSymbols");
 
+  //
+  // icu::DecimalFormatSymbols::ENumberFormatSymbol
+  //
   py::enum_<DecimalFormatSymbols::ENumberFormatSymbol>(dfs, "ENumberFormatSymbol", py::arithmetic(),
                                                        "Constants for specifying a number format symbol.")
       .value("DECIMAL_SEPARATOR_SYMBOL", DecimalFormatSymbols::kDecimalSeparatorSymbol, "The decimal separator.")
@@ -46,6 +51,9 @@ void init_dcfmtsym(py::module &m) {
       .value("FORMAT_SYMBOL_COUNT", DecimalFormatSymbols::kFormatSymbolCount, "Count symbol constants.")
       .export_values();
 
+  //
+  // icu::DecimalFormatSymbols
+  //
   dfs.def(
          // [1] DecimalFormatSymbols::DecimalFormatSymbols
          py::init([](const _LocaleVariant &locale) {
@@ -80,9 +88,12 @@ void init_dcfmtsym(py::module &m) {
           }))
       .def(
           // [4] DecimalFormatSymbols::DecimalFormatSymbols
-          py::init<const DecimalFormatSymbols &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
+          py::init<const DecimalFormatSymbols &>(), py::arg("other"));
+
+  dfs.def(py::self != py::self, py::arg("other"));
+
+  dfs.def(py::self == py::self, py::arg("other"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   dfs.def_static("create_with_last_resort_data", []() {
     ErrorCode error_code;
@@ -93,6 +104,7 @@ void init_dcfmtsym(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
+
   dfs.def("get_locale", py::overload_cast<>(&DecimalFormatSymbols::getLocale, py::const_))
       .def(
           "get_locale",
@@ -105,6 +117,7 @@ void init_dcfmtsym(py::module &m) {
             return result;
           },
           py::arg("type_"));
+
   dfs.def(
       "get_pattern_for_currency_spacing",
       [](const DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency) -> const UnicodeString & {
@@ -116,7 +129,9 @@ void init_dcfmtsym(py::module &m) {
         return result;
       },
       py::arg("type_"), py::arg("before_currency"));
+
   dfs.def("get_symbol", &DecimalFormatSymbols::getSymbol, py::arg("symbol"));
+
   dfs.def(
       "set_pattern_for_currency_spacing",
       [](DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency,
@@ -124,6 +139,7 @@ void init_dcfmtsym(py::module &m) {
         self.setPatternForCurrencySpacing(type, before_currency, VARIANT_TO_UNISTR(pattern));
       },
       py::arg("type_"), py::arg("before_currency"), py::arg("pattern"));
+
   dfs.def(
       "set_symbol",
       [](DecimalFormatSymbols &self, DecimalFormatSymbols::ENumberFormatSymbol symbol,

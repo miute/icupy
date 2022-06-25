@@ -6,8 +6,11 @@
 using namespace icu;
 
 void init_dtitvinf(py::module &m) {
+  //
   // icu::DateIntervalInfo
+  //
   py::class_<DateIntervalInfo> dii(m, "DateIntervalInfo");
+
   dii.def(py::init([](const _LocaleVariant &locale) {
             ErrorCode error_code;
             auto result = std::make_unique<DateIntervalInfo>(VARIANT_TO_LOCALE(locale), error_code);
@@ -17,15 +20,23 @@ void init_dtitvinf(py::module &m) {
             return result;
           }),
           py::arg("locale"))
-      .def(py::init<const DateIntervalInfo &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  dii.def("__copy__", &DateIntervalInfo::clone)
-      .def(
-          "__deepcopy__", [](const DateIntervalInfo &self, py::dict) { return self.clone(); }, py::arg("memo"));
+      .def(py::init<const DateIntervalInfo &>(), py::arg("other"));
+
+  dii.def(py::self != py::self, py::arg("other"));
+
+  dii.def(py::self == py::self, py::arg("other"));
+
+  dii.def("__copy__", &DateIntervalInfo::clone);
+
+  dii.def(
+      "__deepcopy__", [](const DateIntervalInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   dii.def("clone", &DateIntervalInfo::clone);
+
   dii.def("get_default_order", &DateIntervalInfo::getDefaultOrder);
+
   dii.def("get_fallback_interval_pattern", &DateIntervalInfo::getFallbackIntervalPattern, py::arg("result"));
+
   dii.def(
       "get_interval_pattern",
       [](const DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields field,
@@ -38,6 +49,7 @@ void init_dtitvinf(py::module &m) {
         return string;
       },
       py::arg("skeleton"), py::arg("field"), py::arg("result"));
+
   dii.def(
       "set_fallback_interval_pattern",
       [](DateIntervalInfo &self, const _UnicodeStringVariant &fallback_pattern) {
@@ -48,6 +60,7 @@ void init_dtitvinf(py::module &m) {
         }
       },
       py::arg("fallback_pattern"));
+
   dii.def(
       "set_interval_pattern",
       [](DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields lrg_diff_cal_unit,

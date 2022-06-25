@@ -142,6 +142,7 @@ ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_cod
 ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 
 PYBIND11_MODULE(MODULE_NAME, m) {
+  // ICUError exception
   static py::exception<ICUError> ex(m, "ICUError");
   py::register_exception_translator([](std::exception_ptr p) {
     try {
@@ -162,23 +163,31 @@ PYBIND11_MODULE(MODULE_NAME, m) {
     }
   });
 
-  // icu::number
+  // icu::number namespace
   auto number = m.def_submodule("number");
 
+  // icu::UMemory
   py::class_<UMemory>(m, "UMemory");
 
+  // icu::UObject
   py::class_<UObject, UMemory>(m, "UObject");
 
+  // icu::Locale
   py::class_<Locale, UObject> loc(m, "Locale");
 
+  // icu::Replaceable
   py::class_<Replaceable, UObject> rep(m, "Replaceable");
 
+  // icu::UnicodeString
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
 
+  // icu::Formattable
   py::class_<Formattable, UObject> fmt(m, "Formattable");
 
+  // icu::PluralRules
   py::class_<PluralRules, UObject> pr(m, "PluralRules");
 
+  // _UnicodeStringVector
   py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
       .def(py::init<size_t>(), py::arg("n"));
 

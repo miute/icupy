@@ -2,6 +2,9 @@
 #include <unicode/unum.h>
 
 void init_unum(py::module &m) {
+  //
+  // UCurrencySpacing
+  //
   py::enum_<UCurrencySpacing>(m, "UCurrencySpacing", py::arithmetic(), "Constants for specifying currency spacing.")
       .value("UNUM_CURRENCY_MATCH", UNUM_CURRENCY_MATCH)
       .value("UNUM_CURRENCY_SURROUNDING_MATCH", UNUM_CURRENCY_SURROUNDING_MATCH)
@@ -9,6 +12,9 @@ void init_unum(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
+  // UNumberCompactStyle
+  //
   py::enum_<UNumberCompactStyle>(m, "UNumberCompactStyle", py::arithmetic(),
                                  "Constants for specifying short or long format.")
       .value("UNUM_SHORT", UNUM_SHORT)
@@ -16,6 +22,9 @@ void init_unum(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
+  //
+  // UNumberFormatAttribute
+  //
   py::enum_<UNumberFormatAttribute>(m, "UNumberFormatAttribute", py::arithmetic(),
                                     "The possible *UNumberFormat* numeric attributes.")
       .value("UNUM_PARSE_INT_ONLY", UNUM_PARSE_INT_ONLY, "Parse integers only.")
@@ -47,20 +56,17 @@ void init_unum(py::module &m) {
              "Example: setting the scale to -4, 123 formats as \"0.0123\"\n\n  "
              "This setting is analogous to *get_multiplier_scale()* and *set_multiplier_scale()* in decimfmt.h.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
       .value("UNUM_MINIMUM_GROUPING_DIGITS", UNUM_MINIMUM_GROUPING_DIGITS,
              "Minimum grouping digits; most commonly set to 2 to print \"1000\" instead of \"1,000\".\n\n  "
              "See *DecimalFormat::get_minimum_grouping_digits()*.\n\n  "
              "For better control over grouping strategies, use UNumberFormatter.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UNUM_CURRENCY_USAGE", UNUM_CURRENCY_USAGE,
              "if this attribute is set to 0, it is set to *UNUM_CURRENCY_STANDARD* purpose, otherwise it is "
              "*UNUM_CASH_CURRENCY* purpose Default: 0 (*UNUM_CURRENCY_STANDARD* purpose)")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .value("UNUM_FORMAT_FAIL_IF_MORE_THAN_MAX_DIGITS", UNUM_FORMAT_FAIL_IF_MORE_THAN_MAX_DIGITS,
              "If 1, specifies that if setting the \"max integer digits\" attribute would truncate a value, set an "
@@ -73,7 +79,6 @@ void init_unum(py::module &m) {
              "If the pattern does contain an exponent, this attribute has no effect. Has no effect on formatting. "
              "Default: 0 (unset)")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UNUM_PARSE_DECIMAL_MARK_REQUIRED", UNUM_PARSE_DECIMAL_MARK_REQUIRED,
              "if this attribute is set to 1, specifies that, if the pattern contains a decimal mark the input is "
@@ -81,7 +86,6 @@ void init_unum(py::module &m) {
              "If this attribute is set to 0, specifies that input does not have to contain a decimal mark. Has no "
              "effect on formatting. Default: 0 (unset)")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
       .value("UNUM_PARSE_CASE_SENSITIVE", UNUM_PARSE_CASE_SENSITIVE,
              "Parsing: if set to 1, parsing is sensitive to case (lowercase/uppercase).")
@@ -92,6 +96,9 @@ void init_unum(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
+  //
+  // UNumberFormatFields
+  //
   py::enum_<UNumberFormatFields>(
       m, "UNumberFormatFields", py::arithmetic(),
       "*FieldPosition* and *UFieldPosition* selectors for format fields defined by *NumberFormat* and *UNumberFormat*.")
@@ -110,7 +117,6 @@ void init_unum(py::module &m) {
       .value("UNUM_MEASURE_UNIT_FIELD", UNUM_MEASURE_UNIT_FIELD)
       .value("UNUM_COMPACT_FIELD", UNUM_COMPACT_FIELD)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
       .value("UNUM_APPROXIMATELY_SIGN_FIELD", UNUM_APPROXIMATELY_SIGN_FIELD,
              "Approximately sign. In ICU 70, this was categorized under the generic SIGN field.")
@@ -119,6 +125,9 @@ void init_unum(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
+  //
+  // UNumberFormatMinimumGroupingDigits
+  //
   py::enum_<UNumberFormatMinimumGroupingDigits>(
       m, "UNumberFormatMinimumGroupingDigits", py::arithmetic(),
       "Selectors with special numeric values to use locale default minimum grouping digits for the "
@@ -132,6 +141,9 @@ void init_unum(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
+  //
+  // UNumberFormatPadPosition
+  //
   py::enum_<UNumberFormatPadPosition>(m, "UNumberFormatPadPosition", py::arithmetic(),
                                       "The possible number format pad positions.")
       .value("UNUM_PAD_BEFORE_PREFIX", UNUM_PAD_BEFORE_PREFIX)
@@ -140,6 +152,9 @@ void init_unum(py::module &m) {
       .value("UNUM_PAD_AFTER_SUFFIX", UNUM_PAD_AFTER_SUFFIX)
       .export_values();
 
+  //
+  // UNumberFormatRoundingMode
+  //
   py::enum_<UNumberFormatRoundingMode>(
       m, "UNumberFormatRoundingMode", py::arithmetic(),
       "The possible number format rounding modes.\n\n"
@@ -161,6 +176,9 @@ void init_unum(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
       .export_values();
 
+  //
+  // UNumberFormatStyle
+  //
   py::enum_<UNumberFormatStyle>(m, "UNumberFormatStyle", py::arithmetic(), "The possible number format styles.")
       .value("UNUM_PATTERN_DECIMAL", UNUM_PATTERN_DECIMAL, "Decimal format defined by a pattern string.")
       .value("UNUM_DECIMAL", UNUM_DECIMAL, "Decimal format (\"normal\" style).")
@@ -194,12 +212,10 @@ void init_unum(py::module &m) {
              "(*UNUM_CURRENCY*).\n\n  "
              "Overrides any style specified using -cf- key in locale.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UNUM_CASH_CURRENCY", UNUM_CASH_CURRENCY,
              "Currency format with a currency symbol given CASH usage, e.g., \"NT$3\" instead of \"NT$3.23\".")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
       .value("UNUM_DECIMAL_COMPACT_SHORT", UNUM_DECIMAL_COMPACT_SHORT,
              "Decimal format expressed using compact notation (short form, corresponds to "
@@ -218,6 +234,9 @@ void init_unum(py::module &m) {
       .value("UNUM_IGNORE", UNUM_IGNORE, "Alias for *UNUM_PATTERN_DECIMAL*.")
       .export_values();
 
+  //
+  // UNumberFormatSymbol
+  //
   py::enum_<UNumberFormatSymbol>(m, "UNumberFormatSymbol", py::arithmetic(),
                                  "Constants for specifying a number format symbol.")
       .value("UNUM_DECIMAL_SEPARATOR_SYMBOL", UNUM_DECIMAL_SEPARATOR_SYMBOL, "The decimal separator.")
@@ -253,6 +272,9 @@ void init_unum(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .export_values();
 
+  //
+  // UNumberFormatTextAttribute
+  //
   py::enum_<UNumberFormatTextAttribute>(m, "UNumberFormatTextAttribute", py::arithmetic(),
                                         "The possible *UNumberFormat* text attributes.")
       .value("UNUM_POSITIVE_PREFIX", UNUM_POSITIVE_PREFIX, "Positive prefix.")

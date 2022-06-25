@@ -7,8 +7,13 @@
 using namespace icu;
 
 void init_parseerr(py::module &m) {
+  //
+  // UParseError
+  //
   py::class_<UParseError> pe(m, "UParseError");
+
   pe.def(py::init<>());
+
   pe.def("__repr__", [](const UParseError &self) {
     std::stringstream ss;
     std::string pre_context, post_context;
@@ -22,8 +27,12 @@ void init_parseerr(py::module &m) {
     ss << ")";
     return ss.str();
   });
+
   pe.def_readonly("line", &UParseError::line);
+
   pe.def_readonly("offset", &UParseError::offset);
+
   pe.def_readonly("post_context", &UParseError::postContext, py::return_value_policy::reference);
+
   pe.def_readonly("pre_context", &UParseError::preContext, py::return_value_policy::reference);
 }

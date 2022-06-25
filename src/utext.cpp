@@ -55,9 +55,13 @@ void _UTextVector::clear() {
 }
 
 void init_utext(py::module &m) {
+  //
   // _UTextPtr
+  //
   py::class_<_UTextPtr> utp(m, "_UTextPtr");
+
   utp.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+
   utp.def("__repr__", [](const _UTextPtr &self) {
     std::stringstream ss;
     ss << "_UTextPtr(UText(";
@@ -68,36 +72,51 @@ void init_utext(py::module &m) {
     ss << "))";
     return ss.str();
   });
+
   utp.def_property_readonly("magic", [](const _UTextPtr &self) { return self->magic; });
+
   utp.def_property_readonly("flags", [](const _UTextPtr &self) { return self->flags; });
+
   utp.def_property_readonly("provider_properties", [](const _UTextPtr &self) { return self->providerProperties; });
+
   utp.def_property_readonly("p_funcs",
                             [](const _UTextPtr &self) { return reinterpret_cast<std::intptr_t>(self->pFuncs); });
 
+  //
   // _UTextVector
+  //
   py::class_<_UTextVector> utv(m, "UTextVector");
-  utv.def(py::init<size_t>(), py::arg("n")).def(py::init<std::list<UnicodeString>>(), py::arg("iterable"));
-  utv.def("__del__", &_UTextVector::clear)
-      .def(
-          "__getitem__",
-          [](const _UTextVector &self, size_t index) {
-            if (index < 0) {
-              index += self.size();
-            }
-            if (index < 0 || index >= self.size()) {
-              throw py::index_error(std::to_string(index));
-            }
-            return self[index];
-          },
-          py::arg("index"))
-      .def(
-          "__iter__", [](const _UTextVector &self) { return py::make_iterator(self.begin(), self.end()); },
-          py::keep_alive<0, 1>())
-      .def("__len__", &_UTextVector::size);
 
+  utv.def(py::init<size_t>(), py::arg("n")).def(py::init<std::list<UnicodeString>>(), py::arg("iterable"));
+
+  utv.def("__del__", &_UTextVector::clear);
+
+  utv.def(
+      "__getitem__",
+      [](const _UTextVector &self, size_t index) {
+        if (index < 0) {
+          index += self.size();
+        }
+        if (index < 0 || index >= self.size()) {
+          throw py::index_error(std::to_string(index));
+        }
+        return self[index];
+      },
+      py::arg("index"));
+
+  utv.def(
+      "__iter__", [](const _UTextVector &self) { return py::make_iterator(self.begin(), self.end()); },
+      py::keep_alive<0, 1>());
+
+  utv.def("__len__", &_UTextVector::size);
+
+  //
+  // Functions
+  //
   m.def(
       "utext_char32_at", [](_UTextPtr &ut, int64_t native_index) { return utext_char32At(ut, native_index); },
       py::arg("ut"), py::arg("native_index"));
+
   m.def(
       "utext_clone",
       [](std::optional<_UTextPtr> &dest, const _UTextPtr &src, UBool deep, UBool read_only) {
@@ -109,6 +128,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p, src.get_source());
       },
       py::arg("dest"), py::arg("src"), py::arg("deep"), py::arg("read_only"));
+
   m.def(
       "utext_close",
       [](_UTextPtr &ut) -> std::optional<_UTextPtr> {
@@ -120,6 +140,7 @@ void init_utext(py::module &m) {
         return ut;
       },
       py::arg("ut"));
+
   m.def(
       "utext_copy",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, int64_t dest_index, UBool move) {
@@ -130,10 +151,13 @@ void init_utext(py::module &m) {
         }
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), py::arg("dest_index"), py::arg("move"));
+
   m.def(
       "utext_current32", [](_UTextPtr &ut) { return utext_current32(ut); }, py::arg("ut"));
+
   m.def(
       "utext_equals", [](_UTextPtr &a, _UTextPtr &b) { return utext_equals(a, b); }, py::arg("a"), py::arg("b"));
+
   m.def(
       "utext_extract",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit) {
@@ -148,28 +172,39 @@ void init_utext(py::module &m) {
         return result;
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"));
+
   m.def(
       "utext_freeze", [](_UTextPtr &ut) { utext_freeze(ut); }, py::arg("ut"));
+
   m.def(
       "utext_get_native_index", [](_UTextPtr &ut) { return utext_getNativeIndex(ut); }, py::arg("ut"));
+
   m.def(
       "utext_get_previous_native_index", [](_UTextPtr &ut) { return utext_getPreviousNativeIndex(ut); }, py::arg("ut"));
+
   m.def(
       "utext_has_meta_data", [](_UTextPtr &ut) { return utext_hasMetaData(ut); }, py::arg("ut"));
+
   m.def(
       "utext_is_length_expensive", [](_UTextPtr &ut) { return utext_isLengthExpensive(ut); }, py::arg("ut"));
+
   m.def(
       "utext_is_writable", [](_UTextPtr &ut) { return utext_isWritable(ut); }, py::arg("ut"));
+
   m.def(
       "utext_move_index32", [](_UTextPtr &ut, int32_t delta) { return utext_moveIndex32(ut, delta); }, py::arg("ut"),
       py::arg("delta"));
+
   m.def(
       "utext_native_length", [](_UTextPtr &ut) { return utext_nativeLength(ut); }, py::arg("ut"));
+
   m.def(
       "utext_next32", [](_UTextPtr &ut) { return utext_next32(ut); }, py::arg("ut"));
+
   m.def(
       "utext_next32_from", [](_UTextPtr &ut, int64_t native_index) { return utext_next32From(ut, native_index); },
       py::arg("ut"), py::arg("native_index"));
+
   m.def(
       "utext_open_character_iterator",
       [](std::optional<_UTextPtr> &ut, CharacterIterator *ci) {
@@ -181,6 +216,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p);
       },
       py::arg("ut"), py::arg("ci"));
+
   m.def(
       "utext_open_const_unicode_string",
       [](std::optional<_UTextPtr> &ut, const UnicodeString *s) {
@@ -192,6 +228,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p);
       },
       py::arg("ut"), py::arg("s"));
+
   m.def(
       "utext_open_replaceable",
       [](std::optional<_UTextPtr> &ut, Replaceable *rep) {
@@ -203,6 +240,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p);
       },
       py::arg("ut"), py::arg("rep"));
+
   m.def(
       "utext_open_uchars",
       [](std::optional<_UTextPtr> &ut, const UChar *s, int64_t length) {
@@ -215,6 +253,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p, text);
       },
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length"));
+
   m.def(
       "utext_open_unicode_string",
       [](std::optional<_UTextPtr> &ut, UnicodeString *s) {
@@ -226,6 +265,7 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p);
       },
       py::arg("ut"), py::arg("s"));
+
   m.def(
       "utext_open_utf8",
       [](std::optional<_UTextPtr> &ut, const char *s, int64_t length) {
@@ -238,12 +278,15 @@ void init_utext(py::module &m) {
         return std::make_unique<_UTextPtr>(p, text);
       },
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length"));
+
   m.def(
       "utext_previous32", [](_UTextPtr &ut) { return utext_previous32(ut); }, py::arg("ut"));
+
   m.def(
       "utext_previous32_from",
       [](_UTextPtr &ut, int64_t native_index) { return utext_previous32From(ut, native_index); }, py::arg("ut"),
       py::arg("native_index"));
+
   m.def(
       "utext_replace",
       [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, const UChar *replacement_text,
@@ -257,9 +300,11 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), py::arg("replacement_text"),
       py::arg("replacement_length"));
+
   m.def(
       "utext_set_native_index", [](_UTextPtr &ut, int64_t native_index) { utext_setNativeIndex(ut, native_index); },
       py::arg("ut"), py::arg("native_index"));
+
   // FIXME: Add support for UText text provider.
   /*
   m.def(

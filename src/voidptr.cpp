@@ -29,9 +29,14 @@ py::object _ConstVoidPtr::to_object() const {
 }
 
 void init_voidptr(py::module &m) {
+  //
+  // _ConstVoidPtr
+  //
   py::class_<_ConstVoidPtr> cvp(m, "ConstVoidPtr");
+
   cvp.def(py::init<std::nullptr_t>(), py::arg("value") = nullptr)
       .def(py::init<const char *>(), py::arg("value").none(false))
-      .def(py::init<py::object>(), py::arg("value"));
+      .def(py::init<const py::object &>(), py::arg("value"));
+
   cvp.def("to_object", &_ConstVoidPtr::to_object);
 }

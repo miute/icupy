@@ -7,6 +7,9 @@ using namespace icu;
 
 void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
+  //
+  // UMeasurePrefix
+  //
   py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(),
                             "Enumeration for SI and binary prefixes, e.g. "
                             "\"kilo-\", \"nano-\", \"mebi-\".\n\n"
@@ -48,6 +51,9 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
+  //
+  // UMeasureUnitComplexity
+  //
   py::enum_<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity", py::arithmetic(),
                                     "Enumeration for unit complexity.\n\n"
                                     "There are three levels:\n\n"
@@ -65,21 +71,28 @@ void init_measunit(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
+  //
   // icu::MeasureUnit
+  //
   py::class_<MeasureUnit, UObject> mu(m, "MeasureUnit");
+
   mu.def(py::init<const MeasureUnit &>(), py::arg("other"));
-  mu.def("__copy__", &MeasureUnit::clone)
-      .def(
-          "__deepcopy__", [](const MeasureUnit &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const MeasureUnit &self, const UObject &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
+
+  mu.def("__copy__", &MeasureUnit::clone);
+
+  mu.def(
+      "__deepcopy__", [](const MeasureUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  mu.def(
+      "__eq__", [](const MeasureUnit &self, const UObject &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-      .def(
-          "__ne__", [](const MeasureUnit &self, const UObject &other) { return self != other; }, py::is_operator(),
-          py::arg("other"))
+  mu.def(
+      "__ne__", [](const MeasureUnit &self, const UObject &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-      ;
+
   mu.def("clone", &MeasureUnit::clone);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
@@ -91,6 +104,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_arc_minute", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createArcMinute(error_code);
@@ -99,6 +113,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_arc_second", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createArcSecond(error_code);
@@ -107,6 +122,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_celsius", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCelsius(error_code);
@@ -115,6 +131,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_centimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCentimeter(error_code);
@@ -123,6 +140,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_kilometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicKilometer(error_code);
@@ -131,6 +149,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_mile", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicMile(error_code);
@@ -139,6 +158,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_day", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDay(error_code);
@@ -147,6 +167,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_degree", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDegree(error_code);
@@ -155,6 +176,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_fahrenheit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFahrenheit(error_code);
@@ -163,6 +185,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_foot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFoot(error_code);
@@ -171,6 +194,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gforce", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGForce(error_code);
@@ -179,6 +203,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gram", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGram(error_code);
@@ -187,6 +212,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_hectare", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectare(error_code);
@@ -195,6 +221,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_hectopascal", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectopascal(error_code);
@@ -203,6 +230,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_horsepower", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHorsepower(error_code);
@@ -211,6 +239,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_hour", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHour(error_code);
@@ -219,6 +248,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createInch(error_code);
@@ -227,6 +257,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_inch_hg", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createInchHg(error_code);
@@ -235,6 +266,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilogram", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilogram(error_code);
@@ -243,6 +275,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilometer(error_code);
@@ -251,6 +284,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilometer_per_hour", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilometerPerHour(error_code);
@@ -259,6 +293,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilowatt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilowatt(error_code);
@@ -267,6 +302,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_light_year", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLightYear(error_code);
@@ -275,6 +311,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_liter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiter(error_code);
@@ -283,6 +320,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_meter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeter(error_code);
@@ -291,6 +329,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_meter_per_second", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeterPerSecond(error_code);
@@ -299,6 +338,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mile", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMile(error_code);
@@ -307,6 +347,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mile_per_hour", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerHour(error_code);
@@ -315,6 +356,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_millibar", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillibar(error_code);
@@ -323,6 +365,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_millimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimeter(error_code);
@@ -331,6 +374,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_millisecond", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillisecond(error_code);
@@ -339,6 +383,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_minute", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMinute(error_code);
@@ -347,6 +392,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_month", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMonth(error_code);
@@ -355,6 +401,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_ounce", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createOunce(error_code);
@@ -363,6 +410,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_picometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPicometer(error_code);
@@ -371,6 +419,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pound", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPound(error_code);
@@ -379,6 +428,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_second", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSecond(error_code);
@@ -387,6 +437,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_foot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareFoot(error_code);
@@ -395,6 +446,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_kilometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareKilometer(error_code);
@@ -403,6 +455,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_meter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareMeter(error_code);
@@ -411,6 +464,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_mile", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareMile(error_code);
@@ -419,6 +473,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_watt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createWatt(error_code);
@@ -427,6 +482,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_week", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createWeek(error_code);
@@ -435,6 +491,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_yard", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createYard(error_code);
@@ -443,6 +500,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_year", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createYear(error_code);
@@ -451,6 +509,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static(
         "get_available",
         [](const char *type) {
@@ -476,6 +535,7 @@ void init_measunit(py::module &m) {
         }
         return result;
       });
+
   mu.def_static("get_available_types", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::getAvailableTypes(error_code);
@@ -484,7 +544,9 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def("get_subtype", &MeasureUnit::getSubtype);
+
   mu.def("get_type", &MeasureUnit::getType);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
@@ -497,6 +559,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_ampere", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createAmpere(error_code);
@@ -505,6 +568,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_astronomical_unit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createAstronomicalUnit(error_code);
@@ -513,6 +577,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_bit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createBit(error_code);
@@ -521,6 +586,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_bushel", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createBushel(error_code);
@@ -529,6 +595,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_byte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createByte(error_code);
@@ -537,6 +604,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_calorie", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCalorie(error_code);
@@ -545,6 +613,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_carat", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCarat(error_code);
@@ -553,6 +622,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_centiliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCentiliter(error_code);
@@ -561,6 +631,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_centimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicCentimeter(error_code);
@@ -569,6 +640,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_foot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicFoot(error_code);
@@ -577,6 +649,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicInch(error_code);
@@ -585,6 +658,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_meter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicMeter(error_code);
@@ -593,6 +667,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cubic_yard", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicYard(error_code);
@@ -601,6 +676,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cup", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCup(error_code);
@@ -609,6 +685,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_deciliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDeciliter(error_code);
@@ -617,6 +694,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_decimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDecimeter(error_code);
@@ -625,6 +703,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_fathom", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFathom(error_code);
@@ -633,6 +712,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_fluid_ounce", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFluidOunce(error_code);
@@ -641,6 +721,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_foodcalorie", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFoodcalorie(error_code);
@@ -649,6 +730,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_furlong", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFurlong(error_code);
@@ -657,6 +739,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gallon", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGallon(error_code);
@@ -665,6 +748,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gigabit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigabit(error_code);
@@ -673,6 +757,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gigabyte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigabyte(error_code);
@@ -681,6 +766,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gigahertz", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigahertz(error_code);
@@ -689,6 +775,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_gigawatt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigawatt(error_code);
@@ -697,6 +784,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_hectoliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectoliter(error_code);
@@ -705,6 +793,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_hertz", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHertz(error_code);
@@ -713,6 +802,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_joule", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createJoule(error_code);
@@ -721,6 +811,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_karat", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKarat(error_code);
@@ -729,6 +820,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kelvin", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKelvin(error_code);
@@ -737,6 +829,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilobit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilobit(error_code);
@@ -745,6 +838,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilobyte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilobyte(error_code);
@@ -753,6 +847,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilocalorie", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilocalorie(error_code);
@@ -761,6 +856,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilohertz", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilohertz(error_code);
@@ -769,6 +865,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilojoule", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilojoule(error_code);
@@ -777,6 +874,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilowatt_hour", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilowattHour(error_code);
@@ -785,6 +883,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_liter_per_kilometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiterPerKilometer(error_code);
@@ -793,6 +892,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_lux", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLux(error_code);
@@ -801,6 +901,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megabit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegabit(error_code);
@@ -809,6 +910,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megabyte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegabyte(error_code);
@@ -817,6 +919,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megahertz", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegahertz(error_code);
@@ -825,6 +928,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megaliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegaliter(error_code);
@@ -833,6 +937,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megawatt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegawatt(error_code);
@@ -841,6 +946,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_meter_per_second_squared", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeterPerSecondSquared(error_code);
@@ -849,6 +955,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_metric_ton", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMetricTon(error_code);
@@ -857,6 +964,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_microgram", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrogram(error_code);
@@ -865,6 +973,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_micrometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrometer(error_code);
@@ -873,6 +982,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_microsecond", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrosecond(error_code);
@@ -881,6 +991,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mile_per_gallon", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerGallon(error_code);
@@ -889,6 +1000,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_milliampere", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliampere(error_code);
@@ -897,6 +1009,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_milligram", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilligram(error_code);
@@ -905,6 +1018,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_milliliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliliter(error_code);
@@ -913,6 +1027,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_millimeter_of_mercury", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimeterOfMercury(error_code);
@@ -921,6 +1036,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_milliwatt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliwatt(error_code);
@@ -929,6 +1045,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_nanometer", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createNanometer(error_code);
@@ -937,6 +1054,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_nanosecond", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createNanosecond(error_code);
@@ -945,6 +1063,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_nautical_mile", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createNauticalMile(error_code);
@@ -953,6 +1072,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_ohm", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createOhm(error_code);
@@ -961,6 +1081,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_ounce_troy", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createOunceTroy(error_code);
@@ -969,6 +1090,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_parsec", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createParsec(error_code);
@@ -977,6 +1099,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pint", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPint(error_code);
@@ -985,6 +1108,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pound_per_square_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundPerSquareInch(error_code);
@@ -993,6 +1117,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_quart", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createQuart(error_code);
@@ -1001,6 +1126,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_radian", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createRadian(error_code);
@@ -1009,6 +1135,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_centimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareCentimeter(error_code);
@@ -1017,6 +1144,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareInch(error_code);
@@ -1025,6 +1153,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_square_yard", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareYard(error_code);
@@ -1033,6 +1162,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_stone", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createStone(error_code);
@@ -1041,6 +1171,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_tablespoon", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createTablespoon(error_code);
@@ -1049,6 +1180,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_teaspoon", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createTeaspoon(error_code);
@@ -1057,6 +1189,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_terabit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createTerabit(error_code);
@@ -1065,6 +1198,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_terabyte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createTerabyte(error_code);
@@ -1073,6 +1207,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_ton", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createTon(error_code);
@@ -1081,6 +1216,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_volt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createVolt(error_code);
@@ -1100,6 +1236,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_cup_metric", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createCupMetric(error_code);
@@ -1108,6 +1245,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_generic_temperature", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGenericTemperature(error_code);
@@ -1116,6 +1254,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_knot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKnot(error_code);
@@ -1124,6 +1263,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_liter_per_100_kilometers", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiterPer100Kilometers(error_code);
@@ -1132,6 +1272,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mile_scandinavian", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMileScandinavian(error_code);
@@ -1140,6 +1281,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pint_metric", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPintMetric(error_code);
@@ -1148,6 +1290,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_revolution_angle", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createRevolutionAngle(error_code);
@@ -1167,6 +1310,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mile_per_gallon_imperial", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerGallonImperial(error_code);
@@ -1175,6 +1319,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_milligram_per_deciliter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilligramPerDeciliter(error_code);
@@ -1183,6 +1328,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_millimole_per_liter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimolePerLiter(error_code);
@@ -1191,6 +1337,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_part_per_million", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPartPerMillion(error_code);
@@ -1221,6 +1368,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_percent", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPercent(error_code);
@@ -1229,6 +1377,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_permille", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPermille(error_code);
@@ -1237,6 +1386,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_petabyte", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPetabyte(error_code);
@@ -1256,6 +1406,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_british_thermal_unit", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createBritishThermalUnit(error_code);
@@ -1264,6 +1415,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dalton", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDalton(error_code);
@@ -1272,6 +1424,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_day_person", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDayPerson(error_code);
@@ -1280,6 +1433,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dunam", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDunam(error_code);
@@ -1288,6 +1442,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_earth_mass", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createEarthMass(error_code);
@@ -1296,6 +1451,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_electronvolt", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createElectronvolt(error_code);
@@ -1304,6 +1460,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_fluid_ounce_imperial", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createFluidOunceImperial(error_code);
@@ -1312,6 +1469,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_kilopascal", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilopascal(error_code);
@@ -1320,6 +1478,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megapascal", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegapascal(error_code);
@@ -1328,6 +1487,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_mole", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMole(error_code);
@@ -1336,6 +1496,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_month_person", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMonthPerson(error_code);
@@ -1344,6 +1505,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_newton", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createNewton(error_code);
@@ -1352,6 +1514,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_newton_meter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createNewtonMeter(error_code);
@@ -1360,6 +1523,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_permyriad", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPermyriad(error_code);
@@ -1368,6 +1532,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pound_foot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundFoot(error_code);
@@ -1376,6 +1541,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pound_force", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundForce(error_code);
@@ -1384,6 +1550,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_solar_luminosity", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarLuminosity(error_code);
@@ -1392,6 +1559,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_solar_mass", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarMass(error_code);
@@ -1400,6 +1568,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_solar_radius", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarRadius(error_code);
@@ -1408,6 +1577,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_week_person", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createWeekPerson(error_code);
@@ -1416,6 +1586,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_year_person", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createYearPerson(error_code);
@@ -1424,166 +1595,327 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("get_acre", &MeasureUnit::getAcre);
+
   mu.def_static("get_acre_foot", &MeasureUnit::getAcreFoot);
+
   mu.def_static("get_ampere", &MeasureUnit::getAmpere);
+
   mu.def_static("get_arc_minute", &MeasureUnit::getArcMinute);
+
   mu.def_static("get_arc_second", &MeasureUnit::getArcSecond);
+
   mu.def_static("get_astronomical_unit", &MeasureUnit::getAstronomicalUnit);
+
   mu.def_static("get_atmosphere", &MeasureUnit::getAtmosphere);
+
   mu.def_static("get_barrel", &MeasureUnit::getBarrel);
+
   mu.def_static("get_bit", &MeasureUnit::getBit);
+
   mu.def_static("get_british_thermal_unit", &MeasureUnit::getBritishThermalUnit);
+
   mu.def_static("get_bushel", &MeasureUnit::getBushel);
+
   mu.def_static("get_byte", &MeasureUnit::getByte);
+
   mu.def_static("get_calorie", &MeasureUnit::getCalorie);
+
   mu.def_static("get_carat", &MeasureUnit::getCarat);
+
   mu.def_static("get_celsius", &MeasureUnit::getCelsius);
+
   mu.def_static("get_centiliter", &MeasureUnit::getCentiliter);
+
   mu.def_static("get_centimeter", &MeasureUnit::getCentimeter);
+
   mu.def_static("get_century", &MeasureUnit::getCentury);
+
   mu.def_static("get_cubic_centimeter", &MeasureUnit::getCubicCentimeter);
+
   mu.def_static("get_cubic_foot", &MeasureUnit::getCubicFoot);
+
   mu.def_static("get_cubic_inch", &MeasureUnit::getCubicInch);
+
   mu.def_static("get_cubic_kilometer", &MeasureUnit::getCubicKilometer);
+
   mu.def_static("get_cubic_meter", &MeasureUnit::getCubicMeter);
+
   mu.def_static("get_cubic_mile", &MeasureUnit::getCubicMile);
+
   mu.def_static("get_cubic_yard", &MeasureUnit::getCubicYard);
+
   mu.def_static("get_cup", &MeasureUnit::getCup);
+
   mu.def_static("get_cup_metric", &MeasureUnit::getCupMetric);
+
   mu.def_static("get_dalton", &MeasureUnit::getDalton);
+
   mu.def_static("get_day", &MeasureUnit::getDay);
+
   mu.def_static("get_day_person", &MeasureUnit::getDayPerson);
+
   mu.def_static("get_deciliter", &MeasureUnit::getDeciliter);
+
   mu.def_static("get_decimeter", &MeasureUnit::getDecimeter);
+
   mu.def_static("get_degree", &MeasureUnit::getDegree);
+
   mu.def_static("get_dunam", &MeasureUnit::getDunam);
+
   mu.def_static("get_earth_mass", &MeasureUnit::getEarthMass);
+
   mu.def_static("get_electronvolt", &MeasureUnit::getElectronvolt);
+
   mu.def_static("get_fahrenheit", &MeasureUnit::getFahrenheit);
+
   mu.def_static("get_fathom", &MeasureUnit::getFathom);
+
   mu.def_static("get_fluid_ounce", &MeasureUnit::getFluidOunce);
+
   mu.def_static("get_fluid_ounce_imperial", &MeasureUnit::getFluidOunceImperial);
+
   mu.def_static("get_foodcalorie", &MeasureUnit::getFoodcalorie);
+
   mu.def_static("get_foot", &MeasureUnit::getFoot);
+
   mu.def_static("get_furlong", &MeasureUnit::getFurlong);
+
   mu.def_static("get_gallon", &MeasureUnit::getGallon);
+
   mu.def_static("get_gallon_imperial", &MeasureUnit::getGallonImperial);
+
   mu.def_static("get_generic_temperature", &MeasureUnit::getGenericTemperature);
+
   mu.def_static("get_gforce", &MeasureUnit::getGForce);
+
   mu.def_static("get_gigabit", &MeasureUnit::getGigabit);
+
   mu.def_static("get_gigabyte", &MeasureUnit::getGigabyte);
+
   mu.def_static("get_gigahertz", &MeasureUnit::getGigahertz);
+
   mu.def_static("get_gigawatt", &MeasureUnit::getGigawatt);
+
   mu.def_static("get_gram", &MeasureUnit::getGram);
+
   mu.def_static("get_hectare", &MeasureUnit::getHectare);
+
   mu.def_static("get_hectoliter", &MeasureUnit::getHectoliter);
+
   mu.def_static("get_hectopascal", &MeasureUnit::getHectopascal);
+
   mu.def_static("get_hertz", &MeasureUnit::getHertz);
+
   mu.def_static("get_horsepower", &MeasureUnit::getHorsepower);
+
   mu.def_static("get_hour", &MeasureUnit::getHour);
+
   mu.def_static("get_inch", &MeasureUnit::getInch);
+
   mu.def_static("get_inch_hg", &MeasureUnit::getInchHg);
+
   mu.def_static("get_joule", &MeasureUnit::getJoule);
+
   mu.def_static("get_karat", &MeasureUnit::getKarat);
+
   mu.def_static("get_kelvin", &MeasureUnit::getKelvin);
+
   mu.def_static("get_kilobit", &MeasureUnit::getKilobit);
+
   mu.def_static("get_kilobyte", &MeasureUnit::getKilobyte);
+
   mu.def_static("get_kilocalorie", &MeasureUnit::getKilocalorie);
+
   mu.def_static("get_kilogram", &MeasureUnit::getKilogram);
+
   mu.def_static("get_kilohertz", &MeasureUnit::getKilohertz);
+
   mu.def_static("get_kilojoule", &MeasureUnit::getKilojoule);
+
   mu.def_static("get_kilometer", &MeasureUnit::getKilometer);
+
   mu.def_static("get_kilometer_per_hour", &MeasureUnit::getKilometerPerHour);
+
   mu.def_static("get_kilopascal", &MeasureUnit::getKilopascal);
+
   mu.def_static("get_kilowatt", &MeasureUnit::getKilowatt);
+
   mu.def_static("get_kilowatt_hour", &MeasureUnit::getKilowattHour);
+
   mu.def_static("get_knot", &MeasureUnit::getKnot);
+
   mu.def_static("get_light_year", &MeasureUnit::getLightYear);
+
   mu.def_static("get_liter", &MeasureUnit::getLiter);
+
   mu.def_static("get_liter_per_100_kilometers", &MeasureUnit::getLiterPer100Kilometers);
+
   mu.def_static("get_liter_per_kilometer", &MeasureUnit::getLiterPerKilometer);
+
   mu.def_static("get_lux", &MeasureUnit::getLux);
+
   mu.def_static("get_megabit", &MeasureUnit::getMegabit);
+
   mu.def_static("get_megabyte", &MeasureUnit::getMegabyte);
+
   mu.def_static("get_megahertz", &MeasureUnit::getMegahertz);
+
   mu.def_static("get_megaliter", &MeasureUnit::getMegaliter);
+
   mu.def_static("get_megapascal", &MeasureUnit::getMegapascal);
+
   mu.def_static("get_megawatt", &MeasureUnit::getMegawatt);
+
   mu.def_static("get_meter", &MeasureUnit::getMeter);
+
   mu.def_static("get_meter_per_second", &MeasureUnit::getMeterPerSecond);
+
   mu.def_static("get_meter_per_second_squared", &MeasureUnit::getMeterPerSecondSquared);
+
   mu.def_static("get_metric_ton", &MeasureUnit::getMetricTon);
+
   mu.def_static("get_microgram", &MeasureUnit::getMicrogram);
+
   mu.def_static("get_micrometer", &MeasureUnit::getMicrometer);
+
   mu.def_static("get_microsecond", &MeasureUnit::getMicrosecond);
+
   mu.def_static("get_mile", &MeasureUnit::getMile);
+
   mu.def_static("get_mile_per_gallon", &MeasureUnit::getMilePerGallon);
+
   mu.def_static("get_mile_per_gallon_imperial", &MeasureUnit::getMilePerGallonImperial);
+
   mu.def_static("get_mile_per_hour", &MeasureUnit::getMilePerHour);
+
   mu.def_static("get_mile_scandinavian", &MeasureUnit::getMileScandinavian);
+
   mu.def_static("get_milliampere", &MeasureUnit::getMilliampere);
+
   mu.def_static("get_millibar", &MeasureUnit::getMillibar);
+
   mu.def_static("get_milligram", &MeasureUnit::getMilligram);
+
   mu.def_static("get_milligram_per_deciliter", &MeasureUnit::getMilligramPerDeciliter);
+
   mu.def_static("get_milliliter", &MeasureUnit::getMilliliter);
+
   mu.def_static("get_millimeter", &MeasureUnit::getMillimeter);
+
   mu.def_static("get_millimeter_of_mercury", &MeasureUnit::getMillimeterOfMercury);
+
   mu.def_static("get_millimole_per_liter", &MeasureUnit::getMillimolePerLiter);
+
   mu.def_static("get_millisecond", &MeasureUnit::getMillisecond);
+
   mu.def_static("get_milliwatt", &MeasureUnit::getMilliwatt);
+
   mu.def_static("get_minute", &MeasureUnit::getMinute);
+
   mu.def_static("get_mole", &MeasureUnit::getMole);
+
   mu.def_static("get_month", &MeasureUnit::getMonth);
+
   mu.def_static("get_month_person", &MeasureUnit::getMonthPerson);
+
   mu.def_static("get_nanometer", &MeasureUnit::getNanometer);
+
   mu.def_static("get_nanosecond", &MeasureUnit::getNanosecond);
+
   mu.def_static("get_nautical_mile", &MeasureUnit::getNauticalMile);
+
   mu.def_static("get_newton", &MeasureUnit::getNewton);
+
   mu.def_static("get_newton_meter", &MeasureUnit::getNewtonMeter);
+
   mu.def_static("get_ohm", &MeasureUnit::getOhm);
+
   mu.def_static("get_ounce", &MeasureUnit::getOunce);
+
   mu.def_static("get_ounce_troy", &MeasureUnit::getOunceTroy);
+
   mu.def_static("get_parsec", &MeasureUnit::getParsec);
+
   mu.def_static("get_part_per_million", &MeasureUnit::getPartPerMillion);
+
   mu.def_static("get_percent", &MeasureUnit::getPercent);
+
   mu.def_static("get_permille", &MeasureUnit::getPermille);
+
   mu.def_static("get_permyriad", &MeasureUnit::getPermyriad);
+
   mu.def_static("get_petabyte", &MeasureUnit::getPetabyte);
+
   mu.def_static("get_picometer", &MeasureUnit::getPicometer);
+
   mu.def_static("get_pint", &MeasureUnit::getPint);
+
   mu.def_static("get_pint_metric", &MeasureUnit::getPintMetric);
+
   mu.def_static("get_point", &MeasureUnit::getPoint);
+
   mu.def_static("get_pound", &MeasureUnit::getPound);
+
   mu.def_static("get_pound_foot", &MeasureUnit::getPoundFoot);
+
   mu.def_static("get_pound_force", &MeasureUnit::getPoundForce);
+
   mu.def_static("get_pound_per_square_inch", &MeasureUnit::getPoundPerSquareInch);
+
   mu.def_static("get_quart", &MeasureUnit::getQuart);
+
   mu.def_static("get_radian", &MeasureUnit::getRadian);
+
   mu.def_static("get_revolution_angle", &MeasureUnit::getRevolutionAngle);
+
   mu.def_static("get_second", &MeasureUnit::getSecond);
+
   mu.def_static("get_solar_luminosity", &MeasureUnit::getSolarLuminosity);
+
   mu.def_static("get_solar_mass", &MeasureUnit::getSolarMass);
+
   mu.def_static("get_solar_radius", &MeasureUnit::getSolarRadius);
+
   mu.def_static("get_square_centimeter", &MeasureUnit::getSquareCentimeter);
+
   mu.def_static("get_square_foot", &MeasureUnit::getSquareFoot);
+
   mu.def_static("get_square_inch", &MeasureUnit::getSquareInch);
+
   mu.def_static("get_square_kilometer", &MeasureUnit::getSquareKilometer);
+
   mu.def_static("get_square_meter", &MeasureUnit::getSquareMeter);
+
   mu.def_static("get_square_mile", &MeasureUnit::getSquareMile);
+
   mu.def_static("get_square_yard", &MeasureUnit::getSquareYard);
+
   mu.def_static("get_stone", &MeasureUnit::getStone);
+
   mu.def_static("get_tablespoon", &MeasureUnit::getTablespoon);
+
   mu.def_static("get_teaspoon", &MeasureUnit::getTeaspoon);
+
   mu.def_static("get_terabit", &MeasureUnit::getTerabit);
+
   mu.def_static("get_terabyte", &MeasureUnit::getTerabyte);
+
   mu.def_static("get_ton", &MeasureUnit::getTon);
+
   mu.def_static("get_volt", &MeasureUnit::getVolt);
+
   mu.def_static("get_watt", &MeasureUnit::getWatt);
+
   mu.def_static("get_week", &MeasureUnit::getWeek);
+
   mu.def_static("get_week_person", &MeasureUnit::getWeekPerson);
+
   mu.def_static("get_yard", &MeasureUnit::getYard);
+
   mu.def_static("get_year", &MeasureUnit::getYear);
+
   mu.def_static("get_year_person", &MeasureUnit::getYearPerson);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -1596,6 +1928,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_decade", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDecade(error_code);
@@ -1604,6 +1937,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dot_per_centimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDotPerCentimeter(error_code);
@@ -1612,6 +1946,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dot_per_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDotPerInch(error_code);
@@ -1620,6 +1955,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_em", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createEm(error_code);
@@ -1628,6 +1964,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_megapixel", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegapixel(error_code);
@@ -1636,6 +1973,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pascal", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPascal(error_code);
@@ -1644,6 +1982,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pixel", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixel(error_code);
@@ -1652,6 +1991,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pixel_per_centimeter", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixelPerCentimeter(error_code);
@@ -1660,6 +2000,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pixel_per_inch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixelPerInch(error_code);
@@ -1668,6 +2009,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_therm_us", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createThermUs(error_code);
@@ -1676,16 +2018,27 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("get_bar", &MeasureUnit::getBar);
+
   mu.def_static("get_decade", &MeasureUnit::getDecade);
+
   mu.def_static("get_dot_per_centimeter", &MeasureUnit::getDotPerCentimeter);
+
   mu.def_static("get_dot_per_inch", &MeasureUnit::getDotPerInch);
+
   mu.def_static("get_em", &MeasureUnit::getEm);
+
   mu.def_static("get_megapixel", &MeasureUnit::getMegapixel);
+
   mu.def_static("get_pascal", &MeasureUnit::getPascal);
+
   mu.def_static("get_pixel", &MeasureUnit::getPixel);
+
   mu.def_static("get_pixel_per_centimeter", &MeasureUnit::getPixelPerCentimeter);
+
   mu.def_static("get_pixel_per_inch", &MeasureUnit::getPixelPerInch);
+
   mu.def_static("get_therm_us", &MeasureUnit::getThermUs);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
@@ -1701,6 +2054,7 @@ void init_measunit(py::module &m) {
         return result;
       },
       py::arg("identifier"));
+
   mu.def("get_complexity", [](const MeasureUnit &self) {
     ErrorCode error_code;
     auto result = self.getComplexity(error_code);
@@ -1709,6 +2063,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def("get_dimensionality", [](const MeasureUnit &self) {
     ErrorCode error_code;
     auto result = self.getDimensionality(error_code);
@@ -1717,7 +2072,9 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def("get_identifier", &MeasureUnit::getIdentifier);
+
   mu.def(
       "product",
       [](const MeasureUnit &self, const MeasureUnit &other) {
@@ -1729,6 +2086,7 @@ void init_measunit(py::module &m) {
         return result;
       },
       py::arg("other"));
+
   mu.def("reciprocal", [](const MeasureUnit &self) {
     ErrorCode error_code;
     auto result = self.reciprocal(error_code);
@@ -1737,6 +2095,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def(
       "with_dimensionality",
       [](const MeasureUnit &self, int32_t dimensionality) {
@@ -1759,6 +2118,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dessert_spoon", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDessertSpoon(error_code);
@@ -1767,6 +2127,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dessert_spoon_imperial", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDessertSpoonImperial(error_code);
@@ -1775,6 +2136,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dot", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDot(error_code);
@@ -1783,6 +2145,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_dram", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDram(error_code);
@@ -1791,6 +2154,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_drop", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createDrop(error_code);
@@ -1799,6 +2163,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_earth_radius", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createEarthRadius(error_code);
@@ -1807,6 +2172,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_grain", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createGrain(error_code);
@@ -1815,6 +2181,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("create_item", []() {
     ErrorCode error_code;
@@ -1825,6 +2192,7 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   mu.def_static("create_jigger", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createJigger(error_code);
@@ -1833,6 +2201,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("create_kilowatt_hour_per_100_kilometer", []() {
     ErrorCode error_code;
@@ -1843,6 +2212,7 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   mu.def_static("create_lumen", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createLumen(error_code);
@@ -1851,6 +2221,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_pinch", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPinch(error_code);
@@ -1859,6 +2230,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("create_quart_imperial", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createQuartImperial(error_code);
@@ -1867,24 +2239,39 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("get_candela", &MeasureUnit::getCandela);
+
   mu.def_static("get_dessert_spoon", &MeasureUnit::getDessertSpoon);
+
   mu.def_static("get_dessert_spoon_imperial", &MeasureUnit::getDessertSpoonImperial);
+
   mu.def_static("get_dot", &MeasureUnit::getDot);
+
   mu.def_static("get_dram", &MeasureUnit::getDram);
+
   mu.def_static("get_drop", &MeasureUnit::getDrop);
+
   mu.def_static("get_earth_radius", &MeasureUnit::getEarthRadius);
+
   mu.def_static("get_grain", &MeasureUnit::getGrain);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("get_item", &MeasureUnit::getItem);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   mu.def_static("get_jigger", &MeasureUnit::getJigger);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   mu.def_static("get_kilowatt_hour_per_100_kilometer", &MeasureUnit::getKilowattHourPer100Kilometer);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   mu.def_static("get_lumen", &MeasureUnit::getLumen);
+
   mu.def_static("get_pinch", &MeasureUnit::getPinch);
+
   mu.def_static("get_quart_imperial", &MeasureUnit::getQuartImperial);
+
   mu.def("split_to_single_units", [](const MeasureUnit &self) {
     ErrorCode error_code;
     auto pair = self.splitToSingleUnits(error_code);
@@ -1908,7 +2295,9 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def_static("get_milligram_of_glucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
+
   mu.def("get_prefix", [](const MeasureUnit &self) {
     ErrorCode error_code;
     auto result = self.getPrefix(error_code);
@@ -1917,6 +2306,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
   mu.def(
       "with_prefix",
       [](const MeasureUnit &self, UMeasurePrefix prefix) {

@@ -6,9 +6,13 @@
 using namespace icu;
 
 void init_numsys(py::module &m) {
+  //
   // icu::NumberingSystem
+  //
   py::class_<NumberingSystem, UObject> ns(m, "NumberingSystem");
+
   ns.def(py::init<const NumberingSystem &>(), py::arg("other"));
+
   ns.def_static(
         // [1] NumberingSystem::createInstance
         "create_instance",
@@ -44,6 +48,7 @@ void init_numsys(py::module &m) {
             }
             return result;
           });
+
   ns.def_static(
       "create_instance_by_name",
       [](const char *name) {
@@ -55,6 +60,7 @@ void init_numsys(py::module &m) {
         return result;
       },
       py::arg("name"));
+
   ns.def_static("get_available_names", []() {
     ErrorCode error_code;
     auto result = NumberingSystem::getAvailableNames(error_code);
@@ -63,8 +69,12 @@ void init_numsys(py::module &m) {
     }
     return result;
   });
+
   ns.def("get_description", &NumberingSystem::getDescription);
+
   ns.def("get_name", &NumberingSystem::getName);
+
   ns.def("get_radix", &NumberingSystem::getRadix);
+
   ns.def("is_algorithmic", &NumberingSystem::isAlgorithmic);
 }

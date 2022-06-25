@@ -10,9 +10,14 @@
 using namespace icu;
 
 void init_tblcoll(py::module &m) {
+  //
   // icu::Collator
+  //
   py::class_<Collator, UObject> coll(m, "Collator");
 
+  //
+  // icu::Collator::ECollationStrength
+  //
   py::enum_<Collator::ECollationStrength>(
       coll, "ECollationStrength", py::arithmetic(),
       "Base letter represents a primary difference.\n\n"
@@ -36,6 +41,9 @@ void init_tblcoll(py::module &m) {
       .export_values();
 
 #ifndef U_FORCE_HIDE_DEPRECATED_API
+  //
+  // icu::Collator::EComparisonResult
+  //
   py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult", py::arithmetic(),
                                          "**Deprecated:** ICU 2.6. Use C enum UCollationResult defined in ucol.h")
       .value("LESS", Collator::LESS)
@@ -44,6 +52,9 @@ void init_tblcoll(py::module &m) {
       .export_values();
 #endif // U_FORCE_HIDE_DEPRECATED_API
 
+  //
+  // icu::Collator
+  //
   coll.def_static(
           "create_instance",
           [](const _LocaleVariant &loc) {
@@ -63,12 +74,14 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       });
+
   coll.def(
       "equals",
       [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
         return self.equals(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
       },
       py::arg("source"), py::arg("target"));
+
   coll.def_static(
       "get_available_locales",
       []() {
@@ -81,6 +94,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   coll.def_static(
       "get_bound",
       [](const std::vector<uint8_t> &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
@@ -97,6 +111,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"), py::arg("no_of_levels"));
+
   coll.def_static(
           "get_display_name",
           [](const _LocaleVariant &object_locale, const _LocaleVariant &display_locale,
@@ -110,6 +125,7 @@ void init_tblcoll(py::module &m) {
             return Collator::getDisplayName(VARIANT_TO_LOCALE(object_locale), name);
           },
           py::arg("object_locale"), py::arg("name"));
+
   coll.def_static(
       "get_equivalent_reorder_codes",
       [](int32_t reorder_code) {
@@ -124,6 +140,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("reorder_code"));
+
   coll.def_static(
       "get_functional_equivalent",
       [](const char *keyword, const _LocaleVariant &locale) {
@@ -136,6 +153,7 @@ void init_tblcoll(py::module &m) {
         return py::make_tuple(result, is_available);
       },
       py::arg("keyword"), py::arg("locale"));
+
   coll.def_static("get_keywords", []() {
     ErrorCode error_code;
     auto result = Collator::getKeywords(error_code);
@@ -144,6 +162,7 @@ void init_tblcoll(py::module &m) {
     }
     return result;
   });
+
   coll.def_static(
       "get_keyword_values",
       [](const char *keyword) {
@@ -155,6 +174,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("keyword"));
+
   coll.def_static(
       "get_keyword_values_for_locale",
       [](const char *keyword, const _LocaleVariant &locale, UBool commonly_used) {
@@ -167,25 +187,31 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"));
+
   coll.def(
       "greater",
       [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
         return self.greater(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
       },
       py::arg("source"), py::arg("target"));
+
   coll.def(
       "greater_or_equal",
       [](const Collator &self, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
         return self.greaterOrEqual(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
       },
       py::arg("source"), py::arg("target"));
+
   // TODO: Implement "static URegistryKey icu::Collator::registerFactory(CollatorFactory *toAdopt, UErrorCode &status)".
   // TODO: Implement "static URegistryKey icu::Collator::registerInstance(Collator *toAdopt, const Locale &locale,
-  // UErrorCode &status)".
+  //  UErrorCode &status)".
   // TODO: Implement "static UBool icu::Collator::unregister(URegistryKey key, UErrorCode &status)".
 
+  //
   // icu::RuleBasedCollator
+  //
   py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator");
+
   rbc.def(py::init([](const _UnicodeStringVariant &rules) {
             ErrorCode error_code;
             auto result = std::make_unique<RuleBasedCollator>(VARIANT_TO_UNISTR(rules), error_code);
@@ -240,13 +266,19 @@ void init_tblcoll(py::module &m) {
              }
              return result;
            }),
-           py::keep_alive<0, 1>(), py::keep_alive<0, 3>(), py::arg("bin"), py::arg("length"), py::arg("base"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  rbc.def("__copy__", &RuleBasedCollator::clone)
-      .def(
-          "__deepcopy__", [](const RuleBasedCollator &self, py::dict) { return self.clone(); }, py::arg("memo"));
+           py::keep_alive<0, 1>(), py::keep_alive<0, 3>(), py::arg("bin"), py::arg("length"), py::arg("base"));
+
+  rbc.def(py::self != py::self, py::arg("other"));
+
+  rbc.def(py::self == py::self, py::arg("other"));
+
+  rbc.def("__copy__", &RuleBasedCollator::clone);
+
+  rbc.def(
+      "__deepcopy__", [](const RuleBasedCollator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   rbc.def("clone", &RuleBasedCollator::clone);
+
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
     ErrorCode error_code;
     const auto capacity = self.cloneBinary(nullptr, 0, error_code);
@@ -258,6 +290,7 @@ void init_tblcoll(py::module &m) {
     }
     return py::bytes(reinterpret_cast<char *>(buffer.data()), capacity);
   });
+
   rbc.def(
          "compare",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length, const char16_t *target,
@@ -308,6 +341,7 @@ void init_tblcoll(py::module &m) {
           py::arg("s_iter"), py::arg("t_iter"))
       */
       ;
+
   rbc.def("create_collation_element_iterator",
           py::overload_cast<const CharacterIterator &>(&RuleBasedCollator::createCollationElementIterator, py::const_),
           py::arg("source"))
@@ -317,6 +351,7 @@ void init_tblcoll(py::module &m) {
             return self.createCollationElementIterator(VARIANT_TO_UNISTR(source));
           },
           py::arg("source"));
+
   rbc.def(
       "get_attribute",
       [](const RuleBasedCollator &self, UColAttribute attr) {
@@ -328,6 +363,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("attr"));
+
   rbc.def(
          "get_collation_key",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length,
@@ -351,9 +387,11 @@ void init_tblcoll(py::module &m) {
             return result;
           },
           py::arg("source"), py::arg("key"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   rbc.def("get_max_variable", &RuleBasedCollator::getMaxVariable);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   rbc.def("get_reorder_codes", [](const RuleBasedCollator &self) {
     ErrorCode error_code;
     const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
@@ -365,9 +403,11 @@ void init_tblcoll(py::module &m) {
     }
     return result;
   });
+
   rbc.def("get_rules", py::overload_cast<>(&RuleBasedCollator::getRules, py::const_))
       .def("get_rules", py::overload_cast<UColRuleOption, UnicodeString &>(&RuleBasedCollator::getRules, py::const_),
            py::arg("delta"), py::arg("buffer"));
+
   rbc.def(
          "get_sort_key",
          [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length) {
@@ -386,6 +426,7 @@ void init_tblcoll(py::module &m) {
             return result;
           },
           py::arg("source"));
+
   rbc.def("get_tailored_set", [](const RuleBasedCollator &self) {
     ErrorCode error_code;
     auto result = self.getTailoredSet(error_code);
@@ -394,6 +435,7 @@ void init_tblcoll(py::module &m) {
     }
     return result;
   });
+
   rbc.def("get_variable_top", [](const RuleBasedCollator &self) {
     ErrorCode error_code;
     auto result = self.getVariableTop(error_code);
@@ -402,13 +444,16 @@ void init_tblcoll(py::module &m) {
     }
     return result;
   });
+
   rbc.def("get_version", [](const RuleBasedCollator &self) {
     UVersionInfo info;
     self.getVersion(info);
     std::vector<uint8_t> result(info, info + sizeof(info));
     return result;
   });
+
   rbc.def("hash_code", &RuleBasedCollator::hashCode);
+
   rbc.def(
       "set_attribute",
       [](RuleBasedCollator &self, UColAttribute attr, UColAttributeValue value) {
@@ -419,6 +464,7 @@ void init_tblcoll(py::module &m) {
         }
       },
       py::arg("attr"), py::arg("value"));
+
   rbc.def(
       "set_max_variable",
       [](RuleBasedCollator &self, UColReorderCode group) -> Collator & {
@@ -430,6 +476,7 @@ void init_tblcoll(py::module &m) {
         return result;
       },
       py::arg("group"));
+
   rbc.def(
       "set_reorder_codes",
       [](RuleBasedCollator &self, const std::vector<int32_t> &reorder_codes, int32_t reorder_codes_length) {

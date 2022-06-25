@@ -7,8 +7,11 @@
 using namespace icu;
 
 void init_currpinf(py::module &m) {
+  //
   // icu::CurrencyPluralInfo
+  //
   py::class_<CurrencyPluralInfo, UObject> cpi(m, "CurrencyPluralInfo");
+
   cpi.def(py::init([]() {
        ErrorCode error_code;
        auto result = std::make_unique<CurrencyPluralInfo>(error_code);
@@ -26,20 +29,29 @@ void init_currpinf(py::module &m) {
              return result;
            }),
            py::arg("locale"))
-      .def(py::init<const CurrencyPluralInfo &>(), py::arg("info"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  cpi.def("__copy__", &CurrencyPluralInfo::clone)
-      .def(
-          "__deepcopy__", [](const CurrencyPluralInfo &self, py::dict) { return self.clone(); }, py::arg("memo"));
+      .def(py::init<const CurrencyPluralInfo &>(), py::arg("other"));
+
+  cpi.def(py::self != py::self, py::arg("other"));
+
+  cpi.def(py::self == py::self, py::arg("other"));
+
+  cpi.def("__copy__", &CurrencyPluralInfo::clone);
+
+  cpi.def(
+      "__deepcopy__", [](const CurrencyPluralInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   cpi.def("clone", &CurrencyPluralInfo::clone);
+
   cpi.def(
       "get_currency_plural_pattern",
       [](const CurrencyPluralInfo &self, const _UnicodeStringVariant &plural_count, UnicodeString &result)
           -> UnicodeString & { return self.getCurrencyPluralPattern(VARIANT_TO_UNISTR(plural_count), result); },
       py::arg("plural_count"), py::arg("result"));
+
   cpi.def("get_locale", &CurrencyPluralInfo::getLocale);
+
   cpi.def("get_plural_rules", &CurrencyPluralInfo::getPluralRules, py::return_value_policy::reference);
+
   cpi.def(
       "set_currency_plural_pattern",
       [](CurrencyPluralInfo &self, const _UnicodeStringVariant &plural_count, const _UnicodeStringVariant &pattern) {
@@ -50,6 +62,7 @@ void init_currpinf(py::module &m) {
         }
       },
       py::arg("plural_count"), py::arg("pattern"));
+
   cpi.def(
       "set_locale",
       [](CurrencyPluralInfo &self, const _LocaleVariant &loc) {
@@ -60,6 +73,7 @@ void init_currpinf(py::module &m) {
         }
       },
       py::arg("loc"));
+
   cpi.def(
       "set_plural_rules",
       [](CurrencyPluralInfo &self, const _UnicodeStringVariant &rule_description) {

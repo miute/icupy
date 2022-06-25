@@ -29,35 +29,39 @@ public:
 };
 
 void init_stsearch(py::module &m) {
+  //
   // icu::SearchIterator
+  //
   py::class_<SearchIterator, UObject, PySearchIterator> si(m, "SearchIterator");
-  si.def("__iter__",
-         [](SearchIterator &self) -> SearchIterator & {
-           self.reset();
-           return self;
-         })
-      .def("__next__",
-           [](SearchIterator &self) {
-             ErrorCode error_code;
-             auto n = self.next(error_code);
-             if (error_code.isFailure()) {
-               throw ICUError(error_code);
-             } else if (n == USEARCH_DONE) {
-               throw py::stop_iteration();
-             }
-             return n;
-           })
-      .def("__reversed__", [](SearchIterator &self) {
-        std::vector<int32_t> result;
-        ErrorCode error_code;
-        for (auto n = self.last(error_code); n != USEARCH_DONE; n = self.previous(error_code)) {
-          if (error_code.isFailure()) {
-            throw ICUError(error_code);
-          }
-          result.push_back(n);
-        }
-        return result;
-      });
+
+  si.def("__iter__", [](SearchIterator &self) -> SearchIterator & {
+    self.reset();
+    return self;
+  });
+
+  si.def("__next__", [](SearchIterator &self) {
+    ErrorCode error_code;
+    auto n = self.next(error_code);
+    if (error_code.isFailure()) {
+      throw ICUError(error_code);
+    } else if (n == USEARCH_DONE) {
+      throw py::stop_iteration();
+    }
+    return n;
+  });
+
+  si.def("__reversed__", [](SearchIterator &self) {
+    std::vector<int32_t> result;
+    ErrorCode error_code;
+    for (auto n = self.last(error_code); n != USEARCH_DONE; n = self.previous(error_code)) {
+      if (error_code.isFailure()) {
+        throw ICUError(error_code);
+      }
+      result.push_back(n);
+    }
+    return result;
+  });
+
   si.def("first", [](SearchIterator &self) {
     ErrorCode error_code;
     auto result = self.first(error_code);
@@ -66,6 +70,7 @@ void init_stsearch(py::module &m) {
     }
     return result;
   });
+
   si.def(
       "following",
       [](SearchIterator &self, int32_t position) {
@@ -77,12 +82,19 @@ void init_stsearch(py::module &m) {
         return result;
       },
       py::arg("position"));
+
   si.def("get_attribute", &SearchIterator::getAttribute, py::arg("attribute"));
+
   si.def("get_break_iterator", &SearchIterator::getBreakIterator);
+
   si.def("get_matched_length", &SearchIterator::getMatchedLength);
+
   si.def("get_matched_start", &SearchIterator::getMatchedStart);
+
   si.def("get_matched_text", &SearchIterator::getMatchedText, py::arg("result"));
+
   si.def("get_text", &SearchIterator::getText);
+
   si.def("last", [](SearchIterator &self) {
     ErrorCode error_code;
     auto result = self.last(error_code);
@@ -91,6 +103,7 @@ void init_stsearch(py::module &m) {
     }
     return result;
   });
+
   si.def("next", [](SearchIterator &self) {
     ErrorCode error_code;
     auto result = self.next(error_code);
@@ -99,6 +112,7 @@ void init_stsearch(py::module &m) {
     }
     return result;
   });
+
   si.def(
       "preceding",
       [](SearchIterator &self, int32_t position) {
@@ -110,6 +124,7 @@ void init_stsearch(py::module &m) {
         return result;
       },
       py::arg("position"));
+
   si.def("previous", [](SearchIterator &self) {
     ErrorCode error_code;
     auto result = self.previous(error_code);
@@ -118,6 +133,7 @@ void init_stsearch(py::module &m) {
     }
     return result;
   });
+
   si.def(
       "set_attribute",
       [](SearchIterator &self, USearchAttribute attribute, USearchAttributeValue value) {
@@ -128,6 +144,7 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("attribute"), py::arg("value"));
+
   si.def(
       "set_break_iterator",
       [](SearchIterator &self, BreakIterator *breakiter) {
@@ -139,8 +156,11 @@ void init_stsearch(py::module &m) {
       },
       py::arg("breakiter"));
 
+  //
   // icu::StringSearch
+  //
   py::class_<StringSearch, SearchIterator> ss(m, "StringSearch");
+
   ss.def(
         // [1] StringSearch::StringSearch
         py::init([](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &text,
@@ -194,18 +214,29 @@ void init_stsearch(py::module &m) {
           py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
       .def(
           // [5] StringSearch::StringSearch
-          py::init<const StringSearch &>(), py::arg("that"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  ss.def("__copy__", &StringSearch::clone)
-      .def(
-          "__deepcopy__", [](const StringSearch &self, py::dict) { return self.clone(); }, py::arg("memo"));
+          py::init<const StringSearch &>(), py::arg("other"));
+
+  ss.def(py::self != py::self, py::arg("other"));
+
+  ss.def(py::self == py::self, py::arg("other"));
+
+  ss.def("__copy__", &StringSearch::clone);
+
+  ss.def(
+      "__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   ss.def("clone", &StringSearch::clone);
+
   ss.def("get_collator", &StringSearch::getCollator, py::return_value_policy::reference);
+
   ss.def("get_offset", &StringSearch::getOffset);
+
   ss.def("get_pattern", &StringSearch::getPattern);
+
   ss.def("reset", &StringSearch::reset);
+
   ss.def("safe_clone", &StringSearch::safeClone);
+
   ss.def(
       "set_collator",
       [](StringSearch &self, RuleBasedCollator *coll) {
@@ -216,6 +247,7 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("coll"));
+
   ss.def(
       "set_offset",
       [](StringSearch &self, int32_t position) {
@@ -226,6 +258,7 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("position"));
+
   ss.def(
       "set_pattern",
       [](StringSearch &self, const _UnicodeStringVariant &pattern) {
@@ -236,6 +269,7 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("pattern"));
+
   ss.def(
         "set_text",
         [](StringSearch &self, CharacterIterator &text) {
@@ -257,5 +291,5 @@ void init_stsearch(py::module &m) {
           },
           py::arg("text"));
 
-  si.def_property_readonly_static("DONE", [](py::object) -> int32_t { return USEARCH_DONE; });
+  si.def_property_readonly_static("DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
 }

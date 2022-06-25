@@ -9,13 +9,20 @@ using namespace icu;
 
 void init_compactdecimalformat(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
   // icu::CompactDecimalFormat
+  //
   py::class_<CompactDecimalFormat, DecimalFormat> cdf(m, "CompactDecimalFormat");
-  cdf.def(py::init<const CompactDecimalFormat &>(), py::arg("source"));
-  cdf.def("__copy__", &CompactDecimalFormat::clone)
-      .def(
-          "__deepcopy__", [](const CompactDecimalFormat &self, py::dict) { return self.clone(); }, py::arg("memo"));
+
+  cdf.def(py::init<const CompactDecimalFormat &>(), py::arg("other"));
+
+  cdf.def("__copy__", &CompactDecimalFormat::clone);
+
+  cdf.def(
+      "__deepcopy__", [](const CompactDecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   cdf.def("clone", &CompactDecimalFormat::clone);
+
   cdf.def_static(
       "create_instance",
       [](const _LocaleVariant &in_locale, UNumberCompactStyle style) {
@@ -27,6 +34,7 @@ void init_compactdecimalformat(py::module &m) {
         return result;
       },
       py::arg("in_locale"), py::arg("style"));
+
   cdf.def(
          // [3] DecimalFormat::format
          "format", py::overload_cast<double, UnicodeString &, FieldPosition &>(&DecimalFormat::format, py::const_),
@@ -132,6 +140,7 @@ void init_compactdecimalformat(py::module &m) {
             return result;
           },
           py::arg("obj"), py::arg("append_to"));
+
   cdf.def(
          // [1] CompactDecimalFormat::parse
          "parse",

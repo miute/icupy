@@ -18,12 +18,22 @@ UCharsetDetector *_UCharsetDetectorPtr::get() const { return p_; }
 void _UCharsetDetectorPtr::set_source(const std::shared_ptr<void> &source) { source_ = source; }
 
 void init_ucsdet(py::module &m) {
+  //
+  // _ConstUCharsetMatchPtr
+  //
   py::class_<_ConstUCharsetMatchPtr>(m, "_ConstUCharsetMatchPtr");
 
+  //
+  // _UCharsetDetectorPtr
+  //
   py::class_<_UCharsetDetectorPtr>(m, "_UCharsetDetectorPtr");
 
+  //
+  // Functions
+  //
   m.def(
       "ucsdet_close", [](_UCharsetDetectorPtr &ucsd) { ucsdet_close(ucsd); }, py::arg("ucsd"));
+
   m.def(
       "ucsdet_detect",
       [](_UCharsetDetectorPtr &ucsd) -> std::optional<std::unique_ptr<_ConstUCharsetMatchPtr>> {
@@ -37,6 +47,7 @@ void init_ucsdet(py::module &m) {
         return std::make_unique<_ConstUCharsetMatchPtr>(p);
       },
       py::arg("ucsd"));
+
   m.def(
       "ucsdet_detect_all",
       [](_UCharsetDetectorPtr &ucsd) {
@@ -53,10 +64,12 @@ void init_ucsdet(py::module &m) {
         return result;
       },
       py::arg("ucsd"));
+
   m.def(
       "ucsdet_enable_input_filter",
       [](_UCharsetDetectorPtr &ucsd, bool filter) { return ucsdet_enableInputFilter(ucsd, filter); }, py::arg("ucsd"),
       py::arg("filter_"));
+
   m.def(
       "ucsdet_get_all_detectable_charsets",
       [](const _UCharsetDetectorPtr &ucsd) {
@@ -68,6 +81,7 @@ void init_ucsdet(py::module &m) {
         return std::make_unique<_UEnumerationPtr>(p);
       },
       py::arg("ucsd"));
+
   m.def(
       "ucsdet_get_confidence",
       [](_ConstUCharsetMatchPtr &ucsm) {
@@ -79,6 +93,7 @@ void init_ucsdet(py::module &m) {
         return result;
       },
       py::arg("ucsm"));
+
   m.def(
       "ucsdet_get_language",
       [](_ConstUCharsetMatchPtr &ucsm) {
@@ -90,6 +105,7 @@ void init_ucsdet(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("ucsm"));
+
   m.def(
       "ucsdet_get_name",
       [](_ConstUCharsetMatchPtr &ucsm) {
@@ -101,6 +117,7 @@ void init_ucsdet(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("ucsm"));
+
   m.def(
       "ucsdet_get_uchars",
       [](_ConstUCharsetMatchPtr &ucsm) {
@@ -115,9 +132,11 @@ void init_ucsdet(py::module &m) {
         return result;
       },
       py::arg("ucsm"));
+
   m.def(
       "ucsdet_is_input_filter_enabled",
       [](const _UCharsetDetectorPtr &ucsd) { return ucsdet_isInputFilterEnabled(ucsd); }, py::arg("ucsd"));
+
   m.def("ucsdet_open", []() {
     ErrorCode error_code;
     auto p = ucsdet_open(error_code);
@@ -126,6 +145,7 @@ void init_ucsdet(py::module &m) {
     }
     return std::make_unique<_UCharsetDetectorPtr>(p);
   });
+
   m.def(
       "ucsdet_set_declared_encoding",
       [](_UCharsetDetectorPtr &ucsd, const char *encoding, int32_t length) {
@@ -136,6 +156,7 @@ void init_ucsdet(py::module &m) {
         }
       },
       py::arg("ucsd"), py::arg("encoding"), py::arg("length") = -1);
+
   m.def(
       "ucsdet_set_text",
       [](_UCharsetDetectorPtr &ucsd, const char *text_in, int32_t len) {

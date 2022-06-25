@@ -10,6 +10,9 @@ _ULocaleDataPtr::~_ULocaleDataPtr() {}
 ULocaleData *_ULocaleDataPtr::get() const { return p_; }
 
 void init_ulocdata(py::module &m) {
+  //
+  // ULocaleDataDelimiterType
+  //
   py::enum_<ULocaleDataDelimiterType>(m, "ULocaleDataDelimiterType", py::arithmetic(),
                                       "The possible types of delimiters.")
       .value("ULOCDATA_QUOTATION_START", ULOCDATA_QUOTATION_START, "Quotation start.")
@@ -22,6 +25,9 @@ void init_ulocdata(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // ULocaleDataExemplarSetType
+  //
   py::enum_<ULocaleDataExemplarSetType>(m, "ULocaleDataExemplarSetType", py::arithmetic(),
                                         "The possible types of exemplar character sets.")
       .value("ULOCDATA_ES_STANDARD", ULOCDATA_ES_STANDARD, "Basic set.")
@@ -34,6 +40,9 @@ void init_ulocdata(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UMeasurementSystem
+  //
   py::enum_<UMeasurementSystem>(m, "UMeasurementSystem", py::arithmetic(),
                                 "Enumeration for representing the measurement systems.")
       .value("UMS_SI", UMS_SI, "Measurement system specified by SI otherwise known as Metric system.")
@@ -45,10 +54,17 @@ void init_ulocdata(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // _ULocaleDataPtr
+  //
   py::class_<_ULocaleDataPtr>(m, "_ULocaleDataPtr");
 
+  //
+  // Functions
+  //
   m.def(
       "ulocdata_close", [](_ULocaleDataPtr &uld) { ulocdata_close(uld); }, py::arg("uld"));
+
   m.def("ulocdata_get_cldr_version", []() {
     UVersionInfo version_array;
     ErrorCode error_code;
@@ -59,6 +75,7 @@ void init_ulocdata(py::module &m) {
     std::vector<uint8_t> result(version_array, version_array + sizeof(version_array));
     return result;
   });
+
   m.def(
       "ulocdata_get_delimiter",
       [](_ULocaleDataPtr &uld, ULocaleDataDelimiterType type) {
@@ -73,6 +90,7 @@ void init_ulocdata(py::module &m) {
         return result;
       },
       py::arg("uld"), py::arg("type_"));
+
   m.def(
       "ulocdata_get_exemplar_set",
       [](_ULocaleDataPtr &uld, std::optional<_USetPtr> &fill_in, uint32_t options, ULocaleDataExemplarSetType extype) {
@@ -84,6 +102,7 @@ void init_ulocdata(py::module &m) {
         return std::make_unique<_USetPtr>(p);
       },
       py::arg("uld"), py::arg("fill_in"), py::arg("options"), py::arg("extype"));
+
   m.def(
       "ulocdata_get_locale_display_pattern",
       [](_ULocaleDataPtr &uld) {
@@ -98,6 +117,7 @@ void init_ulocdata(py::module &m) {
         return result;
       },
       py::arg("uld"));
+
   m.def(
       "ulocdata_get_locale_separator",
       [](_ULocaleDataPtr &uld) {
@@ -112,6 +132,7 @@ void init_ulocdata(py::module &m) {
         return result;
       },
       py::arg("uld"));
+
   m.def(
       "ulocdata_get_measurement_system",
       [](const char *locale_id) {
@@ -123,8 +144,10 @@ void init_ulocdata(py::module &m) {
         return result;
       },
       py::arg("locale_id"));
+
   m.def(
       "ulocdata_get_no_substitute", [](_ULocaleDataPtr &uld) { return ulocdata_getNoSubstitute(uld); }, py::arg("uld"));
+
   m.def(
       "ulocdata_get_paper_size",
       [](const char *locale_id) {
@@ -137,6 +160,7 @@ void init_ulocdata(py::module &m) {
         return py::make_tuple(height, width);
       },
       py::arg("locale_id"));
+
   m.def(
       "ulocdata_open",
       [](const char *locale_id) {
@@ -148,6 +172,7 @@ void init_ulocdata(py::module &m) {
         return std::make_unique<_ULocaleDataPtr>(p);
       },
       py::arg("locale_id"));
+
   m.def(
       "ulocdata_set_no_substitute", [](_ULocaleDataPtr &uld, UBool setting) { ulocdata_setNoSubstitute(uld, setting); },
       py::arg("uld"), py::arg("setting"));

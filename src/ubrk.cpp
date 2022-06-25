@@ -2,6 +2,9 @@
 #include <unicode/ubrk.h>
 
 void init_ubrk(py::module &m) {
+  //
+  // UBreakIteratorType
+  //
   py::enum_<UBreakIteratorType>(m, "UBreakIteratorType", py::arithmetic(), "The possible types of text boundaries.")
       .value("UBRK_CHARACTER", UBRK_CHARACTER, "Character breaks.")
       .value("UBRK_WORD", UBRK_WORD, "Word breaks.")
@@ -9,6 +12,9 @@ void init_ubrk(py::module &m) {
       .value("UBRK_SENTENCE", UBRK_SENTENCE, "Sentence breaks.")
       .export_values();
 
+  //
+  // ULineBreakTag
+  //
   py::enum_<ULineBreakTag>(m, "ULineBreakTag", py::arithmetic(),
                            "Enum constants for the line break tags returned by *get_rule_status()*.\n\n"
                            "A range of values is defined for each category of word, to allow for further subdivisions "
@@ -22,6 +28,9 @@ void init_ubrk(py::module &m) {
       .value("UBRK_LINE_HARD_LIMIT", UBRK_LINE_HARD_LIMIT, "Upper bound for hard line breaks.")
       .export_values();
 
+  //
+  // USentenceBreakTag
+  //
   py::enum_<USentenceBreakTag>(m, "USentenceBreakTag", py::arithmetic(),
                                "Enum constants for the sentence break tags returned by *get_rule_status()*.\n\n"
                                "A range of values is defined for each category of sentence, to allow for further "
@@ -40,6 +49,9 @@ void init_ubrk(py::module &m) {
              "Upper bound for tags for sentences ended by a separator.")
       .export_values();
 
+  //
+  // UWordBreak
+  //
   py::enum_<UWordBreak>(m, "UWordBreak", py::arithmetic(),
                         "Enum constants for the word break tags returned by *get_rule_status()*.\n\n"
                         "A range of values is defined for each category of word, to allow for further subdivisions of "

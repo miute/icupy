@@ -7,6 +7,9 @@
 using namespace icu;
 
 void init_coleitr(py::module &m) {
+  //
+  // icu::CollationElementIterator
+  //
   py::class_<CollationElementIterator, UObject> cei(m, "CollationElementIterator");
 
   py::enum_<decltype(CollationElementIterator::NULLORDER)>(cei, "CollationElementIterator", py::arithmetic())
@@ -14,28 +17,35 @@ void init_coleitr(py::module &m) {
              "*NULLORDER* indicates that an error has occurred while processing.")
       .export_values();
 
-  cei.def(py::init<CollationElementIterator &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  cei.def("__iter__",
-          [](CollationElementIterator &self) -> CollationElementIterator & {
-            self.reset();
-            return self;
-          })
-      .def("__next__", [](CollationElementIterator &self) {
-        ErrorCode error_code;
-        auto result = self.next(error_code);
-        if (error_code.isFailure()) {
-          throw ICUError(error_code);
-        } else if (result == CollationElementIterator::NULLORDER) {
-          throw py::stop_iteration();
-        }
-        return result;
-      });
+  cei.def(py::init<CollationElementIterator &>(), py::arg("other"));
+
+  cei.def(py::self != py::self, py::arg("other"));
+
+  cei.def(py::self == py::self, py::arg("other"));
+
+  cei.def("__iter__", [](CollationElementIterator &self) -> CollationElementIterator & {
+    self.reset();
+    return self;
+  });
+
+  cei.def("__next__", [](CollationElementIterator &self) {
+    ErrorCode error_code;
+    auto result = self.next(error_code);
+    if (error_code.isFailure()) {
+      throw ICUError(error_code);
+    } else if (result == CollationElementIterator::NULLORDER) {
+      throw py::stop_iteration();
+    }
+    return result;
+  });
+
   cei.def("get_max_expansion", py::overload_cast<int32_t>(&CollationElementIterator::getMaxExpansion, py::const_),
           py::arg("order"));
+
   cei.def("get_offset", &CollationElementIterator::getOffset);
+
   cei.def_static("is_ignorable", &CollationElementIterator::isIgnorable, py::arg("order"));
+
   cei.def("next", [](CollationElementIterator &self) {
     ErrorCode error_code;
     auto result = self.next(error_code);
@@ -44,6 +54,7 @@ void init_coleitr(py::module &m) {
     }
     return result;
   });
+
   cei.def("previous", [](CollationElementIterator &self) {
     ErrorCode error_code;
     auto result = self.previous(error_code);
@@ -52,9 +63,13 @@ void init_coleitr(py::module &m) {
     }
     return result;
   });
+
   cei.def_static("primary_order", &CollationElementIterator::primaryOrder, py::arg("order"));
+
   cei.def("reset", &CollationElementIterator::reset);
+
   cei.def_static("secondary_order", &CollationElementIterator::secondaryOrder, py::arg("order"));
+
   cei.def(
       "set_offset",
       [](CollationElementIterator &self, int32_t new_offset) {
@@ -65,6 +80,7 @@ void init_coleitr(py::module &m) {
         }
       },
       py::arg("new_offset"));
+
   cei.def(
          "set_text",
          [](CollationElementIterator &self, CharacterIterator &str) {
@@ -85,6 +101,8 @@ void init_coleitr(py::module &m) {
             }
           },
           py::arg("str_"));
+
   cei.def("strength_order", &CollationElementIterator::strengthOrder, py::arg("order"));
+
   cei.def_static("tertiary_order", &CollationElementIterator::tertiaryOrder, py::arg("order"));
 }

@@ -8,7 +8,9 @@ using namespace icu;
 
 void init_unounclass(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
+  //
   // icu::NounClass
+  //
   py::enum_<NounClass>(m, "NounClass", py::arithmetic(),
                        "Represents all the grammatical noun classes that are supported by CLDR.")
       .value("OTHER", OTHER)

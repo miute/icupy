@@ -8,10 +8,15 @@ using namespace icu;
 
 void init_dtitvfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+  //
   // icu::FormattedDateInterval
+  //
   py::class_<FormattedDateInterval, UMemory, FormattedValue> fdi(m, "FormattedDateInterval");
+
   // FIXME: Implement "icu::FormattedDateInterval::FormattedDateInterval(FormattedDateInterval &&src)".
+
   fdi.def(py::init<>());
+
   fdi.def(
       "append_to",
       [](FormattedDateInterval &self, Appendable &appendable) -> Appendable & {
@@ -23,6 +28,7 @@ void init_dtitvfmt(py::module &m) {
         return result;
       },
       py::arg("appendable"));
+
   fdi.def(
       "next_position",
       [](const FormattedDateInterval &self, ConstrainedFieldPosition &cfpos) {
@@ -34,6 +40,7 @@ void init_dtitvfmt(py::module &m) {
         return result;
       },
       py::arg("cfpos"));
+
   fdi.def("to_string", [](const FormattedDateInterval &self) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
@@ -42,6 +49,7 @@ void init_dtitvfmt(py::module &m) {
     }
     return result;
   });
+
   fdi.def("to_temp_string", [](const FormattedDateInterval &self) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
@@ -52,14 +60,24 @@ void init_dtitvfmt(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+  //
   // icu::DateIntervalFormat
+  //
   py::class_<DateIntervalFormat, Format> fmt(m, "DateIntervalFormat");
-  fmt.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
-  fmt.def("__copy__", &DateIntervalFormat::clone)
-      .def(
-          "__deepcopy__", [](const DateIntervalFormat &self, py::dict) { return self.clone(); }, py::arg("memo"));
+
+  fmt.def(py::self != py::self, py::arg("other"));
+
+  fmt.def(py::self == py::self, py::arg("other"));
+
+  fmt.def("__copy__", &DateIntervalFormat::clone);
+
+  fmt.def(
+      "__deepcopy__", [](const DateIntervalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   // FIXME: Implement "void icu::DateIntervalFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
+
   fmt.def("clone", &DateIntervalFormat::clone);
+
   fmt.def_static(
          // [1] DateIntervalFormat::createInstance
          "create_instance",
@@ -110,6 +128,7 @@ void init_dtitvfmt(py::module &m) {
             return result;
           },
           py::arg("skeleton"));
+
   fmt.def(
          // [1] DateIntervalFormat::format
          "format",
@@ -175,6 +194,7 @@ void init_dtitvfmt(py::module &m) {
             return result;
           },
           py::arg("obj"), py::arg("append_to"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   fmt.def(
          "format_to_value",
@@ -213,8 +233,11 @@ void init_dtitvfmt(py::module &m) {
       },
       py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
+
   fmt.def("get_date_format", &DateIntervalFormat::getDateFormat, py::return_value_policy::reference);
+
   fmt.def("get_date_interval_info", &DateIntervalFormat::getDateIntervalInfo, py::return_value_policy::reference);
+
   fmt.def(
       "get_time_zone",
       [](const DateIntervalFormat &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
@@ -226,6 +249,7 @@ void init_dtitvfmt(py::module &m) {
         return tz;
       },
       py::return_value_policy::reference);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fmt.def(
       "set_context",
@@ -238,6 +262,7 @@ void init_dtitvfmt(py::module &m) {
       },
       py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
+
   fmt.def(
       "set_date_interval_info",
       [](DateIntervalFormat &self, const DateIntervalInfo &new_interval_patterns) {
@@ -248,5 +273,6 @@ void init_dtitvfmt(py::module &m) {
         }
       },
       py::arg("new_interval_patterns"));
+
   fmt.def("set_time_zone", &DateIntervalFormat::setTimeZone, py::arg("zone"));
 }

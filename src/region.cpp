@@ -9,11 +9,19 @@ using namespace icu;
 
 void init_region(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
   // icu::Region
+  //
   py::class_<Region, UObject> reg(m, "Region");
-  reg.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+
+  reg.def(py::self != py::self, py::arg("other"));
+
+  reg.def(py::self == py::self, py::arg("other"));
+
   reg.def("__contains__", &Region::contains, py::arg("item"));
+
   reg.def("contains", &Region::contains, py::arg("other"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   reg.def_static(
       "get_available",
@@ -26,6 +34,7 @@ void init_region(py::module &m) {
         return result;
       },
       py::arg("type_"));
+
   reg.def("get_contained_regions",
           [](const Region &self) {
             ErrorCode error_code;
@@ -47,10 +56,12 @@ void init_region(py::module &m) {
           },
           py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
+
   reg.def("get_containing_region", py::overload_cast<>(&Region::getContainingRegion, py::const_),
           py::return_value_policy::reference)
       .def("get_containing_region", py::overload_cast<URegionType>(&Region::getContainingRegion, py::const_),
            py::return_value_policy::reference, py::arg("type_"));
+
   reg.def_static(
          "get_instance",
          [](const char *region_code) {
@@ -73,7 +84,9 @@ void init_region(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("code"));
+
   reg.def("get_numeric_code", &Region::getNumericCode);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   reg.def("get_preferred_values", [](const Region &self) {
     ErrorCode error_code;
@@ -84,7 +97,9 @@ void init_region(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
+
   reg.def("get_region_code", &Region::getRegionCode);
+
   reg.def("get_type", &Region::getType);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

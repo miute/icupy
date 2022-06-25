@@ -3,6 +3,9 @@
 
 void init_udat(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
+  //
+  // UDateFormatBooleanAttribute
+  //
   py::enum_<UDateFormatBooleanAttribute>(m, "UDateFormatBooleanAttribute", py::arithmetic(),
                                          "*DateFormat* boolean attributes.")
       .value("UDAT_PARSE_ALLOW_WHITESPACE", UDAT_PARSE_ALLOW_WHITESPACE,
@@ -22,6 +25,9 @@ void init_udat(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
+  //
+  // UDateFormatField
+  //
   py::enum_<UDateFormatField>(
       m, "UDateFormatField", py::arithmetic(),
       "*FieldPosition* and *UFieldPosition* selectors for format fields defined by *DateFormat* and *UDateFormat*.")
@@ -133,7 +139,6 @@ void init_udat(py::module &m) {
              "*FieldPosition* selector for \"U\" field alignment, corresponding to cyclic year names.\n\n  "
              "This is implemented using the *UCAL_YEAR* field. This displays the cyclic year name, if available.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("UDAT_TIMEZONE_LOCALIZED_GMT_OFFSET_FIELD", UDAT_TIMEZONE_LOCALIZED_GMT_OFFSET_FIELD,
              "*FieldPosition* selector for 'O' field alignment, corresponding to the *UCAL_ZONE_OFFSET* and "
@@ -148,7 +153,6 @@ void init_udat(py::module &m) {
              "*UCAL_DST_OFFSET* fields.\n\n  "
              "This displays the ISO 8601 local time offset format.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
       .value("UDAT_AM_PM_MIDNIGHT_NOON_FIELD", UDAT_AM_PM_MIDNIGHT_NOON_FIELD,
              "*FieldPosition* selector for 'b' field alignment.\n\n  "
@@ -161,6 +165,9 @@ void init_udat(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
+  //
+  // UDateFormatHourCycle
+  //
   py::enum_<UDateFormatHourCycle>(m, "UDateFormatHourCycle", py::arithmetic(), "Hour Cycle.")
       .value("UDAT_HOUR_CYCLE_11", UDAT_HOUR_CYCLE_11, "Hour in am/pm (0~11)")
       .value("UDAT_HOUR_CYCLE_12", UDAT_HOUR_CYCLE_12, "Hour in am/pm (1~12)")
@@ -169,6 +176,9 @@ void init_udat(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
+  //
+  // UDateFormatStyle
+  //
   py::enum_<UDateFormatStyle>(m, "UDateFormatStyle", py::arithmetic(), "The possible date/time format styles.")
       .value("UDAT_FULL", UDAT_FULL, "Full style.")
       .value("UDAT_LONG", UDAT_LONG, "Long style.")
@@ -186,6 +196,9 @@ void init_udat(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
       .export_values();
 
+  //
+  // UDateFormatSymbolType
+  //
   py::enum_<UDateFormatSymbolType>(m, "UDateFormatSymbolType", py::arithmetic(),
                                    "The possible types of date format symbols.")
       .value("UDAT_ERAS", UDAT_ERAS, "The era names, for example AD.")
@@ -222,7 +235,6 @@ void init_udat(py::module &m) {
       .value("UDAT_STANDALONE_SHORTER_WEEKDAYS", UDAT_STANDALONE_SHORTER_WEEKDAYS,
              "Standalone version of *UDAT_SHORTER_WEEKDAYS*.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("UDAT_CYCLIC_YEARS_WIDE", UDAT_CYCLIC_YEARS_WIDE,
              "Cyclic year names (only supported for some calendars, and only for FORMAT usage; *udat_set_symbols* "
@@ -241,7 +253,6 @@ void init_udat(py::module &m) {
              "Calendar zodiac names (only supported for some calendars, and only for FORMAT usage; "
              "*udat_set_symbols* not supported for *UDAT_ZODIAC_NAMES_NARROW*)")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
       .value("UDAT_NARROW_QUARTERS", UDAT_NARROW_QUARTERS, "The narrow quarter names, for example 1.")
       .value("UDAT_STANDALONE_NARROW_QUARTERS", UDAT_STANDALONE_NARROW_QUARTERS,

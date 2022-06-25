@@ -7,12 +7,20 @@
 using namespace icu;
 
 void init_dtptngen(py::module &m) {
+  //
   // icu::DateTimePatternGenerator
+  //
   py::class_<DateTimePatternGenerator, UObject> dtpg(m, "DateTimePatternGenerator");
-  dtpg.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
-  dtpg.def("__copy__", &DateTimePatternGenerator::clone)
-      .def(
-          "__deepcopy__", [](const DateTimePatternGenerator &self, py::dict) { return self.clone(); }, py::arg("memo"));
+
+  dtpg.def(py::self != py::self, py::arg("other"));
+
+  dtpg.def(py::self == py::self, py::arg("other"));
+
+  dtpg.def("__copy__", &DateTimePatternGenerator::clone);
+
+  dtpg.def(
+      "__deepcopy__", [](const DateTimePatternGenerator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   dtpg.def(
       "add_pattern",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern, UBool override,
@@ -25,7 +33,9 @@ void init_dtptngen(py::module &m) {
         return result;
       },
       py::arg("pattern"), py::arg("override"), py::arg("conflicting_pattern"));
+
   dtpg.def("clone", &DateTimePatternGenerator::clone);
+
   dtpg.def_static("create_empty_instance", []() {
     ErrorCode error_code;
     auto result = DateTimePatternGenerator::createEmptyInstance(error_code);
@@ -34,6 +44,7 @@ void init_dtptngen(py::module &m) {
     }
     return result;
   });
+
   dtpg.def_static(
           "create_instance",
           [](const _LocaleVariant &locale) {
@@ -53,8 +64,11 @@ void init_dtptngen(py::module &m) {
         }
         return result;
       });
+
   dtpg.def("get_append_item_format", &DateTimePatternGenerator::getAppendItemFormat, py::arg("field"));
+
   dtpg.def("get_append_item_name", &DateTimePatternGenerator::getAppendItemName, py::arg("field"));
+
   dtpg.def(
       "get_base_skeleton",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern) {
@@ -66,6 +80,7 @@ void init_dtptngen(py::module &m) {
         return result;
       },
       py::arg("pattern"));
+
   dtpg.def("get_base_skeletons", [](const DateTimePatternGenerator &self) {
     ErrorCode error_code;
     auto result = self.getBaseSkeletons(error_code);
@@ -74,6 +89,7 @@ void init_dtptngen(py::module &m) {
     }
     return result;
   });
+
   dtpg.def(
           "get_best_pattern",
           [](DateTimePatternGenerator &self, const _UnicodeStringVariant &skeleton,
@@ -116,6 +132,7 @@ void init_dtptngen(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
   dtpg.def("get_decimal", &DateTimePatternGenerator::getDecimal);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   dtpg.def("get_default_hour_cycle", [](const DateTimePatternGenerator &self) {
     ErrorCode error_code;
@@ -131,12 +148,14 @@ void init_dtptngen(py::module &m) {
   dtpg.def("get_field_display_name", &DateTimePatternGenerator::getFieldDisplayName, py::arg("field"),
            py::arg("width"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
+
   dtpg.def(
       "get_pattern_for_skeleton",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &skeleton) -> const UnicodeString & {
         return self.getPatternForSkeleton(VARIANT_TO_UNISTR(skeleton));
       },
       py::arg("skeleton"));
+
   dtpg.def(
       "get_skeleton",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern) {
@@ -148,6 +167,7 @@ void init_dtptngen(py::module &m) {
         return result;
       },
       py::arg("pattern"));
+
   dtpg.def("get_skeletons", [](const DateTimePatternGenerator &self) {
     ErrorCode error_code;
     auto result = self.getSkeletons(error_code);
@@ -156,6 +176,7 @@ void init_dtptngen(py::module &m) {
     }
     return result;
   });
+
   dtpg.def(
           // [1] DateTimePatternGenerator::replaceFieldTypes
           "replace_field_types",
@@ -183,18 +204,21 @@ void init_dtptngen(py::module &m) {
             return result;
           },
           py::arg("pattern"), py::arg("skeleton"));
+
   dtpg.def(
       "set_append_item_format",
       [](DateTimePatternGenerator &self, UDateTimePatternField field, const _UnicodeStringVariant &value) {
         self.setAppendItemFormat(field, VARIANT_TO_UNISTR(value));
       },
       py::arg("field"), py::arg("value"));
+
   dtpg.def(
       "set_append_item_name",
       [](DateTimePatternGenerator &self, UDateTimePatternField field, const _UnicodeStringVariant &value) {
         self.setAppendItemName(field, VARIANT_TO_UNISTR(value));
       },
       py::arg("field"), py::arg("value"));
+
   dtpg.def(
           "set_date_time_format",
           [](DateTimePatternGenerator &self, const _UnicodeStringVariant &date_time_format) {
@@ -214,12 +238,14 @@ void init_dtptngen(py::module &m) {
           py::arg("style"), py::arg("date_time_format"))
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
       ;
+
   dtpg.def(
       "set_decimal",
       [](DateTimePatternGenerator &self, const _UnicodeStringVariant &decimal) {
         self.setDecimal(VARIANT_TO_UNISTR(decimal));
       },
       py::arg("decimal"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   dtpg.def_static(
       "static_get_base_skeleton",
@@ -232,6 +258,7 @@ void init_dtptngen(py::module &m) {
         return result;
       },
       py::arg("pattern"));
+
   dtpg.def_static(
       "static_get_skeleton",
       [](const _UnicodeStringVariant &pattern) {

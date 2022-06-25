@@ -9,6 +9,9 @@
 using namespace icu;
 
 void init_ucnv(py::module &m) {
+  //
+  // UConverterPlatform
+  //
   py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic(),
                                 "Enum for specifying which platform a converter ID refers to.\n\n"
                                 "The use of platform/CCSID is not recommended. See *ucnv_open_ccsid()*.")
@@ -16,6 +19,9 @@ void init_ucnv(py::module &m) {
       .value("UCNV_IBM", UCNV_IBM)
       .export_values();
 
+  //
+  // UConverterType
+  //
   py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(), "Enum for specifying basic types of converters.")
       .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
       .value("UCNV_SBCS", UCNV_SBCS)
@@ -56,6 +62,9 @@ void init_ucnv(py::module &m) {
       .value("UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES", UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES)
       .export_values();
 
+  //
+  // UConverterUnicodeSet
+  //
   py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic(),
                                   "Selectors for Unicode sets that can be returned by *ucnv_get_unicode_set()*.")
       .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET, "Select the set of roundtrippable Unicode code points.")
@@ -67,6 +76,9 @@ void init_ucnv(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // Functions
+  //
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
   m.def(
       "ucnv_clone",
@@ -83,6 +95,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); }, py::arg("converter"));
+
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"), py::arg("name2"));
 
   m.def(
@@ -96,8 +109,11 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("alias"));
+
   m.def("ucnv_count_available", &ucnv_countAvailable);
+
   m.def("ucnv_count_standards", &ucnv_countStandards);
+
   m.def(
       "ucnv_detect_unicode_signature",
       [](const char *source, int32_t source_length) -> std::optional<const char *> {
@@ -109,6 +125,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("source"), py::arg("source_length"));
+
   m.def(
       "ucnv_fix_file_separator",
       [](const _UConverterPtr &cnv, const UChar *source, int32_t source_len) {
@@ -117,6 +134,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("cnv"), py::arg("source"), py::arg("source_len"));
+
   m.def("ucnv_flush_cache", &ucnv_flushCache);
 
   m.def(
@@ -130,6 +148,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("alias"), py::arg("n"));
+
   m.def(
       "ucnv_get_aliases",
       [](const char *alias) {
@@ -147,7 +166,9 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("alias"));
+
   m.def("ucnv_get_available_name", &ucnv_getAvailableName, py::arg("n"));
+
   m.def(
       "ucnv_get_canonical_name",
       [](const char *alias, const char *standard) {
@@ -159,6 +180,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("alias"), py::arg("standard"));
+
   m.def(
       "ucnv_get_ccsid",
       [](_UConverterPtr &converter) {
@@ -170,7 +192,9 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("converter"));
+
   m.def("ucnv_get_default_name", &ucnv_getDefaultName);
+
   m.def(
       "ucnv_get_display_name",
       [](_UConverterPtr &converter, const char *display_locale) {
@@ -185,6 +209,8 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("converter"), py::arg("display_locale"));
+
+  // TODO: Remove ucnv_get_from_u_call_back() in a future release.
   m.def(
       "ucnv_get_from_u_call_back",
       [](const _UConverterPtr &converter) {
@@ -205,6 +231,7 @@ void init_ucnv(py::module &m) {
         return py::make_tuple(_UConverterFromUCallbackPtr(action), _ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
+
   m.def(
       "ucnv_get_from_ucall_back",
       [](const _UConverterPtr &converter) {
@@ -221,6 +248,7 @@ void init_ucnv(py::module &m) {
         return py::make_tuple(_UConverterFromUCallbackPtr(action), _ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
+
   m.def(
       "ucnv_get_name",
       [](const _UConverterPtr &converter) {
@@ -232,6 +260,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("converter"));
+
   m.def(
       "ucnv_get_platform",
       [](const _UConverterPtr &converter) {
@@ -243,6 +272,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("converter"));
+
   m.def(
       "ucnv_get_standard",
       [](uint16_t n) {
@@ -254,6 +284,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("n"));
+
   m.def(
       "ucnv_get_standard_name",
       [](const char *name, const char *standard) {
@@ -265,6 +296,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("standard"));
+
   m.def(
       "ucnv_get_subst_chars",
       [](const _UConverterPtr &converter) {
@@ -278,6 +310,8 @@ void init_ucnv(py::module &m) {
         return py::bytes(sub_chars, len);
       },
       py::arg("converter"));
+
+  // TODO: Remove ucnv_get_to_u_call_back() in a future release.
   m.def(
       "ucnv_get_to_u_call_back",
       [](const _UConverterPtr &converter) {
@@ -298,6 +332,7 @@ void init_ucnv(py::module &m) {
         return py::make_tuple(_UConverterToUCallbackPtr(action), _ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
+
   m.def(
       "ucnv_get_to_ucall_back",
       [](const _UConverterPtr &converter) {
@@ -314,8 +349,10 @@ void init_ucnv(py::module &m) {
         return py::make_tuple(_UConverterToUCallbackPtr(action), _ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
+
   m.def(
       "ucnv_get_type", [](const _UConverterPtr &converter) { return ucnv_getType(converter); }, py::arg("converter"));
+
   m.def(
       "ucnv_get_unicode_set",
       [](const _UConverterPtr &cnv, _USetPtr &set_fill_in, UConverterUnicodeSet which_set) {
@@ -326,8 +363,10 @@ void init_ucnv(py::module &m) {
         }
       },
       py::arg("cnv"), py::arg("set_fill_in"), py::arg("which_set"));
+
   m.def(
       "ucnv_is_ambiguous", [](const _UConverterPtr &cnv) { return ucnv_isAmbiguous(cnv); }, py::arg("cnv"));
+
   m.def(
       "ucnv_is_fixed_width",
       [](const _UConverterPtr &cnv) {
@@ -339,6 +378,7 @@ void init_ucnv(py::module &m) {
         return result;
       },
       py::arg("cnv"));
+
   m.def(
       "ucnv_open",
       [](const char *converter_name) {
@@ -350,6 +390,7 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("converter_name"));
+
   m.def("ucnv_open_all_names", []() {
     ErrorCode error_code;
     auto p = ucnv_openAllNames(error_code);
@@ -358,6 +399,7 @@ void init_ucnv(py::module &m) {
     }
     return std::make_unique<_UEnumerationPtr>(p);
   });
+
   m.def(
       "ucnv_open_ccsid",
       [](int32_t codepage, UConverterPlatform platform) {
@@ -369,6 +411,7 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("codepage"), py::arg("platform"));
+
   m.def(
       "ucnv_open_package",
       [](const char *package_name, const char *converter_name) {
@@ -380,6 +423,7 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UConverterPtr>(p);
       },
       py::arg("package_name"), py::arg("converter_name"));
+
   m.def(
       "ucnv_open_standard_names",
       [](const char *conv_name, const char *standard) {
@@ -391,18 +435,24 @@ void init_ucnv(py::module &m) {
         return std::make_unique<_UEnumerationPtr>(p);
       },
       py::arg("conv_name"), py::arg("standard"));
+
   m.def(
       "ucnv_reset", [](_UConverterPtr &converter) { ucnv_reset(converter); }, py::arg("converter"));
+
   m.def(
       "ucnv_reset_from_unicode", [](_UConverterPtr &converter) { ucnv_resetFromUnicode(converter); },
       py::arg("converter"));
+
   m.def(
       "ucnv_reset_to_unicode", [](_UConverterPtr &converter) { ucnv_resetToUnicode(converter); }, py::arg("converter"));
 
   m.def("ucnv_set_default_name", &ucnv_setDefaultName, py::arg("name"));
+
   m.def(
       "ucnv_set_fallback", [](_UConverterPtr &cnv, UBool uses_fallback) { ucnv_setFallback(cnv, uses_fallback); },
       py::arg("cnv"), py::arg("uses_fallback"));
+
+  // TODO: Remove ucnv_set_from_u_call_back() in a future release.
   m.def(
       "ucnv_set_from_u_call_back",
       [](_UConverterPtr &converter, _UConverterFromUCallbackPtr &new_action, _ConstVoidPtr &new_context) {
@@ -440,6 +490,7 @@ void init_ucnv(py::module &m) {
       },
       py::return_value_policy::reference, py::keep_alive<2, 1>(), py::keep_alive<3, 1>(), py::arg("converter"),
       py::arg("new_action"), py::arg("new_context"));
+
   m.def(
       "ucnv_set_from_ucall_back",
       [](_UConverterPtr &converter, _UConverterFromUCallbackPtr &new_action, _ConstVoidPtr &new_context) {
@@ -484,6 +535,7 @@ void init_ucnv(py::module &m) {
         }
       },
       py::arg("converter"), py::arg("sub_chars"), py::arg("len_"));
+
   m.def(
       "ucnv_set_subst_string",
       [](_UConverterPtr &converter, const UChar *s, int32_t length) {
@@ -494,6 +546,8 @@ void init_ucnv(py::module &m) {
         }
       },
       py::arg("converter"), py::arg("s"), py::arg("length"));
+
+  // TODO: Remove ucnv_set_to_u_call_back() in a future release.
   m.def(
       "ucnv_set_to_u_call_back",
       [](_UConverterPtr &converter, _UConverterToUCallbackPtr &new_action, _ConstVoidPtr &new_context) {
@@ -531,6 +585,7 @@ void init_ucnv(py::module &m) {
       },
       py::return_value_policy::reference, py::keep_alive<2, 1>(), py::keep_alive<3, 1>(), py::arg("converter"),
       py::arg("new_action"), py::arg("new_context"));
+
   m.def(
       "ucnv_set_to_ucall_back",
       [](_UConverterPtr &converter, _UConverterToUCallbackPtr &new_action, _ConstVoidPtr &new_context) {

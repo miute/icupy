@@ -6,6 +6,9 @@
 
 void init_ureldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
+  //
+  // UDateRelativeDateTimeFormatterStyle
+  //
   py::enum_<UDateRelativeDateTimeFormatterStyle>(m, "UDateRelativeDateTimeFormatterStyle", py::arithmetic(),
                                                  "The formatting style.")
       .value("UDAT_STYLE_LONG", UDAT_STYLE_LONG, "Everything spelled out.")
@@ -19,6 +22,9 @@ void init_ureldatefmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+  //
+  // URelativeDateTimeFormatterField
+  //
   py::enum_<URelativeDateTimeFormatterField>(
       m, "URelativeDateTimeFormatterField", py::arithmetic(),
       "*FieldPosition* and *UFieldPosition* selectors for format fields defined by *RelativeDateTimeFormatter*.")
@@ -30,6 +36,9 @@ void init_ureldatefmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
+  //
+  // URelativeDateTimeUnit
+  //
   py::enum_<URelativeDateTimeUnit>(m, "URelativeDateTimeUnit", py::arithmetic(),
                                    "Represents the unit for formatting a relative date.\n\n"
                                    "e.g. \"in 5 days\" or \"next year\"")

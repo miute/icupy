@@ -33,6 +33,9 @@ UCharDirection _UBiDiClassCallbackPtr::callback(const void *context, UChar32 c) 
 }
 
 void init_ubidi(py::module &m) {
+  //
+  // UBiDiDirection
+  //
   py::enum_<UBiDiDirection>(m, "UBiDiDirection", py::arithmetic(),
                             "*UBiDiDirection* values indicate the text direction.")
       .value("UBIDI_LTR", UBIDI_LTR,
@@ -59,6 +62,9 @@ void init_ubidi(py::module &m) {
              "or contains neither left-to-right nor right-to-left characters.")
       .export_values();
 
+  //
+  // UBiDiReorderingMode
+  //
   py::enum_<UBiDiReorderingMode>(m, "UBiDiReorderingMode", py::arithmetic(),
                                  "*UBiDiReorderingMode* values indicate which variant of the Bidi algorithm to use.")
       .value("UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT,
@@ -83,6 +89,9 @@ void init_ubidi(py::module &m) {
              "Inverse Bidi (Visual to Logical) algorithm for the *UBIDI_REORDER_NUMBERS_SPECIAL* Bidi algorithm.")
       .export_values();
 
+  //
+  // UBiDiReorderingOption
+  //
   py::enum_<UBiDiReorderingOption>(
       m, "UBiDiReorderingOption", py::arithmetic(),
       "*UBiDiReorderingOption* values indicate which options are specified to affect the Bidi algorithm.")
@@ -144,16 +153,27 @@ void init_ubidi(py::module &m) {
              "*ubidi_set_para* so that later paragraphs may be concatenated to previous paragraphs on the right.")
       .export_values();
 
+  //
+  // _UBiDiClassCallbackPtr
+  //
   py::class_<_UBiDiClassCallbackPtr>(m, "UBiDiClassCallbackPtr")
       .def(py::init<std::nullptr_t>(), py::arg("fn"))
       .def(py::init<py::function>(), py::arg("fn"));
 
+  //
+  // _UBiDiPtr
+  //
   py::class_<_UBiDiPtr>(m, "_UBiDiPtr");
 
+  //
+  // Functions
+  //
   m.def(
       "ubidi_close", [](_UBiDiPtr &bidi) { ubidi_close(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_count_paragraphs", [](_UBiDiPtr &bidi) { return ubidi_countParagraphs(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_count_runs",
       [](_UBiDiPtr &bidi) {
@@ -165,7 +185,9 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"));
+
   m.def("ubidi_get_base_direction", &ubidi_getBaseDirection, py::arg("text"), py::arg("length"));
+
   m.def(
       "ubidi_get_class_callback",
       [](_UBiDiPtr &bidi) {
@@ -182,16 +204,21 @@ void init_ubidi(py::module &m) {
         return py::make_tuple(_UBiDiClassCallbackPtr(fn), _ConstVoidPtr(context));
       },
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_customized_class", [](_UBiDiPtr &bidi, UChar32 c) { return ubidi_getCustomizedClass(bidi, c); },
       py::arg("bidi"), py::arg("c"));
+
   m.def(
       "ubidi_get_direction", [](_UBiDiPtr &bidi) { return ubidi_getDirection(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_length", [](_UBiDiPtr &bidi) { return ubidi_getLength(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_level_at", [](_UBiDiPtr &bidi, int32_t char_index) { return ubidi_getLevelAt(bidi, char_index); },
       py::arg("bidi"), py::arg("char_index"));
+
   m.def(
       "ubidi_get_levels",
       [](_UBiDiPtr &bidi) {
@@ -205,6 +232,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_logical_index",
       [](_UBiDiPtr &bidi, int32_t visual_index) {
@@ -216,6 +244,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"), py::arg("visual_index"));
+
   m.def(
       "ubidi_get_logical_map",
       [](_UBiDiPtr &bidi) {
@@ -231,6 +260,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_logical_run",
       [](_UBiDiPtr &bidi, int32_t logical_position) {
@@ -240,6 +270,7 @@ void init_ubidi(py::module &m) {
         return py::make_tuple(logical_limit, level);
       },
       py::arg("bidi"), py::arg("logical_position"));
+
   m.def(
       "ubidi_get_paragraph",
       [](_UBiDiPtr &bidi, int32_t char_index) {
@@ -254,6 +285,7 @@ void init_ubidi(py::module &m) {
         return py::make_tuple(result, para_start, para_limit, para_level);
       },
       py::arg("bidi"), py::arg("char_index"));
+
   m.def(
       "ubidi_get_paragraph_by_index",
       [](_UBiDiPtr &bidi, int32_t para_index) {
@@ -268,20 +300,27 @@ void init_ubidi(py::module &m) {
         return py::make_tuple(para_start, para_limit, para_level);
       },
       py::arg("bidi"), py::arg("para_index"));
+
   m.def(
       "ubidi_get_para_level", [](_UBiDiPtr &bidi) { return ubidi_getParaLevel(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_processed_length", [](_UBiDiPtr &bidi) { return ubidi_getProcessedLength(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_reordering_mode", [](_UBiDiPtr &bidi) { return ubidi_getReorderingMode(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_reordering_options", [](_UBiDiPtr &bidi) { return ubidi_getReorderingOptions(bidi); },
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_result_length", [](_UBiDiPtr &bidi) { return ubidi_getResultLength(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_get_text", [](_UBiDiPtr &bidi) { return ubidi_getText(bidi); }, py::return_value_policy::reference,
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_visual_index",
       [](_UBiDiPtr &bidi, int32_t logical_index) {
@@ -293,6 +332,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"), py::arg("logical_index"));
+
   m.def(
       "ubidi_get_visual_map",
       [](_UBiDiPtr &bidi) {
@@ -308,6 +348,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"));
+
   m.def(
       "ubidi_get_visual_run",
       [](_UBiDiPtr &bidi, int32_t run_index) {
@@ -317,6 +358,7 @@ void init_ubidi(py::module &m) {
         return py::make_tuple(result, logical_start, length);
       },
       py::arg("bidi"), py::arg("run_index"));
+
   m.def(
       "ubidi_invert_map",
       [](const std::vector<int32_t> &src_map, int32_t length) {
@@ -325,15 +367,19 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("src_map"), py::arg("length"));
+
   m.def(
       "ubidi_is_inverse", [](_UBiDiPtr &bidi) { return ubidi_isInverse(bidi); }, py::arg("bidi"));
+
   m.def(
       "ubidi_is_order_paragraphs_ltr", [](_UBiDiPtr &bidi) { return ubidi_isOrderParagraphsLTR(bidi); },
       py::arg("bidi"));
+
   m.def("ubidi_open", []() {
     auto bidi = ubidi_open();
     return std::make_unique<_UBiDiPtr>(bidi);
   });
+
   m.def(
       "ubidi_open_sized",
       [](int32_t max_length, int32_t max_run_count) {
@@ -345,10 +391,12 @@ void init_ubidi(py::module &m) {
         return std::make_unique<_UBiDiPtr>(bidi);
       },
       py::arg("max_length"), py::arg("max_run_count"));
+
   m.def(
       "ubidi_order_paragraphs_ltr",
       [](_UBiDiPtr &bidi, UBool order_paragraphs_ltr) { ubidi_orderParagraphsLTR(bidi, order_paragraphs_ltr); },
       py::arg("bidi"), py::arg("order_paragraphs_ltr"));
+
   m.def(
       "ubidi_reorder_logical",
       [](const std::vector<UBiDiLevel> &levels, int32_t length) {
@@ -357,6 +405,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("levels"), py::arg("length"));
+
   m.def(
       "ubidi_reorder_visual",
       [](const std::vector<UBiDiLevel> &levels, int32_t length) {
@@ -365,6 +414,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("levels"), py::arg("length"));
+
   m.def(
       "ubidi_set_class_callback",
       [](_UBiDiPtr &bidi, _UBiDiClassCallbackPtr &new_fn, _ConstVoidPtr &new_context) {
@@ -398,6 +448,7 @@ void init_ubidi(py::module &m) {
       },
       py::return_value_policy::reference, py::keep_alive<2, 1>(), py::keep_alive<3, 1>(), py::arg("bidi"),
       py::arg("new_fn"), py::arg("new_context"));
+
   m.def(
       "ubidi_set_context",
       [](_UBiDiPtr &bidi, const UChar *prologue, int32_t pro_length, const UChar *epilogue, int32_t epi_length) {
@@ -426,9 +477,11 @@ void init_ubidi(py::module &m) {
         bidi.set_epilogue(epilogue_ptr);
       },
       py::arg("bidi"), py::arg("prologue"), py::arg("pro_length"), py::arg("epilogue"), py::arg("epi_length"));
+
   m.def(
       "ubidi_set_inverse", [](_UBiDiPtr &bidi, UBool is_inverse) { ubidi_setInverse(bidi, is_inverse); },
       py::arg("bidi"), py::arg("is_inverse"));
+
   m.def(
       "ubidi_set_line",
       [](_UBiDiPtr &para_bidi, int32_t start, int32_t limit, _UBiDiPtr &line_bidi) {
@@ -439,6 +492,7 @@ void init_ubidi(py::module &m) {
         }
       },
       py::arg("para_bidi"), py::arg("start"), py::arg("limit"), py::arg("line_bidi"));
+
   m.def(
       "ubidi_set_para",
       [](_UBiDiPtr &bidi, const UChar *text, int32_t length, UBiDiLevel para_level,
@@ -466,14 +520,17 @@ void init_ubidi(py::module &m) {
       },
       py::arg("bidi"), py::arg("text").none(false), py::arg("length"), py::arg("para_level"),
       py::arg("embedding_levels") = std::nullopt);
+
   m.def(
       "ubidi_set_reordering_mode",
       [](_UBiDiPtr &bidi, UBiDiReorderingMode reordering_mode) { ubidi_setReorderingMode(bidi, reordering_mode); },
       py::arg("bidi"), py::arg("reordering_mode"));
+
   m.def(
       "ubidi_set_reordering_options",
       [](_UBiDiPtr &bidi, int32_t reordering_options) { ubidi_setReorderingOptions(bidi, reordering_options); },
       py::arg("bidi"), py::arg("reordering_options"));
+
   m.def(
       "ubidi_write_reordered",
       [](_UBiDiPtr &bidi, uint16_t options) {
@@ -496,6 +553,7 @@ void init_ubidi(py::module &m) {
         return result;
       },
       py::arg("bidi"), py::arg("options"));
+
   m.def(
       "ubidi_write_reverse",
       [](const UChar *src, int32_t src_length, uint16_t options) {

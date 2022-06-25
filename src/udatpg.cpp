@@ -2,6 +2,9 @@
 #include <unicode/udatpg.h>
 
 void init_udatpg(py::module &m) {
+  //
+  // UDateTimePatternConflict
+  //
   py::enum_<UDateTimePatternConflict>(m, "UDateTimePatternConflict", py::arithmetic(),
                                       "Status return values from *udatpg_add_pattern()*.")
       .value("UDATPG_NO_CONFLICT", UDATPG_NO_CONFLICT)
@@ -13,6 +16,9 @@ void init_udatpg(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UDateTimePatternField
+  //
   py::enum_<UDateTimePatternField>(
       m, "UDateTimePatternField", py::arithmetic(),
       "Field number constants for *udatpg_get_append_item_formats()* and similar functions.\n\n"
@@ -40,6 +46,9 @@ void init_udatpg(py::module &m) {
 #endif // U_FORCE_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UDateTimePatternMatchOptions
+  //
   py::enum_<UDateTimePatternMatchOptions>(
       m, "UDateTimePatternMatchOptions", py::arithmetic(),
       "Masks to control forcing the length of specified fields in the returned pattern to match those in the skeleton "
@@ -52,6 +61,9 @@ void init_udatpg(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 61)
+  //
+  // UDateTimePGDisplayWidth
+  //
   py::enum_<UDateTimePGDisplayWidth>(m, "UDateTimePGDisplayWidth", py::arithmetic(),
                                      "Field display name width constants for *udatpg_get_field_display_name()*.")
       .value("UDATPG_WIDE", UDATPG_WIDE)

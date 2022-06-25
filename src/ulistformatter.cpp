@@ -6,6 +6,9 @@
 
 void init_ulistformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UListFormatterField
+  //
   py::enum_<UListFormatterField>(
       m, "UListFormatterField", py::arithmetic(),
       "*FieldPosition* and *UFieldPosition* selectors for format fields defined by *ListFormatter*.")
@@ -17,6 +20,9 @@ void init_ulistformatter(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
+  //
+  // UListFormatterType
+  //
   py::enum_<UListFormatterType>(m, "UListFormatterType", py::arithmetic(), "Type of meaning expressed by the list.")
       .value("ULISTFMT_TYPE_AND", ULISTFMT_TYPE_AND,
              "Conjunction formatting, e.g. "
@@ -29,6 +35,9 @@ void init_ulistformatter(py::module &m) {
              "\"5 pounds, 12 ounces\".")
       .export_values();
 
+  //
+  // UListFormatterWidth
+  //
   py::enum_<UListFormatterWidth>(m, "UListFormatterWidth", py::arithmetic(), "Verbosity level of the list patterns.")
       .value("ULISTFMT_WIDTH_WIDE", ULISTFMT_WIDTH_WIDE,
              "Use list formatting with full words (no abbreviations) when possible.")

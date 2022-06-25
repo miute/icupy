@@ -5,18 +5,26 @@
 using namespace icu;
 
 void init_format(py::module &m) {
+  //
   // icu::Format
+  //
   py::class_<Format, UObject> fmt(m, "Format");
-  fmt.def("__copy__", &Format::clone)
-      .def(
-          "__deepcopy__", [](const Format &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const Format &self, const Format &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
-      .def(
-          "__ne__", [](const Format &self, const Format &other) { return self != other; }, py::is_operator(),
-          py::arg("other"));
+
+  fmt.def("__copy__", &Format::clone);
+
+  fmt.def(
+      "__deepcopy__", [](const Format &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  fmt.def(
+      "__eq__", [](const Format &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  fmt.def(
+      "__ne__", [](const Format &self, const Format &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+
   fmt.def("clone", &Format::clone);
+
   fmt.def(
          "format",
          [](const Format &self, const Formattable &obj, UnicodeString &append_to,
@@ -52,6 +60,7 @@ void init_format(py::module &m) {
             return result;
           },
           py::arg("obj"), py::arg("append_to"));
+
   fmt.def(
       "get_locale",
       [](const Format &self, ULocDataLocaleType type) {
@@ -63,6 +72,7 @@ void init_format(py::module &m) {
         return result;
       },
       py::arg("type_"));
+
   fmt.def(
          "parse_object",
          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {

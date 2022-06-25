@@ -5,12 +5,18 @@
 using namespace icu;
 
 void init_idna(py::module &m) {
+  //
+  // icu::IDNAInfo
+  //
   py::class_<IDNAInfo, UMemory>(m, "IDNAInfo")
       .def(py::init<>())
       .def("get_errors", &IDNAInfo::getErrors)
       .def("has_errors", &IDNAInfo::hasErrors)
       .def("is_transitional_different", &IDNAInfo::isTransitionalDifferent);
 
+  //
+  // icu::IDNA
+  //
   py::class_<IDNA, UObject> idna(m, "IDNA");
 
   py::enum_<decltype(UIDNA_DEFAULT)>(idna, "IDNA", py::arithmetic())
@@ -66,6 +72,7 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("options"));
+
   idna.def(
       "label_to_ascii",
       [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
@@ -77,6 +84,7 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("label"), py::arg("dest"), py::arg("info"));
+
   idna.def(
       "label_to_unicode",
       [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
@@ -88,6 +96,7 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("label"), py::arg("dest"), py::arg("info"));
+
   idna.def(
       "name_to_ascii",
       [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
@@ -99,6 +108,7 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("dest"), py::arg("info"));
+
   idna.def(
       "name_to_unicode",
       [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
@@ -111,30 +121,49 @@ void init_idna(py::module &m) {
       },
       py::arg("name"), py::arg("dest"), py::arg("info"));
 
-  idna.def_property_readonly_static("ERROR_EMPTY_LABEL", [](py::object) -> int32_t { return UIDNA_ERROR_EMPTY_LABEL; });
+  idna.def_property_readonly_static("ERROR_EMPTY_LABEL",
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_EMPTY_LABEL; });
+
   idna.def_property_readonly_static("ERROR_LABEL_TOO_LONG",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_LABEL_TOO_LONG; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_LABEL_TOO_LONG; });
+
   idna.def_property_readonly_static("ERROR_DOMAIN_NAME_TOO_LONG",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_DOMAIN_NAME_TOO_LONG; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_DOMAIN_NAME_TOO_LONG; });
+
   idna.def_property_readonly_static("ERROR_LEADING_HYPHEN",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_LEADING_HYPHEN; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_LEADING_HYPHEN; });
+
   idna.def_property_readonly_static("ERROR_TRAILING_HYPHEN",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_TRAILING_HYPHEN; });
-  idna.def_property_readonly_static("ERROR_HYPHEN_3_4", [](py::object) -> int32_t { return UIDNA_ERROR_HYPHEN_3_4; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_TRAILING_HYPHEN; });
+
+  idna.def_property_readonly_static("ERROR_HYPHEN_3_4",
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_HYPHEN_3_4; });
+
   idna.def_property_readonly_static("ERROR_LEADING_COMBINING_MARK",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_LEADING_COMBINING_MARK; });
-  idna.def_property_readonly_static("ERROR_DISALLOWED", [](py::object) -> int32_t { return UIDNA_ERROR_DISALLOWED; });
-  idna.def_property_readonly_static("ERROR_PUNYCODE", [](py::object) -> int32_t { return UIDNA_ERROR_PUNYCODE; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_LEADING_COMBINING_MARK; });
+
+  idna.def_property_readonly_static("ERROR_DISALLOWED",
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_DISALLOWED; });
+
+  idna.def_property_readonly_static("ERROR_PUNYCODE",
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_PUNYCODE; });
+
   idna.def_property_readonly_static("ERROR_LABEL_HAS_DOT",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_LABEL_HAS_DOT; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_LABEL_HAS_DOT; });
+
   idna.def_property_readonly_static("ERROR_INVALID_ACE_LABEL",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_INVALID_ACE_LABEL; });
-  idna.def_property_readonly_static("ERROR_BIDI", [](py::object) -> int32_t { return UIDNA_ERROR_BIDI; });
-  idna.def_property_readonly_static("ERROR_CONTEXTJ", [](py::object) -> int32_t { return UIDNA_ERROR_CONTEXTJ; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_INVALID_ACE_LABEL; });
+
+  idna.def_property_readonly_static("ERROR_BIDI", [](const py::object &) -> int32_t { return UIDNA_ERROR_BIDI; });
+
+  idna.def_property_readonly_static("ERROR_CONTEXTJ",
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_CONTEXTJ; });
+
   idna.def_property_readonly_static("ERROR_CONTEXTO_PUNCTUATION",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_CONTEXTO_PUNCTUATION; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_CONTEXTO_PUNCTUATION; });
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   idna.def_property_readonly_static("ERROR_CONTEXTO_DIGITS",
-                                    [](py::object) -> int32_t { return UIDNA_ERROR_CONTEXTO_DIGITS; });
+                                    [](const py::object &) -> int32_t { return UIDNA_ERROR_CONTEXTO_DIGITS; });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 }

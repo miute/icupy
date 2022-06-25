@@ -2,6 +2,9 @@
 #include <unicode/uloc.h>
 
 void init_uloc(py::module &m) {
+  //
+  // UAcceptResult
+  //
   py::enum_<UAcceptResult>(m, "UAcceptResult", py::arithmetic(),
                            "Output values which *uloc_accept_language()* writes to the 'out_result' parameter.")
       .value("ULOC_ACCEPT_FAILED", ULOC_ACCEPT_FAILED, "No exact match was found.")
@@ -11,6 +14,9 @@ void init_uloc(py::module &m) {
              "For example, the Accept-Language list includes 'ja_JP' and is matched with available locale 'ja'.")
       .export_values();
 
+  //
+  // ULayoutType
+  //
   py::enum_<ULayoutType>(m, "ULayoutType", py::arithmetic(),
                          "enums for the return value for the character and line orientation functions.")
       .value("ULOC_LAYOUT_LTR", ULOC_LAYOUT_LTR)
@@ -21,6 +27,9 @@ void init_uloc(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
+  //
+  // ULocAvailableType
+  //
   py::enum_<ULocAvailableType>(m, "ULocAvailableType", py::arithmetic(),
                                "Types for *uloc_get_available_by_type* and *uloc_count_available_by_type*.")
       .value("ULOC_AVAILABLE_DEFAULT", ULOC_AVAILABLE_DEFAULT,
@@ -40,6 +49,9 @@ void init_uloc(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
+  //
+  // ULocDataLocaleType
+  //
   py::enum_<ULocDataLocaleType>(
       m, "ULocDataLocaleType", py::arithmetic(),
       "Constants for *get_locale()*.\n\n"

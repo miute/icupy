@@ -13,6 +13,9 @@ using namespace icu;
 
 void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
+  //
+  // UBidiPairedBracketType
+  //
   py::enum_<UBidiPairedBracketType>(m, "UBidiPairedBracketType", py::arithmetic(),
                                     "Bidi Paired Bracket Type constants.")
       .value("U_BPT_NONE", U_BPT_NONE, "Not a paired bracket.")
@@ -25,6 +28,9 @@ void init_uchar(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
+  //
+  // UBlockCode
+  //
   py::enum_<UBlockCode>(m, "UBlockCode", py::arithmetic(),
                         "Constants for Unicode blocks, see the Unicode Data file Blocks.txt.")
       .value("UBLOCK_NO_BLOCK", UBLOCK_NO_BLOCK, "New No_Block value in Unicode 4.")
@@ -387,6 +393,9 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_INVALID_CODE", UBLOCK_INVALID_CODE)
       .export_values();
 
+  //
+  // UCharCategory
+  //
   py::enum_<UCharCategory>(m, "UCharCategory", py::arithmetic(),
                            "Data for enumerated Unicode general category types.\n\n"
                            "See http://www.unicode.org/Public/UNIDATA/UnicodeData.html")
@@ -429,6 +438,9 @@ void init_uchar(py::module &m) {
              "http://www.unicode.org/policies/stability_policy.html#Property_Value")
       .export_values();
 
+  //
+  // UCharDirection
+  //
   py::enum_<UCharDirection>(m, "UCharDirection", py::arithmetic(),
                             "This specifies the language directional property of a character set.")
       .value("U_LEFT_TO_RIGHT", U_LEFT_TO_RIGHT, "L.")
@@ -460,6 +472,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UCharNameChoice
+  //
   py::enum_<UCharNameChoice>(m, "UCharNameChoice", py::arithmetic(),
                              "Selector constants for *u_char_name()*.\n\n"
                              "*u_char_name()* returns the \"modern\" name of a Unicode character; or the name that was "
@@ -477,6 +492,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UDecompositionType
+  //
   py::enum_<UDecompositionType>(m, "UDecompositionType", py::arithmetic(), "Decomposition Type constants.")
       .value("U_DT_NONE", U_DT_NONE)
       .value("U_DT_CANONICAL", U_DT_CANONICAL)
@@ -502,6 +520,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UEastAsianWidth
+  //
   py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic(), "East Asian Width constants.")
       .value("U_EA_NEUTRAL", U_EA_NEUTRAL)
       .value("U_EA_AMBIGUOUS", U_EA_AMBIGUOUS)
@@ -515,6 +536,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UGraphemeClusterBreak
+  //
   py::enum_<UGraphemeClusterBreak>(m, "UGraphemeClusterBreak", py::arithmetic(), "Grapheme Cluster Break constants.")
       .value("U_GCB_OTHER", U_GCB_OTHER)
       .value("U_GCB_CONTROL", U_GCB_CONTROL)
@@ -544,6 +568,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UHangulSyllableType
+  //
   py::enum_<UHangulSyllableType>(m, "UHangulSyllableType", py::arithmetic(), "Hangul Syllable Type constants.")
       .value("U_HST_NOT_APPLICABLE", U_HST_NOT_APPLICABLE)
       .value("U_HST_LEADING_JAMO", U_HST_LEADING_JAMO)
@@ -558,6 +585,9 @@ void init_uchar(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UIndicPositionalCategory
+  //
   py::enum_<UIndicPositionalCategory>(m, "UIndicPositionalCategory", py::arithmetic(),
                                       "Indic Positional Category constants.")
       .value("U_INPC_NA", U_INPC_NA)
@@ -582,6 +612,9 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UIndicSyllabicCategory
+  //
   py::enum_<UIndicSyllabicCategory>(m, "UIndicSyllabicCategory", py::arithmetic(), "Indic Syllabic Category constants.")
       .value("U_INSC_OTHER", U_INSC_OTHER)
       .value("U_INSC_AVAGRAHA", U_INSC_AVAGRAHA)
@@ -622,6 +655,9 @@ void init_uchar(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
+  //
+  // UJoiningGroup
+  //
   py::enum_<UJoiningGroup>(m, "UJoiningGroup", py::arithmetic(), "Joining Group constants.")
       .value("U_JG_NO_JOINING_GROUP", U_JG_NO_JOINING_GROUP)
       .value("U_JG_AIN", U_JG_AIN)
@@ -746,6 +782,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UJoiningType
+  //
   py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic(), "Joining Type constants.")
       .value("U_JT_NON_JOINING", U_JT_NON_JOINING)
       .value("U_JT_JOIN_CAUSING", U_JT_JOIN_CAUSING)
@@ -759,6 +798,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // ULineBreak
+  //
   py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic(), "Line Break constants.")
       .value("U_LB_UNKNOWN", U_LB_UNKNOWN)
       .value("U_LB_AMBIGUOUS", U_LB_AMBIGUOUS)
@@ -817,6 +859,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UNumericType
+  //
   py::enum_<UNumericType>(m, "UNumericType", py::arithmetic(), "Numeric Type constants.")
       .value("U_NT_NONE", U_NT_NONE)
       .value("U_NT_DECIMAL", U_NT_DECIMAL)
@@ -828,6 +873,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UProperty
+  //
   py::enum_<UProperty>(
       m, "UProperty", py::arithmetic(),
       "Selection constants for Unicode properties.\n\n"
@@ -1250,6 +1298,9 @@ void init_uchar(py::module &m) {
              "Represents a nonexistent or invalid property or property value.")
       .export_values();
 
+  //
+  // UPropertyNameChoice
+  //
   py::enum_<UPropertyNameChoice>(
       m, "UPropertyNameChoice", py::arithmetic(),
       "Selector constants for *u_get_property_name()* and *u_get_property_value_name()*.\n\n"
@@ -1264,6 +1315,9 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // USentenceBreak
+  //
   py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic(), "Sentence Break constants.")
       .value("U_SB_OTHER", U_SB_OTHER)
       .value("U_SB_ATERM", U_SB_ATERM)
@@ -1287,6 +1341,9 @@ void init_uchar(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UVerticalOrientation
+  //
   py::enum_<UVerticalOrientation>(m, "UVerticalOrientation", py::arithmetic(), "Vertical Orientation constants.")
       .value("U_VO_ROTATED", U_VO_ROTATED)
       .value("U_VO_TRANSFORMED_ROTATED", U_VO_TRANSFORMED_ROTATED)
@@ -1295,6 +1352,9 @@ void init_uchar(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
+  //
+  // UWordBreakValues
+  //
   py::enum_<UWordBreakValues>(m, "UWordBreakValues", py::arithmetic(),
                               "Word Break constants.\n\n"
                               "(*UWordBreak* is a pre-existing enum type in ubrk.h for word break status tags.)")
@@ -1335,8 +1395,12 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // Functions
+  //
   m.def(
       "u_get_gc_mask", [](UChar32 c) { return U_GET_GC_MASK(c); }, py::arg("c"));
+
   m.def(
       "u_mask", [](UChar32 c) { return U_MASK(c); }, py::arg("c"));
 
@@ -1349,8 +1413,11 @@ void init_uchar(py::module &m) {
         return result;
       },
       py::arg("c"));
+
   m.def("u_char_digit_value", &u_charDigitValue, py::arg("c"));
+
   m.def("u_char_direction", &u_charDirection, py::arg("c"));
+
   m.def(
       "u_char_from_name",
       [](UCharNameChoice name_choice, const char *name) {
@@ -1362,7 +1429,9 @@ void init_uchar(py::module &m) {
         return result;
       },
       py::arg("name_choice"), py::arg("name"));
+
   m.def("u_char_mirror", &u_charMirror, py::arg("c"));
+
   m.def(
       "u_char_name",
       [](UChar32 code, UCharNameChoice name_choice) {
@@ -1377,13 +1446,19 @@ void init_uchar(py::module &m) {
         return result;
       },
       py::arg("code"), py::arg("name_choice"));
+
   m.def("u_char_type", &u_charType, py::arg("c"));
+
   m.def("u_digit", &u_digit, py::arg("ch"), py::arg("radix"));
+
   m.def("u_fold_case", &u_foldCase, py::arg("c"), py::arg("options"));
+
   m.def("u_for_digit", &u_forDigit, py::arg("digit"), py::arg("radix"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   m.def("u_get_bidi_paired_bracket", &u_getBidiPairedBracket, py::arg("c"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   m.def(
       "u_get_binary_property_set",
@@ -1397,7 +1472,9 @@ void init_uchar(py::module &m) {
       },
       py::arg("property_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
+
   m.def("u_get_combining_class", &u_getCombiningClass, py::arg("c"));
+
   m.def(
       "u_get_fc_nfkc_closure",
       [](UChar32 c) {
@@ -1412,6 +1489,7 @@ void init_uchar(py::module &m) {
         return result;
       },
       py::arg("c"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   m.def(
       "u_get_int_property_map",
@@ -1425,60 +1503,103 @@ void init_uchar(py::module &m) {
       },
       py::return_value_policy::reference, py::arg("property_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
+
   m.def("u_get_int_property_max_value", &u_getIntPropertyMaxValue, py::arg("which"));
+
   m.def("u_get_int_property_min_value", &u_getIntPropertyMinValue, py::arg("which"));
+
   m.def("u_get_int_property_value", &u_getIntPropertyValue, py::arg("c"), py::arg("which"));
+
   m.def("u_get_numeric_value", &u_getNumericValue, py::arg("c"));
+
   m.def("u_get_property_enum", &u_getPropertyEnum, py::arg("alias"));
+
   m.def("u_get_property_name", &u_getPropertyName, py::arg("property_"), py::arg("name_choice"),
         py::return_value_policy::reference);
+
   m.def("u_get_property_value_enum", &u_getPropertyValueEnum, py::arg("property_"), py::arg("alias"));
+
   m.def("u_get_property_value_name", &u_getPropertyValueName, py::arg("property_"), py::arg("value"),
         py::arg("name_choice"));
+
   m.def("u_get_unicode_version", []() {
     UVersionInfo info;
     u_getUnicodeVersion(info);
     std::vector<uint8_t> result(info, info + sizeof(info));
     return result;
   });
+
   m.def("u_has_binary_property", &u_hasBinaryProperty, py::arg("c"), py::arg("which"));
+
   m.def("u_isalnum", &u_isalnum, py::arg("c"));
+
   m.def("u_isalpha", &u_isalpha, py::arg("c"));
+
   m.def("u_isbase", &u_isbase, py::arg("c"));
+
   m.def("u_isblank", &u_isblank, py::arg("c"));
+
   m.def("u_iscntrl", &u_iscntrl, py::arg("c"));
+
   m.def("u_isdefined", &u_isdefined, py::arg("c"));
+
   m.def("u_isdigit", &u_isdigit, py::arg("c"));
+
   m.def("u_isgraph", &u_isgraph, py::arg("c"));
+
   m.def("u_is_id_ignorable", &u_isIDIgnorable, py::arg("c"));
+
   m.def("u_is_id_part", &u_isIDPart, py::arg("c"));
+
   m.def("u_is_id_start", &u_isIDStart, py::arg("c"));
+
   m.def("u_is_iso_control", &u_isISOControl, py::arg("c"));
+
   m.def("u_is_java_id_part", &u_isJavaIDPart, py::arg("c"));
+
   m.def("u_is_java_id_start", &u_isJavaIDStart, py::arg("c"));
+
   m.def("u_is_java_space_char", &u_isJavaSpaceChar, py::arg("c"));
+
   m.def("u_islower", &u_islower, py::arg("c"));
+
   m.def("u_is_mirrored", &u_isMirrored, py::arg("c"));
+
   m.def("u_isprint", &u_isprint, py::arg("c"));
+
   m.def("u_ispunct", &u_ispunct, py::arg("c"));
+
   m.def("u_isspace", &u_isspace, py::arg("c"));
+
   m.def("u_istitle", &u_istitle, py::arg("c"));
+
   m.def("u_is_ualphabetic", &u_isUAlphabetic, py::arg("c"));
+
   m.def("u_is_ulowercase", &u_isULowercase, py::arg("c"));
+
   m.def("u_isupper", &u_isupper, py::arg("c"));
+
   m.def("u_is_uuppercase", &u_isUUppercase, py::arg("c"));
+
   m.def("u_is_uwhite_space", &u_isUWhiteSpace, py::arg("c"));
+
   m.def("u_is_whitespace", &u_isWhitespace, py::arg("c"));
+
   m.def("u_isxdigit", &u_isxdigit, py::arg("c"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   m.def(
       "u_string_has_binary_property",
       [](const char16_t *s, UProperty which) { return u_stringHasBinaryProperty(s, -1, which); }, py::arg("s"),
       py::arg("which"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   m.def("u_tolower", &u_tolower, py::arg("c"));
+
   m.def("u_totitle", &u_totitle, py::arg("c"));
+
   m.def("u_toupper", &u_toupper, py::arg("c"));
+
   m.def("ublock_get_code", &ublock_getCode, py::arg("c"));
 
   m.attr("U_GC_C_MASK") = U_GC_C_MASK;

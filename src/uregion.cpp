@@ -6,6 +6,9 @@
 
 void init_uregion(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
+  // URegionType
+  //
   py::enum_<URegionType>(m, "URegionType", py::arithmetic(),
                          "*URegionType* is an enumeration defining the different types of regions.\n\n"
                          "Current possible values are *URGN_WORLD*, *URGN_CONTINENT*, *URGN_SUBCONTINENT*, "

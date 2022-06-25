@@ -12,13 +12,19 @@
 using namespace icu;
 
 void init_regex(py::module &m) {
+  //
   // icu::RegexMatcher
+  //
   py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher");
 
+  //
   // icu::RegexPattern
+  //
   py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
 
+  //
   // icu::RegexMatcher
+  //
   rm.def(
         // [1] RegexMatcher::RegexMatcher
         py::init([](const _UnicodeStringVariant &regexp, uint32_t flags) {
@@ -63,6 +69,7 @@ void init_regex(py::module &m) {
             return result;
           }),
           py::arg("regexp"), py::arg("input_"), py::arg("flags"));
+
   rm.def(
         "append_replacement",
         [](RegexMatcher &self, UnicodeString &dest, const _UnicodeStringVariant &replacement) -> RegexMatcher & {
@@ -85,6 +92,7 @@ void init_regex(py::module &m) {
             return result;
           },
           py::arg("dest"), py::arg("replacement"));
+
   rm.def("append_tail", py::overload_cast<UnicodeString &>(&RegexMatcher::appendTail), py::arg("dest"))
       .def(
           "append_tail",
@@ -97,6 +105,7 @@ void init_regex(py::module &m) {
             return std::make_unique<_UTextPtr>(p);
           },
           py::arg("dest"));
+
   rm.def(
         "end",
         [](const RegexMatcher &self, int32_t group) {
@@ -116,6 +125,7 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rm.def(
         "end64",
         [](const RegexMatcher &self, int32_t group) {
@@ -135,6 +145,7 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
 #if (U_ICU_VERSION_MAJOR_NUM < 55)
   rm.def("find", py::overload_cast<>(&RegexMatcher::find));
 #endif // (U_ICU_VERSION_MAJOR_NUM < 55)
@@ -161,6 +172,7 @@ void init_regex(py::module &m) {
            })
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
       ;
+
   rm.def("get_find_progress_callback", [](RegexMatcher &self) {
     URegexFindProgressCallback *callback;
     const void *context;
@@ -178,6 +190,7 @@ void init_regex(py::module &m) {
     // C callback function and callback data
     return py::make_tuple(_URegexFindProgressCallbackPtr(callback), _ConstVoidPtr(context));
   });
+
   rm.def(
       "get_input",
       [](const RegexMatcher &self, std::optional<_UTextPtr> &dest) {
@@ -189,6 +202,7 @@ void init_regex(py::module &m) {
         return std::make_unique<_UTextPtr>(p);
       },
       py::arg("dest"));
+
   rm.def("get_match_callback", [](RegexMatcher &self) {
     URegexMatchCallback *callback;
     const void *context;
@@ -206,8 +220,11 @@ void init_regex(py::module &m) {
     // C callback function and callback data
     return py::make_tuple(_URegexMatchCallbackPtr(callback), _ConstVoidPtr(context));
   });
+
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
+
   rm.def("get_time_limit", &RegexMatcher::getTimeLimit);
+
   rm.def(
         "group",
         [](const RegexMatcher &self, int32_t group_num) {
@@ -252,15 +269,22 @@ void init_regex(py::module &m) {
             return py::make_tuple(std::make_unique<_UTextPtr>(p), group_len);
           },
           py::arg("dest"));
+
   rm.def("group_count", &RegexMatcher::groupCount);
+
   rm.def("has_anchoring_bounds", &RegexMatcher::hasAnchoringBounds);
+
   rm.def("has_transparent_bounds", &RegexMatcher::hasTransparentBounds);
+
   rm.def("hit_end", &RegexMatcher::hitEnd);
+
   rm.def("input", &RegexMatcher::input);
+
   rm.def("input_text", [](const RegexMatcher &self) {
     auto p = self.inputText();
     return std::make_unique<_UTextPtr>(p);
   });
+
   rm.def(
         "looking_at",
         [](RegexMatcher &self, int64_t start_index) {
@@ -280,6 +304,7 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rm.def(
         "matches",
         [](RegexMatcher &self, int64_t start_index) {
@@ -299,8 +324,11 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rm.def("pattern", &RegexMatcher::pattern);
+
   // FIXME: Implement "RegexMatcher& RegexMatcher::refreshInputText(UText *input, UErrorCode &status)".
+
   rm.def(
         "region",
         [](RegexMatcher &self, int64_t region_start, int64_t region_limit, int64_t start_index) -> RegexMatcher & {
@@ -323,10 +351,15 @@ void init_regex(py::module &m) {
             return result;
           },
           py::arg("start"), py::arg("limit"));
+
   rm.def("region_end", &RegexMatcher::regionEnd);
+
   rm.def("region_end64", &RegexMatcher::regionEnd64);
+
   rm.def("region_start", &RegexMatcher::regionStart);
+
   rm.def("region_start64", &RegexMatcher::regionStart64);
+
   rm.def(
         "replace_all",
         [](RegexMatcher &self, const _UnicodeStringVariant &replacement) {
@@ -349,6 +382,7 @@ void init_regex(py::module &m) {
             return std::make_unique<_UTextPtr>(p);
           },
           py::arg("replacement"), py::arg("dest"));
+
   rm.def(
         "replace_first",
         [](RegexMatcher &self, const _UnicodeStringVariant &replacement) {
@@ -371,7 +405,9 @@ void init_regex(py::module &m) {
             return std::make_unique<_UTextPtr>(p);
           },
           py::arg("replacement"), py::arg("dest"));
+
   rm.def("require_end", &RegexMatcher::requireEnd);
+
   rm.def("reset", py::overload_cast<>(&RegexMatcher::reset))
       .def("reset", py::overload_cast<const UnicodeString &>(&RegexMatcher::reset), py::arg("input_"))
       .def(
@@ -388,6 +424,7 @@ void init_regex(py::module &m) {
       .def(
           "reset", [](RegexMatcher &self, _UTextPtr &input) -> RegexMatcher & { return self.reset(input); },
           py::arg("input_"));
+
   rm.def(
       "set_find_progress_callback",
       [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback, _ConstVoidPtr &context) {
@@ -409,6 +446,7 @@ void init_regex(py::module &m) {
         }
       },
       py::arg("callback"), py::arg("context"));
+
   rm.def(
       "set_match_callback",
       [](RegexMatcher &self, _URegexMatchCallbackPtr &callback, _ConstVoidPtr &context) {
@@ -430,6 +468,7 @@ void init_regex(py::module &m) {
         }
       },
       py::arg("callback"), py::arg("context"));
+
   rm.def(
       "set_stack_limit",
       [](RegexMatcher &self, int32_t limit) {
@@ -440,6 +479,7 @@ void init_regex(py::module &m) {
         }
       },
       py::arg("limit"));
+
   rm.def(
       "set_time_limit",
       [](RegexMatcher &self, int32_t limit) {
@@ -450,6 +490,7 @@ void init_regex(py::module &m) {
         }
       },
       py::arg("limit"));
+
   rm.def(
         "split",
         [](RegexMatcher &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {
@@ -480,6 +521,7 @@ void init_regex(py::module &m) {
             return result;
           },
           py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1);
+
   rm.def(
         "start",
         [](const RegexMatcher &self, int32_t group) {
@@ -499,6 +541,7 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rm.def(
         "start64",
         [](const RegexMatcher &self, int32_t group) {
@@ -518,18 +561,27 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rm.def("use_anchoring_bounds", &RegexMatcher::useAnchoringBounds, py::arg("b"));
+
   rm.def("use_transparent_bounds", &RegexMatcher::useTransparentBounds, py::arg("b"));
 
+  //
   // icu::RegexPattern
-  rp.def(py::init<>())
-      .def(py::init<const RegexPattern &>(), py::arg("source"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  rp.def("__copy__", &RegexPattern::clone)
-      .def(
-          "__deepcopy__", [](const RegexPattern &self, py::dict) { return self.clone(); }, py::arg("memo"));
+  //
+  rp.def(py::init<>()).def(py::init<const RegexPattern &>(), py::arg("other"));
+
+  rp.def(py::self != py::self, py::arg("other"));
+
+  rp.def(py::self == py::self, py::arg("other"));
+
+  rp.def("__copy__", &RegexPattern::clone);
+
+  rp.def(
+      "__deepcopy__", [](const RegexPattern &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   rp.def("clone", &RegexPattern::clone);
+
   rp.def_static(
         "compile",
         [](const _UnicodeStringVariant &regex, uint32_t flags) {
@@ -596,7 +648,9 @@ void init_regex(py::module &m) {
             return result;
           },
           py::arg("regex"), py::arg("pe"));
+
   rp.def("flags", &RegexPattern::flags);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   rp.def(
         "group_number_from_name",
@@ -621,6 +675,7 @@ void init_regex(py::module &m) {
           },
           py::arg("group_name"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
+
   rp.def(
         "matcher",
         [](const RegexPattern &self, const UnicodeString &input) {
@@ -640,6 +695,7 @@ void init_regex(py::module &m) {
         }
         return result;
       });
+
   rp.def_static(
         "matches",
         [](const _UnicodeStringVariant &regex, const UnicodeString &input, UParseError &pe) {
@@ -662,7 +718,9 @@ void init_regex(py::module &m) {
             return result;
           },
           py::arg("regex"), py::arg("input_"), py::arg("pe"));
+
   rp.def("pattern", &RegexPattern::pattern);
+
   rp.def("pattern_text", [](const RegexPattern &self) {
     ErrorCode error_code;
     auto p = self.patternText(error_code);
@@ -671,6 +729,7 @@ void init_regex(py::module &m) {
     }
     return std::make_unique<_UTextPtr>(p);
   });
+
   rp.def(
         "split",
         [](const RegexPattern &self, const UnicodeString &input, _UnicodeStringVector &dest, int32_t dest_capacity) {

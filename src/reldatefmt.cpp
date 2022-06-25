@@ -10,6 +10,9 @@ using namespace icu;
 
 void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
+  //
+  // UDateAbsoluteUnit
+  //
   py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic(), "Represents an absolute unit.")
       .value("UDAT_ABSOLUTE_SUNDAY", UDAT_ABSOLUTE_SUNDAY, "Sunday.")
       .value("UDAT_ABSOLUTE_MONDAY", UDAT_ABSOLUTE_MONDAY, "Monday.")
@@ -26,18 +29,19 @@ void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
       .value("UDAT_ABSOLUTE_QUARTER", UDAT_ABSOLUTE_QUARTER, "Quarter.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
       .value("UDAT_ABSOLUTE_HOUR", UDAT_ABSOLUTE_HOUR, "Hour.")
       .value("UDAT_ABSOLUTE_MINUTE", UDAT_ABSOLUTE_MINUTE, "Minute.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
-
 #ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_ABSOLUTE_UNIT_COUNT", UDAT_ABSOLUTE_UNIT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UDateDirection
+  //
   py::enum_<UDateDirection>(m, "UDateDirection", py::arithmetic(),
                             "Represents a direction for an absolute unit e.g., \"Next Tuesday\" or \"Last Tuesday\".")
       .value("UDAT_DIRECTION_LAST_2", UDAT_DIRECTION_LAST_2,
@@ -56,6 +60,9 @@ void init_reldatefmt(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UDateRelativeUnit
+  //
   py::enum_<UDateRelativeUnit>(m, "UDateRelativeUnit", py::arithmetic(),
                                "Represents the unit for formatting a relative date.\n\n"
                                "e.g., \"in 5 days\" or \"in 3 months\"")
@@ -73,8 +80,11 @@ void init_reldatefmt(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+  //
   // icu::FormattedRelativeDateTime
+  //
   py::class_<FormattedRelativeDateTime, UMemory, FormattedValue> frdt(m, "FormattedRelativeDateTime");
+
   frdt.def(
       "append_to",
       [](const FormattedRelativeDateTime &self, Appendable &appendable) -> Appendable & {
@@ -86,6 +96,7 @@ void init_reldatefmt(py::module &m) {
         return result;
       },
       py::arg("appendable"));
+
   frdt.def(
       "next_position",
       [](const FormattedRelativeDateTime &self, ConstrainedFieldPosition &cfpos) {
@@ -97,6 +108,7 @@ void init_reldatefmt(py::module &m) {
         return result;
       },
       py::arg("cfpos"));
+
   frdt.def("to_string", [](const FormattedRelativeDateTime &self) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
@@ -105,6 +117,7 @@ void init_reldatefmt(py::module &m) {
     }
     return result;
   });
+
   frdt.def("to_temp_string", [](const FormattedRelativeDateTime &self) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
@@ -115,8 +128,11 @@ void init_reldatefmt(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+  //
   // icu::RelativeDateTimeFormatter
+  //
   py::class_<RelativeDateTimeFormatter, UObject> rdtf(m, "RelativeDateTimeFormatter");
+
   rdtf.def(
           // [1] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([]() {
@@ -171,6 +187,7 @@ void init_reldatefmt(py::module &m) {
       .def(
           // [5] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init<const RelativeDateTimeFormatter &>(), py::arg("other"));
+
   rdtf.def(
       "combine_date_and_time",
       [](const RelativeDateTimeFormatter &self, const _UnicodeStringVariant &relative_date_string,
@@ -184,6 +201,7 @@ void init_reldatefmt(py::module &m) {
         return result;
       },
       py::arg("relative_date_string"), py::arg("time_string"), py::arg("append_to"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   rdtf.def(
       // [1] RelativeDateTimeFormatter::format
@@ -199,6 +217,7 @@ void init_reldatefmt(py::module &m) {
       },
       py::arg("offset"), py::arg("unit"), py::arg("append_to"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
+
   rdtf.def(
           // [2] RelativeDateTimeFormatter::format
           "format",
@@ -225,6 +244,7 @@ void init_reldatefmt(py::module &m) {
             return result;
           },
           py::arg("direction"), py::arg("unit"), py::arg("append_to"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   rdtf.def(
       "format_numeric",
@@ -252,6 +272,7 @@ void init_reldatefmt(py::module &m) {
         return result;
       },
       py::arg("offset"), py::arg("unit"));
+
   rdtf.def(
           // [1] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
@@ -292,8 +313,10 @@ void init_reldatefmt(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   rdtf.def("get_capitalization_context", &RelativeDateTimeFormatter::getCapitalizationContext);
+
   rdtf.def("get_format_style", &RelativeDateTimeFormatter::getFormatStyle);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
   rdtf.def("get_number_format", &RelativeDateTimeFormatter::getNumberFormat, py::return_value_policy::reference);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 }

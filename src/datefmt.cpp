@@ -6,9 +6,14 @@
 using namespace icu;
 
 void init_datefmt(py::module &m) {
+  //
   // icu::DateFormat
+  //
   py::class_<DateFormat, Format> df(m, "DateFormat");
 
+  //
+  // icu::DateFormat::EStyle
+  //
   py::enum_<DateFormat::EStyle>(df, "EStyle", py::arithmetic(),
                                 "Constants for various style patterns.\n\n"
                                 "These reflect the order of items in the DateTimePatterns resource. There are 4 time "
@@ -30,19 +35,28 @@ void init_datefmt(py::module &m) {
       .value("DEFAULT", DateFormat::EStyle::kDefault)
       .export_values();
 
+  //
+  // icu::DateFormat
+  //
   // FIXME: Implement "void icu::DateFormat::adoptCalendar(Calendar *calendarToAdopt)".
   // FIXME: Implement "void icu::DateFormat::adoptNumberFormat(NumberFormat *formatToAdopt)".
   // FIXME: Implement "void icu::DateFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
+
   df.def("clone", &DateFormat::clone);
+
   df.def_static("create_date_instance", &DateFormat::createDateInstance, py::arg("style") = DateFormat::kDefault,
                 py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
+
   df.def_static("create_date_time_instance", &DateFormat::createDateTimeInstance,
                 py::arg("date_style") = DateFormat::kDefault, py::arg("time_style") = DateFormat::kDefault,
                 py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
+
   df.def_static("create_instance", &DateFormat::createInstance);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   // FIXME: Implement "static DateFormat *icu::DateFormat::createInstanceForSkeleton(Calendar *calendarToAdopt,
-  // const UnicodeString &skeleton, const Locale &locale, UErrorCode &status)".
+  //  const UnicodeString &skeleton, const Locale &locale, UErrorCode &status)".
+
   df.def_static(
         "create_instance_for_skeleton",
         [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale) {
@@ -67,8 +81,10 @@ void init_datefmt(py::module &m) {
           },
           py::arg("skeleton"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
+
   df.def_static("create_time_instance", &DateFormat::createTimeInstance, py::arg("style") = DateFormat::kDefault,
                 py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
+
   df.def_static(
       "get_available_locales",
       []() {
@@ -81,6 +97,7 @@ void init_datefmt(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "get_boolean_attribute",
@@ -94,7 +111,9 @@ void init_datefmt(py::module &m) {
       },
       py::arg("attr"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   df.def("get_calendar", &DateFormat::getCalendar, py::return_value_policy::reference);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "get_context",
@@ -108,7 +127,9 @@ void init_datefmt(py::module &m) {
       },
       py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   df.def("get_number_format", &DateFormat::getNumberFormat, py::return_value_policy::reference);
+
   df.def(
       "get_time_zone",
       [](const DateFormat &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
@@ -120,10 +141,13 @@ void init_datefmt(py::module &m) {
         return tz;
       },
       py::return_value_policy::reference);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("is_calendar_lenient", &DateFormat::isCalendarLenient);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   df.def("is_lenient", &DateFormat::isLenient);
+
   df.def(
         "parse_object",
         [](const DateFormat &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {
@@ -141,6 +165,7 @@ void init_datefmt(py::module &m) {
             }
           },
           py::arg("source"), py::arg("result"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "set_boolean_attribute",
@@ -154,11 +179,16 @@ void init_datefmt(py::module &m) {
       },
       py::arg("attr"), py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   df.def("set_calendar", &DateFormat::setCalendar, py::arg("new_calendar"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("set_calendar_lenient", &DateFormat::setCalendarLenient, py::arg("lenient"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
   df.def("set_lenient", &DateFormat::setLenient, py::arg("lenient"));
+
   df.def("set_number_format", &DateFormat::setNumberFormat, py::arg("new_number_format"));
+
   df.def("set_time_zone", &DateFormat::setTimeZone, py::arg("zone"));
 }

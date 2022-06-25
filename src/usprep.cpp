@@ -8,6 +8,9 @@ _UStringPrepProfilePtr::~_UStringPrepProfilePtr() {}
 UStringPrepProfile *_UStringPrepProfilePtr::get() const { return p_; }
 
 void init_usprep(py::module &m) {
+  //
+  // UStringPrepProfileType
+  //
   py::enum_<UStringPrepProfileType>(
       m, "UStringPrepProfileType", py::arithmetic(),
       "enums for the standard stringprep profile types supported by *usprep_open_by_type*.")
@@ -31,10 +34,17 @@ void init_usprep(py::module &m) {
              "RFC4518 LDAP for case ignore, numeric and stored prefix matching rules.")
       .export_values();
 
+  //
+  // _UStringPrepProfilePtr
+  //
   py::class_<_UStringPrepProfilePtr>(m, "_UStringPrepProfilePtr");
 
+  //
+  // Functions
+  //
   m.def(
       "usprep_close", [](_UStringPrepProfilePtr &profile) { usprep_close(profile); }, py::arg("profile"));
+
   m.def(
       "usprep_open",
       [](const char *path, const char *file_name) {
@@ -46,6 +56,7 @@ void init_usprep(py::module &m) {
         return std::make_unique<_UStringPrepProfilePtr>(profile);
       },
       py::arg("path"), py::arg("file_name"));
+
   m.def(
       "usprep_open_by_type",
       [](UStringPrepProfileType type) {
@@ -57,6 +68,7 @@ void init_usprep(py::module &m) {
         return std::make_unique<_UStringPrepProfilePtr>(profile);
       },
       py::arg("type_"));
+
   m.def(
       "usprep_prepare",
       [](_UStringPrepProfilePtr &prep, const char16_t *src, int32_t src_length, int32_t options,

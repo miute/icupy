@@ -3,8 +3,9 @@
 #include <unicode/ucol.h>
 
 void init_ucol(py::module &m) {
-  // UCollationStrength
-
+  //
+  // UColAttribute
+  //
   py::enum_<UColAttribute>(
       m, "UColAttribute", py::arithmetic(),
       "Attributes that collation service understands.\n\n"
@@ -63,6 +64,9 @@ void init_ucol(py::module &m) {
 #endif // U_FORCE_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UColAttributeValue
+  //
   py::enum_<UColAttributeValue>(
       m, "UColAttributeValue", py::arithmetic(),
       "Enum containing attribute values for controlling collation behavior.\n\n"
@@ -97,6 +101,9 @@ void init_ucol(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UColBoundMode
+  //
   py::enum_<UColBoundMode>(m, "UColBoundMode", py::arithmetic())
       .value("UCOL_BOUND_LOWER", UCOL_BOUND_LOWER, "Lower bound.")
       .value("UCOL_BOUND_UPPER", UCOL_BOUND_UPPER, "Upper bound that will match strings of exact size.")
@@ -108,6 +115,9 @@ void init_ucol(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UCollationResult
+  //
   py::enum_<UCollationResult>(m, "UCollationResult", py::arithmetic(),
                               "*UCOL_LESS* is returned if source string is compared to be less than target string in "
                               "the *ucol_strcoll()* method.\n\n"
@@ -119,6 +129,9 @@ void init_ucol(py::module &m) {
       .value("UCOL_LESS", UCOL_LESS, "string a < string b")
       .export_values();
 
+  //
+  // UColReorderCode
+  //
   py::enum_<UColReorderCode>(
       m, "UColReorderCode", py::arithmetic(),
       "Enum containing the codes for reordering segments of the collation table that are not script codes.\n\n"
@@ -154,6 +167,9 @@ void init_ucol(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // UColRuleOption
+  //
   py::enum_<UColRuleOption>(m, "UColRuleOption", py::arithmetic(), "Options for retrieving the rule string.")
       .value("UCOL_TAILORING_ONLY", UCOL_TAILORING_ONLY,
              "Retrieves the tailoring rules only.\n\n  "

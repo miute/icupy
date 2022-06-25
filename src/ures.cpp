@@ -9,6 +9,9 @@ _UResourceBundlePtr::~_UResourceBundlePtr() {}
 UResourceBundle *_UResourceBundlePtr::get() const { return p_; }
 
 void init_ures(py::module &m) {
+  //
+  // UResType
+  //
   py::enum_<UResType>(m, "UResType", py::arithmetic(), "Numeric constants for types of resource items.")
       .value("URES_NONE", URES_NONE, "Resource type constant for \"no resource\".")
       .value("URES_STRING", URES_STRING, "Resource type constant for 16-bit Unicode strings.")
@@ -38,11 +41,18 @@ void init_ures(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // _UResourceBundlePtr
+  //
   py::class_<_UResourceBundlePtr>(m, "_UResourceBundlePtr");
 
+  //
+  // Functions
+  //
   m.def(
       "ures_close", [](_UResourceBundlePtr &resource_bundle) { ures_close(resource_bundle); },
       py::arg("resource_bundle"));
+
   m.def(
       "ures_open",
       [](const char *package_name, const char *locale) {
@@ -54,6 +64,7 @@ void init_ures(py::module &m) {
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
       py::arg("package_name"), py::arg("locale"));
+
   m.def(
       "ures_open_direct",
       [](const char *package_name, const char *locale) {

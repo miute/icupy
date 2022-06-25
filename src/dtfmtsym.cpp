@@ -6,9 +6,14 @@
 using namespace icu;
 
 void init_dtfmtsym(py::module &m) {
+  //
   // icu::DateFormatSymbols
+  //
   py::class_<DateFormatSymbols, UObject> dfs(m, "DateFormatSymbols");
 
+  //
+  // icu::DateFormatSymbols::DtContextType
+  //
   py::enum_<DateFormatSymbols::DtContextType>(dfs, "DtContextType", py::arithmetic(),
                                               "Selector for date formatting context.")
       .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT)
@@ -19,6 +24,9 @@ void init_dtfmtsym(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // icu::DateFormatSymbols::DtWidthType
+  //
   py::enum_<DateFormatSymbols::DtWidthType>(dfs, "DtWidthType", py::arithmetic(), "Selector for date formatting width.")
       .value("ABBREVIATED", DateFormatSymbols::DtWidthType::ABBREVIATED)
       .value("WIDE", DateFormatSymbols::DtWidthType::WIDE)
@@ -27,13 +35,15 @@ void init_dtfmtsym(py::module &m) {
       .value("SHORT", DateFormatSymbols::DtWidthType::SHORT,
              "Short width is currently only supported for weekday names.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-
 #ifndef U_HIDE_DEPRECATED_API
       .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // icu::DateFormatSymbols
+  //
   dfs.def(py::init([]() {
        ErrorCode error_code;
        auto result = std::make_unique<DateFormatSymbols>(error_code);
@@ -51,9 +61,12 @@ void init_dtfmtsym(py::module &m) {
              return result;
            }),
            py::arg("locale"))
-      .def(py::init<const DateFormatSymbols &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
+      .def(py::init<const DateFormatSymbols &>(), py::arg("other"));
+
+  dfs.def(py::self != py::self, py::arg("other"));
+
+  dfs.def(py::self == py::self, py::arg("other"));
+
   dfs.def(
       "get_am_pm_strings",
       [](const DateFormatSymbols &self) {
@@ -66,6 +79,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def(
       "get_era_names",
       [](const DateFormatSymbols &self) {
@@ -78,6 +92,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def(
       "get_eras",
       [](const DateFormatSymbols &self) {
@@ -90,6 +105,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def(
       "get_locale",
       [](const DateFormatSymbols &self, ULocDataLocaleType type) {
@@ -101,7 +117,9 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::arg("type_"));
+
   dfs.def("get_local_pattern_chars", &DateFormatSymbols::getLocalPatternChars, py::arg("result"));
+
   dfs.def(
          "get_months",
          [](const DateFormatSymbols &self) {
@@ -127,6 +145,7 @@ void init_dtfmtsym(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("context"), py::arg("width"));
+
   dfs.def(
       "get_narrow_eras",
       [](const DateFormatSymbols &self) {
@@ -139,7 +158,9 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def_static("get_pattern_uchars", &DateFormatSymbols::getPatternUChars);
+
   dfs.def(
       "get_quarters",
       [](const DateFormatSymbols &self, DateFormatSymbols::DtContextType context,
@@ -153,6 +174,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("context"), py::arg("width"));
+
   dfs.def(
       "get_short_months",
       [](const DateFormatSymbols &self) {
@@ -165,6 +187,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def(
       "get_short_weekdays",
       [](const DateFormatSymbols &self) {
@@ -177,6 +200,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   dfs.def(
          "get_weekdays",
          [](const DateFormatSymbols &self) {
@@ -202,6 +226,7 @@ void init_dtfmtsym(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("context"), py::arg("width"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   dfs.def(
       "get_year_names",
@@ -216,6 +241,7 @@ void init_dtfmtsym(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("context"), py::arg("width"));
+
   dfs.def(
       "get_zodiac_names",
       [](const DateFormatSymbols &self, DateFormatSymbols::DtContextType context,
@@ -230,6 +256,7 @@ void init_dtfmtsym(py::module &m) {
       },
       py::return_value_policy::reference, py::arg("context"), py::arg("width"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
   dfs.def(
       "set_am_pm_strings",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count) {
@@ -240,6 +267,7 @@ void init_dtfmtsym(py::module &m) {
         self.setAmPmStrings(_ampms.data(), count);
       },
       py::arg("ampms"), py::arg("count") = -1);
+
   dfs.def(
       "set_era_names",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &era_names, int32_t count) {
@@ -250,6 +278,7 @@ void init_dtfmtsym(py::module &m) {
         self.setEraNames(_era_names.data(), count);
       },
       py::arg("era_names"), py::arg("count") = -1);
+
   dfs.def(
       "set_eras",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &eras, int32_t count) {
@@ -260,12 +289,14 @@ void init_dtfmtsym(py::module &m) {
         self.setEras(_eras.data(), count);
       },
       py::arg("eras"), py::arg("count") = -1);
+
   dfs.def(
       "set_local_pattern_chars",
       [](DateFormatSymbols &self, const _UnicodeStringVariant &new_local_pattern_chars) {
         self.setLocalPatternChars(VARIANT_TO_UNISTR(new_local_pattern_chars));
       },
       py::arg("new_local_pattern_chars"));
+
   dfs.def(
          "set_months",
          [](DateFormatSymbols &self, const std::list<UnicodeString> &months, int32_t count) {
@@ -287,6 +318,7 @@ void init_dtfmtsym(py::module &m) {
             self.setMonths(_months.data(), count, context, width);
           },
           py::arg("months"), py::arg("count"), py::arg("context"), py::arg("width"));
+
   dfs.def(
       "set_narrow_eras",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &narrow_eras, int32_t count) {
@@ -297,6 +329,7 @@ void init_dtfmtsym(py::module &m) {
         self.setNarrowEras(_narrow_eras.data(), count);
       },
       py::arg("narrow_eras"), py::arg("count") = -1);
+
   dfs.def(
       "set_quarters",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &quarters, int32_t count,
@@ -308,6 +341,7 @@ void init_dtfmtsym(py::module &m) {
         self.setQuarters(_quarters.data(), count, context, width);
       },
       py::arg("quarters"), py::arg("count"), py::arg("context"), py::arg("width"));
+
   dfs.def(
       "set_short_months",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &short_months, int32_t count) {
@@ -318,6 +352,7 @@ void init_dtfmtsym(py::module &m) {
         self.setShortMonths(_short_months.data(), count);
       },
       py::arg("short_months"), py::arg("count") = -1);
+
   dfs.def(
       "set_short_weekdays",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &abbrev_weekdays, int32_t count) {
@@ -328,6 +363,7 @@ void init_dtfmtsym(py::module &m) {
         self.setShortWeekdays(_abbrev_weekdays.data(), count);
       },
       py::arg("abbrev_weekdays"), py::arg("count") = -1);
+
   dfs.def(
          "set_weekdays",
          [](DateFormatSymbols &self, const std::list<UnicodeString> &weekdays, int32_t count) {
@@ -349,6 +385,7 @@ void init_dtfmtsym(py::module &m) {
             self.setWeekdays(_weekdays.data(), count, context, width);
           },
           py::arg("weekdays"), py::arg("count"), py::arg("context"), py::arg("width"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   dfs.def(
       "set_year_names",
@@ -361,6 +398,7 @@ void init_dtfmtsym(py::module &m) {
         self.setYearNames(_year_names.data(), count, context, width);
       },
       py::arg("year_names"), py::arg("count"), py::arg("context"), py::arg("width"));
+
   dfs.def(
       "set_zodiac_names",
       [](DateFormatSymbols &self, const std::list<UnicodeString> &zodiac_names, int32_t count,
@@ -373,6 +411,7 @@ void init_dtfmtsym(py::module &m) {
       },
       py::arg("zodiac_names"), py::arg("count"), py::arg("context"), py::arg("width"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
   // FIXME: Implement "void DateFormatSymbols::setZoneStrings(const UnicodeString *const *strings, int32_t rowCount,
-  // int32_t columnCount)".
+  //  int32_t columnCount)".
 }

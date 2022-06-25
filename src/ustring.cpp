@@ -3,7 +3,9 @@
 
 void init_ustring(py::module &m) {
   m.def("u_count_char32", &u_countChar32, py::arg("s"), py::arg("length"));
+
   m.def("u_strlen", &u_strlen, py::arg("s"));
+
   m.def(
       "u_unescape",
       [](const char *src) {

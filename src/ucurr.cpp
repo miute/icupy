@@ -2,6 +2,9 @@
 #include <unicode/ucurr.h>
 
 void init_ucurr(py::module &m) {
+  //
+  // UCurrCurrencyType
+  //
   py::enum_<UCurrCurrencyType>(m, "UCurrCurrencyType", py::arithmetic(),
                                "Selector constants for *ucurr_open_currencies()*.")
       .value("UCURR_ALL", UCURR_ALL, "Select all ISO-4217 currency codes.")
@@ -23,6 +26,9 @@ void init_ucurr(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
+  //
+  // UCurrencyUsage
+  //
   py::enum_<UCurrencyUsage>(m, "UCurrencyUsage", py::arithmetic(), "Currency Usage used for Decimal Format.")
       .value("UCURR_USAGE_STANDARD", UCURR_USAGE_STANDARD,
              "A setting to specify currency usage which determines currency digit and rounding for standard usage, for "
@@ -33,6 +39,9 @@ void init_ucurr(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
+  //
+  // UCurrNameStyle
+  //
   py::enum_<UCurrNameStyle>(m, "UCurrNameStyle", py::arithmetic(), "Selector constants for *ucurr_get_name()*.")
       .value("UCURR_SYMBOL_NAME", UCURR_SYMBOL_NAME,
              "Selector for *ucurr_get_name* indicating a symbolic name for a currency, such as \"$\" for USD.")
@@ -44,7 +53,6 @@ void init_ucurr(py::module &m) {
              "The narrow currency symbol is similar to the regular currency symbol, but it always takes the shortest "
              "form: for example, \"$\" instead of \"US$\" for USD in en-CA.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
       .value("UCURR_FORMAL_SYMBOL_NAME", UCURR_FORMAL_SYMBOL_NAME,
              "Selector for *get_name()* indicating the formal currency symbol.\n\n  "

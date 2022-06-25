@@ -5,8 +5,11 @@
 using namespace icu;
 
 void init_plurfmt(py::module &m) {
+  //
   // icu::PluralFormat
+  //
   py::class_<PluralFormat, Format> pf(m, "PluralFormat");
+
   pf.def(
         // [1] PluralFormat::PluralFormat
         py::init([]() {
@@ -122,15 +125,20 @@ void init_plurfmt(py::module &m) {
       .def(
           // [11] icu::PluralFormat
           py::init<const PluralFormat &>(), py::arg("other"));
-  pf.def("__copy__", &PluralFormat::clone)
-      .def(
-          "___deepcopy__", [](const PluralFormat &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const PluralFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
-      .def(
-          "__ne__", [](const PluralFormat &self, const Format &other) { return self != other; }, py::is_operator(),
-          py::arg("other"));
+
+  pf.def("__copy__", &PluralFormat::clone);
+
+  pf.def(
+      "___deepcopy__", [](const PluralFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  pf.def(
+      "__eq__", [](const PluralFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  pf.def(
+      "__ne__", [](const PluralFormat &self, const Format &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+
   pf.def(
       "apply_pattern",
       [](PluralFormat &self, const _UnicodeStringVariant &pattern) {
@@ -141,7 +149,9 @@ void init_plurfmt(py::module &m) {
         }
       },
       py::arg("pattern"));
+
   pf.def("clone", &PluralFormat::clone);
+
   pf.def(
         // [1] PluralFormat::format
         // [2] Format::format
@@ -230,6 +240,7 @@ void init_plurfmt(py::module &m) {
             return result;
           },
           py::arg("number"), py::arg("append_to"), py::arg("pos"));
+
   pf.def(
         "parse_object",
         [](const PluralFormat &self, const _UnicodeStringVariant &source, Formattable &result,
@@ -245,6 +256,7 @@ void init_plurfmt(py::module &m) {
             }
           },
           py::arg("source"), py::arg("result"));
+
   pf.def(
       "set_number_format",
       [](PluralFormat &self, const NumberFormat *format) {
@@ -255,5 +267,6 @@ void init_plurfmt(py::module &m) {
         }
       },
       py::arg("format_"));
+
   pf.def("to_pattern", &PluralFormat::toPattern, py::arg("append_to"));
 }

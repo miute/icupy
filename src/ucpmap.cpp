@@ -24,6 +24,9 @@ uint32_t _UCPMapValueFilterPtr::filter(const void *context, uint32_t value) {
 
 void init_ucpmap(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UCPMapRangeOption
+  //
   py::enum_<UCPMapRangeOption>(
       m, "UCPMapRangeOption", py::arithmetic(),
       "Selectors for how *ucpmap_get_range()* etc.\n\n"
@@ -51,14 +54,24 @@ void init_ucpmap(py::module &m) {
              "associated with the lead surrogate code points.")
       .export_values();
 
+  //
+  // _ConstUCPMapPtr
+  //
   py::class_<_ConstUCPMapPtr>(m, "_ConstUCPMapPtr");
 
+  //
+  // _UCPMapValueFilterPtr
+  //
   py::class_<_UCPMapValueFilterPtr>(m, "UCPMapValueFilterPtr")
       .def(py::init<py::function &>(), py::arg("filter_"))
       .def(py::init<std::nullptr_t>(), py::arg("filter_"));
 
+  //
+  // Functions
+  //
   m.def(
       "ucpmap_get", [](_ConstUCPMapPtr &map, UChar32 c) { return ucpmap_get(map, c); }, py::arg("map_"), py::arg("c"));
+
   m.def(
       "ucpmap_get_range",
       [](_ConstUCPMapPtr &map, UChar32 start, UCPMapRangeOption option, uint32_t surrogate_value,

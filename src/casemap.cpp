@@ -10,8 +10,11 @@ using namespace icu;
 
 void init_casemap(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 59)
+  //
   // icu::CaseMap
+  //
   py::class_<CaseMap, UMemory> cm(m, "CaseMap");
+
   cm.def_static(
       "fold",
       [](uint32_t options, const char16_t *src, int32_t src_length, Edits *edits) {
@@ -26,6 +29,7 @@ void init_casemap(py::module &m) {
         return result;
       },
       py::arg("options"), py::arg("src"), py::arg("src_length") = -1, py::arg("edits") = nullptr);
+
   cm.def_static(
       "to_lower",
       [](const char *locale, uint32_t options, const char16_t *src, int32_t src_length, Edits *edits) {
@@ -40,6 +44,7 @@ void init_casemap(py::module &m) {
         return result;
       },
       py::arg("locale"), py::arg("options"), py::arg("src"), py::arg("src_length") = -1, py::arg("edits") = nullptr);
+
   cm.def_static(
       "to_title",
       [](const char *locale, uint32_t options, BreakIterator *iter, const char16_t *src, int32_t src_length,
@@ -56,6 +61,7 @@ void init_casemap(py::module &m) {
       },
       py::arg("locale"), py::arg("options"), py::arg("iter"), py::arg("src"), py::arg("src_length") = -1,
       py::arg("edits") = nullptr);
+
   cm.def_static(
       "to_upper",
       [](const char *locale, uint32_t options, const char16_t *src, int32_t src_length, Edits *edits) {

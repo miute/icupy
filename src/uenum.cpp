@@ -12,10 +12,17 @@ _UEnumerationPtr::~_UEnumerationPtr() {}
 UEnumeration *_UEnumerationPtr::get() const { return p_; }
 
 void init_uenum(py::module &m) {
+  //
+  // _UEnumerationPtr
+  //
   py::class_<_UEnumerationPtr>(m, "_UEnumerationPtr");
 
+  //
+  // Functions
+  //
   m.def(
       "uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); }, py::arg("en"));
+
   m.def(
       "uenum_count",
       [](_UEnumerationPtr &en) {
@@ -27,6 +34,7 @@ void init_uenum(py::module &m) {
         return result;
       },
       py::arg("en"));
+
   m.def(
       "uenum_next",
       [](_UEnumerationPtr &en) {
@@ -38,6 +46,7 @@ void init_uenum(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("en"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_open_char_strings_enumeration",
@@ -59,6 +68,7 @@ void init_uenum(py::module &m) {
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
+
   m.def(
       "uenum_open_from_string_enumeration",
       [](StringEnumeration *adopted) {
@@ -70,6 +80,7 @@ void init_uenum(py::module &m) {
         return std::make_unique<_UEnumerationPtr>(p);
       },
       py::arg("adopted"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(
       "uenum_open_uchar_strings_enumeration",
@@ -92,6 +103,7 @@ void init_uenum(py::module &m) {
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
+
   m.def(
       "uenum_reset",
       [](_UEnumerationPtr &en) {
@@ -102,6 +114,7 @@ void init_uenum(py::module &m) {
         }
       },
       py::arg("en"));
+
   m.def(
       "uenum_unext",
       [](_UEnumerationPtr &en) {

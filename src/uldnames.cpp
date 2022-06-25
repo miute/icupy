@@ -2,6 +2,9 @@
 #include <unicode/uldnames.h>
 
 void init_uldnames(py::module &m) {
+  //
+  // UDialectHandling
+  //
   py::enum_<UDialectHandling>(m, "UDialectHandling", py::arithmetic(),
                               "Enum used in *LocaleDisplayNames::create_instance*.")
       .value("ULDN_STANDARD_NAMES", ULDN_STANDARD_NAMES,

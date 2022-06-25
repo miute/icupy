@@ -17,6 +17,9 @@ USpoofCheckResult *_USpoofCheckResultPtr::get() const { return p_; }
 
 void init_uspoof(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
+  // URestrictionLevel
+  //
   py::enum_<URestrictionLevel>(m, "URestrictionLevel", py::arithmetic(),
                                "Constants from UAX #39 for use in *uspoof_set_restriction_level*, and for returned "
                                "identifier restriction levels in check results.")
@@ -51,6 +54,9 @@ void init_uspoof(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
+  //
+  // USpoofChecks
+  //
   py::enum_<USpoofChecks>(m, "USpoofChecks", py::arithmetic(),
                           "Enum for the kinds of checks that *USpoofChecker* can perform.\n\n"
                           "These enum values are used both to select the set of checks that will be performed, and to "
@@ -73,7 +79,6 @@ void init_uspoof(py::module &m) {
              "You may set the checks to some subset of SINGLE_SCRIPT_CONFUSABLE, MIXED_SCRIPT_CONFUSABLE, or "
              "WHOLE_SCRIPT_CONFUSABLE to make *uspoof_are_confusable* return only those types of confusables.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-
 #ifndef U_HIDE_DEPRECATED_API
       .value("USPOOF_ANY_CASE", USPOOF_ANY_CASE,
              "**Deprecated:** ICU 58 Any case confusable mappings were removed from UTS 39; the corresponding ICU API "
@@ -123,14 +128,21 @@ void init_uspoof(py::module &m) {
              "passes all checks.")
       .export_values();
 
+  //
   // USpoofChecker
+  //
   py::class_<_USpoofCheckerPtr>(m, "_USpoofCheckerPtr");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
+  //
   // USpoofCheckResult
+  //
   py::class_<_USpoofCheckResultPtr>(m, "_USpoofCheckResultPtr");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 
+  //
+  // Functions
+  //
   m.def(
       "uspoof_are_confusable",
       [](const _USpoofCheckerPtr &sc, const UChar *id1, int32_t length1, const UChar *id2, int32_t length2) {
@@ -142,6 +154,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id1"), py::arg("length1"), py::arg("id2"), py::arg("length2"));
+
   m.def(
       "uspoof_are_confusable_unicode_string",
       [](const _USpoofCheckerPtr &sc, const UnicodeString &s1, const UnicodeString &s2) {
@@ -153,6 +166,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("s1"), py::arg("s2"));
+
   m.def(
       "uspoof_are_confusable_utf8",
       [](const _USpoofCheckerPtr &sc, const char *id1, int32_t length1, const char *id2, int32_t length2) {
@@ -164,6 +178,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id1"), py::arg("length1"), py::arg("id2"), py::arg("length2"));
+
   m.def(
       "uspoof_check",
       [](const _USpoofCheckerPtr &sc, const UChar *id, int32_t length) {
@@ -189,6 +204,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id_"), py::arg("length") = -1, py::arg("check_result") = std::nullopt);
+
   m.def(
       "uspoof_check2_unicode_string",
       [](const _USpoofCheckerPtr &sc, const UnicodeString &id, std::optional<_USpoofCheckResultPtr> &check_result) {
@@ -200,6 +216,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id_"), py::arg("check_result") = std::nullopt);
+
   m.def(
       "uspoof_check2_utf8",
       [](const _USpoofCheckerPtr &sc, const char *id, int32_t length,
@@ -225,6 +242,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id_"));
+
   m.def(
       "uspoof_check_utf8",
       [](const _USpoofCheckerPtr &sc, const char *id, int32_t length) {
@@ -236,6 +254,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("id_"), py::arg("length") = -1);
+
   m.def(
       "uspoof_clone",
       [](const _USpoofCheckerPtr &sc) {
@@ -247,6 +266,7 @@ void init_uspoof(py::module &m) {
         return std::make_unique<_USpoofCheckerPtr>(p);
       },
       py::arg("sc"));
+
   m.def(
       "uspoof_close", [](_USpoofCheckerPtr &sc) { uspoof_close(sc); }, py::arg("sc"));
 
@@ -267,6 +287,7 @@ void init_uspoof(py::module &m) {
         return std::make_unique<_ConstUSetPtr>(p);
       },
       py::arg("sc"));
+
   m.def(
       "uspoof_get_allowed_locales",
       [](const _USpoofCheckerPtr &sc) {
@@ -278,6 +299,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"));
+
   m.def(
       "uspoof_get_allowed_unicode_set",
       [](const _USpoofCheckerPtr &sc) {
@@ -302,6 +324,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("check_result"));
+
   m.def(
       "uspoof_get_check_result_numerics",
       [](const _USpoofCheckResultPtr &check_result) {
@@ -313,6 +336,7 @@ void init_uspoof(py::module &m) {
         return std::make_unique<_ConstUSetPtr>(p);
       },
       py::arg("check_result"));
+
   m.def(
       "uspoof_get_check_result_restriction_level",
       [](const _USpoofCheckResultPtr &check_result) {
@@ -347,6 +371,7 @@ void init_uspoof(py::module &m) {
     }
     return std::make_unique<_ConstUSetPtr>(p);
   });
+
   m.def(
       "uspoof_get_inclusion_unicode_set",
       []() {
@@ -358,6 +383,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   m.def("uspoof_get_recommended_set", []() {
     ErrorCode error_code;
     auto p = uspoof_getRecommendedSet(error_code);
@@ -366,6 +392,7 @@ void init_uspoof(py::module &m) {
     }
     return std::make_unique<_ConstUSetPtr>(p);
   });
+
   m.def(
       "uspoof_get_recommended_unicode_set",
       []() {
@@ -377,6 +404,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   m.def(
       "uspoof_get_restriction_level", [](const _USpoofCheckerPtr &sc) { return uspoof_getRestrictionLevel(sc); },
       py::arg("sc"));
@@ -396,6 +424,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("type_"), py::arg("id_"), py::arg("length") = -1);
+
   m.def(
       "uspoof_get_skeleton_unicode_string",
       [](const _USpoofCheckerPtr &sc, uint32_t type, const UnicodeString &id, UnicodeString &dest) -> UnicodeString & {
@@ -407,6 +436,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("type_"), py::arg("id_"), py::arg("dest"));
+
   m.def(
       "uspoof_get_skeleton_utf8",
       [](const _USpoofCheckerPtr &sc, uint32_t type, const char *id, int32_t length) {
@@ -421,6 +451,7 @@ void init_uspoof(py::module &m) {
         return result;
       },
       py::arg("sc"), py::arg("type_"), py::arg("id_"), py::arg("length") = -1);
+
   m.def("uspoof_open", []() {
     ErrorCode error_code;
     auto sc = uspoof_open(error_code);
@@ -429,6 +460,7 @@ void init_uspoof(py::module &m) {
     }
     return std::make_unique<_USpoofCheckerPtr>(sc);
   });
+
   m.def("uspoof_open_check_result", []() {
     ErrorCode error_code;
     auto p = uspoof_openCheckResult(error_code);
@@ -437,6 +469,7 @@ void init_uspoof(py::module &m) {
     }
     return std::make_unique<_USpoofCheckResultPtr>(p);
   });
+
   m.def(
       "uspoof_open_from_serialized",
       [](const py::buffer &data, int32_t length) {
@@ -452,6 +485,7 @@ void init_uspoof(py::module &m) {
         return std::make_unique<_USpoofCheckerPtr>(p);
       },
       py::arg("data"), py::arg("length") = -1);
+
   m.def(
       "uspoof_open_from_source",
       [](const char *confusables, int32_t confusables_len, const char *confusables_whole_script,
@@ -468,6 +502,7 @@ void init_uspoof(py::module &m) {
       },
       py::arg("confusables"), py::arg("confusables_len"), py::arg("confusables_whole_script"),
       py::arg("confusables_whole_script_len"), py::arg("pe"));
+
   m.def(
       "uspoof_serialize",
       [](_USpoofCheckerPtr &sc) {
@@ -482,6 +517,7 @@ void init_uspoof(py::module &m) {
         return py::bytes(data);
       },
       py::arg("sc"));
+
   m.def(
        "uspoof_set_allowed_chars",
        [](_USpoofCheckerPtr &sc, _ConstUSetPtr &chars) {
@@ -502,6 +538,7 @@ void init_uspoof(py::module &m) {
             }
           },
           py::arg("sc"), py::arg("chars"));
+
   m.def(
       "uspoof_set_allowed_locales",
       [](_USpoofCheckerPtr &sc, const char *locales_list) {
@@ -512,6 +549,7 @@ void init_uspoof(py::module &m) {
         }
       },
       py::arg("sc"), py::arg("locales_list"));
+
   m.def(
       "uspoof_set_allowed_unicode_set",
       [](_USpoofCheckerPtr &sc, const UnicodeSet *chars) {
@@ -522,6 +560,7 @@ void init_uspoof(py::module &m) {
         }
       },
       py::arg("sc"), py::arg("chars"));
+
   m.def(
       "uspoof_set_checks",
       [](_USpoofCheckerPtr &sc, int32_t checks) {

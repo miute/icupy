@@ -5,6 +5,9 @@
 
 void init_udisplaycontext(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
+  // UDisplayContext
+  //
   py::enum_<UDisplayContext>(m, "UDisplayContext", py::arithmetic(),
                              "Display context settings.\n\n"
                              "Note, the specific numeric values are internal and may change.")
@@ -43,7 +46,6 @@ void init_udisplaycontext(py::module &m) {
              "A possible setting for DISPLAY_LENGTH: use short names when generating a locale name, e.g. "
              "\"U.S.\" for US.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("UDISPCTX_SUBSTITUTE", UDISPCTX_SUBSTITUTE,
              "A possible setting for SUBSTITUTE_HANDLING: Returns a fallback value (e.g., the input code) when no "
@@ -56,6 +58,9 @@ void init_udisplaycontext(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
       .export_values();
 
+  //
+  // UDisplayContextType
+  //
   py::enum_<UDisplayContextType>(m, "UDisplayContextType", py::arithmetic(),
                                  "Display context types, for getting values of a particular setting.\n\n"
                                  "Note, the specific numeric values are internal and may change.")
@@ -71,7 +76,6 @@ void init_udisplaycontext(py::module &m) {
              "Type to retrieve the display length setting, e.g. "
              "*UDISPCTX_LENGTH_FULL*, *UDISPCTX_LENGTH_SHORT*.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("UDISPCTX_TYPE_SUBSTITUTE_HANDLING", UDISPCTX_TYPE_SUBSTITUTE_HANDLING,
              "Type to retrieve the substitute handling setting, e.g. "

@@ -10,6 +10,9 @@
 
 void init_unumberformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
+  //
+  // UNumberDecimalSeparatorDisplay
+  //
   py::enum_<UNumberDecimalSeparatorDisplay>(m, "UNumberDecimalSeparatorDisplay", py::arithmetic(),
                                             "An enum declaring how to render the decimal separator.\n\n"
                                             "* UNUM_DECIMAL_SEPARATOR_AUTO: \"1\", \"1.1\"\n"
@@ -23,6 +26,9 @@ void init_unumberformatter(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+  //
+  // UNumberGroupingStrategy
+  //
   py::enum_<UNumberGroupingStrategy>(
       m, "UNumberGroupingStrategy", py::arithmetic(),
       "An enum declaring the strategy for when and how to display grouping separators (i.e., the separator, often a "
@@ -68,6 +74,9 @@ void init_unumberformatter(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
+  //
+  // UNumberRoundingPriority
+  //
   py::enum_<UNumberRoundingPriority>(
       m, "UNumberRoundingPriority", py::arithmetic(),
       "An enum declaring how to resolve conflicts between maximum fraction digits and maximum significant digits.\n\n"
@@ -99,6 +108,9 @@ void init_unumberformatter(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
+  //
+  // UNumberSignDisplay
+  //
   py::enum_<UNumberSignDisplay>(
       m, "UNumberSignDisplay", py::arithmetic(),
       "An enum declaring how to denote positive and negative numbers.\n\n"
@@ -143,7 +155,6 @@ void init_unumberformatter(py::module &m) {
              "Do not show a sign on zero, numbers that round to zero, or NaN. For more information on the accounting "
              "format, see the ACCOUNTING sign display strategy.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
       .value("UNUM_SIGN_NEGATIVE", UNUM_SIGN_NEGATIVE, "Same as AUTO, but do not show the sign on negative zero.")
       .value("UNUM_SIGN_ACCOUNTING_NEGATIVE", UNUM_SIGN_ACCOUNTING_NEGATIVE,
@@ -152,6 +163,9 @@ void init_unumberformatter(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
+  //
+  // UNumberTrailingZeroDisplay
+  //
   py::enum_<UNumberTrailingZeroDisplay>(m, "UNumberTrailingZeroDisplay", py::arithmetic(),
                                         "An enum declaring how to render trailing zeros.\n\n"
                                         "* UNUM_TRAILING_ZERO_AUTO: 0.90, 1.00, 1.10\n"
@@ -163,6 +177,9 @@ void init_unumberformatter(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
+  //
+  // UNumberUnitWidth
+  //
   py::enum_<UNumberUnitWidth>(m, "UNumberUnitWidth", py::arithmetic(),
                               "An enum declaring how to render units, including currencies.\n\n"
                               "Example outputs when formatting 123 USD and 123 meters in *en-CA*:\n\n"

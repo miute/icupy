@@ -2,6 +2,9 @@
 #include <unicode/usearch.h>
 
 void init_usearch(py::module &m) {
+  //
+  // USearchAttribute
+  //
   py::enum_<USearchAttribute>(m, "USearchAttribute", py::arithmetic())
       .value("USEARCH_OVERLAP", USEARCH_OVERLAP, "Option for overlapping matches.")
 #ifndef U_HIDE_DEPRECATED_API
@@ -16,6 +19,9 @@ void init_usearch(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // USearchAttributeValue
+  //
   py::enum_<USearchAttributeValue>(m, "USearchAttributeValue", py::arithmetic())
       .value("USEARCH_DEFAULT", USEARCH_DEFAULT, "Default value for any *USearchAttribute*.")
       .value("USEARCH_OFF", USEARCH_OFF, "Value for *USEARCH_OVERLAP* and *USEARCH_CANONICAL_MATCH*.")

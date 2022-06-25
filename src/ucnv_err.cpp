@@ -38,6 +38,9 @@ void _UConverterToUCallbackPtr::callback(const void *context, UConverterToUnicod
 }
 
 void init_ucnv_err(py::module &m) {
+  //
+  // UConverterCallbackReason
+  //
   py::enum_<UConverterCallbackReason>(
       m, "UConverterCallbackReason", py::arithmetic(),
       "The process condition code to be used with the callbacks.\n\n"
@@ -68,17 +71,32 @@ void init_ucnv_err(py::module &m) {
              "*ucnv_set_from_ucall_back* (or *set_to_ucall_back*) with the correct pointer.")
       .export_values();
 
+  //
+  // _UConverterFromUCallbackPtr
+  //
   py::class_<_UConverterFromUCallbackPtr>(m, "UConverterFromUCallbackPtr")
       .def(py::init<py::function>(), py::arg("action"));
 
+  //
+  // _UConverterPtr
+  //
   py::class_<_UConverterPtr>(m, "_UConverterPtr");
 
+  //
+  // _UConverterToUCallbackPtr
+  //
   py::class_<_UConverterToUCallbackPtr>(m, "UConverterToUCallbackPtr").def(py::init<py::function>(), py::arg("action"));
 
+  //
+  // UConverterFromUnicodeArgs
+  //
   py::class_<UConverterFromUnicodeArgs>(m, "UConverterFromUnicodeArgs")
       .def_property_readonly("converter",
                              [](const UConverterFromUnicodeArgs &self) { return _UConverterPtr(self.converter); });
 
+  //
+  // UConverterToUnicodeArgs
+  //
   py::class_<UConverterToUnicodeArgs>(m, "UConverterToUnicodeArgs")
       .def_property_readonly("converter",
                              [](const UConverterToUnicodeArgs &self) { return _UConverterPtr(self.converter); });

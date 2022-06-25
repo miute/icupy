@@ -9,6 +9,7 @@ void init_uversion(py::module &m) {
     std::vector<uint8_t> result(info, info + sizeof(info));
     return result;
   });
+
   m.def(
       "u_version_from_string",
       [](const char *version_string) {
@@ -18,6 +19,7 @@ void init_uversion(py::module &m) {
         return result;
       },
       py::arg("version_string"));
+
   m.def(
       "u_version_to_string",
       [](const std::vector<uint8_t> &version_array) {

@@ -13,6 +13,9 @@ UBiDiTransform *_UBiDiTransformPtr::get() const { return p_; }
 
 void init_ubiditransform(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
+  //
+  // UBiDiMirroring
+  //
   py::enum_<UBiDiMirroring>(m, "UBiDiMirroring", py::arithmetic(),
                             "*UBiDiMirroring* indicates whether or not characters with the \"mirrored\" property in "
                             "RTL runs should be replaced with their mirror-image counterparts.")
@@ -25,6 +28,9 @@ void init_ubiditransform(py::module &m) {
              "*UBIDI_DO_MIRRORING* option bit set.")
       .export_values();
 
+  //
+  // UBiDiOrder
+  //
   py::enum_<UBiDiOrder>(
       m, "UBiDiOrder", py::arithmetic(),
       "*UBiDiOrder* indicates the order of text.\n\n"
@@ -52,11 +58,18 @@ void init_ubiditransform(py::module &m) {
              "This is a default for output text.")
       .export_values();
 
+  //
+  // _UBiDiTransformPtr
+  //
   py::class_<_UBiDiTransformPtr>(m, "_UBiDiTransformPtr");
 
+  //
+  // Functions
+  //
   m.def(
       "ubiditransform_close", [](_UBiDiTransformPtr &bidi_transform) { ubiditransform_close(bidi_transform); },
       py::arg("bidi_transform"));
+
   m.def("ubiditransform_open", []() {
     ErrorCode error_code;
     auto bidi_transform = ubiditransform_open(error_code);
@@ -65,6 +78,7 @@ void init_ubiditransform(py::module &m) {
     }
     return std::make_unique<_UBiDiTransformPtr>(bidi_transform);
   });
+
   m.def(
       "ubiditransform_transform",
       [](_UBiDiTransformPtr &bidi_transform, const char16_t *src, int32_t src_length, UBiDiLevel in_para_level,

@@ -5,7 +5,9 @@
 using namespace icu;
 
 void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
-  // icu::NumberFormat
+  //
+  // icu::NumberFormat::EAlignmentFields
+  //
   py::enum_<NumberFormat::EAlignmentFields>(
       nf, "EAlignmentFields", py::arithmetic(),
       "Alignment Field constants used to construct a *FieldPosition* object.\n\n"
@@ -33,6 +35,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
       .export_values();
 
+  //
+  // icu::NumberFormat::ERoundingMode
+  //
   py::enum_<NumberFormat::ERoundingMode>(
       nf, "ERoundingMode", py::arithmetic(),
       "Rounding mode.\n\n"
@@ -52,6 +57,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
              "Return *U_FORMAT_INEXACT_ERROR* if number does not format exactly.")
       .export_values();
 
+  //
+  // icu::NumberFormat
+  //
   nf.def_static(
         "create_currency_instance",
         [](const _LocaleVariant &in_locale) {
@@ -71,6 +79,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       });
+
   nf.def_static(
         "create_instance",
         [](const _LocaleVariant &desired_locale, UNumberFormatStyle style) {
@@ -101,6 +110,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       });
+
   nf.def_static(
         "create_percent_instance",
         [](const _LocaleVariant &in_locale) {
@@ -120,6 +130,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       });
+
   nf.def_static(
         "create_scientific_instance",
         [](const _LocaleVariant &in_locale) {
@@ -139,6 +150,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       });
+
   nf.def_static(
       "get_available_locales",
       []() {
@@ -151,6 +163,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         return result;
       },
       py::return_value_policy::reference);
+
   nf.def(
       "get_context",
       [](const NumberFormat &self, UDisplayContextType type) {
@@ -162,17 +175,27 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         return result;
       },
       py::arg("type_"));
+
   nf.def("get_currency", &NumberFormat::getCurrency);
+
   nf.def("get_maximum_fraction_digits", &NumberFormat::getMaximumFractionDigits);
+
   nf.def("get_maximum_integer_digits", &NumberFormat::getMaximumIntegerDigits);
+
   nf.def("get_minimum_fraction_digits", &NumberFormat::getMinimumFractionDigits);
+
   nf.def("get_minimum_integer_digits", &NumberFormat::getMinimumIntegerDigits);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   nf.def("get_rounding_mode", &NumberFormat::getRoundingMode);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
+
   nf.def("is_grouping_used", &NumberFormat::isGroupingUsed);
+
   nf.def("is_lenient", &NumberFormat::isLenient);
+
   nf.def("is_parse_integer_only", &NumberFormat::isParseIntegerOnly);
+
   nf.def(
         "parse_object",
         [](const NumberFormat &self, const _UnicodeStringVariant &source, Formattable &result,

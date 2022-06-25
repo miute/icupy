@@ -7,15 +7,22 @@
 using namespace icu;
 
 void init_sortkey(py::module &m) {
+  //
+  // icu::CollationKey
+  //
   py::class_<CollationKey, UObject> ck(m, "CollationKey");
+
   ck.def(py::init<>())
       .def(py::init([](const std::vector<uint8_t> &values, int32_t count) {
              return std::make_unique<CollationKey>(values.data(), count);
            }),
            py::arg("values"), py::arg("count"))
-      .def(py::init<CollationKey &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
+      .def(py::init<CollationKey &>(), py::arg("other"));
+
+  ck.def(py::self != py::self, py::arg("other"));
+
+  ck.def(py::self == py::self, py::arg("other"));
+
   ck.def(
       "compare_to",
       [](const CollationKey &self, const CollationKey &target) {
@@ -27,6 +34,7 @@ void init_sortkey(py::module &m) {
         return result;
       },
       py::arg("target"));
+
   ck.def(
       "get_byte_array",
       [](const CollationKey &self) {
@@ -36,6 +44,8 @@ void init_sortkey(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   ck.def("hash_code", &CollationKey::hashCode);
+
   ck.def("is_bogus", &CollationKey::isBogus);
 }

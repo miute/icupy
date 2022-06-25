@@ -11,22 +11,34 @@
 using namespace icu;
 
 void init_timezone(py::module &m) {
+  //
   // icu::TimeZone
+  //
   py::class_<TimeZone, UObject> tz(m, "TimeZone");
 
+  //
   // icu::BasicTimeZone
+  //
   py::class_<BasicTimeZone, TimeZone> btz(m, "BasicTimeZone");
 
+  //
   // icu::RuleBasedTimeZone
+  //
   py::class_<RuleBasedTimeZone, BasicTimeZone> rbtz(m, "RuleBasedTimeZone");
 
+  //
   // icu::SimpleTimeZone
+  //
   py::class_<SimpleTimeZone, BasicTimeZone> stz(m, "SimpleTimeZone");
 
+  //
   // icu::VTimeZone
+  //
   py::class_<VTimeZone, BasicTimeZone> vtz(m, "VTimeZone");
 
-  // icu::TimeZone
+  //
+  // icu::TimeZone::EDisplayType
+  //
   py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic(), "Enum for use with *get_display_name*.")
       .value("SHORT", TimeZone::EDisplayType::SHORT, "Selector for short display name.")
       .value("LONG", TimeZone::EDisplayType::LONG, "Selector for long display name.")
@@ -42,21 +54,28 @@ void init_timezone(py::module &m) {
              "Selector for long display name derived from the time zone's fallback name.")
       .export_values();
 
+  //
+  // icu::TimeZone
+  //
   tz.def(
-        "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
-        py::arg("other"))
-      .def(
-          "__ne__", [](const TimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
-          py::arg("other"));
+      "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  tz.def(
+      "__ne__", [](const TimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+
   // FIXME: Implement "static void icu::TimeZone::adoptDefault(TimeZone *zone)".
   /*
   tz.def_static(
       "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : nullptr); }, py::arg("zone"));
   */
+
   tz.def_static(
       "count_equivalent_ids",
       [](const _UnicodeStringVariant &id) { return TimeZone::countEquivalentIDs(VARIANT_TO_UNISTR(id)); },
       py::arg("id_"));
+
   tz.def_static("create_default", []() -> std::variant<BasicTimeZone *, TimeZone *> {
     auto tz = TimeZone::createDefault();
     auto btz = dynamic_cast<BasicTimeZone *>(tz);
@@ -65,6 +84,7 @@ void init_timezone(py::module &m) {
     }
     return tz;
   });
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   tz.def_static("create_enumeration", []() {
     ErrorCode error_code;
@@ -99,6 +119,7 @@ void init_timezone(py::module &m) {
         return result;
       },
       py::arg("raw_offset"));
+
   tz.def_static(
       "create_enumeration_for_region",
       [](const char *region) {
@@ -111,6 +132,7 @@ void init_timezone(py::module &m) {
       },
       py::arg("region"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+
   tz.def_static(
       "create_time_zone",
       [](const _UnicodeStringVariant &id) -> std::variant<BasicTimeZone *, TimeZone *> {
@@ -122,6 +144,7 @@ void init_timezone(py::module &m) {
         return tz;
       },
       py::arg("id_"));
+
   tz.def_static(
       "create_time_zone_id_enumeration",
       [](USystemTimeZoneType zone_type, const char *region, const std::optional<int32_t> &raw_offset) {
@@ -134,6 +157,7 @@ void init_timezone(py::module &m) {
         return result;
       },
       py::arg("zone_type"), py::arg("region"), py::arg("raw_offset"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   tz.def_static("detect_host_time_zone", []() -> std::variant<BasicTimeZone *, TimeZone *> {
     auto tz = TimeZone::detectHostTimeZone();
@@ -144,6 +168,7 @@ void init_timezone(py::module &m) {
     return tz;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
+
   tz.def_static(
       "get_canonical_id",
       [](const _UnicodeStringVariant &id, UnicodeString &canonical_id) {
@@ -156,6 +181,7 @@ void init_timezone(py::module &m) {
         return py::make_tuple(result, is_system_id);
       },
       py::arg("id_"), py::arg("canonical_id"));
+
   tz.def(
         "get_display_name",
         [](const TimeZone &self, const _LocaleVariant &locale, UnicodeString &result) -> UnicodeString & {
@@ -174,15 +200,20 @@ void init_timezone(py::module &m) {
            py::arg("in_daylight"), py::arg("style"), py::arg("result"))
       .def("get_display_name", py::overload_cast<UnicodeString &>(&TimeZone::getDisplayName, py::const_),
            py::arg("result"));
+
   tz.def("get_dst_savings", &TimeZone::getDSTSavings);
+
   tz.def_static(
       "get_equivalent_id",
       [](const _UnicodeStringVariant &id, int32_t index) {
         return TimeZone::getEquivalentID(VARIANT_TO_UNISTR(id), index);
       },
       py::arg("id_"), py::arg("index"));
+
   tz.def_static("get_gmt", &TimeZone::getGMT, py::return_value_policy::reference);
+
   tz.def("get_id", &TimeZone::getID, py::arg("id_"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
       "get_id_for_windows_id",
@@ -196,6 +227,7 @@ void init_timezone(py::module &m) {
       },
       py::arg("winid"), py::arg("region"), py::arg("id_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
+
   tz.def(
       "get_offset",
       [](const TimeZone &self, UDate date, UBool local) {
@@ -208,7 +240,9 @@ void init_timezone(py::module &m) {
         return py::make_tuple(raw_offset, dst_offset);
       },
       py::arg("date"), py::arg("local"));
+
   tz.def("get_raw_offset", &TimeZone::getRawOffset);
+
   tz.def_static(
       "get_region",
       [](const _UnicodeStringVariant &id) {
@@ -223,6 +257,7 @@ void init_timezone(py::module &m) {
         return result;
       },
       py::arg("id_"));
+
   tz.def_static("get_tz_data_version", []() {
     ErrorCode error_code;
     auto result = TimeZone::getTZDataVersion(error_code);
@@ -231,9 +266,11 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   tz.def_static("get_unknown", &TimeZone::getUnknown, py::return_value_policy::reference);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
       "get_windows_id",
@@ -247,19 +284,29 @@ void init_timezone(py::module &m) {
       },
       py::arg("id_"), py::arg("winid"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
+
   tz.def("has_same_rules", &TimeZone::hasSameRules, py::arg("other"));
+
   tz.def_static("set_default", &TimeZone::setDefault, py::arg("zone"));
+
   tz.def(
       "set_id", [](TimeZone &self, const _UnicodeStringVariant &id) { self.setID(VARIANT_TO_UNISTR(id)); },
       py::arg("id_"));
+
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
+
   tz.def("use_daylight_time", &TimeZone::useDaylightTime);
 
+  //
   // icu::BasicTimeZone
-  btz.def("__copy__", &BasicTimeZone::clone)
-      .def(
-          "__deepcopy__", [](const BasicTimeZone &self, py::dict) { return self.clone(); }, py::arg("memo"));
+  //
+  btz.def("__copy__", &BasicTimeZone::clone);
+
+  btz.def(
+      "__deepcopy__", [](const BasicTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   btz.def("clone", &BasicTimeZone::clone);
+
   btz.def("count_transition_rules", [](const BasicTimeZone &self) {
     ErrorCode error_code;
     auto result = self.countTransitionRules(error_code);
@@ -268,8 +315,10 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
+
   btz.def("get_next_transition", &BasicTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   btz.def(
       "get_offset_from_local",
@@ -285,8 +334,10 @@ void init_timezone(py::module &m) {
       },
       py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
   btz.def("get_previous_transition", &BasicTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
   btz.def(
       "get_simple_rules_near",
       [](const BasicTimeZone &self, UDate date) {
@@ -300,6 +351,7 @@ void init_timezone(py::module &m) {
         return py::make_tuple(initial, trsrules[0], trsrules[1]);
       },
       py::return_value_policy::reference, py::arg("date"));
+
   btz.def(
       "get_time_zone_rules",
       [](const BasicTimeZone &self) {
@@ -314,6 +366,7 @@ void init_timezone(py::module &m) {
         return py::make_tuple(initial, trsrules);
       },
       py::return_value_policy::reference);
+
   btz.def(
       "has_equivalent_transitions",
       [](const BasicTimeZone &self, const BasicTimeZone &tz, UDate start, UDate end, UBool ignore_dst_amount) {
@@ -326,18 +379,25 @@ void init_timezone(py::module &m) {
       },
       py::arg("tz"), py::arg("start"), py::arg("end"), py::arg("ignore_dst_amount"));
 
+  //
   // icu::RuleBasedTimeZone
+  //
   rbtz.def(py::init([](const _UnicodeStringVariant &id, InitialTimeZoneRule *initial_rule) {
              return std::make_unique<RuleBasedTimeZone>(VARIANT_TO_UNISTR(id),
                                                         initial_rule ? initial_rule->clone() : nullptr);
            }),
            py::arg("id_"), py::arg("initial_rule"))
-      .def(py::init<const RuleBasedTimeZone &>(), py::arg("source"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  rbtz.def("__copy__", &RuleBasedTimeZone::clone)
-      .def(
-          "__deepcopy__", [](const RuleBasedTimeZone &self, py::dict) { return self.clone(); }, py::arg("memo"));
+      .def(py::init<const RuleBasedTimeZone &>(), py::arg("other"));
+
+  rbtz.def(py::self != py::self, py::arg("other"));
+
+  rbtz.def(py::self == py::self, py::arg("other"));
+
+  rbtz.def("__copy__", &RuleBasedTimeZone::clone);
+
+  rbtz.def(
+      "__deepcopy__", [](const RuleBasedTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   rbtz.def(
       "add_transition_rule",
       [](RuleBasedTimeZone &self, TimeZoneRule *rule) {
@@ -348,7 +408,9 @@ void init_timezone(py::module &m) {
         }
       },
       py::arg("rule"));
+
   rbtz.def("clone", &RuleBasedTimeZone::clone);
+
   rbtz.def("complete", [](RuleBasedTimeZone &self) {
     ErrorCode error_code;
     self.complete(error_code);
@@ -356,6 +418,7 @@ void init_timezone(py::module &m) {
       throw ICUError(error_code);
     }
   });
+
   rbtz.def("count_transition_rules", [](const RuleBasedTimeZone &self) {
     ErrorCode error_code;
     auto result = self.countTransitionRules(error_code);
@@ -364,8 +427,10 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
+
   rbtz.def("get_next_transition", &RuleBasedTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
            py::arg("result"));
+
   rbtz.def(
           "get_offset",
           [](const RuleBasedTimeZone &self, UDate date, UBool local) {
@@ -403,6 +468,7 @@ void init_timezone(py::module &m) {
             return result;
           },
           py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   rbtz.def(
       "get_offset_from_local",
@@ -418,9 +484,12 @@ void init_timezone(py::module &m) {
       },
       py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
   rbtz.def("get_previous_transition", &RuleBasedTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
            py::arg("result"));
+
   rbtz.def("get_raw_offset", &RuleBasedTimeZone::getRawOffset);
+
   rbtz.def(
       "get_time_zone_rules",
       [](const RuleBasedTimeZone &self) {
@@ -435,11 +504,16 @@ void init_timezone(py::module &m) {
         return py::make_tuple(initial, trsrules);
       },
       py::return_value_policy::reference);
+
   rbtz.def("has_same_rules", &RuleBasedTimeZone::hasSameRules, py::arg("other"));
+
   rbtz.def("set_raw_offset", &RuleBasedTimeZone::setRawOffset, py::arg("offset_millis"));
+
   rbtz.def("use_daylight_time", &RuleBasedTimeZone::useDaylightTime);
 
-  // icu::SimpleTimeZone
+  //
+  // icu::SimpleTimeZone::TimeMode
+  //
   py::enum_<SimpleTimeZone::TimeMode>(
       stz, "TimeMode", py::arithmetic(),
       "*TimeMode* is used, together with a millisecond offset after midnight, to specify a rule transition time.\n\n"
@@ -452,7 +526,10 @@ void init_timezone(py::module &m) {
       .value("UTC_TIME", SimpleTimeZone::TimeMode::UTC_TIME)
       .export_values();
 
-  stz.def(py::init<const SimpleTimeZone &>(), py::arg("source"))
+  //
+  // icu::SimpleTimeZone
+  //
+  stz.def(py::init<const SimpleTimeZone &>(), py::arg("other"))
       .def(py::init([](int32_t raw_offset_gmt, const _UnicodeStringVariant &id) {
              return std::make_unique<SimpleTimeZone>(raw_offset_gmt, VARIANT_TO_UNISTR(id));
            }),
@@ -514,13 +591,19 @@ void init_timezone(py::module &m) {
           py::arg("savings_start_day_of_week_in_month"), py::arg("savings_start_day_of_week"),
           py::arg("savings_start_time"), py::arg("savings_start_time_mode"), py::arg("savings_end_month"),
           py::arg("savings_end_day_of_week_in_month"), py::arg("savings_end_day_of_week"), py::arg("savings_end_time"),
-          py::arg("savings_end_time_mode"), py::arg("savings_dst"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  stz.def("__copy__", &SimpleTimeZone::clone)
-      .def(
-          "__deepcopy__", [](const SimpleTimeZone &self, py::dict) { return self.clone(); }, py::arg("memo"));
+          py::arg("savings_end_time_mode"), py::arg("savings_dst"));
+
+  stz.def(py::self != py::self, py::arg("other"));
+
+  stz.def(py::self == py::self, py::arg("other"));
+
+  stz.def("__copy__", &SimpleTimeZone::clone);
+
+  stz.def(
+      "__deepcopy__", [](const SimpleTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   stz.def("clone", &SimpleTimeZone::clone);
+
   stz.def("count_transition_rules", [](const SimpleTimeZone &self) {
     ErrorCode error_code;
     auto result = self.countTransitionRules(error_code);
@@ -529,9 +612,12 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
+
   stz.def("get_dst_savings", &SimpleTimeZone::getDSTSavings);
+
   stz.def("get_next_transition", &SimpleTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
   stz.def(
          "get_offset",
          [](const SimpleTimeZone &self, UDate date, UBool local) {
@@ -583,6 +669,7 @@ void init_timezone(py::module &m) {
           },
           py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"),
           py::arg("milliseconds"), py::arg("month_length"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   stz.def(
       "get_offset_from_local",
@@ -598,9 +685,12 @@ void init_timezone(py::module &m) {
       },
       py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
   stz.def("get_previous_transition", &SimpleTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
   stz.def("get_raw_offset", &SimpleTimeZone::getRawOffset);
+
   stz.def(
       "get_time_zone_rules",
       [](const SimpleTimeZone &self) {
@@ -615,7 +705,9 @@ void init_timezone(py::module &m) {
         return py::make_tuple(initial, trsrules);
       },
       py::return_value_policy::reference);
+
   stz.def("has_same_rules", &SimpleTimeZone::hasSameRules, py::arg("other"));
+
   stz.def(
       "set_dst_savings",
       [](SimpleTimeZone &self, int32_t millis_saved_during_dst) {
@@ -626,6 +718,7 @@ void init_timezone(py::module &m) {
         }
       },
       py::arg("millis_saved_during_dst"));
+
   stz.def(
          // [1] setEndRule(int32_t month, int32_t dayOfMonth, int32_t dayOfWeek, int32_t time, TimeMode mode,
          //                UBool after, UErrorCode &status)
@@ -700,7 +793,9 @@ void init_timezone(py::module &m) {
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"));
+
   stz.def("set_raw_offset", &SimpleTimeZone::setRawOffset, py::arg("offset_millis"));
+
   stz.def(
          // [1] setStartRule(int32_t month, int32_t dayOfMonth, int32_t dayOfWeek, int32_t time, TimeMode mode,
          //                  UBool after, UErrorCode &status)
@@ -775,17 +870,27 @@ void init_timezone(py::module &m) {
             }
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"));
+
   stz.def("set_start_year", &SimpleTimeZone::setStartYear, py::arg("year"));
+
   stz.def("use_daylight_time", &SimpleTimeZone::useDaylightTime);
 
+  //
   // icu::VTimeZone
-  vtz.def(py::init<const VTimeZone &>(), py::arg("source"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
-  vtz.def("__copy__", &VTimeZone::clone)
-      .def(
-          "__deepcopy__", [](const VTimeZone &self, py::dict) { return self.clone(); }, py::arg("memo"));
+  //
+  vtz.def(py::init<const VTimeZone &>(), py::arg("other"));
+
+  vtz.def(py::self != py::self, py::arg("other"));
+
+  vtz.def(py::self == py::self, py::arg("other"));
+
+  vtz.def("__copy__", &VTimeZone::clone);
+
+  vtz.def(
+      "__deepcopy__", [](const VTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   vtz.def("clone", &VTimeZone::clone);
+
   vtz.def("count_transition_rules", [](const VTimeZone &self) {
     ErrorCode error_code;
     auto result = self.countTransitionRules(error_code);
@@ -794,6 +899,7 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
+
   vtz.def_static(
       "create_vtime_zone",
       [](const _UnicodeStringVariant &vtzdata) {
@@ -805,10 +911,12 @@ void init_timezone(py::module &m) {
         return result;
       },
       py::arg("vtzdata"));
+
   vtz.def_static(
       "create_vtime_zone_by_id",
       [](const _UnicodeStringVariant &id) { return VTimeZone::createVTimeZoneByID(VARIANT_TO_UNISTR(id)); },
       py::arg("id_"));
+
   vtz.def_static(
       "create_vtime_zone_from_basic_time_zone",
       [](const BasicTimeZone &basic_tz) {
@@ -820,13 +928,16 @@ void init_timezone(py::module &m) {
         return result;
       },
       py::arg("basic_tz"));
+
   vtz.def("get_last_modified", [](const VTimeZone &self) {
     UDate last_modified = 0;
     auto result = self.getLastModified(last_modified);
     return py::make_tuple(result, last_modified);
   });
+
   vtz.def("get_next_transition", &VTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
   vtz.def(
          "get_offset",
          [](const VTimeZone &self, UDate date, UBool local) {
@@ -864,6 +975,7 @@ void init_timezone(py::module &m) {
             return result;
           },
           py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   vtz.def(
       "get_offset_from_local",
@@ -879,9 +991,12 @@ void init_timezone(py::module &m) {
       },
       py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
   vtz.def("get_previous_transition", &VTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
           py::arg("result"));
+
   vtz.def("get_raw_offset", &VTimeZone::getRawOffset);
+
   vtz.def(
       "get_time_zone_rules",
       [](const VTimeZone &self) {
@@ -896,14 +1011,21 @@ void init_timezone(py::module &m) {
         return py::make_tuple(initial, trsrules);
       },
       py::return_value_policy::reference);
+
   vtz.def("get_tzurl", &VTimeZone::getTZURL, py::arg("url"));
+
   vtz.def("has_same_rules", &VTimeZone::hasSameRules, py::arg("other"));
+
   vtz.def("set_last_modified", &VTimeZone::setLastModified, py::arg("last_modified"));
+
   vtz.def("set_raw_offset", &VTimeZone::setRawOffset, py::arg("offset_millis"));
+
   vtz.def(
       "set_tzurl", [](VTimeZone &self, const _UnicodeStringVariant &url) { self.setTZURL(VARIANT_TO_UNISTR(url)); },
       py::arg("url"));
+
   vtz.def("use_daylight_time", &VTimeZone::useDaylightTime);
+
   vtz.def(
          "write",
          [](const VTimeZone &self, UDate start, UnicodeString &result) {
@@ -924,6 +1046,7 @@ void init_timezone(py::module &m) {
             }
           },
           py::arg("result"));
+
   vtz.def(
       "write_simple",
       [](const VTimeZone &self, UDate time, UnicodeString &result) {

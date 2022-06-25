@@ -6,6 +6,9 @@
 using namespace icu;
 
 void init_uscript(py::module &m) {
+  //
+  // UScriptCode
+  //
   py::enum_<UScriptCode>(
       m, "UScriptCode", py::arithmetic(),
       "Constants for ISO 15924 script codes.\n\n"
@@ -259,6 +262,9 @@ void init_uscript(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
+  // UScriptUsage
+  //
   py::enum_<UScriptUsage>(
       m, "UScriptUsage", py::arithmetic(),
       "Script usage constants.\n\n"
@@ -273,9 +279,13 @@ void init_uscript(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
+  //
+  // Functions
+  //
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def("uscript_breaks_between_letters", &uscript_breaksBetweenLetters, py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   m.def(
       "uscript_get_code",
       [](const char *name_or_abbr_or_locale) {
@@ -290,7 +300,9 @@ void init_uscript(py::module &m) {
         return result;
       },
       py::arg("name_or_abbr_or_locale"));
+
   m.def("uscript_get_name", &uscript_getName, py::arg("script_code"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def(
       "uscript_get_sample_string",
@@ -306,8 +318,10 @@ void init_uscript(py::module &m) {
         return result;
       },
       py::arg("script"));
+
   m.def("uscript_get_sample_unicode_string", &uscript_getSampleUnicodeString, py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   m.def(
       "uscript_get_script",
       [](UChar32 codepoint) {
@@ -319,6 +333,7 @@ void init_uscript(py::module &m) {
         return result;
       },
       py::arg("codepoint"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   m.def(
       "uscript_get_script_extensions",
@@ -335,15 +350,20 @@ void init_uscript(py::module &m) {
       },
       py::arg("c"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
+
   m.def("uscript_get_short_name", &uscript_getShortName, py::arg("script_code"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def("uscript_get_usage", &uscript_getUsage, py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   m.def("uscript_has_script", &uscript_hasScript, py::arg("c"), py::arg("sc"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def("uscript_is_cased", &uscript_isCased, py::arg("script"));
+
   m.def("uscript_is_right_to_left", &uscript_isRightToLeft, py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

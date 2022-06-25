@@ -7,6 +7,9 @@ using namespace icu;
 using Part = MessagePattern::Part;
 
 void init_messagepattern(py::module &m) {
+  //
+  // UMessagePatternApostropheMode
+  //
   py::enum_<UMessagePatternApostropheMode>(
       m, "UMessagePatternApostropheMode", py::arithmetic(),
       "Mode for when an apostrophe starts quoted literal text for *MessageFormat* output.\n\n"
@@ -25,6 +28,9 @@ void init_messagepattern(py::module &m) {
              "This is the behavior of ICU 4.6 and earlier, and of the JDK.")
       .export_values();
 
+  //
+  // UMessagePatternArgType
+  //
   py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType", py::arithmetic(),
                                     "Argument type constants.\n\n"
                                     "Returned by *Part.get_arg_type()* for ARG_START and ARG_LIMIT parts.\n\n"
@@ -51,6 +57,9 @@ void init_messagepattern(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
       .export_values();
 
+  //
+  // UMessagePatternPartType
+  //
   py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType", py::arithmetic(),
                                      "*MessagePattern::Part* type constants.")
       .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START,
@@ -104,23 +113,38 @@ void init_messagepattern(py::module &m) {
              "The part value is an index into an internal array of numeric values; use *get_numeric_value()*.")
       .export_values();
 
+  //
   // icu::MessagePattern
+  //
   py::class_<MessagePattern, UObject> mp(m, "MessagePattern");
 
+  //
   // icu::MessagePattern::Part
+  //
   py::class_<MessagePattern::Part, UMemory> part(mp, "Part");
+
   // FIXME: Unresolved external symbol error with "icu::MessagePattern::Part::operator==(const Part &other)".
-  // part.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+  //  part.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+
   part.def("get_arg_type", &MessagePattern::Part::getArgType);
+
   part.def("get_index", &MessagePattern::Part::getIndex);
+
   part.def("get_length", &MessagePattern::Part::getLength);
+
   part.def("get_limit", &MessagePattern::Part::getLimit);
+
   part.def("get_type", &MessagePattern::Part::getType);
+
   part.def("get_value", &MessagePattern::Part::getValue);
+
   part.def("hash_code", &MessagePattern::Part::hashCode);
+
   part.def_static("has_numeric_value", &MessagePattern::Part::hasNumericValue, py::arg("type_"));
 
+  //
   // icu::MessagePattern
+  //
   mp.def(
         // [1] MessagePattern::MessagePattern
         py::init([]() {
@@ -155,25 +179,44 @@ void init_messagepattern(py::module &m) {
           py::arg("pattern"), py::arg("parse_error"))
       .def(
           // [4] MessagePattern::MessagePattern
-          py::init<const MessagePattern &>(), py::arg("other"))
-      .def(py::self != py::self, py::arg("other"))
-      .def(py::self == py::self, py::arg("other"));
+          py::init<const MessagePattern &>(), py::arg("other"));
+
+  mp.def(py::self != py::self, py::arg("other"));
+
+  mp.def(py::self == py::self, py::arg("other"));
+
   mp.def("auto_quote_apostrophe_deep", &MessagePattern::autoQuoteApostropheDeep);
+
   mp.def("clear", &MessagePattern::clear);
+
   mp.def("clear_pattern_and_set_apostrophe_mode", &MessagePattern::clearPatternAndSetApostropheMode, py::arg("mode"));
+
   mp.def("count_parts", &MessagePattern::countParts);
+
   mp.def("get_apostrophe_mode", &MessagePattern::getApostropheMode);
+
   mp.def("get_limit_part_index", &MessagePattern::getLimitPartIndex, py::arg("start"));
+
   mp.def("get_numeric_value", &MessagePattern::getNumericValue, py::arg("part"));
+
   mp.def("get_part", &MessagePattern::getPart, py::arg("i"));
+
   mp.def("get_part_type", &MessagePattern::getPartType, py::arg("i"));
+
   mp.def("get_pattern_index", &MessagePattern::getPatternIndex, py::arg("part_index"));
+
   mp.def("get_pattern_string", &MessagePattern::getPatternString);
+
   mp.def("get_plural_offset", &MessagePattern::getPluralOffset, py::arg("plural_start"));
+
   mp.def("get_substring", &MessagePattern::getSubstring, py::arg("part"));
+
   mp.def("hash_code", &MessagePattern::hashCode);
+
   mp.def("has_named_arguments", &MessagePattern::hasNamedArguments);
+
   mp.def("has_numbered_arguments", &MessagePattern::hasNumberedArguments);
+
   mp.def(
       "parse",
       [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
@@ -185,6 +228,7 @@ void init_messagepattern(py::module &m) {
         return result;
       },
       py::arg("pattern"), py::arg("parse_error"));
+
   mp.def(
       "parse_choice_style",
       [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
@@ -196,6 +240,7 @@ void init_messagepattern(py::module &m) {
         return result;
       },
       py::arg("pattern"), py::arg("parse_error"));
+
   mp.def(
       "parse_plural_style",
       [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
@@ -207,6 +252,7 @@ void init_messagepattern(py::module &m) {
         return result;
       },
       py::arg("pattern"), py::arg("parse_error"));
+
   mp.def(
       "parse_select_style",
       [](MessagePattern &self, const _UnicodeStringVariant &pattern, UParseError *parse_error) -> MessagePattern & {
@@ -218,12 +264,14 @@ void init_messagepattern(py::module &m) {
         return result;
       },
       py::arg("pattern"), py::arg("parse_error"));
+
   mp.def(
       "part_substring_matches",
       [](const MessagePattern &self, const Part &part, const _UnicodeStringVariant &s) {
         return self.partSubstringMatches(part, VARIANT_TO_UNISTR(s));
       },
       py::arg("part"), py::arg("s"));
+
   mp.def_static(
       "validate_argument_name",
       [](const _UnicodeStringVariant &name) { return MessagePattern::validateArgumentName(VARIANT_TO_UNISTR(name)); },

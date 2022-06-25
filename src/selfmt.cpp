@@ -5,8 +5,11 @@
 using namespace icu;
 
 void init_selfmt(py::module &m) {
+  //
   // icu::SelectFormat
+  //
   py::class_<SelectFormat, Format> sf(m, "SelectFormat");
+
   sf.def(py::init([](const _UnicodeStringVariant &pattern) {
            ErrorCode error_code;
            auto result = std::make_unique<SelectFormat>(VARIANT_TO_UNISTR(pattern), error_code);
@@ -17,15 +20,20 @@ void init_selfmt(py::module &m) {
          }),
          py::arg("pattern"))
       .def(py::init<const SelectFormat &>(), py::arg("other"));
-  sf.def("__copy__", &SelectFormat::clone)
-      .def(
-          "___deepcopy__", [](const SelectFormat &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const SelectFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-          py::arg("other"))
-      .def(
-          "__ne__", [](const SelectFormat &self, const Format &other) { return self != other; }, py::is_operator(),
-          py::arg("other"));
+
+  sf.def("__copy__", &SelectFormat::clone);
+
+  sf.def(
+      "___deepcopy__", [](const SelectFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  sf.def(
+      "__eq__", [](const SelectFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  sf.def(
+      "__ne__", [](const SelectFormat &self, const Format &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+
   sf.def(
       "apply_pattern",
       [](SelectFormat &self, const _UnicodeStringVariant &pattern) {
@@ -36,7 +44,9 @@ void init_selfmt(py::module &m) {
         }
       },
       py::arg("pattern"));
+
   sf.def("clone", &SelectFormat::clone);
+
   sf.def(
         // [1] SelectFormat::format
         // [2] Format::format
@@ -89,6 +99,7 @@ void init_selfmt(py::module &m) {
             return result;
           },
           py::arg("keyword"), py::arg("append_to"), py::arg("pos"));
+
   sf.def(
         "parse_object",
         [](const SelectFormat &self, const _UnicodeStringVariant &source, Formattable &result,
@@ -104,5 +115,6 @@ void init_selfmt(py::module &m) {
             }
           },
           py::arg("source"), py::arg("result"));
+
   sf.def("to_pattern", &SelectFormat::toPattern, py::arg("append_to"));
 }

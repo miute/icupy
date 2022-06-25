@@ -1,6 +1,9 @@
 #include "main.hpp"
 
 void init_utypes(py::module &m) {
+  //
+  // UErrorCode
+  //
   py::enum_<UErrorCode>(m, "UErrorCode", py::arithmetic(),
                         "Standard ICU4C error code type, a substitute for exceptions.")
       .value("U_USING_FALLBACK_WARNING", U_USING_FALLBACK_WARNING,
@@ -255,8 +258,13 @@ void init_utypes(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // Functions
+  //
   m.def("u_error_name", &u_errorName, py::arg("code"));
+
   m.def("u_failure", &U_FAILURE, py::arg("code"));
+
   m.def("u_success", &U_SUCCESS, py::arg("code"));
 
   m.attr("U_MILLIS_PER_DAY") = U_MILLIS_PER_DAY;

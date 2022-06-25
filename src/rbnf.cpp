@@ -5,6 +5,9 @@
 using namespace icu;
 
 void init_rbnf(py::module &m) {
+  //
+  // icu::URBNFRuleSetTag
+  //
   py::enum_<URBNFRuleSetTag>(m, "URBNFRuleSetTag", py::arithmetic(), "Tags for the predefined rulesets.")
       .value("URBNF_SPELLOUT", URBNF_SPELLOUT)
       .value("URBNF_ORDINAL", URBNF_ORDINAL)
@@ -12,8 +15,11 @@ void init_rbnf(py::module &m) {
       .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM)
       .export_values();
 
+  //
   // icu::RuleBasedNumberFormat
+  //
   py::class_<RuleBasedNumberFormat, NumberFormat> rbnf(m, "RuleBasedNumberFormat");
+
   rbnf.def(
           // [1] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init([](const _UnicodeStringVariant &rules, UParseError &perror) {
@@ -77,15 +83,21 @@ void init_rbnf(py::module &m) {
       .def(
           // [6] RuleBasedNumberFormat::RuleBasedNumberFormat
           py::init<const RuleBasedNumberFormat &>(), py::arg("other"));
-  rbnf.def("__copy__", &RuleBasedNumberFormat::clone)
-      .def(
-          "__deepcopy__", [](const RuleBasedNumberFormat &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const RuleBasedNumberFormat &self, const Format &other) { return self == other; },
-          py::is_operator(), py::arg("other"));
+
+  rbnf.def("__copy__", &RuleBasedNumberFormat::clone);
+
+  rbnf.def(
+      "__deepcopy__", [](const RuleBasedNumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  rbnf.def(
+      "__eq__", [](const RuleBasedNumberFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
   // FIXME: Implement "void icu::RuleBasedNumberFormat::adoptDecimalFormatSymbols(DecimalFormatSymbols
-  // *symbolsToAdopt)".
+  //  *symbolsToAdopt)".
+
   rbnf.def("clone", &RuleBasedNumberFormat::clone);
+
   rbnf.def(
           // [1] NumberFormat::format
           // [2] Format::format
@@ -247,13 +259,19 @@ void init_rbnf(py::module &m) {
             return result;
           },
           py::arg("number"), py::arg("append_to"), py::arg("pos_iter"));
+
   rbnf.def("get_default_rule_set_name", &RuleBasedNumberFormat::getDefaultRuleSetName);
+
   rbnf.def("get_number_of_rule_set_display_name_locales", &RuleBasedNumberFormat::getNumberOfRuleSetDisplayNameLocales);
+
   rbnf.def("get_number_of_rule_set_names", &RuleBasedNumberFormat::getNumberOfRuleSetNames);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   rbnf.def("get_rounding_mode", &RuleBasedNumberFormat::getRoundingMode);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
+
   rbnf.def("get_rules", &RuleBasedNumberFormat::getRules);
+
   rbnf.def(
           "get_rule_set_display_name",
           [](RuleBasedNumberFormat &self, const _UnicodeStringVariant &rule_set_name, const _LocaleVariant &locale) {
@@ -266,6 +284,7 @@ void init_rbnf(py::module &m) {
             return self.getRuleSetDisplayName(index, VARIANT_TO_LOCALE(locale));
           },
           py::arg("index"), py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
+
   rbnf.def(
       "get_rule_set_display_name_locale",
       [](const RuleBasedNumberFormat &self, int32_t index) {
@@ -277,8 +296,11 @@ void init_rbnf(py::module &m) {
         return result;
       },
       py::arg("index"));
+
   rbnf.def("get_rule_set_name", &RuleBasedNumberFormat::getRuleSetName, py::arg("index"));
+
   rbnf.def("is_lenient", &RuleBasedNumberFormat::isLenient);
+
   rbnf.def(
           // [1] RuleBasedNumberFormat::parse
           // [2] NumberFormat::parse
@@ -297,6 +319,7 @@ void init_rbnf(py::module &m) {
             }
           },
           py::arg("text"), py::arg("result"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   rbnf.def(
       "set_context",
@@ -313,6 +336,7 @@ void init_rbnf(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   rbnf.def("set_decimal_format_symbols", &RuleBasedNumberFormat::setDecimalFormatSymbols, py::arg("symbols"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
+
   rbnf.def(
       "set_default_rule_set",
       [](RuleBasedNumberFormat &self, const _UnicodeStringVariant &rule_set_name) {
@@ -323,7 +347,9 @@ void init_rbnf(py::module &m) {
         }
       },
       py::arg("rule_set_name"));
+
   rbnf.def("set_lenient", &RuleBasedNumberFormat::setLenient, py::arg("enabled"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   rbnf.def("set_rounding_mode", &RuleBasedNumberFormat::setRoundingMode, py::arg("rounding_mode"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)

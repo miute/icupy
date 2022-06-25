@@ -6,8 +6,11 @@
 using namespace icu;
 
 void init_msgfmt(py::module &m) {
+  //
   // icu::MessageFormat
+  //
   py::class_<MessageFormat, Format> mf(m, "MessageFormat");
+
   mf.def(
         // [1] MessageFormat::MessageFormat
         py::init([](const _UnicodeStringVariant &pattern) {
@@ -47,16 +50,21 @@ void init_msgfmt(py::module &m) {
       .def(
           // [4] MessageFormat::MessageFormat
           py::init<const MessageFormat &>(), py::arg("other"));
-  mf.def("__copy__", &MessageFormat::clone)
-      .def(
-          "__deepcopy__", [](const MessageFormat &self, py::dict) { return self.clone(); }, py::arg("memo"))
-      .def(
-          "__eq__", [](const MessageFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-          py::arg("other"));
+
+  mf.def("__copy__", &MessageFormat::clone);
+
+  mf.def(
+      "__deepcopy__", [](const MessageFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  mf.def(
+      "__eq__", [](const MessageFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
   // FIXME: Implement "void icu::MessageFormat::adoptFormat(const UnicodeString &formatName, Format *formatToAdopt,
-  // UErrorCode &status)".
+  //  UErrorCode &status)".
   // FIXME: Implement "void icu::MessageFormat::adoptFormat(int32_t formatNumber, Format *formatToAdopt)".
   // FIXME: Implement "void icu::MessageFormat::adoptFormats(Format **formatsToAdopt, int32_t count)".
+
   mf.def(
         // [1] MessageFormat::applyPattern
         "apply_pattern",
@@ -91,6 +99,7 @@ void init_msgfmt(py::module &m) {
             }
           },
           py::arg("pattern"), py::arg("parse_error"));
+
   mf.def_static(
       "auto_quote_apostrophe",
       [](const _UnicodeStringVariant &pattern) {
@@ -102,7 +111,9 @@ void init_msgfmt(py::module &m) {
         return result;
       },
       py::arg("pattern"));
+
   mf.def("clone", &MessageFormat::clone);
+
   mf.def(
         // [1] MessageFormat::format
         // [2] Format::format
@@ -159,7 +170,7 @@ void init_msgfmt(py::module &m) {
           },
           py::arg("source"), py::arg("count"), py::arg("append_to"), py::arg("ignore"))
       // FIXME: Implement "static UnicodeString& icu::MessageFormat::format(const UnicodeString &pattern,
-      // const Formattable *arguments, int32_t count, UnicodeString &appendTo, UErrorCode &status)".
+      //  const Formattable *arguments, int32_t count, UnicodeString &appendTo, UErrorCode &status)".
       /*
       .def_static(
           // [6] MessageFormat::format
@@ -211,7 +222,9 @@ void init_msgfmt(py::module &m) {
             return result;
           },
           py::arg("argument_names"), py::arg("arguments"), py::arg("count"), py::arg("append_to"));
+
   mf.def("get_apostrophe_mode", &MessageFormat::getApostropheMode);
+
   mf.def(
       "get_format",
       [](MessageFormat &self, const _UnicodeStringVariant &format_name) {
@@ -223,6 +236,7 @@ void init_msgfmt(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("format_name"));
+
   mf.def("get_format_names", [](MessageFormat &self) {
     ErrorCode error_code;
     auto result = self.getFormatNames(error_code);
@@ -231,6 +245,7 @@ void init_msgfmt(py::module &m) {
     }
     return result;
   });
+
   mf.def(
       "get_formats",
       [](const MessageFormat &self) {
@@ -243,7 +258,9 @@ void init_msgfmt(py::module &m) {
         return result;
       },
       py::return_value_policy::reference);
+
   mf.def("get_locale", &MessageFormat::getLocale);
+
   mf.def(
         // [1] MessageFormat::parse
         "parse",
@@ -274,6 +291,7 @@ void init_msgfmt(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("source"), py::arg("pos"));
+
   mf.def(
         "parse_object",
         [](const MessageFormat &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &pos) {
@@ -290,6 +308,7 @@ void init_msgfmt(py::module &m) {
             }
           },
           py::arg("source"), py::arg("result"));
+
   mf.def(
         // [1] MessageFormat::setFormat
         "set_format",
@@ -305,6 +324,7 @@ void init_msgfmt(py::module &m) {
           // [2] MessageFormat::setFormat
           "set_format", py::overload_cast<int32_t, const Format &>(&MessageFormat::setFormat), py::arg("format_number"),
           py::arg("format_"));
+
   mf.def(
       "set_formats",
       [](MessageFormat &self, std::vector<const Format *> &new_formats, int32_t count) {
@@ -314,10 +334,13 @@ void init_msgfmt(py::module &m) {
         self.setFormats(new_formats.data(), count);
       },
       py::arg("new_formats"), py::arg("count") = -1);
+
   mf.def(
       "set_locale",
       [](MessageFormat &self, const _LocaleVariant &locale) { self.setLocale(VARIANT_TO_LOCALE(locale)); },
       py::arg("locale"));
+
   mf.def("to_pattern", &MessageFormat::toPattern, py::arg("append_to"));
+
   mf.def("uses_named_arguments", &MessageFormat::usesNamedArguments);
 }

@@ -11,6 +11,9 @@ _USetPtr::~_USetPtr() {}
 USet *_USetPtr::get() const { return p_; }
 
 void init_uset(py::module &m) {
+  //
+  // USetSpanCondition
+  //
   py::enum_<USetSpanCondition>(
       m, "USetSpanCondition", py::arithmetic(),
       "Argument values for whether *span()* and similar functions continue while the current character is contained "
@@ -76,10 +79,19 @@ void init_uset(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+  //
+  // _ConstUSetPtr
+  //
   py::class_<_ConstUSetPtr>(m, "_ConstUSetPtr");
 
+  //
+  // _USetPtr
+  //
   py::class_<_USetPtr>(m, "_USetPtr");
 
+  //
+  // USerializedSet
+  //
   py::class_<USerializedSet>(m, "USerializedSet").def(py::init<>());
 
   m.attr("USET_IGNORE_SPACE") = int32_t{USET_IGNORE_SPACE};

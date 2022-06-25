@@ -11,6 +11,9 @@ using namespace icu;
 
 void init_tzfmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+  //
+  // UTimeZoneFormatGMTOffsetPatternType
+  //
   py::enum_<UTimeZoneFormatGMTOffsetPatternType>(m, "UTimeZoneFormatGMTOffsetPatternType", py::arithmetic(),
                                                  "Constants for GMT offset pattern types.")
       .value("UTZFMT_PAT_POSITIVE_HM", UTZFMT_PAT_POSITIVE_HM, "Positive offset with hours and minutes fields.")
@@ -25,6 +28,9 @@ void init_tzfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 
+  //
+  // UTimeZoneFormatParseOption
+  //
   py::enum_<UTimeZoneFormatParseOption>(
       m, "UTimeZoneFormatParseOption", py::arithmetic(),
       "Constants for parse option flags, used for specifying optional parse behavior.")
@@ -40,6 +46,9 @@ void init_tzfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .export_values();
 
+  //
+  // UTimeZoneFormatStyle
+  //
   py::enum_<UTimeZoneFormatStyle>(
       m, "UTimeZoneFormatStyle", py::arithmetic(),
       "Constants for time zone display format style used by format/parse APIs in *TimeZoneFormat*.")
@@ -105,6 +114,9 @@ void init_tzfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 
+  //
+  // UTimeZoneFormatTimeType
+  //
   py::enum_<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType", py::arithmetic(),
                                      "Constants for time types used by *TimeZoneFormat* APIs for receiving time type "
                                      "(standard time, daylight time or unknown).")
@@ -113,14 +125,24 @@ void init_tzfmt(py::module &m) {
       .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT, "Daylight saving time.")
       .export_values();
 
+  //
   // icu::TimeZoneFormat
+  //
   py::class_<TimeZoneFormat, Format> tzf(m, "TimeZoneFormat");
-  tzf.def(py::init<const TimeZoneFormat &>(), py::arg("other")).def(py::self == py::self, py::arg("other"));
-  tzf.def("__copy__", &TimeZoneFormat::clone)
-      .def(
-          "__deepcopy__", [](const TimeZoneFormat &self, py::dict) { return self.clone(); }, py::arg("memo"));
+
+  tzf.def(py::init<const TimeZoneFormat &>(), py::arg("other"));
+
+  tzf.def(py::self == py::self, py::arg("other"));
+
+  tzf.def("__copy__", &TimeZoneFormat::clone);
+
+  tzf.def(
+      "__deepcopy__", [](const TimeZoneFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   // FIXME: Implement "void icu::TimeZoneFormat::adoptTimeZoneNames(TimeZoneNames *tznames)".
+
   tzf.def("clone", &TimeZoneFormat::clone);
+
   tzf.def_static(
       "create_instance",
       [](const _LocaleVariant &locale) {
@@ -132,6 +154,7 @@ void init_tzfmt(py::module &m) {
         return result;
       },
       py::arg("locale"));
+
   tzf.def(
          // [1] TimeZoneFormat::format
          "format",
@@ -176,6 +199,7 @@ void init_tzfmt(py::module &m) {
           py::overload_cast<UTimeZoneFormatStyle, const TimeZone &, UDate, UnicodeString &, UTimeZoneFormatTimeType *>(
               &TimeZoneFormat::format, py::const_),
           py::arg("style"), py::arg("tz"), py::arg("date"), py::arg("name"), py::arg("time_type") = nullptr);
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def(
       "format_offset_iso8601_basic",
@@ -191,6 +215,7 @@ void init_tzfmt(py::module &m) {
       },
       py::arg("offset"), py::arg("use_utc_indicator"), py::arg("is_short"), py::arg("ignore_seconds"),
       py::arg("result"));
+
   tzf.def(
       "format_offset_iso8601_extended",
       [](const TimeZoneFormat &self, int32_t offset, UBool use_utc_indicator, UBool is_short, UBool ignore_seconds,
@@ -206,6 +231,7 @@ void init_tzfmt(py::module &m) {
       py::arg("offset"), py::arg("use_utc_indicator"), py::arg("is_short"), py::arg("ignore_seconds"),
       py::arg("result"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   tzf.def(
       "format_offset_localized_gmt",
       [](const TimeZoneFormat &self, int32_t offset, UnicodeString &result) -> UnicodeString & {
@@ -217,6 +243,7 @@ void init_tzfmt(py::module &m) {
         return string;
       },
       py::arg("offset"), py::arg("result"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def(
       "format_offset_short_localized_gmt",
@@ -230,12 +257,19 @@ void init_tzfmt(py::module &m) {
       },
       py::arg("offset"), py::arg("result"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   tzf.def("get_default_parse_options", &TimeZoneFormat::getDefaultParseOptions);
+
   tzf.def("get_gmt_offset_digits", &TimeZoneFormat::getGMTOffsetDigits, py::arg("digits"));
+
   tzf.def("get_gmt_offset_pattern", &TimeZoneFormat::getGMTOffsetPattern, py::arg("type_"), py::arg("pattern"));
+
   tzf.def("get_gmt_pattern", &TimeZoneFormat::getGMTPattern, py::arg("pattern"));
+
   tzf.def("get_gmt_zero_format", &TimeZoneFormat::getGMTZeroFormat, py::arg("gmt_zero_format"));
+
   tzf.def("get_time_zone_names", &TimeZoneFormat::getTimeZoneNames, py::return_value_policy::reference);
+
   tzf.def(
          "parse",
          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const _UnicodeStringVariant &text,
@@ -261,6 +295,7 @@ void init_tzfmt(py::module &m) {
             return tz;
           },
           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr);
+
   tzf.def(
          "parse_object",
          [](const TimeZoneFormat &self, const _UnicodeStringVariant &source, Formattable &result,
@@ -277,18 +312,21 @@ void init_tzfmt(py::module &m) {
             }
           },
           py::arg("source"), py::arg("result"));
+
   tzf.def(
       "parse_offset_iso8601",
       [](const TimeZoneFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
         return self.parseOffsetISO8601(VARIANT_TO_UNISTR(text), pos);
       },
       py::arg("text"), py::arg("pos"));
+
   tzf.def(
       "parse_offset_localized_gmt",
       [](const TimeZoneFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
         return self.parseOffsetLocalizedGMT(VARIANT_TO_UNISTR(text), pos);
       },
       py::arg("text"), py::arg("pos"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def(
       "parse_offset_short_localized_gmt",
@@ -297,7 +335,9 @@ void init_tzfmt(py::module &m) {
       },
       py::arg("text"), py::arg("pos"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   tzf.def("set_default_parse_options", &TimeZoneFormat::setDefaultParseOptions, py::arg("flags"));
+
   tzf.def(
       "set_gmt_offset_digits",
       [](TimeZoneFormat &self, const _UnicodeStringVariant &digits) {
@@ -308,6 +348,7 @@ void init_tzfmt(py::module &m) {
         }
       },
       py::arg("digits"));
+
   tzf.def(
       "set_gmt_offset_pattern",
       [](TimeZoneFormat &self, UTimeZoneFormatGMTOffsetPatternType type, const _UnicodeStringVariant &pattern) {
@@ -318,6 +359,7 @@ void init_tzfmt(py::module &m) {
         }
       },
       py::arg("type_"), py::arg("pattern"));
+
   tzf.def(
       "set_gmt_pattern",
       [](TimeZoneFormat &self, const _UnicodeStringVariant &pattern) {
@@ -328,6 +370,7 @@ void init_tzfmt(py::module &m) {
         }
       },
       py::arg("pattern"));
+
   tzf.def(
       "set_gmt_zero_format",
       [](TimeZoneFormat &self, const _UnicodeStringVariant &gmt_zero_format) {
@@ -338,6 +381,7 @@ void init_tzfmt(py::module &m) {
         }
       },
       py::arg("gmt_zero_format"));
+
   tzf.def("set_time_zone_names", &TimeZoneFormat::setTimeZoneNames, py::arg("tznames"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

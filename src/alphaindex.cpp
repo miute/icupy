@@ -13,6 +13,9 @@ using ImmutableIndex = AlphabeticIndex::ImmutableIndex;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
 void init_alphaindex(py::module &m) {
+  //
+  // UAlphabeticIndexLabelType
+  //
   py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType", py::arithmetic(),
                                        "Constants for Alphabetic Index Label Types.\n\n"
                                        "The form of these enum constants anticipates having a plain C API for "
@@ -34,19 +37,30 @@ void init_alphaindex(py::module &m) {
              "index.")
       .export_values();
 
+  //
   // icu::AlphabeticIndex
+  //
   py::class_<AlphabeticIndex, UObject> ai(m, "AlphabeticIndex");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+  //
   // icu::AlphabeticIndex::Bucket
+  //
   py::class_<AlphabeticIndex::Bucket, UObject> bkt(ai, "Bucket");
+
   bkt.def("get_label", &Bucket::getLabel);
+
   bkt.def("get_label_type", &Bucket::getLabelType);
 
+  //
   // icu::AlphabeticIndex::ImmutableIndex
+  //
   py::class_<AlphabeticIndex::ImmutableIndex, UObject> ii(ai, "ImmutableIndex");
+
   ii.def("get_bucket", &ImmutableIndex::getBucket, py::return_value_policy::reference, py::arg("index"));
+
   ii.def("get_bucket_count", &ImmutableIndex::getBucketCount);
+
   ii.def(
       "get_bucket_index",
       [](const ImmutableIndex &self, const _UnicodeStringVariant &name) {
@@ -60,7 +74,9 @@ void init_alphaindex(py::module &m) {
       py::arg("name"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
+  //
   // icu::AlphabeticIndex
+  //
   ai.def(py::init([](const _LocaleVariant &locale) {
            ErrorCode error_code;
            auto result = std::make_unique<AlphabeticIndex>(VARIANT_TO_LOCALE(locale), error_code);
@@ -83,6 +99,7 @@ void init_alphaindex(py::module &m) {
            py::arg("collator"))
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       ;
+
   ai.def(
         // [1] AlphabeticIndex::addLabels
         "add_labels",
@@ -107,6 +124,7 @@ void init_alphaindex(py::module &m) {
             return result;
           },
           py::arg("additions"));
+
   ai.def(
       "add_record",
       [](AlphabeticIndex &self, const _UnicodeStringVariant &name, _ConstVoidPtr *data) -> AlphabeticIndex & {
@@ -118,6 +136,7 @@ void init_alphaindex(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("data"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   ai.def("build_immutable_index", [](AlphabeticIndex &self) {
     ErrorCode error_code;
@@ -128,6 +147,7 @@ void init_alphaindex(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
+
   ai.def("clear_records", [](AlphabeticIndex &self) -> AlphabeticIndex & {
     ErrorCode error_code;
     auto &result = self.clearRecords(error_code);
@@ -136,6 +156,7 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("get_bucket_count", [](AlphabeticIndex &self) {
     ErrorCode error_code;
     auto result = self.getBucketCount(error_code);
@@ -144,6 +165,7 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("get_bucket_index", py::overload_cast<>(&AlphabeticIndex::getBucketIndex, py::const_))
       .def(
           "get_bucket_index",
@@ -156,13 +178,21 @@ void init_alphaindex(py::module &m) {
             return result;
           },
           py::arg("item_name"));
+
   ai.def("get_bucket_label", &AlphabeticIndex::getBucketLabel);
+
   ai.def("get_bucket_label_type", &AlphabeticIndex::getBucketLabelType);
+
   ai.def("get_bucket_record_count", &AlphabeticIndex::getBucketRecordCount);
+
   ai.def("get_collator", &AlphabeticIndex::getCollator, py::return_value_policy::reference);
+
   ai.def("get_inflow_label", &AlphabeticIndex::getInflowLabel);
+
   ai.def("get_max_label_count", &AlphabeticIndex::getMaxLabelCount);
+
   ai.def("get_overflow_label", &AlphabeticIndex::getOverflowLabel);
+
   ai.def("get_record_count", [](AlphabeticIndex &self) {
     ErrorCode error_code;
     auto result = self.getRecordCount(error_code);
@@ -171,11 +201,15 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("get_record_data", [](const AlphabeticIndex &self) {
     return reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(self.getRecordData()));
   });
+
   ai.def("get_record_name", &AlphabeticIndex::getRecordName);
+
   ai.def("get_underflow_label", &AlphabeticIndex::getUnderflowLabel);
+
   ai.def("next_bucket", [](AlphabeticIndex &self) {
     ErrorCode error_code;
     auto result = self.nextBucket(error_code);
@@ -184,6 +218,7 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("next_record", [](AlphabeticIndex &self) {
     ErrorCode error_code;
     auto result = self.nextRecord(error_code);
@@ -192,6 +227,7 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("reset_bucket_iterator", [](AlphabeticIndex &self) -> AlphabeticIndex & {
     ErrorCode error_code;
     auto &result = self.resetBucketIterator(error_code);
@@ -200,7 +236,9 @@ void init_alphaindex(py::module &m) {
     }
     return result;
   });
+
   ai.def("reset_record_iterator", &AlphabeticIndex::resetRecordIterator);
+
   ai.def(
       "set_inflow_label",
       [](AlphabeticIndex &self, const _UnicodeStringVariant &inflow_label) -> AlphabeticIndex & {
@@ -212,6 +250,7 @@ void init_alphaindex(py::module &m) {
         return result;
       },
       py::arg("inflow_label"));
+
   ai.def(
       "set_max_label_count",
       [](AlphabeticIndex &self, int32_t max_label_count) -> AlphabeticIndex & {
@@ -223,6 +262,7 @@ void init_alphaindex(py::module &m) {
         return result;
       },
       py::arg("max_label_count"));
+
   ai.def(
       "set_overflow_label",
       [](AlphabeticIndex &self, const _UnicodeStringVariant &overflow_label) -> AlphabeticIndex & {
@@ -234,6 +274,7 @@ void init_alphaindex(py::module &m) {
         return result;
       },
       py::arg("overflow_label"));
+
   ai.def(
       "set_underflow_label",
       [](AlphabeticIndex &self, const _UnicodeStringVariant &underflow_label) -> AlphabeticIndex & {

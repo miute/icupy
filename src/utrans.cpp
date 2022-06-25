@@ -3,6 +3,9 @@
 #include <unicode/utrans.h>
 
 void init_utrans(py::module &m) {
+  //
+  // UTransDirection
+  //
   py::enum_<UTransDirection>(
       m, "UTransDirection", py::arithmetic(),
       "Direction constant indicating the direction in a transliterator, e.g., the forward or reverse rules of a "
@@ -17,10 +20,15 @@ void init_utrans(py::module &m) {
              "For a transliterator opened using a rule, it means reverse direction rules, e.g., \"A < B\".")
       .export_values();
 
+  //
+  // UTransPosition
+  //
   py::class_<UTransPosition> tp(m, "UTransPosition");
+
   tp.def(py::init<>())
       .def(py::init<int32_t, int32_t, int32_t, int32_t>(), py::arg("context_start"), py::arg("context_limit"),
            py::arg("start"), py::arg("limit"));
+
   tp.def("__repr__", [](const UTransPosition &self) {
     std::stringstream ss;
     ss << "UTransPosition(";
@@ -31,8 +39,12 @@ void init_utrans(py::module &m) {
     ss << ")";
     return ss.str();
   });
+
   tp.def_readwrite("context_limit", &UTransPosition::contextLimit);
+
   tp.def_readwrite("context_start", &UTransPosition::contextStart);
+
   tp.def_readwrite("limit", &UTransPosition::limit);
+
   tp.def_readwrite("start", &UTransPosition::start);
 }

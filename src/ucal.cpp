@@ -2,11 +2,17 @@
 #include <unicode/ucal.h>
 
 void init_ucal(py::module &m) {
+  //
+  // UCalendarAMPMs
+  //
   py::enum_<UCalendarAMPMs>(m, "UCalendarAMPMs", py::arithmetic(), "Possible AM/PM values in a *UCalendar*.")
       .value("UCAL_AM", UCAL_AM, "AM.")
       .value("UCAL_PM", UCAL_PM, "PM.")
       .export_values();
 
+  //
+  // UCalendarAttribute
+  //
   py::enum_<UCalendarAttribute>(m, "UCalendarAttribute", py::arithmetic(), "Types of *UCalendar* attributes.")
       .value("UCAL_LENIENT", UCAL_LENIENT, "Lenient parsing.")
       .value("UCAL_FIRST_DAY_OF_WEEK", UCAL_FIRST_DAY_OF_WEEK, "First day of week.")
@@ -20,6 +26,9 @@ void init_ucal(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
       .export_values();
 
+  //
+  // UCalendarDateFields
+  //
   py::enum_<UCalendarDateFields>(m, "UCalendarDateFields", py::arithmetic(), "Possible fields in a *UCalendar*.")
       .value("UCAL_ERA", UCAL_ERA,
              "Field number indicating the era, e.g., AD or BC in the Gregorian (Julian) calendar.\n\n  "
@@ -114,6 +123,9 @@ void init_ucal(py::module &m) {
              "This is a synonym for *UCAL_DATE*. The first day of the month has value 1.")
       .export_values();
 
+  //
+  // UCalendarDaysOfWeek
+  //
   py::enum_<UCalendarDaysOfWeek>(
       m, "UCalendarDaysOfWeek", py::arithmetic(),
       "Useful constant for days of week.\n\n"
@@ -129,6 +141,9 @@ void init_ucal(py::module &m) {
       .value("UCAL_SATURDAY", UCAL_SATURDAY, "Saturday.")
       .export_values();
 
+  //
+  // UCalendarDisplayNameType
+  //
   py::enum_<UCalendarDisplayNameType>(m, "UCalendarDisplayNameType", py::arithmetic(),
                                       "Possible formats for a *UCalendar's* display name.")
       .value("UCAL_STANDARD", UCAL_STANDARD, "Standard display name.")
@@ -137,6 +152,9 @@ void init_ucal(py::module &m) {
       .value("UCAL_SHORT_DST", UCAL_SHORT_DST, "Short daylight savings display name.")
       .export_values();
 
+  //
+  // UCalendarLimitType
+  //
   py::enum_<UCalendarLimitType>(m, "UCalendarLimitType", py::arithmetic(), "Possible limit values for a *UCalendar*.")
       .value("UCAL_MINIMUM", UCAL_MINIMUM, "Minimum value.")
       .value("UCAL_MAXIMUM", UCAL_MAXIMUM, "Maximum value.")
@@ -146,6 +164,9 @@ void init_ucal(py::module &m) {
       .value("UCAL_ACTUAL_MAXIMUM", UCAL_ACTUAL_MAXIMUM, "Actual maximum value.")
       .export_values();
 
+  //
+  // UCalendarMonths
+  //
   py::enum_<UCalendarMonths>(m, "UCalendarMonths", py::arithmetic(),
                              "Possible months in a *UCalendar*.\n\n"
                              "Note: Calendar month is 0-based.")
@@ -166,6 +187,9 @@ void init_ucal(py::module &m) {
              "Although the Gregorian calendar does not use this value, lunar calendars do.")
       .export_values();
 
+  //
+  // UCalendarType
+  //
   py::enum_<UCalendarType>(m, "UCalendarType", py::arithmetic(), "Possible types of *UCalendar*.")
       .value("UCAL_TRADITIONAL", UCAL_TRADITIONAL,
              "Despite the name, *UCAL_TRADITIONAL* designates the locale's default calendar, which may be the "
@@ -175,6 +199,9 @@ void init_ucal(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
+  //
+  // UCalendarWallTimeOption
+  //
   py::enum_<UCalendarWallTimeOption>(m, "UCalendarWallTimeOption", py::arithmetic(),
                                      "Options for handling ambiguous wall time at time zone offset transitions.")
       .value("UCAL_WALLTIME_LAST", UCAL_WALLTIME_LAST,
@@ -189,6 +216,9 @@ void init_ucal(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
+  //
+  // UCalendarWeekdayType
+  //
   py::enum_<UCalendarWeekdayType>(m, "UCalendarWeekdayType", py::arithmetic(),
                                   "Weekday types, as returned by *ucal_get_day_of_week_type()*.")
       .value("UCAL_WEEKDAY", UCAL_WEEKDAY, "Designates a full weekday (no part of the day is included in the weekend).")
@@ -201,6 +231,9 @@ void init_ucal(py::module &m) {
              "Call *ucal_get_weekend_transition()* to get the time of transition.")
       .export_values();
 
+  //
+  // USystemTimeZoneType
+  //
   py::enum_<USystemTimeZoneType>(
       m, "USystemTimeZoneType", py::arithmetic(),
       "System time zone type constants used by filtering zones in *ucal_open_time_zone_id_enumeration*.")
@@ -211,6 +244,9 @@ void init_ucal(py::module &m) {
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
+  //
+  // UTimeZoneLocalOption
+  //
   py::enum_<UTimeZoneLocalOption>(
       m, "UTimeZoneLocalOption", py::arithmetic(),
       "Options used by *ucal_get_time_zone_offset_from_local* and *BasicTimeZone::get_offset_from_local()* to specify "
@@ -243,6 +279,9 @@ void init_ucal(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+  //
+  // UTimeZoneTransitionType
+  //
   py::enum_<UTimeZoneTransitionType>(m, "UTimeZoneTransitionType", py::arithmetic(),
                                      "Time zone transition types for *ucal_get_time_zone_transition_date*.")
       .value("UCAL_TZ_TRANSITION_NEXT", UCAL_TZ_TRANSITION_NEXT,

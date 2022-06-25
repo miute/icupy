@@ -30,6 +30,9 @@ UBool _URegexMatchCallbackPtr::callback(const void *context, int32_t steps) {
 }
 
 void init_uregex(py::module &m) {
+  //
+  // URegexpFlag
+  //
   py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic(), "Constants for Regular Expression Match Modes.")
       .value("UREGEX_CANON_EQ", UREGEX_CANON_EQ,
              "Forces normalization of pattern and strings.\n\n  "
@@ -60,8 +63,14 @@ void init_uregex(py::module &m) {
              "special meaning. If this flag is not set, these escaped letters represent themselves.")
       .export_values();
 
+  //
+  // _URegexFindProgressCallbackPtr
+  //
   py::class_<_URegexFindProgressCallbackPtr>(m, "URegexFindProgressCallbackPtr")
       .def(py::init<py::function>(), py::arg("action"));
 
+  //
+  // _URegexMatchCallbackPtr
+  //
   py::class_<_URegexMatchCallbackPtr>(m, "URegexMatchCallbackPtr").def(py::init<py::function>(), py::arg("action"));
 }

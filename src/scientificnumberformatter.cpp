@@ -11,13 +11,18 @@ using namespace icu;
 
 void init_scientificnumberformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
+  //
   // icu::ScientificNumberFormatter
+  //
   py::class_<ScientificNumberFormatter, UObject> snf(m, "ScientificNumberFormatter");
-  snf.def("__copy__", &ScientificNumberFormatter::clone)
-      .def(
-          "__deepcopy__", [](const ScientificNumberFormatter &self, py::dict) { return self.clone(); },
-          py::arg("memo"));
+
+  snf.def("__copy__", &ScientificNumberFormatter::clone);
+
+  snf.def(
+      "__deepcopy__", [](const ScientificNumberFormatter &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   snf.def("clone", &ScientificNumberFormatter::clone);
+
   snf.def_static(
          // [1] ScientificNumberFormatter::createMarkupInstance
          "create_markup_instance",
@@ -47,6 +52,7 @@ void init_scientificnumberformatter(py::module &m) {
             return result;
           },
           py::arg("fmt_to_adopt"), py::arg("begin_markup"), py::arg("end_markup"));
+
   snf.def_static(
          // [1] ScientificNumberFormatter::createSuperscriptInstance
          "create_superscript_instance",
@@ -72,6 +78,7 @@ void init_scientificnumberformatter(py::module &m) {
             return result;
           },
           py::arg("fmt_to_adopt"));
+
   snf.def(
       "format",
       [](const ScientificNumberFormatter &self, const Formattable &number,

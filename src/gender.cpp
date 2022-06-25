@@ -9,8 +9,11 @@ using namespace icu;
 
 void init_gender(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+  //
   // icu::GenderInfo
+  //
   py::class_<GenderInfo, UObject> gi(m, "GenderInfo");
+
   gi.def_static(
       "get_instance",
       [](const _LocaleVariant &locale) {
@@ -22,6 +25,7 @@ void init_gender(py::module &m) {
         return result;
       },
       py::return_value_policy::reference, py::arg("locale"));
+
   gi.def(
       "get_list_gender",
       [](const GenderInfo &self, const std::vector<UGender> &genders, int32_t length) {

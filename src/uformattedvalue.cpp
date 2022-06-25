@@ -5,6 +5,9 @@
 
 void init_uformattedvalue(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+  //
+  // UFieldCategory
+  //
   py::enum_<UFieldCategory>(
       m, "UFieldCategory", py::arithmetic(),
       "All possible field categories in ICU.\n\n"

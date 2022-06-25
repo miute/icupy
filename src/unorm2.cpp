@@ -2,6 +2,9 @@
 #include <unicode/unorm2.h>
 
 void init_unorm2(py::module &m) {
+  //
+  // UNormalization2Mode
+  //
   py::enum_<UNormalization2Mode>(
       m, "UNormalization2Mode", py::arithmetic(),
       "Constants for normalization modes.\n\n"
@@ -31,6 +34,9 @@ void init_unorm2(py::module &m) {
              "For details see http://www.unicode.org/notes/tn5/#FCC")
       .export_values();
 
+  //
+  // UNormalizationCheckResult
+  //
   py::enum_<UNormalizationCheckResult>(
       m, "UNormalizationCheckResult", py::arithmetic(),
       "Result values for normalization quick check functions.\n\n"
