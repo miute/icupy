@@ -14,8 +14,8 @@ public:
   UText *get() const;
   operator UText *() const { return get(); }
 
-  bool operator!=(const _UTextPtr &other) { return get() != other.get(); }
-  bool operator==(const _UTextPtr &other) { return get() == other.get(); }
+  bool operator!=(const _UTextPtr &other) { return !utext_equals(get(), other); }
+  bool operator==(const _UTextPtr &other) { return utext_equals(get(), other); }
   const UText *operator->() const { return get(); }
 
   const std::shared_ptr<void> &get_source() const;
