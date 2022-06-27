@@ -53,7 +53,8 @@ void init_measfmt(py::module &m) {
       "__deepcopy__", [](const MeasureFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   fmt.def(
-      "__eq__", [](const MeasureFormat &self, const Format &other) { return self == other; }, py::arg("other"));
+      "__eq__", [](const MeasureFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   fmt.def("clone", &MeasureFormat::clone);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)

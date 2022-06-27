@@ -13,7 +13,7 @@ void init_errorcode(py::module &m) {
 
   ec.def(
       "__eq__", [](const ErrorCode &self, UErrorCode error_code) { return self.get() == error_code; },
-      py::arg("other"));
+      py::is_operator(), py::arg("other"));
 
   ec.def("__repr__", [](const ErrorCode &self) {
     std::stringstream ss;

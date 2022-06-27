@@ -25,7 +25,8 @@ void init_rbbi(py::module &m) {
       "__deepcopy__", [](const BreakIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   bi.def(
-      "__eq__", [](const BreakIterator &self, const BreakIterator &other) { return self == other; }, py::arg("other"));
+      "__eq__", [](const BreakIterator &self, const BreakIterator &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   bi.def("__iter__", [](BreakIterator &self) -> BreakIterator & {
     self.first();
@@ -33,7 +34,8 @@ void init_rbbi(py::module &m) {
   });
 
   bi.def(
-      "__ne__", [](const BreakIterator &self, const BreakIterator &other) { return self != other; }, py::arg("other"));
+      "__ne__", [](const BreakIterator &self, const BreakIterator &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   bi.def("__next__", [](BreakIterator &self) {
     auto n = self.next();
