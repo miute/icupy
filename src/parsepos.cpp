@@ -15,14 +15,18 @@ void init_parsepos(py::module &m) {
       .def(py::init<int32_t>(), py::arg("new_index"))
       .def(py::init<const ParsePosition &>(), py::arg("other"));
 
-  pp.def(py::self != py::self, py::arg("other"));
-
-  pp.def(py::self == py::self, py::arg("other"));
-
   pp.def("__copy__", &ParsePosition::clone);
 
   pp.def(
       "__deepcopy__", [](const ParsePosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  pp.def(
+      "__eq__", [](const ParsePosition &self, const ParsePosition &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  pp.def(
+      "__ne__", [](const ParsePosition &self, const ParsePosition &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   pp.def("__repr__", [](const ParsePosition &self) {
     std::stringstream ss;

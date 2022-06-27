@@ -22,14 +22,18 @@ void init_dtitvinf(py::module &m) {
           py::arg("locale"))
       .def(py::init<const DateIntervalInfo &>(), py::arg("other"));
 
-  dii.def(py::self != py::self, py::arg("other"));
-
-  dii.def(py::self == py::self, py::arg("other"));
-
   dii.def("__copy__", &DateIntervalInfo::clone);
 
   dii.def(
       "__deepcopy__", [](const DateIntervalInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  dii.def(
+      "__eq__", [](const DateIntervalInfo &self, const DateIntervalInfo &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  dii.def(
+      "__ne__", [](const DateIntervalInfo &self, const DateIntervalInfo &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   dii.def("clone", &DateIntervalInfo::clone);
 

@@ -90,9 +90,13 @@ void init_dcfmtsym(py::module &m) {
           // [4] DecimalFormatSymbols::DecimalFormatSymbols
           py::init<const DecimalFormatSymbols &>(), py::arg("other"));
 
-  dfs.def(py::self != py::self, py::arg("other"));
+  dfs.def(
+      "__eq__", [](const DecimalFormatSymbols &self, const DecimalFormatSymbols &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
-  dfs.def(py::self == py::self, py::arg("other"));
+  dfs.def(
+      "__ne__", [](const DecimalFormatSymbols &self, const DecimalFormatSymbols &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   dfs.def_static("create_with_last_resort_data", []() {

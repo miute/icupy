@@ -47,14 +47,18 @@ void init_dtrule(py::module &m) {
            py::arg("time_type"))
       .def(py::init<const DateTimeRule &>(), py::arg("other"));
 
-  dtr.def(py::self != py::self, py::arg("other"));
-
-  dtr.def(py::self == py::self, py::arg("other"));
-
   dtr.def("__copy__", &DateTimeRule::clone);
 
   dtr.def(
       "__deepcopy__", [](const DateTimeRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  dtr.def(
+      "__eq__", [](const DateTimeRule &self, const DateTimeRule &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  dtr.def(
+      "__ne__", [](const DateTimeRule &self, const DateTimeRule &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   dtr.def("__repr__", [](const DateTimeRule &self) {
     std::stringstream ss;

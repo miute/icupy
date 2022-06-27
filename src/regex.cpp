@@ -571,14 +571,18 @@ void init_regex(py::module &m) {
   //
   rp.def(py::init<>()).def(py::init<const RegexPattern &>(), py::arg("other"));
 
-  rp.def(py::self != py::self, py::arg("other"));
-
-  rp.def(py::self == py::self, py::arg("other"));
-
   rp.def("__copy__", &RegexPattern::clone);
 
   rp.def(
       "__deepcopy__", [](const RegexPattern &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  rp.def(
+      "__eq__", [](const RegexPattern &self, const RegexPattern &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  rp.def(
+      "__ne__", [](const RegexPattern &self, const RegexPattern &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   rp.def("clone", &RegexPattern::clone);
 

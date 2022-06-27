@@ -389,14 +389,18 @@ void init_timezone(py::module &m) {
            py::arg("id_"), py::arg("initial_rule"))
       .def(py::init<const RuleBasedTimeZone &>(), py::arg("other"));
 
-  rbtz.def(py::self != py::self, py::arg("other"));
-
-  rbtz.def(py::self == py::self, py::arg("other"));
-
   rbtz.def("__copy__", &RuleBasedTimeZone::clone);
 
   rbtz.def(
       "__deepcopy__", [](const RuleBasedTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  rbtz.def(
+      "__eq__", [](const RuleBasedTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  rbtz.def(
+      "__ne__", [](const RuleBasedTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   rbtz.def(
       "add_transition_rule",
@@ -593,14 +597,18 @@ void init_timezone(py::module &m) {
           py::arg("savings_end_day_of_week_in_month"), py::arg("savings_end_day_of_week"), py::arg("savings_end_time"),
           py::arg("savings_end_time_mode"), py::arg("savings_dst"));
 
-  stz.def(py::self != py::self, py::arg("other"));
-
-  stz.def(py::self == py::self, py::arg("other"));
-
   stz.def("__copy__", &SimpleTimeZone::clone);
 
   stz.def(
       "__deepcopy__", [](const SimpleTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  stz.def(
+      "__eq__", [](const SimpleTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  stz.def(
+      "__ne__", [](const SimpleTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   stz.def("clone", &SimpleTimeZone::clone);
 
@@ -880,14 +888,18 @@ void init_timezone(py::module &m) {
   //
   vtz.def(py::init<const VTimeZone &>(), py::arg("other"));
 
-  vtz.def(py::self != py::self, py::arg("other"));
-
-  vtz.def(py::self == py::self, py::arg("other"));
-
   vtz.def("__copy__", &VTimeZone::clone);
 
   vtz.def(
       "__deepcopy__", [](const VTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  vtz.def(
+      "__eq__", [](const VTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  vtz.def(
+      "__ne__", [](const VTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   vtz.def("clone", &VTimeZone::clone);
 

@@ -19,14 +19,20 @@ void init_coleitr(py::module &m) {
 
   cei.def(py::init<CollationElementIterator &>(), py::arg("other"));
 
-  cei.def(py::self != py::self, py::arg("other"));
-
-  cei.def(py::self == py::self, py::arg("other"));
+  cei.def(
+      "__eq__",
+      [](const CollationElementIterator &self, const CollationElementIterator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
   cei.def("__iter__", [](CollationElementIterator &self) -> CollationElementIterator & {
     self.reset();
     return self;
   });
+
+  cei.def(
+      "__ne__",
+      [](const CollationElementIterator &self, const CollationElementIterator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   cei.def("__next__", [](CollationElementIterator &self) {
     ErrorCode error_code;

@@ -31,14 +31,18 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
   */
   pr.def(py::init<const PluralRules &>(), py::arg("other"));
 
-  pr.def(py::self != py::self, py::arg("other"));
-
-  pr.def(py::self == py::self, py::arg("other"));
-
   pr.def("__copy__", py::overload_cast<>(&PluralRules::clone, py::const_));
 
   pr.def(
       "__deepcopy__", [](const PluralRules &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  pr.def(
+      "__eq__", [](const PluralRules &self, const PluralRules &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  pr.def(
+      "__ne__", [](const PluralRules &self, const PluralRules &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   pr.def("clone", py::overload_cast<>(&PluralRules::clone, py::const_));
 

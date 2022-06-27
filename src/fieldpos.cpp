@@ -20,14 +20,18 @@ void init_fieldpos(py::module &m) {
       .def(py::init<int32_t>(), py::arg("field"))
       .def(py::init<const FieldPosition &>(), py::arg("other"));
 
-  fp.def(py::self != py::self, py::arg("other"));
-
-  fp.def(py::self == py::self, py::arg("other"));
-
   fp.def("__copy__", &FieldPosition::clone);
 
   fp.def(
       "__deepcopy__", [](const FieldPosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  fp.def(
+      "__eq__", [](const FieldPosition &self, const FieldPosition &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  fp.def(
+      "__ne__", [](const FieldPosition &self, const FieldPosition &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   fp.def("__repr__", [](const FieldPosition &self) {
     std::stringstream ss;

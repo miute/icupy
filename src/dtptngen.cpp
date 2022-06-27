@@ -12,14 +12,20 @@ void init_dtptngen(py::module &m) {
   //
   py::class_<DateTimePatternGenerator, UObject> dtpg(m, "DateTimePatternGenerator");
 
-  dtpg.def(py::self != py::self, py::arg("other"));
-
-  dtpg.def(py::self == py::self, py::arg("other"));
-
   dtpg.def("__copy__", &DateTimePatternGenerator::clone);
 
   dtpg.def(
       "__deepcopy__", [](const DateTimePatternGenerator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  dtpg.def(
+      "__eq__",
+      [](const DateTimePatternGenerator &self, const DateTimePatternGenerator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  dtpg.def(
+      "__ne__",
+      [](const DateTimePatternGenerator &self, const DateTimePatternGenerator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   dtpg.def(
       "add_pattern",

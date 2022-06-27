@@ -124,7 +124,15 @@ void init_messagepattern(py::module &m) {
   py::class_<MessagePattern::Part, UMemory> part(mp, "Part");
 
   // FIXME: Unresolved external symbol error with "icu::MessagePattern::Part::operator==(const Part &other)".
-  //  part.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+  /*
+  part.def(
+      "__eq__", [](const MessagePattern::Part &self, const Part &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  part.def(
+      "__ne__", [](const MessagePattern::Part &self, const Part &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+  */
 
   part.def("get_arg_type", &MessagePattern::Part::getArgType);
 
@@ -181,9 +189,13 @@ void init_messagepattern(py::module &m) {
           // [4] MessagePattern::MessagePattern
           py::init<const MessagePattern &>(), py::arg("other"));
 
-  mp.def(py::self != py::self, py::arg("other"));
+  mp.def(
+      "__eq__", [](const MessagePattern &self, const MessagePattern &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
-  mp.def(py::self == py::self, py::arg("other"));
+  mp.def(
+      "__ne__", [](const MessagePattern &self, const MessagePattern &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   mp.def("auto_quote_apostrophe_deep", &MessagePattern::autoQuoteApostropheDeep);
 

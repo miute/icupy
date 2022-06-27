@@ -19,14 +19,18 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
            py::arg("country") = nullptr, py::arg("variant") = nullptr, py::arg("keywords_and_values") = nullptr)
       .def(py::init<const Locale &>(), py::arg("other"));
 
-  loc.def(py::self != py::self, py::arg("other"));
-
-  loc.def(py::self == py::self, py::arg("other"));
-
   loc.def("__copy__", [](const Locale &self) { return self.clone(); });
 
   loc.def(
       "__deepcopy__", [](const Locale &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  loc.def(
+      "__eq__", [](const Locale &self, const Locale &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  loc.def(
+      "__ne__", [](const Locale &self, const Locale &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   loc.def("__repr__", [](const Locale &self) {
     std::stringstream ss;

@@ -42,14 +42,18 @@ void init_tzrule(py::module &m) {
       */
       .def(py::init<const AnnualTimeZoneRule &>(), py::arg("other"));
 
-  atzr.def(py::self != py::self, py::arg("other"));
-
-  atzr.def(py::self == py::self, py::arg("other"));
-
   atzr.def("__copy__", &AnnualTimeZoneRule::clone);
 
   atzr.def(
       "__deepcopy__", [](const AnnualTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  atzr.def(
+      "__eq__", [](const AnnualTimeZoneRule &self, const TimeZoneRule &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  atzr.def(
+      "__ne__", [](const AnnualTimeZoneRule &self, const TimeZoneRule &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   atzr.def("__repr__", [](const AnnualTimeZoneRule &self) {
     std::stringstream ss;
@@ -135,14 +139,18 @@ void init_tzrule(py::module &m) {
            py::arg("name"), py::arg("raw_offset"), py::arg("dst_savings"))
       .def(py::init<const InitialTimeZoneRule &>(), py::arg("other"));
 
-  itzr.def(py::self != py::self, py::arg("other"));
-
-  itzr.def(py::self == py::self, py::arg("other"));
-
   itzr.def("__copy__", &InitialTimeZoneRule::clone);
 
   itzr.def(
       "__deepcopy__", [](const InitialTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  itzr.def(
+      "__eq__", [](const InitialTimeZoneRule &self, const TimeZoneRule &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  itzr.def(
+      "__ne__", [](const InitialTimeZoneRule &self, const TimeZoneRule &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   itzr.def("__repr__", [](const InitialTimeZoneRule &self) {
     std::stringstream ss;
@@ -216,14 +224,18 @@ void init_tzrule(py::module &m) {
            py::arg("num_start_times"), py::arg("time_rule_type"))
       .def(py::init<const TimeArrayTimeZoneRule &>(), py::arg("other"));
 
-  tatzr.def(py::self != py::self, py::arg("other"));
-
-  tatzr.def(py::self == py::self, py::arg("other"));
-
   tatzr.def("__copy__", &TimeArrayTimeZoneRule::clone);
 
   tatzr.def(
       "__deepcopy__", [](const TimeArrayTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  tatzr.def(
+      "__eq__", [](const TimeArrayTimeZoneRule &self, const TimeZoneRule &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  tatzr.def(
+      "__ne__", [](const TimeArrayTimeZoneRule &self, const TimeZoneRule &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   tatzr.def("__repr__", [](const TimeArrayTimeZoneRule &self) {
     std::stringstream ss;

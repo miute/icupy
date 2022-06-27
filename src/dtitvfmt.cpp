@@ -65,14 +65,18 @@ void init_dtitvfmt(py::module &m) {
   //
   py::class_<DateIntervalFormat, Format> fmt(m, "DateIntervalFormat");
 
-  fmt.def(py::self != py::self, py::arg("other"));
-
-  fmt.def(py::self == py::self, py::arg("other"));
-
   fmt.def("__copy__", &DateIntervalFormat::clone);
 
   fmt.def(
       "__deepcopy__", [](const DateIntervalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  fmt.def(
+      "__eq__", [](const DateIntervalFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  fmt.def(
+      "__ne__", [](const DateIntervalFormat &self, const Format &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   // FIXME: Implement "void icu::DateIntervalFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
 

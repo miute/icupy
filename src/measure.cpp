@@ -25,12 +25,14 @@ void init_measure(py::module &m) {
            py::arg("number"), py::arg("adopted_unit"))
       .def(py::init<const Measure &>(), py::arg("other"));
 
-  meas.def(py::self == py::self, py::arg("other"));
-
   meas.def("__copy__", &Measure::clone);
 
   meas.def(
       "__deepcopy__", [](const Measure &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  meas.def(
+      "__eq__", [](const Measure &self, const UObject &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   meas.def("clone", &Measure::clone);
 

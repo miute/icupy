@@ -73,9 +73,13 @@ void init_schriter(py::module &m) {
   uci.def("set_text", &UCharCharacterIterator::setText, py::arg("new_text"), py::arg("new_text_length"));
   */
 
-  uci.def(py::self != py::self, py::arg("other"));
+  uci.def(
+      "__eq__", [](const UCharCharacterIterator &self, const ForwardCharacterIterator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
-  uci.def(py::self == py::self, py::arg("other"));
+  uci.def(
+      "__ne__", [](const UCharCharacterIterator &self, const ForwardCharacterIterator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   // uci.def("__copy__", &UCharCharacterIterator::clone)
   //     .def(
@@ -145,19 +149,25 @@ void init_schriter(py::module &m) {
            py::arg("text_str"), py::arg("text_begin"), py::arg("text_end"), py::arg("text_pos"))
       .def(py::init<const StringCharacterIterator &>(), py::arg("other"));
 
-  sci.def(py::self != py::self, py::arg("other"));
-
-  sci.def(py::self == py::self, py::arg("other"));
-
   sci.def("__copy__", &StringCharacterIterator::clone);
 
   sci.def(
       "__deepcopy__", [](const StringCharacterIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
+  sci.def(
+      "__eq__",
+      [](const StringCharacterIterator &self, const ForwardCharacterIterator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
   sci.def("__iter__", [](StringCharacterIterator &self) -> StringCharacterIterator & {
     self.first32();
     return self;
   });
+
+  sci.def(
+      "__ne__",
+      [](const StringCharacterIterator &self, const ForwardCharacterIterator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   sci.def("__next__", [](StringCharacterIterator &self) {
     if (self.getIndex() == self.endIndex()) {

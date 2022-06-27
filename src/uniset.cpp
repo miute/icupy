@@ -82,10 +82,6 @@ void init_uniset(py::module &m) {
            py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(py::init<const UnicodeSet &>(), py::arg("other"));
 
-  us.def(py::self != py::self, py::arg("other"));
-
-  us.def(py::self == py::self, py::arg("other"));
-
   us.def(
         "__contains__",
         [](const UnicodeSet &self, const _UnicodeStringVariant &item) {
@@ -101,8 +97,11 @@ void init_uniset(py::module &m) {
       "__deepcopy__", [](const UnicodeSet &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   us.def(
-        "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return uset_equals(self.toUSet(), other); },
-        py::is_operator(), py::arg("other"))
+        "__eq__", [](const UnicodeSet &self, const UnicodeSet &other) { return self == other; }, py::is_operator(),
+        py::arg("other"))
+      .def(
+          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return uset_equals(self.toUSet(), other); },
+          py::is_operator(), py::arg("other"))
       .def(
           "__eq__", [](const UnicodeSet &self, _USetPtr &other) { return uset_equals(self.toUSet(), other); },
           py::is_operator(), py::arg("other"));
@@ -138,8 +137,11 @@ void init_uniset(py::module &m) {
   us.def("__len__", &UnicodeSet::size);
 
   us.def(
-        "__ne__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return !uset_equals(self.toUSet(), other); },
-        py::is_operator(), py::arg("other"))
+        "__ne__", [](const UnicodeSet &self, const UnicodeSet &other) { return self != other; }, py::is_operator(),
+        py::arg("other"))
+      .def(
+          "__ne__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return !uset_equals(self.toUSet(), other); },
+          py::is_operator(), py::arg("other"))
       .def(
           "__ne__", [](const UnicodeSet &self, _USetPtr &other) { return !uset_equals(self.toUSet(), other); },
           py::is_operator(), py::arg("other"));

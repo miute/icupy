@@ -16,14 +16,18 @@ void init_tztrans(py::module &m) {
       .def(py::init<>())
       .def(py::init<const TimeZoneTransition &>(), py::arg("other"));
 
-  tzt.def(py::self != py::self, py::arg("other"));
-
-  tzt.def(py::self == py::self, py::arg("other"));
-
   tzt.def("__copy__", &TimeZoneTransition::clone);
 
   tzt.def(
       "__deepcopy__", [](const TimeZoneTransition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  tzt.def(
+      "__eq__", [](const TimeZoneTransition &self, const TimeZoneTransition &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  tzt.def(
+      "__ne__", [](const TimeZoneTransition &self, const TimeZoneTransition &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   // FIXME: Implement "void icu::TimeZoneTransition::adoptFrom(TimeZoneRule *from)".
   // FIXME: Implement "void icu::TimeZoneTransition::adoptTo(TimeZoneRule *to)".

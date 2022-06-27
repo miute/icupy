@@ -31,14 +31,18 @@ void init_currpinf(py::module &m) {
            py::arg("locale"))
       .def(py::init<const CurrencyPluralInfo &>(), py::arg("other"));
 
-  cpi.def(py::self != py::self, py::arg("other"));
-
-  cpi.def(py::self == py::self, py::arg("other"));
-
   cpi.def("__copy__", &CurrencyPluralInfo::clone);
 
   cpi.def(
       "__deepcopy__", [](const CurrencyPluralInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  cpi.def(
+      "__eq__", [](const CurrencyPluralInfo &self, const CurrencyPluralInfo &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  cpi.def(
+      "__ne__", [](const CurrencyPluralInfo &self, const CurrencyPluralInfo &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   cpi.def("clone", &CurrencyPluralInfo::clone);
 

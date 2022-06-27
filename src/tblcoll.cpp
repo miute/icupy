@@ -268,14 +268,18 @@ void init_tblcoll(py::module &m) {
            }),
            py::keep_alive<0, 1>(), py::keep_alive<0, 3>(), py::arg("bin"), py::arg("length"), py::arg("base"));
 
-  rbc.def(py::self != py::self, py::arg("other"));
-
-  rbc.def(py::self == py::self, py::arg("other"));
-
   rbc.def("__copy__", &RuleBasedCollator::clone);
 
   rbc.def(
       "__deepcopy__", [](const RuleBasedCollator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  rbc.def(
+      "__eq__", [](const RuleBasedCollator &self, const Collator &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  rbc.def(
+      "__ne__", [](const RuleBasedCollator &self, const Collator &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   rbc.def("clone", &RuleBasedCollator::clone);
 

@@ -60,7 +60,13 @@ void init_utext(py::module &m) {
   //
   py::class_<_UTextPtr> utp(m, "_UTextPtr");
 
-  utp.def(py::self != py::self, py::arg("other")).def(py::self == py::self, py::arg("other"));
+  utp.def(
+      "__eq__", [](const _UTextPtr &self, const _UTextPtr &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  utp.def(
+      "__ne__", [](const _UTextPtr &self, const _UTextPtr &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   utp.def("__repr__", [](const _UTextPtr &self) {
     std::stringstream ss;

@@ -96,14 +96,14 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
                [](const TimeZone *object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt->clone()); }),
            py::arg("object_to_adopt").none(false));
 
-  fmt.def(py::self != py::self, py::arg("other"));
-
-  fmt.def(py::self == py::self, py::arg("other"));
-
   fmt.def("__copy__", &Formattable::clone);
 
   fmt.def(
       "__deepcopy__", [](const Formattable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  fmt.def(
+      "__eq__", [](const Formattable &self, const Formattable &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   fmt.def(
       "__getitem__",
@@ -123,6 +123,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
         return self[index];
       },
       py::arg("index"));
+
+  fmt.def(
+      "__ne__", [](const Formattable &self, const Formattable &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   // FIXME: Implement "void icu::Formattable::adoptArray(Formattable *array, int32_t count)".
   // FIXME: Implement "void icu::Formattable::adoptObject(UObject *objectToAdopt)".

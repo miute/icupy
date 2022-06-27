@@ -256,9 +256,13 @@ void init_rbbi(py::module &m) {
           }),
           py::keep_alive<0, 1>(), py::arg("compiled_rules"), py::arg("rule_length"));
 
-  rbbi.def(py::self != py::self, py::arg("other"));
+  rbbi.def(
+      "__eq__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
-  rbbi.def(py::self == py::self, py::arg("other"));
+  rbbi.def(
+      "__ne__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   rbbi.def(
       "adopt_text",

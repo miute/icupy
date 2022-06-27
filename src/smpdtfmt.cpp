@@ -84,12 +84,14 @@ void init_smpdtfmt(py::module &m) {
           // [8] SimpleDateFormat::SimpleDateFormat
           py::init<const SimpleDateFormat &>(), py::arg("other"));
 
-  sdf.def(py::self == py::self, py::arg("other"));
-
   sdf.def("__copy__", &SimpleDateFormat::clone);
 
   sdf.def(
       "__deepcopy__", [](const SimpleDateFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  sdf.def(
+      "__eq__", [](const SimpleDateFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   // FIXME: Implement "void icu::SimpleDateFormat::adoptCalendar(Calendar *calendarToAdopt)".
   // FIXME: Implement "void icu::SimpleDateFormat::adoptDateFormatSymbols(DateFormatSymbols *newFormatSymbols)".

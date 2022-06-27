@@ -14,11 +14,15 @@ void init_region(py::module &m) {
   //
   py::class_<Region, UObject> reg(m, "Region");
 
-  reg.def(py::self != py::self, py::arg("other"));
-
-  reg.def(py::self == py::self, py::arg("other"));
-
   reg.def("__contains__", &Region::contains, py::arg("item"));
+
+  reg.def(
+      "__eq__", [](const Region &self, const Region &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  reg.def(
+      "__ne__", [](const Region &self, const Region &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   reg.def("contains", &Region::contains, py::arg("other"));
 

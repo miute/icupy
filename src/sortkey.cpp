@@ -19,9 +19,13 @@ void init_sortkey(py::module &m) {
            py::arg("values"), py::arg("count"))
       .def(py::init<CollationKey &>(), py::arg("other"));
 
-  ck.def(py::self != py::self, py::arg("other"));
+  ck.def(
+      "__eq__", [](const CollationKey &self, const CollationKey &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
-  ck.def(py::self == py::self, py::arg("other"));
+  ck.def(
+      "__ne__", [](const CollationKey &self, const CollationKey &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   ck.def(
       "compare_to",

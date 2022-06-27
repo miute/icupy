@@ -132,12 +132,14 @@ void init_tzfmt(py::module &m) {
 
   tzf.def(py::init<const TimeZoneFormat &>(), py::arg("other"));
 
-  tzf.def(py::self == py::self, py::arg("other"));
-
   tzf.def("__copy__", &TimeZoneFormat::clone);
 
   tzf.def(
       "__deepcopy__", [](const TimeZoneFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  tzf.def(
+      "__eq__", [](const TimeZoneFormat &self, const Format &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
 
   // FIXME: Implement "void icu::TimeZoneFormat::adoptTimeZoneNames(TimeZoneNames *tznames)".
 

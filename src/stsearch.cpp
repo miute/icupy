@@ -216,14 +216,18 @@ void init_stsearch(py::module &m) {
           // [5] StringSearch::StringSearch
           py::init<const StringSearch &>(), py::arg("other"));
 
-  ss.def(py::self != py::self, py::arg("other"));
-
-  ss.def(py::self == py::self, py::arg("other"));
-
   ss.def("__copy__", &StringSearch::clone);
 
   ss.def(
       "__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  ss.def(
+      "__eq__", [](const StringSearch &self, const SearchIterator &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  ss.def(
+      "__ne__", [](const StringSearch &self, const SearchIterator &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   ss.def("clone", &StringSearch::clone);
 

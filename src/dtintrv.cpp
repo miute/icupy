@@ -13,14 +13,18 @@ void init_dtintrv(py::module &m) {
   di.def(py::init<UDate, UDate>(), py::arg("from_date"), py::arg("to_date"))
       .def(py::init<const DateInterval &>(), py::arg("other"));
 
-  di.def(py::self != py::self, py::arg("other"));
-
-  di.def(py::self == py::self, py::arg("other"));
-
   di.def("__copy__", &DateInterval::clone);
 
   di.def(
       "__deepcopy__", [](const DateInterval &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  di.def(
+      "__eq__", [](const DateInterval &self, const DateInterval &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  di.def(
+      "__ne__", [](const DateInterval &self, const DateInterval &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
 
   di.def("clone", &DateInterval::clone);
 
