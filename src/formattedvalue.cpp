@@ -18,12 +18,12 @@ void init_formattedvalue(py::module &m) {
 
   cfp.def("__repr__", [](const ConstrainedFieldPosition &self) {
     std::stringstream ss;
-    ss << "ConstrainedFieldPosition(";
+    ss << "<ConstrainedFieldPosition(";
     ss << "category=0x" << std::hex << self.getCategory();
     ss << ", field=" << std::dec << self.getField();
     ss << ", start=" << self.getStart();
     ss << ", limit=" << self.getLimit();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 

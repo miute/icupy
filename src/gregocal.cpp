@@ -420,7 +420,7 @@ void init_gregocal(py::module &m) {
     fmt.format(self.getTime(error_code), dest);
     std::string s;
     dest.toUTF8String(s);
-    ss << "GregorianCalendar(" << s << ")";
+    ss << "<GregorianCalendar('" << s << "')>";
     return ss.str();
   });
 

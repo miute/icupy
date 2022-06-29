@@ -162,10 +162,10 @@ def test_annual_time_zone_rule():
 
     # AnnualTimeZoneRule.__repr__() -> str
     assert repr(ar1) == (
-        "AnnualTimeZoneRule("
+        "<AnnualTimeZoneRule("
         "name='a1', raw_offset=-3600000, dst_savings=3600000, "
         "start_year=1966, end_year=2147483647"
-        ")"
+        ")>"
     )
 
 
@@ -297,11 +297,11 @@ def test_date_time_rule():
 
     # DateTimeRule.__repr__() -> str
     assert repr(dr1) == (
-        "DateTimeRule("
+        "<DateTimeRule("
         "date_rule_type=0, rule_month=1, rule_day_of_month=11, "
         "rule_week_in_month=0, rule_day_of_week=0, rule_millis_in_day=3600000, "
         "time_rule_type=0"
-        ")"
+        ")>"
     )
 
 
@@ -395,9 +395,9 @@ def test_initial_time_zone_rule():
 
     # InitialTimeZoneRule.__repr__() -> str
     assert repr(ir1) == (
-        "InitialTimeZoneRule("
+        "<InitialTimeZoneRule("
         "name='i1', raw_offset=-3600000, dst_savings=3600000"
-        ")"
+        ")>"
     )
 
 
@@ -528,10 +528,10 @@ def test_time_array_time_zone_rule():
 
     # TimeArrayTimeZoneRule.__repr__() -> str
     assert repr(tr1) == (
-        "TimeArrayTimeZoneRule("
+        "<TimeArrayTimeZoneRule("
         "name='t1', raw_offset=-3600000, dst_savings=3600000, "
         "start_times=[0, 1e+07]"
-        ")"
+        ")>"
     )
 
 

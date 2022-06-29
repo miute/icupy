@@ -522,5 +522,5 @@ def test_transliterate():
 
     # UTransPosition.__repr__() -> str
     assert repr(index) == (
-        "UTransPosition(context_start=0, start=4, limit=4, context_limit=5)"
+        "UTransPosition(context_start=0, context_limit=5, start=4, limit=4)"
     )

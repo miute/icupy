@@ -31,9 +31,9 @@ def test_constrained_field_position():
     fl = fmt.format_strings_to_value(items, len(items))
     assert fl.next_position(cfpos)
     assert repr(cfpos) == (
-        "ConstrainedFieldPosition("
+        "<ConstrainedFieldPosition("
         "category=0x1003, field=0, start=0, limit=5"
-        ")"
+        ")>"
     )
 
 
@@ -55,7 +55,9 @@ def test_field_position():
     fmt.format(1215298800000, append_to, pos_iter)
     fpos1 = FieldPosition()
     assert pos_iter.next(fpos1)
-    assert repr(fpos1) == "FieldPosition(field=2, begin_index=0, end_index=3)"
+    assert (
+        repr(fpos1) == "<FieldPosition(field=2, begin_index=0, end_index=3)>"
+    )
 
     # FieldPosition *icu::FieldPosition::clone()
     # FieldPosition.__copy__() -> FieldPosition
@@ -105,7 +107,7 @@ def test_icu_error():
         assert isinstance(ex.args[1], str)  # An error message
 
     # ErrorCode.__repr__() -> str
-    assert repr(error_code) == "ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)"
+    assert repr(error_code) == "<ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)>"
 
 
 @pytest.mark.skipif(
@@ -176,12 +178,12 @@ def test_parse_position():
     pos = ParsePosition()
     fmt.parse(UnicodeString("07/10/96 4:5:0 PM PDT"), cal, pos)
     assert pos.get_error_index() == -1
-    assert repr(pos) == "ParsePosition(index=21, error_index=-1)"
+    assert repr(pos) == "<ParsePosition(index=21, error_index=-1)>"
 
     pos = ParsePosition()
     fmt.parse(UnicodeString("07/10/96 4:5:0 PM JST"), cal, pos)
     assert pos.get_error_index() == 18
-    assert repr(pos) == "ParsePosition(index=0, error_index=18)"
+    assert repr(pos) == "<ParsePosition(index=0, error_index=18)>"
 
 
 def test_u_failure():
@@ -262,7 +264,7 @@ def test_uparse_error():
     _ = MessagePattern(pattern, parse_error)
     assert parse_error.offset == 0
     assert repr(parse_error) == (
-        "UParseError(line=0, offset=0, pre_context='', post_context='')"
+        "<UParseError(line=0, offset=0, pre_context='', post_context='')>"
     )
 
     pattern = UnicodeString("I see {'many'}")
@@ -271,7 +273,7 @@ def test_uparse_error():
         _ = MessagePattern(pattern, parse_error)
     assert parse_error.offset == 7
     assert repr(parse_error) == (
-        "UParseError("
+        "<UParseError("
         "line=0, offset=7, pre_context='I see {', post_context='\\'many\\'}'"
-        ")"
+        ")>"
     )

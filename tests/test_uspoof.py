@@ -515,7 +515,7 @@ def test_set_allowed_chars_63():
         uspoof_set_allowed_chars(sc, chars)  # const USet*
         uniset = uspoof_get_allowed_unicode_set(sc)
         assert repr(uniset) == (
-            "UnicodeSet(["
+            "<UnicodeSet('["
             "\\u0009\\ \\u00A0\\u1680\\u2000-\\u200A\\u202F\\u205F\\u3000"
-            "])"
+            "]')>"
         )

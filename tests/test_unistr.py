@@ -887,10 +887,13 @@ def test_from_utf8():
     assert str(test1) == s3
 
     # UnicodeString.__repr__() -> str
-    assert repr(test1) == "UnicodeString('a\\U0001f338b')"
+    assert repr(test1) == "UnicodeString('a\\U0001f338b', text_length=4)"
 
     test2 = UnicodeString.from_utf8(b"'Julius\tC\xd3\x95sar'")
-    assert repr(test2) == "UnicodeString('\\'Julius\\x09C\\u04d5sar\\'')"
+    assert (
+        repr(test2)
+        == "UnicodeString('\\'Julius\\x09C\\u04d5sar\\'', text_length=14)"
+    )
 
 
 def test_get_buffer():

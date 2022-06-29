@@ -33,9 +33,9 @@ void init_utrans(py::module &m) {
     std::stringstream ss;
     ss << "UTransPosition(";
     ss << "context_start=" << self.contextStart;
+    ss << ", context_limit=" << self.contextLimit;
     ss << ", start=" << self.start;
     ss << ", limit=" << self.limit;
-    ss << ", context_limit=" << self.contextLimit;
     ss << ")";
     return ss.str();
   });

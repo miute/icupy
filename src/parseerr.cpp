@@ -19,12 +19,12 @@ void init_parseerr(py::module &m) {
     std::string pre_context, post_context;
     UnicodeString(self.preContext).toUTF8String(pre_context);
     UnicodeString(self.postContext).toUTF8String(post_context);
-    ss << "UParseError(";
+    ss << "<UParseError(";
     ss << "line=" << self.line;
     ss << ", offset=" << self.offset;
     ss << ", pre_context=" << std::quoted(pre_context, '\'');
     ss << ", post_context=" << std::quoted(post_context, '\'');
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 

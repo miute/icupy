@@ -62,7 +62,7 @@ void init_dtrule(py::module &m) {
 
   dtr.def("__repr__", [](const DateTimeRule &self) {
     std::stringstream ss;
-    ss << "DateTimeRule(";
+    ss << "<DateTimeRule(";
     ss << "date_rule_type=" << self.getDateRuleType();
     ss << ", rule_month=" << self.getRuleMonth();
     ss << ", rule_day_of_month=" << self.getRuleDayOfMonth();
@@ -70,7 +70,7 @@ void init_dtrule(py::module &m) {
     ss << ", rule_day_of_week=" << self.getRuleDayOfWeek();
     ss << ", rule_millis_in_day=" << self.getRuleMillisInDay();
     ss << ", time_rule_type=" << self.getTimeRuleType();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 

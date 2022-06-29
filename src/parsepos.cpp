@@ -30,10 +30,10 @@ void init_parsepos(py::module &m) {
 
   pp.def("__repr__", [](const ParsePosition &self) {
     std::stringstream ss;
-    ss << "ParsePosition(";
+    ss << "<ParsePosition(";
     ss << "index=" << self.getIndex();
     ss << ", error_index=" << self.getErrorIndex();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 

@@ -35,11 +35,11 @@ void init_fieldpos(py::module &m) {
 
   fp.def("__repr__", [](const FieldPosition &self) {
     std::stringstream ss;
-    ss << "FieldPosition(";
+    ss << "<FieldPosition(";
     ss << "field=" << self.getField();
     ss << ", begin_index=" << self.getBeginIndex();
     ss << ", end_index=" << self.getEndIndex();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 

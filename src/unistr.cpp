@@ -166,7 +166,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def("__repr__", [](const UnicodeString &self) {
     std::stringstream ss;
     ss << "UnicodeString('";
-    auto it = UCharCharacterIterator(self.getBuffer(), self.length());
+    const auto text_length = self.length();
+    auto it = UCharCharacterIterator(self.getBuffer(), text_length);
     const char *prefix;
     int w;
     for (auto c = it.first32(); it.hasNext(); c = it.next32()) {
@@ -190,7 +191,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         ss << prefix << std::nouppercase << std::hex << std::setw(w) << std::setfill('0') << c;
       }
     }
-    ss << "')";
+    ss << "', text_length=" << std::dec << text_length;
+    ss << ")";
     return ss.str();
   });
 

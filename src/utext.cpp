@@ -70,12 +70,12 @@ void init_utext(py::module &m) {
 
   utp.def("__repr__", [](const _UTextPtr &self) {
     std::stringstream ss;
-    ss << "_UTextPtr(UText(";
+    ss << "<_UTextPtr(<UText(";
     ss << "magic=0x" << std::hex << self->magic;
     ss << ", flags=0x" << std::hex << self->flags;
     ss << ", providerProperties=0x" << std::hex << self->providerProperties;
     ss << ", pFuncs=0x" << std::hex << self->pFuncs;
-    ss << "))";
+    ss << ")>)>";
     return ss.str();
   });
 

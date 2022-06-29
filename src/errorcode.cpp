@@ -17,10 +17,10 @@ void init_errorcode(py::module &m) {
 
   ec.def("__repr__", [](const ErrorCode &self) {
     std::stringstream ss;
-    ss << "ErrorCode(<";
+    ss << "<ErrorCode(<";
     ss << self.errorName();
     ss << ": " << self.get();
-    ss << ">)";
+    ss << ">)>";
     return ss.str();
   });
 

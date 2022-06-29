@@ -148,11 +148,11 @@ void init_uniset(py::module &m) {
 
   us.def("__repr__", [](const UnicodeSet &self) {
     std::stringstream ss;
-    ss << "UnicodeSet(";
+    ss << "<UnicodeSet('";
     UnicodeString pattern;
-    self.toPattern(pattern, true);
+    self.toPattern(pattern, true).findAndReplace("'", "\\'");
     ss << pattern;
-    ss << ")";
+    ss << "')>";
     return ss.str();
   });
 

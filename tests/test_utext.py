@@ -69,13 +69,13 @@ def test_api():
         assert utext_previous32(ut) == 0x41
 
         result = repr(ut)
-        assert result.startswith("_UTextPtr(UText(magic=0x")
+        assert result.startswith("<_UTextPtr(<UText(magic=0x")
         start = result.find(",")
         assert start != -1
         assert result.startswith(
             ", flags=0x5, providerProperties=0x4, pFuncs=0x", start
         )
-        assert result.endswith("))")
+        assert result.endswith(")>)>")
 
 
 def test_clone_uchars():

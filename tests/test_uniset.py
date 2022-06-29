@@ -186,7 +186,10 @@ def test_api():
     assert test2.is_bogus()
 
     # UnicodeSet.__repr__() -> str
-    assert repr(test1) == "UnicodeSet([0-9])"
+    assert repr(test1) == "<UnicodeSet('[0-9]')>"
+
+    test3 = UnicodeSet(0, 16).add_all("'\"\\")
+    assert repr(test3) == "<UnicodeSet('[\\u0000-\\u0010\"\\'\\\\]')>"
 
 
 def test_apply_int_property_value():

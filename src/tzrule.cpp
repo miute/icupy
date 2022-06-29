@@ -57,7 +57,7 @@ void init_tzrule(py::module &m) {
 
   atzr.def("__repr__", [](const AnnualTimeZoneRule &self) {
     std::stringstream ss;
-    ss << "AnnualTimeZoneRule(";
+    ss << "<AnnualTimeZoneRule(";
     UnicodeString dest;
     self.getName(dest);
     std::string name;
@@ -67,7 +67,7 @@ void init_tzrule(py::module &m) {
     ss << ", dst_savings=" << self.getDSTSavings();
     ss << ", start_year=" << self.getStartYear();
     ss << ", end_year=" << self.getEndYear();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 
@@ -154,7 +154,7 @@ void init_tzrule(py::module &m) {
 
   itzr.def("__repr__", [](const InitialTimeZoneRule &self) {
     std::stringstream ss;
-    ss << "InitialTimeZoneRule(";
+    ss << "<InitialTimeZoneRule(";
     UnicodeString dest;
     self.getName(dest);
     std::string name;
@@ -162,7 +162,7 @@ void init_tzrule(py::module &m) {
     ss << "name=" << std::quoted(name, '\'');
     ss << ", raw_offset=" << self.getRawOffset();
     ss << ", dst_savings=" << self.getDSTSavings();
-    ss << ")";
+    ss << ")>";
     return ss.str();
   });
 
@@ -239,7 +239,7 @@ void init_tzrule(py::module &m) {
 
   tatzr.def("__repr__", [](const TimeArrayTimeZoneRule &self) {
     std::stringstream ss;
-    ss << "TimeArrayTimeZoneRule(";
+    ss << "<TimeArrayTimeZoneRule(";
     UnicodeString dest;
     self.getName(dest);
     std::string name;
@@ -257,7 +257,7 @@ void init_tzrule(py::module &m) {
         ss << ", ";
       }
     }
-    ss << "])";
+    ss << "])>";
     return ss.str();
   });
 
