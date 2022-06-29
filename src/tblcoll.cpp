@@ -266,7 +266,7 @@ void init_tblcoll(py::module &m) {
              }
              return result;
            }),
-           py::keep_alive<0, 1>(), py::keep_alive<0, 3>(), py::arg("bin"), py::arg("length"), py::arg("base"));
+           py::keep_alive<1, 2>(), py::keep_alive<1, 4>(), py::arg("bin"), py::arg("length"), py::arg("base"));
 
   rbc.def("__copy__", &RuleBasedCollator::clone);
 

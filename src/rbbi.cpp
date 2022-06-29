@@ -254,7 +254,7 @@ void init_rbbi(py::module &m) {
             }
             return result;
           }),
-          py::keep_alive<0, 1>(), py::arg("compiled_rules"), py::arg("rule_length"));
+          py::keep_alive<1, 2>(), py::arg("compiled_rules"), py::arg("rule_length"));
 
   rbbi.def(
       "__eq__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self == other; },
