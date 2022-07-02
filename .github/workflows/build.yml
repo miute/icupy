@@ -69,7 +69,6 @@ jobs:
           curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}}
           7z x ${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
-          echo "CMAKE_GENERATOR=Visual Studio 16 2019" >> $env:GITHUB_ENV
 
       - name: Build wheel
         run: |
