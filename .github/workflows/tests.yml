@@ -24,6 +24,20 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Set up Python ${{matrix.python-version}}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
+
+      - name: Install dependencies
+        run: |
+          python -m pip install tox tox-gh-actions
+
       - run: mkdir -p build
 
       - name: Parse icu-versions.json
@@ -44,8 +58,8 @@ jobs:
           sudo apt-get install -y lcov
           curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}}
           sudo tar zxf ${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
-          echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/usr/local/lib" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "CMAKE_GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
       - name: Set up requirements (Windows)
@@ -58,20 +72,7 @@ jobs:
           curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}}
           7z x ${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
-
-      - name: Set up Python ${{matrix.python-version}}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{matrix.python-version}}
-
-      - name: Upgrade pip
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
-
-      - name: Install dependencies
-        run: |
-          python -m pip install tox tox-gh-actions
+          echo "CMAKE_GENERATOR=Visual Studio 16 2019" >> $env:GITHUB_ENV
 
       - name: Run tests
         env:
@@ -95,10 +96,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up requirements
-        run: |
-          sudo apt-get install -y lcov
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -113,6 +110,10 @@ jobs:
         run: |
           python -m pip install tox
 
+      - name: Set up requirements
+        run: |
+          sudo apt-get install -y lcov
+
       - name: Restore coverage data
         uses: actions/download-artifact@v3
         with:
@@ -122,10 +123,10 @@ jobs:
         run: |
           python -m tox -c tox-coverage.ini -e cov,cov-cpp
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
 
-      - name: Store coverage report
+      - name: Store coverage reports
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
