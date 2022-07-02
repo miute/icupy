@@ -11,3 +11,4 @@ black = "*"
 isort = "*"
 build = "*"
 importlib-metadata = {version = "*", markers = "python_version<'3.8'"}
+zipp = {version = "*", markers = "python_version<'3.8'"}
