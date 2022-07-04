@@ -5,27 +5,36 @@
 
 using namespace icu;
 
-class PySearchIterator : SearchIterator {
+class PySearchIterator : public SearchIterator {
 public:
-  using SearchIterator::SearchIterator;
+  PySearchIterator(const PySearchIterator &other) : SearchIterator(other) {}
+  PySearchIterator() : SearchIterator() {}
+  PySearchIterator(const UnicodeString &text, BreakIterator *breakiter = nullptr) : SearchIterator(text, breakiter) {}
+  PySearchIterator(CharacterIterator &text, BreakIterator *breakiter = nullptr) : SearchIterator(text, breakiter) {}
 
-  int32_t getOffset(void) const override { PYBIND11_OVERLOAD_PURE(int32_t, SearchIterator, getOffset); }
-
-  int32_t handleNext(int32_t position, UErrorCode &status) override {
-    PYBIND11_OVERLOAD_PURE(int32_t, SearchIterator, position, status);
+  int32_t getOffset(void) const override {
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "get_offset", getOffset);
   }
 
-  int32_t handlePrev(int32_t position, UErrorCode &status) override {
-    PYBIND11_OVERLOAD_PURE(int32_t, SearchIterator, handlePrev, position, status);
+  int32_t handleNext(int32_t position, UErrorCode & /*status*/) override {
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "handle_next", handleNext, position);
+  }
+
+  int32_t handlePrev(int32_t position, UErrorCode & /*status*/) override {
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "handle_prev", handlePrev, position);
   }
 
   SearchIterator *safeClone(void) const override {
-    PYBIND11_OVERLOAD_PURE(SearchIterator *, SearchIterator, safeClone);
+    PYBIND11_OVERRIDE_PURE_NAME(SearchIterator *, SearchIterator, "safe_clone", safeClone);
   }
 
-  void setOffset(int32_t position, UErrorCode &status) override {
-    PYBIND11_OVERRIDE_PURE(void, SearchIterator, setOffset, position, status);
+  void setOffset(int32_t position, UErrorCode & /*status*/) override {
+    PYBIND11_OVERRIDE_PURE_NAME(void, SearchIterator, "set_offset", setOffset, position);
   }
+
+  using SearchIterator::setMatchLength;
+  using SearchIterator::setMatchNotFound;
+  using SearchIterator::setMatchStart;
 };
 
 void init_stsearch(py::module &m) {
@@ -34,10 +43,29 @@ void init_stsearch(py::module &m) {
   //
   py::class_<SearchIterator, UObject, PySearchIterator> si(m, "SearchIterator");
 
+  si.def(py::init<const PySearchIterator &>(), py::arg("other"))
+      .def(py::init<>())
+      .def(py::init([](const _UnicodeStringVariant &text, BreakIterator *breakiter) {
+             return std::make_unique<PySearchIterator>(VARIANT_TO_UNISTR(text), breakiter);
+           }),
+           py::arg("text"), py::arg("breakiter") = nullptr)
+      .def(py::init([](CharacterIterator &text, BreakIterator *breakiter) {
+             return std::make_unique<PySearchIterator>(text, breakiter);
+           }),
+           py::arg("text"), py::arg("breakiter") = nullptr);
+
+  si.def(
+      "__eq__", [](const SearchIterator &self, const SearchIterator &other) { return self == other; },
+      py::arg("other"));
+
   si.def("__iter__", [](SearchIterator &self) -> SearchIterator & {
     self.reset();
     return self;
   });
+
+  si.def(
+      "__ne__", [](const SearchIterator &self, const SearchIterator &other) { return self != other; },
+      py::arg("other"));
 
   si.def("__next__", [](SearchIterator &self) {
     ErrorCode error_code;
@@ -134,6 +162,8 @@ void init_stsearch(py::module &m) {
     return result;
   });
 
+  si.def("reset", &SearchIterator::reset);
+
   si.def(
       "set_attribute",
       [](SearchIterator &self, USearchAttribute attribute, USearchAttributeValue value) {
@@ -155,6 +185,33 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("breakiter"));
+
+  si.def("set_match_length", &PySearchIterator::setMatchLength, py::arg("length"));
+
+  si.def("set_match_not_found", &PySearchIterator::setMatchNotFound);
+
+  si.def("set_match_start", &PySearchIterator::setMatchStart, py::arg("position"));
+
+  si.def(
+        "set_text",
+        [](SearchIterator &self, CharacterIterator &text) {
+          ErrorCode error_code;
+          self.setText(text, error_code);
+          if (error_code.isFailure()) {
+            throw ICUError(error_code);
+          }
+        },
+        py::arg("text"))
+      .def(
+          "set_text",
+          [](SearchIterator &self, const _UnicodeStringVariant &text) {
+            ErrorCode error_code;
+            self.setText(VARIANT_TO_UNISTR(text), error_code);
+            if (error_code.isFailure()) {
+              throw ICUError(error_code);
+            }
+          },
+          py::arg("text"));
 
   //
   // icu::StringSearch

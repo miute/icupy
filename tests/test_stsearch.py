@@ -1,4 +1,5 @@
 import copy
+from typing import Union
 
 import pytest
 
@@ -10,6 +11,60 @@ from icupy.icu import (
 )
 
 # fmt: on
+
+
+# from icu4c-71_1-src/icu/source/test/intltest/srchtest.cpp
+class _TestSearch(SearchIterator):
+    def __init__(
+        self,
+        pattern: Union[UnicodeString, str],
+        text: Union[StringCharacterIterator, UnicodeString, str],
+    ) -> None:
+        super().__init__(text)
+        self._pattern = pattern
+        self._offset = 0
+
+    def get_offset(self) -> int:
+        # virtual int32_t icu::SearchIterator::getOffset() const
+        return self._offset
+
+    def handle_next(self, position: int) -> int:
+        # virtual int32_t icu::SearchIterator::handleNext(
+        #       int32_t position,
+        #       UErrorCode &status
+        # )
+        text = self.get_text()
+        match = text.index_of(self._pattern, position)
+        if match < 0:
+            self.set_match_not_found()
+            return USEARCH_DONE
+        self.set_match_start(match)
+        self._offset = match
+        self.set_match_length(len(self._pattern))
+        return match
+
+    def handle_prev(self, position: int) -> int:
+        # virtual int32_t icu::SearchIterator::handlePrev(
+        #       int32_t position,
+        #       UErrorCode &status
+        # )
+        text = self.get_text()
+        match = text.last_index_of(self._pattern, 0, position)
+        if match < 0:
+            self.set_match_not_found()
+            return USEARCH_DONE
+        self.set_match_start(match)
+        self._offset = match
+        self.set_match_length(len(self._pattern))
+        return match
+
+    def set_offset(self, position: int) -> None:
+        # virtual void icu::SearchIterator::setOffset(
+        #       int32_t position,
+        #       UErrorCode &status
+        # )
+        if position >= 0 and position <= len(self.get_text()):
+            self._offset = position
 
 
 def test_api():
@@ -424,3 +479,84 @@ def test_string_search():
     assert test5.get_collator() == coll
     assert test5.get_pattern() == pattern
     assert test5.get_text() == text1
+
+
+def test_subclass_next():
+    pattern = UnicodeString("abc")
+    text = UnicodeString("abc abcd abc")
+    si = _TestSearch(pattern, text)
+    assert si.get_text() == text
+
+    assert si.first() == 0
+    assert si.get_offset() == 0
+    assert si.get_matched_start() == 0
+    assert si.get_matched_length() == 3
+
+    assert si.next() == 4
+    assert si.get_offset() == 4
+    assert si.get_matched_start() == 4
+    assert si.get_matched_length() == 3
+
+    assert si.next() == 9
+    assert si.get_offset() == 9
+    assert si.get_matched_start() == 9
+    assert si.get_matched_length() == 3
+
+    assert si.next() == USEARCH_DONE
+    assert si.get_offset() == len(text)
+    assert si.get_matched_start() == USEARCH_DONE
+    assert si.get_matched_length() == 0
+
+    si.reset()
+    assert si.get_offset() == 0
+
+
+def test_subclass_previous():
+    pattern = UnicodeString("abc")
+    text = UnicodeString("abc abcd abc")
+    si = _TestSearch(pattern, text)
+    assert si.get_text() == text
+
+    assert si.last() == 9
+    assert si.get_offset() == 9
+    assert si.get_matched_start() == 9
+    assert si.get_matched_length() == 3
+
+    assert si.previous() == 4
+    assert si.get_offset() == 4
+    assert si.get_matched_start() == 4
+    assert si.get_matched_length() == 3
+
+    assert si.previous() == 0
+    assert si.get_offset() == 0
+    assert si.get_matched_start() == 0
+    assert si.get_matched_length() == 3
+
+    assert si.previous() == USEARCH_DONE
+    assert si.get_offset() == 0
+    assert si.get_matched_start() == USEARCH_DONE
+    assert si.get_matched_length() == 0
+
+
+def test_subclass_set_text():
+    pattern = "abc"
+    text = "abc abcd abc"
+    si = _TestSearch(pattern, text)
+    assert si.get_text() == text
+
+    text2 = StringCharacterIterator(text)
+    si.set_text(text2)
+    assert si.get_text() == text
+
+    text3 = UnicodeString("foo bar baz")
+    si.set_text(text3)
+    assert si.get_text() == text3
+
+    si.set_text(text)
+    assert si.get_text() == text
+
+    si2 = _TestSearch(pattern, text2)
+    assert si2.get_text() == text
+
+    assert si == si2
+    assert not (si != si2)
