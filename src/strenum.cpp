@@ -4,23 +4,11 @@
 
 using namespace icu;
 
-class PyStringEnumeration : StringEnumeration {
-public:
-  int32_t count(UErrorCode &status) const override {
-    PYBIND11_OVERRIDE_PURE(int32_t, StringEnumeration, count, status);
-  }
-
-  void reset(UErrorCode &status) override { PYBIND11_OVERRIDE_PURE(void, StringEnumeration, reset, status); }
-
-protected:
-  using StringEnumeration::StringEnumeration;
-};
-
 void init_strenum(py::module &m) {
   //
   // icu::StringEnumeration
   //
-  py::class_<StringEnumeration, UObject, PyStringEnumeration> se(m, "StringEnumeration");
+  py::class_<StringEnumeration, UObject> se(m, "StringEnumeration");
 
   se.def("__copy__", &StringEnumeration::clone);
 
