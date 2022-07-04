@@ -246,9 +246,11 @@ void init_rbbi(py::module &m) {
           py::arg("rules"), py::arg("parse_error"))
       .def(
           // [4] RuleBasedBreakIterator::RuleBasedBreakIterator
-          py::init([](const std::vector<uint8_t> &compiled_rules, uint32_t rule_length) {
+          py::init([](const py::buffer &compiled_rules, uint32_t rule_length) {
+            auto info = compiled_rules.request();
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedBreakIterator>(compiled_rules.data(), rule_length, error_code);
+            auto result = std::make_unique<RuleBasedBreakIterator>(reinterpret_cast<uint8_t *>(info.ptr), rule_length,
+                                                                   error_code);
             if (error_code.isFailure()) {
               throw ICUError(error_code);
             }
@@ -280,8 +282,7 @@ void init_rbbi(py::module &m) {
   rbbi.def("get_binary_rules", [](RuleBasedBreakIterator &self) {
     uint32_t length = 0;
     auto p = self.getBinaryRules(length);
-    std::vector<uint8_t> result(p, p + length);
-    return result;
+    return py::bytes(reinterpret_cast<char *>(const_cast<uint8_t *>(p)), length);
   });
 
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules);
