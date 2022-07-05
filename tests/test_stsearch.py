@@ -28,7 +28,7 @@ class _TestSearch(SearchIterator):
         # virtual int32_t icu::SearchIterator::getOffset() const
         return self._offset
 
-    def handle_next(self, position: int) -> int:
+    def _handle_next(self, position: int) -> int:
         # virtual int32_t icu::SearchIterator::handleNext(
         #       int32_t position,
         #       UErrorCode &status
@@ -36,14 +36,14 @@ class _TestSearch(SearchIterator):
         text = self.get_text()
         match = text.index_of(self._pattern, position)
         if match < 0:
-            self.set_match_not_found()
+            self._set_match_not_found()
             return USEARCH_DONE
-        self.set_match_start(match)
+        self._set_match_start(match)
         self._offset = match
-        self.set_match_length(len(self._pattern))
+        self._set_match_length(len(self._pattern))
         return match
 
-    def handle_prev(self, position: int) -> int:
+    def _handle_prev(self, position: int) -> int:
         # virtual int32_t icu::SearchIterator::handlePrev(
         #       int32_t position,
         #       UErrorCode &status
@@ -51,11 +51,11 @@ class _TestSearch(SearchIterator):
         text = self.get_text()
         match = text.last_index_of(self._pattern, 0, position)
         if match < 0:
-            self.set_match_not_found()
+            self._set_match_not_found()
             return USEARCH_DONE
-        self.set_match_start(match)
+        self._set_match_start(match)
         self._offset = match
-        self.set_match_length(len(self._pattern))
+        self._set_match_length(len(self._pattern))
         return match
 
     def set_offset(self, position: int) -> None:

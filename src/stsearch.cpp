@@ -17,11 +17,11 @@ public:
   }
 
   int32_t handleNext(int32_t position, UErrorCode & /*status*/) override {
-    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "handle_next", handleNext, position);
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_next", handleNext, position);
   }
 
   int32_t handlePrev(int32_t position, UErrorCode & /*status*/) override {
-    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "handle_prev", handlePrev, position);
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_prev", handlePrev, position);
   }
 
   SearchIterator *safeClone(void) const override {
@@ -186,11 +186,11 @@ void init_stsearch(py::module &m) {
       },
       py::arg("breakiter"));
 
-  si.def("set_match_length", &PySearchIterator::setMatchLength, py::arg("length"));
+  si.def("_set_match_length", &PySearchIterator::setMatchLength, py::arg("length"));
 
-  si.def("set_match_not_found", &PySearchIterator::setMatchNotFound);
+  si.def("_set_match_not_found", &PySearchIterator::setMatchNotFound);
 
-  si.def("set_match_start", &PySearchIterator::setMatchStart, py::arg("position"));
+  si.def("_set_match_start", &PySearchIterator::setMatchStart, py::arg("position"));
 
   si.def(
         "set_text",
