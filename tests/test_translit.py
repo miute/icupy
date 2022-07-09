@@ -1,4 +1,5 @@
 import copy
+from typing import List, Union
 
 import pytest
 
@@ -9,6 +10,111 @@ from icupy.icu import (
 )
 
 # fmt: on
+
+
+class _TestTrans(Transliterator):
+    # icu::Transliterator::Transliterator(
+    #       const UnicodeString &ID,
+    #       UnicodeFilter *adoptedFilter
+    # )
+    def __init__(self, id_: Union[UnicodeString, str]) -> None:
+        super().__init__(id_, None)
+        self.num_calls: int = 0
+
+    # virtual void icu::Transliterator::handleTransliterate(
+    #       Replaceable &text,
+    #       UTransPosition &pos,
+    #       UBool incremental
+    # ) const
+    def _handle_transliterate(
+        self, text: UnicodeString, pos: UTransPosition, incremental: bool
+    ) -> None:
+        pos.start = pos.limit
+        self.num_calls += 1
+
+
+# from CompoundTransliterator
+class _TestTrans2(Transliterator):
+    # icu::Transliterator::Transliterator(
+    #       const UnicodeString &ID,
+    #       UnicodeFilter *adoptedFilter
+    # )
+    def __init__(
+        self, id_: Union[UnicodeString, str], filter_set: UnicodeSet = None
+    ) -> None:
+        super().__init__("Null", filter_set)
+        self.num_calls: int = 0
+        self._trans: List[Transliterator] = []
+        for basic_id in str(id_).strip(";").split(";"):
+            basic_id = basic_id.strip()
+            if len(basic_id) == 0:
+                # static Transliterator *icu::Transliterator::createBasicInstance(
+                #       const UnicodeString &id,
+                #       const UnicodeString *canon
+                # )
+                t = self._create_basic_instance(
+                    UnicodeString("Any-Null"), None
+                )
+            else:
+                t = self._create_basic_instance(basic_id, None)
+            if t:
+                self._trans.append(t)
+
+        names: List[str] = []
+        x = 0
+        for t in self._trans:
+            names.append(str(t.get_id()))
+            x = max(x, t.get_maximum_context_length())
+
+        # void icu::Transliterator::setID(
+        #       const UnicodeString &id
+        # )
+        self._set_id(";".join(names))
+
+        # void icu::Transliterator::setMaximumContextLength(
+        #       int32_t maxContextLength
+        # )
+        self._set_maximum_context_length(x)
+
+    # virtual void icu::Transliterator::handleTransliterate(
+    #       Replaceable &text,
+    #       UTransPosition &pos,
+    #       UBool incremental
+    # ) const
+    def _handle_transliterate(
+        self, text: UnicodeString, pos: UTransPosition, incremental: bool
+    ) -> None:
+        start = pos.start
+        for t in self._trans:
+            # virtual void icu::Transliterator::filteredTransliterate(
+            #       Replaceable &text,
+            #       UTransPosition &index,
+            #       UBool incremental
+            # )	const
+            t.filtered_transliterate(text, pos, incremental)
+            pos.start = start
+
+        pos.start = pos.limit
+        self.num_calls += 1
+
+    # virtual UnicodeSet & icu::Transliterator::getTargetSet(
+    #       UnicodeSet &result
+    # ) const
+    def get_target_set(self, result: UnicodeSet) -> UnicodeSet:
+        result.clear()
+        temp = UnicodeSet()
+        for t in self._trans:
+            result.add_all(t.get_target_set(temp))
+        return result
+
+    # virtual void icu::Transliterator::handleGetSourceSet(
+    #       UnicodeSet &result
+    # ) const
+    def handle_get_source_set(self, result: UnicodeSet) -> None:
+        result.clear()
+        temp = UnicodeSet()
+        for t in self._trans:
+            result.add_all(t.get_source_set(temp))
 
 
 def test_adopt_filter():
@@ -425,6 +531,103 @@ def test_register_instance():
     assert "Any-MyRule1" in ids
     assert "Any-MyRule2" in ids
     assert "Any-MyRule3" in ids
+
+
+def test_subclass_filtered_transliterate():
+    tid = "Halfwidth-Fullwidth; Lower; Hiragana-Katakana; Katakana-Latin"
+    filter_set = UnicodeSet("[^0-9]")
+    t = _TestTrans2(tid, filter_set)
+    assert t.get_id() == "Halfwidth-Fullwidth;Any-Lower;Hira-Kana;Kana-Latn"
+    assert t.get_filter() == filter_set
+    assert t.get_maximum_context_length() == 3
+    assert t.count_elements() == 0
+
+    text = UnicodeString(
+        "ABC123\uff11\uff21\u3042\u30a2\uff71", -1
+    )  # "ABC123１Ａあアｱ"
+
+    index = UTransPosition()
+    index.context_limit = index.limit = len(text)
+    t.transliterate(text, index)
+    assert text == "\uff41\uff42\uff43123\uff11\uff41aaa"  # "ａｂｃ123１ａaaa"
+    assert t.num_calls == 6
+
+
+def test_subclass_handle_get_source_set():
+    tid = "Seoridf-Sweorie"
+    t1 = _TestTrans(tid)
+
+    # virtual void icu::Transliterator::handleGetSourceSet(
+    #       UnicodeSet &result
+    # ) const
+    result = UnicodeSet("[A-z0-9]")
+    t1.handle_get_source_set(result)
+    assert result.size() == 0  # default implementation returns empty set.
+
+    result = UnicodeSet("[A-z0-9]")
+    t1.get_source_set(result)
+    assert result.size() == 0
+
+    result = UnicodeSet("[A-z0-9]")
+    t1.get_target_set(result)
+    assert result.size() == 0  # default implementation returns empty set.
+
+    tid = "Halfwidth-Fullwidth"
+    filter_set = UnicodeSet("[^0-9]")
+    t2 = _TestTrans2(tid, filter_set)
+
+    result = UnicodeSet("[A-z]")
+    t2.handle_get_source_set(result)
+    assert result.size() > 0
+    assert result.contains(0x30, 0x39)
+    assert not result.contains(0xFF10, 0xFF19)  # "０" - "９" (FULLWIDTH DIGIT)
+
+    result = UnicodeSet("[A-z0-9]")
+    t2.get_source_set(result)
+    assert result.size() > 0
+    assert not result.contains(0x30, 0x39)
+    assert not result.contains(0xFF10, 0xFF19)  # "０" - "９" (FULLWIDTH DIGIT)
+
+    result = UnicodeSet("[A-z0-9]")
+    t2.get_target_set(result)
+    assert result.size() > 0
+    assert not result.contains(0x30, 0x39)
+    assert result.contains(0xFF10, 0xFF19)  # "０" - "９" (FULLWIDTH DIGIT)
+
+
+def test_subclass_register_instance():
+    tid = "Seoridf-Sweorie"
+    t = _TestTrans(tid)
+    assert t.get_id() == tid
+
+    Transliterator.register_instance(t)
+
+    t2 = Transliterator.create_instance(tid, UTransDirection.UTRANS_FORWARD)
+    assert isinstance(t2, Transliterator)
+    assert t2.get_id() == tid
+
+    Transliterator.unregister(tid)
+
+    with pytest.raises(ICUError) as exc_info:
+        _ = Transliterator.create_instance(tid, UTransDirection.UTRANS_FORWARD)
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_ID
+
+
+def test_subclass_transliterate():
+    tid = "Seoridf-Sweorie"
+    t = _TestTrans(tid)
+    assert t.get_id() == tid
+    assert t.get_filter() is None
+
+    text = UnicodeString("abc123", -1)
+    index = UTransPosition()
+    index.context_limit = index.limit = len(text)
+    t.transliterate(text, index)
+    assert index.start != 0
+
+    t.finish_transliteration(text, index)
+    assert index.start == index.limit
+    assert t.num_calls == 6
 
 
 def test_transliterate():

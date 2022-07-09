@@ -6,11 +6,41 @@
 
 using namespace icu;
 
+class PyTransliterator : public Transliterator {
+public:
+  PyTransliterator(const UnicodeString &id, UnicodeFilter *adopted_filter) : Transliterator(id, adopted_filter) {}
+  PyTransliterator(const Transliterator &other) : Transliterator(other) {}
+
+  virtual Transliterator *clone() const override { return new PyTransliterator(*this); }
+
+  virtual UnicodeSet &getTargetSet(UnicodeSet &result) const override {
+    PYBIND11_OVERRIDE_NAME(UnicodeSet &, Transliterator, "get_target_set", getTargetSet, result);
+  }
+
+  virtual void handleGetSourceSet(UnicodeSet &result) const override {
+    PYBIND11_OVERRIDE_NAME(void, Transliterator, "handle_get_source_set", handleGetSourceSet, result);
+  }
+
+  virtual void handleTransliterate(Replaceable &text, UTransPosition &pos, UBool incremental) const override {
+    PYBIND11_OVERRIDE_PURE_NAME(void, Transliterator, "_handle_transliterate", handleTransliterate, text, pos,
+                                py::bool_(incremental));
+  }
+
+  virtual UClassID getDynamicClassID() const override;
+  static UClassID U_EXPORT2 getStaticClassID();
+
+  using Transliterator::createBasicInstance;
+  using Transliterator::setID;
+  using Transliterator::setMaximumContextLength;
+};
+
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(PyTransliterator);
+
 void init_translit(py::module &m) {
   //
   // icu::Transliterator
   //
-  py::class_<Transliterator, UObject> tl(m, "Transliterator");
+  py::class_<Transliterator, UObject, PyTransliterator> tl(m, "Transliterator");
 
   //
   // icu::Transliterator::Token
@@ -20,6 +50,14 @@ void init_translit(py::module &m) {
   //
   // icu::Transliterator
   //
+  tl.def(py::init([](const _UnicodeStringVariant &id, UnicodeFilter *adopted_filter) {
+           return std::make_unique<PyTransliterator>(VARIANT_TO_UNISTR(id),
+                                                     adopted_filter ? adopted_filter->clone() : nullptr);
+         }),
+         py::arg("id_"), py::arg("adopted_filter"))
+      .def(py::init([](const PyTransliterator &other) { return std::make_unique<PyTransliterator>(other); }),
+           py::arg("other"));
+
   tl.def("__copy__", &Transliterator::clone);
 
   tl.def(
@@ -51,6 +89,13 @@ void init_translit(py::module &m) {
       py::arg("source"), py::arg("target"));
 
   tl.def("count_elements", &Transliterator::countElements);
+
+  tl.def_static(
+      "_create_basic_instance",
+      [](const _UnicodeStringVariant &id, const UnicodeString *canon) {
+        return PyTransliterator::createBasicInstance(VARIANT_TO_UNISTR(id), canon);
+      },
+      py::arg("id_"), py::arg("canon"));
 
   tl.def_static(
       "create_from_rules",
@@ -98,12 +143,11 @@ void init_translit(py::module &m) {
     return result;
   });
 
-  /*
   tl.def("filtered_transliterate",
          py::overload_cast<Replaceable &, UTransPosition &, UBool>(&Transliterator::filteredTransliterate, py::const_),
          py::arg("text"), py::arg("index"), py::arg("incremental"));
+
   tl.def("finish_transliteration", &Transliterator::finishTransliteration, py::arg("text"), py::arg("index"));
-  */
 
   tl.def_static("get_available_ids", []() {
     ErrorCode error_code;
@@ -166,10 +210,7 @@ void init_translit(py::module &m) {
 
   tl.def("get_target_set", &Transliterator::getTargetSet, py::arg("result"));
 
-  /*
   tl.def("handle_get_source_set", &Transliterator::handleGetSourceSet, py::arg("result"));
-  // FIXME: Implement "void handleTransliterate(Replaceable &text, UTransPosition &pos, UBool incremental)".
-  */
 
   tl.def("orphan_filter", &Transliterator::orphanFilter, py::return_value_policy::reference);
 
@@ -188,6 +229,12 @@ void init_translit(py::module &m) {
         Transliterator::registerInstance(adopted_obj ? adopted_obj->clone() : nullptr);
       },
       py::arg("adopted_obj").none(false));
+
+  tl.def(
+      "_set_id", [](PyTransliterator &self, const _UnicodeStringVariant &id) { self.setID(VARIANT_TO_UNISTR(id)); },
+      py::arg("id_"));
+
+  tl.def("_set_maximum_context_length", &PyTransliterator::setMaximumContextLength, py::arg("max_context_length"));
 
   tl.def("to_rules", &Transliterator::toRules, py::arg("result"), py::arg("escape_unprintable"));
 
@@ -227,5 +274,7 @@ void init_translit(py::module &m) {
           },
           py::arg("text"), py::arg("index"));
 
-  tl.def_static("unregister", &Transliterator::unregister, py::arg("id_"));
+  tl.def_static(
+      "unregister", [](const _UnicodeStringVariant &id) { Transliterator::unregister(VARIANT_TO_UNISTR(id)); },
+      py::arg("id_"));
 }
