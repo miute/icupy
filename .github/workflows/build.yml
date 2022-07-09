@@ -82,5 +82,5 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pipenv run pip install --no-deps --no-index --find-links=./dist/ icupy
+          python -m pipenv run pip install --no-deps --no-index --find-links=./dist/ --force-reinstall icupy
           python -m pipenv run pytest --color=yes
