@@ -134,6 +134,8 @@ void init_uniset(py::module &m) {
           },
           py::arg("slice"));
 
+  us.def("__hash__", &UnicodeSet::hashCode);
+
   us.def("__len__", &UnicodeSet::size);
 
   us.def(

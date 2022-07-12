@@ -644,6 +644,10 @@ def test_hash_code():
     assert coll1.hash_code() == coll3.hash_code()
     assert coll2.hash_code() != coll3.hash_code()
 
+    assert hash(coll1) == coll1.hash_code()
+    assert hash(coll2) == coll2.hash_code()
+    assert hash(coll3) == coll3.hash_code()
+
 
 def test_operator():
     coll1 = Collator.create_instance(Locale.get_english())

@@ -262,6 +262,8 @@ void init_rbbi(py::module &m) {
       "__eq__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self == other; },
       py::is_operator(), py::arg("other"));
 
+  rbbi.def("__hash__", &RuleBasedBreakIterator::hashCode);
+
   rbbi.def(
       "__ne__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self != other; },
       py::is_operator(), py::arg("other"));

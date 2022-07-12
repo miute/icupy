@@ -456,14 +456,26 @@ def test_hash_code():
     assert bi1.hash_code() != bi2.hash_code()
     assert bi2.hash_code() == bi3.hash_code()
 
+    assert hash(bi1) == bi1.hash_code()
+    assert hash(bi2) == bi2.hash_code()
+    assert hash(bi3) == bi3.hash_code()
+
     src = UnicodeString("foo bar baz.")
     bi1.set_text(src)
     assert bi1.hash_code() != bi2.hash_code()
     assert bi2.hash_code() == bi3.hash_code()
 
+    assert hash(bi1) == bi1.hash_code()
+    assert hash(bi2) == bi2.hash_code()
+    assert hash(bi3) == bi3.hash_code()
+
     bi1.next()
     assert bi1.hash_code() != bi2.hash_code()
     assert bi2.hash_code() == bi3.hash_code()
+
+    assert hash(bi1) == bi1.hash_code()
+    assert hash(bi2) == bi2.hash_code()
+    assert hash(bi3) == bi3.hash_code()
 
 
 def test_is_boundary():

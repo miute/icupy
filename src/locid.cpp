@@ -28,6 +28,8 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "__eq__", [](const Locale &self, const Locale &other) { return self == other; }, py::is_operator(),
       py::arg("other"));
 
+  loc.def("__hash__", &Locale::hashCode);
+
   loc.def(
       "__ne__", [](const Locale &self, const Locale &other) { return self != other; }, py::is_operator(),
       py::arg("other"));

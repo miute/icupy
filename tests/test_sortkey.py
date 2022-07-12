@@ -64,6 +64,10 @@ def test_api():
     assert key2.hash_code() == key.hash_code()
     assert key3.hash_code() == key.hash_code()
 
+    assert hash(key1) == key1.hash_code()
+    assert hash(key2) == key2.hash_code()
+    assert hash(key3) == key3.hash_code()
+
     # UBool icu::CollationKey::isBogus(void)
     assert not key1.is_bogus()
     assert not key2.is_bogus()

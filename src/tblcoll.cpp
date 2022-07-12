@@ -277,6 +277,8 @@ void init_tblcoll(py::module &m) {
       "__eq__", [](const RuleBasedCollator &self, const Collator &other) { return self == other; }, py::is_operator(),
       py::arg("other"));
 
+  rbc.def("__hash__", &RuleBasedCollator::hashCode);
+
   rbc.def(
       "__ne__", [](const RuleBasedCollator &self, const Collator &other) { return self != other; }, py::is_operator(),
       py::arg("other"));

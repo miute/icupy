@@ -661,11 +661,20 @@ def test_hash_code():
 
     assert test1.hash_code() == test2.hash_code()
 
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
+
     test1.set_keyword_value("currency", "USD")
     assert test1.hash_code() != test2.hash_code()
 
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
+
     test2.set_keyword_value("currency", "USD")
     assert test1.hash_code() == test2.hash_code()
+
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
 
 
 def test_is_bogus():

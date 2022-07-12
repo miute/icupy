@@ -23,6 +23,8 @@ void init_sortkey(py::module &m) {
       "__eq__", [](const CollationKey &self, const CollationKey &other) { return self == other; }, py::is_operator(),
       py::arg("other"));
 
+  ck.def("__hash__", &CollationKey::hashCode);
+
   ck.def(
       "__ne__", [](const CollationKey &self, const CollationKey &other) { return self != other; }, py::is_operator(),
       py::arg("other"));

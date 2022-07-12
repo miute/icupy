@@ -596,8 +596,14 @@ def test_hash_code():
     # int32_t icu::UnicodeSet::hashCode(void)
     assert test1.hash_code() != test2.hash_code()
 
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
+
     test2.add(0x30, 0x39)
     assert test1.hash_code() == test2.hash_code()
+
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")

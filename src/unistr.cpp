@@ -137,6 +137,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       [](const UnicodeString &self, const _UnicodeStringVariant &other) { return self > VARIANT_TO_UNISTR(other); },
       py::is_operator(), py::arg("other"));
 
+  us.def("__hash__", &UnicodeString::hashCode);
+
   us.def(
       "__iadd__",
       [](UnicodeString &self, const _UnicodeStringVariant &other) { return self += VARIANT_TO_UNISTR(other); },

@@ -134,6 +134,8 @@ void init_messagepattern(py::module &m) {
       py::arg("other"));
   */
 
+  part.def("__hash__", &MessagePattern::Part::hashCode);
+
   part.def("get_arg_type", &MessagePattern::Part::getArgType);
 
   part.def("get_index", &MessagePattern::Part::getIndex);
@@ -192,6 +194,8 @@ void init_messagepattern(py::module &m) {
   mp.def(
       "__eq__", [](const MessagePattern &self, const MessagePattern &other) { return self == other; },
       py::is_operator(), py::arg("other"));
+
+  mp.def("__hash__", &MessagePattern::hashCode);
 
   mp.def(
       "__ne__", [](const MessagePattern &self, const MessagePattern &other) { return self != other; },

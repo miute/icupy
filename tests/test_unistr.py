@@ -932,11 +932,20 @@ def test_hash_code():
     # int32_t icu::UnicodeString::hashCode(void)
     assert test1.hash_code() == test2.hash_code()
 
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
+
     test1.append("d")
     assert test1.hash_code() != test2.hash_code()
 
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
+
     test2.append("d")
     assert test1.hash_code() == test2.hash_code()
+
+    assert hash(test1) == test1.hash_code()
+    assert hash(test2) == test2.hash_code()
 
 
 def test_index_of():

@@ -93,6 +93,8 @@ def test_api():
     # int32_t icu::MessagePattern::hashCode()
     assert mp1.hash_code()
     assert mp1.hash_code() != mp2.hash_code()
+    assert hash(mp1) == mp1.hash_code()
+    assert hash(mp2) == mp2.hash_code()
 
     # UBool icu::MessagePattern::hasNamedArguments()
     assert mp1.has_named_arguments()
@@ -365,6 +367,7 @@ def test_part():
 
     # int32_t icu::MessagePattern::Part::hashCode(void)
     assert part.hash_code()
+    assert hash(part) == part.hash_code()
 
     # static UBool icu::MessagePattern::Part::hasNumericValue(
     #       UMessagePatternPartType type
