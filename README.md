@@ -3,23 +3,30 @@
 [![PyPI](https://img.shields.io/pypi/v/icupy)](https://pypi.org/project/icupy/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/icupy)](https://pypi.org/project/icupy/)
 [![PyPI - License](https://img.shields.io/pypi/l/icupy)](https://pypi.org/project/icupy/)
-[![build wheels](https://github.com/miute/icupy/actions/workflows/build.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/build.yml)
-[![tests](https://github.com/miute/icupy/actions/workflows/tests.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/gh/miute/icupy/branch/main/graph/badge.svg?token=QCW3K19ARA)](https://codecov.io/gh/miute/icupy)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/miute/icupy/main.svg)](https://results.pre-commit.ci/latest/github/miute/icupy/main)
+[![tests](https://github.com/miute/icupy/actions/workflows/tests.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/tests.yml)
+[![build wheels](https://github.com/miute/icupy/actions/workflows/build.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/miute/icupy/branch/main/graph/badge.svg?token=QCW3K19ARA)](https://codecov.io/gh/miute/icupy)
 
 Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/index.html) using [pybind11](https://github.com/pybind/pybind11).
 
 ## Changes from ICU4C
 
-- **Naming Rules**
-  - Renamed C functions and C++ class methods from mixed case to snake case. (e.g., `findAndReplace()` → `find_and_replace()`)
-  - Renamed C++ enumerators to upper snake case without "k" prefix. (e.g., `kDateOffset` → `DATE_OFFSET`)
-  - Renamed APIs that match Python reserved words. e.g.,
+- **Naming Conventions**
+
+  Renamed functions, methods, and C++ enumerators to conform to [PEP 8](https://peps.python.org/pep-0008/#naming-conventions).
+
+  - Function Names:
+    Use `lower_case_with_underscores` style.
+  - Method Names:
+    Use `lower_case_with_underscores` style.
+    Also, use one leading underscore only for protected methods.
+  - C++ Enumerators: Use `UPPER_CASE_WITH_UNDERSCORES` style without a leading "k". (e.g., `kDateOffset` → `DATE_OFFSET`)
+  - APIs that match Python reserved words: e.g.,
     - `with()` → `with_()`
 
 - **Error Handling**
-  - Unlike the C/C++ APIs, icupy raises the `ICUError` exception if an error code indicates a failure instead of receiving an error code `UErrorCode`.
+  - Unlike the C/C++ APIs, `icupy` raises the `icupy.icu.ICUError` exception if an error code indicates a failure instead of receiving an error code `UErrorCode`.
 
     You can access the [icu::ErrorCode](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1ErrorCode.html) object from `ICUError.args[0]`.
     For example:
@@ -175,7 +182,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   Install the following dependencies.
 
   - [Python](https://www.python.org/downloads/) >=3.7
-  - Pre-built [ICU4C](https://github.com/unicode-org/icu/releases) binary package (>=64 recommended)
+  - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=64 recommended)
   - Visual Studio 2015 Update 3 or newer. Visual Studio 2019 recommended
   - [CMake](https://cmake.org/download/) >=3.7
     - *Note: Add CMake to the system PATH.*
@@ -197,8 +204,8 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
     ```
 
   If your system's ICU is out of date, consider
-  [building ICU4C](https://unicode-org.github.io/icu/userguide/icu4c/build.html) from source or installing pre-built
-  [ICU4C](https://github.com/unicode-org/icu/releases) binary package.
+  [building ICU4C from source](https://unicode-org.github.io/icu/userguide/icu4c/build.html) or installing [pre-built
+  ICU4C binary package](https://github.com/unicode-org/icu/releases).
 
 ### Building icupy from source
 
@@ -267,7 +274,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
    pip install git+https://github.com/miute/icupy.git
    ```
 
-## How to import icupy
+## Usage
 
 1. Configuring environment variables:
 
@@ -295,7 +302,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
        export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
        ```
 
-2. To use icupy:
+2. Using `icupy`:
 
    ```python
    import icupy.icu as icu
