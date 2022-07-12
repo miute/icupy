@@ -565,6 +565,13 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       },
       py::return_value_policy::reference);
 
+  us.def(
+      "handle_replace_between",
+      [](UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &text) {
+        self.handleReplaceBetween(start, limit, VARIANT_TO_UNISTR(text));
+      },
+      py::arg("start"), py::arg("limit"), py::arg("text"));
+
   us.def("hash_code", &UnicodeString::hashCode);
 
   us.def("has_more_char32_than", &UnicodeString::hasMoreChar32Than, py::arg("start"), py::arg("length"),

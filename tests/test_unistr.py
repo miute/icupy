@@ -925,6 +925,25 @@ def test_get_buffer():
     assert test1.get_terminated_buffer() is None
 
 
+def test_handle_replace_between():
+    # virtual void icu::UnicodeString::handleReplaceBetween(
+    #       int32_t start,
+    #       int32_t limit,
+    #       const UnicodeString &text
+    # )
+    test1 = UnicodeString("foo bar baz")
+    test1.handle_replace_between(4, 7, UnicodeString("BAR"))
+    test1.handle_replace_between(8, 11, UnicodeString("BAZ"))
+    test1.handle_replace_between(0, 3, UnicodeString("FOO"))
+    assert test1 == "FOO BAR BAZ"
+
+    test1 = UnicodeString("foo bar baz")
+    test1.handle_replace_between(4, 7, "BAR")
+    test1.handle_replace_between(8, 11, "BAZ")
+    test1.handle_replace_between(0, 3, "FOO")
+    assert test1 == "FOO BAR BAZ"
+
+
 def test_hash_code():
     test1 = UnicodeString("abc")
     test2 = UnicodeString("abc")
