@@ -19,7 +19,7 @@ def test_api():
     #       UErrorCode *status
     # )
     version_array = ulocdata_get_cldr_version()
-    assert isinstance(version_array, list)
+    assert isinstance(version_array, tuple)
     assert len(version_array) > 0
     assert all(isinstance(x, int) for x in version_array)
 

@@ -201,7 +201,7 @@ def test_u_get_data_version():
     #       UErrorCode *status
     # )
     data_version = u_get_data_version()
-    assert isinstance(data_version, list)
+    assert isinstance(data_version, tuple)
     assert len(data_version) == 4
     assert all(isinstance(x, int) for x in data_version)
     assert all(x >= 0 for x in data_version)
@@ -210,7 +210,7 @@ def test_u_get_data_version():
 def test_u_get_version():
     # void u_getVersion(UVersionInfo versionArray)
     version_array = u_get_version()
-    assert isinstance(version_array, list)
+    assert isinstance(version_array, tuple)
     assert len(version_array) == 4
     assert all(isinstance(x, int) for x in version_array)
     assert all(x >= 0 for x in version_array)
@@ -228,7 +228,7 @@ def test_u_version_from_string():
     #       const char *versionString
     # )
     version_array = u_version_from_string("123.45.67.89")
-    assert isinstance(version_array, list)
+    assert isinstance(version_array, tuple)
     assert len(version_array) == 4
     assert version_array[0] == 123
     assert version_array[1] == 45
@@ -242,6 +242,10 @@ def test_u_version_to_string():
     #       char *versionString
     # )
     version_string = u_version_to_string([123, 45, 67, 89])
+    assert isinstance(version_string, str)
+    assert version_string == "123.45.67.89"
+
+    version_string = u_version_to_string((123, 45, 67, 89))
     assert isinstance(version_string, str)
     assert version_string == "123.45.67.89"
 

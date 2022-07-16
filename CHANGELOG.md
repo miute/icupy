@@ -3,6 +3,14 @@
 ## WIP
 
 - [CHANGED] Update pybind11 to v2.10.0
+- [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple
+- [CHANGED] Change return type of RuleBasedCollator.get_version() -> list → tuple
+- [CHANGED] Change return type of u_char_age(c: int) -> list → tuple
+- [CHANGED] Change return type of u_get_data_version() -> list → tuple
+- [CHANGED] Change return type of u_get_unicode_version() -> list → tuple
+- [CHANGED] Change return type of u_get_version() -> list → tuple
+- [CHANGED] Change return type of u_version_from_string() -> list → tuple
+- [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
 
 ## v0.13.0 / 2022-07-12
 

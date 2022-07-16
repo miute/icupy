@@ -72,7 +72,9 @@ void init_ulocdata(py::module &m) {
     if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
-    std::vector<uint8_t> result(version_array, version_array + sizeof(version_array));
+    py::tuple result(U_MAX_VERSION_LENGTH);
+    int n = 0;
+    std::for_each(std::begin(version_array), std::end(version_array), [&](auto v) { result[n++] = v; });
     return result;
   });
 

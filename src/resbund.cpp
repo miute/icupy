@@ -231,7 +231,9 @@ void init_resbund(py::module &m) {
   res.def("get_version", [](const ResourceBundle &self) {
     UVersionInfo info;
     self.getVersion(info);
-    std::vector<uint8_t> result(info, info + sizeof(info));
+    py::tuple result(U_MAX_VERSION_LENGTH);
+    int n = 0;
+    std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });
     return result;
   });
 
