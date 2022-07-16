@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## WIP
+
+- [CHANGED] Update pybind11 to v2.10.0
+
 ## v0.13.0 / 2022-07-12
 
 - [CHANGED] Update pybind11 to v2.9.2
