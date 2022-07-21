@@ -107,18 +107,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         "__getitem__",
         [](const UnicodeString &self, int32_t index) {
+          const auto length = self.length();
           if (index < 0) {
-            index += self.length();
+            index += length;
           }
-          if (index < 0 || index >= self.length()) {
-            throw py::index_error(std::to_string(index));
+          if (index < 0 || index >= length) {
+            throw py::index_error("string index out of range: " + std::to_string(index));
           }
           return self[index];
         },
         py::arg("index"))
       .def(
           "__getitem__",
-          [](const UnicodeString &self, py::slice slice) {
+          [](const UnicodeString &self, const py::slice &slice) {
             size_t start, stop, step, slice_length;
             if (!slice.compute(self.length(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();

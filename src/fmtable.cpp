@@ -109,7 +109,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       "__getitem__",
       [](Formattable &self, int32_t index) -> Formattable & {
         ErrorCode error_code;
-        int32_t count;
+        int32_t count = 0;
         self.getArray(count, error_code);
         if (error_code.isFailure()) {
           throw ICUError(error_code);
@@ -118,7 +118,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           index += count;
         }
         if (index < 0 || index >= count) {
-          throw py::index_error(std::to_string(index));
+          throw py::index_error("array index out of range: " + std::to_string(index));
         }
         return self[index];
       },

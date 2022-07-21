@@ -109,18 +109,19 @@ void init_uniset(py::module &m) {
   us.def(
         "__getitem__",
         [](const UnicodeSet &self, int32_t index) {
+          const auto size = self.size();
           if (index < 0) {
-            index += self.size();
+            index += size;
           }
-          if (index < 0 || index >= self.size()) {
-            throw py::index_error(std::to_string(index));
+          if (index < 0 || index >= size) {
+            throw py::index_error("characters index out of range: " + std::to_string(index));
           }
           return self.charAt(index);
         },
         py::arg("index"))
       .def(
           "__getitem__",
-          [](const UnicodeSet &self, py::slice slice) {
+          [](const UnicodeSet &self, const py::slice &slice) {
             size_t start, stop, step, slice_length;
             if (!slice.compute(self.size(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();

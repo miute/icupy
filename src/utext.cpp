@@ -99,12 +99,13 @@ void init_utext(py::module &m) {
 
   utv.def(
       "__getitem__",
-      [](const _UTextVector &self, size_t index) {
+      [](const _UTextVector &self, int32_t index) {
+        const auto size = static_cast<int32_t>(self.size());
         if (index < 0) {
-          index += self.size();
+          index += size;
         }
-        if (index < 0 || index >= self.size()) {
-          throw py::index_error(std::to_string(index));
+        if (index < 0 || index >= size) {
+          throw py::index_error("list index out of range: " + std::to_string(index));
         }
         return self[index];
       },
