@@ -545,9 +545,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         if (p == 0) {
           return std::nullopt;
         }
-        return std::make_unique<_ConstChar16Ptr>(p);
+        return std::make_unique<_ConstChar16Ptr>(p, self.length(), self.getCapacity());
       },
-      py::return_value_policy::reference);
+      py::keep_alive<0, 1>());
 
   us.def("get_capacity", &UnicodeString::getCapacity);
 
@@ -562,9 +562,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         if (p == 0) {
           return std::nullopt;
         }
-        return std::make_unique<_ConstChar16Ptr>(p);
+        return std::make_unique<_ConstChar16Ptr>(p, self.length(), self.getCapacity());
       },
-      py::return_value_policy::reference);
+      py::keep_alive<0, 1>());
 
   us.def(
       "handle_replace_between",

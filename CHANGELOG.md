@@ -2,6 +2,8 @@
 
 ## WIP
 
+- [ADDED] \_ConstChar16Ptr.\_\_getitem__(slice: slice)
+- [ADDED] \_ConstChar16Ptr.\_\_len__()
 - [CHANGED] Update pybind11 to v2.10.0
 - [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple
 - [CHANGED] Change return type of RuleBasedCollator.get_version() -> list → tuple
@@ -11,6 +13,7 @@
 - [CHANGED] Change return type of u_get_version() -> list → tuple
 - [CHANGED] Change return type of u_version_from_string() -> list → tuple
 - [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
+- [FIXED] Raise IndexError when \_ConstChar16Ptr.\_\_getitem__() accessing beyond capacity
 
 ## v0.13.0 / 2022-07-12
 
