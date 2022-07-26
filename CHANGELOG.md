@@ -2,7 +2,6 @@
 
 ## WIP
 
-- [ADDED] \_ConstChar16Ptr.\_\_getitem__(slice: slice)
 - [ADDED] \_ConstChar16Ptr.\_\_len__()
 - [CHANGED] Update pybind11 to v2.10.0
 - [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple

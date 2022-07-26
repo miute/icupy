@@ -903,6 +903,8 @@ def test_get_buffer():
     # [1]
     # const char16_t *icu::UnicodeString::getBuffer()
     p = test1.get_buffer()
+
+    # _ConstChar16Ptr.__getitem__(index: int) -> int
     assert p[0] == 0x61
     assert p[1] == 0x62
     assert p[2] == 0x63
@@ -919,16 +921,22 @@ def test_get_buffer():
     with pytest.raises(IndexError):
         _ = p[-test1.get_capacity() - 1]
 
-    # _ConstChar16Ptr.__getitem__(index: int)
-    # _ConstChar16Ptr.__getitem__(slice: slice)
-    assert list(p) == p[:]
-    assert p[1:6:2] == [0x62, 0xD83C, 0xDF38]
+    assert list(p)[: test1.length()] == [
+        0x61,
+        0x62,
+        0x63,
+        0xD83C,
+        0x20,
+        0xDF38,
+    ]
 
     # _ConstChar16Ptr.__len__()
     assert len(p) == test1.get_capacity()
 
     # const char16_t *icu::UnicodeString::getTerminatedBuffer()
     p = test1.get_terminated_buffer()
+
+    # _ConstChar16Ptr.__getitem__(index: int) -> int
     assert p[0] == 0x61
     assert p[1] == 0x62
     assert p[2] == 0x63
@@ -946,10 +954,15 @@ def test_get_buffer():
     with pytest.raises(IndexError):
         _ = p[-test1.get_capacity() - 1]
 
-    # _ConstChar16Ptr.__getitem__(index: int)
-    # _ConstChar16Ptr.__getitem__(slice: slice)
-    assert list(p) == p[:]
-    assert p[1:6:2] == [0x62, 0xD83C, 0xDF38]
+    assert list(p)[: test1.length() + 1] == [
+        0x61,
+        0x62,
+        0x63,
+        0xD83C,
+        0x20,
+        0xDF38,
+        0,
+    ]
 
     # _ConstChar16Ptr.__len__()
     assert len(p) == test1.get_capacity()
