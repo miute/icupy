@@ -13,6 +13,7 @@
 - [CHANGED] Change return type of u_version_from_string() -> list → tuple
 - [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
 - [FIXED] Raise IndexError when \_ConstChar16Ptr.\_\_getitem__() accessing beyond capacity
+- [FIXED] Change return type of UnicodeString.\_\_getitem__(slice: slice) -> str → UnicodeString
 
 ## v0.13.0 / 2022-07-12
 

@@ -1442,6 +1442,7 @@ def test_operator():
         _ = test1[test1.length()]  # != U+ffff
     _ = test1[test1.length() - 1]
 
+    assert isinstance(test1[:], UnicodeString)
     assert test1[4:7] == "bar"
     assert test1[0:9:4] == "fbb"
     with pytest.raises(ValueError):  # ValueError: slice step cannot be zero

@@ -124,9 +124,10 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
             if (!slice.compute(self.length(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();
             }
-            std::u16string result(slice_length, u'\0');
+            auto result = self.clone();
+            result->remove();
             for (size_t n = 0; n < slice_length; ++n) {
-              result[n] = self[static_cast<int32_t>(start)];
+              result->append(self[static_cast<int32_t>(start)]);
               start += step;
             }
             return result;
