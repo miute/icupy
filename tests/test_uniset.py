@@ -328,8 +328,9 @@ def test_char_at():
     assert test1[-1] == 0x39
 
     # __getitem__(self, slice: slice) -> List[int]
-    assert test1[1:4] == [0x31, 0x32, 0x33]
-    assert test1[1:6:2] == [0x31, 0x33, 0x35]
+    assert isinstance(test1[:], UnicodeSet)
+    assert test1[1:4] == UnicodeSet(0x31, 0x33)
+    assert test1[1:6:2] == UnicodeSet("[135]")
     with pytest.raises(ValueError):  # ValueError: slice step cannot be zero
         _ = test1[::0]
 

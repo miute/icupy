@@ -126,9 +126,9 @@ void init_uniset(py::module &m) {
             if (!slice.compute(self.size(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();
             }
-            std::vector<UChar32> result(slice_length);
+            UnicodeSet result;
             for (size_t n = 0; n < slice_length; ++n) {
-              result[n] = self.charAt(static_cast<int32_t>(start));
+              result.add(self.charAt(static_cast<int32_t>(start)));
               start += step;
             }
             return result;
