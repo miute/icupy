@@ -1478,6 +1478,44 @@ def test_operator():
     assert test7 == expected
 
 
+def test_operator_setitem():
+    test1 = UnicodeString("abcd")
+
+    # UnicodeString.__setitem__(index: int, value: str|int)
+    test1[0] = "a"
+    test1[1] = 0xD83C
+    test1[2] = 0xDF08
+    test1[3] = "b"
+    assert str(test1) == "a\U0001f308b"
+
+    with pytest.raises(IndexError):
+        test1[4] = "c"  # index out of range
+
+    test1[-1] = "c"
+    assert str(test1) == "a\U0001f308c"
+
+    test1[-4] = "d"
+    assert str(test1) == "d\U0001f308c"
+
+    with pytest.raises(IndexError):
+        test1[-5] = "d"  # index out of range
+
+    with pytest.raises(ValueError):
+        test1[0] = "12"  # multi-character string
+
+    test1[0] = 0  # [0, 0xffff]
+    assert test1[0] == "\0"
+
+    with pytest.raises(TypeError):
+        test1[0] = -1  # [0, 0xffff]
+
+    test1[0] = 0xFFFF  # [0, 0xffff]
+    assert test1[0] == "\uffff"
+
+    with pytest.raises(TypeError):
+        test1[0] = 0x10000  # [0, 0xffff]
+
+
 def test_pad_leading():
     # UBool icu::UnicodeString::padLeading(
     #       int32_t targetLength,

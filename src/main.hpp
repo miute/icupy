@@ -18,6 +18,8 @@
 
 namespace py = pybind11;
 
+using _Char16Variant = std::variant<char16_t, uint16_t>;
+
 using _LocaleVariant = std::variant<icu::Locale, std::string>;
 
 using _UnicodeStringList = std::list<icu::UnicodeString>;
@@ -38,11 +40,15 @@ private:
   std::string message_;
 };
 
-static inline auto VARIANT_TO_LOCALE(const _LocaleVariant &x) {
+inline auto VARIANT_TO_CHAR16(const _Char16Variant &x) {
+  return std::visit([](auto &y) -> char16_t { return y; }, x);
+}
+
+inline auto VARIANT_TO_LOCALE(const _LocaleVariant &x) {
   return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();
 }
 
-static inline auto VARIANT_TO_UNISTR(const _UnicodeStringVariant &x) {
+inline auto VARIANT_TO_UNISTR(const _UnicodeStringVariant &x) {
   return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();
 }
 

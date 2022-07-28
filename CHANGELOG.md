@@ -2,7 +2,6 @@
 
 ## WIP
 
-- [ADDED] \_ConstChar16Ptr.\_\_len__()
 - [CHANGED] Update pybind11 to v2.10.0
 - [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple
 - [CHANGED] Change return type of RuleBasedCollator.get_version() -> list → tuple
@@ -12,6 +11,8 @@
 - [CHANGED] Change return type of u_get_version() -> list → tuple
 - [CHANGED] Change return type of u_version_from_string() -> list → tuple
 - [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
+- [IMPROVED] Add \_ConstChar16Ptr.\_\_len__()
+- [IMPROVED] Add UnicodeString.\_\_setitem__(index: int, value: str|int)
 - [FIXED] Raise IndexError when \_ConstChar16Ptr.\_\_getitem__() accessing beyond capacity
 - [FIXED] Change return type of UnicodeSet.\_\_getitem__(slice: slice) -> list[int] → UnicodeSet
 - [FIXED] Change return type of UnicodeString.\_\_getitem__(slice: slice) -> str → UnicodeString

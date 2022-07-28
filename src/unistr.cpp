@@ -199,6 +199,20 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
     return ss.str();
   });
 
+  us.def(
+      "__setitem__",
+      [](UnicodeString &self, int32_t index, const _Char16Variant &value) {
+        const auto length = self.length();
+        if (index < 0) {
+          index += length;
+        }
+        if (index < 0 || index >= length) {
+          throw py::index_error("string index out of range: " + std::to_string(index));
+        }
+        self.setCharAt(index, VARIANT_TO_CHAR16(value));
+      },
+      py::arg("index"), py::arg("value"));
+
   us.def("__str__", [](const UnicodeString &self) {
     std::string result;
     self.toUTF8String(result);
