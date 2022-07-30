@@ -4,10 +4,10 @@ import pytest
 
 # fmt: off
 from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, RegexMatcher, RegexPattern, UnicodeString,
-    UnicodeStringVector, UParseError, URegexpFlag, UTextVector, utext_close,
-    utext_extract, utext_native_length, utext_open_const_unicode_string,
-    utext_open_utf8,
+    U_ICU_VERSION_MAJOR_NUM, ICUError, RegexMatcher, RegexPattern, UErrorCode,
+    UnicodeString, UnicodeStringVector, UParseError, URegexpFlag, UTextVector,
+    utext_close, utext_extract, utext_native_length,
+    utext_open_const_unicode_string, utext_open_utf8,
 )
 
 # fmt: on
@@ -304,6 +304,10 @@ def test_split():
     assert dest1[0] == "foo"
     assert dest1[1] == "bar baz"
 
+    with pytest.raises(ICUError) as exc_info:
+        _ = pattern.split(src1, dest1, 0)
+    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
     # [2]
     # int32_t icu::RegexPattern::split(
     #       UText *input,
@@ -312,12 +316,16 @@ def test_split():
     #       UErrorCode &status
     # )
     src2 = utext_open_const_unicode_string(None, src1)
-    dest2 = UTextVector(10)
+    out = UnicodeStringVector(10)
+    dest2 = UTextVector(out)
     result = pattern.split(src2, dest2)
     assert result == 3
     assert utext_extract(dest2[0], 0, utext_native_length(dest2[0])) == "foo"
     assert utext_extract(dest2[1], 0, utext_native_length(dest2[1])) == "bar"
     assert utext_extract(dest2[2], 0, utext_native_length(dest2[2])) == "baz"
+    assert out[0] == "foo"
+    assert out[1] == "bar"
+    assert out[2] == "baz"
 
     result = pattern.split(src2, dest2, 2)
     assert result == 2
@@ -325,4 +333,11 @@ def test_split():
     assert (
         utext_extract(dest2[1], 0, utext_native_length(dest2[1])) == "bar baz"
     )
+    assert out[0] == "foo"
+    assert out[1] == "bar baz"
+
+    with pytest.raises(ICUError) as exc_info:
+        _ = pattern.split(src2, dest2, 0)
+    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
     utext_close(src2)

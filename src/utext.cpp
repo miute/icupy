@@ -10,34 +10,27 @@
 using namespace icu;
 
 _UTextPtr::_UTextPtr() : p_(nullptr) {}
+
 _UTextPtr::_UTextPtr(UText *p) : p_(p) {}
+
 _UTextPtr::_UTextPtr(UText *p, const std::shared_ptr<void> &source) : p_(p), source_(source) {}
+
 _UTextPtr::~_UTextPtr() {}
+
 UText *_UTextPtr::get() const { return p_; }
 
 const std::shared_ptr<void> &_UTextPtr::get_source() const { return source_; }
 
-_UTextVector::_UTextVector(size_t n) {
-  values_ = std::vector<_UTextPtr>(n);
-  sources_ = std::vector<UnicodeString>(n);
-  ErrorCode error_code;
-  for (size_t i = 0; i < n; ++i) {
-    error_code.reset();
-    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], error_code);
-    if (error_code.isFailure()) {
-      throw ICUError(error_code);
-    }
-  }
-}
+_UTextVector::_UTextVector() {}
 
-_UTextVector::_UTextVector(const _UnicodeStringList &iterable) {
+_UTextVector::_UTextVector(const std::list<std::reference_wrapper<UnicodeString>> &iterable) {
   const auto size = iterable.size();
   values_ = std::vector<_UTextPtr>(size);
-  sources_ = std::vector<UnicodeString>(iterable.begin(), iterable.end());
+  sources_ = std::vector<std::reference_wrapper<UnicodeString>>(iterable.begin(), iterable.end());
   ErrorCode error_code;
   for (size_t i = 0; i < size; ++i) {
     error_code.reset();
-    values_[i] = utext_openUnicodeString(nullptr, &sources_[i], error_code);
+    values_[i] = utext_openUnicodeString(nullptr, &sources_[i].get(), error_code);
     if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
@@ -46,12 +39,62 @@ _UTextVector::_UTextVector(const _UnicodeStringList &iterable) {
 
 _UTextVector::~_UTextVector() { clear(); }
 
+void _UTextVector::append(UnicodeString &src) {
+  ErrorCode error_code;
+  auto ut = utext_openUnicodeString(nullptr, &src, error_code);
+  if (error_code.isFailure()) {
+    throw ICUError(error_code);
+  }
+  append(ut, src);
+}
+
+void _UTextVector::append(UText *ut, UnicodeString &src) {
+  values_.push_back(ut);
+  sources_.push_back(src);
+}
+
 void _UTextVector::clear() {
   for (size_t i = 0; i < values_.size(); ++i) {
     utext_close(values_[i]);
   }
   values_.clear();
   sources_.clear();
+}
+
+void _UTextVector::extend(const std::list<std::reference_wrapper<UnicodeString>> &iterable) {
+  for (auto &src : iterable) {
+    append(src);
+  }
+}
+
+void _UTextVector::insert(int32_t index, UnicodeString &src) {
+  const auto size = static_cast<int32_t>(values_.size());
+  if (index < 0) {
+    index += size;
+  }
+  if (index < 0 || index >= size) {
+    throw py::index_error("list index out of range: " + std::to_string(index));
+  }
+  ErrorCode error_code;
+  auto ut = utext_openUnicodeString(nullptr, &src, error_code);
+  if (error_code.isFailure()) {
+    throw ICUError(error_code);
+  }
+  values_.insert(values_.cbegin() + index, ut);
+  sources_.insert(sources_.cbegin() + index, src);
+}
+
+void _UTextVector::remove(int32_t index) {
+  const auto size = static_cast<int32_t>(values_.size());
+  if (index < 0) {
+    index += size;
+  }
+  if (index < 0 || index >= size) {
+    throw py::index_error("list index out of range: " + std::to_string(index));
+  }
+  utext_close(values_[index]);
+  values_.erase(values_.cbegin() + index);
+  sources_.erase(sources_.cbegin() + index);
 }
 
 void init_utext(py::module &m) {
@@ -93,9 +136,24 @@ void init_utext(py::module &m) {
   //
   py::class_<_UTextVector> utv(m, "UTextVector");
 
-  utv.def(py::init<size_t>(), py::arg("n")).def(py::init<std::list<UnicodeString>>(), py::arg("iterable"));
+  utv.def(py::init<>())
+      .def(py::init<std::list<std::reference_wrapper<UnicodeString>>>(), py::keep_alive<1, 2>(), py::arg("iterable"));
 
   utv.def("__del__", &_UTextVector::clear);
+
+  utv.def("__delitem__", &_UTextVector::remove, py::arg("index"))
+      .def(
+          "__delitem__",
+          [](_UTextVector &self, const py::slice &index) {
+            size_t start = 0, stop = 0, step = 0, slice_length = 0;
+            if (!index.compute(self.size(), &start, &stop, &step, &slice_length)) {
+              throw py::error_already_set();
+            }
+            for (size_t n = 0; n < slice_length; ++n) {
+              self.remove(static_cast<int32_t>(start + (slice_length - n - 1) * step));
+            }
+          },
+          py::arg("index"));
 
   utv.def(
       "__getitem__",
@@ -112,10 +170,26 @@ void init_utext(py::module &m) {
       py::arg("index"));
 
   utv.def(
+      "__iadd__",
+      [](_UTextVector &self, const std::list<std::reference_wrapper<icu::UnicodeString>> &iterable) -> _UTextVector & {
+        self.extend(iterable);
+        return self;
+      },
+      py::keep_alive<1, 2>(), py::arg("iterable"));
+
+  utv.def(
       "__iter__", [](const _UTextVector &self) { return py::make_iterator(self.begin(), self.end()); },
       py::keep_alive<0, 1>());
 
   utv.def("__len__", &_UTextVector::size);
+
+  utv.def("append", py::overload_cast<UnicodeString &>(&_UTextVector::append), py::keep_alive<1, 2>(), py::arg("src"));
+
+  utv.def("clear", &_UTextVector::clear);
+
+  utv.def("extend", &_UTextVector::extend, py::keep_alive<1, 2>(), py::arg("iterable"));
+
+  utv.def("insert", &_UTextVector::insert, py::keep_alive<1, 3>(), py::arg("index"), py::arg("src"));
 
   //
   // Functions

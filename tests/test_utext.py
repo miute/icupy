@@ -3,9 +3,9 @@ import pytest
 # fmt: off
 from icupy.icu import (
     U_SENTINEL, ICUError, StringCharacterIterator, UErrorCode, UnicodeString,
-    UTextVector, utext_char32_at, utext_clone, utext_close, utext_copy,
-    utext_current32, utext_equals, utext_extract, utext_freeze,
-    utext_get_native_index, utext_get_previous_native_index,
+    UnicodeStringVector, UTextVector, utext_char32_at, utext_clone,
+    utext_close, utext_copy, utext_current32, utext_equals, utext_extract,
+    utext_freeze, utext_get_native_index, utext_get_previous_native_index,
     utext_has_meta_data, utext_is_length_expensive, utext_is_writable,
     utext_move_index32, utext_native_length, utext_next32, utext_next32_from,
     utext_open_character_iterator, utext_open_const_unicode_string,
@@ -420,50 +420,211 @@ def test_replace():
         assert utext_extract(ut2, 0, utext_native_length(ut2)) == "AabcC"
 
 
-def test_utext_vector():
-    t = UTextVector(3)
-    assert len(t) == 3
+def test_utext_vector1():
+    # [1]
+    # UTextVector()
+    t = UTextVector()
+    assert len(t) == 0
 
-    dest1 = utext_extract(t[0], 0, utext_native_length(t[0]))
-    dest2 = utext_extract(t[1], 0, utext_native_length(t[1]))
-    dest3 = utext_extract(t[2], 0, utext_native_length(t[2]))
-    assert len(dest1) == 0
-    assert len(dest2) == 0
-    assert len(dest3) == 0
+    # UTextVector.append(src: UnicodeString)
+    src = [UnicodeString("a"), UnicodeString("b")]
+    t.append(src[0])
+    t.append(src[1])
+    assert len(t) == 2
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "a",
+        "b",
+    ]
 
-    assert utext_is_writable(t[0])
-    assert utext_is_writable(t[1])
-    assert utext_is_writable(t[2])
+    # Keep a reference (appended UText → UnicodeString)
+    assert utext_replace(t[0], 0, utext_native_length(t[0]), "foo", -1) == 2
+    assert src == ["foo", "b"]
 
-    utext_replace(t[0], 0, utext_native_length(t[0]), "foo", -1)
-    utext_replace(t[1], 0, utext_native_length(t[1]), "bar", -1)
-    utext_replace(t[2], 0, utext_native_length(t[2]), "baz", -1)
+    # Keep a reference (appended UnicodeString → UText)
+    src[1].set_to("bar")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+    ]
 
-    assert utext_extract(t[0], 0, utext_native_length(t[0])) == "foo"
-    assert utext_extract(t[1], 0, utext_native_length(t[1])) == "bar"
-    assert utext_extract(t[2], 0, utext_native_length(t[2])) == "baz"
+    # UTextVector.extend(iterable: list[UnicodeString])
+    src += [UnicodeString("c"), UnicodeString("d")]
+    t.extend(src[2:])
+    assert len(t) == 4
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "c",
+        "d",
+    ]
 
-    # ut0, ut1, ut2 = t[0], t[1], t[2]
-    # del t
-    # assert ut0.magic == 0
-    # assert ut1.magic == 0
-    # assert ut2.magic == 0
+    # Keep a reference (extended UText → UnicodeString)
+    assert utext_replace(t[2], 0, utext_native_length(t[2]), "baz", -1) == 2
+    assert src == ["foo", "bar", "baz", "d"]
 
-    s = [UnicodeString("foo"), UnicodeString("bar"), UnicodeString("baz")]
-    t = UTextVector(s)
-    assert len(t) == 3
+    # Keep a reference (extended UnicodeString → UText)
+    src[3].set_to("qux")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "baz",
+        "qux",
+    ]
 
-    assert utext_extract(t[0], 0, utext_native_length(t[0])) == s[0]
-    assert utext_extract(t[1], 0, utext_native_length(t[1])) == s[1]
-    assert utext_extract(t[2], 0, utext_native_length(t[2])) == s[2]
+    # UTextVector.insert(index: int, src: UnicodeString)
+    src.insert(0, UnicodeString("a"))
+    src.insert(-1, UnicodeString("b"))
+    t.insert(0, src[0])
+    t.insert(-1, src[-2])
+    assert len(t) == 6
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "a",
+        "foo",
+        "bar",
+        "baz",
+        "b",
+        "qux",
+    ]
 
-    assert utext_is_writable(t[0])
-    assert utext_is_writable(t[1])
-    assert utext_is_writable(t[2])
-
-    # UTextVector.__getitem__(index) -> _UTextPtr
     with pytest.raises(IndexError):
-        _ = t[3]
+        t.insert(6, src[0])
 
-    # UTextVector.__iter__() -> Iterable[_UTextPtr]
-    _ = iter(t)
+    with pytest.raises(IndexError):
+        t.insert(-7, src[0])
+
+    # Keep a reference (inserted UText → UnicodeString)
+    assert utext_replace(t[0], 0, utext_native_length(t[0]), "0", -1) == 0
+    assert src == ["0", "foo", "bar", "baz", "b", "qux"]
+
+    # Keep a reference (inserted UnicodeString → UText)
+    src[4].set_to("4")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "0",
+        "foo",
+        "bar",
+        "baz",
+        "4",
+        "qux",
+    ]
+
+    # UTextVector.__getitem__(index: int) -> _UTextPtr
+    with pytest.raises(IndexError):
+        _ = t[6]
+
+    with pytest.raises(IndexError):
+        _ = t[-7]
+
+    # UTextVector.__delitem__(index: int)
+    del t[0]
+    del src[0]
+    del t[-2]
+    del src[-2]
+    assert len(t) == 4
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "baz",
+        "qux",
+    ]
+
+    with pytest.raises(IndexError):
+        del t[4]
+
+    with pytest.raises(IndexError):
+        del t[-5]
+
+    # UTextVector.__delitem__(index: slice)
+    del t[1:4:2]
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "baz",
+    ]
+
+    with pytest.raises(ValueError):
+        del t[::0]
+
+    # UTextVector.clear()
+    t.clear()
+    assert len(t) == 0
+
+    # UTextVector.__iadd__(iterable: list[UnicodeString])
+    t += src
+    assert len(t) == 4
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "baz",
+        "qux",
+    ]
+
+    # Keep a reference (UText → UnicodeString)
+    assert utext_replace(t[0], 0, utext_native_length(t[0]), "a", -1) == -2
+    assert src == ["a", "bar", "baz", "qux"]
+
+    # Keep a reference (UnicodeString → UText)
+    src[1].set_to("b")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "a",
+        "b",
+        "baz",
+        "qux",
+    ]
+
+
+def test_utext_vector2():
+    # [2]
+    # UTextVector(iterable: list[UnicodeString])
+    src = [UnicodeString("a"), UnicodeString("b"), UnicodeString("c")]
+    t = UTextVector(src)
+    assert len(t) == 3
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "a",
+        "b",
+        "c",
+    ]
+
+    # Keep a reference (initialized UText → UnicodeString)
+    assert utext_replace(t[0], 0, utext_native_length(t[0]), "foo", -1) == 2
+    assert src == ["foo", "b", "c"]
+
+    # Keep a reference (initialized UnicodeString → UText)
+    src[1].set_to("bar")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "c",
+    ]
+
+
+def test_utext_vector2_2():
+    # [2]´
+    # UTextVector(iterable: list[UnicodeString])
+    src = UnicodeStringVector(3)
+    src[0].set_to("a")
+    src[1].set_to("b")
+    src[2].set_to("c")
+    t = UTextVector(src)
+    assert len(t) == 3
+    assert all(utext_is_writable(x) for x in t)
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "a",
+        "b",
+        "c",
+    ]
+
+    # Keep a reference (initialized UText → UnicodeString)
+    assert utext_replace(t[0], 0, utext_native_length(t[0]), "foo", -1) == 2
+    assert [str(x) for x in src] == ["foo", "b", "c"]
+
+    # Keep a reference (initialized UnicodeString → UText)
+    src[1].set_to("bar")
+    assert [utext_extract(x, 0, utext_native_length(x)) for x in t] == [
+        "foo",
+        "bar",
+        "c",
+    ]

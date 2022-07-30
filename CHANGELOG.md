@@ -13,9 +13,20 @@
 - [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
 - [IMPROVED] Add \_ConstChar16Ptr.\_\_len__()
 - [IMPROVED] Add UnicodeString.\_\_setitem__(index: int, value: str|int)
+- [IMPROVED] Improve UTextVector
+  - Add UTextVector()
+  - Add UTextVector.\_\_delitem__(index: int|slice)
+  - Add UTextVector.\_\_getitem__(index: slice) -> UTextVector
+  - Add UTextVector.\_\_iadd__(src: list[UnicodeString]) -> UTextVector
+  - Add UTextVector.append(src: UnicodeString)
+  - Add UTextVector.clear()
+  - Add UTextVector.extend(src: list[UnicodeString])
+  - Add UTextVector.insert(index: int, src: UnicodeString)
 - [FIXED] Raise IndexError when \_ConstChar16Ptr.\_\_getitem__() accessing beyond capacity
-- [FIXED] Change return type of UnicodeSet.\_\_getitem__(slice: slice) -> list[int] → UnicodeSet
-- [FIXED] Change return type of UnicodeString.\_\_getitem__(slice: slice) -> str → UnicodeString
+- [FIXED] Change return type of UnicodeSet.\_\_getitem__(index: slice) -> list[int] → UnicodeSet
+- [FIXED] Change return type of UnicodeString.\_\_getitem__(index: slice) -> str → UnicodeString
+- [FIXED] Change UTextVector to keep references
+- [REMOVED] Remove UTextVector(n: int)
 
 ## v0.13.0 / 2022-07-12
 
