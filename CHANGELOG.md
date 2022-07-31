@@ -16,7 +16,6 @@
 - [IMPROVED] Improve UTextVector
   - Add UTextVector()
   - Add UTextVector.\_\_delitem__(index: int|slice)
-  - Add UTextVector.\_\_getitem__(index: slice) -> UTextVector
   - Add UTextVector.\_\_iadd__(src: list[UnicodeString]) -> UTextVector
   - Add UTextVector.append(src: UnicodeString)
   - Add UTextVector.clear()
@@ -26,6 +25,7 @@
 - [FIXED] Change return type of UnicodeSet.\_\_getitem__(index: slice) -> list[int] → UnicodeSet
 - [FIXED] Change return type of UnicodeString.\_\_getitem__(index: slice) -> str → UnicodeString
 - [FIXED] Change return type of UnicodeString comparison operators from int to bool
+- [FIXED] Fix UnicodeString.\_\_iadd__(other: UnicodeString|str|int) to return itself
 - [FIXED] Change UTextVector to keep references
 - [REMOVED] Remove UTextVector(n: int)
 

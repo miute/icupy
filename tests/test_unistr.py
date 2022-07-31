@@ -1380,6 +1380,7 @@ def test_operator():
     test3 = UnicodeString("foo bar")
 
     # UBool icu::UnicodeString::operator!=(const UnicodeString &text)
+    # UnicodeString.__ne__(other: UnicodeString|str) -> bool
     assert not (test1 != test2)
     assert test1 != test3
 
@@ -1387,6 +1388,7 @@ def test_operator():
     assert test1 != "foo bar"
 
     # UBool icu::UnicodeString::operator<(const UnicodeString &text)
+    # UnicodeString.__lt__(other: UnicodeString|str) -> bool
     assert not (test1 < test2)
     assert not (test1 < test3)
 
@@ -1394,6 +1396,7 @@ def test_operator():
     assert not (test1 < "foo bar")
 
     # UBool icu::UnicodeString::operator<=(const UnicodeString &text)
+    # UnicodeString.__le__(other: UnicodeString|str) -> bool
     assert test1 <= test2
     assert not (test1 <= test3)
 
@@ -1401,6 +1404,7 @@ def test_operator():
     assert not (test1 <= "foo bar")
 
     # UBool icu::UnicodeString::operator==(const UnicodeString &text)
+    # UnicodeString.__eq__(other: UnicodeString|str) -> bool
     assert test1 == test2
     assert not (test1 == test3)
 
@@ -1408,6 +1412,7 @@ def test_operator():
     assert not (test1 == "foo bar")
 
     # UBool icu::UnicodeString::operator>(const UnicodeString &text)
+    # UnicodeString.__gt__(other: UnicodeString|str) -> bool
     assert not (test1 > test2)
     assert test1 > test3
 
@@ -1415,6 +1420,7 @@ def test_operator():
     assert test1 > "foo bar"
 
     # UBool icu::UnicodeString::operator>=(const UnicodeString &text)
+    # UnicodeString.__ge__(other: UnicodeString|str) -> bool
     assert test1 >= test2
     assert test1 >= test3
 
@@ -1422,6 +1428,7 @@ def test_operator():
     assert test1 >= "foo bar"
 
     # char16_t icu::UnicodeString::operator[](int32_t offset)
+    # UnicodeString.__getitem__(index: int) -> str
     assert test1[0] == "f"
     assert test1[1] == "o"
     assert test1[2] == "o"
@@ -1442,6 +1449,7 @@ def test_operator():
         _ = test1[test1.length()]  # != U+ffff
     _ = test1[test1.length() - 1]
 
+    # UnicodeString.__getitem__(index: slice) -> UnicodeString
     assert isinstance(test1[:], UnicodeString)
     assert test1[4:7] == "bar"
     assert test1[0:9:4] == "fbb"
@@ -1451,31 +1459,42 @@ def test_operator():
     # UnicodeString &icu::UnicodeString::operator+=(
     #       const UnicodeString &srcText
     # )
+    # UnicodeString.__iadd__(other: UnicodeString)
+    object_id = id(test3)
     test3 += UnicodeString(" baz")
     assert isinstance(test3, UnicodeString)
     assert test3 == test1
+    assert id(test3) == object_id
 
+    # UnicodeString.__add__(other: UnicodeString)
     test4 = UnicodeString("foo bar") + UnicodeString(" baz")
     assert isinstance(test4, UnicodeString)
     assert test4 == test1
 
+    # UnicodeString.__iadd__(other: str)
     test5 = UnicodeString("foo bar")
+    object_id = id(test5)
     test5 += " baz"
     assert isinstance(test5, UnicodeString)
     assert test5 == test1
+    assert id(test5) == object_id
 
+    # UnicodeString.__add__(other: str)
     test6 = UnicodeString("foo bar") + " baz"
     assert isinstance(test6, UnicodeString)
     assert test6 == test1
 
     # UnicodeString &icu::UnicodeString::operator+=(UChar32 ch)
     # UnicodeString &icu::UnicodeString::operator+=(char16_t ch)
+    # UnicodeString.__iadd__(other: int)
     test7 = UnicodeString("a")
+    object_id = id(test7)
     test7 += 0x20402
     test7 += 0x62
     assert isinstance(test7, UnicodeString)
     expected = UnicodeString("a\\uD841\\uDC02b", -1, US_INV).unescape()
     assert test7 == expected
+    assert id(test7) == object_id
 
 
 def test_operator_setitem():
