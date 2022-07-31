@@ -35,7 +35,9 @@ void init_schriter(py::module &m) {
   //
   // icu::CharacterIterator
   //
-  ci.def("__len__", &CharacterIterator::getLength).def("__str__", [](CharacterIterator &self) {
+  ci.def("__len__", &CharacterIterator::getLength);
+
+  ci.def("__str__", [](CharacterIterator &self) {
     UnicodeString dest;
     self.getText(dest);
     std::string result;

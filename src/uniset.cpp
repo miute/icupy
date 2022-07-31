@@ -121,9 +121,9 @@ void init_uniset(py::module &m) {
         py::arg("index"))
       .def(
           "__getitem__",
-          [](const UnicodeSet &self, const py::slice &slice) {
+          [](const UnicodeSet &self, const py::slice &index) {
             size_t start, stop, step, slice_length;
-            if (!slice.compute(self.size(), &start, &stop, &step, &slice_length)) {
+            if (!index.compute(self.size(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();
             }
             UnicodeSet result;
@@ -133,7 +133,7 @@ void init_uniset(py::module &m) {
             }
             return result;
           },
-          py::arg("slice"));
+          py::arg("index"));
 
   us.def("__hash__", &UnicodeSet::hashCode);
 

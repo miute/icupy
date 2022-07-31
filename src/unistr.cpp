@@ -119,9 +119,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         py::arg("index"))
       .def(
           "__getitem__",
-          [](const UnicodeString &self, const py::slice &slice) {
+          [](const UnicodeString &self, const py::slice &index) {
             size_t start, stop, step, slice_length;
-            if (!slice.compute(self.length(), &start, &stop, &step, &slice_length)) {
+            if (!index.compute(self.length(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();
             }
             UnicodeString result;
@@ -131,7 +131,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
             }
             return result;
           },
-          py::arg("slice"));
+          py::arg("index"));
 
   us.def(
       "__gt__",
@@ -154,7 +154,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       [](const UnicodeString &self, const _UnicodeStringVariant &other) { return self <= VARIANT_TO_UNISTR(other); },
       py::is_operator(), py::arg("other"));
 
-  us.def("__len__", [](const UnicodeString &self) { return self.length(); });
+  us.def("__len__", &UnicodeString::length);
 
   us.def(
       "__lt__",
