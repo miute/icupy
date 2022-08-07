@@ -110,6 +110,7 @@ pybind11_add_module(
     ulocdata.cpp
     uniset.cpp
     unistr.cpp
+    unistrvec.cpp
     unorm2.cpp
     unounclass.cpp
     unum.cpp

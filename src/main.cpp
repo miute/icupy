@@ -108,6 +108,7 @@ void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
 void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
+void init_unistrvec(py::module &m, py::class_<_UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
 void init_unounclass(py::module &m);
 void init_unum(py::module &m);
@@ -188,8 +189,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::class_<PluralRules, UObject> pr(m, "PluralRules");
 
   // _UnicodeStringVector
-  py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
-      .def(py::init<size_t>(), py::arg("n"));
+  // py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
+  //     .def(py::init<size_t>(), py::arg("n"));
+  py::class_<_UnicodeStringVector> usv(m, "UnicodeStringVector");
 
   init_appendable(m);     // icu::Appendable
   init_char16ptr(m);      // icu::Char16Ptr, icu::ConstChar16Ptr
@@ -287,6 +289,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_alphaindex(m); // icu::AlphabeticIndex
 
   init_unistr(m, rep, us); // icu::UnicodeString
+  init_unistrvec(m, usv);  // _UnicodeStringVector
 
   init_icudataver(m);
   init_stringoptions(m);

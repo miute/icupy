@@ -2405,22 +2405,385 @@ def test_unicode_string_appendable():
 
 
 def test_unicode_string_vector():
-    t = UnicodeStringVector(3)
-    assert len(t) == 3
-    assert isinstance(t[0], UnicodeString)
-    assert isinstance(t[1], UnicodeString)
-    assert isinstance(t[2], UnicodeString)
+    # [1]
+    # UnicodeStringVector.__init__()
+    t1 = UnicodeStringVector()
+    assert len(t1) == 0
 
-    t[0].append("foo", -1)
-    t[1].append("bar", -1)
-    t[2].append("baz", -1)
-    assert t[0] == "foo"
-    assert t[1] == "bar"
-    assert t[2] == "baz"
+    # [2]
+    # UnicodeStringVector.__init__(n: int)
+    t2 = UnicodeStringVector(3)
+    assert len(t2) == 3
+    assert all(isinstance(x, UnicodeString) for x in t2)
+    assert len(t2[0]) == 0
+    assert len(t2[1]) == 0
+    assert len(t2[2]) == 0
 
-    s = [UnicodeString("foo"), UnicodeString("bar"), UnicodeString("baz")]
-    t = UnicodeStringVector(s)
-    assert len(t) == 3
-    assert t[0] == s[0]
-    assert t[1] == s[1]
-    assert t[2] == s[2]
+    # [3]
+    # UnicodeStringVector.__init__(other: UnicodeStringVector)
+    t2[0].set_to("foo")
+    t2[1].set_to("bar")
+    t2[2].set_to("baz")
+    t3 = UnicodeStringVector(t2)
+    assert len(t3) == 3
+    assert all(isinstance(x, UnicodeString) for x in t3)
+    assert t3[0] == "foo"
+    assert t3[1] == "bar"
+    assert t3[2] == "baz"
+
+    # [4]
+    # UnicodeStringVector.__init__(iterable: list[UnicodeString])
+    t4 = UnicodeStringVector(
+        [UnicodeString("foo"), UnicodeString("bar"), UnicodeString("baz")]
+    )
+    assert len(t4) == 3
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert t4[0] == "foo"
+    assert t4[1] == "bar"
+    assert t4[2] == "baz"
+
+    # [5]
+    # UnicodeStringVector.__init__(iterable: list[str])
+    t5 = UnicodeStringVector(["foo", "bar", "baz"])
+    assert len(t5) == 3
+    assert all(isinstance(x, UnicodeString) for x in t5)
+    assert t5[0] == "foo"
+    assert t5[1] == "bar"
+    assert t5[2] == "baz"
+
+
+def test_unicode_string_vector_api():
+    t1 = UnicodeStringVector(["foo"])
+
+    # UnicodeStringVector.append(item: UnicodeString|str)
+    t1.append(UnicodeString("bar"))
+    t1.append("baz")
+    assert len(t1) == 3
+    assert all(isinstance(x, UnicodeString) for x in t1)
+    assert list(map(str, t1)) == ["foo", "bar", "baz"]
+
+    # UnicodeStringVector.count(item: UnicodeString|str) -> int
+    t2 = UnicodeStringVector(t1)
+    t2.append("foo")
+    assert t2.count(UnicodeString("foo")) == 2
+    assert t2.count("foo") == 2
+    assert t2.count(UnicodeString("ba")) == 0
+    assert t2.count("ba") == 0
+
+    # [1]
+    # UnicodeStringVector.extend(iterable: list[UnicodeString])
+    t3 = UnicodeStringVector(t1)
+    t3.extend([UnicodeString("qux"), UnicodeString("quux")])
+    assert len(t3) == 5
+    assert all(isinstance(x, UnicodeString) for x in t3)
+    assert list(map(str, t3)) == ["foo", "bar", "baz", "qux", "quux"]
+
+    # [2]
+    # UnicodeStringVector.extend(iterable: list[str])
+    t3 = UnicodeStringVector(t1)
+    t3.extend(["qux", "quux"])
+    assert len(t3) == 5
+    assert all(isinstance(x, UnicodeString) for x in t3)
+    assert list(map(str, t3)) == ["foo", "bar", "baz", "qux", "quux"]
+
+    # UnicodeStringVector.insert(index: int, item: UnicodeString|str)
+    t4 = UnicodeStringVector(t1)
+    t4.insert(0, UnicodeString("0"))
+    assert len(t4) == 4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert list(map(str, t4)) == ["0", "foo", "bar", "baz"]
+
+    t4.insert(-1, "-1")
+    assert len(t4) == 5
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert list(map(str, t4)) == ["0", "foo", "bar", "-1", "baz"]
+
+    with pytest.raises(IndexError):
+        t4.insert(5, "5")  # list index out of range
+
+    with pytest.raises(IndexError):
+        t4.insert(-6, "-6")  # list index out of range
+
+    # UnicodeStringVector.pop(index: int = -1) -> UnicodeString
+    t5 = UnicodeStringVector(["foo", "bar", "baz", "qux", "quux"])
+    item = t5.pop()
+    assert isinstance(item, UnicodeString)
+    assert item == "quux"
+    assert len(t5) == 4
+    assert list(map(str, t5)) == ["foo", "bar", "baz", "qux"]
+
+    item = t5.pop(0)
+    assert isinstance(item, UnicodeString)
+    assert item == "foo"
+    assert len(t5) == 3
+    assert list(map(str, t5)) == ["bar", "baz", "qux"]
+
+    item = t5.pop(-1)
+    assert isinstance(item, UnicodeString)
+    assert item == "qux"
+    assert len(t5) == 2
+    assert list(map(str, t5)) == ["bar", "baz"]
+
+    with pytest.raises(IndexError):
+        _ = t5.pop(2)  # list index out of range
+
+    with pytest.raises(IndexError):
+        _ = t5.pop(-3)  # list index out of range
+
+    # UnicodeStringVector.remove(item: UnicodeString|str)
+    t6 = UnicodeStringVector(["foo", "bar", "baz", "foo"])
+    t6.remove(UnicodeString("foo"))
+    assert len(t6) == 3
+    assert all(isinstance(x, UnicodeString) for x in t6)
+    assert list(map(str, t6)) == ["bar", "baz", "foo"]
+
+    t6.remove("baz")
+    assert len(t6) == 2
+    assert all(isinstance(x, UnicodeString) for x in t6)
+    assert list(map(str, t6)) == ["bar", "foo"]
+
+    with pytest.raises(ValueError):
+        t6.remove("baz")  # item not in list
+
+    # UnicodeStringVector.reverse()
+    t7 = UnicodeStringVector(t1)
+    assert t7.reverse() is None
+    assert len(t7) == 3
+    assert all(isinstance(x, UnicodeString) for x in t7)
+    assert list(map(str, t7)) == ["baz", "bar", "foo"]
+
+    # UnicodeStringVector.clear()
+    assert len(t1) > 0
+    t1.clear()
+    assert len(t1) == 0
+
+
+def test_unicode_string_vector_operators():
+    t1 = UnicodeStringVector(["foo", "bar", "baz"])
+    t2 = UnicodeStringVector(t1)
+    t3 = UnicodeStringVector(["foo", "bar", "baz", "qux"])
+
+    # UnicodeStringVector.__bool__() -> bool
+    assert bool(UnicodeStringVector(1))
+    assert not bool(UnicodeStringVector())
+
+    # UnicodeStringVector.__contains__(item: UnicodeString|str) -> bool
+    assert UnicodeString("bar") in t1
+    assert UnicodeString("ba") not in t1
+    assert "bar" in t1
+    assert "ba" not in t1
+
+    # UnicodeStringVector.__eq__(other: UnicodeStringVector) -> bool
+    assert t1 == t2
+    assert not (t1 == t3)
+
+    # UnicodeStringVector.__ne__(other: UnicodeStringVector) -> bool
+    assert not (t1 != t2)
+    assert t1 != t3
+
+    # [1]
+    # UnicodeStringVector.__getitem__(index: int) -> UnicodeString
+    item = t3[0]
+    assert isinstance(item, UnicodeString)
+    assert item == "foo"
+    item.set_to("FOO")
+    assert t3[0] == "FOO"
+
+    with pytest.raises(IndexError):
+        _ = t3[4]  # list index out of range
+
+    assert t3[-1] == t3[3]
+    assert t3[-2] == t3[2]
+    assert t3[-3] == t3[1]
+    assert t3[-4] == t3[0]
+
+    with pytest.raises(IndexError):
+        _ = t3[-5]  # list index out of range
+
+    # [2]
+    # UnicodeStringVector.__getitem__(index: slice) -> UnicodeStringVector
+    assert isinstance(t3[:], UnicodeStringVector)
+    t4 = t3[1::2]
+    assert len(t4) == 2
+    assert t4[0] == "bar"
+    assert t4[1] == "qux"
+
+    assert len(t3[0:0]) == 0
+
+    with pytest.raises(ValueError):
+        _ = t3[::0]  # slice step cannot be zero
+
+    # [1]
+    # UnicodeStringVector.__iadd__(item: UnicodeString|str) -> UnicodeStringVector
+    object_id4 = id(t4)
+    t4 += UnicodeString("a")
+    assert isinstance(t4, UnicodeStringVector)
+    assert id(t4) == object_id4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert len(t4) == 3
+    assert list(map(str, t4)) == ["bar", "qux", "a"]
+
+    t4 += "ab"
+    assert isinstance(t4, UnicodeStringVector)
+    assert id(t4) == object_id4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert len(t4) == 4
+    assert list(map(str, t4)) == ["bar", "qux", "a", "ab"]
+
+    # [2]
+    # UnicodeStringVector.__iadd__(iterable: list[UnicodeString]) -> UnicodeStringVector
+    t4 += [UnicodeString("abc"), UnicodeString("d")]
+    assert isinstance(t4, UnicodeStringVector)
+    assert id(t4) == object_id4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert len(t4) == 6
+    assert list(map(str, t4)) == ["bar", "qux", "a", "ab", "abc", "d"]
+
+    t4 += UnicodeStringVector(["e", "fg"])
+    assert isinstance(t4, UnicodeStringVector)
+    assert id(t4) == object_id4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert len(t4) == 8
+    assert list(map(str, t4)) == [
+        "bar",
+        "qux",
+        "a",
+        "ab",
+        "abc",
+        "d",
+        "e",
+        "fg",
+    ]
+
+    # [3]
+    # UnicodeStringVector.__iadd__(iterable: list[str]) -> UnicodeStringVector
+    t4 += ["h", "ijk"]
+    assert isinstance(t4, UnicodeStringVector)
+    assert id(t4) == object_id4
+    assert all(isinstance(x, UnicodeString) for x in t4)
+    assert len(t4) == 10
+    assert list(map(str, t4)) == [
+        "bar",
+        "qux",
+        "a",
+        "ab",
+        "abc",
+        "d",
+        "e",
+        "fg",
+        "h",
+        "ijk",
+    ]
+
+    # UnicodeStringVector.__iter__() -> Iterator[UnicodeString]
+    assert [str(x) for x in iter(t1)] == ["foo", "bar", "baz"]
+
+    # UnicodeStringVector.__repr__() -> str
+    assert repr(t1) == "UnicodeStringVector(['foo', 'bar', 'baz'])"
+
+    # UnicodeStringVector.__reversed__() -> UnicodeStringVector
+    t5 = UnicodeStringVector(t1)
+    t5r = reversed(t5)
+    assert isinstance(t5r, UnicodeStringVector)
+    assert len(t5) == len(t5r) == 3
+    assert all(isinstance(x, UnicodeString) for x in t5r)
+    assert list(map(str, t5)) == ["foo", "bar", "baz"]
+    assert list(map(str, t5r)) == ["baz", "bar", "foo"]
+
+    # [1]
+    # UnicodeStringVector.__setitem__(index: int, item: UnicodeString|str)
+    t6 = UnicodeStringVector(t3)
+    t6[3] = UnicodeString("QUX")
+    assert all(isinstance(x, UnicodeString) for x in t6)
+    assert list(map(str, t6)) == ["FOO", "bar", "baz", "QUX"]
+
+    t6[-1] = "qux"
+    assert list(map(str, t6)) == ["FOO", "bar", "baz", "qux"]
+
+    with pytest.raises(IndexError):
+        t6[4] = "quux"  # list index out of range
+
+    with pytest.raises(IndexError):
+        t6[-5] = "quux"  # list index out of range
+
+    # [2]
+    # UnicodeStringVector.__setitem__(index: slice, iterable: list[UnicodeString])
+    t6[::2] = [UnicodeString("Foo"), UnicodeString("Baz")]
+    assert list(map(str, t6)) == ["Foo", "bar", "Baz", "qux"]
+
+    with pytest.raises(ValueError):
+        t6[::0] = [UnicodeString("foo")]  # slice step cannot be zero
+
+    with pytest.raises(ValueError):
+        t6[:] = [
+            UnicodeString("foo")
+        ]  # attempt to assign sequence of size 1 to extended slice of size 4
+
+    # [3]
+    # UnicodeStringVector.__setitem__(index: slice, iterable: list[str])
+    t6[1::2] = ["BAR", "QUX"]
+    assert list(map(str, t6)) == ["Foo", "BAR", "Baz", "QUX"]
+
+    with pytest.raises(ValueError):
+        t6[::0] = ["foo"]  # slice step cannot be zero
+
+    with pytest.raises(ValueError):
+        t6[:] = [
+            "foo"
+        ]  # attempt to assign sequence of size 1 to extended slice of size 4
+
+    # [1]
+    # UnicodeStringVector.__delitem__(index: int)
+    t7 = UnicodeStringVector(list("0123456789"))
+    del t7[0]
+    assert list(map(str, t7)) == [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+    ]
+
+    del t7[-1]
+    assert list(map(str, t7)) == [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+    ]
+
+    with pytest.raises(IndexError):
+        del t7[8]  # list index out of range
+
+    with pytest.raises(IndexError):
+        del t7[-9]  # list index out of range
+
+    # [1]
+    # UnicodeStringVector.__delitem__(index: slice)
+    del t7[1:3]
+    assert list(map(str, t7)) == [
+        "1",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+    ]
+
+    del t7[1::2]
+    assert list(map(str, t7)) == [
+        "1",
+        "5",
+        "7",
+    ]
+
+    with pytest.raises(ValueError):
+        del t7[::0]  # slice step cannot be zero

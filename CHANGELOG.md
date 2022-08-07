@@ -13,8 +13,22 @@
 - [CHANGED] Change return type of ulocdata_get_cldr_version() -> list → tuple
 - [IMPROVED] Add \_ConstChar16Ptr.\_\_len__()
 - [IMPROVED] Add UnicodeString.\_\_setitem__(index: int, value: str|int)
+- [IMPROVED] Reimplement UnicodeStringVector
+  - Change args type of UnicodeStringVector.\_\_contains__(x: UnicodeString) → \_\_contains__(item: UnicodeString|str)
+  - Change args type of UnicodeStringVector.\_\_setitem__(arg0: int, arg1: UnicodeString) → \_\_setitem__(index: int, item: UnicodeString|str)
+  - Change args type of UnicodeStringVector.append(x: UnicodeString) → append(item: UnicodeString|str)
+  - Change args type of UnicodeStringVector.insert(i: int, x: UnicodeString) → insert(index: int, item: UnicodeString|str)
+  - Change args type of UnicodeStringVector.remove(x: UnicodeString) → remove(item: UnicodeString|str)
+  - Add UnicodeStringVector.\_\_iadd__(item: UnicodeString|str) -> UnicodeStringVector
+  - Add UnicodeStringVector.\_\_iadd__(item: list[UnicodeString]) -> UnicodeStringVector
+  - Add UnicodeStringVector.\_\_iadd__(item: list[str]) -> UnicodeStringVector
+  - Add UnicodeStringVector.\_\_init__(iterable: list[str])
+  - Add UnicodeStringVector.\_\_reversed__() -> UnicodeStringVector
+  - Add UnicodeStringVector.\_\_setitem__(index: int, iterable: list[str])
+  - Add UnicodeStringVector.extend(iterable: list[str])
+  - Add UnicodeStringVector.reverse()
 - [IMPROVED] Improve UTextVector
-  - Add UTextVector()
+  - Add UTextVector.\_\_init__()
   - Add UTextVector.\_\_delitem__(index: int|slice)
   - Add UTextVector.\_\_iadd__(src: list[UnicodeString]) -> UTextVector
   - Add UTextVector.append(src: UnicodeString)
@@ -27,7 +41,7 @@
 - [FIXED] Change return type of UnicodeString comparison operators from int to bool
 - [FIXED] Fix UnicodeString.\_\_iadd__(other: UnicodeString|str|int) to return itself
 - [FIXED] Change UTextVector to keep references
-- [REMOVED] Remove UTextVector(n: int)
+- [REMOVED] Remove UTextVector.\_\_init__(n: int)
 
 ## v0.13.0 / 2022-07-12
 
