@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include "ulocdataptr.hpp"
 #include "usetptr.hpp"
+#include <algorithm>
 #include <pybind11/stl.h>
 
 using namespace icu;

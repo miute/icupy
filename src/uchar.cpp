@@ -5,6 +5,7 @@
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #include "usetptr.hpp"
+#include <algorithm>
 #include <memory>
 #include <pybind11/stl.h>
 #include <unicode/uchar.h>

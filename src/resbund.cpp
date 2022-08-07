@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "uresptr.hpp"
+#include <algorithm>
 #include <pybind11/stl.h>
 #include <unicode/resbund.h>
 

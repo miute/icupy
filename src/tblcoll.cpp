@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <algorithm>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/chariter.h>
