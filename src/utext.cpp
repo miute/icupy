@@ -157,7 +157,7 @@ void init_utext(py::module &m) {
 
   utv.def(
       "__getitem__",
-      [](const _UTextVector &self, int32_t index) {
+      [](_UTextVector &self, int32_t index) -> _UTextPtr & {
         const auto size = static_cast<int32_t>(self.size());
         if (index < 0) {
           index += size;
@@ -167,7 +167,7 @@ void init_utext(py::module &m) {
         }
         return self[index];
       },
-      py::arg("index"));
+      py::return_value_policy::reference_internal, py::arg("index"));
 
   utv.def(
       "__iadd__",
