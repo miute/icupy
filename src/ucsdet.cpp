@@ -57,9 +57,10 @@ void init_ucsdet(py::module &m) {
         if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
-        std::vector<std::unique_ptr<_ConstUCharsetMatchPtr>> result(matches_found);
+        std::vector<std::unique_ptr<_ConstUCharsetMatchPtr>> result;
+        result.reserve(matches_found);
         for (int32_t n = 0; n < matches_found; ++n, ++p) {
-          result[n] = std::move(std::make_unique<_ConstUCharsetMatchPtr>(*p));
+          result.push_back(std::move(std::make_unique<_ConstUCharsetMatchPtr>(*p)));
         }
         return result;
       },

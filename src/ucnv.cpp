@@ -157,7 +157,7 @@ void init_ucnv(py::module &m) {
         if (error_code.isFailure()) {
           throw ICUError(error_code);
         }
-        std::vector<const char *> result(count);
+        std::vector<const char *> result(count, nullptr);
         error_code.reset();
         ucnv_getAliases(alias, result.data(), error_code);
         if (error_code.isFailure()) {

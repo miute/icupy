@@ -144,9 +144,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
-    std::vector<Formattable> result(count);
+    std::vector<Formattable> result;
+    result.reserve(count);
     for (int32_t i = 0; i < count; ++i) {
-      result[i] = array[i];
+      result.push_back(array[i]);
     }
     return result;
   });

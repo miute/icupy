@@ -213,7 +213,7 @@ void init_msgfmt(py::module &m) {
             if (count == -1) {
               count = static_cast<int32_t>(argument_names.size());
             }
-            std::vector<UnicodeString> _argument_names(std::begin(argument_names), std::end(argument_names));
+            std::vector<UnicodeString> _argument_names(argument_names.begin(), argument_names.end());
             ErrorCode error_code;
             auto &result = self.format(_argument_names.data(), arguments.data(), count, append_to, error_code);
             if (error_code.isFailure()) {
@@ -251,7 +251,7 @@ void init_msgfmt(py::module &m) {
       [](const MessageFormat &self) {
         int32_t count;
         auto p = self.getFormats(count);
-        std::vector<const Format *> result(count);
+        std::vector<const Format *> result(count, nullptr);
         for (int32_t i = 0; i < count; ++i) {
           result[i] = p[i];
         }
@@ -271,7 +271,7 @@ void init_msgfmt(py::module &m) {
           if (error_code.isFailure()) {
             throw ICUError(error_code);
           }
-          std::vector<Formattable *> result(count);
+          std::vector<Formattable *> result(count, nullptr);
           for (int32_t i = 0; i < count; ++i) {
             result[i] = p + i;
           }
@@ -284,7 +284,7 @@ void init_msgfmt(py::module &m) {
           [](const MessageFormat &self, const _UnicodeStringVariant &source, ParsePosition &pos) {
             int32_t count = 0;
             auto p = self.parse(VARIANT_TO_UNISTR(source), pos, count);
-            std::vector<Formattable *> result(count);
+            std::vector<Formattable *> result(count, nullptr);
             for (int32_t i = 0; i < count; ++i) {
               result[i] = p + i;
             }

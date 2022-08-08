@@ -357,7 +357,7 @@ void init_timezone(py::module &m) {
       [](const BasicTimeZone &self) {
         ErrorCode error_code;
         const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
+        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
         int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (error_code.isFailure()) {
@@ -499,7 +499,7 @@ void init_timezone(py::module &m) {
       [](const RuleBasedTimeZone &self) {
         ErrorCode error_code;
         const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
+        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
         int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (error_code.isFailure()) {
@@ -704,7 +704,7 @@ void init_timezone(py::module &m) {
       [](const SimpleTimeZone &self) {
         ErrorCode error_code;
         const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
+        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
         int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (error_code.isFailure()) {
@@ -1014,7 +1014,7 @@ void init_timezone(py::module &m) {
       [](const VTimeZone &self) {
         ErrorCode error_code;
         const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code));
+        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
         int32_t trscount = static_cast<int32_t>(trsrules.size());
         self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
         if (error_code.isFailure()) {

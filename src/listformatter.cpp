@@ -108,7 +108,7 @@ void init_listformatter(py::module &m) {
       "format",
       [](const ListFormatter &self, const std::list<UnicodeString> &items, int32_t count,
          UnicodeString &append_to) -> UnicodeString & {
-        std::vector<UnicodeString> _items(std::begin(items), std::end(items));
+        std::vector<UnicodeString> _items(items.begin(), items.end());
         if (count == -1) {
           count = static_cast<int32_t>(items.size());
         }
@@ -125,7 +125,7 @@ void init_listformatter(py::module &m) {
   lf.def(
       "format_strings_to_value",
       [](const ListFormatter &self, const std::list<UnicodeString> &items, int32_t count) {
-        std::vector<UnicodeString> _items(std::begin(items), std::end(items));
+        std::vector<UnicodeString> _items(items.begin(), items.end());
         if (count == -1) {
           count = static_cast<int32_t>(items.size());
         }
