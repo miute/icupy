@@ -574,6 +574,9 @@ def test_utext_vector1():
         "qux",
     ]
 
+    # UTextVector.__reversed__() -> Iterator
+    assert reversed(t) is None  # UTextVector does not support reverse iterator
+
 
 def test_utext_vector2():
     # [2]

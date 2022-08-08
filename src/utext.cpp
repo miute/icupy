@@ -181,6 +181,10 @@ void init_utext(py::module &m) {
       "__iter__", [](const _UTextVector &self) { return py::make_iterator(self.begin(), self.end()); },
       py::keep_alive<0, 1>());
 
+  utv.def(
+      "__reversed__", [](const _UTextVector & /*self*/) { return py::none(); },
+      "``UTextVector`` does not support reverse iterator and always returns ``None``.");
+
   utv.def("__len__", &_UTextVector::size);
 
   utv.def("append", py::overload_cast<UnicodeString &>(&_UTextVector::append), py::keep_alive<1, 2>(), py::arg("src"));

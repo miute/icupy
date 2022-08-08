@@ -28,6 +28,7 @@
   - Add UnicodeStringVector.extend(iterable: list[str])
   - Add UnicodeStringVector.reverse()
 - [IMPROVED] Improve UTextVector
+  - Disable reverse iterator of UTextVector
   - Add UTextVector.\_\_init__()
   - Add UTextVector.\_\_delitem__(index: int|slice)
   - Add UTextVector.\_\_iadd__(src: list[UnicodeString]) -> UTextVector
