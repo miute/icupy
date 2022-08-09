@@ -90,7 +90,7 @@ void init_datefmt(py::module &m) {
       []() {
         int32_t count;
         auto p = DateFormat::getAvailableLocales(count);
-        std::vector<const Locale *> result(count);
+        std::vector<const Locale *> result(count, nullptr);
         for (int32_t i = 0; i < count; ++i) {
           result[i] = p + i;
         }

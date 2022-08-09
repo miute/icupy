@@ -512,7 +512,7 @@ void init_regex(py::module &m) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }
             ErrorCode error_code;
-            std::vector<UText *> output(std::max(0, dest_capacity));
+            std::vector<UText *> output(std::max(0, dest_capacity), nullptr);
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
             auto result = self.split(input, output.data(), dest_capacity, error_code);
             if (error_code.isFailure()) {
@@ -755,7 +755,7 @@ void init_regex(py::module &m) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }
             ErrorCode error_code;
-            std::vector<UText *> output(std::max(0, dest_capacity));
+            std::vector<UText *> output(std::max(0, dest_capacity), nullptr);
             std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
             auto result = self.split(input, output.data(), dest_capacity, error_code);
             if (error_code.isFailure()) {

@@ -25,15 +25,16 @@ _UTextVector::_UTextVector() {}
 
 _UTextVector::_UTextVector(const std::list<std::reference_wrapper<UnicodeString>> &iterable) {
   const auto size = iterable.size();
-  values_ = std::vector<_UTextPtr>(size);
-  sources_ = std::vector<std::reference_wrapper<UnicodeString>>(iterable.begin(), iterable.end());
+  values_.reserve(size);
+  sources_.assign(iterable.begin(), iterable.end());
   ErrorCode error_code;
   for (size_t i = 0; i < size; ++i) {
     error_code.reset();
-    values_[i] = utext_openUnicodeString(nullptr, &sources_[i].get(), error_code);
+    auto ut = utext_openUnicodeString(nullptr, &sources_[i].get(), error_code);
     if (error_code.isFailure()) {
       throw ICUError(error_code);
     }
+    values_.push_back(ut);
   }
 }
 
