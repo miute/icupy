@@ -12,11 +12,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "append",
-      [](const Normalizer2 &self, UnicodeString &first, const _UnicodeStringVariant &second) -> UnicodeString & {
+      [](const Normalizer2 &self, UnicodeString &first, const icupy::UnicodeStringVariant &second) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.append(first, VARIANT_TO_UNISTR(second), error_code);
+        auto &result = self.append(first, icupy::to_unistr(second), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -36,7 +36,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getInstance(package_name, name, mode, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -49,7 +49,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getNFCInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -61,7 +61,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getNFDInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -73,7 +73,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getNFKCCasefoldInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -85,7 +85,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getNFKCInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -97,7 +97,7 @@ void init_normalizer2(py::module &m) {
         ErrorCode error_code;
         auto result = Normalizer2::getNFKDInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -114,11 +114,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "is_normalized",
-      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+      [](const Normalizer2 &self, const icupy::UnicodeStringVariant &s) {
         ErrorCode error_code;
-        auto result = self.isNormalized(VARIANT_TO_UNISTR(s), error_code);
+        auto result = self.isNormalized(icupy::to_unistr(s), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -126,22 +126,22 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
         "normalize",
-        [](const Normalizer2 &self, const _UnicodeStringVariant &src) {
+        [](const Normalizer2 &self, const icupy::UnicodeStringVariant &src) {
           ErrorCode error_code;
-          auto result = self.normalize(VARIANT_TO_UNISTR(src), error_code);
+          auto result = self.normalize(icupy::to_unistr(src), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
         py::arg("src"))
       .def(
           "normalize",
-          [](const Normalizer2 &self, const _UnicodeStringVariant &src, UnicodeString &dest) -> UnicodeString & {
+          [](const Normalizer2 &self, const icupy::UnicodeStringVariant &src, UnicodeString &dest) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.normalize(VARIANT_TO_UNISTR(src), dest, error_code);
+            auto &result = self.normalize(icupy::to_unistr(src), dest, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -149,11 +149,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "normalize_second_and_append",
-      [](const Normalizer2 &self, UnicodeString &first, const _UnicodeStringVariant &second) -> UnicodeString & {
+      [](const Normalizer2 &self, UnicodeString &first, const icupy::UnicodeStringVariant &second) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.normalizeSecondAndAppend(first, VARIANT_TO_UNISTR(second), error_code);
+        auto &result = self.normalizeSecondAndAppend(first, icupy::to_unistr(second), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -161,11 +161,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "quick_check",
-      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+      [](const Normalizer2 &self, const icupy::UnicodeStringVariant &s) {
         ErrorCode error_code;
-        auto result = self.quickCheck(VARIANT_TO_UNISTR(s), error_code);
+        auto result = self.quickCheck(icupy::to_unistr(s), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -173,11 +173,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "span_quick_check_yes",
-      [](const Normalizer2 &self, const _UnicodeStringVariant &s) {
+      [](const Normalizer2 &self, const icupy::UnicodeStringVariant &s) {
         ErrorCode error_code;
-        auto result = self.spanQuickCheckYes(VARIANT_TO_UNISTR(s), error_code);
+        auto result = self.spanQuickCheckYes(icupy::to_unistr(s), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

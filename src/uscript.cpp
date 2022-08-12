@@ -295,7 +295,7 @@ void init_uscript(py::module &m) {
         error_code.reset();
         uscript_getCode(name_or_abbr_or_locale, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -313,7 +313,7 @@ void init_uscript(py::module &m) {
         error_code.reset();
         uscript_getSampleString(script, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -328,7 +328,7 @@ void init_uscript(py::module &m) {
         ErrorCode error_code;
         auto result = uscript_getScript(codepoint, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -344,7 +344,7 @@ void init_uscript(py::module &m) {
         error_code.reset();
         uscript_getScriptExtensions(c, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

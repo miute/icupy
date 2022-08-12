@@ -59,23 +59,23 @@ void init_datefmt(py::module &m) {
 
   df.def_static(
         "create_instance_for_skeleton",
-        [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale) {
+        [](const icupy::UnicodeStringVariant &skeleton, const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
           auto result =
-              DateFormat::createInstanceForSkeleton(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale), error_code);
+              DateFormat::createInstanceForSkeleton(icupy::to_unistr(skeleton), icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
         py::arg("skeleton"), py::arg("locale"))
       .def_static(
           "create_instance_for_skeleton",
-          [](const _UnicodeStringVariant &skeleton) {
+          [](const icupy::UnicodeStringVariant &skeleton) {
             ErrorCode error_code;
-            auto result = DateFormat::createInstanceForSkeleton(VARIANT_TO_UNISTR(skeleton), error_code);
+            auto result = DateFormat::createInstanceForSkeleton(icupy::to_unistr(skeleton), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -105,7 +105,7 @@ void init_datefmt(py::module &m) {
         ErrorCode error_code;
         auto result = self.getBooleanAttribute(attr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -121,7 +121,7 @@ void init_datefmt(py::module &m) {
         ErrorCode error_code;
         auto result = self.getContext(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -150,18 +150,17 @@ void init_datefmt(py::module &m) {
 
   df.def(
         "parse_object",
-        [](const DateFormat &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {
-          self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos);
-        },
+        [](const DateFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
+           ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           // [2] Format::parseObject
           "parse_object",
-          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
+          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
+            self.parseObject(icupy::to_unistr(source), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));
@@ -173,7 +172,7 @@ void init_datefmt(py::module &m) {
         ErrorCode error_code;
         auto &result = self.setBooleanAttribute(attr, new_value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

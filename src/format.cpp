@@ -32,7 +32,7 @@ void init_format(py::module &m) {
            ErrorCode error_code;
            auto &result = self.format(obj, append_to, pos, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -44,7 +44,7 @@ void init_format(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -55,7 +55,7 @@ void init_format(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -67,7 +67,7 @@ void init_format(py::module &m) {
         ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -75,17 +75,16 @@ void init_format(py::module &m) {
 
   fmt.def(
          "parse_object",
-         [](const Format &self, const _UnicodeStringVariant &source, Formattable &result, ParsePosition &parse_pos) {
-           self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos);
-         },
+         [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result,
+            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
+          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
+            self.parseObject(icupy::to_unistr(source), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));

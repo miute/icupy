@@ -47,7 +47,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     self.addLikelySubtags(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -57,7 +57,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     self.canonicalize(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
@@ -72,7 +72,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     auto result = self.createKeywords(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -82,7 +82,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     auto result = self.createUnicodeKeywords(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -93,7 +93,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         auto result = Locale::forLanguageTag(tag, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code, tag);
+          throw icupy::ICUError(error_code, tag);
         }
         return result;
       },
@@ -129,26 +129,24 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def(
          "get_display_country",
-         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_country) -> UnicodeString & {
-           return self.getDisplayCountry(VARIANT_TO_LOCALE(display_locale), disp_country);
-         },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_country)
+             -> UnicodeString & { return self.getDisplayCountry(icupy::to_locale(display_locale), disp_country); },
          py::arg("display_locale"), py::arg("disp_country"))
       .def("get_display_country", py::overload_cast<UnicodeString &>(&Locale::getDisplayCountry, py::const_),
            py::arg("disp_country"));
 
   loc.def(
          "get_display_language",
-         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_lang) -> UnicodeString & {
-           return self.getDisplayLanguage(VARIANT_TO_LOCALE(display_locale), disp_lang);
-         },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_lang)
+             -> UnicodeString & { return self.getDisplayLanguage(icupy::to_locale(display_locale), disp_lang); },
          py::arg("display_locale"), py::arg("disp_lang"))
       .def("get_display_language", py::overload_cast<UnicodeString &>(&Locale::getDisplayLanguage, py::const_),
            py::arg("disp_lang"));
 
   loc.def(
          "get_display_name",
-         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &name) -> UnicodeString & {
-           return self.getDisplayName(VARIANT_TO_LOCALE(display_locale), name);
+         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &name) -> UnicodeString & {
+           return self.getDisplayName(icupy::to_locale(display_locale), name);
          },
          py::arg("display_locale"), py::arg("name"))
       .def("get_display_name", py::overload_cast<UnicodeString &>(&Locale::getDisplayName, py::const_),
@@ -156,18 +154,16 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def(
          "get_display_script",
-         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_script) -> UnicodeString & {
-           return self.getDisplayScript(VARIANT_TO_LOCALE(display_locale), disp_script);
-         },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_script)
+             -> UnicodeString & { return self.getDisplayScript(icupy::to_locale(display_locale), disp_script); },
          py::arg("display_locale"), py::arg("disp_script"))
       .def("get_display_script", py::overload_cast<UnicodeString &>(&Locale::getDisplayScript, py::const_),
            py::arg("disp_script"));
 
   loc.def(
          "get_display_variant",
-         [](const Locale &self, const _LocaleVariant &display_locale, UnicodeString &disp_var) -> UnicodeString & {
-           return self.getDisplayVariant(VARIANT_TO_LOCALE(display_locale), disp_var);
-         },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_var)
+             -> UnicodeString & { return self.getDisplayVariant(icupy::to_locale(display_locale), disp_var); },
          py::arg("display_locale"), py::arg("disp_var"))
       .def("get_display_variant", py::overload_cast<UnicodeString &>(&Locale::getDisplayVariant, py::const_),
            py::arg("disp_var"));
@@ -226,7 +222,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     std::set<std::string> result;
     self.getKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -237,7 +233,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "get_keyword_value",
       [](const Locale &self, const char *keyword_name) {
         if (self.isBogus()) {
-          throw ICUError(U_ILLEGAL_ARGUMENT_ERROR);
+          throw icupy::ICUError(U_ILLEGAL_ARGUMENT_ERROR);
         }
         ErrorCode error_code;
         const auto length = self.getKeywordValue(keyword_name, nullptr, 0, error_code);
@@ -245,7 +241,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         error_code.reset();
         self.getKeywordValue(keyword_name, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -257,7 +253,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         std::string result = self.getKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -296,7 +292,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     std::set<std::string> result;
     self.getUnicodeKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -307,7 +303,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         auto result = self.getUnicodeKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code, keyword_name);
+          throw icupy::ICUError(error_code, keyword_name);
         }
         return result;
       },
@@ -331,7 +327,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     self.minimizeSubtags(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -342,7 +338,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         Locale::setDefault(new_locale.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("new_locale"));
@@ -354,7 +350,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         self.setKeywordValue(keyword_name, keyword_value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("keyword_name"), py::arg("keyword_value"));
@@ -369,7 +365,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         ErrorCode error_code;
         self.setUnicodeKeywordValue(keyword_name, keyword_value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("keyword_name"), py::arg("keyword_value"));
@@ -378,7 +374,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
     ErrorCode error_code;
     auto result = self.toLanguageTag<std::string>(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

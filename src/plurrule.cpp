@@ -24,7 +24,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
       ErrorCode error_code;
       auto result = std::make_unique<PluralRules>(error_code);
       if (error_code.isFailure()) {
-        throw ICUError(error_code);
+        throw icupy::ICUError(error_code);
       }
       return result;
     }));
@@ -50,18 +50,18 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     ErrorCode error_code;
     auto result = PluralRules::createDefaultRules(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
 
   pr.def_static(
       "create_rules",
-      [](const _UnicodeStringVariant &description) {
+      [](const icupy::UnicodeStringVariant &description) {
         ErrorCode error_code;
-        auto result = PluralRules::createRules(VARIANT_TO_UNISTR(description), error_code);
+        auto result = PluralRules::createRules(icupy::to_unistr(description), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -69,11 +69,11 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def_static(
         "for_locale",
-        [](const _LocaleVariant &locale) {
+        [](const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = PluralRules::forLocale(VARIANT_TO_LOCALE(locale), error_code);
+          auto result = PluralRules::forLocale(icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -81,11 +81,11 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .def_static(
           "for_locale",
-          [](const _LocaleVariant &locale, UPluralType type) {
+          [](const icupy::LocaleVariant &locale, UPluralType type) {
             ErrorCode error_code;
-            auto result = PluralRules::forLocale(VARIANT_TO_LOCALE(locale), type, error_code);
+            auto result = PluralRules::forLocale(icupy::to_locale(locale), type, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -99,19 +99,19 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
     ErrorCode error_code;
     auto result = self.getKeywords(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
 
   pr.def(
       "get_samples",
-      [](PluralRules &self, const _UnicodeStringVariant &keyword, int32_t dest_capacity) {
+      [](PluralRules &self, const icupy::UnicodeStringVariant &keyword, int32_t dest_capacity) {
         ErrorCode error_code;
         std::vector<double> result(dest_capacity);
-        auto count = self.getSamples(VARIANT_TO_UNISTR(keyword), result.data(), dest_capacity, error_code);
+        auto count = self.getSamples(icupy::to_unistr(keyword), result.data(), dest_capacity, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         result.resize(count);
         return result;
@@ -120,8 +120,8 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def(
       "is_keyword",
-      [](const PluralRules &self, const _UnicodeStringVariant &keyword) {
-        return self.isKeyword(VARIANT_TO_UNISTR(keyword));
+      [](const PluralRules &self, const icupy::UnicodeStringVariant &keyword) {
+        return self.isKeyword(icupy::to_unistr(keyword));
       },
       py::arg("keyword"));
 
@@ -132,7 +132,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         ErrorCode error_code;
         auto result = self.select(number, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -146,7 +146,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         ErrorCode error_code;
         auto result = self.select(number, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

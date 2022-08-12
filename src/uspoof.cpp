@@ -149,7 +149,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_areConfusable(sc, id1, length1, id2, length2, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -161,7 +161,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_areConfusableUnicodeString(sc, s1, s2, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -173,7 +173,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_areConfusableUTF8(sc, id1, length1, id2, length2, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -185,7 +185,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_check(sc, id, length, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -199,7 +199,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_check2(sc, id, length, check_result.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -211,7 +211,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_check2UnicodeString(sc, id, check_result.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -224,7 +224,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_check2UTF8(sc, id, length, check_result.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -237,7 +237,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_checkUnicodeString(sc, id, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -249,7 +249,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_checkUTF8(sc, id, length, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -261,7 +261,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto p = uspoof_clone(sc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_USpoofCheckerPtr>(p);
       },
@@ -282,7 +282,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto p = uspoof_getAllowedChars(sc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_ConstUSetPtr>(p);
       },
@@ -294,7 +294,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getAllowedLocales(sc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -306,7 +306,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getAllowedUnicodeSet(sc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -319,7 +319,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getCheckResultChecks(check_result, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -331,7 +331,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto p = uspoof_getCheckResultNumerics(check_result, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_ConstUSetPtr>(p);
       },
@@ -343,7 +343,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getCheckResultRestrictionLevel(check_result, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -356,7 +356,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getChecks(sc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -367,7 +367,7 @@ void init_uspoof(py::module &m) {
     ErrorCode error_code;
     auto p = uspoof_getInclusionSet(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::make_unique<_ConstUSetPtr>(p);
   });
@@ -378,7 +378,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getInclusionUnicodeSet(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -388,7 +388,7 @@ void init_uspoof(py::module &m) {
     ErrorCode error_code;
     auto p = uspoof_getRecommendedSet(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::make_unique<_ConstUSetPtr>(p);
   });
@@ -399,7 +399,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto result = uspoof_getRecommendedUnicodeSet(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -419,7 +419,7 @@ void init_uspoof(py::module &m) {
         error_code.reset();
         uspoof_getSkeleton(sc, type, id, length, result.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -431,7 +431,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto &result = uspoof_getSkeletonUnicodeString(sc, type, id, dest, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -446,7 +446,7 @@ void init_uspoof(py::module &m) {
         error_code.reset();
         uspoof_getSkeletonUTF8(sc, type, id, length, result.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -456,7 +456,7 @@ void init_uspoof(py::module &m) {
     ErrorCode error_code;
     auto sc = uspoof_open(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::make_unique<_USpoofCheckerPtr>(sc);
   });
@@ -465,7 +465,7 @@ void init_uspoof(py::module &m) {
     ErrorCode error_code;
     auto p = uspoof_openCheckResult(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::make_unique<_USpoofCheckResultPtr>(p);
   });
@@ -480,7 +480,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         auto p = uspoof_openFromSerialized(info.ptr, length, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_USpoofCheckerPtr>(p);
       },
@@ -495,7 +495,7 @@ void init_uspoof(py::module &m) {
         auto p = uspoof_openFromSource(confusables, confusables_len, confusables_whole_script,
                                        confusables_whole_script_len, &err_type, pe, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         // return py::make_tuple(std::make_unique<_USpoofCheckerPtr>(p), err_type);
         return std::make_unique<_USpoofCheckerPtr>(p);
@@ -512,7 +512,7 @@ void init_uspoof(py::module &m) {
         error_code.reset();
         uspoof_serialize(sc, data.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return py::bytes(data);
       },
@@ -524,7 +524,7 @@ void init_uspoof(py::module &m) {
          ErrorCode error_code;
          uspoof_setAllowedChars(sc, chars, error_code);
          if (error_code.isFailure()) {
-           throw ICUError(error_code);
+           throw icupy::ICUError(error_code);
          }
        },
        py::arg("sc"), py::arg("chars"))
@@ -534,7 +534,7 @@ void init_uspoof(py::module &m) {
             ErrorCode error_code;
             uspoof_setAllowedChars(sc, chars, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("sc"), py::arg("chars"));
@@ -545,7 +545,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         uspoof_setAllowedLocales(sc, locales_list, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("sc"), py::arg("locales_list"));
@@ -556,7 +556,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         uspoof_setAllowedUnicodeSet(sc, chars, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("sc"), py::arg("chars"));
@@ -567,7 +567,7 @@ void init_uspoof(py::module &m) {
         ErrorCode error_code;
         uspoof_setChecks(sc, checks, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("sc"), py::arg("checks"));

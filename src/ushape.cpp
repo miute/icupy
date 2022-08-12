@@ -13,7 +13,7 @@ void init_ushape(py::module &m) {
         error_code.reset();
         u_shapeArabic(source, source_length, result.data(), dest_size, options, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

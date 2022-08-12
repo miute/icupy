@@ -71,7 +71,7 @@ void init_ulocdata(py::module &m) {
     ErrorCode error_code;
     ulocdata_getCLDRVersion(version_array, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     py::tuple result(U_MAX_VERSION_LENGTH);
     int n = 0;
@@ -88,7 +88,7 @@ void init_ulocdata(py::module &m) {
         error_code.reset();
         ulocdata_getDelimiter(uld, type, result.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -100,7 +100,7 @@ void init_ulocdata(py::module &m) {
         ErrorCode error_code;
         auto p = ulocdata_getExemplarSet(uld, fill_in.value_or(nullptr), options, extype, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_USetPtr>(p);
       },
@@ -115,7 +115,7 @@ void init_ulocdata(py::module &m) {
         error_code.reset();
         ulocdata_getLocaleDisplayPattern(uld, result.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -130,7 +130,7 @@ void init_ulocdata(py::module &m) {
         error_code.reset();
         ulocdata_getLocaleSeparator(uld, result.data(), dest_size, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -142,7 +142,7 @@ void init_ulocdata(py::module &m) {
         ErrorCode error_code;
         auto result = ulocdata_getMeasurementSystem(locale_id, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -158,7 +158,7 @@ void init_ulocdata(py::module &m) {
         ErrorCode error_code;
         ulocdata_getPaperSize(locale_id, &height, &width, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return py::make_tuple(height, width);
       },
@@ -170,7 +170,7 @@ void init_ulocdata(py::module &m) {
         ErrorCode error_code;
         auto p = ulocdata_open(locale_id, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_ULocaleDataPtr>(p);
       },

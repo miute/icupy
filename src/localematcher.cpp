@@ -87,11 +87,11 @@ void init_localematcher(py::module &m) {
   //
   lm.def(
         "get_best_match",
-        [](const LocaleMatcher &self, const _LocaleVariant &desired_locale) {
+        [](const LocaleMatcher &self, const icupy::LocaleVariant &desired_locale) {
           ErrorCode error_code;
-          auto result = self.getBestMatch(VARIANT_TO_LOCALE(desired_locale), error_code);
+          auto result = self.getBestMatch(icupy::to_locale(desired_locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -104,7 +104,7 @@ void init_localematcher(py::module &m) {
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatch(iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -116,7 +116,7 @@ void init_localematcher(py::module &m) {
         ErrorCode error_code;
         auto result = self.getBestMatchForListString(desired_locale_list, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -128,7 +128,7 @@ void init_localematcher(py::module &m) {
           ErrorCode error_code;
           auto result = self.getBestMatchResult(desired_locale, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -141,7 +141,7 @@ void init_localematcher(py::module &m) {
             Locale::RangeIterator<const Locale *> iter(first, first + desired_locales.size());
             auto result = self.getBestMatchResult(iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -150,11 +150,11 @@ void init_localematcher(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lm.def(
       "is_match",
-      [](const LocaleMatcher &self, const _LocaleVariant &desired, const _LocaleVariant &supported) {
+      [](const LocaleMatcher &self, const icupy::LocaleVariant &desired, const icupy::LocaleVariant &supported) {
         ErrorCode error_code;
-        auto result = self.isMatch(VARIANT_TO_LOCALE(desired), VARIANT_TO_LOCALE(supported), error_code);
+        auto result = self.isMatch(icupy::to_locale(desired), icupy::to_locale(supported), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -168,8 +168,8 @@ void init_localematcher(py::module &m) {
 
   lmb.def(
       "add_supported_locale",
-      [](Builder &self, const _LocaleVariant &locale) -> Builder & {
-        return self.addSupportedLocale(VARIANT_TO_LOCALE(locale));
+      [](Builder &self, const icupy::LocaleVariant &locale) -> Builder & {
+        return self.addSupportedLocale(icupy::to_locale(locale));
       },
       py::arg("locale"));
 
@@ -177,7 +177,7 @@ void init_localematcher(py::module &m) {
     ErrorCode error_code;
     auto result = self.build(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -199,8 +199,8 @@ void init_localematcher(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lmb.def(
       "set_max_distance",
-      [](Builder &self, const _LocaleVariant &desired, const _LocaleVariant &supported) -> Builder & {
-        return self.setMaxDistance(VARIANT_TO_LOCALE(desired), VARIANT_TO_LOCALE(supported));
+      [](Builder &self, const icupy::LocaleVariant &desired, const icupy::LocaleVariant &supported) -> Builder & {
+        return self.setMaxDistance(icupy::to_locale(desired), icupy::to_locale(supported));
       },
       py::arg("desired"), py::arg("supported"));
 
@@ -236,7 +236,7 @@ void init_localematcher(py::module &m) {
     ErrorCode error_code;
     auto result = self.makeResolvedLocale(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

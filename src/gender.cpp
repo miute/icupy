@@ -16,11 +16,11 @@ void init_gender(py::module &m) {
 
   gi.def_static(
       "get_instance",
-      [](const _LocaleVariant &locale) {
+      [](const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
-        auto result = GenderInfo::getInstance(VARIANT_TO_LOCALE(locale), error_code);
+        auto result = GenderInfo::getInstance(icupy::to_locale(locale), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -35,7 +35,7 @@ void init_gender(py::module &m) {
         ErrorCode error_code;
         auto result = self.getListGender(genders.data(), length, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

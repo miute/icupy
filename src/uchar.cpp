@@ -1427,7 +1427,7 @@ void init_uchar(py::module &m) {
         ErrorCode error_code;
         auto result = u_charFromName(name_choice, name, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -1444,7 +1444,7 @@ void init_uchar(py::module &m) {
         error_code.reset();
         u_charName(code, name_choice, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -1469,7 +1469,7 @@ void init_uchar(py::module &m) {
         ErrorCode error_code;
         auto uset = u_getBinaryPropertySet(property, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_ConstUSetPtr>(uset);
       },
@@ -1487,7 +1487,7 @@ void init_uchar(py::module &m) {
         error_code.reset();
         u_getFC_NFKC_Closure(c, result.data(), static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -1500,7 +1500,7 @@ void init_uchar(py::module &m) {
         ErrorCode error_code;
         auto map = u_getIntPropertyMap(property, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_ConstUCPMapPtr>(map);
       },

@@ -67,7 +67,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             ErrorCode error_code;
             auto result = std::make_unique<Formattable>(number, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -112,7 +112,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
         int32_t count = 0;
         self.getArray(count, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         if (index < 0) {
           index += count;
@@ -142,7 +142,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     int32_t count;
     auto array = self.getArray(count, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     std::vector<Formattable> result;
     result.reserve(count);
@@ -156,7 +156,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     ErrorCode error_code;
     auto result = self.getDate(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -165,7 +165,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     ErrorCode error_code;
     auto str = self.getDecimalNumber(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return py::str(str.data());
   });
@@ -174,7 +174,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     ErrorCode error_code;
     auto result = self.getDouble(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -183,7 +183,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     ErrorCode error_code;
     auto result = self.getInt64(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -192,7 +192,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
     ErrorCode error_code;
     auto result = self.getLong(static_cast<UErrorCode &>(error_code));
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -233,7 +233,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             ErrorCode error_code;
             auto &result = self.getString(error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           })
@@ -243,7 +243,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
             ErrorCode error_code;
             auto &value = self.getString(result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return value;
           },
@@ -271,7 +271,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
         ErrorCode error_code;
         self.setDecimalNumber(number_string, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("number_string"));
@@ -284,8 +284,8 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def(
       "set_string",
-      [](Formattable &self, const _UnicodeStringVariant &string_to_copy) {
-        self.setString(VARIANT_TO_UNISTR(string_to_copy));
+      [](Formattable &self, const icupy::UnicodeStringVariant &string_to_copy) {
+        self.setString(icupy::to_unistr(string_to_copy));
       },
       py::arg("string_to_copy"));
 

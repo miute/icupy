@@ -13,13 +13,15 @@ void init_locdspnm(py::module &m) {
   ldn.def_static(
          // [1] LocaleDisplayNames::createInstance
          "create_instance",
-         [](const _LocaleVariant &locale) { return LocaleDisplayNames::createInstance(VARIANT_TO_LOCALE(locale)); },
+         [](const icupy::LocaleVariant &locale) {
+           return LocaleDisplayNames::createInstance(icupy::to_locale(locale));
+         },
          py::arg("locale"))
       .def_static(
           // [2] LocaleDisplayNames::createInstance
           "create_instance",
-          [](const _LocaleVariant &locale, UDialectHandling dialect_handling) {
-            return LocaleDisplayNames::createInstance(VARIANT_TO_LOCALE(locale), dialect_handling);
+          [](const icupy::LocaleVariant &locale, UDialectHandling dialect_handling) {
+            return LocaleDisplayNames::createInstance(icupy::to_locale(locale), dialect_handling);
           },
           py::arg("locale"), py::arg("dialect_handling"));
 
@@ -27,11 +29,11 @@ void init_locdspnm(py::module &m) {
   ldn.def_static(
       // [3] LocaleDisplayNames::createInstance
       "create_instance",
-      [](const _LocaleVariant &locale, std::vector<UDisplayContext> &contexts, int32_t length) {
+      [](const icupy::LocaleVariant &locale, std::vector<UDisplayContext> &contexts, int32_t length) {
         if (length == -1) {
           length = static_cast<int32_t>(contexts.size());
         }
-        return LocaleDisplayNames::createInstance(VARIANT_TO_LOCALE(locale), contexts.data(), length);
+        return LocaleDisplayNames::createInstance(icupy::to_locale(locale), contexts.data(), length);
       },
       py::arg("locale"), py::arg("contexts"), py::arg("length") = -1);
 

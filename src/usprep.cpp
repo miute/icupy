@@ -51,7 +51,7 @@ void init_usprep(py::module &m) {
         ErrorCode error_code;
         auto profile = usprep_open(path, file_name, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UStringPrepProfilePtr>(profile);
       },
@@ -63,7 +63,7 @@ void init_usprep(py::module &m) {
         ErrorCode error_code;
         auto profile = usprep_openByType(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UStringPrepProfilePtr>(profile);
       },
@@ -79,7 +79,7 @@ void init_usprep(py::module &m) {
         error_code.reset();
         usprep_prepare(prep, src, src_length, result.data(), dest_size, options, parse_error, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

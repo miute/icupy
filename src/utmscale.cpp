@@ -77,7 +77,7 @@ void init_utmscale(py::module &m) {
         ErrorCode error_code;
         auto result = utmscale_fromInt64(other_time, time_scale, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -89,7 +89,7 @@ void init_utmscale(py::module &m) {
         ErrorCode error_code;
         auto result = utmscale_getTimeScaleValue(time_scale, value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -101,7 +101,7 @@ void init_utmscale(py::module &m) {
         ErrorCode error_code;
         auto result = utmscale_toInt64(universal_time, time_scale, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

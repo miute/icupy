@@ -29,7 +29,7 @@ void init_uversion(py::module &m) {
       "u_version_to_string",
       [](const std::vector<uint8_t> &version_array) {
         if (version_array.size() != sizeof(UVersionInfo)) {
-          throw ICUError(U_ILLEGAL_ARGUMENT_ERROR);
+          throw icupy::ICUError(U_ILLEGAL_ARGUMENT_ERROR);
         }
         UVersionInfo info;
         std::copy(version_array.begin(), version_array.end(), info);

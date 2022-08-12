@@ -23,7 +23,7 @@ void init_listformatter(py::module &m) {
         ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -35,7 +35,7 @@ void init_listformatter(py::module &m) {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -45,7 +45,7 @@ void init_listformatter(py::module &m) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -54,7 +54,7 @@ void init_listformatter(py::module &m) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -72,11 +72,11 @@ void init_listformatter(py::module &m) {
 
   lf.def_static(
         "create_instance",
-        [](const _LocaleVariant &locale) {
+        [](const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = ListFormatter::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+          auto result = ListFormatter::createInstance(icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -85,7 +85,7 @@ void init_listformatter(py::module &m) {
         ErrorCode error_code;
         auto result = ListFormatter::createInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -93,11 +93,11 @@ void init_listformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   lf.def_static(
       "create_instance",
-      [](const _LocaleVariant &locale, UListFormatterType type, UListFormatterWidth width) {
+      [](const icupy::LocaleVariant &locale, UListFormatterType type, UListFormatterWidth width) {
         ErrorCode error_code;
-        auto result = ListFormatter::createInstance(VARIANT_TO_LOCALE(locale), type, width, error_code);
+        auto result = ListFormatter::createInstance(icupy::to_locale(locale), type, width, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -115,7 +115,7 @@ void init_listformatter(py::module &m) {
         ErrorCode error_code;
         auto &result = self.format(_items.data(), count, append_to, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -132,7 +132,7 @@ void init_listformatter(py::module &m) {
         ErrorCode error_code;
         auto result = self.formatStringsToValue(_items.data(), count, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

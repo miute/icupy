@@ -25,11 +25,11 @@ void init_compactdecimalformat(py::module &m) {
 
   cdf.def_static(
       "create_instance",
-      [](const _LocaleVariant &in_locale, UNumberCompactStyle style) {
+      [](const icupy::LocaleVariant &in_locale, UNumberCompactStyle style) {
         ErrorCode error_code;
-        auto result = CompactDecimalFormat::createInstance(VARIANT_TO_LOCALE(in_locale), style, error_code);
+        auto result = CompactDecimalFormat::createInstance(icupy::to_locale(in_locale), style, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -47,7 +47,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -64,7 +64,7 @@ void init_compactdecimalformat(py::module &m) {
       //       ErrorCode error_code;
       //       auto &result = self.format(number, append_to, pos_iter, error_code);
       //       if (error_code.isFailure()) {
-      //         throw ICUError(error_code);
+      //         throw icupy::ICUError(error_code);
       //       }
       //       return result;
       //     },
@@ -81,7 +81,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -94,7 +94,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -106,7 +106,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -118,7 +118,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -135,7 +135,7 @@ void init_compactdecimalformat(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -144,17 +144,17 @@ void init_compactdecimalformat(py::module &m) {
   cdf.def(
          // [1] CompactDecimalFormat::parse
          "parse",
-         [](const CompactDecimalFormat &self, const _UnicodeStringVariant &text, Formattable &result,
-            ParsePosition &parse_position) { self.parse(VARIANT_TO_UNISTR(text), result, parse_position); },
+         [](const CompactDecimalFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result,
+            ParsePosition &parse_position) { self.parse(icupy::to_unistr(text), result, parse_position); },
          py::arg("text"), py::arg("result"), py::arg("parse_position"))
       .def(
           // [2] CompactDecimalFormat::parse
           "parse",
-          [](const CompactDecimalFormat &self, const _UnicodeStringVariant &text, Formattable &result) {
+          [](const CompactDecimalFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result) {
             ErrorCode error_code;
-            self.parse(VARIANT_TO_UNISTR(text), result, error_code);
+            self.parse(icupy::to_unistr(text), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));

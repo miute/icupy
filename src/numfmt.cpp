@@ -62,11 +62,11 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   //
   nf.def_static(
         "create_currency_instance",
-        [](const _LocaleVariant &in_locale) {
+        [](const icupy::LocaleVariant &in_locale) {
           ErrorCode error_code;
-          auto result = NumberFormat::createCurrencyInstance(VARIANT_TO_LOCALE(in_locale), error_code);
+          auto result = NumberFormat::createCurrencyInstance(icupy::to_locale(in_locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -75,29 +75,29 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         ErrorCode error_code;
         auto result = NumberFormat::createCurrencyInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
 
   nf.def_static(
         "create_instance",
-        [](const _LocaleVariant &desired_locale, UNumberFormatStyle style) {
+        [](const icupy::LocaleVariant &desired_locale, UNumberFormatStyle style) {
           ErrorCode error_code;
-          auto result = NumberFormat::createInstance(VARIANT_TO_LOCALE(desired_locale), style, error_code);
+          auto result = NumberFormat::createInstance(icupy::to_locale(desired_locale), style, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
         py::arg("desired_locale"), py::arg("style"))
       .def_static(
           "create_instance",
-          [](const _LocaleVariant &in_locale) {
+          [](const icupy::LocaleVariant &in_locale) {
             ErrorCode error_code;
-            auto result = NumberFormat::createInstance(VARIANT_TO_LOCALE(in_locale), error_code);
+            auto result = NumberFormat::createInstance(icupy::to_locale(in_locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -106,18 +106,18 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         ErrorCode error_code;
         auto result = NumberFormat::createInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
 
   nf.def_static(
         "create_percent_instance",
-        [](const _LocaleVariant &in_locale) {
+        [](const icupy::LocaleVariant &in_locale) {
           ErrorCode error_code;
-          auto result = NumberFormat::createPercentInstance(VARIANT_TO_LOCALE(in_locale), error_code);
+          auto result = NumberFormat::createPercentInstance(icupy::to_locale(in_locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -126,18 +126,18 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         ErrorCode error_code;
         auto result = NumberFormat::createPercentInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
 
   nf.def_static(
         "create_scientific_instance",
-        [](const _LocaleVariant &in_locale) {
+        [](const icupy::LocaleVariant &in_locale) {
           ErrorCode error_code;
-          auto result = NumberFormat::createScientificInstance(VARIANT_TO_LOCALE(in_locale), error_code);
+          auto result = NumberFormat::createScientificInstance(icupy::to_locale(in_locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -146,7 +146,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         ErrorCode error_code;
         auto result = NumberFormat::createScientificInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -170,7 +170,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         ErrorCode error_code;
         auto result = self.getContext(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -198,16 +198,16 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
 
   nf.def(
         "parse_object",
-        [](const NumberFormat &self, const _UnicodeStringVariant &source, Formattable &result,
-           ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
+        [](const NumberFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
+           ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const _UnicodeStringVariant &source, Formattable &result) {
+          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
+            self.parseObject(icupy::to_unistr(source), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));

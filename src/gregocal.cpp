@@ -29,7 +29,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         self.add(field, amount, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("field"), py::arg("amount"));
@@ -47,7 +47,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.after(when, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -59,7 +59,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.before(when, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -72,22 +72,22 @@ void init_gregocal(py::module &m) {
 
   cal.def_static(
          "create_instance",
-         [](const _LocaleVariant &locale) {
+         [](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = Calendar::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+           auto result = Calendar::createInstance(icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
          py::arg("locale"))
       .def_static(
           "create_instance",
-          [](const TimeZone &zone, const _LocaleVariant &locale) {
+          [](const TimeZone &zone, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = Calendar::createInstance(zone, VARIANT_TO_LOCALE(locale), error_code);
+            auto result = Calendar::createInstance(zone, icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -98,7 +98,7 @@ void init_gregocal(py::module &m) {
             ErrorCode error_code;
             auto result = Calendar::createInstance(zone, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -107,7 +107,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = Calendar::createInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -118,7 +118,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.equals(when, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -130,7 +130,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.fieldDifference(when, field, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -142,7 +142,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.get(field, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -167,7 +167,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.getDayOfWeekType(day_of_week, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -177,7 +177,7 @@ void init_gregocal(py::module &m) {
     ErrorCode error_code;
     auto result = self.getFirstDayOfWeek(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -187,11 +187,11 @@ void init_gregocal(py::module &m) {
 
   cal.def_static(
       "get_keyword_values_for_locale",
-      [](const char *key, const _LocaleVariant &locale, UBool commonly_used) {
+      [](const char *key, const icupy::LocaleVariant &locale, UBool commonly_used) {
         ErrorCode error_code;
-        auto result = Calendar::getKeywordValuesForLocale(key, VARIANT_TO_LOCALE(locale), commonly_used, error_code);
+        auto result = Calendar::getKeywordValuesForLocale(key, icupy::to_locale(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -206,7 +206,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -230,7 +230,7 @@ void init_gregocal(py::module &m) {
     ErrorCode error_code;
     auto result = self.getTime(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -257,7 +257,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.getWeekendTransition(day_of_week, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -275,7 +275,7 @@ void init_gregocal(py::module &m) {
            ErrorCode error_code;
            auto result = self.isWeekend(date, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -318,7 +318,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         self.setTime(date, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("date"));
@@ -346,7 +346,7 @@ void init_gregocal(py::module &m) {
       ErrorCode error_code;
       auto result = std::make_unique<GregorianCalendar>(error_code);
       if (error_code.isFailure()) {
-        throw ICUError(error_code);
+        throw icupy::ICUError(error_code);
       }
       return result;
     }))
@@ -354,25 +354,25 @@ void init_gregocal(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(zone, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
            py::arg("zone"))
-      .def(py::init([](const _LocaleVariant &locale) {
+      .def(py::init([](const icupy::LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(VARIANT_TO_LOCALE(locale), error_code);
+             auto result = std::make_unique<GregorianCalendar>(icupy::to_locale(locale), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
-      .def(py::init([](const TimeZone &zone, const _LocaleVariant &locale) {
+      .def(py::init([](const TimeZone &zone, const icupy::LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(zone, VARIANT_TO_LOCALE(locale), error_code);
+             auto result = std::make_unique<GregorianCalendar>(zone, icupy::to_locale(locale), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -381,7 +381,7 @@ void init_gregocal(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -390,7 +390,7 @@ void init_gregocal(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -399,7 +399,7 @@ void init_gregocal(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, second, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -432,7 +432,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.getActualMaximum(field, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -444,7 +444,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         auto result = self.getActualMinimum(field, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -460,7 +460,7 @@ void init_gregocal(py::module &m) {
     ErrorCode error_code;
     auto result = self.inDaylightTime(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -475,7 +475,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         self.roll(field, amount, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("field"), py::arg("amount"));
@@ -486,7 +486,7 @@ void init_gregocal(py::module &m) {
         ErrorCode error_code;
         self.setGregorianChange(date, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("date"));

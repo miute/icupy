@@ -31,11 +31,11 @@ void init_measfmt(py::module &m) {
   py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  fmt.def(py::init([](const _LocaleVariant &locale, UMeasureFormatWidth width) {
+  fmt.def(py::init([](const icupy::LocaleVariant &locale, UMeasureFormatWidth width) {
             ErrorCode error_code;
-            auto result = std::make_unique<MeasureFormat>(VARIANT_TO_LOCALE(locale), width, error_code);
+            auto result = std::make_unique<MeasureFormat>(icupy::to_locale(locale), width, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -61,11 +61,11 @@ void init_measfmt(py::module &m) {
 
   fmt.def_static(
          "create_currency_format",
-         [](const _LocaleVariant &locale) {
+         [](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = MeasureFormat::createCurrencyFormat(VARIANT_TO_LOCALE(locale), error_code);
+           auto result = MeasureFormat::createCurrencyFormat(icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -74,7 +74,7 @@ void init_measfmt(py::module &m) {
         ErrorCode error_code;
         auto result = MeasureFormat::createCurrencyFormat(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -87,7 +87,7 @@ void init_measfmt(py::module &m) {
            ErrorCode error_code;
            auto &result = self.format(obj, append_to, pos, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -100,7 +100,7 @@ void init_measfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -112,7 +112,7 @@ void init_measfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -126,7 +126,7 @@ void init_measfmt(py::module &m) {
         ErrorCode error_code;
         auto &result = self.formatMeasurePerUnit(measure, per_unit, append_to, pos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -144,7 +144,7 @@ void init_measfmt(py::module &m) {
         }
         auto &result = self.formatMeasures(measures.data(), measure_count, append_to, pos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -158,7 +158,7 @@ void init_measfmt(py::module &m) {
         ErrorCode error_code;
         auto result = self.getUnitDisplayName(unit, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -168,17 +168,17 @@ void init_measfmt(py::module &m) {
   fmt.def(
          // [2] icu::Format::parseObject
          "parse_object",
-         [](const MeasureFormat &self, const _UnicodeStringVariant &source, Formattable &result,
-            ParsePosition &parse_pos) { self.parseObject(VARIANT_TO_UNISTR(source), result, parse_pos); },
+         [](const MeasureFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
+            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           // [3] icu::Format::parseObject
           "parse_object",
-          [](const MeasureFormat &self, const _UnicodeStringVariant &source, Formattable &result) {
+          [](const MeasureFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(VARIANT_TO_UNISTR(source), result, error_code);
+            self.parseObject(icupy::to_unistr(source), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("source"), py::arg("result"));

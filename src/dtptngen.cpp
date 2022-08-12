@@ -29,12 +29,12 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "add_pattern",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern, UBool override,
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern, UBool override,
          UnicodeString &conflicting_pattern) {
         ErrorCode error_code;
-        auto result = self.addPattern(VARIANT_TO_UNISTR(pattern), override, conflicting_pattern, error_code);
+        auto result = self.addPattern(icupy::to_unistr(pattern), override, conflicting_pattern, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -46,18 +46,18 @@ void init_dtptngen(py::module &m) {
     ErrorCode error_code;
     auto result = DateTimePatternGenerator::createEmptyInstance(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
 
   dtpg.def_static(
           "create_instance",
-          [](const _LocaleVariant &locale) {
+          [](const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = DateTimePatternGenerator::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+            auto result = DateTimePatternGenerator::createInstance(icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -66,7 +66,7 @@ void init_dtptngen(py::module &m) {
         ErrorCode error_code;
         auto result = DateTimePatternGenerator::createInstance(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -77,11 +77,11 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "get_base_skeleton",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern) {
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        auto result = self.getBaseSkeleton(VARIANT_TO_UNISTR(pattern), error_code);
+        auto result = self.getBaseSkeleton(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -91,30 +91,30 @@ void init_dtptngen(py::module &m) {
     ErrorCode error_code;
     auto result = self.getBaseSkeletons(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
 
   dtpg.def(
           "get_best_pattern",
-          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &skeleton,
+          [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &skeleton,
              UDateTimePatternMatchOptions options) {
             ErrorCode error_code;
-            auto result = self.getBestPattern(VARIANT_TO_UNISTR(skeleton), options, error_code);
+            auto result = self.getBestPattern(icupy::to_unistr(skeleton), options, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
           py::arg("skeleton"), py::arg("options"))
       .def(
           "get_best_pattern",
-          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &skeleton) {
+          [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &skeleton) {
             ErrorCode error_code;
-            auto result = self.getBestPattern(VARIANT_TO_UNISTR(skeleton), error_code);
+            auto result = self.getBestPattern(icupy::to_unistr(skeleton), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -128,7 +128,7 @@ void init_dtptngen(py::module &m) {
             ErrorCode error_code;
             auto &result = self.getDateTimeFormat(style, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -144,7 +144,7 @@ void init_dtptngen(py::module &m) {
     ErrorCode error_code;
     auto result = self.getDefaultHourCycle(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -157,18 +157,18 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "get_pattern_for_skeleton",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &skeleton) -> const UnicodeString & {
-        return self.getPatternForSkeleton(VARIANT_TO_UNISTR(skeleton));
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &skeleton) -> const UnicodeString & {
+        return self.getPatternForSkeleton(icupy::to_unistr(skeleton));
       },
       py::arg("skeleton"));
 
   dtpg.def(
       "get_skeleton",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern) {
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        auto result = self.getSkeleton(VARIANT_TO_UNISTR(pattern), error_code);
+        auto result = self.getSkeleton(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -178,7 +178,7 @@ void init_dtptngen(py::module &m) {
     ErrorCode error_code;
     auto result = self.getSkeletons(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -186,13 +186,13 @@ void init_dtptngen(py::module &m) {
   dtpg.def(
           // [1] DateTimePatternGenerator::replaceFieldTypes
           "replace_field_types",
-          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern,
-             const _UnicodeStringVariant &skeleton, UDateTimePatternMatchOptions options) {
+          [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern,
+             const icupy::UnicodeStringVariant &skeleton, UDateTimePatternMatchOptions options) {
             ErrorCode error_code;
             auto result =
-                self.replaceFieldTypes(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(skeleton), options, error_code);
+                self.replaceFieldTypes(icupy::to_unistr(pattern), icupy::to_unistr(skeleton), options, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -200,12 +200,12 @@ void init_dtptngen(py::module &m) {
       .def(
           // [2] DateTimePatternGenerator::replaceFieldTypes
           "replace_field_types",
-          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &pattern,
-             const _UnicodeStringVariant &skeleton) {
+          [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern,
+             const icupy::UnicodeStringVariant &skeleton) {
             ErrorCode error_code;
-            auto result = self.replaceFieldTypes(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(skeleton), error_code);
+            auto result = self.replaceFieldTypes(icupy::to_unistr(pattern), icupy::to_unistr(skeleton), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -213,32 +213,33 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "set_append_item_format",
-      [](DateTimePatternGenerator &self, UDateTimePatternField field, const _UnicodeStringVariant &value) {
-        self.setAppendItemFormat(field, VARIANT_TO_UNISTR(value));
+      [](DateTimePatternGenerator &self, UDateTimePatternField field, const icupy::UnicodeStringVariant &value) {
+        self.setAppendItemFormat(field, icupy::to_unistr(value));
       },
       py::arg("field"), py::arg("value"));
 
   dtpg.def(
       "set_append_item_name",
-      [](DateTimePatternGenerator &self, UDateTimePatternField field, const _UnicodeStringVariant &value) {
-        self.setAppendItemName(field, VARIANT_TO_UNISTR(value));
+      [](DateTimePatternGenerator &self, UDateTimePatternField field, const icupy::UnicodeStringVariant &value) {
+        self.setAppendItemName(field, icupy::to_unistr(value));
       },
       py::arg("field"), py::arg("value"));
 
   dtpg.def(
           "set_date_time_format",
-          [](DateTimePatternGenerator &self, const _UnicodeStringVariant &date_time_format) {
-            self.setDateTimeFormat(VARIANT_TO_UNISTR(date_time_format));
+          [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &date_time_format) {
+            self.setDateTimeFormat(icupy::to_unistr(date_time_format));
           },
           py::arg("date_time_format"))
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
       .def(
           "set_date_time_format",
-          [](DateTimePatternGenerator &self, UDateFormatStyle style, const _UnicodeStringVariant &date_time_format) {
+          [](DateTimePatternGenerator &self, UDateFormatStyle style,
+             const icupy::UnicodeStringVariant &date_time_format) {
             ErrorCode error_code;
-            self.setDateTimeFormat(style, VARIANT_TO_UNISTR(date_time_format), error_code);
+            self.setDateTimeFormat(style, icupy::to_unistr(date_time_format), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("style"), py::arg("date_time_format"))
@@ -247,19 +248,19 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "set_decimal",
-      [](DateTimePatternGenerator &self, const _UnicodeStringVariant &decimal) {
-        self.setDecimal(VARIANT_TO_UNISTR(decimal));
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &decimal) {
+        self.setDecimal(icupy::to_unistr(decimal));
       },
       py::arg("decimal"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   dtpg.def_static(
       "static_get_base_skeleton",
-      [](const _UnicodeStringVariant &pattern) {
+      [](const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        auto result = DateTimePatternGenerator::staticGetBaseSkeleton(VARIANT_TO_UNISTR(pattern), error_code);
+        auto result = DateTimePatternGenerator::staticGetBaseSkeleton(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -267,11 +268,11 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def_static(
       "static_get_skeleton",
-      [](const _UnicodeStringVariant &pattern) {
+      [](const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        auto result = DateTimePatternGenerator::staticGetSkeleton(VARIANT_TO_UNISTR(pattern), error_code);
+        auto result = DateTimePatternGenerator::staticGetSkeleton(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

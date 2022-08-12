@@ -56,22 +56,22 @@ void init_dcfmtsym(py::module &m) {
   //
   dfs.def(
          // [1] DecimalFormatSymbols::DecimalFormatSymbols
-         py::init([](const _LocaleVariant &locale) {
+         py::init([](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<DecimalFormatSymbols>(VARIANT_TO_LOCALE(locale), error_code);
+           auto result = std::make_unique<DecimalFormatSymbols>(icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }),
          py::arg("locale"))
       .def(
           // [2] DecimalFormatSymbols::DecimalFormatSymbols
-          py::init([](const _LocaleVariant &locale, const NumberingSystem &ns) {
+          py::init([](const icupy::LocaleVariant &locale, const NumberingSystem &ns) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormatSymbols>(VARIANT_TO_LOCALE(locale), ns, error_code);
+            auto result = std::make_unique<DecimalFormatSymbols>(icupy::to_locale(locale), ns, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -82,7 +82,7 @@ void init_dcfmtsym(py::module &m) {
             ErrorCode error_code;
             auto result = std::make_unique<DecimalFormatSymbols>(error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }))
@@ -103,7 +103,7 @@ void init_dcfmtsym(py::module &m) {
     ErrorCode error_code;
     auto result = DecimalFormatSymbols::createWithLastResortData(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -116,7 +116,7 @@ void init_dcfmtsym(py::module &m) {
             ErrorCode error_code;
             auto result = self.getLocale(type, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -128,7 +128,7 @@ void init_dcfmtsym(py::module &m) {
         ErrorCode error_code;
         auto &result = self.getPatternForCurrencySpacing(type, before_currency, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -139,15 +139,15 @@ void init_dcfmtsym(py::module &m) {
   dfs.def(
       "set_pattern_for_currency_spacing",
       [](DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency,
-         const _UnicodeStringVariant &pattern) {
-        self.setPatternForCurrencySpacing(type, before_currency, VARIANT_TO_UNISTR(pattern));
+         const icupy::UnicodeStringVariant &pattern) {
+        self.setPatternForCurrencySpacing(type, before_currency, icupy::to_unistr(pattern));
       },
       py::arg("type_"), py::arg("before_currency"), py::arg("pattern"));
 
   dfs.def(
       "set_symbol",
       [](DecimalFormatSymbols &self, DecimalFormatSymbols::ENumberFormatSymbol symbol,
-         const _UnicodeStringVariant &value,
-         const UBool propogate_digits) { self.setSymbol(symbol, VARIANT_TO_UNISTR(value), propogate_digits); },
+         const icupy::UnicodeStringVariant &value,
+         const UBool propogate_digits) { self.setSymbol(symbol, icupy::to_unistr(value), propogate_digits); },
       py::arg("symbol"), py::arg("value"), py::arg("propogate_digits") = true);
 }

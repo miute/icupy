@@ -113,7 +113,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -125,7 +125,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.getNounClass(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -136,7 +136,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.getOutputUnit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -149,7 +149,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -161,7 +161,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toDecimalNumber<std::string>(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -172,7 +172,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -183,7 +183,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -232,7 +232,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.formatDecimal(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -244,7 +244,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.formatDouble(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -256,7 +256,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.formatInt(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -267,7 +267,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toFormat(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -279,11 +279,11 @@ void init_numberformatter(py::module &, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   nf.def_static(
       "for_skeleton",
-      [](const _UnicodeStringVariant &skeleton) {
+      [](const icupy::UnicodeStringVariant &skeleton) {
         ErrorCode error_code;
-        auto result = NumberFormatter::forSkeleton(VARIANT_TO_UNISTR(skeleton), error_code);
+        auto result = NumberFormatter::forSkeleton(icupy::to_unistr(skeleton), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -293,11 +293,11 @@ void init_numberformatter(py::module &, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   nf.def_static(
       "for_skeleton",
-      [](const _UnicodeStringVariant &skeleton, UParseError &perror) {
+      [](const icupy::UnicodeStringVariant &skeleton, UParseError &perror) {
         ErrorCode error_code;
-        auto result = NumberFormatter::forSkeleton(VARIANT_TO_UNISTR(skeleton), perror, error_code);
+        auto result = NumberFormatter::forSkeleton(icupy::to_unistr(skeleton), perror, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -308,7 +308,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
   nf.def_static(
       "with_locale",
-      [](const _LocaleVariant &locale) { return NumberFormatter::withLocale(VARIANT_TO_LOCALE(locale)); },
+      [](const icupy::LocaleVariant &locale) { return NumberFormatter::withLocale(icupy::to_locale(locale)); },
       py::arg("locale"));
 
   //
@@ -407,7 +407,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toSkeleton(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -529,7 +529,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toSkeleton(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -637,8 +637,8 @@ void init_numberformatter(py::module &, py::module &m2) {
 
   unf.def(
       "locale",
-      [](const UnlocalizedNumberFormatter &self, const _LocaleVariant &locale) {
-        return self.locale(VARIANT_TO_LOCALE(locale));
+      [](const UnlocalizedNumberFormatter &self, const icupy::LocaleVariant &locale) {
+        return self.locale(icupy::to_locale(locale));
       },
       py::arg("locale"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)

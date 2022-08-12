@@ -108,7 +108,7 @@ void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
 void init_uniset(py::module &m);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
-void init_unistrvec(py::module &m, py::class_<_UnicodeStringVector> &usv);
+void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
 void init_unounclass(py::module &m);
 void init_unum(py::module &m);
@@ -134,6 +134,8 @@ void init_utypes(py::module &m);
 void init_uversion(py::module &m);
 void init_voidptr(py::module &m);
 
+namespace icupy {
+
 ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_code_(error_code) {
   if (message != nullptr && *message != 0) {
     message_.append(message);
@@ -142,15 +144,17 @@ ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_cod
 
 ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 
+} // namespace icupy
+
 PYBIND11_MODULE(MODULE_NAME, m) {
-  // ICUError exception
-  static py::exception<ICUError> ex(m, "ICUError");
+  // icupy::ICUError exception
+  static py::exception<icupy::ICUError> ex(m, "ICUError");
   py::register_exception_translator([](std::exception_ptr p) {
     try {
       if (p) {
         std::rethrow_exception(p);
       }
-    } catch (const ICUError &e) {
+    } catch (const icupy::ICUError &e) {
       const ErrorCode error_code(e.get_error_code());
       auto message = e.get_message();
       if (message == nullptr || strlen(message) == 0) {
@@ -188,10 +192,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   // icu::PluralRules
   py::class_<PluralRules, UObject> pr(m, "PluralRules");
 
-  // _UnicodeStringVector
-  // py::bind_vector<_UnicodeStringVector>(m, "UnicodeStringVector", py::module_local(false))
-  //     .def(py::init<size_t>(), py::arg("n"));
-  py::class_<_UnicodeStringVector> usv(m, "UnicodeStringVector");
+  // icupy::UnicodeStringVector
+  py::class_<icupy::UnicodeStringVector> usv(m, "UnicodeStringVector");
 
   init_appendable(m);     // icu::Appendable
   init_char16ptr(m);      // icu::Char16Ptr, icu::ConstChar16Ptr
@@ -289,7 +291,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_alphaindex(m); // icu::AlphabeticIndex
 
   init_unistr(m, rep, us); // icu::UnicodeString
-  init_unistrvec(m, usv);  // _UnicodeStringVector
+  init_unistrvec(m, usv);  // icupy::UnicodeStringVector
 
   init_icudataver(m);
   init_stringoptions(m);

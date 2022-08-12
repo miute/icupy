@@ -61,11 +61,11 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
       "create_character_instance",
-      [](const _LocaleVariant &where) {
+      [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createCharacterInstance(VARIANT_TO_LOCALE(where), error_code);
+        auto it = BreakIterator::createCharacterInstance(icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return it;
       },
@@ -73,11 +73,11 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
       "create_line_instance",
-      [](const _LocaleVariant &where) {
+      [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createLineInstance(VARIANT_TO_LOCALE(where), error_code);
+        auto it = BreakIterator::createLineInstance(icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return it;
       },
@@ -85,11 +85,11 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
       "create_sentence_instance",
-      [](const _LocaleVariant &where) {
+      [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createSentenceInstance(VARIANT_TO_LOCALE(where), error_code);
+        auto it = BreakIterator::createSentenceInstance(icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return it;
       },
@@ -98,11 +98,11 @@ void init_rbbi(py::module &m) {
 #ifndef U_HIDE_DEPRECATED_API
   bi.def_static(
       "create_title_instance",
-      [](const _LocaleVariant &where) {
+      [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createTitleInstance(VARIANT_TO_LOCALE(where), error_code);
+        auto it = BreakIterator::createTitleInstance(icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return it;
       },
@@ -111,11 +111,11 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
       "create_word_instance",
-      [](const _LocaleVariant &where) {
+      [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createWordInstance(VARIANT_TO_LOCALE(where), error_code);
+        auto it = BreakIterator::createWordInstance(icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return it;
       },
@@ -142,16 +142,15 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
         "get_display_name",
-        [](const _LocaleVariant &object_locale, const _LocaleVariant &display_locale,
+        [](const icupy::LocaleVariant &object_locale, const icupy::LocaleVariant &display_locale,
            UnicodeString &name) -> UnicodeString & {
-          return BreakIterator::getDisplayName(VARIANT_TO_LOCALE(object_locale), VARIANT_TO_LOCALE(display_locale),
-                                               name);
+          return BreakIterator::getDisplayName(icupy::to_locale(object_locale), icupy::to_locale(display_locale), name);
         },
         py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))
       .def_static(
           "get_display_name",
-          [](const _LocaleVariant &object_locale, UnicodeString &name) -> UnicodeString & {
-            return BreakIterator::getDisplayName(VARIANT_TO_LOCALE(object_locale), name);
+          [](const icupy::LocaleVariant &object_locale, UnicodeString &name) -> UnicodeString & {
+            return BreakIterator::getDisplayName(icupy::to_locale(object_locale), name);
           },
           py::arg("object_locale"), py::arg("name"));
 
@@ -161,7 +160,7 @@ void init_rbbi(py::module &m) {
         ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -176,7 +175,7 @@ void init_rbbi(py::module &m) {
     error_code.reset();
     self.getRuleStatusVec(result.data(), static_cast<int32_t>(result.size()), error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -190,7 +189,7 @@ void init_rbbi(py::module &m) {
         ErrorCode error_code;
         auto p = self.getUText(fill_in.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -218,7 +217,7 @@ void init_rbbi(py::module &m) {
             ErrorCode error_code;
             self.setText(text, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"));
@@ -235,11 +234,11 @@ void init_rbbi(py::module &m) {
           py::init<const RuleBasedBreakIterator &>(), py::arg("other"))
       .def(
           // [3] RuleBasedBreakIterator::RuleBasedBreakIterator
-          py::init([](const _UnicodeStringVariant &rules, UParseError &parse_error) {
+          py::init([](const icupy::UnicodeStringVariant &rules, UParseError &parse_error) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedBreakIterator>(VARIANT_TO_UNISTR(rules), parse_error, error_code);
+            auto result = std::make_unique<RuleBasedBreakIterator>(icupy::to_unistr(rules), parse_error, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -252,7 +251,7 @@ void init_rbbi(py::module &m) {
             auto result = std::make_unique<RuleBasedBreakIterator>(reinterpret_cast<uint8_t *>(info.ptr), rule_length,
                                                                    error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -297,7 +296,7 @@ void init_rbbi(py::module &m) {
         ErrorCode error_code;
         auto p = self.getUText(fill_in.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -325,7 +324,7 @@ void init_rbbi(py::module &m) {
             ErrorCode error_code;
             self.setText(text, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"));

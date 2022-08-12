@@ -15,7 +15,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbFromUWriteBytes(args, source, length, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));
@@ -31,7 +31,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbFromUWriteSub(args, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -47,7 +47,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbToUWriteSub(args, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -63,7 +63,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbToUWriteUChars(args, source, length, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));
@@ -74,7 +74,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbFromUWriteBytes(args, source, length, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));
@@ -85,7 +85,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbFromUWriteSub(args, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -96,7 +96,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbToUWriteSub(args, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("offset_index"));
@@ -107,7 +107,7 @@ void init_ucnv_cb(py::module &m) {
         ErrorCode error_code;
         ucnv_cbToUWriteUChars(args, source, length, offset_index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("args"), py::arg("source"), py::arg("length"), py::arg("offset_index"));

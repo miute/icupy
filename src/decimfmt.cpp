@@ -29,28 +29,28 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           ErrorCode error_code;
           auto result = std::make_unique<DecimalFormat>(error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         }))
       .def(
           // [2] DecimalFormat::DecimalFormat
-          py::init([](const _UnicodeStringVariant &pattern) {
+          py::init([](const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(VARIANT_TO_UNISTR(pattern), error_code);
+            auto result = std::make_unique<DecimalFormat>(icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"))
       .def(
           // [6] DecimalFormat::DecimalFormat
-          py::init([](const _UnicodeStringVariant &pattern, const DecimalFormatSymbols &symbols) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, const DecimalFormatSymbols &symbols) {
             ErrorCode error_code;
-            auto result = std::make_unique<DecimalFormat>(VARIANT_TO_UNISTR(pattern), symbols, error_code);
+            auto result = std::make_unique<DecimalFormat>(icupy::to_unistr(pattern), symbols, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -73,42 +73,42 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def(
         "apply_localized_pattern",
-        [](DecimalFormat &self, const _UnicodeStringVariant &pattern) {
+        [](DecimalFormat &self, const icupy::UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), error_code);
+          self.applyLocalizedPattern(icupy::to_unistr(pattern), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
         },
         py::arg("pattern"))
       .def(
           "apply_localized_pattern",
-          [](DecimalFormat &self, const _UnicodeStringVariant &pattern, UParseError &parse_error) {
+          [](DecimalFormat &self, const icupy::UnicodeStringVariant &pattern, UParseError &parse_error) {
             ErrorCode error_code;
-            self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+            self.applyLocalizedPattern(icupy::to_unistr(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("parse_error"));
 
   df.def(
         "apply_pattern",
-        [](DecimalFormat &self, const _UnicodeStringVariant &pattern) {
+        [](DecimalFormat &self, const icupy::UnicodeStringVariant &pattern) {
           ErrorCode error_code;
-          self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
+          self.applyPattern(icupy::to_unistr(pattern), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
         },
         py::arg("pattern"))
       .def(
           "apply_pattern",
-          [](DecimalFormat &self, const _UnicodeStringVariant &pattern, UParseError &parse_error) {
+          [](DecimalFormat &self, const icupy::UnicodeStringVariant &pattern, UParseError &parse_error) {
             ErrorCode error_code;
-            self.applyPattern(VARIANT_TO_UNISTR(pattern), parse_error, error_code);
+            self.applyPattern(icupy::to_unistr(pattern), parse_error, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("pattern"), py::arg("parse_error"));
@@ -125,7 +125,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -138,7 +138,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -161,7 +161,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -184,7 +184,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -207,7 +207,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -221,7 +221,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -232,7 +232,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -245,7 +245,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         ErrorCode error_code;
         auto result = self.getAttribute(attr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -322,16 +322,16 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def(
         "parse",
-        [](const DecimalFormat &self, const _UnicodeStringVariant &text, Formattable &result,
-           ParsePosition &parse_position) { self.parse(VARIANT_TO_UNISTR(text), result, parse_position); },
+        [](const DecimalFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result,
+           ParsePosition &parse_position) { self.parse(icupy::to_unistr(text), result, parse_position); },
         py::arg("text"), py::arg("result"), py::arg("parse_position"))
       .def(
           "parse",
-          [](const NumberFormat &self, const _UnicodeStringVariant &text, Formattable &result) {
+          [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result) {
             ErrorCode error_code;
-            self.parse(VARIANT_TO_UNISTR(text), result, error_code);
+            self.parse(icupy::to_unistr(text), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));
@@ -339,8 +339,8 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   df.def(
       "parse_currency",
-      [](const DecimalFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
-        return self.parseCurrency(VARIANT_TO_UNISTR(text), pos);
+      [](const DecimalFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseCurrency(icupy::to_unistr(text), pos);
       },
       py::arg("text"), py::arg("pos"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
@@ -352,7 +352,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         ErrorCode error_code;
         auto &result = self.setAttribute(attr, new_value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -365,7 +365,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         ErrorCode error_code;
         self.setCurrency(the_currency, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("the_currency"));
@@ -379,7 +379,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         ErrorCode error_code;
         self.setCurrencyUsage(new_usage, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("new_usage"));
@@ -435,22 +435,22 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def(
       "set_negative_prefix",
-      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
-        self.setNegativePrefix(VARIANT_TO_UNISTR(new_value));
+      [](DecimalFormat &self, const icupy::UnicodeStringVariant &new_value) {
+        self.setNegativePrefix(icupy::to_unistr(new_value));
       },
       py::arg("new_value"));
 
   df.def(
       "set_negative_suffix",
-      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
-        self.setNegativeSuffix(VARIANT_TO_UNISTR(new_value));
+      [](DecimalFormat &self, const icupy::UnicodeStringVariant &new_value) {
+        self.setNegativeSuffix(icupy::to_unistr(new_value));
       },
       py::arg("new_value"));
 
   df.def(
       "set_pad_character",
-      [](DecimalFormat &self, const _UnicodeStringVariant &pad_char) {
-        self.setPadCharacter(VARIANT_TO_UNISTR(pad_char));
+      [](DecimalFormat &self, const icupy::UnicodeStringVariant &pad_char) {
+        self.setPadCharacter(icupy::to_unistr(pad_char));
       },
       py::arg("pad_char"));
 
@@ -470,15 +470,15 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def(
       "set_positive_prefix",
-      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
-        self.setPositivePrefix(VARIANT_TO_UNISTR(new_value));
+      [](DecimalFormat &self, const icupy::UnicodeStringVariant &new_value) {
+        self.setPositivePrefix(icupy::to_unistr(new_value));
       },
       py::arg("new_value"));
 
   df.def(
       "set_positive_suffix",
-      [](DecimalFormat &self, const _UnicodeStringVariant &new_value) {
-        self.setPositiveSuffix(VARIANT_TO_UNISTR(new_value));
+      [](DecimalFormat &self, const icupy::UnicodeStringVariant &new_value) {
+        self.setPositiveSuffix(icupy::to_unistr(new_value));
       },
       py::arg("new_value"));
 
@@ -505,7 +505,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
         ErrorCode error_code;
         auto result = self.toNumberFormatter(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

@@ -18,7 +18,7 @@ void init_measure(py::module &m) {
              auto result = std::make_unique<Measure>(
                  number, reinterpret_cast<MeasureUnit *>(adopted_unit ? adopted_unit->clone() : nullptr), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -49,7 +49,7 @@ void init_measure(py::module &m) {
            ErrorCode error_code;
            auto result = std::make_unique<CurrencyAmount>(amount, iso_code, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }),
@@ -58,7 +58,7 @@ void init_measure(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<CurrencyAmount>(amount, iso_code, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -85,7 +85,7 @@ void init_measure(py::module &m) {
             ErrorCode error_code;
             auto result = std::make_unique<TimeUnitAmount>(number, time_unit_field, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -94,7 +94,7 @@ void init_measure(py::module &m) {
              ErrorCode error_code;
              auto result = std::make_unique<TimeUnitAmount>(amount, time_unit_field, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),

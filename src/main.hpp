@@ -18,15 +18,31 @@
 
 namespace py = pybind11;
 
-using _Char16Variant = std::variant<char16_t, uint16_t>;
+namespace icupy {
 
-using _LocaleVariant = std::variant<icu::Locale, std::string>;
+using Char16Variant = std::variant<char16_t, uint16_t>;
 
-using _UnicodeStringList = std::list<icu::UnicodeString>;
-using _UnicodeStringVariant = std::variant<icu::UnicodeString, std::u16string>;
-using _UnicodeStringVector = std::vector<icu::UnicodeString>;
+using LocaleVariant = std::variant<icu::Locale, std::string>;
 
-PYBIND11_MAKE_OPAQUE(_UnicodeStringVector);
+using UnicodeStringList = std::list<icu::UnicodeString>;
+using UnicodeStringVariant = std::variant<icu::UnicodeString, std::u16string>;
+using UnicodeStringVector = std::vector<icu::UnicodeString>;
+
+using UChar32Variant = std::variant<char32_t, UChar32>;
+
+inline auto to_char16(const Char16Variant &x) {
+  return std::visit([](auto &y) -> char16_t { return y; }, x);
+}
+
+inline auto to_locale(const LocaleVariant &x) { return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str(); }
+
+inline auto to_uchar32(const UChar32Variant &x) {
+  return std::visit([](auto &y) -> UChar32 { return y; }, x);
+}
+
+inline auto to_unistr(const UnicodeStringVariant &x) {
+  return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();
+}
 
 class ICUError : public std::exception {
 public:
@@ -40,16 +56,8 @@ private:
   std::string message_;
 };
 
-inline auto VARIANT_TO_CHAR16(const _Char16Variant &x) {
-  return std::visit([](auto &y) -> char16_t { return y; }, x);
-}
+} // namespace icupy
 
-inline auto VARIANT_TO_LOCALE(const _LocaleVariant &x) {
-  return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();
-}
-
-inline auto VARIANT_TO_UNISTR(const _UnicodeStringVariant &x) {
-  return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();
-}
+PYBIND11_MAKE_OPAQUE(icupy::UnicodeStringVector);
 
 #endif // ICUPY_MAIN_HPP

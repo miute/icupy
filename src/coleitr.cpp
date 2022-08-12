@@ -38,7 +38,7 @@ void init_coleitr(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     } else if (result == CollationElementIterator::NULLORDER) {
       throw py::stop_iteration();
     }
@@ -56,7 +56,7 @@ void init_coleitr(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -65,7 +65,7 @@ void init_coleitr(py::module &m) {
     ErrorCode error_code;
     auto result = self.previous(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -82,7 +82,7 @@ void init_coleitr(py::module &m) {
         ErrorCode error_code;
         self.setOffset(new_offset, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("new_offset"));
@@ -93,17 +93,17 @@ void init_coleitr(py::module &m) {
            ErrorCode error_code;
            self.setText(str, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
          },
          py::arg("str_"))
       .def(
           "set_text",
-          [](CollationElementIterator &self, const _UnicodeStringVariant &str) {
+          [](CollationElementIterator &self, const icupy::UnicodeStringVariant &str) {
             ErrorCode error_code;
-            self.setText(VARIANT_TO_UNISTR(str), error_code);
+            self.setText(icupy::to_unistr(str), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("str_"));

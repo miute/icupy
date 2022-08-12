@@ -48,15 +48,15 @@ void init_dtfmtsym(py::module &m) {
        ErrorCode error_code;
        auto result = std::make_unique<DateFormatSymbols>(error_code);
        if (error_code.isFailure()) {
-         throw ICUError(error_code);
+         throw icupy::ICUError(error_code);
        }
        return result;
      }))
-      .def(py::init([](const _LocaleVariant &locale) {
+      .def(py::init([](const icupy::LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<DateFormatSymbols>(VARIANT_TO_LOCALE(locale), error_code);
+             auto result = std::make_unique<DateFormatSymbols>(icupy::to_locale(locale), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -116,7 +116,7 @@ void init_dtfmtsym(py::module &m) {
         ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -296,8 +296,8 @@ void init_dtfmtsym(py::module &m) {
 
   dfs.def(
       "set_local_pattern_chars",
-      [](DateFormatSymbols &self, const _UnicodeStringVariant &new_local_pattern_chars) {
-        self.setLocalPatternChars(VARIANT_TO_UNISTR(new_local_pattern_chars));
+      [](DateFormatSymbols &self, const icupy::UnicodeStringVariant &new_local_pattern_chars) {
+        self.setLocalPatternChars(icupy::to_unistr(new_local_pattern_chars));
       },
       py::arg("new_local_pattern_chars"));
 

@@ -29,7 +29,7 @@ void init_uenum(py::module &m) {
         ErrorCode error_code;
         auto result = uenum_count(en, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -41,7 +41,7 @@ void init_uenum(py::module &m) {
         ErrorCode error_code;
         auto result = uenum_next(en, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -62,7 +62,7 @@ void init_uenum(py::module &m) {
         }
         auto p = uenum_openCharStringsEnumeration(source.get(), count, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
@@ -75,7 +75,7 @@ void init_uenum(py::module &m) {
         ErrorCode error_code;
         auto p = uenum_openFromStringEnumeration(adopted ? adopted->clone() : nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
       },
@@ -97,7 +97,7 @@ void init_uenum(py::module &m) {
         }
         auto p = uenum_openUCharStringsEnumeration(source.get(), count, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p, source);
       },
@@ -110,7 +110,7 @@ void init_uenum(py::module &m) {
         ErrorCode error_code;
         uenum_reset(en, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("en"));
@@ -121,7 +121,7 @@ void init_uenum(py::module &m) {
         ErrorCode error_code;
         auto result = uenum_unext(en, nullptr, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

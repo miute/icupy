@@ -28,9 +28,9 @@ void init_tzrule(py::module &m) {
 
   atzr.def_property_readonly_static("MAX_YEAR", [](const py::object &) { return AnnualTimeZoneRule::MAX_YEAR; });
 
-  atzr.def(py::init([](const _UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings,
+  atzr.def(py::init([](const icupy::UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings,
                        const DateTimeRule &date_time_rule, int32_t start_year, int32_t end_year) {
-             return std::make_unique<AnnualTimeZoneRule>(VARIANT_TO_UNISTR(name), raw_offset, dst_savings,
+             return std::make_unique<AnnualTimeZoneRule>(icupy::to_unistr(name), raw_offset, dst_savings,
                                                          date_time_rule, start_year, end_year);
            }),
            py::arg("name"), py::arg("raw_offset"), py::arg("dst_savings"), py::arg("date_time_rule"),
@@ -133,8 +133,8 @@ void init_tzrule(py::module &m) {
   //
   py::class_<InitialTimeZoneRule, TimeZoneRule> itzr(m, "InitialTimeZoneRule");
 
-  itzr.def(py::init([](const _UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings) {
-             return std::make_unique<InitialTimeZoneRule>(VARIANT_TO_UNISTR(name), raw_offset, dst_savings);
+  itzr.def(py::init([](const icupy::UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings) {
+             return std::make_unique<InitialTimeZoneRule>(icupy::to_unistr(name), raw_offset, dst_savings);
            }),
            py::arg("name"), py::arg("raw_offset"), py::arg("dst_savings"))
       .def(py::init<const InitialTimeZoneRule &>(), py::arg("other"));
@@ -214,10 +214,10 @@ void init_tzrule(py::module &m) {
   py::class_<TimeArrayTimeZoneRule, TimeZoneRule> tatzr(m, "TimeArrayTimeZoneRule");
 
   tatzr
-      .def(py::init([](const _UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings,
+      .def(py::init([](const icupy::UnicodeStringVariant &name, int32_t raw_offset, int32_t dst_savings,
                        const std::vector<UDate> &start_times, int32_t num_start_times,
                        DateTimeRule::TimeRuleType time_rule_type) {
-             return std::make_unique<TimeArrayTimeZoneRule>(VARIANT_TO_UNISTR(name), raw_offset, dst_savings,
+             return std::make_unique<TimeArrayTimeZoneRule>(icupy::to_unistr(name), raw_offset, dst_savings,
                                                             start_times.data(), num_start_times, time_rule_type);
            }),
            py::arg("name"), py::arg("raw_offset"), py::arg("dst_savings"), py::arg("start_times"),

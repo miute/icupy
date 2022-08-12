@@ -55,7 +55,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -66,7 +66,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.getDecimalNumbers<std::string>(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -76,7 +76,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.getIdentityResult(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -88,7 +88,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -99,7 +99,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -109,7 +109,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -126,7 +126,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         ErrorCode error_code;
         auto result = self.formatFormattableRange(first, second, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -139,7 +139,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
   nrf.def_static(
       "with_locale",
-      [](const _LocaleVariant &locale) { return NumberRangeFormatter::withLocale(VARIANT_TO_LOCALE(locale)); },
+      [](const icupy::LocaleVariant &locale) { return NumberRangeFormatter::withLocale(icupy::to_locale(locale)); },
       py::arg("locale"));
 
   //
@@ -273,8 +273,8 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
   unrf.def(
       "locale",
-      [](const UnlocalizedNumberRangeFormatter &self, const _LocaleVariant &locale) {
-        return self.locale(VARIANT_TO_LOCALE(locale));
+      [](const UnlocalizedNumberRangeFormatter &self, const icupy::LocaleVariant &locale) {
+        return self.locale(icupy::to_locale(locale));
       },
       py::arg("locale"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)

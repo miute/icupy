@@ -11,11 +11,11 @@ void init_dtitvinf(py::module &m) {
   //
   py::class_<DateIntervalInfo> dii(m, "DateIntervalInfo");
 
-  dii.def(py::init([](const _LocaleVariant &locale) {
+  dii.def(py::init([](const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<DateIntervalInfo>(VARIANT_TO_LOCALE(locale), error_code);
+            auto result = std::make_unique<DateIntervalInfo>(icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -43,12 +43,12 @@ void init_dtitvinf(py::module &m) {
 
   dii.def(
       "get_interval_pattern",
-      [](const DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields field,
+      [](const DateIntervalInfo &self, const icupy::UnicodeStringVariant &skeleton, UCalendarDateFields field,
          UnicodeString &result) -> UnicodeString & {
         ErrorCode error_code;
-        auto &string = self.getIntervalPattern(VARIANT_TO_UNISTR(skeleton), field, result, error_code);
+        auto &string = self.getIntervalPattern(icupy::to_unistr(skeleton), field, result, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return string;
       },
@@ -56,24 +56,24 @@ void init_dtitvinf(py::module &m) {
 
   dii.def(
       "set_fallback_interval_pattern",
-      [](DateIntervalInfo &self, const _UnicodeStringVariant &fallback_pattern) {
+      [](DateIntervalInfo &self, const icupy::UnicodeStringVariant &fallback_pattern) {
         ErrorCode error_code;
-        self.setFallbackIntervalPattern(VARIANT_TO_UNISTR(fallback_pattern), error_code);
+        self.setFallbackIntervalPattern(icupy::to_unistr(fallback_pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("fallback_pattern"));
 
   dii.def(
       "set_interval_pattern",
-      [](DateIntervalInfo &self, const _UnicodeStringVariant &skeleton, UCalendarDateFields lrg_diff_cal_unit,
-         const _UnicodeStringVariant &interval_pattern) {
+      [](DateIntervalInfo &self, const icupy::UnicodeStringVariant &skeleton, UCalendarDateFields lrg_diff_cal_unit,
+         const icupy::UnicodeStringVariant &interval_pattern) {
         ErrorCode error_code;
-        self.setIntervalPattern(VARIANT_TO_UNISTR(skeleton), lrg_diff_cal_unit, VARIANT_TO_UNISTR(interval_pattern),
+        self.setIntervalPattern(icupy::to_unistr(skeleton), lrg_diff_cal_unit, icupy::to_unistr(interval_pattern),
                                 error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("skeleton"), py::arg("lrg_diff_cal_unit"), py::arg("interval_pattern"));

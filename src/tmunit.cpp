@@ -41,7 +41,7 @@ void init_tmunit(py::module &m) {
         ErrorCode error_code;
         auto result = TimeUnit::createInstance(time_unit_field, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

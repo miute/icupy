@@ -32,7 +32,7 @@ _UTextVector::_UTextVector(const std::list<std::reference_wrapper<UnicodeString>
     error_code.reset();
     auto ut = utext_openUnicodeString(nullptr, &sources_[i].get(), error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     values_.push_back(ut);
   }
@@ -44,7 +44,7 @@ void _UTextVector::append(UnicodeString &src) {
   ErrorCode error_code;
   auto ut = utext_openUnicodeString(nullptr, &src, error_code);
   if (error_code.isFailure()) {
-    throw ICUError(error_code);
+    throw icupy::ICUError(error_code);
   }
   append(ut, src);
 }
@@ -79,7 +79,7 @@ void _UTextVector::insert(int32_t index, UnicodeString &src) {
   ErrorCode error_code;
   auto ut = utext_openUnicodeString(nullptr, &src, error_code);
   if (error_code.isFailure()) {
-    throw ICUError(error_code);
+    throw icupy::ICUError(error_code);
   }
   values_.insert(values_.cbegin() + index, ut);
   sources_.insert(sources_.cbegin() + index, src);
@@ -209,7 +209,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, src.get_source());
       },
@@ -233,7 +233,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         utext_copy(ut, native_start, native_limit, dest_index, move, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), py::arg("dest_index"), py::arg("move"));
@@ -253,7 +253,7 @@ void init_utext(py::module &m) {
         error_code.reset();
         utext_extract(ut, native_start, native_limit, result.data(), dest_capacity, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -297,7 +297,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_openCharacterIterator(ut.value_or(nullptr), ci, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -309,7 +309,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_openConstUnicodeString(ut.value_or(nullptr), s, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -321,7 +321,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_openReplaceable(ut.value_or(nullptr), rep, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -334,7 +334,7 @@ void init_utext(py::module &m) {
         auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max(int64_t{0}, length));
         auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
       },
@@ -346,7 +346,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_openUnicodeString(ut.value_or(nullptr), s, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },
@@ -359,7 +359,7 @@ void init_utext(py::module &m) {
         auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max(int64_t{0}, length));
         auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
       },
@@ -380,7 +380,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto result = utext_replace(ut, native_start, native_limit, replacement_text, replacement_length, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -399,7 +399,7 @@ void init_utext(py::module &m) {
         ErrorCode error_code;
         auto p = utext_setup(ut.value_or(nullptr), extra_space, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p);
       },

@@ -67,7 +67,7 @@ void init_idna(py::module &m) {
         ErrorCode error_code;
         auto result = IDNA::createUTS46Instance(options, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -75,11 +75,12 @@ void init_idna(py::module &m) {
 
   idna.def(
       "label_to_ascii",
-      [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+      [](const IDNA &self, const icupy::UnicodeStringVariant &label, UnicodeString &dest,
+         IDNAInfo &info) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.labelToASCII(VARIANT_TO_UNISTR(label), dest, info, error_code);
+        auto &result = self.labelToASCII(icupy::to_unistr(label), dest, info, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -87,11 +88,12 @@ void init_idna(py::module &m) {
 
   idna.def(
       "label_to_unicode",
-      [](const IDNA &self, const _UnicodeStringVariant &label, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+      [](const IDNA &self, const icupy::UnicodeStringVariant &label, UnicodeString &dest,
+         IDNAInfo &info) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.labelToUnicode(VARIANT_TO_UNISTR(label), dest, info, error_code);
+        auto &result = self.labelToUnicode(icupy::to_unistr(label), dest, info, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -99,11 +101,12 @@ void init_idna(py::module &m) {
 
   idna.def(
       "name_to_ascii",
-      [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+      [](const IDNA &self, const icupy::UnicodeStringVariant &name, UnicodeString &dest,
+         IDNAInfo &info) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.nameToASCII(VARIANT_TO_UNISTR(name), dest, info, error_code);
+        auto &result = self.nameToASCII(icupy::to_unistr(name), dest, info, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -111,11 +114,12 @@ void init_idna(py::module &m) {
 
   idna.def(
       "name_to_unicode",
-      [](const IDNA &self, const _UnicodeStringVariant &name, UnicodeString &dest, IDNAInfo &info) -> UnicodeString & {
+      [](const IDNA &self, const icupy::UnicodeStringVariant &name, UnicodeString &dest,
+         IDNAInfo &info) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.nameToUnicode(VARIANT_TO_UNISTR(name), dest, info, error_code);
+        auto &result = self.nameToUnicode(icupy::to_unistr(name), dest, info, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

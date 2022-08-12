@@ -53,11 +53,11 @@ void init_tznames(py::module &m) {
 
   tzn.def_static(
       "create_instance",
-      [](const _LocaleVariant &locale) {
+      [](const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
-        auto result = TimeZoneNames::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+        auto result = TimeZoneNames::createInstance(icupy::to_locale(locale), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -66,11 +66,11 @@ void init_tznames(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   tzn.def_static(
       "create_tzdb_instance",
-      [](const _LocaleVariant &locale) {
+      [](const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
-        auto result = TimeZoneNames::createTZDBInstance(VARIANT_TO_LOCALE(locale), error_code);
+        auto result = TimeZoneNames::createTZDBInstance(icupy::to_locale(locale), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -79,11 +79,11 @@ void init_tznames(py::module &m) {
 
   tzn.def(
          "get_available_meta_zone_ids",
-         [](const TimeZoneNames &self, const _UnicodeStringVariant &tz_id) {
+         [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &tz_id) {
            ErrorCode error_code;
-           auto result = self.getAvailableMetaZoneIDs(VARIANT_TO_UNISTR(tz_id), error_code);
+           auto result = self.getAvailableMetaZoneIDs(icupy::to_unistr(tz_id), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -92,48 +92,52 @@ void init_tznames(py::module &m) {
         ErrorCode error_code;
         auto result = self.getAvailableMetaZoneIDs(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
 
   tzn.def(
       "get_display_name",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &tz_id, UTimeZoneNameType type, UDate date,
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &tz_id, UTimeZoneNameType type, UDate date,
          UnicodeString &name) -> UnicodeString & {
-        return self.getDisplayName(VARIANT_TO_UNISTR(tz_id), type, date, name);
+        return self.getDisplayName(icupy::to_unistr(tz_id), type, date, name);
       },
       py::arg("tz_id"), py::arg("type_"), py::arg("date"), py::arg("name"));
 
   tzn.def(
       "get_exemplar_location_name",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &tz_id, UnicodeString &name) -> UnicodeString & {
-        return self.getExemplarLocationName(VARIANT_TO_UNISTR(tz_id), name);
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &tz_id, UnicodeString &name) -> UnicodeString & {
+        return self.getExemplarLocationName(icupy::to_unistr(tz_id), name);
       },
       py::arg("tz_id"), py::arg("name"));
 
   tzn.def(
       "get_meta_zone_display_name",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &mz_id, UTimeZoneNameType type, UnicodeString &name)
-          -> UnicodeString & { return self.getMetaZoneDisplayName(VARIANT_TO_UNISTR(mz_id), type, name); },
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &mz_id, UTimeZoneNameType type,
+         UnicodeString &name) -> UnicodeString & {
+        return self.getMetaZoneDisplayName(icupy::to_unistr(mz_id), type, name);
+      },
       py::arg("mz_id"), py::arg("type_"), py::arg("name"));
 
   tzn.def(
       "get_meta_zone_id",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &tz_id, UDate date,
-         UnicodeString &mz_id) -> UnicodeString & { return self.getMetaZoneID(VARIANT_TO_UNISTR(tz_id), date, mz_id); },
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &tz_id, UDate date,
+         UnicodeString &mz_id) -> UnicodeString & { return self.getMetaZoneID(icupy::to_unistr(tz_id), date, mz_id); },
       py::arg("tz_id"), py::arg("date"), py::arg("mz_id"));
 
   tzn.def(
       "get_reference_zone_id",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &mz_id, const char *region, UnicodeString &tz_id)
-          -> UnicodeString & { return self.getReferenceZoneID(VARIANT_TO_UNISTR(mz_id), region, tz_id); },
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &mz_id, const char *region, UnicodeString &tz_id)
+          -> UnicodeString & { return self.getReferenceZoneID(icupy::to_unistr(mz_id), region, tz_id); },
       py::arg("mz_id"), py::arg("region"), py::arg("tz_id"));
 
   tzn.def(
       "get_time_zone_display_name",
-      [](const TimeZoneNames &self, const _UnicodeStringVariant &tz_id, UTimeZoneNameType type, UnicodeString &name)
-          -> UnicodeString & { return self.getTimeZoneDisplayName(VARIANT_TO_UNISTR(tz_id), type, name); },
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &tz_id, UTimeZoneNameType type,
+         UnicodeString &name) -> UnicodeString & {
+        return self.getTimeZoneDisplayName(icupy::to_unistr(tz_id), type, name);
+      },
       py::arg("tz_id"), py::arg("type_"), py::arg("name"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

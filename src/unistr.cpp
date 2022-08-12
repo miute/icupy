@@ -65,7 +65,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
              ErrorCode error_code;
              auto result = std::make_unique<UnicodeString>(src, src_length, cnv, error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -79,13 +79,13 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__add__",
-      [](UnicodeString &self, const _UnicodeStringVariant &other) { return self + VARIANT_TO_UNISTR(other); },
+      [](UnicodeString &self, const icupy::UnicodeStringVariant &other) { return self + icupy::to_unistr(other); },
       py::is_operator(), py::arg("other"));
 
   us.def(
       "__contains__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &item) {
-        return self.indexOf(VARIANT_TO_UNISTR(item)) >= 0;
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &item) {
+        return self.indexOf(icupy::to_unistr(item)) >= 0;
       },
       py::arg("item"));
 
@@ -96,13 +96,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__eq__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) { return self == VARIANT_TO_UNISTR(other); },
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) {
+        return self == icupy::to_unistr(other);
+      },
       py::is_operator(), py::arg("other"));
 
   us.def(
       "__ge__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) -> bool {
-        return self >= VARIANT_TO_UNISTR(other);
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) -> bool {
+        return self >= icupy::to_unistr(other);
       },
       py::is_operator(), py::arg("other"));
 
@@ -137,8 +139,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__gt__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) -> bool {
-        return self > VARIANT_TO_UNISTR(other);
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) -> bool {
+        return self > icupy::to_unistr(other);
       },
       py::is_operator(), py::arg("other"));
 
@@ -146,8 +148,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         "__iadd__",
-        [](UnicodeString &self, const _UnicodeStringVariant &other) -> UnicodeString & {
-          return self += VARIANT_TO_UNISTR(other);
+        [](UnicodeString &self, const icupy::UnicodeStringVariant &other) -> UnicodeString & {
+          return self += icupy::to_unistr(other);
         },
         py::is_operator(), py::arg("other"))
       .def(
@@ -156,8 +158,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__le__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) -> bool {
-        return self <= VARIANT_TO_UNISTR(other);
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) -> bool {
+        return self <= icupy::to_unistr(other);
       },
       py::is_operator(), py::arg("other"));
 
@@ -165,14 +167,16 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__lt__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) -> bool {
-        return self < VARIANT_TO_UNISTR(other);
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) -> bool {
+        return self < icupy::to_unistr(other);
       },
       py::is_operator(), py::arg("other"));
 
   us.def(
       "__ne__",
-      [](const UnicodeString &self, const _UnicodeStringVariant &other) { return self != VARIANT_TO_UNISTR(other); },
+      [](const UnicodeString &self, const icupy::UnicodeStringVariant &other) {
+        return self != icupy::to_unistr(other);
+      },
       py::is_operator(), py::arg("other"));
 
   us.def("__repr__", [](const UnicodeString &self) {
@@ -210,7 +214,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "__setitem__",
-      [](UnicodeString &self, int32_t index, const _Char16Variant &value) {
+      [](UnicodeString &self, int32_t index, const icupy::Char16Variant &value) {
         const auto length = self.length();
         if (index < 0) {
           index += length;
@@ -218,7 +222,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         if (index < 0 || index >= length) {
           throw py::index_error("string index out of range: " + std::to_string(index));
         }
-        self.setCharAt(index, VARIANT_TO_CHAR16(value));
+        self.setCharAt(index, icupy::to_char16(value));
       },
       py::arg("index"), py::arg("value"));
 
@@ -231,7 +235,6 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   // us.def(
   //       // [1] append(char16_t srcChar)
   //       "append", py::overload_cast<char16_t>(&UnicodeString::append), py::arg("src_char"))
-
   us.def(
         // [2] append(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
         "append", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::append), py::arg("src_chars"),
@@ -239,8 +242,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [3] append(const UnicodeString &srcText)
           "append",
-          [](UnicodeString &self, const _UnicodeStringVariant &src_text) -> UnicodeString & {
-            return self.append(VARIANT_TO_UNISTR(src_text));
+          [](UnicodeString &self, const icupy::UnicodeStringVariant &src_text) -> UnicodeString & {
+            return self.append(icupy::to_unistr(src_text));
           },
           py::arg("src_text"))
       .def(
@@ -261,8 +264,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] caseCompare(const UnicodeString &text, uint32_t options)
         "case_compare",
-        [](const UnicodeString &self, const _UnicodeStringVariant &text, uint32_t options) {
-          return self.caseCompare(VARIANT_TO_UNISTR(text), options);
+        [](const UnicodeString &self, const icupy::UnicodeStringVariant &text, uint32_t options) {
+          return self.caseCompare(icupy::to_unistr(text), options);
         },
         py::arg("text"), py::arg("options"))
       .def(
@@ -301,9 +304,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "case_compare_between",
-      [](const UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &src_text,
+      [](const UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &src_text,
          int32_t src_start, int32_t src_limit, uint32_t options) {
-        return self.caseCompareBetween(start, limit, VARIANT_TO_UNISTR(src_text), src_start, src_limit, options);
+        return self.caseCompareBetween(start, limit, icupy::to_unistr(src_text), src_start, src_limit, options);
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"),
       py::arg("options"));
@@ -313,8 +316,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] compare(const UnicodeString &text)
         "compare",
-        [](const UnicodeString &self, const _UnicodeStringVariant &text) {
-          return self.compare(VARIANT_TO_UNISTR(text));
+        [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+          return self.compare(icupy::to_unistr(text));
         },
         py::arg("text"))
       .def(
@@ -347,17 +350,17 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "compare_between",
-      [](const UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &src_text,
+      [](const UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &src_text,
          int32_t src_start, int32_t src_limit) {
-        return self.compareBetween(start, limit, VARIANT_TO_UNISTR(src_text), src_start, src_limit);
+        return self.compareBetween(start, limit, icupy::to_unistr(src_text), src_start, src_limit);
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
 
   us.def(
         // [1] compareCodePointOrder(const UnicodeString &text)
         "compare_code_point_order",
-        [](const UnicodeString &self, const _UnicodeStringVariant &text) {
-          return self.compareCodePointOrder(VARIANT_TO_UNISTR(text));
+        [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+          return self.compareCodePointOrder(icupy::to_unistr(text));
         },
         py::arg("text"))
       .def(
@@ -394,9 +397,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "compare_code_point_order_between",
-      [](const UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &src_text,
+      [](const UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &src_text,
          int32_t src_start, int32_t src_limit) {
-        return self.compareCodePointOrderBetween(start, limit, VARIANT_TO_UNISTR(src_text), src_start, src_limit);
+        return self.compareCodePointOrderBetween(start, limit, icupy::to_unistr(src_text), src_start, src_limit);
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
 
@@ -415,8 +418,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [3] endsWith(const UnicodeString &text)
           "ends_with",
-          [](const UnicodeString &self, const _UnicodeStringVariant &src_text) {
-            return self.endsWith(VARIANT_TO_UNISTR(src_text));
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &src_text) {
+            return self.endsWith(icupy::to_unistr(src_text));
           },
           py::arg("src_text"))
       .def(
@@ -437,7 +440,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           error_code.reset();
           self.extract(dest.data(), static_cast<int32_t>(dest.size()), cnv, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return py::bytes(dest.data(), length);
         },
@@ -450,7 +453,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
             ErrorCode error_code;
             self.extract(result.data(), static_cast<int32_t>(result.size()), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           })
@@ -521,29 +524,29 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] findAndReplace(const UnicodeString &oldText, const UnicodeString &newText)
         "find_and_replace",
-        [](UnicodeString &self, const _UnicodeStringVariant &old_text,
-           const _UnicodeStringVariant &new_text) -> UnicodeString & {
-          return self.findAndReplace(VARIANT_TO_UNISTR(old_text), VARIANT_TO_UNISTR(new_text));
+        [](UnicodeString &self, const icupy::UnicodeStringVariant &old_text,
+           const icupy::UnicodeStringVariant &new_text) -> UnicodeString & {
+          return self.findAndReplace(icupy::to_unistr(old_text), icupy::to_unistr(new_text));
         },
         py::arg("old_text"), py::arg("new_text"))
       .def(
           // [2] findAndReplace(int32_t start, int32_t length, const UnicodeString &oldText,
           //                    const UnicodeString &newText)
           "find_and_replace",
-          [](UnicodeString &self, int32_t start, int32_t length, const _UnicodeStringVariant &old_text,
-             const _UnicodeStringVariant &new_text) -> UnicodeString & {
-            return self.findAndReplace(start, length, VARIANT_TO_UNISTR(old_text), VARIANT_TO_UNISTR(new_text));
+          [](UnicodeString &self, int32_t start, int32_t length, const icupy::UnicodeStringVariant &old_text,
+             const icupy::UnicodeStringVariant &new_text) -> UnicodeString & {
+            return self.findAndReplace(start, length, icupy::to_unistr(old_text), icupy::to_unistr(new_text));
           },
           py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("new_text"))
       .def(
           // [3] findAndReplace(int32_t start, int32_t length, const UnicodeString &oldText, int32_t oldStart,
           //                    int32_t oldLength, const UnicodeString &newText, int32_t newStart, int32_t newLength)
           "find_and_replace",
-          [](UnicodeString &self, int32_t start, int32_t length, const _UnicodeStringVariant &old_text,
-             int32_t old_start, int32_t old_length, const _UnicodeStringVariant &new_text, int32_t new_start,
+          [](UnicodeString &self, int32_t start, int32_t length, const icupy::UnicodeStringVariant &old_text,
+             int32_t old_start, int32_t old_length, const icupy::UnicodeStringVariant &new_text, int32_t new_start,
              int32_t new_length) -> UnicodeString & {
-            return self.findAndReplace(start, length, VARIANT_TO_UNISTR(old_text), old_start, old_length,
-                                       VARIANT_TO_UNISTR(new_text), new_start, new_length);
+            return self.findAndReplace(start, length, icupy::to_unistr(old_text), old_start, old_length,
+                                       icupy::to_unistr(new_text), new_start, new_length);
           },
           py::arg("start"), py::arg("length"), py::arg("old_text"), py::arg("old_start"), py::arg("old_length"),
           py::arg("new_text"), py::arg("new_start"), py::arg("new_length"));
@@ -591,8 +594,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "handle_replace_between",
-      [](UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &text) {
-        self.handleReplaceBetween(start, limit, VARIANT_TO_UNISTR(text));
+      [](UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &text) {
+        self.handleReplaceBetween(start, limit, icupy::to_unistr(text));
       },
       py::arg("start"), py::arg("limit"), py::arg("text"));
 
@@ -620,15 +623,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [7] indexOf(const UnicodeString &text)
           "index_of",
-          [](const UnicodeString &self, const _UnicodeStringVariant &text) {
-            return self.indexOf(VARIANT_TO_UNISTR(text));
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+            return self.indexOf(icupy::to_unistr(text));
           },
           py::arg("text"))
       .def(
           // [8] indexOf(const UnicodeString &text, int32_t start)
           "index_of",
-          [](const UnicodeString &self, const _UnicodeStringVariant &text, int32_t start) {
-            return self.indexOf(VARIANT_TO_UNISTR(text), start);
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text, int32_t start) {
+            return self.indexOf(icupy::to_unistr(text), start);
           },
           py::arg("text"), py::arg("start"))
       .def(
@@ -661,8 +664,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [3] insert(int32_t start, const UnicodeString &srcText)
           "insert",
-          [](UnicodeString &self, int32_t start, const _UnicodeStringVariant &src_text) -> UnicodeString & {
-            return self.insert(start, VARIANT_TO_UNISTR(src_text));
+          [](UnicodeString &self, int32_t start, const icupy::UnicodeStringVariant &src_text) -> UnicodeString & {
+            return self.insert(start, icupy::to_unistr(src_text));
           },
           py::arg("start"), py::arg("src_text"))
       .def(
@@ -705,15 +708,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [7] lastIndexOf(const UnicodeString &text)
           "last_index_of",
-          [](const UnicodeString &self, const _UnicodeStringVariant &text) {
-            return self.lastIndexOf(VARIANT_TO_UNISTR(text));
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+            return self.lastIndexOf(icupy::to_unistr(text));
           },
           py::arg("text"))
       .def(
           // [8] lastIndexOf(const UnicodeString &text, int32_t start)
           "last_index_of",
-          [](const UnicodeString &self, const _UnicodeStringVariant &text, int32_t start) {
-            return self.lastIndexOf(VARIANT_TO_UNISTR(text), start);
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text, int32_t start) {
+            return self.lastIndexOf(icupy::to_unistr(text), start);
           },
           py::arg("text"), py::arg("start"))
       .def(
@@ -769,8 +772,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [3] replace(int32_t start, int32_t length, const UnicodeString &srcText)
           "replace",
-          [](UnicodeString &self, int32_t start, int32_t length, const _UnicodeStringVariant &src_text)
-              -> UnicodeString & { return self.replace(start, length, VARIANT_TO_UNISTR(src_text)); },
+          [](UnicodeString &self, int32_t start, int32_t length, const icupy::UnicodeStringVariant &src_text)
+              -> UnicodeString & { return self.replace(start, length, icupy::to_unistr(src_text)); },
           py::arg("start"), py::arg("length"), py::arg("src_text"))
       .def(
           // [4] replace(int32_t start, int32_t length, const UnicodeString &srcText, int32_t srcStart,
@@ -792,16 +795,16 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] replaceBetween(int32_t start, int32_t limit, const UnicodeString &srcText)
         "replace_between",
-        [](UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &src_text)
-            -> UnicodeString & { return self.replaceBetween(start, limit, VARIANT_TO_UNISTR(src_text)); },
+        [](UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &src_text)
+            -> UnicodeString & { return self.replaceBetween(start, limit, icupy::to_unistr(src_text)); },
         py::arg("start"), py::arg("limit"), py::arg("src_text"))
       .def(
           // [2] replaceBetween(int32_t start, int32_t limit, const UnicodeString &srcText, int32_t srcStart,
           //                    int32_t srcLimit)
           "replace_between",
-          [](UnicodeString &self, int32_t start, int32_t limit, const _UnicodeStringVariant &src_text,
+          [](UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &src_text,
              int32_t src_start, int32_t src_limit) -> UnicodeString & {
-            return self.replaceBetween(start, limit, VARIANT_TO_UNISTR(src_text), src_start, src_limit);
+            return self.replaceBetween(start, limit, icupy::to_unistr(src_text), src_start, src_limit);
           },
           py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
 
@@ -822,8 +825,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [4] setTo(const UnicodeString &srcText)
           "set_to",
-          [](UnicodeString &self, const _UnicodeStringVariant &src_text) -> UnicodeString & {
-            return self.setTo(VARIANT_TO_UNISTR(src_text));
+          [](UnicodeString &self, const icupy::UnicodeStringVariant &src_text) -> UnicodeString & {
+            return self.setTo(icupy::to_unistr(src_text));
           },
           py::arg("src_text"))
       .def(
@@ -860,8 +863,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [3] startsWith(const UnicodeString &text)
           "starts_with",
-          [](const UnicodeString &self, const _UnicodeStringVariant &text) {
-            return self.startsWith(VARIANT_TO_UNISTR(text));
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+            return self.startsWith(icupy::to_unistr(text));
           },
           py::arg("text"))
       .def(
@@ -883,8 +886,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         "to_lower",
-        [](UnicodeString &self, const _LocaleVariant &locale) -> UnicodeString & {
-          return self.toLower(VARIANT_TO_LOCALE(locale));
+        [](UnicodeString &self, const icupy::LocaleVariant &locale) -> UnicodeString & {
+          return self.toLower(icupy::to_locale(locale));
         },
         py::arg("locale"))
       .def("to_lower", py::overload_cast<>(&UnicodeString::toLower));
@@ -892,20 +895,20 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def("to_title", py::overload_cast<BreakIterator *>(&UnicodeString::toTitle), py::arg("title_iter"))
       .def(
           "to_title",
-          [](UnicodeString &self, BreakIterator *title_iter, const _LocaleVariant &locale) -> UnicodeString & {
-            return self.toTitle(title_iter, VARIANT_TO_LOCALE(locale));
+          [](UnicodeString &self, BreakIterator *title_iter, const icupy::LocaleVariant &locale) -> UnicodeString & {
+            return self.toTitle(title_iter, icupy::to_locale(locale));
           },
           py::arg("title_iter"), py::arg("locale"))
       .def(
           "to_title",
-          [](UnicodeString &self, BreakIterator *title_iter, const _LocaleVariant &locale, uint32_t options)
-              -> UnicodeString & { return self.toTitle(title_iter, VARIANT_TO_LOCALE(locale), options); },
+          [](UnicodeString &self, BreakIterator *title_iter, const icupy::LocaleVariant &locale, uint32_t options)
+              -> UnicodeString & { return self.toTitle(title_iter, icupy::to_locale(locale), options); },
           py::arg("title_iter"), py::arg("locale"), py::arg("options"));
 
   us.def(
         "to_upper",
-        [](UnicodeString &self, const _LocaleVariant &locale) -> UnicodeString & {
-          return self.toUpper(VARIANT_TO_LOCALE(locale));
+        [](UnicodeString &self, const icupy::LocaleVariant &locale) -> UnicodeString & {
+          return self.toUpper(icupy::to_locale(locale));
         },
         py::arg("locale"))
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper));
@@ -917,7 +920,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
     error_code.reset();
     self.toUTF32(dest.data(), length, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::u32string(dest.begin(), dest.end());
   });

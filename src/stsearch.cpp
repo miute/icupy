@@ -45,8 +45,8 @@ void init_stsearch(py::module &m) {
 
   si.def(py::init<const PySearchIterator &>(), py::arg("other"))
       .def(py::init<>())
-      .def(py::init([](const _UnicodeStringVariant &text, BreakIterator *breakiter) {
-             return std::make_unique<PySearchIterator>(VARIANT_TO_UNISTR(text), breakiter);
+      .def(py::init([](const icupy::UnicodeStringVariant &text, BreakIterator *breakiter) {
+             return std::make_unique<PySearchIterator>(icupy::to_unistr(text), breakiter);
            }),
            py::arg("text"), py::arg("breakiter") = nullptr)
       .def(py::init([](CharacterIterator &text, BreakIterator *breakiter) {
@@ -71,7 +71,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     auto n = self.next(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     } else if (n == USEARCH_DONE) {
       throw py::stop_iteration();
     }
@@ -83,7 +83,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     for (auto n = self.last(error_code); n != USEARCH_DONE; n = self.previous(error_code)) {
       if (error_code.isFailure()) {
-        throw ICUError(error_code);
+        throw icupy::ICUError(error_code);
       }
       result.push_back(n);
     }
@@ -94,7 +94,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     auto result = self.first(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -105,7 +105,7 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         auto result = self.following(position, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -127,7 +127,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     auto result = self.last(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -136,7 +136,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -147,7 +147,7 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         auto result = self.preceding(position, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -157,7 +157,7 @@ void init_stsearch(py::module &m) {
     ErrorCode error_code;
     auto result = self.previous(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -170,7 +170,7 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         self.setAttribute(attribute, value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("attribute"), py::arg("value"));
@@ -181,7 +181,7 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         self.setBreakIterator(breakiter, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("breakiter"));
@@ -198,17 +198,17 @@ void init_stsearch(py::module &m) {
           ErrorCode error_code;
           self.setText(text, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
         },
         py::arg("text"))
       .def(
           "set_text",
-          [](SearchIterator &self, const _UnicodeStringVariant &text) {
+          [](SearchIterator &self, const icupy::UnicodeStringVariant &text) {
             ErrorCode error_code;
-            self.setText(VARIANT_TO_UNISTR(text), error_code);
+            self.setText(icupy::to_unistr(text), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"));
@@ -220,51 +220,51 @@ void init_stsearch(py::module &m) {
 
   ss.def(
         // [1] StringSearch::StringSearch
-        py::init([](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &text,
-                    const _LocaleVariant &locale, BreakIterator *breakiter) {
+        py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &text,
+                    const icupy::LocaleVariant &locale, BreakIterator *breakiter) {
           ErrorCode error_code;
-          auto result = std::make_unique<StringSearch>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(text),
-                                                       VARIANT_TO_LOCALE(locale), breakiter, error_code);
+          auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), icupy::to_unistr(text),
+                                                       icupy::to_locale(locale), breakiter, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         }),
         py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
       .def(
           // [2] StringSearch::StringSearch
-          py::init([](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &text, RuleBasedCollator *coll,
-                      BreakIterator *breakiter) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &text,
+                      RuleBasedCollator *coll, BreakIterator *breakiter) {
             ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(text), coll,
+            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), icupy::to_unistr(text), coll,
                                                          breakiter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"), py::arg("text"), py::arg("coll"), py::arg("breakiter"))
       .def(
           // [3] StringSearch::StringSearch
-          py::init([](const _UnicodeStringVariant &pattern, CharacterIterator &text, const _LocaleVariant &locale,
-                      BreakIterator *breakiter) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, CharacterIterator &text,
+                      const icupy::LocaleVariant &locale, BreakIterator *breakiter) {
             ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(VARIANT_TO_UNISTR(pattern), text, VARIANT_TO_LOCALE(locale),
+            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), text, icupy::to_locale(locale),
                                                          breakiter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter"))
       .def(
           // [4] StringSearch::StringSearch
-          py::init([](const _UnicodeStringVariant &pattern, CharacterIterator &text, RuleBasedCollator *coll,
+          py::init([](const icupy::UnicodeStringVariant &pattern, CharacterIterator &text, RuleBasedCollator *coll,
                       BreakIterator *breakiter) {
             ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(VARIANT_TO_UNISTR(pattern), text, coll, breakiter, error_code);
+            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), text, coll, breakiter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -304,7 +304,7 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         self.setCollator(coll, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("coll"));
@@ -315,18 +315,18 @@ void init_stsearch(py::module &m) {
         ErrorCode error_code;
         self.setOffset(position, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("position"));
 
   ss.def(
       "set_pattern",
-      [](StringSearch &self, const _UnicodeStringVariant &pattern) {
+      [](StringSearch &self, const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        self.setPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        self.setPattern(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("pattern"));
@@ -337,17 +337,17 @@ void init_stsearch(py::module &m) {
           ErrorCode error_code;
           self.setText(text, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
         },
         py::arg("text"))
       .def(
           "set_text",
-          [](StringSearch &self, const _UnicodeStringVariant &text) {
+          [](StringSearch &self, const icupy::UnicodeStringVariant &text) {
             ErrorCode error_code;
-            self.setText(VARIANT_TO_UNISTR(text), error_code);
+            self.setText(icupy::to_unistr(text), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"));

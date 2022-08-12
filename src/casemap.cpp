@@ -24,7 +24,7 @@ void init_casemap(py::module &m) {
         error_code.reset();
         CaseMap::fold(options, src, src_length, result.data(), dest_size, edits, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -39,7 +39,7 @@ void init_casemap(py::module &m) {
         error_code.reset();
         CaseMap::toLower(locale, options, src, src_length, result.data(), dest_size, edits, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -55,7 +55,7 @@ void init_casemap(py::module &m) {
         error_code.reset();
         CaseMap::toTitle(locale, options, iter, src, src_length, result.data(), dest_size, edits, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -71,7 +71,7 @@ void init_casemap(py::module &m) {
         error_code.reset();
         CaseMap::toUpper(locale, options, src, src_length, result.data(), dest_size, edits, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

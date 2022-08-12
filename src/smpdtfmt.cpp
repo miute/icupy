@@ -18,64 +18,64 @@ void init_smpdtfmt(py::module &m) {
            ErrorCode error_code;
            auto result = std::make_unique<SimpleDateFormat>(error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }))
       .def(
           // [2] SimpleDateFormat::SimpleDateFormat
-          py::init([](const _UnicodeStringVariant &pattern) {
+          py::init([](const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), error_code);
+            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"))
       .def(
           // [3] SimpleDateFormat::SimpleDateFormat
-          py::init([](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &override) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &override) {
             ErrorCode error_code;
             auto result =
-                std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), VARIANT_TO_UNISTR(override), error_code);
+                std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), icupy::to_unistr(override), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"), py::arg("override"))
       .def(
           // [4] SimpleDateFormat::SimpleDateFormat
-          py::init([](const _UnicodeStringVariant &pattern, const Locale &locale) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, const Locale &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), locale, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), locale, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("pattern"), py::arg("locale"))
       .def(
           // [5] SimpleDateFormat::SimpleDateFormat
-          py::init(
-              [](const _UnicodeStringVariant &pattern, const _UnicodeStringVariant &override, const Locale &locale) {
-                ErrorCode error_code;
-                auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern),
-                                                                 VARIANT_TO_UNISTR(override), locale, error_code);
-                if (error_code.isFailure()) {
-                  throw ICUError(error_code);
-                }
-                return result;
-              }),
+          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &override,
+                      const Locale &locale) {
+            ErrorCode error_code;
+            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), icupy::to_unistr(override),
+                                                             locale, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          }),
           py::arg("pattern"), py::arg("override"), py::arg("locale"))
       .def(
           // [7] SimpleDateFormat::SimpleDateFormat
-          py::init([](const _UnicodeStringVariant &pattern, const DateFormatSymbols &format_data) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, const DateFormatSymbols &format_data) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(VARIANT_TO_UNISTR(pattern), format_data, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), format_data, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -101,19 +101,19 @@ void init_smpdtfmt(py::module &m) {
 
   sdf.def(
       "apply_localized_pattern",
-      [](SimpleDateFormat &self, const _UnicodeStringVariant &pattern) {
+      [](SimpleDateFormat &self, const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
-        self.applyLocalizedPattern(VARIANT_TO_UNISTR(pattern), error_code);
+        self.applyLocalizedPattern(icupy::to_unistr(pattern), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("pattern"));
 
   sdf.def(
       "apply_pattern",
-      [](SimpleDateFormat &self, const _UnicodeStringVariant &pattern) {
-        self.applyPattern(VARIANT_TO_UNISTR(pattern));
+      [](SimpleDateFormat &self, const icupy::UnicodeStringVariant &pattern) {
+        self.applyPattern(icupy::to_unistr(pattern));
       },
       py::arg("pattern"));
 
@@ -134,7 +134,7 @@ void init_smpdtfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(cal, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -148,7 +148,7 @@ void init_smpdtfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -162,7 +162,7 @@ void init_smpdtfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -174,7 +174,7 @@ void init_smpdtfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -195,7 +195,7 @@ void init_smpdtfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(date, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -205,7 +205,7 @@ void init_smpdtfmt(py::module &m) {
     ErrorCode error_code;
     auto result = self.get2DigitYearStart(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -221,25 +221,25 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
          // [1] SimpleDateFormat::parse
          "parse",
-         [](const SimpleDateFormat &self, const _UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
-           self.parse(VARIANT_TO_UNISTR(text), cal, pos);
+         [](const SimpleDateFormat &self, const icupy::UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
+           self.parse(icupy::to_unistr(text), cal, pos);
          },
          py::arg("text"), py::arg("cal"), py::arg("pos"))
       .def(
           // [2] DateFormat::parse
           "parse",
-          [](const DateFormat &self, const _UnicodeStringVariant &text, ParsePosition &pos) {
-            return self.parse(VARIANT_TO_UNISTR(text), pos);
+          [](const DateFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
+            return self.parse(icupy::to_unistr(text), pos);
           },
           py::arg("text"), py::arg("pos"))
       .def(
           // [3] DateFormat::parse
           "parse",
-          [](const DateFormat &self, const _UnicodeStringVariant &text) {
+          [](const DateFormat &self, const icupy::UnicodeStringVariant &text) {
             ErrorCode error_code;
-            auto result = self.parse(VARIANT_TO_UNISTR(text), error_code);
+            auto result = self.parse(icupy::to_unistr(text), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -251,7 +251,7 @@ void init_smpdtfmt(py::module &m) {
         ErrorCode error_code;
         self.set2DigitYearStart(d, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("d"));
@@ -263,7 +263,7 @@ void init_smpdtfmt(py::module &m) {
         ErrorCode error_code;
         self.setContext(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("value"));
@@ -281,7 +281,7 @@ void init_smpdtfmt(py::module &m) {
         ErrorCode error_code;
         auto &string = self.toLocalizedPattern(result, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return string;
       },

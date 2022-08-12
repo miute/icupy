@@ -14,22 +14,22 @@ void init_resbund(py::module &m) {
 
   res.def(
          // [1] ResourceBundle::ResourceBundle
-         py::init([](const UnicodeString &package_name, const _LocaleVariant &locale) {
+         py::init([](const UnicodeString &package_name, const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<ResourceBundle>(package_name, VARIANT_TO_LOCALE(locale), error_code);
+           auto result = std::make_unique<ResourceBundle>(package_name, icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }),
          py::arg("package_name"), py::arg("locale"))
       .def(
           // [2] ResourceBundle::ResourceBundle
-          py::init([](const _UnicodeStringVariant &package_name) {
+          py::init([](const icupy::UnicodeStringVariant &package_name) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(VARIANT_TO_UNISTR(package_name), error_code);
+            auto result = std::make_unique<ResourceBundle>(icupy::to_unistr(package_name), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -40,17 +40,17 @@ void init_resbund(py::module &m) {
             ErrorCode error_code;
             auto result = std::make_unique<ResourceBundle>(error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }))
       .def(
           // [4] ResourceBundle::ResourceBundle
-          py::init([](const char *package_name, const _LocaleVariant &locale) {
+          py::init([](const char *package_name, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, VARIANT_TO_LOCALE(locale), error_code);
+            auto result = std::make_unique<ResourceBundle>(package_name, icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -64,7 +64,7 @@ void init_resbund(py::module &m) {
             ErrorCode error_code;
             auto result = std::make_unique<ResourceBundle>(res, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -89,7 +89,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getNext(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -102,7 +102,7 @@ void init_resbund(py::module &m) {
            ErrorCode error_code;
            auto result = self.get(key, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -113,7 +113,7 @@ void init_resbund(py::module &m) {
             ErrorCode error_code;
             auto result = self.get(index, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -124,7 +124,7 @@ void init_resbund(py::module &m) {
     int32_t length;
     auto p = self.getBinary(length, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     std::vector<uint8_t> result(p, p + length);
     return result;
@@ -134,7 +134,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getInt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -144,7 +144,7 @@ void init_resbund(py::module &m) {
     int32_t length;
     auto p = self.getIntVector(length, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     std::vector<int32_t> result(p, p + length);
     return result;
@@ -158,7 +158,7 @@ void init_resbund(py::module &m) {
         ErrorCode error_code;
         auto result = self.getLocale(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -170,7 +170,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getNext(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -179,7 +179,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getNextString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -190,7 +190,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -201,7 +201,7 @@ void init_resbund(py::module &m) {
            ErrorCode error_code;
            auto result = self.getStringEx(key, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -212,7 +212,7 @@ void init_resbund(py::module &m) {
             ErrorCode error_code;
             auto result = self.getStringEx(index, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -224,7 +224,7 @@ void init_resbund(py::module &m) {
     ErrorCode error_code;
     auto result = self.getUInt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

@@ -50,8 +50,8 @@ void init_translit(py::module &m) {
   //
   // icu::Transliterator
   //
-  tl.def(py::init([](const _UnicodeStringVariant &id, UnicodeFilter *adopted_filter) {
-           return std::make_unique<PyTransliterator>(VARIANT_TO_UNISTR(id),
+  tl.def(py::init([](const icupy::UnicodeStringVariant &id, UnicodeFilter *adopted_filter) {
+           return std::make_unique<PyTransliterator>(icupy::to_unistr(id),
                                                      adopted_filter ? adopted_filter->clone() : nullptr);
          }),
          py::arg("id_"), py::arg("adopted_filter"))
@@ -76,15 +76,15 @@ void init_translit(py::module &m) {
 
   tl.def_static(
       "count_available_targets",
-      [](const _UnicodeStringVariant &source) {
-        return Transliterator::countAvailableTargets(VARIANT_TO_UNISTR(source));
+      [](const icupy::UnicodeStringVariant &source) {
+        return Transliterator::countAvailableTargets(icupy::to_unistr(source));
       },
       py::arg("source"));
 
   tl.def_static(
       "count_available_variants",
-      [](const _UnicodeStringVariant &source, const _UnicodeStringVariant &target) {
-        return Transliterator::countAvailableVariants(VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target));
+      [](const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target) {
+        return Transliterator::countAvailableVariants(icupy::to_unistr(source), icupy::to_unistr(target));
       },
       py::arg("source"), py::arg("target"));
 
@@ -92,20 +92,20 @@ void init_translit(py::module &m) {
 
   tl.def_static(
       "_create_basic_instance",
-      [](const _UnicodeStringVariant &id, const UnicodeString *canon) {
-        return PyTransliterator::createBasicInstance(VARIANT_TO_UNISTR(id), canon);
+      [](const icupy::UnicodeStringVariant &id, const UnicodeString *canon) {
+        return PyTransliterator::createBasicInstance(icupy::to_unistr(id), canon);
       },
       py::arg("id_"), py::arg("canon"));
 
   tl.def_static(
       "create_from_rules",
-      [](const _UnicodeStringVariant &id, const _UnicodeStringVariant &rules, UTransDirection dir,
+      [](const icupy::UnicodeStringVariant &id, const icupy::UnicodeStringVariant &rules, UTransDirection dir,
          UParseError &parse_error) {
         ErrorCode error_code;
-        auto result = Transliterator::createFromRules(VARIANT_TO_UNISTR(id), VARIANT_TO_UNISTR(rules), dir, parse_error,
+        auto result = Transliterator::createFromRules(icupy::to_unistr(id), icupy::to_unistr(rules), dir, parse_error,
                                                       error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -113,22 +113,22 @@ void init_translit(py::module &m) {
 
   tl.def_static(
         "create_instance",
-        [](const _UnicodeStringVariant &id, UTransDirection dir) {
+        [](const icupy::UnicodeStringVariant &id, UTransDirection dir) {
           ErrorCode error_code;
-          auto result = Transliterator::createInstance(VARIANT_TO_UNISTR(id), dir, error_code);
+          auto result = Transliterator::createInstance(icupy::to_unistr(id), dir, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
         py::arg("id_"), py::arg("dir_"))
       .def_static(
           "create_instance",
-          [](const _UnicodeStringVariant &id, UTransDirection dir, UParseError &parse_error) {
+          [](const icupy::UnicodeStringVariant &id, UTransDirection dir, UParseError &parse_error) {
             ErrorCode error_code;
-            auto result = Transliterator::createInstance(VARIANT_TO_UNISTR(id), dir, parse_error, error_code);
+            auto result = Transliterator::createInstance(icupy::to_unistr(id), dir, parse_error, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -138,7 +138,7 @@ void init_translit(py::module &m) {
     ErrorCode error_code;
     auto result = self.createInverse(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -153,7 +153,7 @@ void init_translit(py::module &m) {
     ErrorCode error_code;
     auto result = Transliterator::getAvailableIDs(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -162,29 +162,30 @@ void init_translit(py::module &m) {
 
   tl.def_static(
       "get_available_target",
-      [](int32_t index, const _UnicodeStringVariant &source, UnicodeString &result) -> UnicodeString & {
-        return Transliterator::getAvailableTarget(index, VARIANT_TO_UNISTR(source), result);
+      [](int32_t index, const icupy::UnicodeStringVariant &source, UnicodeString &result) -> UnicodeString & {
+        return Transliterator::getAvailableTarget(index, icupy::to_unistr(source), result);
       },
       py::arg("index"), py::arg("source"), py::arg("result"));
 
   tl.def_static(
       "get_available_variant",
-      [](int32_t index, const _UnicodeStringVariant &source, const _UnicodeStringVariant &target,
+      [](int32_t index, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target,
          UnicodeString &result) -> UnicodeString & {
-        return Transliterator::getAvailableVariant(index, VARIANT_TO_UNISTR(source), VARIANT_TO_UNISTR(target), result);
+        return Transliterator::getAvailableVariant(index, icupy::to_unistr(source), icupy::to_unistr(target), result);
       },
       py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"));
 
   tl.def_static(
         "get_display_name",
-        [](const _UnicodeStringVariant &id, const _LocaleVariant &in_locale, UnicodeString &result) -> UnicodeString & {
-          return Transliterator::getDisplayName(VARIANT_TO_UNISTR(id), VARIANT_TO_LOCALE(in_locale), result);
+        [](const icupy::UnicodeStringVariant &id, const icupy::LocaleVariant &in_locale,
+           UnicodeString &result) -> UnicodeString & {
+          return Transliterator::getDisplayName(icupy::to_unistr(id), icupy::to_locale(in_locale), result);
         },
         py::arg("id_"), py::arg("in_locale"), py::arg("result"))
       .def_static(
           "get_display_name",
-          [](const _UnicodeStringVariant &id, UnicodeString &result) -> UnicodeString & {
-            return Transliterator::getDisplayName(VARIANT_TO_UNISTR(id), result);
+          [](const icupy::UnicodeStringVariant &id, UnicodeString &result) -> UnicodeString & {
+            return Transliterator::getDisplayName(icupy::to_unistr(id), result);
           },
           py::arg("id_"), py::arg("result"));
 
@@ -194,7 +195,7 @@ void init_translit(py::module &m) {
         ErrorCode error_code;
         auto &result = self.getElement(index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -216,8 +217,8 @@ void init_translit(py::module &m) {
 
   tl.def_static(
       "register_alias",
-      [](const _UnicodeStringVariant &alias_id, const _UnicodeStringVariant &real_id) {
-        Transliterator::registerAlias(VARIANT_TO_UNISTR(alias_id), VARIANT_TO_UNISTR(real_id));
+      [](const icupy::UnicodeStringVariant &alias_id, const icupy::UnicodeStringVariant &real_id) {
+        Transliterator::registerAlias(icupy::to_unistr(alias_id), icupy::to_unistr(real_id));
       },
       py::arg("alias_id"), py::arg("real_id"));
 
@@ -231,7 +232,8 @@ void init_translit(py::module &m) {
       py::arg("adopted_obj").none(false));
 
   tl.def(
-      "_set_id", [](PyTransliterator &self, const _UnicodeStringVariant &id) { self.setID(VARIANT_TO_UNISTR(id)); },
+      "_set_id",
+      [](PyTransliterator &self, const icupy::UnicodeStringVariant &id) { self.setID(icupy::to_unistr(id)); },
       py::arg("id_"));
 
   tl.def("_set_maximum_context_length", &PyTransliterator::setMaximumContextLength, py::arg("max_context_length"));
@@ -245,11 +247,11 @@ void init_translit(py::module &m) {
       .def(
           "transliterate",
           [](const Transliterator &self, Replaceable &text, UTransPosition &index,
-             const _UnicodeStringVariant &insertion) {
+             const icupy::UnicodeStringVariant &insertion) {
             ErrorCode error_code;
-            self.transliterate(text, index, VARIANT_TO_UNISTR(insertion), error_code);
+            self.transliterate(text, index, icupy::to_unistr(insertion), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"), py::arg("insertion"))
@@ -259,7 +261,7 @@ void init_translit(py::module &m) {
             ErrorCode error_code;
             self.transliterate(text, index, insertion, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"), py::arg("insertion"))
@@ -269,12 +271,12 @@ void init_translit(py::module &m) {
             ErrorCode error_code;
             self.transliterate(text, index, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("index"));
 
   tl.def_static(
-      "unregister", [](const _UnicodeStringVariant &id) { Transliterator::unregister(VARIANT_TO_UNISTR(id)); },
+      "unregister", [](const icupy::UnicodeStringVariant &id) { Transliterator::unregister(icupy::to_unistr(id)); },
       py::arg("id_"));
 }

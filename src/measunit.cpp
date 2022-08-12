@@ -100,7 +100,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createAcre(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -109,7 +109,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createArcMinute(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -118,7 +118,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createArcSecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -127,7 +127,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCelsius(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -136,7 +136,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCentimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -145,7 +145,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicKilometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -154,7 +154,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicMile(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -163,7 +163,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDay(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -172,7 +172,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDegree(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -181,7 +181,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFahrenheit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -190,7 +190,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFoot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -199,7 +199,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGForce(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -208,7 +208,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGram(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -217,7 +217,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectare(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -226,7 +226,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectopascal(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -235,7 +235,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHorsepower(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -244,7 +244,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHour(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -253,7 +253,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -262,7 +262,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createInchHg(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -271,7 +271,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilogram(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -280,7 +280,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -289,7 +289,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilometerPerHour(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -298,7 +298,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilowatt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -307,7 +307,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLightYear(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -316,7 +316,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -325,7 +325,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -334,7 +334,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeterPerSecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -343,7 +343,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMile(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -352,7 +352,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerHour(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -361,7 +361,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillibar(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -370,7 +370,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -379,7 +379,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillisecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -388,7 +388,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMinute(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -397,7 +397,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMonth(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -406,7 +406,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createOunce(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -415,7 +415,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPicometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -424,7 +424,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPound(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -433,7 +433,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -442,7 +442,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareFoot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -451,7 +451,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareKilometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -460,7 +460,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareMeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -469,7 +469,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareMile(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -478,7 +478,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createWatt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -487,7 +487,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createWeek(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -496,7 +496,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createYard(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -505,7 +505,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createYear(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -519,7 +519,7 @@ void init_measunit(py::module &m) {
           error_code.reset();
           MeasureUnit::getAvailable(type, result.data(), capacity, error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -531,7 +531,7 @@ void init_measunit(py::module &m) {
         error_code.reset();
         MeasureUnit::getAvailable(result.data(), capacity, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       });
@@ -540,7 +540,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::getAvailableTypes(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -555,7 +555,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createAcreFoot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -564,7 +564,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createAmpere(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -573,7 +573,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createAstronomicalUnit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -582,7 +582,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createBit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -591,7 +591,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createBushel(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -600,7 +600,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createByte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -609,7 +609,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCalorie(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -618,7 +618,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCarat(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -627,7 +627,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCentiliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -636,7 +636,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicCentimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -645,7 +645,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicFoot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -654,7 +654,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -663,7 +663,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicMeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -672,7 +672,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCubicYard(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -681,7 +681,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCup(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -690,7 +690,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDeciliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -699,7 +699,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDecimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -708,7 +708,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFathom(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -717,7 +717,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFluidOunce(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -726,7 +726,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFoodcalorie(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -735,7 +735,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFurlong(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -744,7 +744,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGallon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -753,7 +753,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigabit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -762,7 +762,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigabyte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -771,7 +771,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigahertz(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -780,7 +780,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGigawatt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -789,7 +789,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectoliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -798,7 +798,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createHertz(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -807,7 +807,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createJoule(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -816,7 +816,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKarat(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -825,7 +825,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKelvin(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -834,7 +834,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilobit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -843,7 +843,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilobyte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -852,7 +852,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilocalorie(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -861,7 +861,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilohertz(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -870,7 +870,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilojoule(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -879,7 +879,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilowattHour(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -888,7 +888,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiterPerKilometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -897,7 +897,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLux(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -906,7 +906,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegabit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -915,7 +915,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegabyte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -924,7 +924,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegahertz(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -933,7 +933,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegaliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -942,7 +942,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegawatt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -951,7 +951,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMeterPerSecondSquared(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -960,7 +960,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMetricTon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -969,7 +969,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrogram(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -978,7 +978,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -987,7 +987,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMicrosecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -996,7 +996,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerGallon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1005,7 +1005,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliampere(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1014,7 +1014,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilligram(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1023,7 +1023,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1032,7 +1032,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimeterOfMercury(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1041,7 +1041,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilliwatt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1050,7 +1050,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createNanometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1059,7 +1059,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createNanosecond(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1068,7 +1068,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createNauticalMile(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1077,7 +1077,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createOhm(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1086,7 +1086,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createOunceTroy(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1095,7 +1095,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createParsec(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1104,7 +1104,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPint(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1113,7 +1113,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundPerSquareInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1122,7 +1122,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createQuart(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1131,7 +1131,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createRadian(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1140,7 +1140,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareCentimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1149,7 +1149,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1158,7 +1158,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSquareYard(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1167,7 +1167,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createStone(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1176,7 +1176,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createTablespoon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1185,7 +1185,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createTeaspoon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1194,7 +1194,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createTerabit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1203,7 +1203,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createTerabyte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1212,7 +1212,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createTon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1221,7 +1221,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createVolt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1232,7 +1232,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCentury(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1241,7 +1241,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCupMetric(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1250,7 +1250,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGenericTemperature(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1259,7 +1259,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKnot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1268,7 +1268,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLiterPer100Kilometers(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1277,7 +1277,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMileScandinavian(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1286,7 +1286,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPintMetric(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1295,7 +1295,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createRevolutionAngle(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1306,7 +1306,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGallonImperial(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1315,7 +1315,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilePerGallonImperial(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1324,7 +1324,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilligramPerDeciliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1333,7 +1333,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMillimolePerLiter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1342,7 +1342,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPartPerMillion(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1353,7 +1353,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoint(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1364,7 +1364,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createAtmosphere(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1373,7 +1373,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPercent(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1382,7 +1382,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPermille(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1391,7 +1391,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPetabyte(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1402,7 +1402,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createBarrel(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1411,7 +1411,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createBritishThermalUnit(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1420,7 +1420,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDalton(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1429,7 +1429,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDayPerson(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1438,7 +1438,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDunam(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1447,7 +1447,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createEarthMass(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1456,7 +1456,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createElectronvolt(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1465,7 +1465,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createFluidOunceImperial(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1474,7 +1474,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilopascal(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1483,7 +1483,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegapascal(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1492,7 +1492,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMole(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1501,7 +1501,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMonthPerson(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1510,7 +1510,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createNewton(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1519,7 +1519,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createNewtonMeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1528,7 +1528,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPermyriad(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1537,7 +1537,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundFoot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1546,7 +1546,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPoundForce(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1555,7 +1555,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarLuminosity(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1564,7 +1564,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarMass(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1573,7 +1573,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createSolarRadius(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1582,7 +1582,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createWeekPerson(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1591,7 +1591,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createYearPerson(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1924,7 +1924,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createBar(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1933,7 +1933,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDecade(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1942,7 +1942,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDotPerCentimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1951,7 +1951,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDotPerInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1960,7 +1960,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createEm(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1969,7 +1969,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMegapixel(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1978,7 +1978,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPascal(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1987,7 +1987,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixel(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -1996,7 +1996,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixelPerCentimeter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2005,7 +2005,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPixelPerInch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2014,7 +2014,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createThermUs(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2049,7 +2049,7 @@ void init_measunit(py::module &m) {
         ErrorCode error_code;
         auto result = MeasureUnit::forIdentifier(identifier, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -2059,7 +2059,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = self.getComplexity(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2068,7 +2068,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = self.getDimensionality(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2081,7 +2081,7 @@ void init_measunit(py::module &m) {
         ErrorCode error_code;
         auto result = self.product(other, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -2091,7 +2091,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = self.reciprocal(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2102,7 +2102,7 @@ void init_measunit(py::module &m) {
         ErrorCode error_code;
         auto result = self.withDimensionality(dimensionality, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -2114,7 +2114,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createCandela(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2123,7 +2123,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDessertSpoon(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2132,7 +2132,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDessertSpoonImperial(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2141,7 +2141,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDot(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2150,7 +2150,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDram(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2159,7 +2159,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createDrop(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2168,7 +2168,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createEarthRadius(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2177,7 +2177,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createGrain(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2187,7 +2187,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createItem(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2197,7 +2197,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createJigger(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2207,7 +2207,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createKilowattHourPer100Kilometer(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2217,7 +2217,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createLumen(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2226,7 +2226,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createPinch(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2235,7 +2235,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createQuartImperial(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2276,7 +2276,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto pair = self.splitToSingleUnits(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     std::vector<MeasureUnit> result(pair.second);
     for (int32_t i = 0; i < pair.second; ++i) {
@@ -2291,7 +2291,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2302,7 +2302,7 @@ void init_measunit(py::module &m) {
     ErrorCode error_code;
     auto result = self.getPrefix(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -2313,7 +2313,7 @@ void init_measunit(py::module &m) {
         ErrorCode error_code;
         auto result = self.withPrefix(prefix, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

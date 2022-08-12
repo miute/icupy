@@ -27,7 +27,7 @@ void init_localebuilder(py::module &m) {
     ErrorCode error_code;
     auto result = self.build(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -66,8 +66,8 @@ void init_localebuilder(py::module &m) {
 
   lb.def(
       "set_locale",
-      [](LocaleBuilder &self, const _LocaleVariant &locale) -> LocaleBuilder & {
-        return self.setLocale(VARIANT_TO_LOCALE(locale));
+      [](LocaleBuilder &self, const icupy::LocaleVariant &locale) -> LocaleBuilder & {
+        return self.setLocale(icupy::to_locale(locale));
       },
       py::arg("locale"));
 

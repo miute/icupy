@@ -74,7 +74,7 @@ void init_ubiditransform(py::module &m) {
     ErrorCode error_code;
     auto bidi_transform = ubiditransform_open(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return std::make_unique<_UBiDiTransformPtr>(bidi_transform);
   });
@@ -94,7 +94,7 @@ void init_ubiditransform(py::module &m) {
             ubiditransform_transform(bidi_transform, src, src_length, result.data(), dest_size, in_para_level, in_order,
                                      out_para_level, out_order, do_mirroring, shaping_options, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         result.resize(dest_size);
         return result;

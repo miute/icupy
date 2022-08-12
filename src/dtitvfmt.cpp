@@ -23,7 +23,7 @@ void init_dtitvfmt(py::module &m) {
         ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -35,7 +35,7 @@ void init_dtitvfmt(py::module &m) {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -45,7 +45,7 @@ void init_dtitvfmt(py::module &m) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -54,7 +54,7 @@ void init_dtitvfmt(py::module &m) {
     ErrorCode error_code;
     auto result = self.toTempString(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -85,11 +85,11 @@ void init_dtitvfmt(py::module &m) {
   fmt.def_static(
          // [1] DateIntervalFormat::createInstance
          "create_instance",
-         [](const _UnicodeStringVariant &skeleton, const DateIntervalInfo &dtitvinf) {
+         [](const icupy::UnicodeStringVariant &skeleton, const DateIntervalInfo &dtitvinf) {
            ErrorCode error_code;
-           auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), dtitvinf, error_code);
+           auto result = DateIntervalFormat::createInstance(icupy::to_unistr(skeleton), dtitvinf, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -97,12 +97,13 @@ void init_dtitvfmt(py::module &m) {
       .def_static(
           // [2] DateIntervalFormat::createInstance
           "create_instance",
-          [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale, const DateIntervalInfo &dtitvinf) {
+          [](const icupy::UnicodeStringVariant &skeleton, const icupy::LocaleVariant &locale,
+             const DateIntervalInfo &dtitvinf) {
             ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale),
+            auto result = DateIntervalFormat::createInstance(icupy::to_unistr(skeleton), icupy::to_locale(locale),
                                                              dtitvinf, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -110,12 +111,12 @@ void init_dtitvfmt(py::module &m) {
       .def_static(
           // [3] DateIntervalFormat::createInstance
           "create_instance",
-          [](const _UnicodeStringVariant &skeleton, const _LocaleVariant &locale) {
+          [](const icupy::UnicodeStringVariant &skeleton, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
             auto result =
-                DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skeleton), VARIANT_TO_LOCALE(locale), error_code);
+                DateIntervalFormat::createInstance(icupy::to_unistr(skeleton), icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -123,11 +124,11 @@ void init_dtitvfmt(py::module &m) {
       .def_static(
           // [4] DateIntervalFormat::createInstance
           "create_instance",
-          [](const _UnicodeStringVariant &skelton) {
+          [](const icupy::UnicodeStringVariant &skelton) {
             ErrorCode error_code;
-            auto result = DateIntervalFormat::createInstance(VARIANT_TO_UNISTR(skelton), error_code);
+            auto result = DateIntervalFormat::createInstance(icupy::to_unistr(skelton), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -141,7 +142,7 @@ void init_dtitvfmt(py::module &m) {
            ErrorCode error_code;
            auto &result = self.format(from_calendar, to_calendar, append_to, field_position, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -154,7 +155,7 @@ void init_dtitvfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(dt_interval, append_to, field_position, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -168,7 +169,7 @@ void init_dtitvfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, field_position, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -181,7 +182,7 @@ void init_dtitvfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -193,7 +194,7 @@ void init_dtitvfmt(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -206,7 +207,7 @@ void init_dtitvfmt(py::module &m) {
            ErrorCode error_code;
            auto result = self.formatToValue(from_calendar, to_calendar, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -217,7 +218,7 @@ void init_dtitvfmt(py::module &m) {
             ErrorCode error_code;
             auto result = self.formatToValue(dt_interval, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -231,7 +232,7 @@ void init_dtitvfmt(py::module &m) {
         ErrorCode error_code;
         auto result = self.getContext(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -261,7 +262,7 @@ void init_dtitvfmt(py::module &m) {
         ErrorCode error_code;
         self.setContext(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("value"));
@@ -273,7 +274,7 @@ void init_dtitvfmt(py::module &m) {
         ErrorCode error_code;
         self.setDateIntervalInfo(new_interval_patterns, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("new_interval_patterns"));

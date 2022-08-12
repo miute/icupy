@@ -136,18 +136,19 @@ void init_schriter(py::module &m) {
   //
   py::class_<StringCharacterIterator, UCharCharacterIterator> sci(m, "StringCharacterIterator");
 
-  sci.def(py::init([](const _UnicodeStringVariant &text_str) {
-            return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str));
+  sci.def(py::init([](const icupy::UnicodeStringVariant &text_str) {
+            return std::make_unique<StringCharacterIterator>(icupy::to_unistr(text_str));
           }),
           py::arg("text_str"))
-      .def(py::init([](const _UnicodeStringVariant &text_str, int32_t text_pos) {
-             return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str), text_pos);
+      .def(py::init([](const icupy::UnicodeStringVariant &text_str, int32_t text_pos) {
+             return std::make_unique<StringCharacterIterator>(icupy::to_unistr(text_str), text_pos);
            }),
            py::arg("text_str"), py::arg("text_pos"))
-      .def(py::init([](const _UnicodeStringVariant &text_str, int32_t text_begin, int32_t text_end, int32_t text_pos) {
-             return std::make_unique<StringCharacterIterator>(VARIANT_TO_UNISTR(text_str), text_begin, text_end,
-                                                              text_pos);
-           }),
+      .def(py::init(
+               [](const icupy::UnicodeStringVariant &text_str, int32_t text_begin, int32_t text_end, int32_t text_pos) {
+                 return std::make_unique<StringCharacterIterator>(icupy::to_unistr(text_str), text_begin, text_end,
+                                                                  text_pos);
+               }),
            py::arg("text_str"), py::arg("text_begin"), py::arg("text_end"), py::arg("text_pos"))
       .def(py::init<const StringCharacterIterator &>(), py::arg("other"));
 
@@ -192,8 +193,8 @@ void init_schriter(py::module &m) {
 
   sci.def(
       "set_text",
-      [](StringCharacterIterator &self, const _UnicodeStringVariant &new_text) {
-        self.setText(VARIANT_TO_UNISTR(new_text));
+      [](StringCharacterIterator &self, const icupy::UnicodeStringVariant &new_text) {
+        self.setText(icupy::to_unistr(new_text));
       },
       py::arg("new_text"));
 }

@@ -10,11 +10,11 @@ void init_caniter(py::module &m) {
   //
   py::class_<CanonicalIterator, UObject> ci(m, "CanonicalIterator");
 
-  ci.def(py::init([](const _UnicodeStringVariant &source) {
+  ci.def(py::init([](const icupy::UnicodeStringVariant &source) {
            ErrorCode error_code;
-           auto result = std::make_unique<CanonicalIterator>(VARIANT_TO_UNISTR(source), error_code);
+           auto result = std::make_unique<CanonicalIterator>(icupy::to_unistr(source), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }),
@@ -41,11 +41,11 @@ void init_caniter(py::module &m) {
 
   ci.def(
       "set_source",
-      [](CanonicalIterator &self, const _UnicodeStringVariant &new_source) {
+      [](CanonicalIterator &self, const icupy::UnicodeStringVariant &new_source) {
         ErrorCode error_code;
-        self.setSource(VARIANT_TO_UNISTR(new_source), error_code);
+        self.setSource(icupy::to_unistr(new_source), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("new_source"));

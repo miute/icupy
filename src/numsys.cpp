@@ -16,11 +16,11 @@ void init_numsys(py::module &m) {
   ns.def_static(
         // [1] NumberingSystem::createInstance
         "create_instance",
-        [](const _LocaleVariant &locale) {
+        [](const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = NumberingSystem::createInstance(VARIANT_TO_LOCALE(locale), error_code);
+          auto result = NumberingSystem::createInstance(icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
@@ -28,12 +28,12 @@ void init_numsys(py::module &m) {
       .def_static(
           // [2] NumberingSystem::createInstance
           "create_instance",
-          [](int32_t radix, UBool is_algorithmic, const _UnicodeStringVariant &description) {
+          [](int32_t radix, UBool is_algorithmic, const icupy::UnicodeStringVariant &description) {
             ErrorCode error_code;
             auto result =
-                NumberingSystem::createInstance(radix, is_algorithmic, VARIANT_TO_UNISTR(description), error_code);
+                NumberingSystem::createInstance(radix, is_algorithmic, icupy::to_unistr(description), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -44,7 +44,7 @@ void init_numsys(py::module &m) {
             ErrorCode error_code;
             auto result = NumberingSystem::createInstance(error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           });
@@ -55,7 +55,7 @@ void init_numsys(py::module &m) {
         ErrorCode error_code;
         auto result = NumberingSystem::createInstanceByName(name, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -65,7 +65,7 @@ void init_numsys(py::module &m) {
     ErrorCode error_code;
     auto result = NumberingSystem::getAvailableNames(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

@@ -22,60 +22,59 @@ void init_rbnf(py::module &m) {
 
   rbnf.def(
           // [1] RuleBasedNumberFormat::RuleBasedNumberFormat
-          py::init([](const _UnicodeStringVariant &rules, UParseError &perror) {
+          py::init([](const icupy::UnicodeStringVariant &rules, UParseError &perror) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedNumberFormat>(VARIANT_TO_UNISTR(rules), perror, error_code);
+            auto result = std::make_unique<RuleBasedNumberFormat>(icupy::to_unistr(rules), perror, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"), py::arg("perror"))
       .def(
           // [2] RuleBasedNumberFormat::RuleBasedNumberFormat
-          py::init([](const _UnicodeStringVariant &rules, const _UnicodeStringVariant &localizations,
+          py::init([](const icupy::UnicodeStringVariant &rules, const icupy::UnicodeStringVariant &localizations,
                       UParseError &perror) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedNumberFormat>(VARIANT_TO_UNISTR(rules),
-                                                                  VARIANT_TO_UNISTR(localizations), perror, error_code);
+            auto result = std::make_unique<RuleBasedNumberFormat>(icupy::to_unistr(rules),
+                                                                  icupy::to_unistr(localizations), perror, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"), py::arg("localizations"), py::arg("perror"))
       .def(
           // [3] RuleBasedNumberFormat::RuleBasedNumberFormat
-          py::init([](const _UnicodeStringVariant &rules, const Locale &locale, UParseError &perror) {
+          py::init([](const icupy::UnicodeStringVariant &rules, const Locale &locale, UParseError &perror) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedNumberFormat>(VARIANT_TO_UNISTR(rules), locale, perror, error_code);
+            auto result = std::make_unique<RuleBasedNumberFormat>(icupy::to_unistr(rules), locale, perror, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"), py::arg("locale"), py::arg("perror"))
       .def(
           // [4] RuleBasedNumberFormat::RuleBasedNumberFormat
-          py::init([](const _UnicodeStringVariant &rules, const _UnicodeStringVariant &localizations,
-                      const _LocaleVariant &locale, UParseError &perror) {
+          py::init([](const icupy::UnicodeStringVariant &rules, const icupy::UnicodeStringVariant &localizations,
+                      const icupy::LocaleVariant &locale, UParseError &perror) {
             ErrorCode error_code;
-            auto result =
-                std::make_unique<RuleBasedNumberFormat>(VARIANT_TO_UNISTR(rules), VARIANT_TO_UNISTR(localizations),
-                                                        VARIANT_TO_LOCALE(locale), perror, error_code);
+            auto result = std::make_unique<RuleBasedNumberFormat>(
+                icupy::to_unistr(rules), icupy::to_unistr(localizations), icupy::to_locale(locale), perror, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("rules"), py::arg("localizations"), py::arg("locale"), py::arg("perror"))
       .def(
           // [5] RuleBasedNumberFormat::RuleBasedNumberFormat
-          py::init([](URBNFRuleSetTag tag, const _LocaleVariant &locale) {
+          py::init([](URBNFRuleSetTag tag, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedNumberFormat>(tag, VARIANT_TO_LOCALE(locale), error_code);
+            auto result = std::make_unique<RuleBasedNumberFormat>(tag, icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           }),
@@ -107,7 +106,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -121,7 +120,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -133,7 +132,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -141,12 +140,12 @@ void init_rbnf(py::module &m) {
       .def(
           // [9] RuleBasedNumberFormat::format
           "format",
-          [](const RuleBasedNumberFormat &self, double number, const _UnicodeStringVariant &rule_set_name,
+          [](const RuleBasedNumberFormat &self, double number, const icupy::UnicodeStringVariant &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(number, VARIANT_TO_UNISTR(rule_set_name), to_append_to, pos, error_code);
+            auto &result = self.format(number, icupy::to_unistr(rule_set_name), to_append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -169,7 +168,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -177,12 +176,12 @@ void init_rbnf(py::module &m) {
       .def(
           // [15] RuleBasedNumberFormat::format
           "format",
-          [](const RuleBasedNumberFormat &self, int32_t number, const _UnicodeStringVariant &rule_set_name,
+          [](const RuleBasedNumberFormat &self, int32_t number, const icupy::UnicodeStringVariant &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(number, VARIANT_TO_UNISTR(rule_set_name), to_append_to, pos, error_code);
+            auto &result = self.format(number, icupy::to_unistr(rule_set_name), to_append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -205,7 +204,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -213,12 +212,12 @@ void init_rbnf(py::module &m) {
       .def(
           // [21] RuleBasedNumberFormat::format
           "format",
-          [](const RuleBasedNumberFormat &self, int64_t number, const _UnicodeStringVariant &rule_set_name,
+          [](const RuleBasedNumberFormat &self, int64_t number, const icupy::UnicodeStringVariant &rule_set_name,
              UnicodeString &to_append_to, FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(number, VARIANT_TO_UNISTR(rule_set_name), to_append_to, pos, error_code);
+            auto &result = self.format(number, icupy::to_unistr(rule_set_name), to_append_to, pos, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -241,7 +240,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -254,7 +253,7 @@ void init_rbnf(py::module &m) {
             ErrorCode error_code;
             auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -274,14 +273,15 @@ void init_rbnf(py::module &m) {
 
   rbnf.def(
           "get_rule_set_display_name",
-          [](RuleBasedNumberFormat &self, const _UnicodeStringVariant &rule_set_name, const _LocaleVariant &locale) {
-            return self.getRuleSetDisplayName(VARIANT_TO_UNISTR(rule_set_name), VARIANT_TO_LOCALE(locale));
+          [](RuleBasedNumberFormat &self, const icupy::UnicodeStringVariant &rule_set_name,
+             const icupy::LocaleVariant &locale) {
+            return self.getRuleSetDisplayName(icupy::to_unistr(rule_set_name), icupy::to_locale(locale));
           },
           py::arg("rule_set_name"), py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"))
       .def(
           "get_rule_set_display_name",
-          [](RuleBasedNumberFormat &self, int32_t index, const _LocaleVariant &locale) {
-            return self.getRuleSetDisplayName(index, VARIANT_TO_LOCALE(locale));
+          [](RuleBasedNumberFormat &self, int32_t index, const icupy::LocaleVariant &locale) {
+            return self.getRuleSetDisplayName(index, icupy::to_locale(locale));
           },
           py::arg("index"), py::arg_v("locale", Locale::getDefault(), "icupy.icu.Locale.get_default()"));
 
@@ -291,7 +291,7 @@ void init_rbnf(py::module &m) {
         ErrorCode error_code;
         auto result = self.getRuleSetDisplayNameLocale(index, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -305,17 +305,17 @@ void init_rbnf(py::module &m) {
           // [1] RuleBasedNumberFormat::parse
           // [2] NumberFormat::parse
           "parse",
-          [](const RuleBasedNumberFormat &self, const _UnicodeStringVariant &text, Formattable &result,
-             ParsePosition &parse_position) { self.parse(VARIANT_TO_UNISTR(text), result, parse_position); },
+          [](const RuleBasedNumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result,
+             ParsePosition &parse_position) { self.parse(icupy::to_unistr(text), result, parse_position); },
           py::arg("text"), py::arg("result"), py::arg("parse_position"))
       .def(
           // [3] NumberFormat::parse
           "parse",
-          [](const NumberFormat &self, const _UnicodeStringVariant &text, Formattable &result) {
+          [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result) {
             ErrorCode error_code;
-            self.parse(VARIANT_TO_UNISTR(text), result, error_code);
+            self.parse(icupy::to_unistr(text), result, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
           },
           py::arg("text"), py::arg("result"));
@@ -327,7 +327,7 @@ void init_rbnf(py::module &m) {
         ErrorCode error_code;
         self.setContext(value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("value"));
@@ -339,11 +339,11 @@ void init_rbnf(py::module &m) {
 
   rbnf.def(
       "set_default_rule_set",
-      [](RuleBasedNumberFormat &self, const _UnicodeStringVariant &rule_set_name) {
+      [](RuleBasedNumberFormat &self, const icupy::UnicodeStringVariant &rule_set_name) {
         ErrorCode error_code;
-        self.setDefaultRuleSet(VARIANT_TO_UNISTR(rule_set_name), error_code);
+        self.setDefaultRuleSet(icupy::to_unistr(rule_set_name), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
       },
       py::arg("rule_set_name"));

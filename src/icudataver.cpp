@@ -15,7 +15,7 @@ void init_icudataver(py::module &m) {
     ErrorCode error_code;
     u_getDataVersion(info, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     py::tuple result(U_MAX_VERSION_LENGTH);
     int n = 0;

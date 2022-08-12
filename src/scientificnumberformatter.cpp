@@ -26,13 +26,13 @@ void init_scientificnumberformatter(py::module &m) {
   snf.def_static(
          // [1] ScientificNumberFormatter::createMarkupInstance
          "create_markup_instance",
-         [](const _LocaleVariant &locale, const _UnicodeStringVariant &begin_markup,
-            const _UnicodeStringVariant &end_markup) {
+         [](const icupy::LocaleVariant &locale, const icupy::UnicodeStringVariant &begin_markup,
+            const icupy::UnicodeStringVariant &end_markup) {
            ErrorCode error_code;
            auto result = ScientificNumberFormatter::createMarkupInstance(
-               VARIANT_TO_LOCALE(locale), VARIANT_TO_UNISTR(begin_markup), VARIANT_TO_UNISTR(end_markup), error_code);
+               icupy::to_locale(locale), icupy::to_unistr(begin_markup), icupy::to_unistr(end_markup), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -40,14 +40,14 @@ void init_scientificnumberformatter(py::module &m) {
       .def_static(
           // [2] ScientificNumberFormatter::createMarkupInstance
           "create_markup_instance",
-          [](DecimalFormat *fmt_to_adopt, const _UnicodeStringVariant &begin_markup,
-             const _UnicodeStringVariant &end_markup) {
+          [](DecimalFormat *fmt_to_adopt, const icupy::UnicodeStringVariant &begin_markup,
+             const icupy::UnicodeStringVariant &end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
                 reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr),
-                VARIANT_TO_UNISTR(begin_markup), VARIANT_TO_UNISTR(end_markup), error_code);
+                icupy::to_unistr(begin_markup), icupy::to_unistr(end_markup), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -56,11 +56,11 @@ void init_scientificnumberformatter(py::module &m) {
   snf.def_static(
          // [1] ScientificNumberFormatter::createSuperscriptInstance
          "create_superscript_instance",
-         [](const _LocaleVariant &locale) {
+         [](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = ScientificNumberFormatter::createSuperscriptInstance(VARIANT_TO_LOCALE(locale), error_code);
+           auto result = ScientificNumberFormatter::createSuperscriptInstance(icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -73,7 +73,7 @@ void init_scientificnumberformatter(py::module &m) {
             auto result = ScientificNumberFormatter::createSuperscriptInstance(
                 reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -86,7 +86,7 @@ void init_scientificnumberformatter(py::module &m) {
         ErrorCode error_code;
         auto &result = self.format(number, append_to, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },

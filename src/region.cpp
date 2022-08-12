@@ -33,7 +33,7 @@ void init_region(py::module &m) {
         ErrorCode error_code;
         auto result = Region::getAvailable(type, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -44,7 +44,7 @@ void init_region(py::module &m) {
             ErrorCode error_code;
             auto result = self.getContainedRegions(error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           })
@@ -54,7 +54,7 @@ void init_region(py::module &m) {
             ErrorCode error_code;
             auto result = self.getContainedRegions(type, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -72,7 +72,7 @@ void init_region(py::module &m) {
            ErrorCode error_code;
            auto result = Region::getInstance(region_code, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          },
@@ -83,7 +83,7 @@ void init_region(py::module &m) {
             ErrorCode error_code;
             auto result = Region::getInstance(code, error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -96,7 +96,7 @@ void init_region(py::module &m) {
     ErrorCode error_code;
     auto result = self.getPreferredValues(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

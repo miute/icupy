@@ -13,7 +13,7 @@ void init_currunit(py::module &m) {
            ErrorCode error_code;
            auto result = std::make_unique<CurrencyUnit>(iso_code, error_code);
            if (error_code.isFailure()) {
-             throw ICUError(error_code);
+             throw icupy::ICUError(error_code);
            }
            return result;
          }),

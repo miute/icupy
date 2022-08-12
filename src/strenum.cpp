@@ -23,7 +23,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     self.reset(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return self;
   });
@@ -32,7 +32,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     auto result = self.count(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -45,7 +45,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(nullptr, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     } else if (result == nullptr) {
       throw py::stop_iteration();
     }
@@ -58,7 +58,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     auto result = self.count(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -67,7 +67,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(nullptr, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -76,7 +76,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     self.reset(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
   });
 
@@ -86,7 +86,7 @@ void init_strenum(py::module &m) {
         ErrorCode error_code;
         auto result = self.snext(error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -96,7 +96,7 @@ void init_strenum(py::module &m) {
     ErrorCode error_code;
     auto result = self.unext(nullptr, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

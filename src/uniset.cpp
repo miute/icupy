@@ -60,22 +60,22 @@ void init_uniset(py::module &m) {
 
   us.def(py::init<>())
       .def(py::init<UChar32, UChar32>(), py::arg("start"), py::arg("end"))
-      .def(py::init([](const _UnicodeStringVariant &pattern) {
+      .def(py::init([](const icupy::UnicodeStringVariant &pattern) {
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeSet>(VARIANT_TO_UNISTR(pattern), error_code);
+             auto result = std::make_unique<UnicodeSet>(icupy::to_unistr(pattern), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
            py::arg("pattern"))
-      .def(py::init([](const _UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
+      .def(py::init([](const icupy::UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
                        std::optional<const SymbolTable *> symbols) {
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeSet>(VARIANT_TO_UNISTR(pattern), pos, options,
+             auto result = std::make_unique<UnicodeSet>(icupy::to_unistr(pattern), pos, options,
                                                         symbols.value_or(nullptr), error_code);
              if (error_code.isFailure()) {
-               throw ICUError(error_code);
+               throw icupy::ICUError(error_code);
              }
              return result;
            }),
@@ -84,8 +84,8 @@ void init_uniset(py::module &m) {
 
   us.def(
         "__contains__",
-        [](const UnicodeSet &self, const _UnicodeStringVariant &item) {
-          return self.contains(VARIANT_TO_UNISTR(item));
+        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &item) {
+          return self.contains(icupy::to_unistr(item));
         },
         py::arg("item"))
       .def(
@@ -161,7 +161,9 @@ void init_uniset(py::module &m) {
 
   us.def(
         "add",
-        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & { return self.add(VARIANT_TO_UNISTR(s)); },
+        [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+          return self.add(icupy::to_unistr(s));
+        },
         py::arg("s"))
       .def("add", py::overload_cast<UChar32>(&UnicodeSet::add), py::arg("c"))
       .def("add", py::overload_cast<UChar32, UChar32>(&UnicodeSet::add), py::arg("start"), py::arg("end"));
@@ -169,8 +171,8 @@ void init_uniset(py::module &m) {
   us.def("add_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::addAll), py::arg("c"))
       .def(
           "add_all",
-          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-            return self.addAll(VARIANT_TO_UNISTR(s));
+          [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.addAll(icupy::to_unistr(s));
           },
           py::arg("s"));
 
@@ -182,7 +184,7 @@ void init_uniset(py::module &m) {
         ErrorCode error_code;
         auto &result = self.applyIntPropertyValue(prop, value, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -190,24 +192,24 @@ void init_uniset(py::module &m) {
 
   us.def(
         "apply_pattern",
-        [](UnicodeSet &self, const _UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
+        [](UnicodeSet &self, const icupy::UnicodeStringVariant &pattern, ParsePosition &pos, uint32_t options,
            std::optional<const SymbolTable *> symbols) -> UnicodeSet & {
           ErrorCode error_code;
           auto &result =
-              self.applyPattern(VARIANT_TO_UNISTR(pattern), pos, options, symbols.value_or(nullptr), error_code);
+              self.applyPattern(icupy::to_unistr(pattern), pos, options, symbols.value_or(nullptr), error_code);
           if (error_code.isFailure()) {
-            throw ICUError(error_code);
+            throw icupy::ICUError(error_code);
           }
           return result;
         },
         py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
       .def(
           "apply_pattern",
-          [](UnicodeSet &self, const _UnicodeStringVariant &pattern) -> UnicodeSet & {
+          [](UnicodeSet &self, const icupy::UnicodeStringVariant &pattern) -> UnicodeSet & {
             ErrorCode error_code;
-            auto &result = self.applyPattern(VARIANT_TO_UNISTR(pattern), error_code);
+            auto &result = self.applyPattern(icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
-              throw ICUError(error_code);
+              throw icupy::ICUError(error_code);
             }
             return result;
           },
@@ -215,11 +217,12 @@ void init_uniset(py::module &m) {
 
   us.def(
       "apply_property_alias",
-      [](UnicodeSet &self, const _UnicodeStringVariant &prop, const _UnicodeStringVariant &value) -> UnicodeSet & {
+      [](UnicodeSet &self, const icupy::UnicodeStringVariant &prop,
+         const icupy::UnicodeStringVariant &value) -> UnicodeSet & {
         ErrorCode error_code;
-        auto &result = self.applyPropertyAlias(VARIANT_TO_UNISTR(prop), VARIANT_TO_UNISTR(value), error_code);
+        auto &result = self.applyPropertyAlias(icupy::to_unistr(prop), icupy::to_unistr(value), error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -239,8 +242,8 @@ void init_uniset(py::module &m) {
 
   us.def(
         "complement",
-        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-          return self.complement(VARIANT_TO_UNISTR(s));
+        [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+          return self.complement(icupy::to_unistr(s));
         },
         py::arg("s"))
       .def("complement", py::overload_cast<UChar32>(&UnicodeSet::complement), py::arg("c"))
@@ -250,14 +253,14 @@ void init_uniset(py::module &m) {
   us.def("complement_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::complementAll), py::arg("c"))
       .def(
           "complement_all",
-          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-            return self.complementAll(VARIANT_TO_UNISTR(s));
+          [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.complementAll(icupy::to_unistr(s));
           },
           py::arg("s"));
 
   us.def(
         "contains",
-        [](const UnicodeSet &self, const _UnicodeStringVariant &s) { return self.contains(VARIANT_TO_UNISTR(s)); },
+        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) { return self.contains(icupy::to_unistr(s)); },
         py::arg("s"))
       .def("contains", py::overload_cast<UChar32>(&UnicodeSet::contains, py::const_), py::arg("c"))
       .def("contains", py::overload_cast<UChar32, UChar32>(&UnicodeSet::contains, py::const_), py::arg("start"),
@@ -266,14 +269,16 @@ void init_uniset(py::module &m) {
   us.def("contains_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsAll, py::const_), py::arg("c"))
       .def(
           "contains_all",
-          [](const UnicodeSet &self, const _UnicodeStringVariant &s) { return self.containsAll(VARIANT_TO_UNISTR(s)); },
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+            return self.containsAll(icupy::to_unistr(s));
+          },
           py::arg("s"));
 
   us.def("contains_none", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsNone, py::const_), py::arg("c"))
       .def(
           "contains_none",
-          [](const UnicodeSet &self, const _UnicodeStringVariant &s) {
-            return self.containsNone(VARIANT_TO_UNISTR(s));
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+            return self.containsNone(icupy::to_unistr(s));
           },
           py::arg("s"))
       .def("contains_none", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsNone, py::const_),
@@ -282,19 +287,20 @@ void init_uniset(py::module &m) {
   us.def("contains_some", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsSome, py::const_), py::arg("c"))
       .def(
           "contains_some",
-          [](const UnicodeSet &self, const _UnicodeStringVariant &s) {
-            return self.containsSome(VARIANT_TO_UNISTR(s));
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+            return self.containsSome(icupy::to_unistr(s));
           },
           py::arg("s"))
       .def("contains_some", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsSome, py::const_),
            py::arg("start"), py::arg("end"));
 
   us.def_static(
-      "create_from", [](const _UnicodeStringVariant &s) { return UnicodeSet::createFrom(VARIANT_TO_UNISTR(s)); },
+      "create_from", [](const icupy::UnicodeStringVariant &s) { return UnicodeSet::createFrom(icupy::to_unistr(s)); },
       py::arg("s"));
 
   us.def_static(
-      "create_from_all", [](const _UnicodeStringVariant &s) { return UnicodeSet::createFromAll(VARIANT_TO_UNISTR(s)); },
+      "create_from_all",
+      [](const icupy::UnicodeStringVariant &s) { return UnicodeSet::createFromAll(icupy::to_unistr(s)); },
       py::arg("s"));
 
   us.def("freeze", &UnicodeSet::freeze);
@@ -336,8 +342,8 @@ void init_uniset(py::module &m) {
 
   us.def(
         "remove",
-        [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-          return self.remove(VARIANT_TO_UNISTR(s));
+        [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+          return self.remove(icupy::to_unistr(s));
         },
         py::arg("s"))
       .def("remove", py::overload_cast<UChar32>(&UnicodeSet::remove), py::arg("c"))
@@ -346,8 +352,8 @@ void init_uniset(py::module &m) {
   us.def("remove_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::removeAll), py::arg("c"))
       .def(
           "remove_all",
-          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-            return self.removeAll(VARIANT_TO_UNISTR(s));
+          [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.removeAll(icupy::to_unistr(s));
           },
           py::arg("s"));
 
@@ -355,16 +361,16 @@ void init_uniset(py::module &m) {
 
   us.def_static(
       "resembles_pattern",
-      [](const _UnicodeStringVariant &pattern, int32_t pos) {
-        return UnicodeSet::resemblesPattern(VARIANT_TO_UNISTR(pattern), pos);
+      [](const icupy::UnicodeStringVariant &pattern, int32_t pos) {
+        return UnicodeSet::resemblesPattern(icupy::to_unistr(pattern), pos);
       },
       py::arg("pattern"), py::arg("pos"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   us.def(
       "retain",
-      [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-        return self.retain(VARIANT_TO_UNISTR(s));
+      [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+        return self.retain(icupy::to_unistr(s));
       },
       py::arg("s"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
@@ -375,8 +381,8 @@ void init_uniset(py::module &m) {
   us.def("retain_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::retainAll), py::arg("c"))
       .def(
           "retain_all",
-          [](UnicodeSet &self, const _UnicodeStringVariant &s) -> UnicodeSet & {
-            return self.retainAll(VARIANT_TO_UNISTR(s));
+          [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
+            return self.retainAll(icupy::to_unistr(s));
           },
           py::arg("s"));
 
@@ -387,7 +393,7 @@ void init_uniset(py::module &m) {
     error_code.reset();
     self.serialize(result.data(), length, error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });

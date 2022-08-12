@@ -60,7 +60,7 @@ void init_edits(py::module &m) {
         ErrorCode error_code;
         auto &result = self.mergeAndAppend(ab, bc, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -86,7 +86,7 @@ void init_edits(py::module &m) {
         ErrorCode error_code;
         auto result = self.destinationIndexFromSourceIndex(i, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -98,7 +98,7 @@ void init_edits(py::module &m) {
         ErrorCode error_code;
         auto result = self.findDestinationIndex(i, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -111,7 +111,7 @@ void init_edits(py::module &m) {
         ErrorCode error_code;
         auto result = self.findSourceIndex(i, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -125,7 +125,7 @@ void init_edits(py::module &m) {
     ErrorCode error_code;
     auto result = self.next(error_code);
     if (error_code.isFailure()) {
-      throw ICUError(error_code);
+      throw icupy::ICUError(error_code);
     }
     return result;
   });
@@ -143,7 +143,7 @@ void init_edits(py::module &m) {
         ErrorCode error_code;
         auto result = self.sourceIndexFromDestinationIndex(i, error_code);
         if (error_code.isFailure()) {
-          throw ICUError(error_code);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
