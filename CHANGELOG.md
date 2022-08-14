@@ -3,6 +3,7 @@
 ## WIP
 
 - [CHANGED] Update pybind11 to v2.10.0
+- [CHANGED] Change args and return type of Collator.get_bound(source: list[int], source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> list[int] → get_bound(source: bytes, source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> bytes
 - [CHANGED] Change args type of CollationKey.\_\_init__(values: list[int], count: int) → \_\_init__(values: bytes, count: int = -1)
 - [CHANGED] Change return type of CollationKey.get_byte_array() -> list[int] → bytes
 - [CHANGED] Change return type of ResourceBundle.get_binary() -> list[int] → bytes

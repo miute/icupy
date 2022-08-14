@@ -274,14 +274,21 @@ def test_get_bound():
     result2 = Collator.get_bound(
         source, len(source), UColBoundMode.UCOL_BOUND_UPPER, 1
     )
-    assert isinstance(result1, list)
-    assert isinstance(result2, list)
+    assert isinstance(result1, bytes)
+    assert isinstance(result2, bytes)
     assert len(result1) > 0
     assert len(result2) > 0
-    assert all(isinstance(x, int) for x in result1)
-    assert all(isinstance(x, int) for x in result2)
     assert result1 < source
     assert result2 > source
+
+    result1a = Collator.get_bound(
+        source, -1, UColBoundMode.UCOL_BOUND_LOWER, 1
+    )
+    result2a = Collator.get_bound(
+        source, -1, UColBoundMode.UCOL_BOUND_UPPER, 1
+    )
+    assert result1 == result1a
+    assert result2 == result2a
 
 
 def test_get_collation_key():

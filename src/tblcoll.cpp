@@ -98,18 +98,22 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
       "get_bound",
-      [](const std::vector<uint8_t> &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
+      [](const py::buffer &source, int32_t source_length, UColBoundMode bound_type, uint32_t no_of_levels) {
+        auto info = source.request();
+        if (source_length == -1) {
+          source_length = static_cast<int32_t>(info.size);
+        }
+        auto _source = reinterpret_cast<const uint8_t *>(info.ptr);
         ErrorCode error_code;
         const auto result_length =
-            Collator::getBound(source.data(), source_length, bound_type, no_of_levels, nullptr, 0, error_code);
+            Collator::getBound(_source, source_length, bound_type, no_of_levels, nullptr, 0, error_code);
         std::vector<uint8_t> result(result_length);
         error_code.reset();
-        Collator::getBound(source.data(), source_length, bound_type, no_of_levels, result.data(), result_length,
-                           error_code);
+        Collator::getBound(_source, source_length, bound_type, no_of_levels, result.data(), result_length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return result;
+        return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"), py::arg("no_of_levels"));
 
