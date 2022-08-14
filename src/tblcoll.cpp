@@ -420,7 +420,7 @@ void init_tblcoll(py::module &m) {
            const auto result_length = self.getSortKey(source, source_length, nullptr, 0);
            std::vector<uint8_t> result(result_length);
            self.getSortKey(source, source_length, result.data(), result_length);
-           return result;
+           return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
          },
          py::arg("source"), py::arg("source_length"))
       .def(
@@ -429,7 +429,7 @@ void init_tblcoll(py::module &m) {
             const auto result_length = self.getSortKey(icupy::to_unistr(source), nullptr, 0);
             std::vector<uint8_t> result(result_length);
             self.getSortKey(icupy::to_unistr(source), result.data(), result_length);
-            return result;
+            return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
           },
           py::arg("source"));
 

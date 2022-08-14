@@ -7,6 +7,7 @@
 - [CHANGED] Change return type of CollationKey.get_byte_array() -> list[int] → bytes
 - [CHANGED] Change return type of ResourceBundle.get_binary() -> list[int] → bytes
 - [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple
+- [CHANGED] Change return type of RuleBasedCollator.get_sort_key(...) -> list[int] → bytes
 - [CHANGED] Change return type of RuleBasedCollator.get_version() -> list → tuple
 - [CHANGED] Change return type of u_char_age(c: int) -> list → tuple
 - [CHANGED] Change return type of u_get_data_version() -> list → tuple

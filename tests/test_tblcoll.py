@@ -542,9 +542,8 @@ def test_get_sort_key():
     #       int32_t resultLength
     # )
     result1 = coll.get_sort_key("ABC", -1)
-    assert isinstance(result1, list)
+    assert isinstance(result1, bytes)
     assert len(result1) > 0
-    assert all(isinstance(x, int) for x in result1)
 
     # [2]
     # int32_t icu::Collator::getSortKey(
@@ -553,9 +552,8 @@ def test_get_sort_key():
     #       int32_t resultLength
     # )
     result2 = coll.get_sort_key(UnicodeString("abc"))
-    assert isinstance(result2, list)
+    assert isinstance(result2, bytes)
     assert len(result2) > 0
-    assert all(isinstance(x, int) for x in result2)
 
     result2a = coll.get_sort_key("abc")
     assert result2a == result2
