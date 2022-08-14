@@ -121,13 +121,12 @@ void init_resbund(py::module &m) {
 
   res.def("get_binary", [](const ResourceBundle &self) {
     ErrorCode error_code;
-    int32_t length;
+    int32_t length = 0;
     auto p = self.getBinary(length, error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
-    std::vector<uint8_t> result(p, p + length);
-    return result;
+    return py::bytes(reinterpret_cast<const char *>(p), length);
   });
 
   res.def("get_int", [](const ResourceBundle &self) {

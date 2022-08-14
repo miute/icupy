@@ -5,6 +5,7 @@
 - [CHANGED] Update pybind11 to v2.10.0
 - [CHANGED] Change args type of CollationKey.\_\_init__(values: list[int], count: int) → \_\_init__(values: bytes, count: int = -1)
 - [CHANGED] Change return type of CollationKey.get_byte_array() -> list[int] → bytes
+- [CHANGED] Change return type of ResourceBundle.get_binary() -> list[int] → bytes
 - [CHANGED] Change return type of ResourceBundle.get_version() -> list → tuple
 - [CHANGED] Change return type of RuleBasedCollator.get_version() -> list → tuple
 - [CHANGED] Change return type of u_char_age(c: int) -> list → tuple

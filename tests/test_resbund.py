@@ -163,32 +163,19 @@ def test_api2():
     #       UErrorCode &status
     # )
     result = test2.get_binary()
-    assert isinstance(result, list)
+    assert isinstance(result, bytes)
     assert len(result) == 15
-    assert result == [
-        0x00,
-        0x01,
-        0x02,
-        0x03,
-        0x04,
-        0x05,
-        0x06,
-        0x07,
-        0x08,
-        0x09,
-        0x0A,
-        0x0B,
-        0x0C,
-        0x0D,
-        0x0E,
-    ]
+    assert (
+        result
+        == b"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e"
+    )
 
     # "testtypes" > "emptybin"
     test3 = test1.get("emptybin")
     assert isinstance(test3, ResourceBundle)
     assert test3.get_type() == UResType.URES_BINARY
     result = test3.get_binary()
-    assert isinstance(result, list)
+    assert isinstance(result, bytes)
     assert len(result) == 0
 
     # "testtypes" > "minusone"
