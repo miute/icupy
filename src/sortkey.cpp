@@ -13,10 +13,14 @@ void init_sortkey(py::module &m) {
   py::class_<CollationKey, UObject> ck(m, "CollationKey");
 
   ck.def(py::init<>())
-      .def(py::init([](const std::vector<uint8_t> &values, int32_t count) {
-             return std::make_unique<CollationKey>(values.data(), count);
+      .def(py::init([](const py::buffer &values, int32_t count) {
+             auto info = values.request();
+             if (count == -1) {
+               count = static_cast<int32_t>(info.size);
+             }
+             return std::make_unique<CollationKey>(reinterpret_cast<uint8_t *>(info.ptr), count);
            }),
-           py::arg("values"), py::arg("count"))
+           py::arg("values"), py::arg("count") = -1)
       .def(py::init<CollationKey &>(), py::arg("other"));
 
   ck.def(
@@ -41,15 +45,11 @@ void init_sortkey(py::module &m) {
       },
       py::arg("target"));
 
-  ck.def(
-      "get_byte_array",
-      [](const CollationKey &self) {
-        int32_t count = 0;
-        auto p = self.getByteArray(count);
-        std::vector<uint8_t> result(p, p + count);
-        return result;
-      },
-      py::return_value_policy::reference);
+  ck.def("get_byte_array", [](const CollationKey &self) {
+    int32_t count = 0;
+    auto p = self.getByteArray(count);
+    return py::bytes(reinterpret_cast<const char *>(p), count);
+  });
 
   ck.def("hash_code", &CollationKey::hashCode);
 

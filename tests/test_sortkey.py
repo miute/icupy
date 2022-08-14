@@ -23,9 +23,8 @@ def test_api():
 
     # const uint8_t *icu::CollationKey::getByteArray(int32_t &count)
     values = key.get_byte_array()
-    assert isinstance(values, list)
+    assert isinstance(values, bytes)
     assert len(values) > 0
-    assert all(isinstance(x, int) for x in values)
 
     # [2]
     # icu::CollationKey::CollationKey(
@@ -33,6 +32,8 @@ def test_api():
     #       int32_t count
     # )
     key2 = CollationKey(values, len(values))
+    key2a = CollationKey(values)
+    assert key2 == key2a
 
     # [3]
     # icu::CollationKey::CollationKey(const CollationKey &other)
