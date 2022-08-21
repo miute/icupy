@@ -506,10 +506,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         // [1] extractBetween(int32_t start, int32_t limit, char16_t *dst, int32_t dstStart = 0)
         "extract_between",
         [](const UnicodeString &self, int32_t start, int32_t limit) {
-          std::u16string result(self.length(), u'\0');
+          std::u16string result(std::max(0, std::min(self.length(), std::max(0, limit)) - std::max(0, start)), u'\0');
           self.extractBetween(start, limit, result.data());
-          auto pos = result.find_last_not_of(u'\0');
-          result.erase(pos == std::u16string::npos ? 0 : pos + 1);
           return result;
         },
         py::arg("start"), py::arg("limit"))

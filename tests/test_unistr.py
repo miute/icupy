@@ -675,16 +675,79 @@ def test_extract_between():
     #       char16_t *dst,
     #       int32_t dstStart = 0
     # )
+    dest = test1.extract_between(0, 1)
+    assert isinstance(dest, str)
+    assert dest == "a"
+
+    dest = test1.extract_between(0, 3)
+    assert isinstance(dest, str)
+    assert dest == "a\U0001F338"  # "a\uD83C\uDF38" → "a\U0001F338"
+
+    dest = test1.extract_between(0, 4)
+    assert isinstance(dest, str)
+    assert dest == "a\U0001F338b"  # "a\uD83C\uDF38b" → "a\U0001F338b"
+
+    dest = test1.extract_between(0, 5)
+    assert isinstance(dest, str)
+    assert (
+        dest == "a\U0001F338b\x00"
+    )  # "a\uD83C\uDF38b\x00" → "a\U0001F338b\x00"
+
+    dest = test1.extract_between(0, 6)
+    assert isinstance(dest, str)
+    assert (
+        dest == "a\U0001F338b\x00c"
+    )  # "a\uD83C\uDF38b\x00c" → "a\U0001F338b\x00c"
+
+    dest = test1.extract_between(0, 1000)
+    assert isinstance(dest, str)
+    assert (
+        dest == "a\U0001F338b\x00c"
+    )  # "a\uD83C\uDF38b\x00c" → "a\U0001F338b\x00c"
+
+    dest = test1.extract_between(3, 3)
+    assert isinstance(dest, str)
+    assert len(dest) == 0
+
+    dest = test1.extract_between(3, 4)
+    assert isinstance(dest, str)
+    assert dest == "b"
+
+    dest = test1.extract_between(3, 5)
+    assert isinstance(dest, str)
+    assert dest == "b\x00"
+
     dest = test1.extract_between(3, 6)
     assert isinstance(dest, str)
     assert dest == "b\x00c"
 
-    dest = test1.extract_between(3, 5)
+    dest = test1.extract_between(4, 6)
     assert isinstance(dest, str)
-    assert dest == "b"
+    assert dest == "\x00c"
+
+    dest = test1.extract_between(5, 6)
+    assert isinstance(dest, str)
+    assert dest == "c"
+
+    dest = test1.extract_between(6, 7)
+    assert isinstance(dest, str)
+    assert len(dest) == 0
 
     dest = test2.extract_between(3, 6)
+    assert isinstance(dest, str)
+    assert len(dest) == 0  # test2 is not valid
+
+    dest = test1.extract_between(1, 0)
+    assert isinstance(dest, str)
     assert len(dest) == 0
+
+    dest = test1.extract_between(-2, -1)
+    assert isinstance(dest, str)
+    assert len(dest) == 0
+
+    dest = test1.extract_between(-2, 1)
+    assert isinstance(dest, str)
+    assert dest == "a"
 
     # [2]
     # void icu::UnicodeString::extractBetween(

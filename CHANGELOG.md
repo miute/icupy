@@ -46,6 +46,7 @@
 - [FIXED] Change return type of UnicodeString.\_\_getitem__(index: slice) -> str → UnicodeString
 - [FIXED] Change return type of UnicodeString comparison operators from int to bool
 - [FIXED] Fix UnicodeString.\_\_iadd__(other: UnicodeString|str|int) to return itself
+- [FIXED] Fix return value of UnicodeString.extract_between(start: int, limit: int)
 - [FIXED] Change UTextVector to keep references
 - [REMOVED] Remove UTextVector.\_\_init__(n: int)
 
