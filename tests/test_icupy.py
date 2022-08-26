@@ -76,8 +76,11 @@ def test_field_position():
 def test_icu_error():
     assert issubclass(ICUError, Exception)
 
+    fmt = DateFormat.create_date_time_instance(
+        DateFormat.SHORT, DateFormat.LONG, Locale.get_english()
+    )
     with pytest.raises(ICUError) as exc_info:
-        _ = u_version_to_string([1, 2, 3])
+        _ = fmt.parse("07/10/96 4:5:0 PM, PDT")
     ex = exc_info.value
     assert isinstance(ex, ICUError)
     assert len(ex.args) == 1
@@ -249,13 +252,11 @@ def test_u_version_to_string():
     assert isinstance(version_string, str)
     assert version_string == "123.45.67.89"
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(TypeError):
         _ = u_version_to_string([1, 2, 3])
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(TypeError):
         _ = u_version_to_string([1, 2, 3, 4, 5])
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     with pytest.raises(TypeError):
         _ = u_version_to_string([256, 0, 0, 0])  # [0, 255]

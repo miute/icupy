@@ -41,6 +41,7 @@
   - Add UTextVector.clear()
   - Add UTextVector.extend(src: list[UnicodeString])
   - Add UTextVector.insert(index: int, src: UnicodeString)
+- [IMPROVED] Change args type of u_version_to_string(version_array: list[int]) → u_version_to_string(version_array: list[int[4]])
 - [FIXED] Raise IndexError when \_ConstChar16Ptr.\_\_getitem__() accessing beyond capacity
 - [FIXED] Change return type of UnicodeSet.\_\_getitem__(index: slice) -> list[int] → UnicodeSet
 - [FIXED] Change return type of UnicodeString.\_\_getitem__(index: slice) -> str → UnicodeString
