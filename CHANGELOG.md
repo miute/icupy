@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## WIP
+## v0.14.0 / 2022-08-29
 
 - [CHANGED] Update pybind11 to v2.10.0
 - [CHANGED] Change args and return type of Collator.get_bound(source: list[int], source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> list[int] → get_bound(source: bytes, source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> bytes
