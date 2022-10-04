@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## WIP
+
+- NEW
+  - Add support for Python 3.11
+
 ## v0.14.0 / 2022-08-29
 
 - CHANGED
