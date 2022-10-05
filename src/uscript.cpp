@@ -255,6 +255,10 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_TOTO", USCRIPT_TOTO)
       .value("USCRIPT_VITHKUQI", USCRIPT_VITHKUQI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+#if (U_ICU_VERSION_MAJOR_NUM >= 72)
+      .value("USCRIPT_KAWI", USCRIPT_KAWI)
+      .value("USCRIPT_NAG_MUNDARI", USCRIPT_NAG_MUNDARI)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
 #ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
