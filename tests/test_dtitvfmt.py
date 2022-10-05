@@ -231,7 +231,10 @@ def test_date_interval_info():
     pattern = dtitvinf3.get_fallback_interval_pattern(result)
     assert isinstance(pattern, UnicodeString)
     assert id(result) == id(pattern)
-    assert result == "{0} \u2013 {1}"
+    assert result in (
+        "{0} \u2013 {1}",
+        "{0}\u2009\u2013\u2009{1}",  # ICU>=72
+    )
 
     # void icu::DateIntervalInfo::setFallbackIntervalPattern(
     #       const UnicodeString &fallbackPattern,
@@ -255,14 +258,20 @@ def test_date_interval_info():
     )
     assert isinstance(pattern, UnicodeString)
     assert id(result) == id(pattern)
-    assert result == "HH:mm \u2013 HH:mm"
+    assert result in (
+        "HH:mm \u2013 HH:mm",
+        "HH:mm\u2009\u2013\u2009HH:mm",  # ICU>=72
+    )
 
     pattern = dtitvinf3.get_interval_pattern(
         "Hm", UCalendarDateFields.UCAL_HOUR_OF_DAY, result
     )
     assert isinstance(pattern, UnicodeString)
     assert id(result) == id(pattern)
-    assert result == "HH:mm \u2013 HH:mm"
+    assert result in (
+        "HH:mm \u2013 HH:mm",
+        "HH:mm\u2009\u2013\u2009HH:mm",  # ICU>=72
+    )
 
     # void icu::DateIntervalInfo::setIntervalPattern(
     #       const UnicodeString &skeleton,
@@ -341,7 +350,10 @@ def test_format():
     result = fmt.format(from_calendar, to_calendar, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # [2]
     # UnicodeString &icu::DateIntervalFormat::format(
@@ -356,7 +368,10 @@ def test_format():
     result = fmt.format(dt_interval, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # [3]
     # UnicodeString &icu::DateIntervalFormat::format(
@@ -374,7 +389,10 @@ def test_format():
     )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # [5]
     # UnicodeString &icu::Format::format(
@@ -403,7 +421,10 @@ def test_format():
     )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
@@ -429,7 +450,10 @@ def test_format_to_value():
     # )
     dtitv1 = fmt.format_to_value(from_calendar, to_calendar)
     assert isinstance(dtitv1, FormattedDateInterval)
-    assert dtitv1.to_temp_string() == "Apr 26 \u2013 28, 2013"
+    assert dtitv1.to_temp_string() in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # [2]
     # FormattedDateInterval icu::DateIntervalFormat::formatToValue(
@@ -439,7 +463,10 @@ def test_format_to_value():
     dt_interval = DateInterval(from_date, to_date)
     dtitv2 = fmt.format_to_value(dt_interval)
     assert isinstance(dtitv2, FormattedDateInterval)
-    assert dtitv2.to_temp_string() == "Apr 26 \u2013 28, 2013"
+    assert dtitv2.to_temp_string() in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
@@ -468,7 +495,10 @@ def test_formatted_date_interval():
     result = dtitv.append_to(appendable)
     assert isinstance(result, UnicodeStringAppendable)
     assert id(result) == id(appendable)
-    assert dest == "\U0001f338Apr 26 \u2013 28, 2013"
+    assert dest in (
+        "\U0001f338Apr 26 \u2013 28, 2013",
+        "\U0001f338Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # UBool icu::FormattedDateInterval::nextPosition(
     #       ConstrainedFieldPosition &cfpos,
@@ -514,14 +544,20 @@ def test_formatted_date_interval():
     # UnicodeString icu::FormattedDateInterval::toString(UErrorCode &status)
     result = dtitv.to_string()
     assert isinstance(result, UnicodeString)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
     # UnicodeString icu::FormattedDateInterval::toTempString(
     #       UErrorCode &status
     # )
     result = dtitv.to_temp_string()
     assert isinstance(result, UnicodeString)
-    assert result == "Apr 26 \u2013 28, 2013"
+    assert result in (
+        "Apr 26 \u2013 28, 2013",
+        "Apr 26\u2009\u2013\u200928, 2013",  # ICU>=72
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")

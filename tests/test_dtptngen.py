@@ -120,6 +120,7 @@ def test_api():
     assert result in [
         "MMMM d, h:mm a",  # ICU<=70
         "MMMM d 'at' h:mm a",  # ICU>=71
+        "MMMM d 'at' h:mm\u202fa",  # ICU>=72
     ]
 
     result = gen1.get_best_pattern(
@@ -129,6 +130,7 @@ def test_api():
     assert result in [
         "MMMM d, h:mm a",  # ICU<=70
         "MMMM d 'at' h:mm a",  # ICU>=71
+        "MMMM d 'at' h:mm\u202fa",  # ICU>=72
     ]
 
     # [2]
@@ -141,6 +143,7 @@ def test_api():
     assert result in [
         "MMMM d, h:mm a",  # ICU<=70
         "MMMM d 'at' h:mm a",  # ICU>=71
+        "MMMM d 'at' h:mm\u202fa",  # ICU>=72
     ]
 
     result = gen1.get_best_pattern("MMMMdjmm")
@@ -148,6 +151,7 @@ def test_api():
     assert result in [
         "MMMM d, h:mm a",  # ICU<=70
         "MMMM d 'at' h:mm a",  # ICU>=71
+        "MMMM d 'at' h:mm\u202fa",  # ICU>=72
     ]
 
     # const UnicodeString &icu::DateTimePatternGenerator::getDateTimeFormat()

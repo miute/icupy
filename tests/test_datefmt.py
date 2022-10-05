@@ -230,7 +230,10 @@ def test_format():
     result = fmt.format(cal, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [2]
     # UnicodeString &icu::DateFormat::format(
@@ -244,7 +247,10 @@ def test_format():
     result = fmt.format(cal, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     fp = FieldPosition()
     assert pos_iter.next(fp)
@@ -273,7 +279,10 @@ def test_format():
     result = fmt.format(cal, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [3]
     # UnicodeString &icu::DateFormat::format(
@@ -288,7 +297,10 @@ def test_format():
     result = fmt.format(obj, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [6]
     # UnicodeString &icu::DateFormat::format(
@@ -303,7 +315,10 @@ def test_format():
     result = fmt.format(obj, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     fp = FieldPosition()
     assert pos_iter.next(fp)
@@ -315,7 +330,10 @@ def test_format():
     result = fmt.format(obj, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [8]
     # UnicodeString &icu::DateFormat::format(
@@ -326,7 +344,10 @@ def test_format():
     result = fmt.format(date, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [9]
     # UnicodeString &icu::DateFormat::format(
@@ -339,7 +360,10 @@ def test_format():
     result = fmt.format(date, append_to, field_position)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [10]
     # UnicodeString &icu::DateFormat::format(
@@ -353,7 +377,10 @@ def test_format():
     result = fmt.format(date, append_to, pos_iter)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     fp = FieldPosition()
     assert pos_iter.next(fp)
@@ -365,7 +392,10 @@ def test_format():
     result = fmt.format(date, append_to, None)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
     # [3]
     # UnicodeString &icu::Format::format(
@@ -378,7 +408,10 @@ def test_format():
     result = fmt.format(obj, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == "Jul 5, 2008, 11:00 PM"
+    assert result in (
+        "Jul 5, 2008, 11:00 PM",
+        "Jul 5, 2008, 11:00\u202fPM",  # ICU>=72
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")

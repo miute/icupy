@@ -237,9 +237,11 @@ def test_format():
     result = fmt.format(obj, append_to, pos)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     # *U_UNSUPPORTED_ERROR in ICU 69*
@@ -285,9 +287,11 @@ def test_format():
     result = fmt.format(obj, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     # [5]
@@ -308,9 +312,11 @@ def test_format():
     result = fmt.format(source, len(source), append_to, ignore)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     append_to.remove()
@@ -318,9 +324,11 @@ def test_format():
     result = fmt.format(source, -1, append_to, ignore)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     # *NotImplemented*
@@ -357,18 +365,22 @@ def test_format():
     )
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     append_to.remove()
     result = fmt.format(argument_names, arguments, -1, append_to)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(append_to)
-    assert result == (
+    assert result in (
         "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7."
+        "there was a disturbance in the Force on planet 7.",
+        "At 4:42\u202fPM on November 23, "
+        "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
 

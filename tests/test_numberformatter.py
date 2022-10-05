@@ -141,8 +141,8 @@ def test_formatted_number_68():
     assert unit.get_identifier() == "stone-and-pound"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
-def test_formatted_number_71():
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM != 71, reason="ICU4C!=71")
+def test_formatted_number_get_noun_class_71():
     from icupy.icu import NounClass
 
     fmt = (
