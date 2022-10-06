@@ -2319,4 +2319,28 @@ void init_measunit(py::module &m) {
       },
       py::arg("prefix"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 72)
+  mu.def_static("create_quarter", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createQuarter(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_tonne", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createTonne(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("get_quarter", &MeasureUnit::getQuarter);
+
+  mu.def_static("get_tonne", &MeasureUnit::getTonne);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
 }

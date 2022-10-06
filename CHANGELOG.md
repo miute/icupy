@@ -8,6 +8,11 @@
 - CHANGED
   - Update icupy.icu.UBlockCode enum
   - Update icupy.icu.UScriptCode enum
+  - Update icupy.icu.MeasureUnit class
+    - Add MeasureUnit.create_quarter()
+    - Add MeasureUnit.create_tonne()
+    - Add MeasureUnit.get_quarter()
+    - Add MeasureUnit.get_tonne()
 
 ## v0.14.0 / 2022-08-29
 

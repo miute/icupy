@@ -1808,6 +1808,31 @@ def test_measure_unit_70():
     ) == "1 kWh/100km"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
+def test_measure_unit_72():
+    fmt = NumberFormatter.with_locale(Locale.get_us())
+
+    # static MeasureUnit *icu::MeasureUnit::createQuarter(UErrorCode &status)
+    assert (
+        fmt.unit(MeasureUnit.create_quarter()).format_int(1).to_string()
+    ) == "1 qtr"
+
+    # static MeasureUnit *icu::MeasureUnit::createTonne(UErrorCode &status)
+    assert (
+        fmt.unit(MeasureUnit.create_tonne()).format_int(1).to_string()
+    ) == "1 t"
+
+    # static MeasureUnit icu::MeasureUnit::getQuarter()
+    assert (
+        fmt.unit(MeasureUnit.get_quarter()).format_int(1).to_string()
+    ) == "1 qtr"
+
+    # static MeasureUnit icu::MeasureUnit::getTonne()
+    assert (
+        fmt.unit(MeasureUnit.get_tonne()).format_int(1).to_string()
+    ) == "1 t"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(
