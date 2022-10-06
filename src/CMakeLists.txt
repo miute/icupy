@@ -100,6 +100,7 @@ pybind11_add_module(
     udat.cpp
     udatpg.cpp
     udisplaycontext.cpp
+    udisplayoptions.cpp
     uenum.cpp
     uformattedvalue.cpp
     ugender.cpp

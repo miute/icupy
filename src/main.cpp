@@ -98,6 +98,7 @@ void init_ucurr(py::module &m);
 void init_udat(py::module &m);
 void init_udatpg(py::module &m);
 void init_udisplaycontext(py::module &m);
+void init_udisplayoptions(py::module &m);
 void init_uenum(py::module &m);
 void init_uformattedvalue(py::module &m);
 void init_ugender(py::module &m);
@@ -310,6 +311,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_udat(m);
   init_udatpg(m);
   init_udisplaycontext(m);
+  init_udisplayoptions(m);
   init_uenum(m);
   init_uformattedvalue(m);
   init_ugender(m);

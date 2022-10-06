@@ -5,6 +5,13 @@
 - NEW
   - Add support for ICU 72
   - Add support for Python 3.11
+  - Add icupy.icu.UDisplayOptionsCapitalization enum
+  - Add icupy.icu.UDisplayOptionsDisplayLength enum
+  - Add icupy.icu.UDisplayOptionsGrammaticalCase enum
+  - Add icupy.icu.UDisplayOptionsNameStyle enum
+  - Add icupy.icu.UDisplayOptionsNounClass enum
+  - Add icupy.icu.UDisplayOptionsPluralCategory enum
+  - Add icupy.icu.UDisplayOptionsSubstituteHandling enum
 - CHANGED
   - Update icupy.icu.UBlockCode enum
   - Update icupy.icu.UScriptCode enum
