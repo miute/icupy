@@ -5,13 +5,20 @@
 - NEW
   - Add support for ICU 72
   - Add support for Python 3.11
-  - Add icupy.icu.UDisplayOptionsCapitalization enum
-  - Add icupy.icu.UDisplayOptionsDisplayLength enum
-  - Add icupy.icu.UDisplayOptionsGrammaticalCase enum
-  - Add icupy.icu.UDisplayOptionsNameStyle enum
-  - Add icupy.icu.UDisplayOptionsNounClass enum
-  - Add icupy.icu.UDisplayOptionsPluralCategory enum
-  - Add icupy.icu.UDisplayOptionsSubstituteHandling enum
+  - Implement Display options API (udisplayoptions)
+    - Add icupy.icu.UDisplayOptionsCapitalization enum
+    - Add icupy.icu.UDisplayOptionsDisplayLength enum
+    - Add icupy.icu.UDisplayOptionsGrammaticalCase enum
+    - Add icupy.icu.UDisplayOptionsNameStyle enum
+    - Add icupy.icu.UDisplayOptionsNounClass enum
+    - Add icupy.icu.UDisplayOptionsPluralCategory enum
+    - Add icupy.icu.UDisplayOptionsSubstituteHandling enum
+    - Add icupy.icu.udispopt_from_grammatical_case_identifier(identifier)
+    - Add icupy.icu.udispopt_from_noun_class_identifier(identifier)
+    - Add icupy.icu.udispopt_from_plural_category_identifier(identifier)
+    - Add icupy.icu.udispopt_get_grammatical_case_identifier(grammatical_case)
+    - Add icupy.icu.udispopt_get_noun_class_identifier(noun_class)
+    - Add icupy.icu.udispopt_get_plural_category_identifier(plural_category)
 - CHANGED
   - Update icupy.icu.UBlockCode enum
   - Update icupy.icu.UScriptCode enum

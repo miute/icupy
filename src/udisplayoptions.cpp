@@ -135,5 +135,23 @@ void init_udisplayoptions(py::module &m) {
       .value("UDISPOPT_SUBSTITUTE_HANDLING_NO_SUBSTITUTE", UDISPOPT_SUBSTITUTE_HANDLING_NO_SUBSTITUTE,
              "Returns a null value when no data is available.")
       .export_values();
+
+  //
+  // C APIs
+  //
+  m.def("udispopt_from_grammatical_case_identifier", &udispopt_fromGrammaticalCaseIdentifier,
+        py::arg("identifier").none(false));
+
+  m.def("udispopt_from_noun_class_identifier", &udispopt_fromNounClassIdentifier, py::arg("identifier").none(false));
+
+  m.def("udispopt_from_plural_category_identifier", &udispopt_fromPluralCategoryIdentifier,
+        py::arg("identifier").none(false));
+
+  m.def("udispopt_get_grammatical_case_identifier", &udispopt_getGrammaticalCaseIdentifier,
+        py::arg("grammatical_case"));
+
+  m.def("udispopt_get_noun_class_identifier", &udispopt_getNounClassIdentifier, py::arg("noun_class"));
+
+  m.def("udispopt_get_plural_category_identifier", &udispopt_getPluralCategoryIdentifier, py::arg("plural_category"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
 }
