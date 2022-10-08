@@ -4,9 +4,11 @@
 #include <pybind11/stl.h>
 #include <unicode/numberformatter.h>
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 71)
+#if (U_ICU_VERSION_MAJOR_NUM == 71)
 #include <unicode/unounclass.h>
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
+#elif (U_ICU_VERSION_MAJOR_NUM >= 72)
+#include <unicode/displayoptions.h>
+#endif // (U_ICU_VERSION_MAJOR_NUM == 71)
 
 using namespace icu;
 using namespace icu::number;

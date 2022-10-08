@@ -147,15 +147,34 @@ def test_formatted_number_get_noun_class_71():
 
     fmt = (
         NumberFormatter.with_()
-        .usage("person")
-        .unit(MeasureUnit.get_kilogram())
-        .locale("en-GB")
+        .unit(MeasureUnit.for_identifier("cubic-meter"))
+        .locale("fr")
     )
-    num = fmt.format_double(80)
+    num = fmt.format_double(1.1)
     assert isinstance(num, FormattedNumber)
 
     # NounClass icu::number::FormattedNumber::getNounClass(UErrorCode &status)
-    assert num.get_noun_class() == NounClass.OTHER
+    assert num.get_noun_class() == NounClass.MASCULINE
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
+def test_formatted_number_get_noun_class_72():
+    from icupy.icu import UDisplayOptionsNounClass
+
+    fmt = (
+        NumberFormatter.with_()
+        .unit(MeasureUnit.for_identifier("cubic-meter"))
+        .locale("fr")
+    )
+    num = fmt.format_double(1.1)
+    assert isinstance(num, FormattedNumber)
+
+    # UDisplayOptionsNounClass
+    # icu::number::FormattedNumber::getNounClass(UErrorCode &status)
+    assert (
+        num.get_noun_class()
+        == UDisplayOptionsNounClass.UDISPOPT_NOUN_CLASS_MASCULINE
+    )
 
 
 def test_integer_width():

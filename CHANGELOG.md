@@ -29,6 +29,7 @@
     - Add MeasureUnit.create_tonne()
     - Add MeasureUnit.get_quarter()
     - Add MeasureUnit.get_tonne()
+  - Fix return type of icupy.icu.number.FormattedNumber.get_noun_class()
 
 ## v0.14.0 / 2022-08-29
 
