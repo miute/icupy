@@ -24,6 +24,7 @@ pybind11_add_module(
     datefmt.cpp
     dcfmtsym.cpp
     decimfmt.cpp
+    displayoptions.cpp
     dtfmtsym.cpp
     dtintrv.cpp
     dtitvfmt.cpp

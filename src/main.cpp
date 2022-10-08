@@ -23,6 +23,7 @@ void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
 void init_dcfmtsym(py::module &m);
 void init_decimfmt(py::module &m, py::class_<DecimalFormat, NumberFormat> &df);
+void init_displayoptions(py::module &m);
 void init_dtfmtsym(py::module &m);
 void init_dtintrv(py::module &m);
 void init_dtitvfmt(py::module &m);
@@ -250,6 +251,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_selfmt(m); // icu::SelectFormat
 
+  init_displayoptions(m);               // icu::DisplayOptions
   init_numberformatter(m, number);      // icu::number::NumberFormatter
   init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
   init_plurrule(m, pr);                 // icu::PluralRules

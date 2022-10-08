@@ -5,6 +5,8 @@
 - NEW
   - Add support for ICU 72
   - Add support for Python 3.11
+  - Implement icu::DisplayOptions class
+    - Add icupy.icu.DisplayOptions class
   - Implement Display options API (udisplayoptions)
     - Add icupy.icu.UDisplayOptionsCapitalization enum
     - Add icupy.icu.UDisplayOptionsDisplayLength enum
