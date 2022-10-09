@@ -15,20 +15,29 @@
     - Add icupy.icu.UDisplayOptionsNounClass enum
     - Add icupy.icu.UDisplayOptionsPluralCategory enum
     - Add icupy.icu.UDisplayOptionsSubstituteHandling enum
-    - Add icupy.icu.udispopt_from_grammatical_case_identifier(identifier)
-    - Add icupy.icu.udispopt_from_noun_class_identifier(identifier)
-    - Add icupy.icu.udispopt_from_plural_category_identifier(identifier)
-    - Add icupy.icu.udispopt_get_grammatical_case_identifier(grammatical_case)
-    - Add icupy.icu.udispopt_get_noun_class_identifier(noun_class)
-    - Add icupy.icu.udispopt_get_plural_category_identifier(plural_category)
-- CHANGED
-  - Update icupy.icu.UBlockCode enum
-  - Update icupy.icu.UScriptCode enum
-  - Update icupy.icu.MeasureUnit class
-    - Add MeasureUnit.create_quarter()
-    - Add MeasureUnit.create_tonne()
-    - Add MeasureUnit.get_quarter()
-    - Add MeasureUnit.get_tonne()
+    - Add icupy.icu.udispopt_from_grammatical_case_identifier(identifier: str)
+    - Add icupy.icu.udispopt_from_noun_class_identifier(identifier: str)
+    - Add icupy.icu.udispopt_from_plural_category_identifier(identifier: str)
+    - Add icupy.icu.udispopt_get_grammatical_case_identifier(grammatical_case: UDisplayOptionsGrammaticalCase)
+    - Add icupy.icu.udispopt_get_noun_class_identifier(noun_class: UDisplayOptionsNounClass)
+    - Add icupy.icu.udispopt_get_plural_category_identifier(plural_category: UDisplayOptionsPluralCategory)
+- ADDED
+  - Add icupy.icu.UBlockCode.UBLOCK_ARABIC_EXTENDED_C
+  - Add icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_H
+  - Add icupy.icu.UBlockCode.UBLOCK_CYRILLIC_EXTENDED_D
+  - Add icupy.icu.UBlockCode.UBLOCK_DEVANAGARI_EXTENDED_A
+  - Add icupy.icu.UBlockCode.UBLOCK_KAKTOVIK_NUMERALS
+  - Add icupy.icu.UBlockCode.UBLOCK_KAWI
+  - Add icupy.icu.UBlockCode.UBLOCK_NAG_MUNDARI
+  - Add icupy.icu.UScriptCode.USCRIPT_KAWI
+  - Add icupy.icu.UScriptCode.USCRIPT_NAG_MUNDARI
+  - Add icupy.icu.MeasureUnit.create_quarter()
+  - Add icupy.icu.MeasureUnit.create_tonne()
+  - Add icupy.icu.MeasureUnit.get_quarter()
+  - Add icupy.icu.MeasureUnit.get_tonne()
+  - Add icupy.icu.number.LocalizedNumberFormatter.display_options(display_options: DisplayOptions)
+  - Add icupy.icu.number.UnlocalizedNumberFormatter.display_options(display_options: DisplayOptions)
+- FIXED
   - Fix return type of icupy.icu.number.FormattedNumber.get_noun_class()
 
 ## v0.14.0 / 2022-08-29

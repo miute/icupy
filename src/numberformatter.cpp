@@ -347,6 +347,15 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("style"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 72)
+  nfs_lnf.def(
+      "display_options",
+      [](const _LocalizedNumberFormatterSettings &self, const DisplayOptions &display_options) {
+        return self.displayOptions(display_options);
+      },
+      py::arg("display_options"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 61)
   nfs_lnf.def(
       "grouping",
@@ -463,6 +472,15 @@ void init_numberformatter(py::module &, py::module &m2) {
         return self.decimal(style);
       },
       py::arg("style"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 72)
+  nfs_unf.def(
+      "display_options",
+      [](const _UnlocalizedNumberFormatterSettings &self, const DisplayOptions &display_options) {
+        return self.displayOptions(display_options);
+      },
+      py::arg("display_options"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 61)
   nfs_unf.def(

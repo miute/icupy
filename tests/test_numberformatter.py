@@ -388,6 +388,31 @@ def test_localized_number_formatter_68():
     assert isinstance(result, LocalizedNumberFormatter)
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
+def test_localized_number_formatter_72():
+    from icupy.icu import DisplayOptions, UDisplayOptionsGrammaticalCase
+
+    bld = DisplayOptions.builder()
+    display_options = bld.set_grammatical_case(
+        UDisplayOptionsGrammaticalCase.UDISPOPT_GRAMMATICAL_CASE_DATIVE
+    ).build()
+
+    # icu::number::LocalizedNumberFormatter
+    # icu::number::NumberFormatterSettings<LocalizedNumberFormatter>::displayOptions(
+    #       const DisplayOptions &displayOptions
+    # )
+    fmt = (
+        NumberFormatter.with_locale("de")
+        .unit(MeasureUnit.for_identifier("meter-and-centimeter"))
+        .unit_width(UNumberUnitWidth.UNUM_UNIT_WIDTH_FULL_NAME)
+        .display_options(display_options)
+    )
+    assert isinstance(fmt, LocalizedNumberFormatter)
+
+    num = fmt.format_double(2.1)
+    assert num.to_temp_string() == "2 Metern, 10 Zentimetern"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_localized_number_formatter_to_format():
     # fmt: off
@@ -886,3 +911,28 @@ def test_unlocalized_number_formatter_68():
     # )
     result = fmt.usage("person")
     assert isinstance(result, UnlocalizedNumberFormatter)
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
+def test_unlocalized_number_formatter_72():
+    from icupy.icu import DisplayOptions, UDisplayOptionsGrammaticalCase
+
+    bld = DisplayOptions.builder()
+    display_options = bld.set_grammatical_case(
+        UDisplayOptionsGrammaticalCase.UDISPOPT_GRAMMATICAL_CASE_DATIVE
+    ).build()
+
+    # icu::number::UnlocalizedNumberFormatter
+    # icu::number::NumberFormatterSettings<UnlocalizedNumberFormatter>::displayOptions(
+    #       const DisplayOptions &displayOptions
+    # )
+    fmt = (
+        NumberFormatter.with_()
+        .unit(MeasureUnit.for_identifier("meter-and-centimeter"))
+        .unit_width(UNumberUnitWidth.UNUM_UNIT_WIDTH_FULL_NAME)
+        .display_options(display_options)
+    )
+    assert isinstance(fmt, UnlocalizedNumberFormatter)
+
+    num = fmt.locale("de").format_double(2.1)
+    assert num.to_temp_string() == "2 Metern, 10 Zentimetern"
