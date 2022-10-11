@@ -74,6 +74,14 @@ jobs:
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
           echo "CMAKE_GENERATOR=Visual Studio 16 2019" >> $env:GITHUB_ENV
 
+      - name: Set up icu4c-72rc-Win64
+        if: startsWith(matrix.os, 'windows') && startsWith(matrix.icu-version, '72rc')
+        working-directory: build
+        env:
+          ICU4C_DIR: "icu4c"
+        run: |
+          7z x ${{env.ICU4C_DIR}}\20220922.23_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
+
       - name: Run tests
         env:
           PLATFORM: ${{matrix.os}}
