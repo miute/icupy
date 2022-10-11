@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.python-version}}
-          cache: "pipenv"
+          cache: "pip"
 
       - name: Upgrade pip
         run: |
@@ -33,9 +33,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --user pipenv
-          python -m pipenv --python ${{matrix.python-version}}
-          python -m pipenv install --dev
+          # python -m pip install --user pipenv
+          # python -m pipenv --python ${{matrix.python-version}}
+          # python -m pipenv install --dev
+          python -m pip install build pytest
 
       - run: mkdir -p build
 
@@ -71,7 +72,7 @@ jobs:
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
       - name: Set up icu4c-72rc-Win64
-        if: startsWith(matrix.os, 'windows') && startsWith(matrix.icu-version, '72rc')
+        if: startsWith(matrix.os, 'windows') && startsWith(steps.icu.outputs.latest, '72rc')
         working-directory: build
         env:
           ICU4C_DIR: "icu4c"
@@ -80,15 +81,18 @@ jobs:
 
       - name: Build wheel
         run: |
-          python -m pipenv run python -m build --wheel
+          # python -m pipenv run python -m build --wheel
+          python -m build --wheel
 
       - name: Store wheel
         uses: actions/upload-artifact@v3
         with:
-          name: dist-icu${{steps.icu.outputs.latest}}
+          name: dist-icupy-icu${{steps.icu.outputs.latest}}
           path: dist/*.whl
 
       - name: Run tests
         run: |
-          python -m pipenv run pip install --no-deps --no-index --find-links=./dist/ --force-reinstall icupy
-          python -m pipenv run pytest --color=yes
+          # python -m pipenv run pip install --no-deps --no-index --find-links=./dist/ --force-reinstall icupy
+          # python -m pipenv run pytest --color=yes
+          python -m pip install --no-deps --no-index --find-links=./dist/ --force-reinstall icupy
+          pytest --color=yes
