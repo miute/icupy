@@ -596,7 +596,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   pre.def_static("increment", &Precision::increment, py::arg("rounding_increment"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
-  pre.def_static("increment_exact", Precision::incrementExact, py::arg("mantissa"), py::arg("magnitude"));
+  pre.def_static("increment_exact", &Precision::incrementExact, py::arg("mantissa"), py::arg("magnitude"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
   pre.def_static("integer", &Precision::integer);
