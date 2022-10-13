@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.python-version}}
-          cache: "pip"
 
       - name: Upgrade pip
         run: |
@@ -46,17 +45,17 @@ jobs:
         run: |
           latest=`cat ./icu-versions.json | jq -r .latest`
           echo "latest=$latest"
-          echo "::set-output name=latest::$latest"
           content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"$latest\")"`
           echo "icu4c=$content"
-          echo "::set-output name=icu4c::$content"
+          echo "icu4c_latest_version=$latest" >> $GITHUB_ENV
+          echo "icu4c_target_json=$content" >> $GITHUB_ENV
 
       - name: Set up requirements (Ubuntu)
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: build
         run: |
-          curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}}
-          sudo tar zxf ${{fromJson(steps.icu.outputs.icu4c).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
+          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}}
+          sudo tar zxf ${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
@@ -67,12 +66,12 @@ jobs:
           INSTALL_PREFIX: "${{github.workspace}}/build"
           ICU4C_DIR: "icu4c"
         run: |
-          curl -LO ${{fromJson(steps.icu.outputs.icu4c).url}}/${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}}
-          7z x ${{fromJson(steps.icu.outputs.icu4c).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
+          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_win64_zip}}
+          7z x ${{fromJson(env.icu4c_target_json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
       - name: Set up icu4c-72rc-Win64
-        if: startsWith(matrix.os, 'windows') && startsWith(steps.icu.outputs.latest, '72rc')
+        if: startsWith(matrix.os, 'windows') && startsWith(env.icu4c_latest_version, '72rc')
         working-directory: build
         env:
           ICU4C_DIR: "icu4c"
@@ -87,7 +86,7 @@ jobs:
       - name: Store wheel
         uses: actions/upload-artifact@v3
         with:
-          name: dist-icupy-icu${{steps.icu.outputs.latest}}
+          name: dist-icupy-icu${{env.icu4c_latest_version}}
           path: dist/*.whl
 
       - name: Run tests
