@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, windows-2019]
-        icu-version: ["70.1", "71.1", "72rc"]
+        icu-version: ["70.1", "71.1", "72.1"]
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11.0-rc.2"]
 
     steps:
@@ -81,6 +81,14 @@ jobs:
           ICU4C_DIR: "icu4c"
         run: |
           7z x ${{env.ICU4C_DIR}}\20220922.23_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
+
+      - name: Set up icu4c-72_1-Win64
+        if: startsWith(matrix.os, 'windows') && startsWith(matrix.icu-version, '72.1')
+        working-directory: build
+        env:
+          ICU4C_DIR: "icu4c"
+        run: |
+          7z x ${{env.ICU4C_DIR}}\20221013.8_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
 
       - name: Run tests
         env:
