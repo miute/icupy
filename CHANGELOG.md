@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## WIP
+## v0.15.0 / 2022-10-21
 
 - NEW
   - Add support for ICU 72
