@@ -36,7 +36,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install tox tox-gh-actions
+          python -m pip install tox
+          python -m pip install --pre tox-gh-actions
 
       - run: mkdir -p build
 
