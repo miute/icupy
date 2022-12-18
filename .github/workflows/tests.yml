@@ -36,7 +36,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install tox tox-gh-actions
+          python -m pip install tox
+          python -m pip install --pre tox-gh-actions
 
       - run: mkdir -p build
 
@@ -141,6 +142,9 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          files: coverage.xml, coverage-cpp.info
 
       - name: Store coverage reports
         uses: actions/upload-artifact@v3
