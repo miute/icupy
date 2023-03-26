@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from collections.abc import Iterable
 from functools import partial
 
 # fmt: off
@@ -17,7 +20,7 @@ def test_api():
     with gc(ucsdet_open(), ucsdet_close) as ucsd:
         en = ucsdet_get_all_detectable_charsets(ucsd)
         assert uenum_count(en) > 0
-        charsets = iter(partial(uenum_next, en), None)
+        charsets: Iterable[str] = iter(partial(uenum_next, en), None)
         assert "UTF-8" in charsets
         uenum_close(en)
 

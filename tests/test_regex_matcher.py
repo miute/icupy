@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 # fmt: off
@@ -663,7 +665,7 @@ def test_set_find_progress_callback():
     assert isinstance(callback1a, URegexFindProgressCallbackPtr)
     assert isinstance(context1a, ConstVoidPtr)
 
-    result2 = []
+    result2: list[int] = []
     callback2 = URegexFindProgressCallbackPtr(_find_progress_callback2)
     context2 = ConstVoidPtr(result2)
     matcher.set_find_progress_callback(callback2, context2)
@@ -737,7 +739,7 @@ def test_set_match_callback():
     assert isinstance(callback1a, URegexMatchCallbackPtr)
     assert isinstance(context1a, ConstVoidPtr)
 
-    result2 = []
+    result2: list[int] = []
     callback2 = URegexMatchCallbackPtr(_match_callback2)
     context2 = ConstVoidPtr(result2)
     matcher.set_match_callback(callback2, context2)

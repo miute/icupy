@@ -1,11 +1,8 @@
-import sys
-from contextlib import contextmanager
-from typing import Any, Iterator
+from __future__ import annotations
 
-if sys.version_info[:2] >= (3, 9):
-    from collections.abc import Callable
-else:
-    from typing import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+from typing import Any
 
 __all__ = ["gc"]
 

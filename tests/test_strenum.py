@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import copy
+from collections.abc import Iterable
 
 from icupy.icu import Locale, StringEnumeration, UnicodeString
 
@@ -130,7 +133,8 @@ def test_snext():
     assert UnicodeString("collation", -1) in it
 
     it.reset()
-    t = [x.clone() for x in iter(it.snext, None)]
+    y: Iterable[UnicodeString] = iter(it.snext, None)
+    t: list[UnicodeString] = [x.clone() for x in y]
     assert len(t) == 2
     assert all(isinstance(x, UnicodeString) for x in t)
     t2 = [str(x) for x in t]
@@ -164,7 +168,8 @@ def test_unext():
     assert "collation" in it
 
     it.reset()
-    t = [x for x in iter(it.unext, None)]
+    y: Iterable[UnicodeString] = iter(it.unext, None)
+    t = list(y)
     assert len(t) == 2
     assert all(isinstance(x, str) for x in t)
     assert "calendar" in t

@@ -257,6 +257,7 @@ def test_u_get_int_property_map():
 
     def _filter2(_context: object, _value: int) -> int:
         assert isinstance(_context, dict)
+        assert isinstance(_context["key"], int)
         return _value | _context["key"]
 
     # UChar32 ucpmap_getRange(const UCPMap *map,

@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import os
 import subprocess
 import sys
 from configparser import ConfigParser
 from pathlib import Path
+from typing import Any
 
 from setuptools import Extension
 from setuptools.command.build_ext import build_ext
@@ -17,13 +20,13 @@ PLAT_TO_CMAKE = {
 
 
 class CMakeExtension(Extension):
-    def __init__(self, name, sourcedir=""):
+    def __init__(self, name: str, sourcedir: str = "") -> None:
         Extension.__init__(self, name, sources=[])
-        self.sourcedir = os.path.abspath(sourcedir)
+        self.sourcedir: str = os.path.abspath(sourcedir)
 
 
 class CMakeBuild(build_ext):
-    def build_extension(self, ext):
+    def build_extension(self, ext: CMakeExtension) -> None:
         extdir = os.path.abspath(
             os.path.dirname(self.get_ext_fullpath(ext.name))
         )
@@ -140,12 +143,17 @@ class CMakeBuild(build_ext):
         )
 
 
-def build(setup_kwargs):
+def build(setup_kwargs: dict[str, Any]) -> None:
     config = ConfigParser()
     here = Path(__file__).parent.resolve()
     config.read(here / "setup.cfg")
-    pairs = [x for x in config["options"]["package_dir"].split("\n") if x]
-    package_dir = dict([map(str.strip, x.split("=")) for x in pairs])
+    pairs: list[str] = [
+        x for x in config["options"]["package_dir"].split("\n") if x
+    ]
+    items: list[tuple[str, str]] = [
+        tuple(map(str.strip, x.split("="))) for x in pairs  # type: ignore
+    ]
+    package_dir: dict[str, str] = dict(items)
     ext_modules = [CMakeExtension(config["metadata"]["name"], package_dir[""])]
     cmdclass = dict(build_ext=CMakeBuild)
     setup_kwargs.update(

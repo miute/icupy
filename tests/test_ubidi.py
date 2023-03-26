@@ -305,13 +305,15 @@ def test_set_class_callback():
         nonlocal char_from_bidi_class
         if _c in char_from_bidi_class:
             return char_from_bidi_class.index(_c)
-        return u_get_int_property_max_value(UProperty.UCHAR_BIDI_CLASS) + 1
+        _n: int = u_get_int_property_max_value(UProperty.UCHAR_BIDI_CLASS)
+        return _n + 1
 
     def _callback2(_context: object, _c: int) -> int:
         assert isinstance(_context, list)
         if _c in _context:
             return _context.index(_c)
-        return u_get_int_property_max_value(UProperty.UCHAR_BIDI_CLASS) + 1
+        _n: int = u_get_int_property_max_value(UProperty.UCHAR_BIDI_CLASS)
+        return _n + 1
 
     with gc(ubidi_open(), ubidi_close) as bidi:
         # void ubidi_getClassCallback(UBiDi *pBiDi,

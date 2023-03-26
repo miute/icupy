@@ -34,10 +34,11 @@ class _TestSearch(SearchIterator):
         #       UErrorCode &status
         # )
         text = self.get_text()
-        match = text.index_of(self._pattern, position)
+        match: int = text.index_of(self._pattern, position)
         if match < 0:
             self._set_match_not_found()
-            return USEARCH_DONE
+            match = USEARCH_DONE
+            return match
         self._set_match_start(match)
         self._offset = match
         self._set_match_length(len(self._pattern))
@@ -49,10 +50,11 @@ class _TestSearch(SearchIterator):
         #       UErrorCode &status
         # )
         text = self.get_text()
-        match = text.last_index_of(self._pattern, 0, position)
+        match: int = text.last_index_of(self._pattern, 0, position)
         if match < 0:
             self._set_match_not_found()
-            return USEARCH_DONE
+            match = USEARCH_DONE
+            return match
         self._set_match_start(match)
         self._offset = match
         self._set_match_length(len(self._pattern))

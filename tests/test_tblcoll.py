@@ -805,7 +805,7 @@ def test_sort():
 
     result1 = sorted(src)
     result2 = sorted(src, key=cmp_to_key(_cmp))
-    result3 = sorted(src, key=lambda s: coll.get_sort_key(s, -1))
+    result3 = sorted(src, key=lambda s: coll.get_sort_key(s, -1))  # type: ignore
     assert result1 != result2
     assert result1 != result3
     assert result2 == result3

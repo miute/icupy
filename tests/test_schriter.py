@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import copy
+from collections.abc import Iterable
 
 # fmt: off
 from icupy.icu import (
@@ -34,12 +37,12 @@ def test_iter():
 
     assert list(it) == ["a", "\U0001f338", "b"]
 
-    t = [it.first()] + [c for c in iter(it.next, StringCharacterIterator.DONE)]
+    y: Iterable[int] = iter(it.next, StringCharacterIterator.DONE)
+    t: list[int] = [it.first()] + [c for c in y]
     assert t == [0x61, 0xD83C, 0xDF38, 0x62]
 
-    t = [it.first32()] + [
-        c for c in iter(it.next32, StringCharacterIterator.DONE)
-    ]
+    y = iter(it.next32, StringCharacterIterator.DONE)
+    t = [it.first32()] + [c for c in y]
     assert t == [0x61, 0x1F338, 0x62]
 
     assert reversed(it) == ["b", "\U0001f338", "a"]
