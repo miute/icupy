@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## WIP
+
+- NEW
+  - Add support for [ICU 73 RC](https://github.com/unicode-org/icu/releases/tag/release-73-rc)
+- CHANGED
+  - Update [pybind11](https://github.com/pybind/pybind11) to v2.10.4
+
 ## v0.15.0 / 2022-10-21
 
 - NEW

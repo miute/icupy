@@ -86,6 +86,14 @@ jobs:
         run: |
           7z x ${{env.ICU4C_DIR}}\20221013.8_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
 
+      - name: Set up icu4c-73rc-Win64
+        if: startsWith(matrix.os, 'windows') && startsWith(env.icu4c_latest_version, '73rc')
+        working-directory: build
+        env:
+          ICU4C_DIR: "icu4c"
+        run: |
+          7z x ${{env.ICU4C_DIR}}\20230323.12_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
+
       - name: Build wheel
         run: |
           # python -m pipenv run python -m build --wheel
