@@ -40,3 +40,10 @@ ensure_newline_before_comments = true
 extend_skip = [
     "src/third_party/",
 ]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+warn_return_any = true
+check_untyped_defs = true
+verbosity = 0
