@@ -263,6 +263,15 @@ void init_gregocal(py::module &m) {
       },
       py::arg("day_of_week"));
 
+  cal.def("in_daylight_time", [](const Calendar &self) {
+    ErrorCode error_code;
+    auto result = self.inDaylightTime(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
   cal.def("is_equivalent_to", &Calendar::isEquivalentTo, py::arg("other"));
 
   cal.def("is_lenient", &Calendar::isLenient);
@@ -455,15 +464,6 @@ void init_gregocal(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   gc.def("get_type", &GregorianCalendar::getType);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-
-  gc.def("in_daylight_time", [](const GregorianCalendar &self) {
-    ErrorCode error_code;
-    auto result = self.inDaylightTime(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
 
   gc.def("is_equivalent_to", &GregorianCalendar::isEquivalentTo, py::arg("other"));
 
