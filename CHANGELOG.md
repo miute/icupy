@@ -5,7 +5,10 @@
 - NEW
   - Add support for [ICU 73 RC](https://github.com/unicode-org/icu/releases/tag/release-73-rc)
 - ADDED
+  - Add icupy.icu.Calendar.get_temporal_month_code()
   - Add icupy.icu.Calendar.in_daylight_time()
+  - Add icupy.icu.Calendar.in_temporal_leap_year()
+  - Add icupy.icu.Calendar.set_temporal_month_code(temporal_month: str)
 - CHANGED
   - Update [pybind11](https://github.com/pybind/pybind11) to v2.10.4
 - REMOVED

@@ -226,6 +226,17 @@ void init_gregocal(py::module &m) {
   cal.def("get_skipped_wall_time_option", &Calendar::getSkippedWallTimeOption);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 73)
+  cal.def("get_temporal_month_code", [](const Calendar &self) {
+    ErrorCode error_code;
+    auto result = self.getTemporalMonthCode(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
+
   cal.def("get_time", [](const Calendar &self) {
     ErrorCode error_code;
     auto result = self.getTime(error_code);
@@ -271,6 +282,17 @@ void init_gregocal(py::module &m) {
     }
     return result;
   });
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 73)
+  cal.def("in_temporal_leap_year", [](const Calendar &self) {
+    ErrorCode error_code;
+    auto result = self.inTemporalLeapYear(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
   cal.def("is_equivalent_to", &Calendar::isEquivalentTo, py::arg("other"));
 
@@ -320,6 +342,19 @@ void init_gregocal(py::module &m) {
 
   cal.def("set_skipped_wall_time_option", &Calendar::setSkippedWallTimeOption, py::arg("option"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 73)
+  cal.def(
+      "set_temporal_month_code",
+      [](Calendar &self, const char *temporal_month) {
+        ErrorCode error_code;
+        self.setTemporalMonthCode(temporal_month, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("temporal_month").none(false));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
   cal.def(
       "set_time",
