@@ -592,3 +592,55 @@ def test_gregorian_calendar():
     assert cal10.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal10.get_time_zone() == zone2
     assert cal10.get_time() - offset == 1215268215000.0  # 2008-07-05T23:30:15Z
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
+def test_in_temporal_leap_year():
+    gc = GregorianCalendar()
+    gc.clear()
+    gc.set(2024, UCalendarMonths.UCAL_JANUARY, 1)
+
+    # virtual bool icu::Calendar::inTemporalLeapYear(UErrorCode &status) const
+    loc = Locale(Locale.get_root())
+    loc.set_keyword_value("calendar", "japanese")
+    cal = Calendar.create_instance(loc)
+    cal.set_time(gc.get_time())
+    assert cal.in_temporal_leap_year()
+
+    gc.set(2023, UCalendarMonths.UCAL_JANUARY, 1)
+    cal.set_time(gc.get_time())
+    assert not cal.in_temporal_leap_year()
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
+def test_set_temporal_month_code():
+    gc = GregorianCalendar()
+    gc.clear()
+    gc.set(2022, UCalendarMonths.UCAL_JANUARY, 11)
+
+    # virtual const char * icu::Calendar::getTemporalMonthCode(UErrorCode &status) const
+    loc = Locale(Locale.get_root())
+    loc.set_keyword_value("calendar", "hebrew")
+    cal = Calendar.create_instance(loc)
+    cal.set_time(gc.get_time())
+    code = cal.get_temporal_month_code()
+    assert isinstance(code, str)
+    assert code == "M05"
+
+    gc.set(2022, UCalendarMonths.UCAL_FEBRUARY, 12)
+    cal.set_time(gc.get_time())
+    code = cal.get_temporal_month_code()
+    assert isinstance(code, str)
+    assert code == "M05L"
+
+    # virtual void icu::Calendar::setTemporalMonthCode(
+    #       const char *temporalMonth,
+    #       UErrorCode &status
+    # )
+    cal.set_temporal_month_code("M05")
+    code = cal.get_temporal_month_code()
+    assert isinstance(code, str)
+    assert code == "M05"
+
+    with pytest.raises(TypeError):
+        cal.set_temporal_month_code(None)
