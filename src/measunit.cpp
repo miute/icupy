@@ -2182,17 +2182,6 @@ void init_measunit(py::module &m) {
     return result;
   });
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  mu.def_static("create_item", []() {
-    ErrorCode error_code;
-    auto result = MeasureUnit::createItem(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
-
   mu.def_static("create_jigger", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createJigger(error_code);
@@ -2201,17 +2190,6 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  mu.def_static("create_kilowatt_hour_per_100_kilometer", []() {
-    ErrorCode error_code;
-    auto result = MeasureUnit::createKilowattHourPer100Kilometer(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 
   mu.def_static("create_lumen", []() {
     ErrorCode error_code;
@@ -2256,15 +2234,7 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_grain", &MeasureUnit::getGrain);
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  mu.def_static("get_item", &MeasureUnit::getItem);
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
-
   mu.def_static("get_jigger", &MeasureUnit::getJigger);
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  mu.def_static("get_kilowatt_hour_per_100_kilometer", &MeasureUnit::getKilowattHourPer100Kilometer);
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 
   mu.def_static("get_lumen", &MeasureUnit::getLumen);
 
@@ -2319,6 +2289,30 @@ void init_measunit(py::module &m) {
       },
       py::arg("prefix"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 70)
+  mu.def_static("create_item", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createItem(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_kilowatt_hour_per_100_kilometer", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKilowattHourPer100Kilometer(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("get_item", &MeasureUnit::getItem);
+
+  mu.def_static("get_kilowatt_hour_per_100_kilometer", &MeasureUnit::getKilowattHourPer100Kilometer);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 72)
   mu.def_static("create_quarter", []() {
