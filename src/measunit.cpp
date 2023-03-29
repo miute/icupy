@@ -2337,4 +2337,17 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_tonne", &MeasureUnit::getTonne);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 73)
+  mu.def_static("create_beaufort", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createBeaufort(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("get_beaufort", &MeasureUnit::getBeaufort);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 }

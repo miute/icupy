@@ -9,6 +9,8 @@
   - Add **icupy.icu.Calendar.in_daylight_time()**
   - Add **icupy.icu.Calendar.in_temporal_leap_year()**
   - Add **icupy.icu.Calendar.set_temporal_month_code(temporal_month: str)**
+  - Add **icupy.icu.MeasureUnit.create_beaufort()**
+  - Add **icupy.icu.MeasureUnit.get_beaufort()**
 - CHANGED
   - Update [pybind11](https://github.com/pybind/pybind11) to v2.10.4
 - FIXED

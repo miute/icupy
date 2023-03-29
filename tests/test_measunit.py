@@ -1833,6 +1833,21 @@ def test_measure_unit_72():
     ) == "1 t"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
+def test_measure_unit_73():
+    fmt = NumberFormatter.with_locale(Locale.get_us())
+
+    # static MeasureUnit * icu::MeasureUnit::createBeaufort(UErrorCode &status)
+    assert (
+        fmt.unit(MeasureUnit.create_beaufort()).format_int(1).to_string()
+    ) == "B 1"
+
+    # static MeasureUnit icu::MeasureUnit::getBeaufort()
+    assert (
+        fmt.unit(MeasureUnit.get_beaufort()).format_int(1).to_string()
+    ) == "B 1"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(
