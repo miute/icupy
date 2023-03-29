@@ -148,6 +148,30 @@ void init_gregocal(py::module &m) {
       },
       py::arg("field"));
 
+  cal.def(
+      "get_actual_maximum",
+      [](const Calendar &self, UCalendarDateFields field) {
+        ErrorCode error_code;
+        auto result = self.getActualMaximum(field, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("field"));
+
+  cal.def(
+      "get_actual_minimum",
+      [](const Calendar &self, UCalendarDateFields field) {
+        ErrorCode error_code;
+        auto result = self.getActualMinimum(field, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("field"));
+
   cal.def_static(
       "get_available_locales",
       []() {
@@ -322,6 +346,17 @@ void init_gregocal(py::module &m) {
     return tz;
   });
 
+  cal.def(
+      "roll",
+      [](Calendar &self, UCalendarDateFields field, int32_t amount) {
+        ErrorCode error_code;
+        self.roll(field, amount, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("field"), py::arg("amount"));
+
   cal.def("set", py::overload_cast<int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"), py::arg("month"),
           py::arg("date"))
       .def("set", py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"),
@@ -470,30 +505,6 @@ void init_gregocal(py::module &m) {
 
   gc.def("clone", &GregorianCalendar::clone);
 
-  gc.def(
-      "get_actual_maximum",
-      [](const GregorianCalendar &self, UCalendarDateFields field) {
-        ErrorCode error_code;
-        auto result = self.getActualMaximum(field, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("field"));
-
-  gc.def(
-      "get_actual_minimum",
-      [](const GregorianCalendar &self, UCalendarDateFields field) {
-        ErrorCode error_code;
-        auto result = self.getActualMinimum(field, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("field"));
-
   gc.def("get_gregorian_change", &GregorianCalendar::getGregorianChange);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
@@ -503,17 +514,6 @@ void init_gregocal(py::module &m) {
   gc.def("is_equivalent_to", &GregorianCalendar::isEquivalentTo, py::arg("other"));
 
   gc.def("is_leap_year", &GregorianCalendar::isLeapYear, py::arg("year"));
-
-  gc.def(
-      "roll",
-      [](GregorianCalendar &self, UCalendarDateFields field, int32_t amount) {
-        ErrorCode error_code;
-        self.roll(field, amount, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-      },
-      py::arg("field"), py::arg("amount"));
 
   gc.def(
       "set_gregorian_change",
