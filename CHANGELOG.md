@@ -15,6 +15,7 @@
   - Add **icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_FLOOR**
   - Add **icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_ODD**
   - Add **icupy.icu.UCalendarDateFields.UCAL_ORDINAL_MONTH**
+  - Add **icupy.icu.USET_SIMPLE_CASE_INSENSITIVE**
 - CHANGED
   - Update [pybind11](https://github.com/pybind/pybind11) to v2.10.4
 - FIXED
