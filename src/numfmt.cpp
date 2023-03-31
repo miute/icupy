@@ -55,6 +55,11 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
              "Round towards the nearest integer, or away from zero if equidistant.")
       .value("ROUND_UNNECESSARY", NumberFormat::kRoundUnnecessary,
              "Return *U_FORMAT_INEXACT_ERROR* if number does not format exactly.")
+#if (U_ICU_VERSION_MAJOR_NUM >= 73)
+      .value("ROUND_HALF_ODD", NumberFormat::kRoundHalfOdd, "Rounds ties toward the odd number.")
+      .value("ROUND_HALF_CEILING", NumberFormat::kRoundHalfCeiling, "Rounds ties toward +infinity (U+221E).")
+      .value("ROUND_HALF_FLOOR", NumberFormat::kRoundHalfFloor, "Rounds ties toward -infinity (U+221E).")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
       .export_values();
 
   //

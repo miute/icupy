@@ -11,6 +11,9 @@
   - Add **icupy.icu.Calendar.set_temporal_month_code(temporal_month: str)**
   - Add **icupy.icu.MeasureUnit.create_beaufort()**
   - Add **icupy.icu.MeasureUnit.get_beaufort()**
+  - Add **icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_CEILING**
+  - Add **icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_FLOOR**
+  - Add **icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_ODD**
 - CHANGED
   - Update [pybind11](https://github.com/pybind/pybind11) to v2.10.4
 - FIXED
