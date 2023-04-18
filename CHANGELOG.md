@@ -3,7 +3,7 @@
 ## WIP
 
 - NEW
-  - Add support for [ICU 73 RC](https://github.com/unicode-org/icu/releases/tag/release-73-rc)
+  - Add support for [ICU 73](https://github.com/unicode-org/icu/releases/tag/release-73-1) (partial)
 - ADDED
   - Add **icupy.icu.Calendar.get_temporal_month_code()**
   - Add **icupy.icu.Calendar.in_daylight_time()**

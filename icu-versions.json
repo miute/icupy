@@ -1,6 +1,12 @@
 {
-    "latest": "73rc",
+    "latest": "73.1",
     "versions": [
+        {
+            "version": "73.1",
+            "url": "https://github.com/unicode-org/icu/releases/download/release-73-1",
+            "icu4c_ubuntu_x64_tgz": "icu4c-73_1-Ubuntu22.04-x64.tgz",
+            "icu4c_win64_zip": "icu4c-73_1-Win64-MSVC2019.zip"
+        },
         {
             "version": "73rc",
             "url": "https://github.com/unicode-org/icu/releases/download/release-73-rc",
