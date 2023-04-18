@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## WIP
+## v0.16.0 / 2023-04-18
 
 - NEW
   - Add support for [ICU 73](https://github.com/unicode-org/icu/releases/tag/release-73-1) (partial)
