@@ -24,6 +24,7 @@
   - Move **roll(field: UCalendarDateFields, amount: int)** of **icupy.icu.GregorianCalendar** class to **icupy.icu.Calendar** class
 - REMOVED
   - Remove **icupy.icu.GregorianCalendar.in_daylight_time()**
+  - Remove **icupy.number** module
 
 ## v0.15.0 / 2022-10-21
 

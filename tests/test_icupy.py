@@ -37,12 +37,6 @@ def test_constrained_field_position():
     )
 
 
-def test_deprecated_api():
-    # icupy.number module is deprecated
-    with pytest.warns(UserWarning):
-        import icupy.number  # noqa: F401
-
-
 def test_field_position():
     # icu::FieldPosition
     # FieldPosition.__repr__() -> str
