@@ -206,50 +206,50 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_strenum(m);        // icu::StringEnumeration
   init_voidptr(m);        // _ConstVoidPtr
 
-  init_dtrule(m);         // icu::DateTimeRule
-  init_tzrule(m);         // icu::TimeZoneRule
-  init_tztrans(m);        // icu::TimeZoneTransition
-  init_timezone(m);       // icu::TimeZone
+  init_dtrule(m);   // icu::DateTimeRule
+  init_tzrule(m);   // icu::TimeZoneRule
+  init_tztrans(m);  // icu::TimeZoneTransition
+  init_timezone(m); // icu::TimeZone
 
-  init_gregocal(m);       // icu::Calendar, icu::GregorianCalendar
+  init_gregocal(m); // icu::Calendar, icu::GregorianCalendar
 
-  init_measunit(m);       // icu::MeasureUnit
-  init_currunit(m);       // icu::CurrencyUnit
-  init_tmunit(m);         // icu::TimeUnit
-  init_nounit(m);         // icu::NoUnit
-  init_measure(m);        // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
+  init_measunit(m); // icu::MeasureUnit
+  init_currunit(m); // icu::CurrencyUnit
+  init_tmunit(m);   // icu::TimeUnit
+  init_nounit(m);   // icu::NoUnit
+  init_measure(m);  // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
 
-  init_currpinf(m);       // icu::CurrencyPluralInfo
-  init_dtintrv(m);        // icu::DateInterval
-  init_dtitvinf(m);       // icu::DateIntervalInfo
-  init_fieldpos(m);       // icu::FieldPosition
-  init_fpositer(m);       // icu::FieldPositionIterator
-  init_fmtable(m, fmt);   // icu::Formattable
-  init_numsys(m);         // icu::NumberingSystem
-  init_dcfmtsym(m);       // icu::DecimalFormatSymbols
+  init_currpinf(m);     // icu::CurrencyPluralInfo
+  init_dtintrv(m);      // icu::DateInterval
+  init_dtitvinf(m);     // icu::DateIntervalInfo
+  init_fieldpos(m);     // icu::FieldPosition
+  init_fpositer(m);     // icu::FieldPositionIterator
+  init_fmtable(m, fmt); // icu::Formattable
+  init_numsys(m);       // icu::NumberingSystem
+  init_dcfmtsym(m);     // icu::DecimalFormatSymbols
 
-  init_format(m);         // icu::Format
+  init_format(m); // icu::Format
 
   py::class_<NumberFormat, Format> numfmt(m, "NumberFormat");
 
   py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat");
 
-  init_numfmt(m, numfmt);               // icu::NumberFormat
-  init_rbnf(m);                         // icu::RuleBasedNumberFormat
+  init_numfmt(m, numfmt); // icu::NumberFormat
+  init_rbnf(m);           // icu::RuleBasedNumberFormat
 
-  init_datefmt(m);                      // icu::DateFormat
-  init_dtfmtsym(m);                     // icu::DateFormatSymbols
-  init_dtitvfmt(m);                     // icu::DateIntervalFormat
-  init_tznames(m);                      // icu::TimeZoneNames
-  init_tzfmt(m);                        // icu::TimeZoneFormat
-  init_smpdtfmt(m);                     // icu::SimpleDateFormat
+  init_datefmt(m);  // icu::DateFormat
+  init_dtfmtsym(m); // icu::DateFormatSymbols
+  init_dtitvfmt(m); // icu::DateIntervalFormat
+  init_tznames(m);  // icu::TimeZoneNames
+  init_tzfmt(m);    // icu::TimeZoneFormat
+  init_smpdtfmt(m); // icu::SimpleDateFormat
 
-  init_measfmt(m);                      // icu::MeasureFormat
+  init_measfmt(m); // icu::MeasureFormat
 
-  init_messagepattern(m);               // icu::MessagePattern
-  init_msgfmt(m);                       // icu::MessageFormat
+  init_messagepattern(m); // icu::MessagePattern
+  init_msgfmt(m);         // icu::MessageFormat
 
-  init_selfmt(m);                       // icu::SelectFormat
+  init_selfmt(m); // icu::SelectFormat
 
   init_displayoptions(m);               // icu::DisplayOptions
   init_numberformatter(m, number);      // icu::number::NumberFormatter
@@ -260,41 +260,41 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_plurfmt(m);                      // icu::PluralFormat
   init_scientificnumberformatter(m);    // icu::ScientificNumberFormatter
 
-  init_schriter(m);                     // icu::StringCharacterIterator
-  init_coleitr(m);                      // icu::CollationElementIterator
+  init_schriter(m); // icu::StringCharacterIterator
+  init_coleitr(m);  // icu::CollationElementIterator
 
-  init_caniter(m);                      // icu::CanonicalIterator
-  init_dtptngen(m);                     // icu::DateTimePatternGenerator
-  init_gender(m);                       // icu::GenderInfo
-  init_idna(m);                         // icu::IDNA
-  init_listformatter(m);                // icu::ListFormatter
-  init_localebuilder(m);                // icu::LocaleBuilder
-  init_localematcher(m);                // icu::LocaleMatcher
-  init_locdspnm(m);                     // icu::LocaleDisplayNames
-  init_locid(m, loc);                   // icu::Locale
-  init_rbbi(m);                         // icu::RuleBasedBreakIterator
-  init_regex(m);                        // icu::RegexPattern, icu::RegexMatcher
-  init_region(m);                       // icu::Region
-  init_reldatefmt(m);                   // icu::RelativeDateTimeFormatter
-  init_resbund(m);                      // icu::ResourceBundle
-  init_sortkey(m);                      // icu::CollationKey
+  init_caniter(m);       // icu::CanonicalIterator
+  init_dtptngen(m);      // icu::DateTimePatternGenerator
+  init_gender(m);        // icu::GenderInfo
+  init_idna(m);          // icu::IDNA
+  init_listformatter(m); // icu::ListFormatter
+  init_localebuilder(m); // icu::LocaleBuilder
+  init_localematcher(m); // icu::LocaleMatcher
+  init_locdspnm(m);      // icu::LocaleDisplayNames
+  init_locid(m, loc);    // icu::Locale
+  init_rbbi(m);          // icu::RuleBasedBreakIterator
+  init_regex(m);         // icu::RegexPattern, icu::RegexMatcher
+  init_region(m);        // icu::Region
+  init_reldatefmt(m);    // icu::RelativeDateTimeFormatter
+  init_resbund(m);       // icu::ResourceBundle
+  init_sortkey(m);       // icu::CollationKey
 
-  init_filteredbrk(m);                  // icu::FilteredBreakIteratorBuilder
+  init_filteredbrk(m); // icu::FilteredBreakIteratorBuilder
 
-  init_edits(m);                        // icu::Edits
-  init_casemap(m);                      // icu::CaseMap
+  init_edits(m);   // icu::Edits
+  init_casemap(m); // icu::CaseMap
 
-  init_uniset(m);                       // icu::UnicodeSet
-  init_usetiter(m);                     // icu::UnicodeSetIterator
-  init_normalizer2(m);                  // icu::Normalizer2, icu::FilteredNormalizer2
-  init_tblcoll(m);                      // icu::RuleBasedCollator
-  init_stsearch(m);                     // icu::StringSearch
-  init_translit(m);                     // icu::Transliterator
+  init_uniset(m);      // icu::UnicodeSet
+  init_usetiter(m);    // icu::UnicodeSetIterator
+  init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
+  init_tblcoll(m);     // icu::RuleBasedCollator
+  init_stsearch(m);    // icu::StringSearch
+  init_translit(m);    // icu::Transliterator
 
-  init_alphaindex(m);                   // icu::AlphabeticIndex
+  init_alphaindex(m); // icu::AlphabeticIndex
 
-  init_unistr(m, rep, us);              // icu::UnicodeString
-  init_unistrvec(m, usv);               // icupy::UnicodeStringVector
+  init_unistr(m, rep, us); // icu::UnicodeString
+  init_unistrvec(m, usv);  // icupy::UnicodeStringVector
 
   init_icudataver(m);
   init_stringoptions(m);
