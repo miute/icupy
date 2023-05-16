@@ -1769,9 +1769,19 @@ def test_measure_unit_69():
         .format_int(1)
         .to_string()
     ) == "1 mg/dL"
+    assert (
+        fmt.unit(MeasureUnit.create_milligram_ofglucose_per_deciliter())
+        .format_int(1)
+        .to_string()
+    ) == "1 mg/dL"
 
     assert (
         fmt.unit(MeasureUnit.get_milligram_of_glucose_per_deciliter())
+        .format_int(1)
+        .to_string()
+    ) == "1 mg/dL"
+    assert (
+        fmt.unit(MeasureUnit.get_milligram_ofglucose_per_deciliter())
         .format_int(1)
         .to_string()
     ) == "1 mg/dL"

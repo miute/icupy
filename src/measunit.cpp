@@ -1338,14 +1338,23 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def_static("create_milligram_of_glucose_per_deciliter", []() { // Not a typo
-    ErrorCode error_code;
-    auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  mu.def_static("create_milligram_of_glucose_per_deciliter", // Not a typo
+                []() {
+                  ErrorCode error_code;
+                  auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
+                  if (error_code.isFailure()) {
+                    throw icupy::ICUError(error_code);
+                  }
+                  return result;
+                })
+      .def_static("create_milligram_ofglucose_per_deciliter", []() {
+        ErrorCode error_code;
+        auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
@@ -2447,7 +2456,8 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def_static("get_milligram_of_glucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
+  mu.def_static("get_milligram_of_glucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter)
+      .def_static("get_milligram_ofglucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
