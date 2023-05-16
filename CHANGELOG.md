@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## WIP
+
+- Refactoring
+
 ## v0.16.0 / 2023-04-18
 
 - NEW
