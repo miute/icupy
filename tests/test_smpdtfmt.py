@@ -7,7 +7,8 @@ from icupy.icu import (
     U_ICU_VERSION_MAJOR_NUM, DateFormat, DateFormatSymbols, FieldPosition,
     FieldPositionIterator, Format, Formattable, GregorianCalendar, ICUError,
     Locale, ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
-    UCalendarMonths, UDateFormatField, UErrorCode, UnicodeString,
+    UCalendarMonths, UDateFormatField, UErrorCode, ULocDataLocaleType,
+    UnicodeString,
 )
 
 # fmt: on
@@ -31,6 +32,13 @@ def test_api():
     assert fmt1 == fmt2
     assert not (fmt1 == fmt3)
     assert not (fmt2 == fmt3)
+
+    # Locale icu::Format::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
+    loc = fmt1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
 
     # UnicodeString &icu::SimpleDateFormat::toLocalizedPattern(
     #       UnicodeString &result,

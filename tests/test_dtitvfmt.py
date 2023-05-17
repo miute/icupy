@@ -7,7 +7,7 @@ from icupy.icu import (
     U_ICU_VERSION_MAJOR_NUM, Calendar, DateFormat, DateInterval,
     DateIntervalFormat, DateIntervalInfo, FieldPosition, FieldPositionIterator,
     Format, Formattable, ICUError, Locale, TimeZone, UCalendarDateFields,
-    UErrorCode, UnicodeString,
+    UErrorCode, ULocDataLocaleType, UnicodeString,
 )
 
 # fmt: on
@@ -37,6 +37,13 @@ def test_api():
     # const DateIntervalInfo *icu::DateIntervalFormat::getDateIntervalInfo()
     dtitvinf = fmt2.get_date_interval_info()
     assert isinstance(dtitvinf, DateIntervalInfo)
+
+    # Locale icu::Format::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
+    loc = fmt1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
 
     # void icu::DateIntervalFormat::setDateIntervalInfo(
     #       const DateIntervalInfo &newIntervalPatterns,

@@ -11,8 +11,8 @@ import copy
 from icupy.icu import (
     CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,
     Formattable, ICUError, Locale, Measure, MeasureFormat, MeasureUnit,
-    ParsePosition, TimeUnit, TimeUnitAmount, UErrorCode, UMeasureFormatWidth,
-    UnicodeString,
+    ParsePosition, TimeUnit, TimeUnitAmount, UErrorCode, ULocDataLocaleType,
+    UMeasureFormatWidth, UnicodeString,
 )
 
 # fmt: on
@@ -65,6 +65,14 @@ def test_api():
     # )
     fmt6 = MeasureFormat.create_currency_format()
     assert isinstance(fmt6, MeasureFormat)
+
+    # Locale icu::Format::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
+    loc = fmt1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
+    assert loc == Locale("en-US")
 
 
 def test_clone():
