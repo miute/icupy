@@ -55,13 +55,19 @@ def test_formatted_number_62():
 def test_formatted_number_64():
     # fmt: off
     from icupy.icu import (
-        ConstrainedFieldPosition, FormattedValue, UFieldCategory,
+        ConstrainedFieldPosition, FormattedValue, ICUError, UFieldCategory,
         UNumberFormatFields,
     )
 
     # fmt: on
 
     assert issubclass(FormattedNumber, FormattedValue)
+
+    # icu::number::FormattedNumber::FormattedNumber()
+    num = FormattedNumber()
+    with pytest.raises(ICUError) as exc_info:
+        _ = num.to_string()
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
 
     fmt = (
         NumberFormatter.with_()

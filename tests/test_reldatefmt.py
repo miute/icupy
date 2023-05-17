@@ -200,13 +200,21 @@ def test_format_numeric_to_value():
     # fmt: off
     from icupy.icu import (
         ConstrainedFieldPosition, FormattedRelativeDateTime, FormattedValue,
-        UFieldCategory, UnicodeStringAppendable, UNumberFormatFields,
-        URelativeDateTimeFormatterField, URelativeDateTimeUnit,
+        ICUError, UErrorCode, UFieldCategory, UnicodeStringAppendable,
+        UNumberFormatFields, URelativeDateTimeFormatterField,
+        URelativeDateTimeUnit,
     )
 
     # fmt: on
 
     assert issubclass(FormattedRelativeDateTime, FormattedValue)
+
+    # icu::FormattedRelativeDateTime::FormattedRelativeDateTime()
+    fv = FormattedRelativeDateTime()
+    with pytest.raises(ICUError) as exc_info:
+        _ = fv.to_string()
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
+
     fmt = RelativeDateTimeFormatter("en-US")
 
     # FormattedRelativeDateTime

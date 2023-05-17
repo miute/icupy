@@ -108,6 +108,8 @@ void init_numberformatter(py::module &, py::module &m2) {
   //
   // icu::number::FormattedNumber
   //
+  fn.def(py::init<>());
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 62 && U_ICU_VERSION_MAJOR_NUM < 64)
   fn.def(
       "append_to",

@@ -480,11 +480,19 @@ def test_format_to_value():
 def test_formatted_date_interval():
     # fmt: off
     from icupy.icu import (
-        ConstrainedFieldPosition, FormattedDateInterval, UDateFormatField,
-        UFieldCategory, UnicodeStringAppendable,
+        ConstrainedFieldPosition, FormattedDateInterval, FormattedValue,
+        UDateFormatField, UFieldCategory, UnicodeStringAppendable,
     )
 
     # fmt: on
+
+    assert issubclass(FormattedDateInterval, FormattedValue)
+
+    # icu::FormattedDateInterval::FormattedDateInterval()
+    dtitv = FormattedDateInterval()
+    with pytest.raises(ICUError) as exc_info:
+        _ = dtitv.to_string()
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
 
     fmt = DateIntervalFormat.create_instance("yMMMd", Locale.get_english())
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z

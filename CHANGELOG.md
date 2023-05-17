@@ -4,9 +4,12 @@
 
 - Refactoring
 - FIXED
+  - Add **icupy.icu.FormattedRelativeDateTime.\_\_init__()**
   - Add **icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()**
   - Add **icupy.icu.MeasureUnit.get_milligram_ofglucose_per_deciliter()**
   - Add **icupy.icu.MessageFormat.get_locale(type_: ULocDataLocaleType)**
+  - Add **icupy.icu.number.FormattedNumber.\_\_init__()**
+  - Add **icupy.icu.number.FormattedNumberRange.\_\_init__()**
 
 ## v0.16.0 / 2023-04-18
 

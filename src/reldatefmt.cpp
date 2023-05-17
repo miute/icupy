@@ -85,6 +85,7 @@ void init_reldatefmt(py::module &m) {
   //
   py::class_<FormattedRelativeDateTime, UMemory, FormattedValue> frdt(m, "FormattedRelativeDateTime");
 
+  frdt.def(py::init<>());
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   //

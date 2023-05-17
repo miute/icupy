@@ -64,9 +64,15 @@ def test_formatted_number_range_63():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_range_64():
-    from icupy.icu import FormattedValue
+    from icupy.icu import FormattedValue, ICUError
 
     assert issubclass(FormattedNumberRange, FormattedValue)
+
+    # icu::number::FormattedNumberRange::FormattedNumberRange()
+    num = FormattedNumberRange()
+    with pytest.raises(ICUError) as exc_info:
+        _ = num.to_string()
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
 
     fmt = (
         NumberRangeFormatter.with_locale("en-US")

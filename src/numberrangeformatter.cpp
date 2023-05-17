@@ -48,7 +48,8 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   //
   // icu::number::FormattedNumberRange
   //
-  // Omit `icu::number::FormattedNumberRange::FormattedNumberRange()`.
+  fnr.def(py::init<>());
+
 #if (U_ICU_VERSION_MAJOR_NUM < 64)
   fnr.def(
       "append_to",

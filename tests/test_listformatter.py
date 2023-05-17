@@ -87,13 +87,21 @@ def test_create_instance_67():
 def test_format_strings_to_value():
     # fmt: off
     from icupy.icu import (
-        ConstrainedFieldPosition, FormattedList, FormattedValue,
-        UFieldCategory, UListFormatterField, UnicodeStringAppendable,
+        ConstrainedFieldPosition, FormattedList, FormattedValue, ICUError,
+        UErrorCode, UFieldCategory, UListFormatterField,
+        UnicodeStringAppendable,
     )
 
     # fmt: on
 
     assert issubclass(FormattedList, FormattedValue)
+
+    # icu::FormattedList::FormattedList()
+    fl = FormattedList()
+    with pytest.raises(ICUError) as exc_info:
+        _ = fl.to_string()
+    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
+
     fmt = ListFormatter.create_instance("en")
 
     # FormattedList icu::ListFormatter::formatStringsToValue(
