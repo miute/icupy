@@ -65,6 +65,13 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   //
   // icu::NumberFormat
   //
+  nf.def("__copy__", &NumberFormat::clone);
+
+  nf.def(
+      "___deepcopy__", [](const NumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  nf.def("clone", &NumberFormat::clone);
+
   nf.def_static(
         "create_currency_instance",
         [](const icupy::LocaleVariant &in_locale) {
@@ -156,6 +163,138 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         return result;
       });
 
+  nf.def(
+        // [1] icu::NumberFormat::format
+        // [2] icu::Format::format
+        "format",
+        [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
+           FieldPosition &pos) -> UnicodeString & {
+          ErrorCode error_code;
+          auto &result = self.format(obj, append_to, pos, error_code);
+          if (error_code.isFailure()) {
+            throw icupy::ICUError(error_code);
+          }
+          return result;
+        },
+        py::arg("obj"), py::arg("append_to"), py::arg("pos"))
+      .def(
+          // [3] icu::Format::format
+          // [4] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          // [5] icu::Format::format
+          "format",
+          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(obj, append_to, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"))
+      .def(
+          // [8] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, double number, UnicodeString &append_to) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"))
+      .def(
+          // [9] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, double number, UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, pos, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"), py::arg("pos"))
+      .def(
+          // [11] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, double number, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          // [12] icu::NumberFormat::format
+          // [16] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, int64_t number, UnicodeString &append_to) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"))
+      .def(
+          // [13] icu::NumberFormat::format
+          // [17] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
+             FieldPosition &pos) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, pos, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"), py::arg("pos"))
+      .def(
+          // [15] icu::NumberFormat::format
+          // [19] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(number, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          // [20] icu::NumberFormat::format
+          "format",
+          [](const NumberFormat &self, const char *number, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("number").none(false), py::arg("append_to"), py::arg("pos_iter"));
+
   nf.def_static(
       "get_available_locales",
       []() {
@@ -169,6 +308,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       },
       py::return_value_policy::reference);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 53)
   nf.def(
       "get_context",
       [](const NumberFormat &self, UDisplayContextType type) {
@@ -180,6 +320,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
         return result;
       },
       py::arg("type_"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   nf.def("get_currency", &NumberFormat::getCurrency);
 
@@ -202,18 +343,67 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def("is_parse_integer_only", &NumberFormat::isParseIntegerOnly);
 
   nf.def(
-        "parse_object",
-        [](const NumberFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-           ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
-        py::arg("source"), py::arg("result"), py::arg("parse_pos"))
+        "parse",
+        [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result,
+           ParsePosition &parse_position) { self.parse(icupy::to_unistr(text), result, parse_position); },
+        py::arg("text"), py::arg("result"), py::arg("parse_position"))
       .def(
-          "parse_object",
-          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
+          "parse",
+          [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result) {
             ErrorCode error_code;
-            self.parseObject(icupy::to_unistr(source), result, error_code);
+            self.parse(icupy::to_unistr(text), result, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
           },
-          py::arg("source"), py::arg("result"));
+          py::arg("text"), py::arg("result"));
+
+  nf.def(
+      "parse_currency",
+      [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
+        return self.parseCurrency(icupy::to_unistr(text), pos);
+      },
+      py::arg("text"), py::arg("pos"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 53)
+  nf.def(
+      "set_context",
+      [](NumberFormat &self, UDisplayContext value) {
+        ErrorCode error_code;
+        self.setContext(value, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("value"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+  nf.def(
+      "set_currency",
+      [](NumberFormat &self, const char16_t *the_currency) {
+        ErrorCode error_code;
+        self.setCurrency(the_currency, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("the_currency"));
+
+  nf.def("set_grouping_used", &NumberFormat::setGroupingUsed, py::arg("new_value"));
+
+  nf.def("set_lenient", &NumberFormat::setLenient, py::arg("enable"));
+
+  nf.def("set_maximum_fraction_digits", &NumberFormat::setMaximumFractionDigits, py::arg("new_value"));
+
+  nf.def("set_maximum_integer_digits", &NumberFormat::setMaximumIntegerDigits, py::arg("new_value"));
+
+  nf.def("set_minimum_fraction_digits", &NumberFormat::setMinimumFractionDigits, py::arg("new_value"));
+
+  nf.def("set_minimum_integer_digits", &NumberFormat::setMinimumIntegerDigits, py::arg("new_value"));
+
+  nf.def("set_parse_integer_only", &NumberFormat::setParseIntegerOnly, py::arg("value"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 60)
+  nf.def("set_rounding_mode", &NumberFormat::setRoundingMode, py::arg("rounding_mode"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 }

@@ -57,6 +57,11 @@ void init_timezone(py::module &m) {
   //
   // icu::TimeZone
   //
+  tz.def("__copy__", &TimeZone::clone);
+
+  tz.def(
+      "__deepcopy__", [](const TimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
   tz.def(
       "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
       py::arg("other"));
@@ -70,6 +75,8 @@ void init_timezone(py::module &m) {
   tz.def_static(
       "adopt_default", [](TimeZone *zone) { TimeZone::adoptDefault(zone ? zone->clone() : nullptr); }, py::arg("zone"));
   */
+
+  tz.def("clone", &TimeZone::clone);
 
   tz.def_static(
       "count_equivalent_ids",
@@ -229,17 +236,42 @@ void init_timezone(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
   tz.def(
-      "get_offset",
-      [](const TimeZone &self, UDate date, UBool local) {
-        ErrorCode error_code;
-        int32_t raw_offset, dst_offset;
-        self.getOffset(date, local, raw_offset, dst_offset, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(raw_offset, dst_offset);
-      },
-      py::arg("date"), py::arg("local"));
+        "get_offset",
+        [](const TimeZone &self, UDate date, UBool local) {
+          ErrorCode error_code;
+          int32_t raw_offset, dst_offset;
+          self.getOffset(date, local, raw_offset, dst_offset, error_code);
+          if (error_code.isFailure()) {
+            throw icupy::ICUError(error_code);
+          }
+          return py::make_tuple(raw_offset, dst_offset);
+        },
+        py::arg("date"), py::arg("local"))
+      .def(
+          "get_offset",
+          [](const TimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
+             int32_t millis) {
+            ErrorCode error_code;
+            auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"))
+      .def(
+          "get_offset",
+          [](const TimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
+             int32_t millis, int32_t month_length) {
+            ErrorCode error_code;
+            auto result = self.getOffset(era, year, month, day, day_of_week, millis, month_length, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"),
+          py::arg("month_length"));
 
   tz.def("get_raw_offset", &TimeZone::getRawOffset);
 
@@ -395,14 +427,6 @@ void init_timezone(py::module &m) {
       "__deepcopy__", [](const RuleBasedTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   rbtz.def(
-      "__eq__", [](const RuleBasedTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  rbtz.def(
-      "__ne__", [](const RuleBasedTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
-  rbtz.def(
       "add_transition_rule",
       [](RuleBasedTimeZone &self, TimeZoneRule *rule) {
         ErrorCode error_code;
@@ -422,98 +446,6 @@ void init_timezone(py::module &m) {
       throw icupy::ICUError(error_code);
     }
   });
-
-  rbtz.def("count_transition_rules", [](const RuleBasedTimeZone &self) {
-    ErrorCode error_code;
-    auto result = self.countTransitionRules(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  rbtz.def("get_next_transition", &RuleBasedTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
-           py::arg("result"));
-
-  rbtz.def(
-          "get_offset",
-          [](const RuleBasedTimeZone &self, UDate date, UBool local) {
-            ErrorCode error_code;
-            int32_t raw_offset, dst_offset;
-            self.getOffset(date, local, raw_offset, dst_offset, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return py::make_tuple(raw_offset, dst_offset);
-          },
-          py::arg("date"), py::arg("local"))
-      .def(
-          "get_offset",
-          [](const RuleBasedTimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
-             int32_t millis, int32_t month_length) {
-            ErrorCode error_code;
-            auto result = self.getOffset(era, year, month, day, day_of_week, millis, month_length, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"),
-          py::arg("month_length"))
-      .def(
-          "get_offset",
-          [](const RuleBasedTimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
-             int32_t millis) {
-            ErrorCode error_code;
-            auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  rbtz.def(
-      "get_offset_from_local",
-      [](const RuleBasedTimeZone &self, UDate date, UTimeZoneLocalOption non_existing_time_opt,
-         UTimeZoneLocalOption duplicated_time_opt) {
-        int32_t raw_offset = 0, dst_offset = 0;
-        ErrorCode error_code;
-        self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(raw_offset, dst_offset);
-      },
-      py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-
-  rbtz.def("get_previous_transition", &RuleBasedTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
-           py::arg("result"));
-
-  rbtz.def("get_raw_offset", &RuleBasedTimeZone::getRawOffset);
-
-  rbtz.def(
-      "get_time_zone_rules",
-      [](const RuleBasedTimeZone &self) {
-        ErrorCode error_code;
-        const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
-        int32_t trscount = static_cast<int32_t>(trsrules.size());
-        self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(initial, trsrules);
-      },
-      py::return_value_policy::reference);
-
-  rbtz.def("has_same_rules", &RuleBasedTimeZone::hasSameRules, py::arg("other"));
-
-  rbtz.def("set_raw_offset", &RuleBasedTimeZone::setRawOffset, py::arg("offset_millis"));
-
-  rbtz.def("use_daylight_time", &RuleBasedTimeZone::useDaylightTime);
 
   //
   // icu::SimpleTimeZone::TimeMode
@@ -602,29 +534,7 @@ void init_timezone(py::module &m) {
   stz.def(
       "__deepcopy__", [](const SimpleTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  stz.def(
-      "__eq__", [](const SimpleTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  stz.def(
-      "__ne__", [](const SimpleTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
   stz.def("clone", &SimpleTimeZone::clone);
-
-  stz.def("count_transition_rules", [](const SimpleTimeZone &self) {
-    ErrorCode error_code;
-    auto result = self.countTransitionRules(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  stz.def("get_dst_savings", &SimpleTimeZone::getDSTSavings);
-
-  stz.def("get_next_transition", &SimpleTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
 
   stz.def(
          "get_offset",
@@ -677,44 +587,6 @@ void init_timezone(py::module &m) {
           },
           py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"),
           py::arg("milliseconds"), py::arg("month_length"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  stz.def(
-      "get_offset_from_local",
-      [](const SimpleTimeZone &self, UDate date, UTimeZoneLocalOption non_existing_time_opt,
-         UTimeZoneLocalOption duplicated_time_opt) {
-        int32_t raw_offset = 0, dst_offset = 0;
-        ErrorCode error_code;
-        self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(raw_offset, dst_offset);
-      },
-      py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-
-  stz.def("get_previous_transition", &SimpleTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
-
-  stz.def("get_raw_offset", &SimpleTimeZone::getRawOffset);
-
-  stz.def(
-      "get_time_zone_rules",
-      [](const SimpleTimeZone &self) {
-        ErrorCode error_code;
-        const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
-        int32_t trscount = static_cast<int32_t>(trsrules.size());
-        self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(initial, trsrules);
-      },
-      py::return_value_policy::reference);
-
-  stz.def("has_same_rules", &SimpleTimeZone::hasSameRules, py::arg("other"));
 
   stz.def(
       "set_dst_savings",
@@ -802,8 +674,6 @@ void init_timezone(py::module &m) {
           },
           py::arg("month"), py::arg("day_of_week_in_month"), py::arg("day_of_week"), py::arg("time"));
 
-  stz.def("set_raw_offset", &SimpleTimeZone::setRawOffset, py::arg("offset_millis"));
-
   stz.def(
          // [1] setStartRule(int32_t month, int32_t dayOfMonth, int32_t dayOfWeek, int32_t time, TimeMode mode,
          //                  UBool after, UErrorCode &status)
@@ -881,8 +751,6 @@ void init_timezone(py::module &m) {
 
   stz.def("set_start_year", &SimpleTimeZone::setStartYear, py::arg("year"));
 
-  stz.def("use_daylight_time", &SimpleTimeZone::useDaylightTime);
-
   //
   // icu::VTimeZone
   //
@@ -893,24 +761,7 @@ void init_timezone(py::module &m) {
   vtz.def(
       "__deepcopy__", [](const VTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  vtz.def(
-      "__eq__", [](const VTimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  vtz.def(
-      "__ne__", [](const VTimeZone &self, const TimeZone &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
   vtz.def("clone", &VTimeZone::clone);
-
-  vtz.def("count_transition_rules", [](const VTimeZone &self) {
-    ErrorCode error_code;
-    auto result = self.countTransitionRules(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
 
   vtz.def_static(
       "create_vtime_zone",
@@ -947,97 +798,14 @@ void init_timezone(py::module &m) {
     return py::make_tuple(result, last_modified);
   });
 
-  vtz.def("get_next_transition", &VTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
-
-  vtz.def(
-         "get_offset",
-         [](const VTimeZone &self, UDate date, UBool local) {
-           ErrorCode error_code;
-           int32_t raw_offset, dst_offset;
-           self.getOffset(date, local, raw_offset, dst_offset, error_code);
-           if (error_code.isFailure()) {
-             throw icupy::ICUError(error_code);
-           }
-           return py::make_tuple(raw_offset, dst_offset);
-         },
-         py::arg("date"), py::arg("local"))
-      .def(
-          "get_offset",
-          [](const VTimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
-             int32_t millis, int32_t month_length) {
-            ErrorCode error_code;
-            auto result = self.getOffset(era, year, month, day, day_of_week, millis, month_length, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"),
-          py::arg("month_length"))
-      .def(
-          "get_offset",
-          [](const VTimeZone &self, uint8_t era, int32_t year, int32_t month, int32_t day, uint8_t day_of_week,
-             int32_t millis) {
-            ErrorCode error_code;
-            auto result = self.getOffset(era, year, month, day, day_of_week, millis, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("era"), py::arg("year"), py::arg("month"), py::arg("day"), py::arg("day_of_week"), py::arg("millis"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  vtz.def(
-      "get_offset_from_local",
-      [](const VTimeZone &self, UDate date, UTimeZoneLocalOption non_existing_time_opt,
-         UTimeZoneLocalOption duplicated_time_opt) {
-        int32_t raw_offset = 0, dst_offset = 0;
-        ErrorCode error_code;
-        self.getOffsetFromLocal(date, non_existing_time_opt, duplicated_time_opt, raw_offset, dst_offset, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(raw_offset, dst_offset);
-      },
-      py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-
-  vtz.def("get_previous_transition", &VTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
-
-  vtz.def("get_raw_offset", &VTimeZone::getRawOffset);
-
-  vtz.def(
-      "get_time_zone_rules",
-      [](const VTimeZone &self) {
-        ErrorCode error_code;
-        const InitialTimeZoneRule *initial;
-        std::vector<const TimeZoneRule *> trsrules(self.countTransitionRules(error_code), nullptr);
-        int32_t trscount = static_cast<int32_t>(trsrules.size());
-        self.getTimeZoneRules(initial, trsrules.data(), trscount, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return py::make_tuple(initial, trsrules);
-      },
-      py::return_value_policy::reference);
-
   vtz.def("get_tzurl", &VTimeZone::getTZURL, py::arg("url"));
 
-  vtz.def("has_same_rules", &VTimeZone::hasSameRules, py::arg("other"));
-
   vtz.def("set_last_modified", &VTimeZone::setLastModified, py::arg("last_modified"));
-
-  vtz.def("set_raw_offset", &VTimeZone::setRawOffset, py::arg("offset_millis"));
 
   vtz.def(
       "set_tzurl",
       [](VTimeZone &self, const icupy::UnicodeStringVariant &url) { self.setTZURL(icupy::to_unistr(url)); },
       py::arg("url"));
-
-  vtz.def("use_daylight_time", &VTimeZone::useDaylightTime);
 
   vtz.def(
          "write",

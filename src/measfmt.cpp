@@ -52,10 +52,6 @@ void init_measfmt(py::module &m) {
   fmt.def(
       "__deepcopy__", [](const MeasureFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  fmt.def(
-      "__eq__", [](const MeasureFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
   fmt.def("clone", &MeasureFormat::clone);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
@@ -78,45 +74,6 @@ void init_measfmt(py::module &m) {
         }
         return result;
       });
-
-  fmt.def(
-         // [2] icu::MeasureFormat::format
-         "format",
-         [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to,
-            FieldPosition &pos) -> UnicodeString & {
-           ErrorCode error_code;
-           auto &result = self.format(obj, append_to, pos, error_code);
-           if (error_code.isFailure()) {
-             throw icupy::ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("obj"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [3] icu::Format::format
-          "format",
-          [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [4] icu::Format::format
-          "format",
-          [](const MeasureFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   fmt.def(
@@ -164,22 +121,4 @@ void init_measfmt(py::module &m) {
       },
       py::arg("unit"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-
-  fmt.def(
-         // [2] icu::Format::parseObject
-         "parse_object",
-         [](const MeasureFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
-         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // [3] icu::Format::parseObject
-          "parse_object",
-          [](const MeasureFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(icupy::to_unistr(source), result, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"));
 }

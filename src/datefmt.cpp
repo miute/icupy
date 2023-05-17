@@ -98,6 +98,88 @@ void init_datefmt(py::module &m) {
       },
       py::return_value_policy::reference);
 
+  df.def(
+        // [1] icu::DateFormat::format
+        "format", py::overload_cast<Calendar &, UnicodeString &, FieldPosition &>(&DateFormat::format, py::const_),
+        py::arg("cal"), py::arg("append_to"), py::arg("field_position"))
+      .def(
+          // [2] icu::DateFormat::format
+          "format",
+          [](const DateFormat &self, Calendar &cal, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(cal, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("cal"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          // [3] icu::DateFormat::format
+          // [4] icu::DateFormat::format
+          // [1] icu::Format::format
+          "format",
+          [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to,
+             FieldPosition &pos) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(obj, append_to, pos, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"), py::arg("pos"))
+      .def(
+          // [5] icu::DateFormat::format
+          // [6] icu::DateFormat::format
+          // [2] icu::Format::format
+          "format",
+          [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
+      .def(
+          // [7] icu::DateFormat::format
+          // [3] icu::Format::format
+          "format",
+          [](const DateFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(obj, append_to, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("obj"), py::arg("append_to"))
+      .def(
+          // [8] icu::DateFormat::format
+          "format", py::overload_cast<UDate, UnicodeString &>(&DateFormat::format, py::const_), py::arg("date"),
+          py::arg("append_to"))
+      .def(
+          // [9] icu::DateFormat::format
+          "format", py::overload_cast<UDate, UnicodeString &, FieldPosition &>(&DateFormat::format, py::const_),
+          py::arg("date"), py::arg("append_to"), py::arg("field_position"))
+      .def(
+          // [10] icu::DateFormat::format
+          "format",
+          [](const DateFormat &self, UDate date, UnicodeString &append_to,
+             FieldPositionIterator *pos_iter) -> UnicodeString & {
+            ErrorCode error_code;
+            auto &result = self.format(date, append_to, pos_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("date"), py::arg("append_to"), py::arg("pos_iter"));
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "get_boolean_attribute",
@@ -149,6 +231,33 @@ void init_datefmt(py::module &m) {
   df.def("is_lenient", &DateFormat::isLenient);
 
   df.def(
+        // [1] icu::DateFormat::parse
+        "parse",
+        [](const DateFormat &self, const icupy::UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
+          self.parse(icupy::to_unistr(text), cal, pos);
+        },
+        py::arg("text"), py::arg("cal"), py::arg("pos"))
+      .def(
+          // [2] icu::DateFormat::parse
+          "parse",
+          [](const DateFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
+            return self.parse(icupy::to_unistr(text), pos);
+          },
+          py::arg("text"), py::arg("pos"))
+      .def(
+          // [3] icu::DateFormat::parse
+          "parse",
+          [](const DateFormat &self, const icupy::UnicodeStringVariant &text) {
+            ErrorCode error_code;
+            auto result = self.parse(icupy::to_unistr(text), error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("text"));
+
+  df.def(
         "parse_object",
         [](const DateFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
@@ -183,6 +292,17 @@ void init_datefmt(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def("set_calendar_lenient", &DateFormat::setCalendarLenient, py::arg("lenient"));
+
+  df.def(
+      "set_context",
+      [](DateFormat &self, UDisplayContext value) {
+        ErrorCode error_code;
+        self.setContext(value, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   df.def("set_lenient", &DateFormat::setLenient, py::arg("lenient"));

@@ -49,6 +49,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   // icu::number::FormattedNumberRange
   //
   // Omit `icu::number::FormattedNumberRange::FormattedNumberRange()`.
+#if (U_ICU_VERSION_MAJOR_NUM < 64)
   fnr.def(
       "append_to",
       [](const FormattedNumberRange &self, Appendable &appendable) -> Appendable & {
@@ -60,6 +61,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return result;
       },
       py::arg("appendable"));
+#endif // (U_ICU_VERSION_MAJOR_NUM < 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   fnr.def("get_decimal_numbers", [](const FormattedNumberRange &self) {
@@ -81,20 +83,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     return result;
   });
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  fnr.def(
-      "next_position",
-      [](const FormattedNumberRange &self, ConstrainedFieldPosition &cfpos) {
-        ErrorCode error_code;
-        auto result = self.nextPosition(cfpos, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("cfpos"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-
+#if (U_ICU_VERSION_MAJOR_NUM < 64)
   fnr.def("to_string", [](const FormattedNumberRange &self) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
@@ -103,17 +92,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
     }
     return result;
   });
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  fnr.def("to_temp_string", [](const FormattedNumberRange &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+#endif // (U_ICU_VERSION_MAJOR_NUM < 64)
 
   //
   // icu::number::LocalizedNumberRangeFormatter

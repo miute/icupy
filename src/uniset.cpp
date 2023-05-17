@@ -41,7 +41,7 @@ void init_uniset(py::module &m) {
   //
   // icu::UnicodeMatcher
   //
-  py::class_<UnicodeMatcher>(m, "UnicodeMatcher");
+  py::class_<UnicodeMatcher> umat(m, "UnicodeMatcher");
 
   //
   // icu::UnicodeFilter
@@ -53,6 +53,24 @@ void init_uniset(py::module &m) {
   //
   py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet");
 
+  //
+  // icu::UnicodeMatcher
+  //
+  umat.def("add_match_set_to", &UnicodeMatcher::addMatchSetTo, py::arg("to_union_to"));
+
+  umat.def(
+      "matches",
+      [](UnicodeMatcher &self, const Replaceable &text, int32_t offset, int32_t limit, UBool incremental) {
+        auto result = self.matches(text, offset, limit, incremental);
+        return py::make_tuple(result, offset);
+      },
+      py::arg("text"), py::arg("offset"), py::arg("limit"), py::arg("incremental"));
+
+  umat.def("to_pattern", &UnicodeMatcher::toPattern, py::arg("result"), py::arg("escape_unprintable") = false);
+
+  //
+  // icu::UnicodeSet
+  //
   py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())
       .value("MIN_VALUE", UnicodeSet::MIN_VALUE, "Minimum value that can be stored in a *UnicodeSet*.")
       .value("MAX_VALUE", UnicodeSet::MAX_VALUE, "Maximum value that can be stored in a *UnicodeSet*.")
@@ -175,8 +193,6 @@ void init_uniset(py::module &m) {
             return self.addAll(icupy::to_unistr(s));
           },
           py::arg("s"));
-
-  us.def("add_match_set_to", &UnicodeSet::addMatchSetTo, py::arg("to_union_to"));
 
   us.def(
       "apply_int_property_value",
@@ -333,14 +349,6 @@ void init_uniset(py::module &m) {
   us.def("is_frozen", &UnicodeSet::isFrozen);
 
   us.def(
-      "matches",
-      [](UnicodeSet &self, const Replaceable &text, int32_t offset, int32_t limit, UBool incremental) {
-        auto result = self.matches(text, offset, limit, incremental);
-        return py::make_tuple(result, offset);
-      },
-      py::arg("text"), py::arg("offset"), py::arg("limit"), py::arg("incremental"));
-
-  us.def(
         "remove",
         [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
           return self.remove(icupy::to_unistr(s));
@@ -415,8 +423,6 @@ void init_uniset(py::module &m) {
       .def("span_back",
            py::overload_cast<const UnicodeString &, int32_t, USetSpanCondition>(&UnicodeSet::spanBack, py::const_),
            py::arg("s"), py::arg("limit"), py::arg("span_condition"));
-
-  us.def("to_pattern", &UnicodeSet::toPattern, py::arg("result"), py::arg("escape_unprintable") = false);
 
   us.def("to_uset", [](UnicodeSet &self) {
     auto uset = self.toUSet();

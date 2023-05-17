@@ -507,12 +507,6 @@ void init_gregocal(py::module &m) {
 
   gc.def("get_gregorian_change", &GregorianCalendar::getGregorianChange);
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  gc.def("get_type", &GregorianCalendar::getType);
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-
-  gc.def("is_equivalent_to", &GregorianCalendar::isEquivalentTo, py::arg("other"));
-
   gc.def("is_leap_year", &GregorianCalendar::isLeapYear, py::arg("year"));
 
   gc.def(

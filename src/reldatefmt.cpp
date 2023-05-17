@@ -85,47 +85,6 @@ void init_reldatefmt(py::module &m) {
   //
   py::class_<FormattedRelativeDateTime, UMemory, FormattedValue> frdt(m, "FormattedRelativeDateTime");
 
-  frdt.def(
-      "append_to",
-      [](const FormattedRelativeDateTime &self, Appendable &appendable) -> Appendable & {
-        ErrorCode error_code;
-        auto &result = self.appendTo(appendable, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("appendable"));
-
-  frdt.def(
-      "next_position",
-      [](const FormattedRelativeDateTime &self, ConstrainedFieldPosition &cfpos) {
-        ErrorCode error_code;
-        auto result = self.nextPosition(cfpos, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("cfpos"));
-
-  frdt.def("to_string", [](const FormattedRelativeDateTime &self) {
-    ErrorCode error_code;
-    auto result = self.toString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  frdt.def("to_temp_string", [](const FormattedRelativeDateTime &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   //

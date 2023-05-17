@@ -16,48 +16,6 @@ void init_listformatter(py::module &m) {
 
   fl.def(py::init<>());
   // FIXME: Implement "icu::FormattedList::FormattedList(FormattedList &&src)".
-
-  fl.def(
-      "append_to",
-      [](const FormattedList &self, Appendable &appendable) -> Appendable & {
-        ErrorCode error_code;
-        auto &result = self.appendTo(appendable, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("appendable"));
-
-  fl.def(
-      "next_position",
-      [](const FormattedList &self, ConstrainedFieldPosition &cfpos) {
-        ErrorCode error_code;
-        auto result = self.nextPosition(cfpos, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("cfpos"));
-
-  fl.def("to_string", [](const FormattedList &self) {
-    ErrorCode error_code;
-    auto result = self.toString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  fl.def("to_temp_string", [](const FormattedList &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)

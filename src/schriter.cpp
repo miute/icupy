@@ -17,6 +17,24 @@ void init_schriter(py::module &m) {
              "limits of its iteration.")
       .export_values();
 
+  fci.def(
+      "__eq__",
+      [](const ForwardCharacterIterator &self, const ForwardCharacterIterator &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
+
+  fci.def(
+      "__ne__",
+      [](const ForwardCharacterIterator &self, const ForwardCharacterIterator &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
+
+  fci.def("hash_code", &ForwardCharacterIterator::hashCode);
+
+  fci.def("has_next", &ForwardCharacterIterator::hasNext);
+
+  fci.def("next32_post_inc", &ForwardCharacterIterator::next32PostInc);
+
+  fci.def("next_post_inc", [](ForwardCharacterIterator &self) -> uint16_t { return self.nextPostInc(); });
+
   //
   // icu::CharacterIterator
   //
@@ -45,7 +63,17 @@ void init_schriter(py::module &m) {
     return result;
   });
 
+  ci.def("clone", &CharacterIterator::clone);
+
+  ci.def("current", [](const CharacterIterator &self) -> uint16_t { return self.current(); });
+
+  ci.def("current32", &CharacterIterator::current32);
+
   ci.def("end_index", &CharacterIterator::endIndex);
+
+  ci.def("first", [](CharacterIterator &self) -> uint16_t { return self.first(); });
+
+  ci.def("first32", &CharacterIterator::first32);
 
   ci.def("first32_post_inc", &CharacterIterator::first32PostInc);
 
@@ -54,6 +82,32 @@ void init_schriter(py::module &m) {
   ci.def("get_index", &CharacterIterator::getIndex);
 
   ci.def("get_length", &CharacterIterator::getLength);
+
+  ci.def("get_text", &CharacterIterator::getText, py::arg("result"));
+
+  ci.def("has_previous", &CharacterIterator::hasPrevious);
+
+  ci.def("last", [](CharacterIterator &self) -> uint16_t { return self.last(); });
+
+  ci.def("last32", &CharacterIterator::last32);
+
+  ci.def("move", &CharacterIterator::move, py::arg("delta"), py::arg("origin"));
+
+  ci.def("move32", &CharacterIterator::move32, py::arg("delta"), py::arg("origin"));
+
+  ci.def("next", [](CharacterIterator &self) -> uint16_t { return self.next(); });
+
+  ci.def("next32", &CharacterIterator::next32);
+
+  ci.def("previous", [](CharacterIterator &self) -> uint16_t { return self.previous(); });
+
+  ci.def("previous32", &CharacterIterator::previous32);
+
+  ci.def(
+      "set_index", [](CharacterIterator &self, int32_t position) -> uint16_t { return self.setIndex(position); },
+      py::arg("position"));
+
+  ci.def("set_index32", &CharacterIterator::setIndex32, py::arg("position"));
 
   ci.def("set_to_end", &CharacterIterator::setToEnd);
 
@@ -75,61 +129,12 @@ void init_schriter(py::module &m) {
   uci.def("set_text", &UCharCharacterIterator::setText, py::arg("new_text"), py::arg("new_text_length"));
   */
 
-  uci.def(
-      "__eq__", [](const UCharCharacterIterator &self, const ForwardCharacterIterator &other) { return self == other; },
-      py::is_operator(), py::arg("other"));
+  uci.def("__copy__", &UCharCharacterIterator::clone);
 
   uci.def(
-      "__ne__", [](const UCharCharacterIterator &self, const ForwardCharacterIterator &other) { return self != other; },
-      py::is_operator(), py::arg("other"));
+      "__deepcopy__", [](const UCharCharacterIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  // uci.def("__copy__", &UCharCharacterIterator::clone)
-  //     .def(
-  //         "__deepcopy__", [](const UCharCharacterIterator &self, py::dict &) { return self.clone(); },
-  //         py::arg("memo"));
-  // uci.def("clone", &UCharCharacterIterator::clone);
-
-  uci.def("current", [](const UCharCharacterIterator &self) -> uint16_t { return self.current(); });
-
-  uci.def("current32", &UCharCharacterIterator::current32);
-
-  uci.def("first", [](UCharCharacterIterator &self) -> uint16_t { return self.first(); });
-
-  uci.def("first32", &UCharCharacterIterator::first32);
-
-  uci.def("get_text", &UCharCharacterIterator::getText, py::arg("result"));
-
-  uci.def("has_next", &UCharCharacterIterator::hasNext);
-
-  uci.def("has_previous", &UCharCharacterIterator::hasPrevious);
-
-  uci.def("hash_code", &UCharCharacterIterator::hashCode);
-
-  uci.def("last", [](UCharCharacterIterator &self) -> uint16_t { return self.last(); });
-
-  uci.def("last32", &UCharCharacterIterator::last32);
-
-  uci.def("move", &UCharCharacterIterator::move, py::arg("delta"), py::arg("origin"));
-
-  uci.def("move32", &UCharCharacterIterator::move32, py::arg("delta"), py::arg("origin"));
-
-  uci.def("next", [](UCharCharacterIterator &self) -> uint16_t { return self.next(); });
-
-  uci.def("next_post_inc", [](UCharCharacterIterator &self) -> uint16_t { return self.nextPostInc(); });
-
-  uci.def("next32", &UCharCharacterIterator::next32);
-
-  uci.def("next32_post_inc", &UCharCharacterIterator::next32PostInc);
-
-  uci.def("previous", [](UCharCharacterIterator &self) -> uint16_t { return self.previous(); });
-
-  uci.def("previous32", &UCharCharacterIterator::previous32);
-
-  uci.def(
-      "set_index", [](UCharCharacterIterator &self, int32_t position) -> uint16_t { return self.setIndex(position); },
-      py::arg("position"));
-
-  uci.def("set_index32", &UCharCharacterIterator::setIndex32, py::arg("position"));
+  uci.def("clone", &UCharCharacterIterator::clone);
 
   //
   // icu::StringCharacterIterator
@@ -157,20 +162,10 @@ void init_schriter(py::module &m) {
   sci.def(
       "__deepcopy__", [](const StringCharacterIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  sci.def(
-      "__eq__",
-      [](const StringCharacterIterator &self, const ForwardCharacterIterator &other) { return self == other; },
-      py::is_operator(), py::arg("other"));
-
   sci.def("__iter__", [](StringCharacterIterator &self) -> StringCharacterIterator & {
     self.first32();
     return self;
   });
-
-  sci.def(
-      "__ne__",
-      [](const StringCharacterIterator &self, const ForwardCharacterIterator &other) { return self != other; },
-      py::is_operator(), py::arg("other"));
 
   sci.def("__next__", [](StringCharacterIterator &self) {
     if (self.getIndex() == self.endIndex()) {
@@ -188,8 +183,6 @@ void init_schriter(py::module &m) {
   });
 
   sci.def("clone", &StringCharacterIterator::clone);
-
-  sci.def("get_text", &StringCharacterIterator::getText, py::arg("result"));
 
   sci.def(
       "set_text",

@@ -18,11 +18,31 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   //
   // icu::Replaceable
   //
+  rep.def("__copy__", &Replaceable::clone);
+
+  rep.def(
+      "__deepcopy__", [](const Replaceable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  rep.def("__len__", &Replaceable::length);
+
   rep.def("char32_at", &Replaceable::char32At, py::arg("offset"));
+
+  rep.def("clone", &Replaceable::clone);
 
   rep.def(
       "char_at", [](const Replaceable &self, int32_t offset) -> uint16_t { return self.charAt(offset); },
       py::arg("offset"));
+
+  rep.def("copy", &Replaceable::copy, py::arg("start"), py::arg("limit"), py::arg("dest"));
+
+  rep.def("extract_between", &Replaceable::extractBetween, py::arg("start"), py::arg("limit"), py::arg("target"));
+
+  rep.def(
+      "handle_replace_between",
+      [](Replaceable &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &text) {
+        self.handleReplaceBetween(start, limit, icupy::to_unistr(text));
+      },
+      py::arg("start"), py::arg("limit"), py::arg("text"));
 
   rep.def("length", &Replaceable::length);
 
@@ -162,8 +182,6 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         return self <= icupy::to_unistr(other);
       },
       py::is_operator(), py::arg("other"));
-
-  us.def("__len__", &UnicodeString::length);
 
   us.def(
       "__lt__",
@@ -403,8 +421,6 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"), py::arg("src_start"), py::arg("src_limit"));
 
-  us.def("copy", &UnicodeString::copy, py::arg("start"), py::arg("limit"), py::arg("dest"));
-
   us.def("count_char32", &UnicodeString::countChar32, py::arg("start ") = 0, py::arg("length") = INT32_MAX);
 
   us.def(
@@ -589,13 +605,6 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         return std::make_unique<_ConstChar16Ptr>(p, self.length(), self.getCapacity());
       },
       py::keep_alive<0, 1>());
-
-  us.def(
-      "handle_replace_between",
-      [](UnicodeString &self, int32_t start, int32_t limit, const icupy::UnicodeStringVariant &text) {
-        self.handleReplaceBetween(start, limit, icupy::to_unistr(text));
-      },
-      py::arg("start"), py::arg("limit"), py::arg("text"));
 
   us.def("hash_code", &UnicodeString::hashCode);
 

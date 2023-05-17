@@ -56,6 +56,79 @@ void init_tblcoll(py::module &m) {
   //
   // icu::Collator
   //
+  coll.def("__copy__", &Collator::clone);
+
+  coll.def(
+      "__deepcopy__", [](const Collator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+
+  coll.def(
+      "__eq__", [](const Collator &self, const Collator &other) { return self == other; }, py::is_operator(),
+      py::arg("other"));
+
+  coll.def("__hash__", &Collator::hashCode);
+
+  coll.def(
+      "__ne__", [](const Collator &self, const Collator &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+
+  coll.def("clone", &Collator::clone);
+
+  coll.def(
+          // [2] icu::Collator::compare
+          "compare",
+          [](const Collator &self, const char16_t *source, int32_t source_length, const char16_t *target,
+             int32_t target_length) {
+            ErrorCode error_code;
+            auto result = self.compare(source, source_length, target, target_length, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("source"), py::arg("source_length"), py::arg("target"), py::arg("target_length"))
+      .def(
+          // [5] icu::Collator::compare
+          "compare",
+          [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target,
+             int32_t length) {
+            ErrorCode error_code;
+            auto result = self.compare(icupy::to_unistr(source), icupy::to_unistr(target), length, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("source"), py::arg("target"), py::arg("length"))
+      .def(
+          // [6] icu::Collator::compare
+          "compare",
+          [](const Collator &self, const icupy::UnicodeStringVariant &source,
+             const icupy::UnicodeStringVariant &target) {
+            ErrorCode error_code;
+            auto result = self.compare(icupy::to_unistr(source), icupy::to_unistr(target), error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("source"), py::arg("target"))
+      // FIXME: Implement uiter C API.
+      /*
+      .def(
+          // [7] icu::Collator::compare
+          "compare",
+          [](const Collator &self, UCharIterator &s_iter, UCharIterator &t_iter) {
+            ErrorCode error_code;
+            auto result = self.compare(s_iter, t_iter, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("s_iter"), py::arg("t_iter"))
+      */
+      ;
+
   coll.def_static(
           "create_instance",
           [](const icupy::LocaleVariant &loc) {
@@ -82,6 +155,18 @@ void init_tblcoll(py::module &m) {
         return self.equals(icupy::to_unistr(source), icupy::to_unistr(target));
       },
       py::arg("source"), py::arg("target"));
+
+  coll.def(
+      "get_attribute",
+      [](const Collator &self, UColAttribute attr) {
+        ErrorCode error_code;
+        auto result = self.getAttribute(attr, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("attr"));
 
   coll.def_static(
       "get_available_locales",
@@ -116,6 +201,29 @@ void init_tblcoll(py::module &m) {
         return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"), py::arg("no_of_levels"));
+
+  coll.def(
+          "get_collation_key",
+          [](const Collator &self, const char16_t *source, int32_t source_length, CollationKey &key) -> CollationKey & {
+            ErrorCode error_code;
+            auto &result = self.getCollationKey(source, source_length, key, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("source"), py::arg("source_length"), py::arg("key"))
+      .def(
+          "get_collation_key",
+          [](const Collator &self, const icupy::UnicodeStringVariant &source, CollationKey &key) -> CollationKey & {
+            ErrorCode error_code;
+            auto &result = self.getCollationKey(icupy::to_unistr(source), key, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("source"), py::arg("key"));
 
   coll.def_static(
           "get_display_name",
@@ -192,6 +300,68 @@ void init_tblcoll(py::module &m) {
       },
       py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 53)
+  coll.def("get_max_variable", &Collator::getMaxVariable);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+  coll.def("get_reorder_codes", [](const Collator &self) {
+    ErrorCode error_code;
+    const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
+    error_code.reset();
+    std::vector<int32_t> result(dest_capacity);
+    self.getReorderCodes(result.data(), dest_capacity, error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  coll.def(
+          "get_sort_key",
+          [](const Collator &self, const char16_t *source, int32_t source_length) {
+            const auto result_length = self.getSortKey(source, source_length, nullptr, 0);
+            std::vector<uint8_t> result(result_length);
+            self.getSortKey(source, source_length, result.data(), result_length);
+            return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
+          },
+          py::arg("source"), py::arg("source_length"))
+      .def(
+          "get_sort_key",
+          [](const Collator &self, const icupy::UnicodeStringVariant &source) {
+            const auto result_length = self.getSortKey(icupy::to_unistr(source), nullptr, 0);
+            std::vector<uint8_t> result(result_length);
+            self.getSortKey(icupy::to_unistr(source), result.data(), result_length);
+            return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
+          },
+          py::arg("source"));
+
+  coll.def("get_tailored_set", [](const Collator &self) {
+    ErrorCode error_code;
+    auto result = self.getTailoredSet(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  coll.def("get_variable_top", [](const Collator &self) {
+    ErrorCode error_code;
+    auto result = self.getVariableTop(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  coll.def("get_version", [](const Collator &self) {
+    UVersionInfo info;
+    self.getVersion(info);
+    py::tuple result(U_MAX_VERSION_LENGTH);
+    int n = 0;
+    std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });
+    return result;
+  });
+
   coll.def(
       "greater",
       [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target) {
@@ -206,9 +376,46 @@ void init_tblcoll(py::module &m) {
       },
       py::arg("source"), py::arg("target"));
 
+  coll.def("hash_code", &Collator::hashCode);
+
   // TODO: Implement "static URegistryKey icu::Collator::registerFactory(CollatorFactory *toAdopt, UErrorCode &status)".
   // TODO: Implement "static URegistryKey icu::Collator::registerInstance(Collator *toAdopt, const Locale &locale,
   //  UErrorCode &status)".
+
+  coll.def(
+      "set_attribute",
+      [](Collator &self, UColAttribute attr, UColAttributeValue value) {
+        ErrorCode error_code;
+        self.setAttribute(attr, value, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("attr"), py::arg("value"));
+
+  coll.def(
+      "set_max_variable",
+      [](Collator &self, UColReorderCode group) -> Collator & {
+        ErrorCode error_code;
+        auto &result = self.setMaxVariable(group, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("group"));
+
+  coll.def(
+      "set_reorder_codes",
+      [](Collator &self, const std::vector<int32_t> &reorder_codes, int32_t reorder_codes_length) {
+        ErrorCode error_code;
+        self.setReorderCodes(reorder_codes.data(), reorder_codes_length, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("reorder_codes"), py::arg("reorder_codes_length"));
+
   // TODO: Implement "static UBool icu::Collator::unregister(URegistryKey key, UErrorCode &status)".
 
   //
@@ -275,16 +482,6 @@ void init_tblcoll(py::module &m) {
   rbc.def(
       "__deepcopy__", [](const RuleBasedCollator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  rbc.def(
-      "__eq__", [](const RuleBasedCollator &self, const Collator &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  rbc.def("__hash__", &RuleBasedCollator::hashCode);
-
-  rbc.def(
-      "__ne__", [](const RuleBasedCollator &self, const Collator &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
   rbc.def("clone", &RuleBasedCollator::clone);
 
   rbc.def("clone_binary", [](const RuleBasedCollator &self) {
@@ -299,58 +496,6 @@ void init_tblcoll(py::module &m) {
     return py::bytes(reinterpret_cast<char *>(buffer.data()), capacity);
   });
 
-  rbc.def(
-         "compare",
-         [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length, const char16_t *target,
-            int32_t target_length) {
-           ErrorCode error_code;
-           auto result = self.compare(source, source_length, target, target_length, error_code);
-           if (error_code.isFailure()) {
-             throw icupy::ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("source"), py::arg("source_length"), py::arg("target"), py::arg("target_length"))
-      .def(
-          "compare",
-          [](const RuleBasedCollator &self, const icupy::UnicodeStringVariant &source,
-             const icupy::UnicodeStringVariant &target, int32_t length) {
-            ErrorCode error_code;
-            auto result = self.compare(icupy::to_unistr(source), icupy::to_unistr(target), length, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"), py::arg("length"))
-      .def(
-          "compare",
-          [](const RuleBasedCollator &self, const icupy::UnicodeStringVariant &source,
-             const icupy::UnicodeStringVariant &target) {
-            ErrorCode error_code;
-            auto result = self.compare(icupy::to_unistr(source), icupy::to_unistr(target), error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("target"))
-      // FIXME: Implement uiter C API.
-      /*
-      .def(
-          "compare",
-          [](const RuleBasedCollator &self, UCharIterator &s_iter, UCharIterator &t_iter) {
-            ErrorCode error_code;
-            auto result = self.compare(s_iter, t_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("s_iter"), py::arg("t_iter"))
-      */
-      ;
-
   rbc.def("create_collation_element_iterator",
           py::overload_cast<const CharacterIterator &>(&RuleBasedCollator::createCollationElementIterator, py::const_),
           py::arg("source"))
@@ -361,142 +506,7 @@ void init_tblcoll(py::module &m) {
           },
           py::arg("source"));
 
-  rbc.def(
-      "get_attribute",
-      [](const RuleBasedCollator &self, UColAttribute attr) {
-        ErrorCode error_code;
-        auto result = self.getAttribute(attr, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("attr"));
-
-  rbc.def(
-         "get_collation_key",
-         [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length,
-            CollationKey &key) -> CollationKey & {
-           ErrorCode error_code;
-           auto &result = self.getCollationKey(source, source_length, key, error_code);
-           if (error_code.isFailure()) {
-             throw icupy::ICUError(error_code);
-           }
-           return result;
-         },
-         py::arg("source"), py::arg("source_length"), py::arg("key"))
-      .def(
-          "get_collation_key",
-          [](const RuleBasedCollator &self, const icupy::UnicodeStringVariant &source,
-             CollationKey &key) -> CollationKey & {
-            ErrorCode error_code;
-            auto &result = self.getCollationKey(icupy::to_unistr(source), key, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("source"), py::arg("key"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  rbc.def("get_max_variable", &RuleBasedCollator::getMaxVariable);
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-
-  rbc.def("get_reorder_codes", [](const RuleBasedCollator &self) {
-    ErrorCode error_code;
-    const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
-    error_code.reset();
-    std::vector<int32_t> result(dest_capacity);
-    self.getReorderCodes(result.data(), dest_capacity, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
   rbc.def("get_rules", py::overload_cast<>(&RuleBasedCollator::getRules, py::const_))
       .def("get_rules", py::overload_cast<UColRuleOption, UnicodeString &>(&RuleBasedCollator::getRules, py::const_),
            py::arg("delta"), py::arg("buffer"));
-
-  rbc.def(
-         "get_sort_key",
-         [](const RuleBasedCollator &self, const char16_t *source, int32_t source_length) {
-           const auto result_length = self.getSortKey(source, source_length, nullptr, 0);
-           std::vector<uint8_t> result(result_length);
-           self.getSortKey(source, source_length, result.data(), result_length);
-           return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
-         },
-         py::arg("source"), py::arg("source_length"))
-      .def(
-          "get_sort_key",
-          [](const RuleBasedCollator &self, const icupy::UnicodeStringVariant &source) {
-            const auto result_length = self.getSortKey(icupy::to_unistr(source), nullptr, 0);
-            std::vector<uint8_t> result(result_length);
-            self.getSortKey(icupy::to_unistr(source), result.data(), result_length);
-            return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
-          },
-          py::arg("source"));
-
-  rbc.def("get_tailored_set", [](const RuleBasedCollator &self) {
-    ErrorCode error_code;
-    auto result = self.getTailoredSet(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  rbc.def("get_variable_top", [](const RuleBasedCollator &self) {
-    ErrorCode error_code;
-    auto result = self.getVariableTop(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  rbc.def("get_version", [](const RuleBasedCollator &self) {
-    UVersionInfo info;
-    self.getVersion(info);
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });
-    return result;
-  });
-
-  rbc.def("hash_code", &RuleBasedCollator::hashCode);
-
-  rbc.def(
-      "set_attribute",
-      [](RuleBasedCollator &self, UColAttribute attr, UColAttributeValue value) {
-        ErrorCode error_code;
-        self.setAttribute(attr, value, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-      },
-      py::arg("attr"), py::arg("value"));
-
-  rbc.def(
-      "set_max_variable",
-      [](RuleBasedCollator &self, UColReorderCode group) -> Collator & {
-        ErrorCode error_code;
-        auto &result = self.setMaxVariable(group, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("group"));
-
-  rbc.def(
-      "set_reorder_codes",
-      [](RuleBasedCollator &self, const std::vector<int32_t> &reorder_codes, int32_t reorder_codes_length) {
-        ErrorCode error_code;
-        self.setReorderCodes(reorder_codes.data(), reorder_codes_length, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-      },
-      py::arg("reorder_codes"), py::arg("reorder_codes_length"));
 }

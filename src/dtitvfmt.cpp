@@ -16,48 +16,6 @@ void init_dtitvfmt(py::module &m) {
   // FIXME: Implement "icu::FormattedDateInterval::FormattedDateInterval(FormattedDateInterval &&src)".
 
   fdi.def(py::init<>());
-
-  fdi.def(
-      "append_to",
-      [](FormattedDateInterval &self, Appendable &appendable) -> Appendable & {
-        ErrorCode error_code;
-        auto &result = self.appendTo(appendable, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("appendable"));
-
-  fdi.def(
-      "next_position",
-      [](const FormattedDateInterval &self, ConstrainedFieldPosition &cfpos) {
-        ErrorCode error_code;
-        auto result = self.nextPosition(cfpos, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("cfpos"));
-
-  fdi.def("to_string", [](const FormattedDateInterval &self) {
-    ErrorCode error_code;
-    auto result = self.toString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-
-  fdi.def("to_temp_string", [](const FormattedDateInterval &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   //
@@ -69,14 +27,6 @@ void init_dtitvfmt(py::module &m) {
 
   fmt.def(
       "__deepcopy__", [](const DateIntervalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
-
-  fmt.def(
-      "__eq__", [](const DateIntervalFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  fmt.def(
-      "__ne__", [](const DateIntervalFormat &self, const Format &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
 
   // FIXME: Implement "void icu::DateIntervalFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
 

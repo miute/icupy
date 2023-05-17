@@ -56,10 +56,6 @@ void init_msgfmt(py::module &m) {
   mf.def(
       "__deepcopy__", [](const MessageFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  mf.def(
-      "__eq__", [](const MessageFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
   // FIXME: Implement "void icu::MessageFormat::adoptFormat(const UnicodeString &formatName, Format *formatToAdopt,
   //  UErrorCode &status)".
   // FIXME: Implement "void icu::MessageFormat::adoptFormat(int32_t formatNumber, Format *formatToAdopt)".
@@ -291,22 +287,6 @@ void init_msgfmt(py::module &m) {
             return result;
           },
           py::return_value_policy::reference, py::arg("source"), py::arg("pos"));
-
-  mf.def(
-        "parse_object",
-        [](const MessageFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-           ParsePosition &pos) { self.parseObject(icupy::to_unistr(source), result, pos); },
-        py::arg("source"), py::arg("result"), py::arg("pos"))
-      .def(
-          "parse_object",
-          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(icupy::to_unistr(source), result, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"));
 
   mf.def(
         // [1] MessageFormat::setFormat

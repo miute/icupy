@@ -108,7 +108,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   //
   // icu::number::FormattedNumber
   //
-#if (U_ICU_VERSION_MAJOR_NUM >= 62)
+#if (U_ICU_VERSION_MAJOR_NUM >= 62 && U_ICU_VERSION_MAJOR_NUM < 64)
   fn.def(
       "append_to",
       [](const FormattedNumber &self, Appendable &appendable) -> Appendable & {
@@ -120,7 +120,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return result;
       },
       py::arg("appendable"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62 && U_ICU_VERSION_MAJOR_NUM < 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
   fn.def("get_noun_class", [](const FormattedNumber &self) {
@@ -144,20 +144,6 @@ void init_numberformatter(py::module &, py::module &m2) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  fn.def(
-      "next_position",
-      [](const FormattedNumber &self, ConstrainedFieldPosition &cfpos) {
-        ErrorCode error_code;
-        auto result = self.nextPosition(cfpos, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      },
-      py::arg("cfpos"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   fn.def("to_decimal_number", [](const FormattedNumber &self) {
     ErrorCode error_code;
@@ -169,7 +155,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 62)
+#if (U_ICU_VERSION_MAJOR_NUM >= 62 && U_ICU_VERSION_MAJOR_NUM < 64)
   fn.def("to_string", [](const FormattedNumber &self) {
     ErrorCode error_code;
     auto result = self.toString(error_code);
@@ -178,18 +164,7 @@ void init_numberformatter(py::module &, py::module &m2) {
     }
     return result;
   });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  fn.def("to_temp_string", [](const FormattedNumber &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 62 && U_ICU_VERSION_MAJOR_NUM < 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
   //

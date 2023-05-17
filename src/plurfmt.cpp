@@ -134,14 +134,6 @@ void init_plurfmt(py::module &m) {
       "___deepcopy__", [](const PluralFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   pf.def(
-      "__eq__", [](const PluralFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  pf.def(
-      "__ne__", [](const PluralFormat &self, const Format &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
-  pf.def(
       "apply_pattern",
       [](PluralFormat &self, const icupy::UnicodeStringVariant &pattern) {
         ErrorCode error_code;
@@ -155,8 +147,8 @@ void init_plurfmt(py::module &m) {
   pf.def("clone", &PluralFormat::clone);
 
   pf.def(
-        // [1] PluralFormat::format
-        // [2] Format::format
+        // [1] icu::PluralFormat::format
+        // [2] icu::Format::format
         "format",
         [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
            FieldPosition &pos) -> UnicodeString & {
@@ -169,7 +161,7 @@ void init_plurfmt(py::module &m) {
         },
         py::arg("obj"), py::arg("append_to"), py::arg("pos"))
       .def(
-          // [3] Format::format
+          // [3] icu::Format::format
           "format",
           [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
              FieldPositionIterator *pos_iter) -> UnicodeString & {
@@ -182,7 +174,7 @@ void init_plurfmt(py::module &m) {
           },
           py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
       .def(
-          // [4] Format::format
+          // [4] icu::Format::format
           "format",
           [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
             ErrorCode error_code;
@@ -194,7 +186,7 @@ void init_plurfmt(py::module &m) {
           },
           py::arg("obj"), py::arg("append_to"))
       .def(
-          // [5] PluralFormat::format
+          // [5] icu::PluralFormat::format
           "format",
           [](const PluralFormat &self, double number) {
             ErrorCode error_code;
@@ -206,7 +198,7 @@ void init_plurfmt(py::module &m) {
           },
           py::arg("number").noconvert())
       .def(
-          // [6] PluralFormat::format
+          // [6] icu::PluralFormat::format
           "format",
           [](const PluralFormat &self, double number, UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
@@ -218,7 +210,7 @@ void init_plurfmt(py::module &m) {
           },
           py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos"))
       .def(
-          // [7] PluralFormat::format
+          // [7] icu::PluralFormat::format
           "format",
           [](const PluralFormat &self, int32_t number) {
             ErrorCode error_code;
@@ -230,7 +222,7 @@ void init_plurfmt(py::module &m) {
           },
           py::arg("number"))
       .def(
-          // [8] PluralFormat::format
+          // [8] icu::PluralFormat::format
           "format",
           [](const PluralFormat &self, int32_t number, UnicodeString &append_to,
              FieldPosition &pos) -> UnicodeString & {
@@ -242,22 +234,6 @@ void init_plurfmt(py::module &m) {
             return result;
           },
           py::arg("number"), py::arg("append_to"), py::arg("pos"));
-
-  pf.def(
-        "parse_object",
-        [](const PluralFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-           ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
-        py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          "parse_object",
-          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(icupy::to_unistr(source), result, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"));
 
   pf.def(
       "set_number_format",

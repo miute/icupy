@@ -89,10 +89,6 @@ void init_smpdtfmt(py::module &m) {
   sdf.def(
       "__deepcopy__", [](const SimpleDateFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  sdf.def(
-      "__eq__", [](const SimpleDateFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
   // FIXME: Implement "void icu::SimpleDateFormat::adoptCalendar(Calendar *calendarToAdopt)".
   // FIXME: Implement "void icu::SimpleDateFormat::adoptDateFormatSymbols(DateFormatSymbols *newFormatSymbols)".
   // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(const UnicodeString &fields,
@@ -119,88 +115,6 @@ void init_smpdtfmt(py::module &m) {
 
   sdf.def("clone", &SimpleDateFormat::clone);
 
-  sdf.def(
-         // [2] SimpleDateFormat::format
-         // [1] DateFormat::format
-         "format",
-         py::overload_cast<Calendar &, UnicodeString &, FieldPosition &>(&SimpleDateFormat::format, py::const_),
-         py::arg("cal"), py::arg("append_to"), py::arg("field_position"))
-      .def(
-          // [4] SimpleDateFormat::format
-          // [2] DateFormat::format
-          "format",
-          [](const SimpleDateFormat &self, Calendar &cal, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(cal, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("cal"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [3] DateFormat::format
-          // [1] Format::format
-          "format",
-          [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPosition &pos) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [6] DateFormat::format
-          // [2] Format::format
-          "format",
-          [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [3] Format::format
-          "format",
-          [](const SimpleDateFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"))
-      .def(
-          // [8] DateFormat::format
-          "format", py::overload_cast<UDate, UnicodeString &>(&DateFormat::format, py::const_), py::arg("date"),
-          py::arg("append_to"))
-      .def(
-          // [9] DateFormat::format
-          "format", py::overload_cast<UDate, UnicodeString &, FieldPosition &>(&DateFormat::format, py::const_),
-          py::arg("date"), py::arg("append_to"), py::arg("field_position"))
-      .def(
-          // [10] DateFormat::format
-          "format",
-          [](const DateFormat &self, UDate date, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(date, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("date"), py::arg("append_to"), py::arg("pos_iter"));
-
   sdf.def("get_2digit_year_start", [](const SimpleDateFormat &self) {
     ErrorCode error_code;
     auto result = self.get2DigitYearStart(error_code);
@@ -219,33 +133,6 @@ void init_smpdtfmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
   sdf.def(
-         // [1] SimpleDateFormat::parse
-         "parse",
-         [](const SimpleDateFormat &self, const icupy::UnicodeStringVariant &text, Calendar &cal, ParsePosition &pos) {
-           self.parse(icupy::to_unistr(text), cal, pos);
-         },
-         py::arg("text"), py::arg("cal"), py::arg("pos"))
-      .def(
-          // [2] DateFormat::parse
-          "parse",
-          [](const DateFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
-            return self.parse(icupy::to_unistr(text), pos);
-          },
-          py::arg("text"), py::arg("pos"))
-      .def(
-          // [3] DateFormat::parse
-          "parse",
-          [](const DateFormat &self, const icupy::UnicodeStringVariant &text) {
-            ErrorCode error_code;
-            auto result = self.parse(icupy::to_unistr(text), error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("text"));
-
-  sdf.def(
       "set_2digit_year_start",
       [](SimpleDateFormat &self, UDate d) {
         ErrorCode error_code;
@@ -255,19 +142,6 @@ void init_smpdtfmt(py::module &m) {
         }
       },
       py::arg("d"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  sdf.def(
-      "set_context",
-      [](SimpleDateFormat &self, UDisplayContext value) {
-        ErrorCode error_code;
-        self.setContext(value, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-      },
-      py::arg("value"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   sdf.def("set_date_format_symbols", &SimpleDateFormat::setDateFormatSymbols, py::arg("new_format_symbols"));
 

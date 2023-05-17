@@ -56,7 +56,7 @@ void init_stsearch(py::module &m) {
 
   si.def(
       "__eq__", [](const SearchIterator &self, const SearchIterator &other) { return self == other; },
-      py::arg("other"));
+      py::is_operator(), py::arg("other"));
 
   si.def("__iter__", [](SearchIterator &self) -> SearchIterator & {
     self.reset();
@@ -65,7 +65,7 @@ void init_stsearch(py::module &m) {
 
   si.def(
       "__ne__", [](const SearchIterator &self, const SearchIterator &other) { return self != other; },
-      py::arg("other"));
+      py::is_operator(), py::arg("other"));
 
   si.def("__next__", [](SearchIterator &self) {
     ErrorCode error_code;
@@ -278,14 +278,6 @@ void init_stsearch(py::module &m) {
   ss.def(
       "__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  ss.def(
-      "__eq__", [](const StringSearch &self, const SearchIterator &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
-  ss.def(
-      "__ne__", [](const StringSearch &self, const SearchIterator &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
-
   ss.def("clone", &StringSearch::clone);
 
   ss.def("get_collator", &StringSearch::getCollator, py::return_value_policy::reference);
@@ -293,8 +285,6 @@ void init_stsearch(py::module &m) {
   ss.def("get_offset", &StringSearch::getOffset);
 
   ss.def("get_pattern", &StringSearch::getPattern);
-
-  ss.def("reset", &StringSearch::reset);
 
   ss.def("safe_clone", &StringSearch::safeClone);
 
@@ -330,27 +320,6 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("pattern"));
-
-  ss.def(
-        "set_text",
-        [](StringSearch &self, CharacterIterator &text) {
-          ErrorCode error_code;
-          self.setText(text, error_code);
-          if (error_code.isFailure()) {
-            throw icupy::ICUError(error_code);
-          }
-        },
-        py::arg("text"))
-      .def(
-          "set_text",
-          [](StringSearch &self, const icupy::UnicodeStringVariant &text) {
-            ErrorCode error_code;
-            self.setText(icupy::to_unistr(text), error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("text"));
 
   si.def_property_readonly_static("DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
 }

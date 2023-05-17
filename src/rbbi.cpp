@@ -257,28 +257,9 @@ void init_rbbi(py::module &m) {
           }),
           py::keep_alive<1, 2>(), py::arg("compiled_rules"), py::arg("rule_length"));
 
-  rbbi.def(
-      "__eq__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self == other; },
-      py::is_operator(), py::arg("other"));
-
   rbbi.def("__hash__", &RuleBasedBreakIterator::hashCode);
 
-  rbbi.def(
-      "__ne__", [](const RuleBasedBreakIterator &self, const BreakIterator &other) { return self != other; },
-      py::is_operator(), py::arg("other"));
-
-  rbbi.def(
-      "adopt_text",
-      [](RuleBasedBreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : nullptr); },
-      py::arg("it"));
-
   rbbi.def("clone", &RuleBasedBreakIterator::clone);
-
-  rbbi.def("current", &RuleBasedBreakIterator::current);
-
-  rbbi.def("first", &RuleBasedBreakIterator::first);
-
-  rbbi.def("following", &RuleBasedBreakIterator::following, py::arg("offset"));
 
   rbbi.def("get_binary_rules", [](RuleBasedBreakIterator &self) {
     uint32_t length = 0;
@@ -288,44 +269,7 @@ void init_rbbi(py::module &m) {
 
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules);
 
-  rbbi.def("get_text", &RuleBasedBreakIterator::getText, py::return_value_policy::reference);
-
-  rbbi.def(
-      "get_utext",
-      [](const RuleBasedBreakIterator &self, std::optional<_UTextPtr> &fill_in) {
-        ErrorCode error_code;
-        auto p = self.getUText(fill_in.value_or(nullptr), error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return std::make_unique<_UTextPtr>(p);
-      },
-      py::keep_alive<0, 1>(), py::arg("fill_in"));
-
   rbbi.def("hash_code", &RuleBasedBreakIterator::hashCode);
 
-  rbbi.def("is_boundary", &RuleBasedBreakIterator::isBoundary, py::arg("offset"));
-
-  rbbi.def("last", &RuleBasedBreakIterator::last);
-
-  rbbi.def("next", py::overload_cast<int32_t>(&RuleBasedBreakIterator::next), py::arg("n"))
-      .def("next", py::overload_cast<>(&RuleBasedBreakIterator::next));
-
-  rbbi.def("preceding", &RuleBasedBreakIterator::preceding, py::arg("offset"));
-
-  rbbi.def("previous", &RuleBasedBreakIterator::previous);
-
   // FIXME: Implement "BreakIterator& refreshInputText(UText *input, UErrorCode &status)".
-
-  rbbi.def("set_text", py::overload_cast<const UnicodeString &>(&RuleBasedBreakIterator::setText), py::arg("text"))
-      .def(
-          "set_text",
-          [](RuleBasedBreakIterator &self, _UTextPtr &text) {
-            ErrorCode error_code;
-            self.setText(text, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("text"));
 }

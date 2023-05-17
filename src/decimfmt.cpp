@@ -64,10 +64,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def(
       "__deepcopy__", [](const DecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  df.def(
-      "__eq__", [](const DecimalFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
   // FIXME: Implement "void icu::DecimalFormat::adoptCurrencyPluralInfo(CurrencyPluralInfo *toAdopt)".
   // FIXME: Implement "void icu::DecimalFormat::adoptDecimalFormatSymbols(DecimalFormatSymbols *symbolsToAdopt)".
 
@@ -116,127 +112,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("are_significant_digits_used", &DecimalFormat::areSignificantDigitsUsed);
 
   df.def("clone", &DecimalFormat::clone);
-
-  df.def(
-        // [1] NumberFormat::format
-        "format",
-        [](const DecimalFormat &self, const Formattable &obj, UnicodeString &append_to,
-           FieldPosition &pos) -> UnicodeString & {
-          ErrorCode error_code;
-          auto &result = self.format(obj, append_to, pos, error_code);
-          if (error_code.isFailure()) {
-            throw icupy::ICUError(error_code);
-          }
-          return result;
-        },
-        py::arg("obj"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [2] NumberFormat::format
-          "format",
-          [](const DecimalFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [7] NumberFormat::format
-          "format", py::overload_cast<double, UnicodeString &>(&NumberFormat::format, py::const_),
-          py::arg("number").noconvert(), py::arg("append_to"))
-      .def(
-          // [8] DecimalFormat::format
-          // [9] NumberFormat::format
-          "format", py::overload_cast<double, UnicodeString &, FieldPosition &>(&DecimalFormat::format, py::const_),
-          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [12] NumberFormat::format
-          // [13] DecimalFormat::format
-          "format",
-          [](const DecimalFormat &self, double number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number").noconvert(), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [14] NumberFormat::format
-          "format", py::overload_cast<int32_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
-          py::arg("append_to"))
-      .def(
-          // [15] DecimalFormat::format
-          // [16] NumberFormat::format
-          "format", py::overload_cast<int32_t, UnicodeString &, FieldPosition &>(&DecimalFormat::format, py::const_),
-          py::arg("number"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [19] NumberFormat::format
-          // [20] DecimalFormat::format
-          "format",
-          [](const DecimalFormat &self, int32_t number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [21] NumberFormat::format
-          "format", py::overload_cast<int64_t, UnicodeString &>(&NumberFormat::format, py::const_), py::arg("number"),
-          py::arg("append_to"))
-      .def(
-          // [22] NumberFormat::format
-          // [23] DecimalFormat::format
-          "format", py::overload_cast<int64_t, UnicodeString &, FieldPosition &>(&DecimalFormat::format, py::const_),
-          py::arg("number"), py::arg("append_to"), py::arg("pos"))
-      .def(
-          // [26] NumberFormat::format
-          // [27] DecimalFormat::format
-          "format",
-          [](const DecimalFormat &self, int64_t number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          // [28] NumberFormat::format
-          // [29] DecimalFormat::format
-          "format",
-          [](const DecimalFormat &self, const char *number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"))
-      .def(
-          "format",
-          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
-            ErrorCode error_code;
-            auto &result = self.format(obj, append_to, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("obj"), py::arg("append_to"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   df.def(
@@ -294,8 +169,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def("get_rounding_increment", &DecimalFormat::getRoundingIncrement);
 
-  df.def("get_rounding_mode", &DecimalFormat::getRoundingMode);
-
   df.def("get_secondary_grouping_size", &DecimalFormat::getSecondaryGroupingSize);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
@@ -320,31 +193,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("is_sign_always_shown", &DecimalFormat::isSignAlwaysShown);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-  df.def(
-        "parse",
-        [](const DecimalFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result,
-           ParsePosition &parse_position) { self.parse(icupy::to_unistr(text), result, parse_position); },
-        py::arg("text"), py::arg("result"), py::arg("parse_position"))
-      .def(
-          "parse",
-          [](const NumberFormat &self, const icupy::UnicodeStringVariant &text, Formattable &result) {
-            ErrorCode error_code;
-            self.parse(icupy::to_unistr(text), result, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("text"), py::arg("result"));
-
-#if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  df.def(
-      "parse_currency",
-      [](const DecimalFormat &self, const icupy::UnicodeStringVariant &text, ParsePosition &pos) {
-        return self.parseCurrency(icupy::to_unistr(text), pos);
-      },
-      py::arg("text"), py::arg("pos"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   df.def(
       "set_attribute",
@@ -358,17 +206,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       },
       py::arg("attr"), py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-
-  df.def(
-      "set_currency",
-      [](DecimalFormat &self, const char16_t *the_currency) {
-        ErrorCode error_code;
-        self.setCurrency(the_currency, error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-      },
-      py::arg("the_currency"));
 
   df.def("set_currency_plural_info", &DecimalFormat::setCurrencyPluralInfo, py::arg("info"));
 
@@ -407,23 +244,13 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("set_grouping_used", &DecimalFormat::setGroupingUsed, py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
-  df.def("set_lenient", &DecimalFormat::setLenient, py::arg("enable"));
-
-  df.def("set_maximum_fraction_digits", &DecimalFormat::setMaximumFractionDigits, py::arg("new_value"));
-
-  df.def("set_maximum_integer_digits", &DecimalFormat::setMaximumIntegerDigits, py::arg("new_value"));
-
   df.def("set_maximum_significant_digits", &DecimalFormat::setMaximumSignificantDigits, py::arg("max_"));
 
   df.def("set_minimum_exponent_digits", &DecimalFormat::setMinimumExponentDigits, py::arg("min_exp_dig"));
 
-  df.def("set_minimum_fraction_digits", &DecimalFormat::setMinimumFractionDigits, py::arg("new_value"));
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("set_minimum_grouping_digits", &DecimalFormat::setMinimumGroupingDigits, py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-
-  df.def("set_minimum_integer_digits", &DecimalFormat::setMinimumIntegerDigits, py::arg("new_value"));
 
   df.def("set_minimum_significant_digits", &DecimalFormat::setMinimumSignificantDigits, py::arg("min_"));
 
@@ -460,10 +287,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("set_parse_case_sensitive", &DecimalFormat::setParseCaseSensitive, py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  df.def("set_parse_integer_only", &DecimalFormat::setParseIntegerOnly, py::arg("value"));
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("set_parse_no_exponent", &DecimalFormat::setParseNoExponent, py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -483,8 +306,6 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
       py::arg("new_value"));
 
   df.def("set_rounding_increment", &DecimalFormat::setRoundingIncrement, py::arg("new_value"));
-
-  df.def("set_rounding_mode", &DecimalFormat::setRoundingMode, py::arg("rounding_mode"));
 
   df.def("set_scientific_notation", &DecimalFormat::setScientificNotation, py::arg("use_scientific"));
 

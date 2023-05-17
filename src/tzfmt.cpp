@@ -137,10 +137,6 @@ void init_tzfmt(py::module &m) {
   tzf.def(
       "__deepcopy__", [](const TimeZoneFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
-  tzf.def(
-      "__eq__", [](const TimeZoneFormat &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
-
   // FIXME: Implement "void icu::TimeZoneFormat::adoptTimeZoneNames(TimeZoneNames *tznames)".
 
   tzf.def("clone", &TimeZoneFormat::clone);
@@ -297,23 +293,6 @@ void init_tzfmt(py::module &m) {
             return tz;
           },
           py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr);
-
-  tzf.def(
-         "parse_object",
-         [](const TimeZoneFormat &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
-         py::arg("source"), py::arg("result"), py::arg("parse_pos"))
-      .def(
-          // [2] Format::parseObject
-          "parse_object",
-          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
-            ErrorCode error_code;
-            self.parseObject(icupy::to_unistr(source), result, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-          },
-          py::arg("source"), py::arg("result"));
 
   tzf.def(
       "parse_offset_iso8601",
