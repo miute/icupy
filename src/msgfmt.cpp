@@ -255,7 +255,18 @@ void init_msgfmt(py::module &m) {
       },
       py::return_value_policy::reference);
 
-  mf.def("get_locale", &MessageFormat::getLocale);
+  mf.def("get_locale", &MessageFormat::getLocale)
+      .def(
+          "get_locale",
+          [](const Format &self, ULocDataLocaleType type) {
+            ErrorCode error_code;
+            auto result = self.getLocale(type, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("type_"));
 
   mf.def(
         // [1] MessageFormat::parse

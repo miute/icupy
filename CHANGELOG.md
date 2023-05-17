@@ -6,6 +6,7 @@
 - FIXED
   - Add **icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()**
   - Add **icupy.icu.MeasureUnit.get_milligram_ofglucose_per_deciliter()**
+  - Add **icupy.icu.MessageFormat.get_locale(type_: ULocDataLocaleType)**
 
 ## v0.16.0 / 2023-04-18
 

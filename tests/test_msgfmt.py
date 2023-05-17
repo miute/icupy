@@ -7,7 +7,8 @@ from icupy.icu import (
     U_ICU_VERSION_MAJOR_NUM, DecimalFormat, FieldPosition,
     FieldPositionIterator, Formattable, ICUError, Locale, MessageFormat,
     ParsePosition, SimpleDateFormat, StringEnumeration, TimeZone, UErrorCode,
-    UMessagePatternApostropheMode, UnicodeString, UParseError,
+    ULocDataLocaleType, UMessagePatternApostropheMode, UnicodeString,
+    UParseError,
 )
 
 # fmt: on
@@ -78,6 +79,14 @@ def test_api():
     result = fmt.get_locale()
     assert isinstance(result, Locale)
     assert result == Locale("en", "US")
+
+    # Locale icu::Format::getLocale(
+    #       ULocDataLocaleType type,
+    #       UErrorCode &status
+    # )
+    loc = fmt.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, Locale)
+    assert loc == Locale("en-US")
 
     # void icu::MessageFormat::setLocale(const Locale &theLocale)
     fmt.set_locale(Locale.get_france())
