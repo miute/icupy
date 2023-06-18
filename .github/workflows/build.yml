@@ -68,31 +68,10 @@ jobs:
         run: |
           curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_win64_zip}}
           7z x ${{fromJson(env.icu4c_target_json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
+          if ("x${{fromJson(env.icu4c_target_json).double_zipped_filename}}" -ne "x") {
+            7z x ${{env.ICU4C_DIR}}/${{fromJson(env.icu4c_target_json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
+          }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
-
-      - name: Set up icu4c-72rc-Win64
-        if: startsWith(matrix.os, 'windows') && startsWith(env.icu4c_latest_version, '72rc')
-        working-directory: build
-        env:
-          ICU4C_DIR: "icu4c"
-        run: |
-          7z x ${{env.ICU4C_DIR}}\20220922.23_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
-
-      - name: Set up icu4c-72_1-Win64
-        if: startsWith(matrix.os, 'windows') && startsWith(env.icu4c_latest_version, '72.1')
-        working-directory: build
-        env:
-          ICU4C_DIR: "icu4c"
-        run: |
-          7z x ${{env.ICU4C_DIR}}\20221013.8_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
-
-      - name: Set up icu4c-73rc-Win64
-        if: startsWith(matrix.os, 'windows') && startsWith(env.icu4c_latest_version, '73rc')
-        working-directory: build
-        env:
-          ICU4C_DIR: "icu4c"
-        run: |
-          7z x ${{env.ICU4C_DIR}}\20230323.12_ICU4C_MSVC_x64_Release\icu-windows.zip -o${{env.ICU4C_DIR}}
 
       - name: Build wheel
         run: |

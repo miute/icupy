@@ -1,6 +1,13 @@
 {
-    "latest": "73.1",
+    "latest": "73.2",
     "versions": [
+        {
+            "version": "73.2",
+            "url": "https://github.com/unicode-org/icu/releases/download/release-73-2",
+            "icu4c_ubuntu_x64_tgz": "icu4c-73_2-Ubuntu22.04-x64.tgz",
+            "icu4c_win64_zip": "icu4c-73_2-Win64-MSVC2019.zip",
+            "double_zipped_filename": "20230608.2_ICU4C_MSVC_x64_Release/icu-windows.zip"
+        },
         {
             "version": "73.1",
             "url": "https://github.com/unicode-org/icu/releases/download/release-73-1",
@@ -11,19 +18,22 @@
             "version": "73rc",
             "url": "https://github.com/unicode-org/icu/releases/download/release-73-rc",
             "icu4c_ubuntu_x64_tgz": "icu4c-73rc-Ubuntu-22.04.x64.tgz",
-            "icu4c_win64_zip": "icu4c-73rc-Win64-MSVC2019.zip"
+            "icu4c_win64_zip": "icu4c-73rc-Win64-MSVC2019.zip",
+            "double_zipped_filename": "20230323.12_ICU4C_MSVC_x64_Release/icu-windows.zip"
         },
         {
             "version": "72.1",
             "url": "https://github.com/unicode-org/icu/releases/download/release-72-1",
             "icu4c_ubuntu_x64_tgz": "icu4c-72_1-Ubuntu22.04-x64.tgz",
-            "icu4c_win64_zip": "icu4c-72_1-Win64-MSVC2019.zip"
+            "icu4c_win64_zip": "icu4c-72_1-Win64-MSVC2019.zip",
+            "double_zipped_filename": "20221013.8_ICU4C_MSVC_x64_Release/icu-windows.zip"
         },
         {
             "version": "72rc",
             "url": "https://github.com/unicode-org/icu/releases/download/release-72-rc",
             "icu4c_ubuntu_x64_tgz": "icu4c-72rc-Ubuntu-22.04.x64.tgz",
-            "icu4c_win64_zip": "icu4c-72rc-Win64-MSVC2019.zip"
+            "icu4c_win64_zip": "icu4c-72rc-Win64-MSVC2019.zip",
+            "double_zipped_filename": "20220922.23_ICU4C_MSVC_x64_Release/icu-windows.zip"
         },
         {
             "version": "71.1",
