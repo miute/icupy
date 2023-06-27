@@ -19,12 +19,7 @@ if sys.platform.startswith("win"):
             "Check the ICU_ROOT environment variable setting (ICU_ROOT=%s)"
             % (path, os.getenv("ICU_ROOT", ""))
         )
-    if sys.version_info[:2] >= (3, 8):
-        os.add_dll_directory(path)
-    else:
-        os.environ["PATH"] = "{}{}{}".format(
-            path, os.pathsep, os.getenv("PATH", "")
-        )
+    os.add_dll_directory(path)
     del path
 
 from . import icu  # noqa: F401

@@ -2,7 +2,9 @@
 
 ## WIP
 
-- Refactoring
+- CHANGED
+  - Drop support for Python 3.7
+  - Refactoring
 - FIXED
   - Add **icupy.icu.FormattedRelativeDateTime.\_\_init__()**
   - Add **icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()**
