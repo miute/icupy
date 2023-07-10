@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## WIP
+## v0.17.0 / 2023-07-10
 
 - CHANGED
   - Drop support for Python 3.7
