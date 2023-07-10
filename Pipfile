@@ -7,5 +7,3 @@ name = "pypi"
 
 [dev-packages]
 pytest = "*"
-black = "*"
-isort = "*"
