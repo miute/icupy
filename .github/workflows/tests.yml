@@ -15,9 +15,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-2019]
+        os: [ubuntu-22.04, windows-latest]
         icu-version: ["70.1", "71.1", "72.1", "73.2"]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -32,12 +32,12 @@ jobs:
       - name: Upgrade pip
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade setuptools
+          python -m pip install --upgrade setuptools
 
       - name: Install dependencies
         run: |
-          pip install tox
-          pip install --pre tox-gh-actions
+          python -m pip install --user tox
+          python -m pip install --user --pre tox-gh-actions
 
       - run: mkdir -p build
 
@@ -76,13 +76,12 @@ jobs:
             7z x ${{env.ICU4C_DIR}}/${{fromJson(env.icu4c_target_json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
           }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
-          echo "CMAKE_GENERATOR=Visual Studio 16 2019" >> $env:GITHUB_ENV
 
       - name: Run tests
         env:
           PLATFORM: ${{matrix.os}}
         run: |
-          tox -c tox-coverage.ini
+          python -m tox -c tox-coverage.ini
 
       - name: Store coverage data
         if: matrix.icu-version == env.icu4c_latest_version
@@ -103,16 +102,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Upgrade pip
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade setuptools
+          python -m pip install --upgrade setuptools
 
       - name: Install dependencies
         run: |
-          pip install tox
+          python -m pip install --user tox
 
       - name: Set up requirements
         run: |
@@ -125,7 +124,7 @@ jobs:
 
       - name: Report coverage statistics
         run: |
-          tox -c tox-coverage.ini -e cov,cov-cpp
+          python -m tox -c tox-coverage.ini -e cov,cov-cpp
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
