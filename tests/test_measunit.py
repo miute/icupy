@@ -1663,26 +1663,34 @@ def test_measure_unit_68():
 
     assert (
         fmt.unit(MeasureUnit.create_dessert_spoon()).format_int(1).to_string()
-    ) == "1 dstspn"
+    ) in (
+        "1 dstspn",  # ICU4C<74
+        "1 dsp",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.create_dessert_spoon_imperial())
         .format_int(1)
         .to_string()
-    ) == "1 dstspn Imp"
+    ) in (
+        "1 dstspn Imp",  # ICU4C<74
+        "1 dsp-Imp.",  # ICU4C>=74
+    )
 
     assert (fmt.unit(MeasureUnit.create_dot()).format_int(1).to_string()) in (
         "1 dot",  # ICU4C<69
         "1 px",  # ICU4C>=69
     )
 
-    assert (
-        fmt.unit(MeasureUnit.create_dram()).format_int(1).to_string()
-    ) == "1 dram fl"
+    assert (fmt.unit(MeasureUnit.create_dram()).format_int(1).to_string()) in (
+        "1 dram fl",  # ICU4C<74
+        "1 dram",  # ICU4C>=74
+    )
 
-    assert (
-        fmt.unit(MeasureUnit.create_drop()).format_int(1).to_string()
-    ) == "1 drop"
+    assert (fmt.unit(MeasureUnit.create_drop()).format_int(1).to_string()) in (
+        "1 drop",  # ICU4C<74
+        "1 dr",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.create_earth_radius()).format_int(1).to_string()
@@ -1690,7 +1698,10 @@ def test_measure_unit_68():
 
     assert (
         fmt.unit(MeasureUnit.create_grain()).format_int(1).to_string()
-    ) == "1 grain"
+    ) in (
+        "1 grain",  # ICU4C<74
+        "1 gr",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.create_jigger()).format_int(1).to_string()
@@ -1702,11 +1713,17 @@ def test_measure_unit_68():
 
     assert (
         fmt.unit(MeasureUnit.create_pinch()).format_int(1).to_string()
-    ) == "1 pinch"
+    ) in (
+        "1 pinch",  # ICU4C<74
+        "1 pn",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.create_quart_imperial()).format_int(1).to_string()
-    ) == "1 qt Imp."
+    ) in (
+        "1 qt Imp.",  # ICU4C<74
+        "1 qt-Imp.",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.get_candela()).format_int(1).to_string()
@@ -1714,34 +1731,43 @@ def test_measure_unit_68():
 
     assert (
         fmt.unit(MeasureUnit.get_dessert_spoon()).format_int(1).to_string()
-    ) == "1 dstspn"
+    ) in (
+        "1 dstspn",  # ICU4C<74
+        "1 dsp",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.get_dessert_spoon_imperial())
         .format_int(1)
         .to_string()
-    ) == "1 dstspn Imp"
+    ) in (
+        "1 dstspn Imp",  # ICU4C<74
+        "1 dsp-Imp.",  # ICU4C>=74
+    )
 
     assert (fmt.unit(MeasureUnit.get_dot()).format_int(1).to_string()) in (
         "1 dot",  # ICU4C<69
-        "1 px",
-    )  # ICU4C>=69
+        "1 px",  # ICU4C>=69
+    )
 
-    assert (
-        fmt.unit(MeasureUnit.get_dram()).format_int(1).to_string()
-    ) == "1 dram fl"
+    assert (fmt.unit(MeasureUnit.get_dram()).format_int(1).to_string()) in (
+        "1 dram fl",  # ICU4C<69
+        "1 dram",  # ICU4C>=69
+    )
 
-    assert (
-        fmt.unit(MeasureUnit.get_drop()).format_int(1).to_string()
-    ) == "1 drop"
+    assert (fmt.unit(MeasureUnit.get_drop()).format_int(1).to_string()) in (
+        "1 drop",  # ICU4C<74
+        "1 dr",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.get_earth_radius()).format_int(1).to_string()
     ) == "1 R\u2295"  # 1 R⊕
 
-    assert (
-        fmt.unit(MeasureUnit.get_grain()).format_int(1).to_string()
-    ) == "1 grain"
+    assert (fmt.unit(MeasureUnit.get_grain()).format_int(1).to_string()) in (
+        "1 grain",  # ICU4C<74
+        "1 gr",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.get_jigger()).format_int(1).to_string()
@@ -1751,13 +1777,17 @@ def test_measure_unit_68():
         fmt.unit(MeasureUnit.get_lumen()).format_int(1).to_string()
     ) == "1 lm"
 
-    assert (
-        fmt.unit(MeasureUnit.get_pinch()).format_int(1).to_string()
-    ) == "1 pinch"
+    assert (fmt.unit(MeasureUnit.get_pinch()).format_int(1).to_string()) in (
+        "1 pinch",  # ICU4C<74
+        "1 pn",  # ICU4C>=74
+    )
 
     assert (
         fmt.unit(MeasureUnit.get_quart_imperial()).format_int(1).to_string()
-    ) == "1 qt Imp."
+    ) in (
+        "1 qt Imp.",  # ICU4C<74
+        "1 qt-Imp.",  # ICU4C>=74
+    )
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")

@@ -114,8 +114,14 @@ def test_api():
     # U+5146: CJK Unified Ideograph-5146 (= 10^12)
     # U+4EAC: CJK Unified Ideograph-4EAC (= 10^16)
     assert u_get_numeric_value(ord("1")) == 1.0
-    assert u_get_numeric_value(0x5146) == 1000000000000.0
-    assert u_get_numeric_value(0x4EAC) == U_NO_NUMERIC_VALUE
+    assert u_get_numeric_value(0x5146) in (
+        10**12,
+        1000000.0,  # ICU4C==74rc
+    )
+    assert u_get_numeric_value(0x4EAC) in (
+        U_NO_NUMERIC_VALUE,  # ICU4C<74
+        10**16,  # ICU4C>=74
+    )
 
     assert u_get_property_enum("gcm") == UProperty.UCHAR_GENERAL_CATEGORY_MASK
 
