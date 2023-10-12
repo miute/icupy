@@ -387,6 +387,189 @@ def test_api_58():
         )
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_are_bidi_confusable():
+    # From icu/source/test/intltest/itspoof.cpp
+    # fmt: off
+    from icupy.icu import (
+        USPOOF_SINGLE_SCRIPT_CONFUSABLE, UBiDiDirection,
+        uspoof_are_bidi_confusable, uspoof_are_bidi_confusable_unicode_string,
+        uspoof_are_bidi_confusable_utf8,
+    )
+
+    # fmt: on
+    id1 = "J-2"
+    id2 = "J\u200F2\u2013\u200F"
+
+    with gc(uspoof_open(), uspoof_close) as sc:
+        # uint32_t uspoof_areBidiConfusable(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const UChar *id1,
+        #       int32_t length1,
+        #       const UChar *id2,
+        #       int32_t length2,
+        #       UErrorCode *status
+        # )
+        result = uspoof_are_bidi_confusable(
+            sc, UBiDiDirection.UBIDI_LTR, id1, -1, id2, -1
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        result = uspoof_are_bidi_confusable(
+            sc, UBiDiDirection.UBIDI_LTR, id1, len(id1), id2, len(id2)
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        # uint32_t uspoof_areBidiConfusableUnicodeString(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const icu::UnicodeString &s1,
+        #       const icu::UnicodeString &s2,
+        #       UErrorCode *status
+        # )
+        result = uspoof_are_bidi_confusable_unicode_string(
+            sc,
+            UBiDiDirection.UBIDI_LTR,
+            UnicodeString(id1),
+            UnicodeString(id2),
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        result = uspoof_are_bidi_confusable_unicode_string(
+            sc,
+            UBiDiDirection.UBIDI_LTR,
+            id1,
+            UnicodeString(id2),
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        result = uspoof_are_bidi_confusable_unicode_string(
+            sc,
+            UBiDiDirection.UBIDI_LTR,
+            UnicodeString(id1),
+            id2,
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        result = uspoof_are_bidi_confusable_unicode_string(
+            sc,
+            UBiDiDirection.UBIDI_LTR,
+            id1,
+            id2,
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        b1 = id1.encode()
+        b2 = id2.encode()
+
+        # uint32_t uspoof_areBidiConfusableUTF8(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const char *id1,
+        #       int32_t length1,
+        #       const char *id2,
+        #       int32_t length2,
+        #       UErrorCode *status
+        # )
+        result = uspoof_are_bidi_confusable_utf8(
+            sc, UBiDiDirection.UBIDI_LTR, b1, -1, b2, -1
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+        result = uspoof_are_bidi_confusable_utf8(
+            sc, UBiDiDirection.UBIDI_LTR, b1, len(b1), b2, len(b2)
+        )
+        assert isinstance(result, int)
+        assert result == USPOOF_SINGLE_SCRIPT_CONFUSABLE
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_get_bidi_skeleton():
+    # From icu/source/test/intltest/itspoof.cpp
+    # fmt: off
+    from icupy.icu import (
+        UBiDiDirection, uspoof_get_bidi_skeleton,
+        uspoof_get_bidi_skeleton_unicode_string, uspoof_get_bidi_skeleton_utf8,
+    )
+
+    # fmt: on
+    id_ = "A1<שׂ"
+
+    with gc(uspoof_open(), uspoof_close) as sc:
+        # int32_t uspoof_getBidiSkeleton(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const UChar *id,
+        #       int32_t length,
+        #       UChar *dest,
+        #       int32_t destCapacity,
+        #       UErrorCode *status
+        # )
+        dest = uspoof_get_bidi_skeleton(sc, UBiDiDirection.UBIDI_LTR, id_, -1)
+        assert isinstance(dest, str)
+        assert dest == "Al<ש\u0307"
+
+        dest = uspoof_get_bidi_skeleton(
+            sc, UBiDiDirection.UBIDI_LTR, id_, len(id_)
+        )
+        assert isinstance(dest, str)
+        assert dest == "Al<ש\u0307"
+
+        dest = UnicodeString()
+
+        # icu::UnicodeString &uspoof_getBidiSkeletonUnicodeString(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const icu::UnicodeString &id,
+        #       icu::UnicodeString &dest,
+        #       UErrorCode *status
+        # )
+        result = uspoof_get_bidi_skeleton_unicode_string(
+            sc, UBiDiDirection.UBIDI_LTR, UnicodeString(id_), dest
+        )
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(dest)
+        assert dest == "Al<ש\u0307"
+
+        result = uspoof_get_bidi_skeleton_unicode_string(
+            sc, UBiDiDirection.UBIDI_LTR, id_, dest
+        )
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(dest)
+        assert dest == "Al<ש\u0307"
+
+        b = id_.encode()
+
+        # int32_t uspoof_getBidiSkeletonUTF8(
+        #       const USpoofChecker *sc,
+        #       UBiDiDirection direction,
+        #       const char *id,
+        #       int32_t length,
+        #       char *dest,
+        #       int32_t destCapacity,
+        #       UErrorCode *status
+        # )
+        dest = uspoof_get_bidi_skeleton_utf8(
+            sc, UBiDiDirection.UBIDI_LTR, b, -1
+        )
+        assert isinstance(dest, bytes)
+        assert dest.decode() == "Al<ש\u0307"
+
+        dest = uspoof_get_bidi_skeleton_utf8(
+            sc, UBiDiDirection.UBIDI_LTR, b, len(b)
+        )
+        assert isinstance(dest, bytes)
+        assert dest.decode() == "Al<ש\u0307"
+
+
 def test_open_from_serialized():
     with gc(uspoof_open(), uspoof_close) as sc:
         # int32_t uspoof_serialize(

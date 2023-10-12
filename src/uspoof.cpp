@@ -312,6 +312,94 @@ void init_uspoof(py::module &m) {
       },
       py::return_value_policy::reference, py::arg("sc"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  m.def(
+      "uspoof_are_bidi_confusable",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const UChar *id1, int32_t length1, const UChar *id2,
+         int32_t length2) {
+        ErrorCode error_code;
+        auto result = uspoof_areBidiConfusable(sc, direction, id1, length1, id2, length2, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("id1"), py::arg("length1"), py::arg("id2"), py::arg("length2"));
+
+  m.def(
+      "uspoof_are_bidi_confusable_unicode_string",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const icupy::UnicodeStringVariant &s1,
+         const icupy::UnicodeStringVariant &s2) {
+        ErrorCode error_code;
+        auto result = uspoof_areBidiConfusableUnicodeString(sc, direction, icupy::to_unistr(s1), icupy::to_unistr(s2),
+                                                            error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("s1"), py::arg("s2"));
+
+  m.def(
+      "uspoof_are_bidi_confusable_utf8",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const py::bytes &id1, int32_t length1,
+         const py::bytes &id2, int32_t length2) {
+        const auto s1 = static_cast<std::string>(id1);
+        const auto s2 = static_cast<std::string>(id2);
+        ErrorCode error_code;
+        auto result = uspoof_areBidiConfusableUTF8(sc, direction, s1.data(), length1, s2.data(), length2, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("id1"), py::arg("length1"), py::arg("id2"), py::arg("length2"));
+
+  m.def(
+      "uspoof_get_bidi_skeleton",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const UChar *id_, int32_t length) {
+        ErrorCode error_code;
+        auto dest_size = uspoof_getBidiSkeleton(sc, direction, id_, length, nullptr, 0, error_code);
+        std::u16string dest(dest_size, u'\0');
+        error_code.reset();
+        uspoof_getBidiSkeleton(sc, direction, id_, length, dest.data(), dest_size, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return dest;
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("id_"), py::arg("length") = -1);
+
+  m.def(
+      "uspoof_get_bidi_skeleton_unicode_string",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const icupy::UnicodeStringVariant &id_,
+         UnicodeString &dest) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = uspoof_getBidiSkeletonUnicodeString(sc, direction, icupy::to_unistr(id_), dest, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("id_"), py::arg("dest"));
+
+  m.def(
+      "uspoof_get_bidi_skeleton_utf8",
+      [](const _USpoofCheckerPtr &sc, UBiDiDirection direction, const py::bytes &id_, int32_t length) {
+        const auto s = static_cast<std::string>(id_);
+        ErrorCode error_code;
+        auto dest_size = uspoof_getBidiSkeletonUTF8(sc, direction, s.data(), length, nullptr, 0, error_code);
+        std::string dest(dest_size, '\0');
+        error_code.reset();
+        uspoof_getBidiSkeletonUTF8(sc, direction, s.data(), length, dest.data(), dest_size, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("sc"), py::arg("direction"), py::arg("id_"), py::arg("length") = -1);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
   m.def(
       "uspoof_get_check_result_checks",

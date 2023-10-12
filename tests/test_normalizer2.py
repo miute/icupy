@@ -267,3 +267,12 @@ def test_icu_49():
     decomposition = UnicodeString()
     assert n2.get_raw_decomposition(0xC5, decomposition)
     assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_icu_74():
+    # static const Normalizer2 *
+    # icu::Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode&)
+    n2 = Normalizer2.get_nfkc_simple_casefold_instance()
+    assert isinstance(n2, Normalizer2)
+    assert n2.normalize("aA\u0308 ßẞ \u1F80\u1F88") == "aä ßß \u1F80\u1F80"

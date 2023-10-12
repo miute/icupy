@@ -1888,6 +1888,28 @@ def test_measure_unit_73():
     ) == "B 1"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_measure_unit_74():
+    fmt = NumberFormatter.with_locale(Locale.get_us())
+
+    # static MeasureUnit *
+    # icu::MeasureUnit::createGasolineEnergyDensity(UErrorCode&)
+    assert (
+        fmt.unit(MeasureUnit.create_gasoline_energy_density())
+        .format_int(1)
+        .to_string()
+        == "1 gas-equiv"
+    )
+
+    # static MeasureUnit icu::MeasureUnit::getGasolineEnergyDensity()
+    assert (
+        fmt.unit(MeasureUnit.get_gasoline_energy_density())
+        .format_int(1)
+        .to_string()
+        == "1 gas-equiv"
+    )
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(
