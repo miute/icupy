@@ -34,6 +34,12 @@ void init_measure(py::module &m) {
       "__eq__", [](const Measure &self, const UObject &other) { return self == other; }, py::is_operator(),
       py::arg("other"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  meas.def(
+      "__ne__", [](const Measure &self, const UObject &other) { return self != other; }, py::is_operator(),
+      py::arg("other"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
   meas.def("clone", &Measure::clone);
 
   meas.def("get_number", &Measure::getNumber);

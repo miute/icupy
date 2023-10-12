@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        icu-version: ["70.1", "71.1", "72.1", "73.2"]
         os: [ubuntu-22.04, windows-latest]
+        icu-version: ["70.1", "71.1", "72.1", "73.2", "74rc"]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
