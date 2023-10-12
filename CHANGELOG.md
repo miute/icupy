@@ -1,5 +1,10 @@
 # Changelog
 
+## WIP
+
+- NEW
+  - Add support for Python 3.12
+
 ## v0.17.0 / 2023-07-10
 
 - FIXED
