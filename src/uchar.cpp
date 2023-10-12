@@ -396,6 +396,9 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_KAWI", UBLOCK_KAWI)
       .value("UBLOCK_NAG_MUNDARI", UBLOCK_NAG_MUNDARI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+      .value("UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I", UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -863,6 +866,13 @@ void init_uchar(py::module &m) {
       .value("U_LB_E_MODIFIER", U_LB_E_MODIFIER)
       .value("U_LB_ZWJ", U_LB_ZWJ)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+      .value("U_LB_AKSARA", U_LB_AKSARA, "[AK]")
+      .value("U_LB_AKSARA_PREBASE", U_LB_AKSARA_PREBASE, "[AP]")
+      .value("U_LB_AKSARA_START", U_LB_AKSARA_START, "[AS]")
+      .value("U_LB_VIRAMA_FINAL", U_LB_VIRAMA_FINAL, "[VF]")
+      .value("U_LB_VIRAMA", U_LB_VIRAMA, "[VI]")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_LB_COUNT", U_LB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -1126,6 +1136,17 @@ void init_uchar(py::module &m) {
              "Binary property of strings RGI_Emoji.\n\n  "
              "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+      .value("UCHAR_IDS_UNARY_OPERATOR", UCHAR_IDS_UNARY_OPERATOR,
+             "Binary property IDS_Unary_Operator.\n\n"
+             "For programmatic determination of Ideographic Description Sequences.")
+      .value("UCHAR_ID_COMPAT_MATH_START", UCHAR_ID_COMPAT_MATH_START,
+             "Binary property ID_Compat_Math_Start.\n\n"
+             "Used in mathematical identifier profile in UAX #31.")
+      .value("UCHAR_ID_COMPAT_MATH_CONTINUE", UCHAR_ID_COMPAT_MATH_CONTINUE,
+             "Binary property ID_Compat_Math_Continue.\n\n"
+             "Used in mathematical identifier profile in UAX #31.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")

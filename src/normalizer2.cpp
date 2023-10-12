@@ -91,6 +91,20 @@ void init_normalizer2(py::module &m) {
       },
       py::return_value_policy::reference);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  n2.def_static(
+      "get_nfkc_simple_casefold_instance",
+      []() {
+        ErrorCode error_code;
+        auto result = Normalizer2::getNFKCSimpleCasefoldInstance(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::return_value_policy::reference);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
   n2.def_static(
       "get_nfkd_instance",
       []() {

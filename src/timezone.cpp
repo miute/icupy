@@ -219,6 +219,20 @@ void init_timezone(py::module &m) {
 
   tz.def_static("get_gmt", &TimeZone::getGMT, py::return_value_policy::reference);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  tz.def_static(
+      "get_iana_id",
+      [](const icupy::UnicodeStringVariant &id_, UnicodeString &iana_id) -> UnicodeString & {
+        ErrorCode error_code;
+        auto &result = TimeZone::getIanaID(icupy::to_unistr(id_), iana_id, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("id_"), py::arg("iana_id"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
   tz.def("get_id", &TimeZone::getID, py::arg("id_"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)

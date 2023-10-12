@@ -703,6 +703,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  mu.def_static("create_gasoline_energy_density", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createGasolineEnergyDensity(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   mu.def_static("create_generic_temperature", []() {
     ErrorCode error_code;
@@ -2301,7 +2312,13 @@ void init_measunit(py::module &m) {
   mu.def_static("get_gallon", &MeasureUnit::getGallon);
 
   mu.def_static("get_gallon_imperial", &MeasureUnit::getGallonImperial);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 74)
+  mu.def_static("get_gasoline_energy_density", &MeasureUnit::getGasolineEnergyDensity);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_generic_temperature", &MeasureUnit::getGenericTemperature);
 
   mu.def_static("get_gforce", &MeasureUnit::getGForce);

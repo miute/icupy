@@ -3,7 +3,31 @@
 ## WIP
 
 - NEW
+  - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-rc) (partial)
   - Add support for Python 3.12
+- ADDED
+  - Add `icupy.icu.Measure.__ne__(other: UObject)`
+  - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`
+  - Add `icupy.icu.MeasureUnit.get_gasoline_energy_density()`
+  - Add `icupy.icu.Normalizer2.get_nfkc_simple_casefold_instance()`
+  - Add `icupy.icu.TimeZone.get_iana_id(id_: UnicodeString | str, iana_id: UnicodeString)`
+  - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I`
+  - Add `icupy.icu.ULineBreak.U_LB_AKSARA_PREBASE`
+  - Add `icupy.icu.ULineBreak.U_LB_AKSARA_START`
+  - Add `icupy.icu.ULineBreak.U_LB_AKSARA`
+  - Add `icupy.icu.ULineBreak.U_LB_VIRAMA_FINAL`
+  - Add `icupy.icu.ULineBreak.U_LB_VIRAMA`
+  - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_CONTINUE`
+  - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_START`
+  - Add `icupy.icu.UProperty.UCHAR_IDS_UNARY_OPERATOR`
+  - Add `icupy.icu.uspoof_are_bidi_confusable_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, s1: UnicodeString | str, s2: UnicodeString | str)`
+  - Add `icupy.icu.uspoof_are_bidi_confusable_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: bytes, length1: int, id2: bytes, length2: int)`
+  - Add `icupy.icu.uspoof_are_bidi_confusable(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: str, length1: int, id2: str, length2: int)`
+  - Add `icupy.icu.uspoof_get_bidi_skeleton_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: UnicodeString | str, dest: UnicodeString)`
+  - Add `icupy.icu.uspoof_get_bidi_skeleton_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: bytes, length: int = -1)`
+  - Add `icupy.icu.uspoof_get_bidi_skeleton(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: str, length: int = -1)`
+- CHANGED
+  - Update pybind11 from 2.10.4 to 2.11.1
 
 ## v0.17.0 / 2023-07-10
 

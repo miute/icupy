@@ -1555,6 +1555,26 @@ def test_time_zone_detect_host_time_zone():
     assert isinstance(zone, BasicTimeZone)
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_time_zone_get_iana_id():
+    # static UnicodeString &
+    # icu::TimeZone::getIanaID(
+    #       const UnicodeString &id,
+    #       UnicodeString &ianaID,
+    #       UErrorCode &status
+    # )
+    iana_id = UnicodeString()
+    result = TimeZone.get_iana_id(UnicodeString("Asia/Calcutta"), iana_id)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(iana_id)
+    assert iana_id == "Asia/Kolkata"
+
+    result = TimeZone.get_iana_id("Asia/Calcutta", iana_id)
+    assert isinstance(result, UnicodeString)
+    assert id(result) == id(iana_id)
+    assert iana_id == "Asia/Kolkata"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_time_zone_get_unknown():
     # static const TimeZone &icu::TimeZone::getUnknown()
