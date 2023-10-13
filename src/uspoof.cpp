@@ -169,9 +169,11 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_are_confusable_utf8",
-      [](const _USpoofCheckerPtr &sc, const char *id1, int32_t length1, const char *id2, int32_t length2) {
+      [](const _USpoofCheckerPtr &sc, const py::bytes &id1, int32_t length1, const py::bytes &id2, int32_t length2) {
+        const auto s1 = static_cast<std::string>(id1);
+        const auto s2 = static_cast<std::string>(id2);
         ErrorCode error_code;
-        auto result = uspoof_areConfusableUTF8(sc, id1, length1, id2, length2, error_code);
+        auto result = uspoof_areConfusableUTF8(sc, s1.data(), length1, s2.data(), length2, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -219,10 +221,11 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_check2_utf8",
-      [](const _USpoofCheckerPtr &sc, const char *id, int32_t length,
+      [](const _USpoofCheckerPtr &sc, const py::bytes &id_, int32_t length,
          std::optional<_USpoofCheckResultPtr> &check_result) {
+        const auto s = static_cast<std::string>(id_);
         ErrorCode error_code;
-        auto result = uspoof_check2UTF8(sc, id, length, check_result.value_or(nullptr), error_code);
+        auto result = uspoof_check2UTF8(sc, s.data(), length, check_result.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -245,9 +248,10 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_check_utf8",
-      [](const _USpoofCheckerPtr &sc, const char *id, int32_t length) {
+      [](const _USpoofCheckerPtr &sc, const py::bytes &id_, int32_t length) {
+        const auto s = static_cast<std::string>(id_);
         ErrorCode error_code;
-        auto result = uspoof_checkUTF8(sc, id, length, nullptr, error_code);
+        auto result = uspoof_checkUTF8(sc, s.data(), length, nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -527,16 +531,17 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_get_skeleton_utf8",
-      [](const _USpoofCheckerPtr &sc, uint32_t type, const char *id, int32_t length) {
+      [](const _USpoofCheckerPtr &sc, uint32_t type, const py::bytes &id_, int32_t length) {
+        const auto s = static_cast<std::string>(id_);
         ErrorCode error_code;
-        auto dest_size = uspoof_getSkeletonUTF8(sc, type, id, length, nullptr, 0, error_code);
-        std::string result(dest_size, '\0');
+        auto dest_size = uspoof_getSkeletonUTF8(sc, type, s.data(), length, nullptr, 0, error_code);
+        std::string dest(dest_size, '\0');
         error_code.reset();
-        uspoof_getSkeletonUTF8(sc, type, id, length, result.data(), dest_size, error_code);
+        uspoof_getSkeletonUTF8(sc, type, s.data(), length, dest.data(), dest_size, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return result;
+        return py::bytes(dest);
       },
       py::arg("sc"), py::arg("type_"), py::arg("id_"), py::arg("length") = -1);
 

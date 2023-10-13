@@ -153,7 +153,7 @@ def test_append_replacement():
     # )
     s2 = UnicodeString()
     dest2 = utext_open_unicode_string(None, s2)
-    replacement2 = utext_open_utf8(None, "abc", -1)
+    replacement2 = utext_open_utf8(None, "abc".encode(), -1)
     result = matcher.append_replacement(dest2, replacement2)
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)
@@ -191,7 +191,7 @@ def test_append_tail():
     # )
     s2 = UnicodeString()
     dest2 = utext_open_unicode_string(None, s2)
-    replacement2 = utext_open_utf8(None, "abc", -1)
+    replacement2 = utext_open_utf8(None, "abc".encode(), -1)
     matcher.append_replacement(dest2, replacement2)
     result = matcher.append_tail(dest2)
     assert result == dest2
@@ -400,7 +400,7 @@ def test_regex_matcher():
     #       uint32_t flags,
     #       UErrorCode &status
     # )
-    regexp2 = utext_open_utf8(None, s, -1)
+    regexp2 = utext_open_utf8(None, s.encode(), -1)
     test2 = RegexMatcher(regexp2, URegexpFlag.UREGEX_CASE_INSENSITIVE)
     pattern2 = test2.pattern()
     assert pattern2.pattern() == s
@@ -431,8 +431,8 @@ def test_regex_matcher():
     #       uint32_t flags,
     #       UErrorCode &status
     # )
-    regexp4 = utext_open_utf8(None, s, -1)
-    src4 = utext_open_utf8(None, "foo bar baz", -1)
+    regexp4 = utext_open_utf8(None, s.encode(), -1)
+    src4 = utext_open_utf8(None, "foo bar baz".encode(), -1)
     test4 = RegexMatcher(regexp4, src4, URegexpFlag.UREGEX_CASE_INSENSITIVE)
     pattern4 = test4.pattern()
     assert pattern4.pattern() == s
@@ -510,11 +510,11 @@ def test_replace_all():
     #       UText *dest,
     #       UErrorCode &status
     # )
-    replacement = utext_open_utf8(None, "xyz", -1)
+    replacement = utext_open_utf8(None, "xyz".encode(), -1)
     dest = matcher.replace_all(replacement, None)
     assert utext_extract(dest, 0, utext_native_length(dest)) == ".xyz..xyz.."
 
-    utext_open_utf8(replacement, "ABC", -1)
+    utext_open_utf8(replacement, "ABC".encode(), -1)
     utext_replace(dest, 0, utext_native_length(dest), "", -1)
     result = matcher.replace_all(replacement, dest)
     assert result == dest
@@ -547,11 +547,11 @@ def test_replace_first():
     #       UText *dest,
     #       UErrorCode &status
     # )
-    replacement = utext_open_utf8(None, "xyz", -1)
+    replacement = utext_open_utf8(None, "xyz".encode(), -1)
     dest = matcher.replace_first(replacement, None)
     assert utext_extract(dest, 0, utext_native_length(dest)) == ".xyz..abc.."
 
-    utext_open_utf8(replacement, "ABC", -1)
+    utext_open_utf8(replacement, "ABC".encode(), -1)
     utext_replace(dest, 0, utext_native_length(dest), "", -1)
     result = matcher.replace_first(replacement, dest)
     assert result == dest
@@ -603,7 +603,7 @@ def test_reset():
 
     # [4]
     # RegexMatcher &icu::RegexMatcher::reset(UText *input)
-    src4 = utext_open_utf8(None, "abc xyz", -1)
+    src4 = utext_open_utf8(None, "abc xyz".encode(), -1)
     result = matcher.reset(src4)
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)

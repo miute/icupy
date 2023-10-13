@@ -26,8 +26,8 @@ def test_api():
     # USpoofChecker *uspoof_open(UErrorCode *status)
     # void uspoof_close(USpoofChecker *sc)
     with gc(uspoof_open(), uspoof_close) as sc:
-        sc_mixed = "\x73\u0441"
-        sc_latin = "\x73\x63"
+        sc_mixed = "\x73\u0441"  # "sc", with Cyrillic 'c'
+        sc_latin = "\x73\x63"  # "sc", plain ascii
 
         # int32_t uspoof_areConfusable(
         #       const USpoofChecker *sc,
@@ -39,6 +39,12 @@ def test_api():
         # )
         assert (
             uspoof_are_confusable(sc, sc_latin, -1, sc_mixed, -1)
+            == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+        )
+        assert (
+            uspoof_are_confusable(
+                sc, sc_latin, len(sc_latin), sc_mixed, len(sc_mixed)
+            )
             == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
         )
 
@@ -56,6 +62,9 @@ def test_api():
             | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
         )
 
+        b_sc_latin = sc_latin.encode()
+        b_sc_mixed = sc_mixed.encode()
+
         # int32_t uspoof_areConfusableUTF8(
         #       const USpoofChecker *sc,
         #       const char *id1,
@@ -65,7 +74,13 @@ def test_api():
         #       UErrorCode *status
         # )
         assert (
-            uspoof_are_confusable_utf8(sc, sc_latin, -1, sc_mixed, -1)
+            uspoof_are_confusable_utf8(sc, b_sc_latin, -1, b_sc_mixed, -1)
+            == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+        )
+        assert (
+            uspoof_are_confusable_utf8(
+                sc, b_sc_latin, len(b_sc_latin), b_sc_mixed, len(b_sc_mixed)
+            )
             == USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
         )
 
@@ -78,6 +93,10 @@ def test_api():
         # )
         assert (
             uspoof_check(sc, sc_mixed, -1) == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
+        assert (
+            uspoof_check(sc, sc_mixed, len(sc_mixed))
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
         )
         assert (
             uspoof_check(sc, sc_mixed)  # length is optional
@@ -103,11 +122,15 @@ def test_api():
         #       UErrorCode *status
         # )
         assert (
-            uspoof_check_utf8(sc, sc_mixed, -1)
+            uspoof_check_utf8(sc, b_sc_mixed, -1)
             == USpoofChecks.USPOOF_SINGLE_SCRIPT
         )
         assert (
-            uspoof_check_utf8(sc, sc_mixed)  # length is optional
+            uspoof_check_utf8(sc, b_sc_mixed, len(b_sc_mixed))
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
+        assert (
+            uspoof_check_utf8(sc, b_sc_mixed)  # length is optional
             == USpoofChecks.USPOOF_SINGLE_SCRIPT
         )
 
@@ -147,7 +170,7 @@ def test_api():
         # )
         assert uspoof_get_checks(sc) == USpoofChecks.USPOOF_ALL_CHECKS
 
-        lll_latin_a = "\x6c\x49\x31"
+        lll_latin_a = "\x6c\x49\x31"  # lI1, all ASCII
         lll_skel = "\x6c\x6c\x6c"
 
         # int32_t uspoof_getSkeleton(
@@ -161,6 +184,10 @@ def test_api():
         # )
         type_ = USpoofChecks.USPOOF_ANY_CASE  # Deprecated in ICU 58
         dest = uspoof_get_skeleton(sc, type_, lll_latin_a, -1)
+        assert isinstance(dest, str)
+        assert dest == lll_skel
+
+        dest = uspoof_get_skeleton(sc, type_, lll_latin_a, len(lll_latin_a))
         assert isinstance(dest, str)
         assert dest == lll_skel
 
@@ -179,6 +206,8 @@ def test_api():
         assert id(result) == id(dest)
         assert dest == lll_skel
 
+        b_lll_latin_a = lll_latin_a.encode()
+
         # int32_t uspoof_getSkeletonUTF8(
         #       const USpoofChecker *sc,
         #       uint32_t type,
@@ -188,9 +217,15 @@ def test_api():
         #       int32_t destCapacity,
         #       UErrorCode *status
         # )
-        dest = uspoof_get_skeleton_utf8(sc, type_, lll_latin_a, -1)
-        assert isinstance(dest, str)
-        assert dest == lll_skel
+        dest = uspoof_get_skeleton_utf8(sc, type_, b_lll_latin_a, -1)
+        assert isinstance(dest, bytes)
+        assert dest.decode() == lll_skel
+
+        dest = uspoof_get_skeleton_utf8(
+            sc, type_, b_lll_latin_a, len(b_lll_latin_a)
+        )
+        assert isinstance(dest, bytes)
+        assert dest.decode() == lll_skel
 
         # void uspoof_setAllowedLocales(
         #       USpoofChecker *sc,
@@ -297,6 +332,8 @@ def test_api_58():
     with gc(uspoof_open(), uspoof_close) as sc, gc(
         uspoof_open_check_result(), uspoof_close_check_result
     ) as check_result:
+        id_ = "m\u0307"
+
         # int32_t uspoof_check2(
         #       const USpoofChecker *sc,
         #       const UChar *id,
@@ -304,10 +341,14 @@ def test_api_58():
         #       USpoofCheckResult *checkResult,
         #       UErrorCode *status
         # )
-        assert uspoof_check2(sc, "m\u0307", -1, check_result) == 0
-        assert uspoof_check2(sc, "m\u0307", -1, None) == 0
-        assert uspoof_check2(sc, "m\u0307", -1) == 0  # checkResult is optional
-        assert uspoof_check2(sc, "m\u0307") == 0  # length is optional
+        assert uspoof_check2(sc, id_, -1, check_result) == 0
+        assert uspoof_check2(sc, id_, -1, None) == 0
+        assert uspoof_check2(sc, id_, -1) == 0  # checkResult is optional
+        assert uspoof_check2(sc, id_) == 0  # length is optional
+
+        assert uspoof_check2(sc, id_, len(id_), check_result) == 0
+        assert uspoof_check2(sc, id_, len(id_), None) == 0
+        assert uspoof_check2(sc, id_, len(id_)) == 0  # checkResult is optional
 
         # int32_t uspoof_check2UnicodeString(
         #       const USpoofChecker *sc,
@@ -316,18 +357,15 @@ def test_api_58():
         #       UErrorCode *status
         # )
         assert (
-            uspoof_check2_unicode_string(
-                sc, UnicodeString("m\u0307"), check_result
-            )
+            uspoof_check2_unicode_string(sc, UnicodeString(id_), check_result)
             == 0
         )
+        assert uspoof_check2_unicode_string(sc, UnicodeString(id_), None) == 0
         assert (
-            uspoof_check2_unicode_string(sc, UnicodeString("m\u0307"), None)
-            == 0
-        )
-        assert (
-            uspoof_check2_unicode_string(sc, UnicodeString("m\u0307")) == 0
+            uspoof_check2_unicode_string(sc, UnicodeString(id_)) == 0
         )  # checkResult is optional
+
+        b_id = id_.encode()
 
         # int32_t uspoof_check2UTF8(
         #       const USpoofChecker *sc,
@@ -336,12 +374,16 @@ def test_api_58():
         #       USpoofCheckResult *checkResult,
         #       UErrorCode *status
         # )
-        assert uspoof_check2_utf8(sc, "m\u0307", -1, check_result) == 0
-        assert uspoof_check2_utf8(sc, "m\u0307", -1, None) == 0
+        assert uspoof_check2_utf8(sc, b_id, -1, check_result) == 0
+        assert uspoof_check2_utf8(sc, b_id, -1, None) == 0
+        assert uspoof_check2_utf8(sc, b_id, -1) == 0  # checkResult is optional
+        assert uspoof_check2_utf8(sc, b_id) == 0  # length is optional
+
+        assert uspoof_check2_utf8(sc, b_id, len(b_id), check_result) == 0
+        assert uspoof_check2_utf8(sc, b_id, len(b_id), None) == 0
         assert (
-            uspoof_check2_utf8(sc, "m\u0307", -1) == 0
+            uspoof_check2_utf8(sc, b_id, len(b_id)) == 0
         )  # checkResult is optional
-        assert uspoof_check2_utf8(sc, "m\u0307") == 0  # length is optional
 
         # int32_t uspoof_getCheckResultChecks(
         #       const USpoofCheckResult *checkResult,
@@ -350,7 +392,7 @@ def test_api_58():
         assert uspoof_get_check_result_checks(check_result) == 0
 
         assert (
-            uspoof_check2_utf8(sc, "i\u0307", -1, check_result)
+            uspoof_check2_utf8(sc, "i\u0307".encode(), -1, check_result)
             == USpoofChecks.USPOOF_HIDDEN_OVERLAY
         )
         assert (

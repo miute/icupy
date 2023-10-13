@@ -576,7 +576,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       py::arg("utf32"), py::arg("length"));
 
   us.def_static(
-      "from_utf8", [](const char *utf8) { return UnicodeString::fromUTF8(StringPiece(utf8)); }, py::arg("utf8"));
+      "from_utf8", [](const py::bytes &utf8) { return UnicodeString::fromUTF8(StringPiece(utf8)); }, py::arg("utf8"));
 
   us.def(
       "get_buffer",

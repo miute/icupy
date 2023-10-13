@@ -374,16 +374,16 @@ def test_open_unicode_string():
 
 
 def test_open_utf8():
-    s1 = "\x41\U0001f338\x42"
-    s2 = "\x61\U0001f338\x62"
-    with gc(utext_open_utf8(None, s1, -1), utext_close) as ut1:
+    b1 = "\x41\U0001f338\x42".encode()
+    b2 = "\x61\U0001f338\x62".encode()
+    with gc(utext_open_utf8(None, b1, -1), utext_close) as ut1:
         assert not utext_is_writable(ut1)
 
         dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
         assert dest1 == "A\U0001f338B"
 
         # Reset
-        ut2 = utext_open_utf8(ut1, s2, -1)
+        ut2 = utext_open_utf8(ut1, b2, -1)
         assert ut2 == ut1
 
         dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
@@ -393,14 +393,25 @@ def test_open_utf8():
         assert dest2 == "a\U0001f338b"
 
         # Keep-alive test
-        utext_open_utf8(ut1, s1, -1)
+        utext_open_utf8(ut1, b1, -1)
         dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
         assert dest1 == "A\U0001f338B"
 
-        # NULL string
-        utext_open_utf8(ut1, None, -1)
-        dest1 = utext_extract(ut1, 0, 4)
-        assert len(dest1) == 0
+    with gc(utext_open_utf8(None, b2, len(b2)), utext_close) as ut1:
+        dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
+        assert dest1 == "a\U0001f338b"
+
+    with gc(utext_open_utf8(None, b2, len(b2) - 1), utext_close) as ut1:
+        dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
+        assert dest1 == "a\U0001f338"
+
+    with gc(utext_open_utf8(None, b2, len(b2) - 2), utext_close) as ut1:
+        dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
+        assert dest1 == "a\ufffd"
+
+    with gc(utext_open_utf8(None, b2), utext_close) as ut1:
+        dest1 = utext_extract(ut1, 0, utext_native_length(ut1))
+        assert dest1 == "a\U0001f338b"
 
 
 def test_replace():

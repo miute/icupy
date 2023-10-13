@@ -28,6 +28,13 @@
   - Add `icupy.icu.uspoof_get_bidi_skeleton(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: str, length: int = -1)`
 - CHANGED
   - Update pybind11 from 2.10.4 to 2.11.1
+  - Change argument type from `str` to `bytes`
+    - `icupy.icu.UnicodeString.from_utf8(utf8: str)` → `icupy.icu.UnicodeString.from_utf8(utf8: bytes)`
+    - `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: str, length1: int, id2: str, length2: int)` → `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: bytes, length1: int, id2: bytes, length2: int)`
+    - `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: str, length: int, check_result: _USpoofCheckerPtr | None = None)` → `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int, check_result: _USpoofCheckerPtr | None = None)`
+    - `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: str, length: int = -1)` → `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int = -1)`
+    - `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: str, length: int = -1) -> str` → `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: bytes, length: int = -1) -> bytes`
+    - `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: str, length: int)` → `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: bytes, length: int = -1)`
 
 ## v0.17.0 / 2023-07-10
 

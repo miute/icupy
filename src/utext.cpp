@@ -354,16 +354,17 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_open_utf8",
-      [](std::optional<_UTextPtr> &ut, const char *s, int64_t length) {
+      [](std::optional<_UTextPtr> &ut, const py::bytes &s, int64_t length) {
+        auto text = std::make_shared<std::string>(
+            s, 0, length < 0 ? py::len(s) : std::min(static_cast<size_t>(length), py::len(s)));
         ErrorCode error_code;
-        auto text = std::make_shared<std::string>(s, s && length == -1 ? std::strlen(s) : std::max(int64_t{0}, length));
         auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UTextPtr>(p, text);
       },
-      py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length"));
+      py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length") = -1);
 
   m.def(
       "utext_previous32", [](_UTextPtr &ut) { return utext_previous32(ut); }, py::arg("ut"));

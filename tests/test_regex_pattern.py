@@ -97,7 +97,7 @@ def test_compile():
     #       uint32_t flags,
     #       UErrorCode &status
     # )
-    regex4 = utext_open_utf8(None, s, -1)
+    regex4 = utext_open_utf8(None, s.encode(), -1)
     test4 = RegexPattern.compile(regex4, URegexpFlag.UREGEX_CASE_INSENSITIVE)
     assert isinstance(test4, RegexPattern)
     assert test4.pattern() == s
@@ -111,7 +111,7 @@ def test_compile():
     #       UParseError &pe,
     #       UErrorCode &status
     # )
-    regex5 = utext_open_utf8(None, s, -1)
+    regex5 = utext_open_utf8(None, s.encode(), -1)
     pe = UParseError()
     test5 = RegexPattern.compile(
         regex5, URegexpFlag.UREGEX_CASE_INSENSITIVE, pe
@@ -127,7 +127,7 @@ def test_compile():
     #       UParseError &pe,
     #       UErrorCode &status
     # )
-    regex6 = utext_open_utf8(None, s, -1)
+    regex6 = utext_open_utf8(None, s.encode(), -1)
     pe = UParseError()
     test6 = RegexPattern.compile(regex6, pe)
     assert isinstance(test6, RegexPattern)
