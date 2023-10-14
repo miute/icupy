@@ -157,9 +157,9 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_are_confusable_unicode_string",
-      [](const _USpoofCheckerPtr &sc, const UnicodeString &s1, const UnicodeString &s2) {
+      [](const _USpoofCheckerPtr &sc, const icupy::UnicodeStringVariant &s1, const icupy::UnicodeStringVariant &s2) {
         ErrorCode error_code;
-        auto result = uspoof_areConfusableUnicodeString(sc, s1, s2, error_code);
+        auto result = uspoof_areConfusableUnicodeString(sc, icupy::to_unistr(s1), icupy::to_unistr(s2), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -209,9 +209,10 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_check2_unicode_string",
-      [](const _USpoofCheckerPtr &sc, const UnicodeString &id, std::optional<_USpoofCheckResultPtr> &check_result) {
+      [](const _USpoofCheckerPtr &sc, const icupy::UnicodeStringVariant &id_,
+         std::optional<_USpoofCheckResultPtr> &check_result) {
         ErrorCode error_code;
-        auto result = uspoof_check2UnicodeString(sc, id, check_result.value_or(nullptr), error_code);
+        auto result = uspoof_check2UnicodeString(sc, icupy::to_unistr(id_), check_result.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -236,9 +237,9 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_check_unicode_string",
-      [](const _USpoofCheckerPtr &sc, const UnicodeString &id) {
+      [](const _USpoofCheckerPtr &sc, const icupy::UnicodeStringVariant &id_) {
         ErrorCode error_code;
-        auto result = uspoof_checkUnicodeString(sc, id, nullptr, error_code);
+        auto result = uspoof_checkUnicodeString(sc, icupy::to_unistr(id_), nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -519,9 +520,10 @@ void init_uspoof(py::module &m) {
 
   m.def(
       "uspoof_get_skeleton_unicode_string",
-      [](const _USpoofCheckerPtr &sc, uint32_t type, const UnicodeString &id, UnicodeString &dest) -> UnicodeString & {
+      [](const _USpoofCheckerPtr &sc, uint32_t type_, const icupy::UnicodeStringVariant &id_,
+         UnicodeString &dest) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = uspoof_getSkeletonUnicodeString(sc, type, id, dest, error_code);
+        auto &result = uspoof_getSkeletonUnicodeString(sc, type_, icupy::to_unistr(id_), dest, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

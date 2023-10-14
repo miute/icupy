@@ -35,6 +35,12 @@
     - `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: str, length: int = -1)` → `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int = -1)`
     - `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: str, length: int = -1) -> str` → `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: bytes, length: int = -1) -> bytes`
     - `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: str, length: int)` → `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: bytes, length: int = -1)`
+- FIXED
+  - Change argument type from `UnicodeString` to `UnicodeString | str`
+    - `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString, s2: UnicodeString)` → `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString | str, s2: UnicodeString | str)`
+    - `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString, check_result: _USpoofCheckResultPtr | None = None)` → `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str, check_result: _USpoofCheckResultPtr | None = None)`
+    - `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString)` → `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str)`
+    - `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString, dest: UnicodeString)` → `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString | str, dest: UnicodeString)`
 
 ## v0.17.0 / 2023-07-10
 

@@ -49,7 +49,9 @@ def test_api():
         )
 
         s1 = UnicodeString("cxs")
-        s2 = UnicodeString("\\u0441\\u0445\\u0455").unescape()
+        s2 = UnicodeString(
+            "\\u0441\\u0445\\u0455"
+        ).unescape()  # Cyrillic "cxs"
 
         # int32_t uspoof_areConfusableUnicodeString(
         #       const USpoofChecker *sc,
@@ -58,6 +60,22 @@ def test_api():
         #       UErrorCode *status
         # )
         assert uspoof_are_confusable_unicode_string(sc, s1, s2) == (
+            USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
+        )
+        assert uspoof_are_confusable_unicode_string(sc, "cxs", s2) == (
+            USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
+        )
+        assert uspoof_are_confusable_unicode_string(
+            sc, s1, "\u0441\u0445\u0455"
+        ) == (
+            USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
+            | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
+        )
+        assert uspoof_are_confusable_unicode_string(
+            sc, "cxs", "\u0441\u0445\u0455"
+        ) == (
             USpoofChecks.USPOOF_MIXED_SCRIPT_CONFUSABLE
             | USpoofChecks.USPOOF_WHOLE_SCRIPT_CONFUSABLE
         )
@@ -111,6 +129,10 @@ def test_api():
         # )
         assert (
             uspoof_check_unicode_string(sc, UnicodeString(sc_mixed))
+            == USpoofChecks.USPOOF_SINGLE_SCRIPT
+        )
+        assert (
+            uspoof_check_unicode_string(sc, sc_mixed)
             == USpoofChecks.USPOOF_SINGLE_SCRIPT
         )
 
@@ -201,6 +223,13 @@ def test_api():
         dest = UnicodeString()
         result = uspoof_get_skeleton_unicode_string(
             sc, type_, UnicodeString(lll_latin_a), dest
+        )
+        assert isinstance(result, UnicodeString)
+        assert id(result) == id(dest)
+        assert dest == lll_skel
+
+        result = uspoof_get_skeleton_unicode_string(
+            sc, type_, lll_latin_a, dest
         )
         assert isinstance(result, UnicodeString)
         assert id(result) == id(dest)
@@ -363,6 +392,12 @@ def test_api_58():
         assert uspoof_check2_unicode_string(sc, UnicodeString(id_), None) == 0
         assert (
             uspoof_check2_unicode_string(sc, UnicodeString(id_)) == 0
+        )  # checkResult is optional
+
+        assert uspoof_check2_unicode_string(sc, id_, check_result) == 0
+        assert uspoof_check2_unicode_string(sc, id_, None) == 0
+        assert (
+            uspoof_check2_unicode_string(sc, id_) == 0
         )  # checkResult is optional
 
         b_id = id_.encode()
