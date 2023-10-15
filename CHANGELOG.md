@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## v0.18.0a1 / 2023-10-15
 
 - NEW
   - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-rc) (partial)
