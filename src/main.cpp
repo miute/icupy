@@ -71,6 +71,7 @@ void init_resbund(py::module &m);
 void init_schriter(py::module &m);
 void init_scientificnumberformatter(py::module &m);
 void init_selfmt(py::module &m);
+void init_simplenumberformatter(py::module &m, py::module &m2);
 void init_smpdtfmt(py::module &m);
 void init_sortkey(py::module &m);
 void init_strenum(py::module &m);
@@ -126,6 +127,7 @@ void init_usearch(py::module &m);
 void init_uset(py::module &m);
 void init_usetiter(py::module &m);
 void init_ushape(py::module &m);
+void init_usimplenumberformatter(py::module &m);
 void init_uspoof(py::module &m);
 void init_usprep(py::module &m);
 void init_ustring(py::module &m);
@@ -251,14 +253,15 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_selfmt(m); // icu::SelectFormat
 
-  init_displayoptions(m);               // icu::DisplayOptions
-  init_numberformatter(m, number);      // icu::number::NumberFormatter
-  init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
-  init_plurrule(m, pr);                 // icu::PluralRules
-  init_decimfmt(m, decfmt);             // icu::DecimalFormat
-  init_compactdecimalformat(m);         // icu::CompactDecimalFormat
-  init_plurfmt(m);                      // icu::PluralFormat
-  init_scientificnumberformatter(m);    // icu::ScientificNumberFormatter
+  init_displayoptions(m);                // icu::DisplayOptions
+  init_numberformatter(m, number);       // icu::number::NumberFormatter
+  init_numberrangeformatter(m, number);  // icu::number::NumberRangeFormatter
+  init_plurrule(m, pr);                  // icu::PluralRules
+  init_decimfmt(m, decfmt);              // icu::DecimalFormat
+  init_compactdecimalformat(m);          // icu::CompactDecimalFormat
+  init_plurfmt(m);                       // icu::PluralFormat
+  init_scientificnumberformatter(m);     // icu::ScientificNumberFormatter
+  init_simplenumberformatter(m, number); // icu::number::SimpleNumber, icu::number::SimpleNumberFormatter
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator
@@ -336,6 +339,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_usearch(m);
   init_uset(m);
   init_ushape(m);
+  init_usimplenumberformatter(m);
   init_uspoof(m);
   init_usprep(m);
   init_ustring(m);

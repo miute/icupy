@@ -1,10 +1,14 @@
 # Changelog
 
-## v0.18.0a1 / 2023-10-15
+## v0.18.0a2 / 2023-10-17
 
 - NEW
   - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-rc) (partial)
   - Add support for Python 3.12
+  - Implement icu::number::SimpleNumberFormatter class
+    - Add `icupy.icu.number.SimpleNumber` class
+    - Add `icupy.icu.number.SimpleNumberFormatter` class
+    - Add `icupy.icu.USimpleNumberSign` enum
 - ADDED
   - Add `icupy.icu.Measure.__ne__(other: UObject)`
   - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`

@@ -73,6 +73,7 @@ pybind11_add_module(
     schriter.cpp
     scientificnumberformatter.cpp
     selfmt.cpp
+    simplenumberformatter.cpp
     smpdtfmt.cpp
     sortkey.cpp
     strenum.cpp
@@ -128,6 +129,7 @@ pybind11_add_module(
     uset.cpp
     usetiter.cpp
     ushape.cpp
+    usimplenumberformatter.cpp
     uspoof.cpp
     usprep.cpp
     ustring.cpp
