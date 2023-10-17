@@ -4,10 +4,10 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
 #include <unicode/simplenumberformatter.h>
 #include <unicode/usimplenumberformatter.h>
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
 using namespace icu;
 using namespace icu::number;
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
 void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
