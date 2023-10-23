@@ -269,6 +269,34 @@ def test_icu_49():
     assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+def test_icu_60():
+    nfkc_cf = Normalizer2.get_nfkc_casefold_instance()
+    src = (
+        "  AÄA\u0308A\u0308\u00ad\u0323Ä\u0323,"
+        "\u00ad\u1100\u1161가\u11A8가\u3133  "
+    ).encode()
+    expected = "  aääạ\u0308ạ\u0308,가각갃  ".encode()
+
+    # void icu::Normalizer2::normalizeUTF8(
+    #       uint32_t options,
+    #       StringPiece src,
+    #       ByteSink &sink,
+    #       Edits *edits,
+    #       UErrorCode &errorCode
+    # ) const
+    result = nfkc_cf.normalize_utf8(0, src)
+    assert isinstance(result, bytes)
+    assert result == expected
+
+    # UBool icu::Normalizer2::isNormalizedUTF8(
+    #       StringPiece s,
+    #       UErrorCode &errorCode
+    # ) const
+    assert nfkc_cf.is_normalized_utf8(src) is False
+    assert nfkc_cf.is_normalized_utf8(expected) is True
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
 def test_icu_74():
     # static const Normalizer2 *

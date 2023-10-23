@@ -129,6 +129,18 @@ void init_tblcoll(py::module &m) {
       */
       ;
 
+  coll.def(
+      "compare_utf8",
+      [](Collator &self, const py::bytes &source, const py::bytes &target) {
+        ErrorCode error_code;
+        auto result = self.compareUTF8(StringPiece(source), StringPiece(target), error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("source"), py::arg("target"));
+
   coll.def_static(
           "create_instance",
           [](const icupy::LocaleVariant &loc) {

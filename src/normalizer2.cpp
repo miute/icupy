@@ -138,6 +138,20 @@ void init_normalizer2(py::module &m) {
       },
       py::arg("s"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 60)
+  n2.def(
+      "is_normalized_utf8",
+      [](const Normalizer2 &self, const py::bytes &b) -> py::bool_ {
+        ErrorCode error_code;
+        auto result = self.isNormalizedUTF8(StringPiece(b), error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("b"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
+
   n2.def(
         "normalize",
         [](const Normalizer2 &self, const icupy::UnicodeStringVariant &src) {
@@ -172,6 +186,23 @@ void init_normalizer2(py::module &m) {
         return result;
       },
       py::arg("first"), py::arg("second"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 60)
+  // TODO: Implement icu::Edits.
+  n2.def(
+      "normalize_utf8",
+      [](const Normalizer2 &self, uint32_t options, const py::bytes &src) {
+        std::string dest;
+        auto sink = StringByteSink<std::string>(&dest);
+        ErrorCode error_code;
+        self.normalizeUTF8(options, StringPiece(src), sink, nullptr, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("options"), py::arg("src"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
   n2.def(
       "quick_check",
