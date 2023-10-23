@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.18.0a2 / 2023-10-17
+## v0.18.0a2 / 2023-10-23
 
 - NEW
   - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-rc) (partial)
@@ -10,10 +10,17 @@
     - Add `icupy.icu.number.SimpleNumberFormatter` class
     - Add `icupy.icu.USimpleNumberSign` enum
 - ADDED
+  - Add `icupy.icu.Collator.compare_utf8(source: bytes, target: bytes)`
+  - Add `icupy.icu.IDNA.label_to_ascii_utf8(label: bytes, info: IDNAInfo)`
+  - Add `icupy.icu.IDNA.label_to_unicode_utf8(label: bytes, info: IDNAInfo)`
+  - Add `icupy.icu.IDNA.name_to_ascii_utf8(name: bytes, info: IDNAInfo)`
+  - Add `icupy.icu.IDNA.name_to_unicode_utf8(name: bytes, info: IDNAInfo)`
   - Add `icupy.icu.Measure.__ne__(other: UObject)`
   - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`
   - Add `icupy.icu.MeasureUnit.get_gasoline_energy_density()`
   - Add `icupy.icu.Normalizer2.get_nfkc_simple_casefold_instance()`
+  - Add `icupy.icu.Normalizer2.is_normalized_utf8(s: bytes)`
+  - Add `icupy.icu.Normalizer2.normalize_utf8(options: int, src: bytes)`
   - Add `icupy.icu.TimeZone.get_iana_id(id_: UnicodeString | str, iana_id: UnicodeString)`
   - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I`
   - Add `icupy.icu.ULineBreak.U_LB_AKSARA_PREBASE`
@@ -21,6 +28,7 @@
   - Add `icupy.icu.ULineBreak.U_LB_AKSARA`
   - Add `icupy.icu.ULineBreak.U_LB_VIRAMA_FINAL`
   - Add `icupy.icu.ULineBreak.U_LB_VIRAMA`
+  - Add `icupy.icu.UnicodeSet.span_utf8(b: bytes, length: int, span_condition: USetSpanCondition)`
   - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_CONTINUE`
   - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_START`
   - Add `icupy.icu.UProperty.UCHAR_IDS_UNARY_OPERATOR`

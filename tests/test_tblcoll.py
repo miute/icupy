@@ -78,6 +78,15 @@ def test_compare():
     assert coll.compare(source, target, 3) == UCollationResult.UCOL_EQUAL
     assert coll.compare(source, target) == UCollationResult.UCOL_EQUAL
 
+    # UCollationResult icu::Collator::compareUTF8(
+    #       const StringPiece &source,
+    #       const StringPiece &target,
+    #       UErrorCode &status
+    # ) const
+    source = "a\uFFFDz".encode()
+    target = b"a\x80z"
+    assert coll.compare_utf8(source, target) == UCollationResult.UCOL_EQUAL
+
 
 def test_create_collation_element_iterator():
     coll = Collator.create_instance(Locale("es"))

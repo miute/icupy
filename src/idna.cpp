@@ -87,6 +87,20 @@ void init_idna(py::module &m) {
       py::arg("label"), py::arg("dest"), py::arg("info"));
 
   idna.def(
+      "label_to_ascii_utf8",
+      [](const IDNA &self, const py::bytes &label, IDNAInfo &info) {
+        std::string dest;
+        auto sink = StringByteSink<std::string>(&dest);
+        ErrorCode error_code;
+        self.labelToASCII_UTF8(StringPiece(label), sink, info, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("label"), py::arg("info"));
+
+  idna.def(
       "label_to_unicode",
       [](const IDNA &self, const icupy::UnicodeStringVariant &label, UnicodeString &dest,
          IDNAInfo &info) -> UnicodeString & {
@@ -98,6 +112,20 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("label"), py::arg("dest"), py::arg("info"));
+
+  idna.def(
+      "label_to_unicode_utf8",
+      [](const IDNA &self, const py::bytes &label, IDNAInfo &info) {
+        std::string dest;
+        auto sink = StringByteSink<std::string>(&dest);
+        ErrorCode error_code;
+        self.labelToUnicodeUTF8(StringPiece(label), sink, info, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("label"), py::arg("info"));
 
   idna.def(
       "name_to_ascii",
@@ -113,6 +141,20 @@ void init_idna(py::module &m) {
       py::arg("name"), py::arg("dest"), py::arg("info"));
 
   idna.def(
+      "name_to_ascii_utf8",
+      [](const IDNA &self, const py::bytes &name, IDNAInfo &info) {
+        std::string dest;
+        auto sink = StringByteSink(&dest);
+        ErrorCode error_code;
+        self.nameToASCII_UTF8(StringPiece(name), sink, info, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("name"), py::arg("info"));
+
+  idna.def(
       "name_to_unicode",
       [](const IDNA &self, const icupy::UnicodeStringVariant &name, UnicodeString &dest,
          IDNAInfo &info) -> UnicodeString & {
@@ -124,6 +166,20 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("dest"), py::arg("info"));
+
+  idna.def(
+      "name_to_unicode_utf8",
+      [](const IDNA &self, const py::bytes &name, IDNAInfo &info) {
+        std::string dest;
+        auto sink = StringByteSink(&dest);
+        ErrorCode error_code;
+        self.nameToUnicodeUTF8(StringPiece(name), sink, info, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(dest);
+      },
+      py::arg("name"), py::arg("info"));
 
   idna.def_property_readonly_static("ERROR_EMPTY_LABEL",
                                     [](const py::object &) -> int32_t { return UIDNA_ERROR_EMPTY_LABEL; });

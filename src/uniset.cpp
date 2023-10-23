@@ -417,6 +417,14 @@ void init_uniset(py::module &m) {
       .def("span", py::overload_cast<const UnicodeString &, int32_t, USetSpanCondition>(&UnicodeSet::span, py::const_),
            py::arg("s"), py::arg("start"), py::arg("span_condition"));
 
+  us.def(
+      "span_utf8",
+      [](const UnicodeSet &self, const py::bytes &b, int32_t length, USetSpanCondition span_condition) {
+        auto s = static_cast<std::string>(b);
+        return self.spanUTF8(s.data(), length, span_condition);
+      },
+      py::arg("b"), py::arg("length"), py::arg("span_condition"));
+
   us.def("span_back",
          py::overload_cast<const char16_t *, int32_t, USetSpanCondition>(&UnicodeSet::spanBack, py::const_),
          py::arg("s"), py::arg("length"), py::arg("span_condition"))

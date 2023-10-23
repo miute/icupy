@@ -649,7 +649,7 @@ def test_api():
     #       UnicodeString &dest,
     #       IDNAInfo &info,
     #       UErrorCode &errorCode
-    # )
+    # ) const
     dest = UnicodeString()
     info = IDNAInfo()
     src = UnicodeString("www.eXample.cOm")
@@ -667,12 +667,23 @@ def test_api():
     assert id(result) == id(dest)
     assert dest == expected
 
+    # void icu::IDNA::nameToASCII_UTF8(
+    #   	StringPiece name,
+    #       ByteSink &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # ) const
+    result = _trans.name_to_ascii_utf8(b"www.eXample.cOm", info)
+    assert not info.has_errors()
+    assert isinstance(result, bytes)
+    assert result.decode() == expected
+
     # UnicodeString &icu::IDNA::labelToASCII(
     #       const UnicodeString &label,
     #       UnicodeString &dest,
     #       IDNAInfo &info,
     #       UErrorCode &errorCode
-    # )
+    # ) const
     src.set_to_bogus()
     dest = UnicodeString("quatsch")
     with pytest.raises(ICUError) as exc_info:
@@ -700,12 +711,42 @@ def test_api():
     assert id(result) == id(dest)
     assert dest == expected
 
+    # void icu::IDNA::labelToASCII_UTF8(
+    # 	    StringPiece label,
+    #       ByteSink &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # ) const
+    result = _nontrans.label_to_ascii_utf8(b"xn--bcher.de-65a", info)
+    assert info.get_errors() == (
+        IDNA.ERROR_LABEL_HAS_DOT | IDNA.ERROR_INVALID_ACE_LABEL
+    )
+    assert isinstance(result, bytes)
+    assert result.decode() == expected
+
+    # UnicodeString &icu::IDNA::labelToUnicode(
+    # 	    const UnicodeString &label,
+    #       UnicodeString &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # ) const
     dest.remove()
     result = _trans.label_to_unicode("\x61\u00df", dest, info)
     assert info.get_errors() == 0
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert dest == "\x61\x73\x73"
+
+    # void icu::IDNA::labelToUnicodeUTF8(
+    #   	StringPiece label,
+    #       ByteSink &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # ) const
+    result = _trans.label_to_unicode_utf8(b"\x61\xc3\x9f", info)
+    assert info.get_errors() == 0
+    assert isinstance(result, bytes)
+    assert result == b"\x61\x73\x73"
 
 
 def test_not_std3():
@@ -722,7 +763,7 @@ def test_not_std3():
     #       UnicodeString &dest,
     #       IDNAInfo &info,
     #       UErrorCode &errorCode
-    # )
+    # ) const
     # '\x00a_2+2=4\n.essen.net'
     result = not3.name_to_unicode(src, dest, info)
     assert not info.has_errors()
@@ -731,12 +772,23 @@ def test_not_std3():
     assert result != src
     assert result == expected
 
+    # void icu::IDNA::nameToUnicodeUTF8(
+    #   	StringPiece name,
+    #       ByteSink &dest,
+    #       IDNAInfo &info,
+    #       UErrorCode &errorCode
+    # ) const
+    result = not3.name_to_unicode_utf8(str(src).encode(), info)
+    assert not info.has_errors()
+    assert isinstance(result, bytes)
+    assert result.decode() == str(expected)
+
     # UnicodeString &icu::IDNA::nameToASCII(
     #       const UnicodeString &name,
     #       UnicodeString &dest,
     #       IDNAInfo &info,
     #       UErrorCode &errorCode
-    # )
+    # ) const
     dest.remove()
     src = UnicodeString("a z.xn--4db.edu")
     result = not3.name_to_ascii(src, dest, info)

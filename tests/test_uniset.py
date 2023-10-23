@@ -872,6 +872,19 @@ def test_span():
         == 2
     )
 
+    # int32_t icu::UnicodeSet::spanUTF8(
+    #       const char *s,
+    #       int32_t length,
+    #       USetSpanCondition spanCondition
+    # ) const
+    b = b"abcde"
+    assert test1.span_utf8(b, -1, USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    assert (
+        test1.span_utf8(b, len(b), USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    )
+    assert test1.span_utf8(b, 2, USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    assert test1.span_utf8(b, 1, USetSpanCondition.USET_SPAN_CONTAINED) == 0
+
 
 def test_span_back():
     test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
