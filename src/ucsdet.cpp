@@ -68,8 +68,8 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_enable_input_filter",
-      [](_UCharsetDetectorPtr &ucsd, bool filter) { return ucsdet_enableInputFilter(ucsd, filter); }, py::arg("ucsd"),
-      py::arg("filter_"));
+      [](_UCharsetDetectorPtr &ucsd, py::bool_ filter) -> py::bool_ { return ucsdet_enableInputFilter(ucsd, filter); },
+      py::arg("ucsd"), py::arg("filter_"));
 
   m.def(
       "ucsdet_get_all_detectable_charsets",
@@ -136,7 +136,7 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_is_input_filter_enabled",
-      [](const _UCharsetDetectorPtr &ucsd) { return ucsdet_isInputFilterEnabled(ucsd); }, py::arg("ucsd"));
+      [](const _UCharsetDetectorPtr &ucsd) -> py::bool_ { return ucsdet_isInputFilterEnabled(ucsd); }, py::arg("ucsd"));
 
   m.def("ucsdet_open", []() {
     ErrorCode error_code;

@@ -149,7 +149,8 @@ void init_ulocdata(py::module &m) {
       py::arg("locale_id"));
 
   m.def(
-      "ulocdata_get_no_substitute", [](_ULocaleDataPtr &uld) { return ulocdata_getNoSubstitute(uld); }, py::arg("uld"));
+      "ulocdata_get_no_substitute", [](_ULocaleDataPtr &uld) -> py::bool_ { return ulocdata_getNoSubstitute(uld); },
+      py::arg("uld"));
 
   m.def(
       "ulocdata_get_paper_size",
@@ -177,6 +178,7 @@ void init_ulocdata(py::module &m) {
       py::arg("locale_id"));
 
   m.def(
-      "ulocdata_set_no_substitute", [](_ULocaleDataPtr &uld, UBool setting) { ulocdata_setNoSubstitute(uld, setting); },
-      py::arg("uld"), py::arg("setting"));
+      "ulocdata_set_no_substitute",
+      [](_ULocaleDataPtr &uld, py::bool_ setting) { ulocdata_setNoSubstitute(uld, setting); }, py::arg("uld"),
+      py::arg("setting"));
 }

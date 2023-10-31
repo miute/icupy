@@ -127,14 +127,14 @@ def test_api2():
         assert isinstance(result, ResourceBundle)
         resources.append(result)
 
-    assert not test1.has_next()
+    assert test1.has_next() is False
     with pytest.raises(ICUError) as exc_info:
         _ = test1.get_next()
     assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
     # void icu::ResourceBundle::resetIterator(void)
     test1.reset_iterator()
-    assert test1.has_next()
+    assert test1.has_next() is True
 
     for index, expected in enumerate(resources):
         # [2]

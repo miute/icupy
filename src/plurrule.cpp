@@ -120,7 +120,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def(
       "is_keyword",
-      [](const PluralRules &self, const icupy::UnicodeStringVariant &keyword) {
+      [](const PluralRules &self, const icupy::UnicodeStringVariant &keyword) -> py::bool_ {
         return self.isKeyword(icupy::to_unistr(keyword));
       },
       py::arg("keyword"));

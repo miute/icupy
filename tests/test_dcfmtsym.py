@@ -244,4 +244,4 @@ def test_numbering_system():
     assert ns7.get_radix() == 10
 
     # UBool icu::NumberingSystem::isAlgorithmic()
-    assert not ns7.is_algorithmic()
+    assert ns7.is_algorithmic() is False

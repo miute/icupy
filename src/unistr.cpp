@@ -425,23 +425,28 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [1] endsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
-        "ends_with", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::endsWith, py::const_),
+        "ends_with",
+        [](const UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> py::bool_ {
+          return self.endsWith(src_chars, src_start, src_length);
+        },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [2] endsWith(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
-          "ends_with", py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::endsWith, py::const_),
+          "ends_with",
+          [](const UnicodeString &self, const UnicodeString &src_text, int32_t src_start,
+             int32_t src_length) -> py::bool_ { return self.endsWith(src_text, src_start, src_length); },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [3] endsWith(const UnicodeString &text)
           "ends_with",
-          [](const UnicodeString &self, const icupy::UnicodeStringVariant &src_text) {
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &src_text) -> py::bool_ {
             return self.endsWith(icupy::to_unistr(src_text));
           },
           py::arg("src_text"))
       .def(
           // [4] endsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "ends_with",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) {
+          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> py::bool_ {
             return self.endsWith(src_chars, src_length);
           },
           py::arg("src_chars"), py::arg("src_length"));
@@ -608,8 +613,12 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def("hash_code", &UnicodeString::hashCode);
 
-  us.def("has_more_char32_than", &UnicodeString::hasMoreChar32Than, py::arg("start"), py::arg("length"),
-         py::arg("number"));
+  us.def(
+      "has_more_char32_than",
+      [](const UnicodeString &self, int32_t start, int32_t length, int32_t number) -> py::bool_ {
+        return self.hasMoreChar32Than(start, length, number);
+      },
+      py::arg("start"), py::arg("length"), py::arg("number"));
 
   us.def(
         // [4] indexOf(const char16_t *srcChars, int32_t srcLength, int32_t start)
@@ -690,9 +699,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           // [6] insert(int32_t start, UChar32 srcChar)
           "insert", py::overload_cast<int32_t, UChar32>(&UnicodeString::insert), py::arg("start"), py::arg("src_char"));
 
-  us.def("is_bogus", &UnicodeString::isBogus);
+  us.def("is_bogus", [](const UnicodeString &self) -> py::bool_ { return self.isBogus(); });
 
-  us.def("is_empty", &UnicodeString::isEmpty);
+  us.def("is_empty", [](const UnicodeString &self) -> py::bool_ { return self.isEmpty(); });
 
   us.def(
         // [4] lastIndexOf(const char16_t *srcChars, int32_t srcLength, int32_t start)
@@ -754,14 +763,14 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
       "pad_leading",
-      [](UnicodeString &self, int32_t target_length, uint16_t pad_char) {
+      [](UnicodeString &self, int32_t target_length, uint16_t pad_char) -> py::bool_ {
         return self.padLeading(target_length, pad_char);
       },
       py::arg("target_length"), py::arg("pad_char") = 0x20);
 
   us.def(
       "pad_trailing",
-      [](UnicodeString &self, int32_t target_length, uint16_t pad_char) {
+      [](UnicodeString &self, int32_t target_length, uint16_t pad_char) -> py::bool_ {
         return self.padTrailing(target_length, pad_char);
       },
       py::arg("target_length"), py::arg("pad_char") = 0x20);
@@ -860,24 +869,28 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [1] startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
-        "starts_with", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::startsWith, py::const_),
+        "starts_with",
+        [](const UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> py::bool_ {
+          return self.startsWith(src_chars, src_start, src_length);
+        },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [2] startsWith(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
           "starts_with",
-          py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::startsWith, py::const_),
+          [](const UnicodeString &self, const UnicodeString &src_text, int32_t src_start,
+             int32_t src_length) -> py::bool_ { return self.startsWith(src_text, src_start, src_length); },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [3] startsWith(const UnicodeString &text)
           "starts_with",
-          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) {
+          [](const UnicodeString &self, const icupy::UnicodeStringVariant &text) -> py::bool_ {
             return self.startsWith(icupy::to_unistr(text));
           },
           py::arg("text"))
       .def(
           // [4] startsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "starts_with",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) {
+          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> py::bool_ {
             return self.startsWith(src_chars, src_length);
           },
           py::arg("src_chars"), py::arg("src_length"));
@@ -947,7 +960,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def("trim", &UnicodeString::trim);
 
-  us.def("truncate", &UnicodeString::truncate, py::arg("target_length"));
+  us.def(
+      "truncate", [](UnicodeString &self, int32_t target_length) -> py::bool_ { return self.truncate(target_length); },
+      py::arg("target_length"));
 
   us.def("unescape", &UnicodeString::unescape);
 

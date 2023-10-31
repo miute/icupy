@@ -183,7 +183,7 @@ void init_datefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "get_boolean_attribute",
-      [](const DateFormat &self, UDateFormatBooleanAttribute attr) {
+      [](const DateFormat &self, UDateFormatBooleanAttribute attr) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.getBooleanAttribute(attr, error_code);
         if (error_code.isFailure()) {
@@ -225,10 +225,10 @@ void init_datefmt(py::module &m) {
       py::return_value_policy::reference);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  df.def("is_calendar_lenient", &DateFormat::isCalendarLenient);
+  df.def("is_calendar_lenient", [](const DateFormat &self) -> py::bool_ { return self.isCalendarLenient(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
-  df.def("is_lenient", &DateFormat::isLenient);
+  df.def("is_lenient", [](const DateFormat &self) -> py::bool_ { return self.isLenient(); });
 
   df.def(
         // [1] icu::DateFormat::parse
@@ -277,7 +277,7 @@ void init_datefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "set_boolean_attribute",
-      [](DateFormat &self, UDateFormatBooleanAttribute attr, UBool new_value) -> DateFormat & {
+      [](DateFormat &self, UDateFormatBooleanAttribute attr, py::bool_ new_value) -> DateFormat & {
         ErrorCode error_code;
         auto &result = self.setBooleanAttribute(attr, new_value, error_code);
         if (error_code.isFailure()) {
@@ -291,7 +291,9 @@ void init_datefmt(py::module &m) {
   df.def("set_calendar", &DateFormat::setCalendar, py::arg("new_calendar"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  df.def("set_calendar_lenient", &DateFormat::setCalendarLenient, py::arg("lenient"));
+  df.def(
+      "set_calendar_lenient", [](DateFormat &self, py::bool_ lenient) { self.setCalendarLenient(lenient); },
+      py::arg("lenient"));
 
   df.def(
       "set_context",
@@ -305,7 +307,8 @@ void init_datefmt(py::module &m) {
       py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
-  df.def("set_lenient", &DateFormat::setLenient, py::arg("lenient"));
+  df.def(
+      "set_lenient", [](DateFormat &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
 
   df.def("set_number_format", &DateFormat::setNumberFormat, py::arg("new_number_format"));
 

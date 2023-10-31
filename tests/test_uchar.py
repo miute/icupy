@@ -147,37 +147,39 @@ def test_api():
         == "Canonical"
     )
 
-    assert u_has_binary_property(0x300C, UProperty.UCHAR_BIDI_MIRRORED)
+    assert u_has_binary_property(0x300C, UProperty.UCHAR_BIDI_MIRRORED) is True
 
-    assert u_isalnum(ord("a"))
-    assert u_isalpha(ord("a"))
-    assert u_isbase(ord("a"))
-    assert u_isblank(0x3000)  # U+3000: Ideographic Space
-    assert u_iscntrl(0x0A)  # U+000A: <End of Line> (EOL, LF, NL)
-    assert not u_isdefined(0xFDD0)  # U+FDD0: Undefined Character
-    assert u_isdigit(0xFF11)  # U+FF11: Fullwidth Digit One
-    assert u_isgraph(0x300C)  # U+300C: Left Corner Bracket
-    assert u_is_id_ignorable(0xAD)  # U+00AD: Soft Hyphen (SHY)
-    assert u_is_id_part(0x16EE)  # U+16EE: Runic Arlaug Symbol
-    assert u_is_id_start(0x16EE)  # U+16EE: Runic Arlaug Symbol
-    assert u_is_iso_control(0x00)  # U+0000: <Null> (NUL)
-    assert u_is_java_id_part(ord("$"))  # U+0024: Dollar Sign
-    assert u_is_java_id_start(ord("_"))  # U+005F: Low Line
-    assert u_is_java_space_char(0x20)  # U+0020: Space (SP)
-    assert u_islower(ord("a"))
-    assert u_is_mirrored(0x300C)  # U+300C: Left Corner Bracket
-    assert u_isprint(ord("a"))
-    assert u_ispunct(ord("_"))
-    assert u_isspace(0x3000)  # U+3000: Ideographic Space
+    assert u_isalnum(ord("a")) is True
+    assert u_isalpha(ord("a")) is True
+    assert u_isbase(ord("a")) is True
+    assert u_isblank(0x3000) is True  # U+3000: Ideographic Space
+    assert u_iscntrl(0x0A) is True  # U+000A: <End of Line> (EOL, LF, NL)
+    assert u_isdefined(0xFDD0) is False  # U+FDD0: Undefined Character
+    assert u_isdigit(0xFF11) is True  # U+FF11: Fullwidth Digit One
+    assert u_isgraph(0x300C) is True  # U+300C: Left Corner Bracket
+    assert u_is_id_ignorable(0xAD) is True  # U+00AD: Soft Hyphen (SHY)
+    assert u_is_id_part(0x16EE) is True  # U+16EE: Runic Arlaug Symbol
+    assert u_is_id_start(0x16EE) is True  # U+16EE: Runic Arlaug Symbol
+    assert u_is_iso_control(0x00) is True  # U+0000: <Null> (NUL)
+    assert u_is_java_id_part(ord("$")) is True  # U+0024: Dollar Sign
+    assert u_is_java_id_start(ord("_")) is True  # U+005F: Low Line
+    assert u_is_java_space_char(0x20) is True  # U+0020: Space (SP)
+    assert u_islower(ord("a")) is True
+    assert u_is_mirrored(0x300C) is True  # U+300C: Left Corner Bracket
+    assert u_isprint(ord("a")) is True
+    assert u_ispunct(ord("_")) is True
+    assert u_isspace(0x3000) is True  # U+3000: Ideographic Space
     # U+01C5: Latin Capital Letter D with Small Letter Z with Caron
-    assert u_istitle(0x01C5)
-    assert u_is_ualphabetic(ord("A"))
-    assert u_is_ulowercase(ord("a"))
-    assert u_isupper(ord("A"))
-    assert u_is_uuppercase(ord("A"))
-    assert u_is_uwhite_space(0x3000)  # U+3000: Ideographic Space
-    assert u_is_whitespace(0x3000)  # U+3000: Ideographic Space
-    assert u_isxdigit(0xFF21)  # U+FF21: Fullwidth Latin Capital Letter A
+    assert u_istitle(0x01C5) is True
+    assert u_is_ualphabetic(ord("A")) is True
+    assert u_is_ulowercase(ord("a")) is True
+    assert u_isupper(ord("A")) is True
+    assert u_is_uuppercase(ord("A")) is True
+    assert u_is_uwhite_space(0x3000) is True  # U+3000: Ideographic Space
+    assert u_is_whitespace(0x3000) is True  # U+3000: Ideographic Space
+    assert (
+        u_isxdigit(0xFF21) is True
+    )  # U+FF21: Fullwidth Latin Capital Letter A
 
     # U+FF21: Fullwidth Latin Capital Letter A
     # U+FF41: Fullwidth Latin Small Letter A
@@ -204,8 +206,10 @@ def test_api_70():
     #       int32_t length,
     #       UProperty which
     # )
-    assert u_string_has_binary_property("\U0001f338", UCHAR_BASIC_EMOJI)
-    assert not u_string_has_binary_property("\uff11", UCHAR_BASIC_EMOJI)
+    assert (
+        u_string_has_binary_property("\U0001f338", UCHAR_BASIC_EMOJI) is True
+    )
+    assert u_string_has_binary_property("\uff11", UCHAR_BASIC_EMOJI) is False
 
 
 def test_u_char_age():

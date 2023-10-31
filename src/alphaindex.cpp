@@ -210,7 +210,7 @@ void init_alphaindex(py::module &m) {
 
   ai.def("get_underflow_label", &AlphabeticIndex::getUnderflowLabel);
 
-  ai.def("next_bucket", [](AlphabeticIndex &self) {
+  ai.def("next_bucket", [](AlphabeticIndex &self) -> py::bool_ {
     ErrorCode error_code;
     auto result = self.nextBucket(error_code);
     if (error_code.isFailure()) {
@@ -219,7 +219,7 @@ void init_alphaindex(py::module &m) {
     return result;
   });
 
-  ai.def("next_record", [](AlphabeticIndex &self) {
+  ai.def("next_record", [](AlphabeticIndex &self) -> py::bool_ {
     ErrorCode error_code;
     auto result = self.nextRecord(error_code);
     if (error_code.isFailure()) {

@@ -255,11 +255,11 @@ def test_char_at():
     #       int32_t length,
     #       int32_t number
     # )
-    assert test1.has_more_char32_than(0, INT32_MAX, -1)
-    assert test1.has_more_char32_than(0, INT32_MAX, 0)
-    assert test1.has_more_char32_than(0, INT32_MAX, 1)
-    assert test1.has_more_char32_than(0, INT32_MAX, 2)
-    assert not test1.has_more_char32_than(0, INT32_MAX, 3)
+    assert test1.has_more_char32_than(0, INT32_MAX, -1) is True
+    assert test1.has_more_char32_than(0, INT32_MAX, 0) is True
+    assert test1.has_more_char32_than(0, INT32_MAX, 1) is True
+    assert test1.has_more_char32_than(0, INT32_MAX, 2) is True
+    assert test1.has_more_char32_than(0, INT32_MAX, 3) is False
 
     # UnicodeString &icu::UnicodeString::setCharAt(
     #       int32_t offset,
@@ -502,8 +502,8 @@ def test_ends_with():
     #       int32_t srcStart,
     #       int32_t srcLength
     # )
-    assert not test1.ends_with(s2, 0, -1)
-    assert test1.ends_with(s3, 0, -1)
+    assert test1.ends_with(s2, 0, -1) is False
+    assert test1.ends_with(s3, 0, -1) is True
 
     # [2]
     # UBool icu::UnicodeString::endsWith(
@@ -511,23 +511,23 @@ def test_ends_with():
     #       int32_t srcStart,
     #       int32_t srcLength
     # )
-    assert not test1.ends_with(test2, 0, len(test2))
-    assert test1.ends_with(test3, 0, len(test3))
+    assert test1.ends_with(test2, 0, len(test2)) is False
+    assert test1.ends_with(test3, 0, len(test3)) is True
 
     # [3]
     # UBool icu::UnicodeString::endsWith(const UnicodeString &text)
-    assert not test1.ends_with(test2)
-    assert test1.ends_with(test3)
-    assert not test1.ends_with("foo")
-    assert test1.ends_with("bar")
+    assert test1.ends_with(test2) is False
+    assert test1.ends_with(test3) is True
+    assert test1.ends_with("foo") is False
+    assert test1.ends_with("bar") is True
 
     # [4]
     # UBool icu::UnicodeString::endsWith(
     #       ConstChar16Ptr srcChars,
     #       int32_t srcLength
     # )
-    assert not test1.ends_with(s2, -1)
-    assert test1.ends_with(s3, -1)
+    assert test1.ends_with(s2, -1) is False
+    assert test1.ends_with(s3, -1) is True
 
 
 def test_extract():
@@ -1604,11 +1604,11 @@ def test_pad_leading():
     #       char16_t padChar = 0x0020
     # )
     test1 = UnicodeString("foo")
-    assert test1.pad_leading(10)
+    assert test1.pad_leading(10) is True
     assert test1 == "       foo"
 
     test1 = UnicodeString("foo")
-    assert test1.pad_leading(10, ord("."))
+    assert test1.pad_leading(10, ord(".")) is True
     assert test1 == ".......foo"
 
 
@@ -1618,11 +1618,11 @@ def test_pad_trailing():
     #       char16_t padChar = 0x0020
     # )
     test1 = UnicodeString("foo")
-    assert test1.pad_trailing(10)
+    assert test1.pad_trailing(10) is True
     assert test1 == "foo       "
 
     test1 = UnicodeString("foo")
-    assert test1.pad_trailing(10, ord("."))
+    assert test1.pad_trailing(10, ord(".")) is True
     assert test1 == "foo......."
 
 
@@ -1956,8 +1956,8 @@ def test_starts_with():
     #       int32_t srcStart,
     #       int32_t srcLength
     # )
-    assert test1.starts_with(s2, 0, -1)
-    assert not test1.starts_with(s3, 0, -1)
+    assert test1.starts_with(s2, 0, -1) is True
+    assert test1.starts_with(s3, 0, -1) is False
 
     # [2]
     # UBool icu::UnicodeString::startsWith(
@@ -1965,23 +1965,23 @@ def test_starts_with():
     #       int32_t srcStart,
     #       int32_t srcLength
     # )
-    assert test1.starts_with(test2, 0, len(test2))
-    assert not test1.starts_with(test3, 0, len(test3))
+    assert test1.starts_with(test2, 0, len(test2)) is True
+    assert test1.starts_with(test3, 0, len(test3)) is False
 
     # [3]
     # UBool icu::UnicodeString::startsWith(const UnicodeString &text)
-    assert test1.starts_with(test2)
-    assert not test1.starts_with(test3)
-    assert test1.starts_with("foo")
-    assert not test1.starts_with("bar")
+    assert test1.starts_with(test2) is True
+    assert test1.starts_with(test3) is False
+    assert test1.starts_with("foo") is True
+    assert test1.starts_with("bar") is False
 
     # [4]
     # UBool icu::UnicodeString::startsWith(
     #       ConstChar16Ptr srcChars,
     #       int32_t srcLength
     # )
-    assert test1.starts_with(s2, -1)
-    assert not test1.starts_with(s3, -1)
+    assert test1.starts_with(s2, -1) is True
+    assert test1.starts_with(s3, -1) is False
 
 
 def test_swap():
@@ -2259,10 +2259,10 @@ def test_truncate():
     test1 = UnicodeString("foo bar baz", -1, US_INV).unescape()
 
     # UBool icu::UnicodeString::truncate(int32_t targetLength)
-    assert not test1.truncate(15)
+    assert test1.truncate(15) is False
     assert len(test1) == 11
 
-    assert test1.truncate(7)
+    assert test1.truncate(7) is True
     assert len(test1) == 7
     assert test1 == "foo bar"
 
@@ -2296,8 +2296,8 @@ def test_unicode_string():
     # [1]
     # icu::UnicodeString::UnicodeString()
     test1 = UnicodeString()
-    assert not test1.is_bogus()
-    assert test1.is_empty()
+    assert test1.is_bogus() is False
+    assert test1.is_empty() is True
     assert len(test1) == 0
 
     # [2]
@@ -2307,36 +2307,36 @@ def test_unicode_string():
     #       int32_t count
     # )
     test2 = UnicodeString(20, 0x41, 10)
-    assert not test2.is_bogus()
-    assert not test2.is_empty()
+    assert test2.is_bogus() is False
+    assert test2.is_empty() is False
     assert test2 == "A" * 10
 
     # [3]
     # icu::UnicodeString::UnicodeString(char16_t ch)
     test3 = UnicodeString(0x41)
-    assert not test3.is_bogus()
-    assert not test3.is_empty()
+    assert test3.is_bogus() is False
+    assert test3.is_empty() is False
     assert test3 == "A"
 
     # [4]
     # icu::UnicodeString::UnicodeString(UChar32 ch)
     test4 = UnicodeString(0x1F338)
-    assert not test4.is_bogus()
-    assert not test4.is_empty()
+    assert test4.is_bogus() is False
+    assert test4.is_empty() is False
     assert test4 == "\U0001F338"
 
     # [5]
     # icu::UnicodeString::UnicodeString(const char16_t *text)
     test5 = UnicodeString("foo bar baz")
-    assert not test5.is_bogus()
-    assert not test5.is_empty()
+    assert test5.is_bogus() is False
+    assert test5.is_empty() is False
     assert test5 == "foo bar baz"
 
     # [8]
     # icu::UnicodeString::UnicodeString(const std::nullptr_t text)
     test8 = UnicodeString(None)
-    assert not test8.is_bogus()
-    assert test8.is_empty()
+    assert test8.is_bogus() is False
+    assert test8.is_empty() is True
     assert len(test8) == 0
 
     # [9]
@@ -2345,8 +2345,8 @@ def test_unicode_string():
     #       int32_t textLength
     # )
     test9 = UnicodeString("foo bar baz", 4)
-    assert not test9.is_bogus()
-    assert not test9.is_empty()
+    assert test9.is_bogus() is False
+    assert test9.is_empty() is False
     assert test9 == "foo "
 
     # [12]
@@ -2355,8 +2355,8 @@ def test_unicode_string():
     #       int32_t textLength
     # )
     test12 = UnicodeString(None, 10)
-    assert not test12.is_bogus()
-    assert test12.is_empty()
+    assert test12.is_bogus() is False
+    assert test12.is_empty() is True
     assert len(test12) == 0
 
     # [20]
@@ -2367,8 +2367,8 @@ def test_unicode_string():
     sjis = b"\x61\x5b\x5c\xb1\x87\x54"
     utf8 = sjis.decode("cp932")
     test20 = UnicodeString(sjis, "ibm-943c")
-    assert not test20.is_bogus()
-    assert not test20.is_empty()
+    assert test20.is_bogus() is False
+    assert test20.is_empty() is False
     assert test20 == utf8
 
     # [21]
@@ -2379,15 +2379,15 @@ def test_unicode_string():
     # )
     utf16be = b"\x00\x62\x00\x61\x00\x72"
     test21 = UnicodeString(utf16be, len(utf16be), "utf-16-be")
-    assert not test21.is_bogus()
-    assert not test21.is_empty()
+    assert test21.is_bogus() is False
+    assert test21.is_empty() is False
     assert test21 == "bar"
 
     utf8 = "a\U0001F338b"
     utf32be = utf8.encode("utf-32-be")
     test21a = UnicodeString(utf32be, len(utf32be), "utf-32-be")
-    assert not test21a.is_bogus()
-    assert not test21a.is_empty()
+    assert test21a.is_bogus() is False
+    assert test21a.is_empty() is False
     assert test21a == utf8
 
     # [22]
@@ -2400,8 +2400,8 @@ def test_unicode_string():
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
         utf8 = sjis.decode("cp932")
         test22 = UnicodeString(sjis, len(sjis), cnv)
-        assert not test22.is_bogus()
-        assert not test22.is_empty()
+        assert test22.is_bogus() is False
+        assert test22.is_empty() is False
         assert test22 == utf8
 
     # [23]
@@ -2411,15 +2411,15 @@ def test_unicode_string():
     #       enum EInvariant inv
     # )
     test23 = UnicodeString("foo bar baz", -1, US_INV)
-    assert not test23.is_bogus()
-    assert not test23.is_empty()
+    assert test23.is_bogus() is False
+    assert test23.is_empty() is False
     assert test23 == "foo bar baz"
 
     # [24]
     # icu::UnicodeString::UnicodeString(const UnicodeString &that)
     test24 = UnicodeString(test5)
-    assert not test24.is_bogus()
-    assert not test24.is_empty()
+    assert test24.is_bogus() is False
+    assert test24.is_empty() is False
     assert test24 == "foo bar baz"
 
     # [26]
@@ -2428,8 +2428,8 @@ def test_unicode_string():
     #       int32_t srcStart
     # )
     test26 = UnicodeString(test5, 4)
-    assert not test26.is_bogus()
-    assert not test26.is_empty()
+    assert test26.is_bogus() is False
+    assert test26.is_empty() is False
     assert test26 == "bar baz"
 
     # [27]
@@ -2439,8 +2439,8 @@ def test_unicode_string():
     #       int32_t srcLength
     # )
     test27 = UnicodeString(test5, 4, 3)
-    assert not test27.is_bogus()
-    assert not test27.is_empty()
+    assert test27.is_bogus() is False
+    assert test27.is_empty() is False
     assert test27 == "bar"
 
 
@@ -2451,18 +2451,18 @@ def test_unicode_string_appendable():
     app = UnicodeStringAppendable(dest)
 
     # UBool icu::UnicodeStringAppendable::appendCodePoint(UChar32 c)
-    assert app.append_code_point(0x61)
-    assert app.append_code_point(0x1F338)
+    assert app.append_code_point(0x61) is True
+    assert app.append_code_point(0x1F338) is True
 
     # UBool icu::UnicodeStringAppendable::appendCodeUnit(char16_t c)
-    assert app.append_code_unit(0x62)
+    assert app.append_code_unit(0x62) is True
 
     # UBool icu::UnicodeStringAppendable::appendString(
     #       const char16_t *s,
     #       int32_t length
     # )
-    assert app.append_string("\U0001f338c", -1)
-    assert app.append_string("defghijklm", 3)
+    assert app.append_string("\U0001f338c", -1) is True
+    assert app.append_string("defghijklm", 3) is True
 
     assert dest == "a\U0001f338b\U0001f338cdef"
 

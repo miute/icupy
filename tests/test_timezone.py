@@ -45,7 +45,7 @@ def test_basic_time_zone():
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     result = TimeZoneTransition()
-    assert zone1.get_next_transition(base, False, result)
+    assert zone1.get_next_transition(base, False, result) is True
     assert result.get_time() == 1236506400000.0  # 2009-03-08T10:00:00Z
 
     # UBool icu::BasicTimeZone::getPreviousTransition(
@@ -53,7 +53,7 @@ def test_basic_time_zone():
     #       UBool inclusive,
     #       TimeZoneTransition &result
     # )
-    assert zone1.get_previous_transition(base, False, result)
+    assert zone1.get_previous_transition(base, False, result) is True
     assert result.get_time() == 1225616400000.0  # 2008-11-02T09:00:00Z
 
     # void icu::BasicTimeZone::getSimpleRulesNear(
@@ -105,9 +105,9 @@ def test_basic_time_zone():
     zone6 = TimeZone.create_time_zone("America/Indiana/Indianapolis")
     start = 1104537600000.0  # 2005-01-01T00:00:00Z
     end = 1262304000000.0  # 2010-01-01T00:00:00Z
-    assert not zone5.has_equivalent_transitions(zone6, start, end, True)
+    assert zone5.has_equivalent_transitions(zone6, start, end, True) is False
     start = 1136073600000.0  # 2006-01-01T00:00:00Z
-    assert zone5.has_equivalent_transitions(zone6, start, end, True)
+    assert zone5.has_equivalent_transitions(zone6, start, end, True) is True
 
 
 def test_basic_time_zone_get_offset():
@@ -274,7 +274,7 @@ def test_rule_based_time_zone():
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
-    assert zone1.get_next_transition(base, False, tzt)
+    assert zone1.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
     # UBool icu::BasicTimeZone::getPreviousTransition(
@@ -282,7 +282,7 @@ def test_rule_based_time_zone():
     #       UBool inclusive,
     #       TimeZoneTransition &result
     # )
-    assert zone1.get_previous_transition(base, False, tzt)
+    assert zone1.get_previous_transition(base, False, tzt) is True
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
     # int32_t icu::TimeZone::getRawOffset(void)
@@ -340,12 +340,12 @@ def test_rule_based_time_zone():
     # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
-    assert not zone1.has_equivalent_transitions(zone2, start, end, False)
-    assert not zone2.has_equivalent_transitions(zone1, start, end, False)
+    assert zone1.has_equivalent_transitions(zone2, start, end, False) is False
+    assert zone2.has_equivalent_transitions(zone1, start, end, False) is False
 
     # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
-    assert not zone1.has_same_rules(zone2)
-    assert zone2.has_same_rules(zone3)
+    assert zone1.has_same_rules(zone2) is False
+    assert zone2.has_same_rules(zone3) is True
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
     zone1.set_id(UnicodeString("abc"))
@@ -358,8 +358,8 @@ def test_rule_based_time_zone():
     assert zone1.get_raw_offset() == 0
 
     # UBool icu::TimeZone::useDaylightTime(void)
-    assert zone1.use_daylight_time()
-    assert not zone2.use_daylight_time()
+    assert zone1.use_daylight_time() is True
+    assert zone2.use_daylight_time() is False
 
 
 def test_rule_based_time_zone_get_offset():
@@ -683,7 +683,7 @@ def test_simple_time_zone():
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
-    assert zone3.get_next_transition(base, False, tzt)
+    assert zone3.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
     # UBool icu::BasicTimeZone::getPreviousTransition(
@@ -691,7 +691,7 @@ def test_simple_time_zone():
     #       UBool inclusive,
     #       TimeZoneTransition &result
     # )
-    assert zone3.get_previous_transition(base, False, tzt)
+    assert zone3.get_previous_transition(base, False, tzt) is True
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
     # int32_t icu::TimeZone::getRawOffset(void)
@@ -772,12 +772,12 @@ def test_simple_time_zone():
     # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
-    assert not zone5.has_equivalent_transitions(zone4, start, end, False)
-    assert zone5.has_equivalent_transitions(zone1, start, end, False)
+    assert zone5.has_equivalent_transitions(zone4, start, end, False) is False
+    assert zone5.has_equivalent_transitions(zone1, start, end, False) is True
 
     # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
-    assert not zone5.has_same_rules(zone4)
-    assert zone5.has_same_rules(zone1)
+    assert zone5.has_same_rules(zone4) is False
+    assert zone5.has_same_rules(zone1) is True
 
     # void icu::SimpleTimeZone::setDSTSavings(
     #       int32_t millisSavedDuringDST,
@@ -813,11 +813,11 @@ def test_simple_time_zone():
     assert trsrules[1].get_start_year() == 1966
 
     # UBool icu::TimeZone::useDaylightTime(void)
-    assert zone1.use_daylight_time()
-    assert not zone2.use_daylight_time()
-    assert zone3.use_daylight_time()
-    assert zone4.use_daylight_time()
-    assert zone5.use_daylight_time()
+    assert zone1.use_daylight_time() is True
+    assert zone2.use_daylight_time() is False
+    assert zone3.use_daylight_time() is True
+    assert zone4.use_daylight_time() is True
+    assert zone5.use_daylight_time() is True
 
 
 def test_simple_time_zone_get_offset():
@@ -1385,13 +1385,13 @@ def test_time_zone():
     assert isinstance(result, UnicodeString)
     assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
-    assert is_system_id
+    assert is_system_id is True
 
     canonical_id.remove()
     result, is_system_id = TimeZone.get_canonical_id("PST", canonical_id)
     assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
-    assert is_system_id
+    assert is_system_id is True
 
     locale = Locale.get_english()
 
@@ -1632,8 +1632,8 @@ def test_time_zone_has_same_rules():
     id_ = "Europe/Moscow"
     otz = TimeZone.create_time_zone(id_)
     vtz1 = VTimeZone.create_vtime_zone_by_id(id_)
-    assert not otz.has_same_rules(vtz1)
-    assert vtz1.has_same_rules(otz)
+    assert otz.has_same_rules(vtz1) is False
+    assert vtz1.has_same_rules(otz) is True
 
     stz1 = SimpleTimeZone(28800000, "Asia/Singapore")
     stz1.set_start_year(1970)
@@ -1641,7 +1641,7 @@ def test_time_zone_has_same_rules():
     stz1.set_end_rule(1, 1, 0)
     vtz2 = VTimeZone.create_vtime_zone_from_basic_time_zone(stz1)
     stz2 = stz1.clone()
-    assert vtz2.has_same_rules(stz2)
+    assert vtz2.has_same_rules(stz2) is True
 
 
 def test_vtime_zone():
@@ -1737,7 +1737,7 @@ def test_vtime_zone():
     assert zone1.get_last_modified() == (True, 1215298800000.0)
     assert zone2.get_last_modified() == (True, 1215298800000.0)
     result, _ = zone3.get_last_modified()
-    assert not result
+    assert result is False
 
     # UBool icu::BasicTimeZone::getNextTransition(
     #       UDate base,
@@ -1746,7 +1746,7 @@ def test_vtime_zone():
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
     tzt = TimeZoneTransition()
-    assert zone3.get_next_transition(base, False, tzt)
+    assert zone3.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
     # UBool icu::BasicTimeZone::getPreviousTransition(
@@ -1754,7 +1754,7 @@ def test_vtime_zone():
     #       UBool inclusive,
     #       TimeZoneTransition &result
     # )
-    assert zone3.get_previous_transition(base, False, tzt)
+    assert zone3.get_previous_transition(base, False, tzt) is True
     assert tzt.get_time() == 1215298800000.0  # 2008-07-05T23:00:00Z
 
     # int32_t icu::TimeZone::getRawOffset(void)
@@ -1812,9 +1812,9 @@ def test_vtime_zone():
 
     # UBool icu::VTimeZone::getTZURL(UnicodeString &url)
     url = UnicodeString()
-    assert zone1.get_tzurl(url)
+    assert zone1.get_tzurl(url) is True
     assert url == "http://source.icu-project.org/timezone"
-    assert not zone3.get_tzurl(url)
+    assert zone3.get_tzurl(url) is False
 
     # UBool icu::BasicTimeZone::hasEquivalentTransitions(
     #       const BasicTimeZone &tz,
@@ -1825,12 +1825,12 @@ def test_vtime_zone():
     # )
     start = 1215298800000.0  # 2008-07-05T23:00:00Z
     end = 1231027200000.0  # 2009-01-04T00:00:00Z
-    assert not zone1.has_equivalent_transitions(zone3, start, end, False)
-    assert not zone3.has_equivalent_transitions(zone1, start, end, False)
+    assert zone1.has_equivalent_transitions(zone3, start, end, False) is False
+    assert zone3.has_equivalent_transitions(zone1, start, end, False) is False
 
     # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
-    assert not zone1.has_same_rules(zone2)
-    assert not zone2.has_same_rules(zone3)
+    assert zone1.has_same_rules(zone2) is False
+    assert zone2.has_same_rules(zone3) is False
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
     zone1.set_id(UnicodeString("abc"))
@@ -1844,13 +1844,13 @@ def test_vtime_zone():
 
     # void icu::VTimeZone::setTZURL(const UnicodeString &url)
     zone1.set_tzurl("http://www.example.com")
-    assert zone1.get_tzurl(url)
+    assert zone1.get_tzurl(url) is True
     assert url == "http://www.example.com"
 
     # UBool icu::TimeZone::useDaylightTime(void)
-    assert zone1.use_daylight_time()
-    assert zone2.use_daylight_time()
-    assert zone3.use_daylight_time()
+    assert zone1.use_daylight_time() is True
+    assert zone2.use_daylight_time() is True
+    assert zone3.use_daylight_time() is True
 
     # [1]
     # void icu::VTimeZone::write(

@@ -185,7 +185,7 @@ void init_timezone(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(result, is_system_id);
+        return py::make_tuple(result, py::bool_(is_system_id));
       },
       py::arg("id_"), py::arg("canonical_id"));
 
@@ -197,14 +197,16 @@ void init_timezone(py::module &m) {
         py::arg("locale"), py::arg("result"))
       .def(
           "get_display_name",
-          [](const TimeZone &self, UBool in_daylight, TimeZone::EDisplayType style, const icupy::LocaleVariant &locale,
-             UnicodeString &result) -> UnicodeString & {
+          [](const TimeZone &self, py::bool_ in_daylight, TimeZone::EDisplayType style,
+             const icupy::LocaleVariant &locale, UnicodeString &result) -> UnicodeString & {
             return self.getDisplayName(in_daylight, style, icupy::to_locale(locale), result);
           },
           py::arg("in_daylight"), py::arg("style"), py::arg("locale"), py::arg("result"))
-      .def("get_display_name",
-           py::overload_cast<UBool, TimeZone::EDisplayType, UnicodeString &>(&TimeZone::getDisplayName, py::const_),
-           py::arg("in_daylight"), py::arg("style"), py::arg("result"))
+      .def(
+          "get_display_name",
+          [](const TimeZone &self, py::bool_ in_daylight, TimeZone::EDisplayType style,
+             UnicodeString &result) -> UnicodeString & { return self.getDisplayName(in_daylight, style, result); },
+          py::arg("in_daylight"), py::arg("style"), py::arg("result"))
       .def("get_display_name", py::overload_cast<UnicodeString &>(&TimeZone::getDisplayName, py::const_),
            py::arg("result"));
 
@@ -251,7 +253,7 @@ void init_timezone(py::module &m) {
 
   tz.def(
         "get_offset",
-        [](const TimeZone &self, UDate date, UBool local) {
+        [](const TimeZone &self, UDate date, py::bool_ local) {
           ErrorCode error_code;
           int32_t raw_offset, dst_offset;
           self.getOffset(date, local, raw_offset, dst_offset, error_code);
@@ -331,7 +333,10 @@ void init_timezone(py::module &m) {
       py::arg("id_"), py::arg("winid"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
-  tz.def("has_same_rules", &TimeZone::hasSameRules, py::arg("other"));
+  tz.def(
+      "has_same_rules",
+      [](const TimeZone &self, const TimeZone &other) -> py::bool_ { return self.hasSameRules(other); },
+      py::arg("other"));
 
   tz.def_static("set_default", &TimeZone::setDefault, py::arg("zone"));
 
@@ -341,7 +346,7 @@ void init_timezone(py::module &m) {
 
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
 
-  tz.def("use_daylight_time", &TimeZone::useDaylightTime);
+  tz.def("use_daylight_time", [](const TimeZone &self) -> py::bool_ { return self.useDaylightTime(); });
 
   //
   // icu::BasicTimeZone
@@ -362,8 +367,12 @@ void init_timezone(py::module &m) {
     return result;
   });
 
-  btz.def("get_next_transition", &BasicTimeZone::getNextTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
+  btz.def(
+      "get_next_transition",
+      [](const BasicTimeZone &self, UDate base, py::bool_ inclusive, TimeZoneTransition &result) -> py::bool_ {
+        return self.getNextTransition(base, inclusive, result);
+      },
+      py::arg("base"), py::arg("inclusive"), py::arg("result"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   btz.def(
@@ -381,8 +390,12 @@ void init_timezone(py::module &m) {
       py::arg("date"), py::arg("non_existing_time_opt"), py::arg("duplicated_time_opt"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
-  btz.def("get_previous_transition", &BasicTimeZone::getPreviousTransition, py::arg("base"), py::arg("inclusive"),
-          py::arg("result"));
+  btz.def(
+      "get_previous_transition",
+      [](const BasicTimeZone &self, UDate base, py::bool_ inclusive, TimeZoneTransition &result) -> py::bool_ {
+        return self.getPreviousTransition(base, inclusive, result);
+      },
+      py::arg("base"), py::arg("inclusive"), py::arg("result"));
 
   btz.def(
       "get_simple_rules_near",
@@ -415,7 +428,8 @@ void init_timezone(py::module &m) {
 
   btz.def(
       "has_equivalent_transitions",
-      [](const BasicTimeZone &self, const BasicTimeZone &tz, UDate start, UDate end, UBool ignore_dst_amount) {
+      [](const BasicTimeZone &self, const BasicTimeZone &tz, UDate start, UDate end,
+         py::bool_ ignore_dst_amount) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.hasEquivalentTransitions(tz, start, end, ignore_dst_amount, error_code);
         if (error_code.isFailure()) {
@@ -552,7 +566,7 @@ void init_timezone(py::module &m) {
 
   stz.def(
          "get_offset",
-         [](const SimpleTimeZone &self, UDate date, UBool local) {
+         [](const SimpleTimeZone &self, UDate date, py::bool_ local) {
            ErrorCode error_code;
            int32_t raw_offset, dst_offset;
            self.getOffset(date, local, raw_offset, dst_offset, error_code);
@@ -618,7 +632,7 @@ void init_timezone(py::module &m) {
          //                UBool after, UErrorCode &status)
          "set_end_rule",
          [](SimpleTimeZone &self, int32_t month, int32_t day_of_month, int32_t day_of_week, int32_t time,
-            SimpleTimeZone::TimeMode mode, UBool after) {
+            SimpleTimeZone::TimeMode mode, py::bool_ after) {
            ErrorCode error_code;
            self.setEndRule(month, day_of_month, day_of_week, time, mode, after, error_code);
            if (error_code.isFailure()) {
@@ -645,7 +659,7 @@ void init_timezone(py::module &m) {
           //                UErrorCode &status)
           "set_end_rule",
           [](SimpleTimeZone &self, int32_t month, int32_t day_of_month, int32_t day_of_week, int32_t time,
-             UBool after) {
+             py::bool_ after) {
             ErrorCode error_code;
             self.setEndRule(month, day_of_month, day_of_week, time, after, error_code);
             if (error_code.isFailure()) {
@@ -693,7 +707,7 @@ void init_timezone(py::module &m) {
          //                  UBool after, UErrorCode &status)
          "set_start_rule",
          [](SimpleTimeZone &self, int32_t month, int32_t day_of_month, int32_t day_of_week, int32_t time,
-            SimpleTimeZone::TimeMode mode, UBool after) {
+            SimpleTimeZone::TimeMode mode, py::bool_ after) {
            ErrorCode error_code;
            self.setStartRule(month, day_of_month, day_of_week, time, mode, after, error_code);
            if (error_code.isFailure()) {
@@ -720,7 +734,7 @@ void init_timezone(py::module &m) {
           //                  UErrorCode &status)
           "set_start_rule",
           [](SimpleTimeZone &self, int32_t month, int32_t day_of_month, int32_t day_of_week, int32_t time,
-             UBool after) {
+             py::bool_ after) {
             ErrorCode error_code;
             self.setStartRule(month, day_of_month, day_of_week, time, after, error_code);
             if (error_code.isFailure()) {
@@ -809,10 +823,12 @@ void init_timezone(py::module &m) {
   vtz.def("get_last_modified", [](const VTimeZone &self) {
     UDate last_modified = 0;
     auto result = self.getLastModified(last_modified);
-    return py::make_tuple(result, last_modified);
+    return py::make_tuple(py::bool_(result), last_modified);
   });
 
-  vtz.def("get_tzurl", &VTimeZone::getTZURL, py::arg("url"));
+  vtz.def(
+      "get_tzurl", [](const VTimeZone &self, UnicodeString &url) -> py::bool_ { return self.getTZURL(url); },
+      py::arg("url"));
 
   vtz.def("set_last_modified", &VTimeZone::setLastModified, py::arg("last_modified"));
 

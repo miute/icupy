@@ -229,7 +229,7 @@ def test_date_interval_info():
     assert not (dtitvinf2 == dtitvinf2b)
 
     # UBool icu::DateIntervalInfo::getDefaultOrder()
-    assert not dtitvinf2.get_default_order()
+    assert dtitvinf2.get_default_order() is False
 
     # UnicodeString &icu::DateIntervalInfo::getFallbackIntervalPattern(
     #       UnicodeString &result

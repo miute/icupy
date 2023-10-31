@@ -60,13 +60,18 @@ void init_uniset(py::module &m) {
 
   umat.def(
       "matches",
-      [](UnicodeMatcher &self, const Replaceable &text, int32_t offset, int32_t limit, UBool incremental) {
+      [](UnicodeMatcher &self, const Replaceable &text, int32_t offset, int32_t limit, py::bool_ incremental) {
         auto result = self.matches(text, offset, limit, incremental);
         return py::make_tuple(result, offset);
       },
       py::arg("text"), py::arg("offset"), py::arg("limit"), py::arg("incremental"));
 
-  umat.def("to_pattern", &UnicodeMatcher::toPattern, py::arg("result"), py::arg("escape_unprintable") = false);
+  umat.def(
+      "to_pattern",
+      [](const UnicodeMatcher &self, UnicodeString &result, py::bool_ escape_unprintable) -> UnicodeString & {
+        return self.toPattern(result, escape_unprintable);
+      },
+      py::arg("result"), py::arg("escape_unprintable") = false);
 
   //
   // icu::UnicodeSet
@@ -102,12 +107,13 @@ void init_uniset(py::module &m) {
 
   us.def(
         "__contains__",
-        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &item) {
+        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &item) -> py::bool_ {
           return self.contains(icupy::to_unistr(item));
         },
         py::arg("item"))
       .def(
-          "__contains__", [](const UnicodeSet &self, UChar32 item) { return self.contains(item); }, py::arg("item"));
+          "__contains__", [](const UnicodeSet &self, UChar32 item) -> py::bool_ { return self.contains(item); },
+          py::arg("item"));
 
   us.def("__copy__", &UnicodeSet::clone);
 
@@ -276,39 +282,54 @@ void init_uniset(py::module &m) {
 
   us.def(
         "contains",
-        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) { return self.contains(icupy::to_unistr(s)); },
+        [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> py::bool_ {
+          return self.contains(icupy::to_unistr(s));
+        },
         py::arg("s"))
-      .def("contains", py::overload_cast<UChar32>(&UnicodeSet::contains, py::const_), py::arg("c"))
-      .def("contains", py::overload_cast<UChar32, UChar32>(&UnicodeSet::contains, py::const_), py::arg("start"),
-           py::arg("end"));
+      .def(
+          "contains", [](const UnicodeSet &self, UChar32 c) -> py::bool_ { return self.contains(c); }, py::arg("c"))
+      .def(
+          "contains",
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ { return self.contains(start, end); },
+          py::arg("start"), py::arg("end"));
 
-  us.def("contains_all", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsAll, py::const_), py::arg("c"))
+  us.def(
+        "contains_all", [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ { return self.containsAll(c); },
+        py::arg("c"))
       .def(
           "contains_all",
-          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> py::bool_ {
             return self.containsAll(icupy::to_unistr(s));
           },
           py::arg("s"));
 
-  us.def("contains_none", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsNone, py::const_), py::arg("c"))
+  us.def(
+        "contains_none", [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ { return self.containsNone(c); },
+        py::arg("c"))
       .def(
           "contains_none",
-          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> py::bool_ {
             return self.containsNone(icupy::to_unistr(s));
           },
           py::arg("s"))
-      .def("contains_none", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsNone, py::const_),
-           py::arg("start"), py::arg("end"));
+      .def(
+          "contains_none",
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ { return self.containsNone(start, end); },
+          py::arg("start"), py::arg("end"));
 
-  us.def("contains_some", py::overload_cast<const UnicodeSet &>(&UnicodeSet::containsSome, py::const_), py::arg("c"))
+  us.def(
+        "contains_some", [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ { return self.containsSome(c); },
+        py::arg("c"))
       .def(
           "contains_some",
-          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) {
+          [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> py::bool_ {
             return self.containsSome(icupy::to_unistr(s));
           },
           py::arg("s"))
-      .def("contains_some", py::overload_cast<UChar32, UChar32>(&UnicodeSet::containsSome, py::const_),
-           py::arg("start"), py::arg("end"));
+      .def(
+          "contains_some",
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ { return self.containsSome(start, end); },
+          py::arg("start"), py::arg("end"));
 
   us.def_static(
       "create_from", [](const icupy::UnicodeStringVariant &s) { return UnicodeSet::createFrom(icupy::to_unistr(s)); },
@@ -337,16 +358,16 @@ void init_uniset(py::module &m) {
   us.def("hash_code", &UnicodeSet::hashCode);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  us.def("has_strings", &UnicodeSet::hasStrings);
+  us.def("has_strings", [](const UnicodeSet &self) -> py::bool_ { return self.hasStrings(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 
   us.def("index_of", &UnicodeSet::indexOf, py::arg("c"));
 
-  us.def("is_bogus", &UnicodeSet::isBogus);
+  us.def("is_bogus", [](const UnicodeSet &self) -> py::bool_ { return self.isBogus(); });
 
-  us.def("is_empty", &UnicodeSet::isEmpty);
+  us.def("is_empty", [](const UnicodeSet &self) -> py::bool_ { return self.isEmpty(); });
 
-  us.def("is_frozen", &UnicodeSet::isFrozen);
+  us.def("is_frozen", [](const UnicodeSet &self) -> py::bool_ { return self.isFrozen(); });
 
   us.def(
         "remove",
@@ -369,7 +390,7 @@ void init_uniset(py::module &m) {
 
   us.def_static(
       "resembles_pattern",
-      [](const icupy::UnicodeStringVariant &pattern, int32_t pos) {
+      [](const icupy::UnicodeStringVariant &pattern, int32_t pos) -> py::bool_ {
         return UnicodeSet::resemblesPattern(icupy::to_unistr(pattern), pos);
       },
       py::arg("pattern"), py::arg("pos"));

@@ -72,8 +72,8 @@ def test_api():
         assert isinstance(buf, str)
         assert buf == utf8
 
-        assert not ucsdet_is_input_filter_enabled(ucsd)
-        assert not ucsdet_enable_input_filter(ucsd, True)
-        assert ucsdet_is_input_filter_enabled(ucsd)
+        assert ucsdet_is_input_filter_enabled(ucsd) is False
+        assert ucsdet_enable_input_filter(ucsd, True) is False
+        assert ucsdet_is_input_filter_enabled(ucsd) is True
 
         ucsdet_set_declared_encoding(ucsd, "UTF-8", -1)

@@ -220,19 +220,19 @@ def test_filtered_break_iterator_builder_56():
     #       const UnicodeString &string,
     #       UErrorCode &status
     # )
-    assert builder2.suppress_break_after(UnicodeString("Mr."))
-    assert builder2.suppress_break_after("Capt.")
-    assert not builder2.suppress_break_after("Mr.")
-    assert not builder2.suppress_break_after(UnicodeString("Capt."))
+    assert builder2.suppress_break_after(UnicodeString("Mr.")) is True
+    assert builder2.suppress_break_after("Capt.") is True
+    assert builder2.suppress_break_after("Mr.") is False
+    assert builder2.suppress_break_after(UnicodeString("Capt.")) is False
 
     # UBool icu::FilteredBreakIteratorBuilder::unsuppressBreakAfter(
     #       const UnicodeString &string,
     #       UErrorCode &status
     # )
-    assert builder2.unsuppress_break_after(UnicodeString("Capt."))
-    assert builder2.unsuppress_break_after("Mr.")
-    assert not builder2.unsuppress_break_after("Capt.")
-    assert not builder2.unsuppress_break_after(UnicodeString("Mr."))
+    assert builder2.unsuppress_break_after(UnicodeString("Capt.")) is True
+    assert builder2.unsuppress_break_after("Mr.") is True
+    assert builder2.unsuppress_break_after("Capt.") is False
+    assert builder2.unsuppress_break_after(UnicodeString("Mr.")) is False
 
     # **Deprecated in ICU 60**
     # BreakIterator *icu::FilteredBreakIteratorBuilder::build(
@@ -283,11 +283,11 @@ def test_filtered_break_iterator_builder_60():
     builder = FilteredBreakIteratorBuilder.create_empty_instance()
     assert isinstance(builder, FilteredBreakIteratorBuilder)
 
-    assert builder.suppress_break_after("Mr.")
-    assert not builder.suppress_break_after("Mr.")
-    assert builder.unsuppress_break_after("Mr.")
-    assert not builder.unsuppress_break_after("Mr.")
-    assert builder.suppress_break_after("Mr.")
+    assert builder.suppress_break_after("Mr.") is True
+    assert builder.suppress_break_after("Mr.") is False
+    assert builder.unsuppress_break_after("Mr.") is True
+    assert builder.unsuppress_break_after("Mr.") is False
+    assert builder.suppress_break_after("Mr.") is True
 
     # BreakIterator *
     # icu::FilteredBreakIteratorBuilder::wrapIteratorWithFilter(

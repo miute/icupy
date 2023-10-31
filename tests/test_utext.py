@@ -47,11 +47,11 @@ def test_api():
         assert utext_get_native_index(ut) == 0
         assert utext_get_previous_native_index(ut) == 0
 
-        assert not utext_has_meta_data(ut)
-        assert not utext_is_length_expensive(ut)
-        assert not utext_is_writable(ut)
+        assert utext_has_meta_data(ut) is False
+        assert utext_is_length_expensive(ut) is False
+        assert utext_is_writable(ut) is False
 
-        utext_move_index32(ut, 1)
+        assert utext_move_index32(ut, 1) is True
         assert utext_native_length(ut) == 4
         assert utext_next32(ut) == 0x1F338
         assert utext_next32(ut) == 0x42
@@ -224,13 +224,13 @@ def test_equals():
         with gc(utext_clone(None, ut1, False, True), utext_close) as ut2:
             utext_set_native_index(ut1, 0)
             utext_set_native_index(ut2, 0)
-            assert utext_equals(ut1, ut2)
+            assert utext_equals(ut1, ut2) is True
 
             assert utext_next32(ut1) != U_SENTINEL
-            assert not utext_equals(ut1, ut2)
+            assert utext_equals(ut1, ut2) is False
 
             assert utext_next32(ut2) != U_SENTINEL
-            assert utext_equals(ut1, ut2)
+            assert utext_equals(ut1, ut2) is True
 
 
 def test_freeze():

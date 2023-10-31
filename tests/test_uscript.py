@@ -14,8 +14,8 @@ from icupy.icu import (
 
 
 def test_api():
-    assert uscript_breaks_between_letters(UScriptCode.USCRIPT_JAPANESE)
-    assert not uscript_breaks_between_letters(UScriptCode.USCRIPT_LATIN)
+    assert uscript_breaks_between_letters(UScriptCode.USCRIPT_JAPANESE) is True
+    assert uscript_breaks_between_letters(UScriptCode.USCRIPT_LATIN) is False
 
     # int32_t uscript_getCode(const char *nameOrAbbrOrLocale,
     #                         UScriptCode *fillIn,
@@ -82,11 +82,11 @@ def test_api():
         == UScriptUsage.USCRIPT_USAGE_LIMITED_USE
     )
 
-    assert uscript_has_script(0x3031, UScriptCode.USCRIPT_HIRAGANA)
-    assert not uscript_has_script(0x3031, UScriptCode.USCRIPT_HAN)
+    assert uscript_has_script(0x3031, UScriptCode.USCRIPT_HIRAGANA) is True
+    assert uscript_has_script(0x3031, UScriptCode.USCRIPT_HAN) is False
 
-    assert uscript_is_cased(UScriptCode.USCRIPT_LATIN)
-    assert not uscript_is_cased(UScriptCode.USCRIPT_HIRAGANA)
+    assert uscript_is_cased(UScriptCode.USCRIPT_LATIN) is True
+    assert uscript_is_cased(UScriptCode.USCRIPT_HIRAGANA) is False
 
-    assert uscript_is_right_to_left(UScriptCode.USCRIPT_ARABIC)
-    assert not uscript_is_right_to_left(UScriptCode.USCRIPT_LATIN)
+    assert uscript_is_right_to_left(UScriptCode.USCRIPT_ARABIC) is True
+    assert uscript_is_right_to_left(UScriptCode.USCRIPT_LATIN) is False

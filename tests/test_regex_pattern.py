@@ -201,16 +201,16 @@ def test_matches():
     #       UErrorCode &status
     # )
     pe = UParseError()
-    assert RegexPattern.matches(regex1, src1a, pe)
+    assert RegexPattern.matches(regex1, src1a, pe) is True
 
     pe = UParseError()
-    assert not RegexPattern.matches(regex1, src1b, pe)
+    assert RegexPattern.matches(regex1, src1b, pe) is False
 
     pe = UParseError()
-    assert RegexPattern.matches("[A-Za-z]+", src1a, pe)
+    assert RegexPattern.matches("[A-Za-z]+", src1a, pe) is True
 
     pe = UParseError()
-    assert not RegexPattern.matches("[A-Za-z]+", src1b, pe)
+    assert RegexPattern.matches("[A-Za-z]+", src1b, pe) is False
 
     # [2]
     # static UBool icu::RegexPattern::matches(
@@ -222,11 +222,11 @@ def test_matches():
     regex2 = utext_open_const_unicode_string(None, regex1)
     src2a = utext_open_const_unicode_string(None, src1a)
     pe = UParseError()
-    assert RegexPattern.matches(regex2, src2a, pe)
+    assert RegexPattern.matches(regex2, src2a, pe) is True
 
     src2b = utext_open_const_unicode_string(None, src1b)
     pe = UParseError()
-    assert not RegexPattern.matches(regex2, src2b, pe)
+    assert RegexPattern.matches(regex2, src2b, pe) is False
 
     utext_close(regex2)
     utext_close(src2a)

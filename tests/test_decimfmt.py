@@ -17,13 +17,13 @@ def test_api():
     fmt = DecimalFormat("0", symbols)
 
     # UBool icu::DecimalFormat::areSignificantDigitsUsed()
-    assert not fmt.are_significant_digits_used()
+    assert fmt.are_significant_digits_used() is False
 
     # void icu::DecimalFormat::setSignificantDigitsUsed(
     #       UBool useSignificantDigits
     # )
     fmt.set_significant_digits_used(True)
-    assert fmt.are_significant_digits_used()
+    assert fmt.are_significant_digits_used() is True
 
     # const CurrencyPluralInfo *icu::DecimalFormat::getCurrencyPluralInfo(void)
     result = fmt.get_currency_plural_info()
@@ -193,25 +193,25 @@ def test_api():
     assert fmt.get_secondary_grouping_size() == 3
 
     # UBool icu::DecimalFormat::isDecimalSeparatorAlwaysShown(void)
-    assert not fmt.is_decimal_separator_always_shown()
+    assert fmt.is_decimal_separator_always_shown() is False
 
     # void icu::DecimalFormat::setDecimalSeparatorAlwaysShown(UBool newValue)
     fmt.set_decimal_separator_always_shown(True)
-    assert fmt.is_decimal_separator_always_shown()
+    assert fmt.is_decimal_separator_always_shown() is True
 
     # UBool icu::DecimalFormat::isExponentSignAlwaysShown(void)
-    assert not fmt.is_exponent_sign_always_shown()
+    assert fmt.is_exponent_sign_always_shown() is False
 
     # void icu::DecimalFormat::setExponentSignAlwaysShown(UBool expSignAlways)
     fmt.set_exponent_sign_always_shown(True)
-    assert fmt.is_exponent_sign_always_shown()
+    assert fmt.is_exponent_sign_always_shown() is True
 
     # UBool icu::DecimalFormat::isScientificNotation(void)
-    assert fmt.is_scientific_notation()
+    assert fmt.is_scientific_notation() is True
 
     # void icu::DecimalFormat::setScientificNotation(UBool useScientific)
     fmt.set_scientific_notation(False)
-    assert not fmt.is_scientific_notation()
+    assert fmt.is_scientific_notation() is False
 
     # UBool icu::DecimalFormat::operator==(const Format &other)
     fmt2 = DecimalFormat("0", DecimalFormatSymbols(Locale.get_us()))
@@ -328,11 +328,11 @@ def test_api_54():
     assert fmt.get_currency_usage() == UCurrencyUsage.UCURR_USAGE_CASH
 
     # UBool icu::DecimalFormat::isDecimalPatternMatchRequired(void)
-    assert not fmt.is_decimal_pattern_match_required()
+    assert fmt.is_decimal_pattern_match_required() is False
 
     # void icu::DecimalFormat::setDecimalPatternMatchRequired(UBool newValue)
     fmt.set_decimal_pattern_match_required(True)
-    assert fmt.is_decimal_pattern_match_required()
+    assert fmt.is_decimal_pattern_match_required() is True
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
@@ -363,32 +363,32 @@ def test_api_64():
     assert fmt.get_minimum_grouping_digits() == 1
 
     # UBool icu::DecimalFormat::isFormatFailIfMoreThanMaxDigits()
-    assert not fmt.is_format_fail_if_more_than_max_digits()
+    assert fmt.is_format_fail_if_more_than_max_digits() is False
 
     # void icu::DecimalFormat::setFormatFailIfMoreThanMaxDigits(UBool value)
     fmt.set_format_fail_if_more_than_max_digits(True)
-    assert fmt.is_format_fail_if_more_than_max_digits()
+    assert fmt.is_format_fail_if_more_than_max_digits() is True
 
     # UBool icu::DecimalFormat::isParseCaseSensitive()
-    assert not fmt.is_parse_case_sensitive()
+    assert fmt.is_parse_case_sensitive() is False
 
     # void icu::DecimalFormat::setParseCaseSensitive(UBool value)
     fmt.set_parse_case_sensitive(True)
-    assert fmt.is_parse_case_sensitive()
+    assert fmt.is_parse_case_sensitive() is True
 
     # UBool icu::DecimalFormat::isParseNoExponent()
-    assert not fmt.is_parse_no_exponent()
+    assert fmt.is_parse_no_exponent() is False
 
     # void icu::DecimalFormat::setParseNoExponent(UBool value)
     fmt.set_parse_no_exponent(True)
-    assert fmt.is_parse_no_exponent()
+    assert fmt.is_parse_no_exponent() is True
 
     # UBool icu::DecimalFormat::isSignAlwaysShown()
-    assert not fmt.is_sign_always_shown()
+    assert fmt.is_sign_always_shown() is False
 
     # void icu::DecimalFormat::setSignAlwaysShown(UBool value)
     fmt.set_sign_always_shown(True)
-    assert fmt.is_sign_always_shown()
+    assert fmt.is_sign_always_shown() is True
 
     # const number::LocalizedNumberFormatter *
     # icu::DecimalFormat::toNumberFormatter(UErrorCode &status)

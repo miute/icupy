@@ -89,11 +89,11 @@ def test_api():
     assert fmt2.get_time_zone() == zone4
 
     # UBool icu::DateFormat::isLenient(void)
-    assert fmt2.is_lenient()
+    assert fmt2.is_lenient() is True
 
     # void icu::DateFormat::setLenient(UBool lenient)
     fmt2.set_lenient(False)
-    assert not fmt2.is_lenient()
+    assert fmt2.is_lenient() is False
 
 
 def test_clone():
@@ -426,8 +426,11 @@ def test_get_boolean_attribute():
     #       UDateFormatBooleanAttribute attr,
     #       UErrorCode &status
     # )
-    assert fmt.get_boolean_attribute(
-        UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE
+    assert (
+        fmt.get_boolean_attribute(
+            UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE
+        )
+        is True
     )
 
     # DateFormat &icu::DateFormat::setBooleanAttribute(
@@ -440,8 +443,11 @@ def test_get_boolean_attribute():
     )
     assert isinstance(result, DateFormat)
     assert id(result) == id(fmt)
-    assert not fmt.get_boolean_attribute(
-        UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE
+    assert (
+        fmt.get_boolean_attribute(
+            UDateFormatBooleanAttribute.UDAT_PARSE_ALLOW_WHITESPACE
+        )
+        is False
     )
 
 
@@ -498,15 +504,15 @@ def test_is_calendar_lenient():
     )
 
     # UBool icu::DateFormat::isCalendarLenient(void)
-    assert fmt.is_calendar_lenient()
+    assert fmt.is_calendar_lenient() is True
 
     cal = fmt.get_calendar()
-    assert cal.is_lenient()
+    assert cal.is_lenient() is True
 
     # void icu::DateFormat::setCalendarLenient(UBool lenient)
     fmt.set_calendar_lenient(False)
-    assert not fmt.is_calendar_lenient()
-    assert not cal.is_lenient()
+    assert fmt.is_calendar_lenient() is False
+    assert cal.is_lenient() is False
 
 
 def test_parse():

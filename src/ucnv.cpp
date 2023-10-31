@@ -365,11 +365,12 @@ void init_ucnv(py::module &m) {
       py::arg("cnv"), py::arg("set_fill_in"), py::arg("which_set"));
 
   m.def(
-      "ucnv_is_ambiguous", [](const _UConverterPtr &cnv) { return ucnv_isAmbiguous(cnv); }, py::arg("cnv"));
+      "ucnv_is_ambiguous", [](const _UConverterPtr &cnv) -> py::bool_ { return ucnv_isAmbiguous(cnv); },
+      py::arg("cnv"));
 
   m.def(
       "ucnv_is_fixed_width",
-      [](const _UConverterPtr &cnv) {
+      [](const _UConverterPtr &cnv) -> py::bool_ {
         ErrorCode error_code;
         auto result = ucnv_isFixedWidth(cnv, error_code);
         if (error_code.isFailure()) {
@@ -449,7 +450,7 @@ void init_ucnv(py::module &m) {
   m.def("ucnv_set_default_name", &ucnv_setDefaultName, py::arg("name"));
 
   m.def(
-      "ucnv_set_fallback", [](_UConverterPtr &cnv, UBool uses_fallback) { ucnv_setFallback(cnv, uses_fallback); },
+      "ucnv_set_fallback", [](_UConverterPtr &cnv, py::bool_ uses_fallback) { ucnv_setFallback(cnv, uses_fallback); },
       py::arg("cnv"), py::arg("uses_fallback"));
 
   // TODO: Remove ucnv_set_from_u_call_back() in a future release.
@@ -621,7 +622,8 @@ void init_ucnv(py::module &m) {
       py::arg("new_action"), py::arg("new_context"));
 
   m.def(
-      "ucnv_uses_fallback", [](const _UConverterPtr &cnv) { return ucnv_usesFallback(cnv); }, py::arg("cnv"));
+      "ucnv_uses_fallback", [](const _UConverterPtr &cnv) -> py::bool_ { return ucnv_usesFallback(cnv); },
+      py::arg("cnv"));
 
   m.attr("UCNV_LOCALE_OPTION_STRING") = UCNV_LOCALE_OPTION_STRING;
   m.attr("UCNV_OPTION_SEP_CHAR") = UCNV_OPTION_SEP_CHAR;

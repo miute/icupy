@@ -9,7 +9,7 @@ void init_dtitvinf(py::module &m) {
   //
   // icu::DateIntervalInfo
   //
-  py::class_<DateIntervalInfo> dii(m, "DateIntervalInfo");
+  py::class_<DateIntervalInfo, UObject> dii(m, "DateIntervalInfo");
 
   dii.def(py::init([](const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
@@ -37,7 +37,7 @@ void init_dtitvinf(py::module &m) {
 
   dii.def("clone", &DateIntervalInfo::clone);
 
-  dii.def("get_default_order", &DateIntervalInfo::getDefaultOrder);
+  dii.def("get_default_order", [](const DateIntervalInfo &self) -> py::bool_ { return self.getDefaultOrder(); });
 
   dii.def("get_fallback_interval_pattern", &DateIntervalInfo::getFallbackIntervalPattern, py::arg("result"));
 

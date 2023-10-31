@@ -39,7 +39,9 @@ void init_localebuilder(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   lb.def(
       "copy_error_to",
-      [](const LocaleBuilder &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      [](const LocaleBuilder &self, ErrorCode &out_error_code) -> py::bool_ {
+        return self.copyErrorTo(out_error_code);
+      },
       py::arg("out_error_code"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 

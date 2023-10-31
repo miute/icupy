@@ -130,11 +130,11 @@ def test_api():
         )
         assert uniset.size() > 0
 
-        assert ucnv_is_ambiguous(cnv)
-        assert not ucnv_is_fixed_width(cnv)
-        assert not ucnv_uses_fallback(cnv)
+        assert ucnv_is_ambiguous(cnv) is True
+        assert ucnv_is_fixed_width(cnv) is False
+        assert ucnv_uses_fallback(cnv) is False
         ucnv_set_fallback(cnv, True)
-        assert ucnv_uses_fallback(cnv)
+        assert ucnv_uses_fallback(cnv) is True
 
         test2 = UnicodeString("a\uFF71b\U0001f338c", -1)
         dest = test2.extract(cnv)  # utf-8 to ibm-943

@@ -48,10 +48,10 @@ def test_add_record():
     obj4 = {"AlphabeticIndex": index}
 
     # UBool icu::AlphabeticIndex::nextBucket(UErrorCode &status)
-    assert index.next_bucket()
+    assert index.next_bucket() is True
 
     # UBool icu::AlphabeticIndex::nextRecord(UErrorCode &status)
-    assert not index.next_record()
+    assert index.next_record() is False
 
     # AlphabeticIndex &icu::AlphabeticIndex::addRecord(
     #       const UnicodeString &name,
@@ -89,33 +89,33 @@ def test_add_record():
     # int32_t icu::AlphabeticIndex::getBucketRecordCount()
     # const void *icu::AlphabeticIndex::getRecordData()
     # const UnicodeString &icu::AlphabeticIndex::getRecordName()
-    assert index.next_bucket()
+    assert index.next_bucket() is True
     assert index.get_bucket_record_count() == 0
-    assert not index.next_record()
+    assert index.next_record() is False
 
-    assert index.next_bucket()
+    assert index.next_bucket() is True
     assert index.get_bucket_record_count() == 1
-    assert index.next_record()
+    assert index.next_record() is True
     result = index.get_record_data()
     assert result is None
     result = index.get_record_name()
     assert isinstance(result, UnicodeString)
     assert result == "Adam"
-    assert not index.next_record()
+    assert index.next_record() is False
 
-    assert index.next_bucket()
+    assert index.next_bucket() is True
     assert index.get_bucket_record_count() == 1
-    assert index.next_record()
+    assert index.next_record() is True
     result = index.get_record_data()
     assert result is None
     result = index.get_record_name()
     assert isinstance(result, UnicodeString)
     assert result == "Baker"
-    assert not index.next_record()
+    assert index.next_record() is False
 
-    assert index.next_bucket()
+    assert index.next_bucket() is True
     assert index.get_bucket_record_count() == 2
-    assert index.next_record()
+    assert index.next_record() is True
     result = index.get_record_data()
     assert isinstance(result, ConstVoidPtr)
     assert result.to_object() == obj4
@@ -123,21 +123,21 @@ def test_add_record():
     assert isinstance(result, UnicodeString)
     assert result == "Chad"
 
-    assert index.next_record()
+    assert index.next_record() is True
     result = index.get_record_data()
     assert isinstance(result, ConstVoidPtr)
     assert result.to_object() == obj3
     result = index.get_record_name()
     assert isinstance(result, UnicodeString)
     assert result == "Charlie"
-    assert not index.next_record()
+    assert index.next_record() is False
 
     # AlphabeticIndex &icu::AlphabeticIndex::resetRecordIterator()
     result = index.reset_record_iterator()
     assert isinstance(result, AlphabeticIndex)
     assert id(result) == id(index)
 
-    assert index.next_record()
+    assert index.next_record() is True
     assert index.get_record_name() == "Chad"
 
     # AlphabeticIndex &icu::AlphabeticIndex::clearRecords(UErrorCode &status)
@@ -161,9 +161,9 @@ def test_api():
     assert index2.get_bucket_count() == 28
 
     # UBool icu::AlphabeticIndex::nextBucket(UErrorCode &status)
-    assert index.next_bucket()
-    assert index.next_bucket()
-    assert index.next_bucket()
+    assert index.next_bucket() is True
+    assert index.next_bucket() is True
+    assert index.next_bucket() is True
 
     # [1]
     # int32_t icu::AlphabeticIndex::getBucketIndex()
@@ -216,7 +216,7 @@ def test_api():
     result = index.reset_bucket_iterator()
     assert isinstance(result, AlphabeticIndex)
     assert id(result) == id(index)
-    assert index.next_bucket()
+    assert index.next_bucket() is True
     assert index.get_bucket_index() == 0
 
     # AlphabeticIndex &icu::AlphabeticIndex::setInflowLabel(

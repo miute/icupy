@@ -108,12 +108,12 @@ def test_api():
     assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
 
     # UBool icu::Formattable::isNumeric()
-    assert not fmt2.is_numeric()
-    assert fmt3.is_numeric()
-    assert fmt4.is_numeric()
-    assert fmt5.is_numeric()
-    assert not fmt8.is_numeric()
-    assert not fmt10.is_numeric()
+    assert fmt2.is_numeric() is False
+    assert fmt3.is_numeric() is True
+    assert fmt4.is_numeric() is True
+    assert fmt5.is_numeric() is True
+    assert fmt8.is_numeric() is False
+    assert fmt10.is_numeric() is False
 
     # UBool icu::Formattable::operator!=(const Formattable &other)
     assert fmt3 != fmt4

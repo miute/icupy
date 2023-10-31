@@ -251,7 +251,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def("get_type", &Formattable::getType);
 
-  fmt.def("is_numeric", &Formattable::isNumeric);
+  fmt.def("is_numeric", [](const Formattable &self) -> py::bool_ { return self.isNumeric(); });
 
   fmt.def(
       "set_array",

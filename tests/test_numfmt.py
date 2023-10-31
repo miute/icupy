@@ -42,10 +42,13 @@ def test_api():
     assert fmt.get_minimum_integer_digits() == 1
 
     # UBool icu::NumberFormat::isGroupingUsed(void)
-    assert fmt.is_grouping_used()
+    assert fmt.is_grouping_used() is True
+
+    # UBool icu::NumberFormat::isLenient(void) const
+    assert fmt.is_lenient() is False
 
     # UBool icu::NumberFormat::isParseIntegerOnly(void)
-    assert not fmt.is_parse_integer_only()
+    assert fmt.is_parse_integer_only() is False
 
 
 def test_create_currency_instance():

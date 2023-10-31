@@ -336,11 +336,11 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   nf.def("get_rounding_mode", &NumberFormat::getRoundingMode);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
-  nf.def("is_grouping_used", &NumberFormat::isGroupingUsed);
+  nf.def("is_grouping_used", [](const NumberFormat &self) -> py::bool_ { return self.isGroupingUsed(); });
 
-  nf.def("is_lenient", &NumberFormat::isLenient);
+  nf.def("is_lenient", [](const NumberFormat &self) -> py::bool_ { return self.isLenient(); });
 
-  nf.def("is_parse_integer_only", &NumberFormat::isParseIntegerOnly);
+  nf.def("is_parse_integer_only", [](const NumberFormat &self) -> py::bool_ { return self.isParseIntegerOnly(); });
 
   nf.def(
         "parse",
@@ -389,9 +389,12 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       },
       py::arg("the_currency"));
 
-  nf.def("set_grouping_used", &NumberFormat::setGroupingUsed, py::arg("new_value"));
+  nf.def(
+      "set_grouping_used", [](NumberFormat &self, py::bool_ new_value) { self.setGroupingUsed(new_value); },
+      py::arg("new_value"));
 
-  nf.def("set_lenient", &NumberFormat::setLenient, py::arg("enable"));
+  nf.def(
+      "set_lenient", [](NumberFormat &self, py::bool_ enable) { self.setLenient(enable); }, py::arg("enable"));
 
   nf.def("set_maximum_fraction_digits", &NumberFormat::setMaximumFractionDigits, py::arg("new_value"));
 
@@ -401,7 +404,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
 
   nf.def("set_minimum_integer_digits", &NumberFormat::setMinimumIntegerDigits, py::arg("new_value"));
 
-  nf.def("set_parse_integer_only", &NumberFormat::setParseIntegerOnly, py::arg("value"));
+  nf.def(
+      "set_parse_integer_only", [](NumberFormat &self, py::bool_ value) { self.setParseIntegerOnly(value); },
+      py::arg("value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   nf.def("set_rounding_mode", &NumberFormat::setRoundingMode, py::arg("rounding_mode"));

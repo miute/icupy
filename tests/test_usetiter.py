@@ -15,10 +15,10 @@ def test_next():
     it = UnicodeSetIterator(uniset)
 
     # UBool icu::UnicodeSetIterator::next()
-    assert it.next()
+    assert it.next() is True
 
     # UBool icu::UnicodeSetIterator::isString()
-    assert not it.is_string()
+    assert it.is_string() is False
 
     # UChar32 icu::UnicodeSetIterator::getCodepoint()
     assert it.get_codepoint() == ord("a")
@@ -28,22 +28,22 @@ def test_next():
     assert isinstance(result, UnicodeString)
     assert result == "a"
 
-    assert it.next()
-    assert not it.is_string()
+    assert it.next() is True
+    assert it.is_string() is False
     assert it.get_codepoint() == 0x1ABCD
     assert it.get_string() == "\U0001abcd"
 
-    assert it.next()
-    assert it.is_string()
+    assert it.next() is True
+    assert it.is_string() is True
     assert it.get_string() == "ab"
 
-    assert not it.next()
+    assert it.next() is False
 
     # [1]
     # void icu::UnicodeSetIterator::reset()
     it.reset()
-    assert it.next()
-    assert not it.is_string()
+    assert it.next() is True
+    assert it.is_string() is False
     assert it.get_codepoint() == ord("a")
     assert it.get_string() == "a"
 
@@ -54,30 +54,30 @@ def test_next_range():
     it = UnicodeSetIterator()
 
     # UBool icu::UnicodeSetIterator::nextRange()
-    assert not it.next_range()
+    assert it.next_range() is False
 
     # [2]
     # void icu::UnicodeSetIterator::reset(const UnicodeSet &set)
     uniset = UnicodeSet("[a0-9{ab}]")
     it.reset(uniset)
 
-    assert it.next_range()
-    assert not it.is_string()
+    assert it.next_range() is True
+    assert it.is_string() is False
     assert it.get_codepoint() == ord("0")
 
     # UChar32 icu::UnicodeSetIterator::getCodepointEnd()
     assert it.get_codepoint_end() == ord("9")
 
-    assert it.next_range()
-    assert not it.is_string()
+    assert it.next_range() is True
+    assert it.is_string() is False
     assert it.get_codepoint() == ord("a")
     assert it.get_codepoint_end() == ord("a")
 
-    assert it.next_range()
-    assert it.is_string()
+    assert it.next_range() is True
+    assert it.is_string() is True
     assert it.get_string() == "ab"
 
-    assert not it.next_range()
+    assert it.next_range() is False
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")

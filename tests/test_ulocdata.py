@@ -105,11 +105,11 @@ def test_api():
         assert separator == ", "
 
         # UBool ulocdata_getNoSubstitute(ULocaleData *uld)
-        assert not ulocdata_get_no_substitute(uld)
+        assert ulocdata_get_no_substitute(uld) is False
 
         # void ulocdata_setNoSubstitute(
         #       ULocaleData *uld,
         #       UBool setting
         # )
         ulocdata_set_no_substitute(uld, True)
-        assert ulocdata_get_no_substitute(uld)
+        assert ulocdata_get_no_substitute(uld) is True

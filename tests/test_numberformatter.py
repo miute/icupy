@@ -226,7 +226,7 @@ def test_localized_number_formatter_60():
     #       UErrorCode &outErrorCode
     # )
     out_error_code = ErrorCode()
-    assert not fmt2.copy_error_to(out_error_code)
+    assert fmt2.copy_error_to(out_error_code) is False
     assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
     # template<typename Derived>
@@ -768,7 +768,7 @@ def test_unlocalized_number_formatter_60():
     #       UErrorCode &outErrorCode
     # )
     out_error_code = ErrorCode()
-    assert not fmt2.copy_error_to(out_error_code)
+    assert fmt2.copy_error_to(out_error_code) is False
     assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
     # template<typename Derived>

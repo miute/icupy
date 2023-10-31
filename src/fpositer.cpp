@@ -20,5 +20,6 @@ void init_fpositer(py::module &m) {
       "__ne__", [](const FieldPositionIterator &self, const FieldPositionIterator &other) { return self != other; },
       py::is_operator(), py::arg("other"));
 
-  fpi.def("next", &FieldPositionIterator::next, py::arg("fp"));
+  fpi.def(
+      "next", [](FieldPositionIterator &self, FieldPosition &fp) -> py::bool_ { return self.next(fp); }, py::arg("fp"));
 }

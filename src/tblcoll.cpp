@@ -163,9 +163,8 @@ void init_tblcoll(py::module &m) {
 
   coll.def(
       "equals",
-      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target) {
-        return self.equals(icupy::to_unistr(source), icupy::to_unistr(target));
-      },
+      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target)
+          -> py::bool_ { return self.equals(icupy::to_unistr(source), icupy::to_unistr(target)); },
       py::arg("source"), py::arg("target"));
 
   coll.def(
@@ -275,7 +274,7 @@ void init_tblcoll(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(result, is_available);
+        return py::make_tuple(result, py::bool_(is_available));
       },
       py::arg("keyword"), py::arg("locale"));
 
@@ -302,7 +301,7 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
       "get_keyword_values_for_locale",
-      [](const char *keyword, const icupy::LocaleVariant &locale, UBool commonly_used) {
+      [](const char *keyword, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
         ErrorCode error_code;
         auto result = Collator::getKeywordValuesForLocale(keyword, icupy::to_locale(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
@@ -376,16 +375,14 @@ void init_tblcoll(py::module &m) {
 
   coll.def(
       "greater",
-      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target) {
-        return self.greater(icupy::to_unistr(source), icupy::to_unistr(target));
-      },
+      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target)
+          -> py::bool_ { return self.greater(icupy::to_unistr(source), icupy::to_unistr(target)); },
       py::arg("source"), py::arg("target"));
 
   coll.def(
       "greater_or_equal",
-      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target) {
-        return self.greaterOrEqual(icupy::to_unistr(source), icupy::to_unistr(target));
-      },
+      [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target)
+          -> py::bool_ { return self.greaterOrEqual(icupy::to_unistr(source), icupy::to_unistr(target)); },
       py::arg("source"), py::arg("target"));
 
   coll.def("hash_code", &Collator::hashCode);
