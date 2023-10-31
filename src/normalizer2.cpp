@@ -2,6 +2,10 @@
 #include <pybind11/stl.h>
 #include <unicode/normalizer2.h>
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 60)
+#include <unicode/edits.h>
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
+
 using namespace icu;
 
 void init_normalizer2(py::module &m) {
@@ -188,20 +192,19 @@ void init_normalizer2(py::module &m) {
       py::arg("first"), py::arg("second"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
-  // TODO: Implement icu::Edits.
   n2.def(
       "normalize_utf8",
-      [](const Normalizer2 &self, uint32_t options, const py::bytes &src) {
+      [](const Normalizer2 &self, uint32_t options, const py::bytes &src, std::optional<Edits *> edits) {
         std::string dest;
         auto sink = StringByteSink<std::string>(&dest);
         ErrorCode error_code;
-        self.normalizeUTF8(options, StringPiece(src), sink, nullptr, error_code);
+        self.normalizeUTF8(options, StringPiece(src), sink, edits.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return py::bytes(dest);
       },
-      py::arg("options"), py::arg("src"));
+      py::arg("options"), py::arg("src"), py::arg("edits") = nullptr);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
   n2.def(
