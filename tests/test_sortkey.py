@@ -70,9 +70,9 @@ def test_api():
     assert hash(key3) == key3.hash_code()
 
     # UBool icu::CollationKey::isBogus(void)
-    assert not key1.is_bogus()
-    assert not key2.is_bogus()
-    assert not key3.is_bogus()
+    assert key1.is_bogus() is False
+    assert key2.is_bogus() is False
+    assert key3.is_bogus() is False
 
     # UBool icu::CollationKey::operator!=(const CollationKey &source)
     assert key1 != key

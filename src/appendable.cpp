@@ -17,17 +17,28 @@ void init_appendable(py::module &m) {
   //
   // icu::Appendable
   //
-  app.def("append_code_point", &Appendable::appendCodePoint, py::arg("c"));
+  app.def(
+      "append_code_point", [](Appendable &self, UChar32 c) -> py::bool_ { return self.appendCodePoint(c); },
+      py::arg("c"));
 
   app.def(
-      "append_code_unit", [](Appendable &self, int16_t c) { return self.appendCodeUnit(c); }, py::arg("c"));
+      "append_code_unit", [](Appendable &self, int16_t c) -> py::bool_ { return self.appendCodeUnit(c); },
+      py::arg("c"));
 
-  app.def("append_string", &Appendable::appendString, py::arg("s"), py::arg("length"));
+  app.def(
+      "append_string",
+      [](Appendable &self, const char16_t *s, int32_t length) -> py::bool_ { return self.appendString(s, length); },
+      py::arg("s").none(false), py::arg("length") = -1);
 
   // FIXME: Implement "char16_t *icu::Appendable::getAppendBuffer(int32_t minCapacity,
   //  int32_t desiredCapacityHint, char16_t *scratch, int32_t scratchCapacity, int32_t *resultCapacity)".
 
-  app.def("reserve_append_capacity", &Appendable::reserveAppendCapacity, py::arg("append_capacity"));
+  app.def(
+      "reserve_append_capacity",
+      [](Appendable &self, int32_t append_capacity) -> py::bool_ {
+        return self.reserveAppendCapacity(append_capacity);
+      },
+      py::arg("append_capacity"));
 
   //
   // icu::UnicodeStringAppendable

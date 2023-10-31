@@ -655,14 +655,14 @@ def test_api():
     src = UnicodeString("www.eXample.cOm")
     expected = UnicodeString("www.example.com")
     result = _trans.name_to_ascii(src, dest, info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
 
     dest.remove()
     result = _trans.name_to_ascii("www.eXample.cOm", dest, info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
@@ -674,7 +674,7 @@ def test_api():
     #       UErrorCode &errorCode
     # ) const
     result = _trans.name_to_ascii_utf8(b"www.eXample.cOm", info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, bytes)
     assert result.decode() == expected
 
@@ -766,7 +766,7 @@ def test_not_std3():
     # ) const
     # '\x00a_2+2=4\n.essen.net'
     result = not3.name_to_unicode(src, dest, info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert result != src
@@ -779,7 +779,7 @@ def test_not_std3():
     #       UErrorCode &errorCode
     # ) const
     result = not3.name_to_unicode_utf8(str(src).encode(), info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, bytes)
     assert result.decode() == str(expected)
 
@@ -800,14 +800,14 @@ def test_not_std3():
     dest.remove()
     src = UnicodeString("a\\u2260b\\u226Ec\\u226Fd").unescape()
     result = not3.name_to_unicode(src, dest, info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert result == src
 
     dest.remove()
     result = not3.name_to_unicode("a\u2260b\u226Ec\u226Fd", dest, info)
-    assert not info.has_errors()
+    assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)
     assert result == src
@@ -906,14 +906,14 @@ def test_some_cases(s, mode, u, errors):
     # Differences between transitional and nontransitional processing
     if mode == "B":
         assert not (
-            an_info.is_transitional_different()
-            or at_info.is_transitional_different()
-            or un_info.is_transitional_different()
-            or ut_info.is_transitional_different()
-            or anl_info.is_transitional_different()
-            or atl_info.is_transitional_different()
-            or unl_info.is_transitional_different()
-            or utl_info.is_transitional_different()
+            an_info.is_transitional_different() is True
+            or at_info.is_transitional_different() is True
+            or un_info.is_transitional_different() is True
+            or ut_info.is_transitional_different() is True
+            or anl_info.is_transitional_different() is True
+            or atl_info.is_transitional_different() is True
+            or unl_info.is_transitional_different() is True
+            or utl_info.is_transitional_different() is True
         )
         assert not (
             an != at
@@ -927,13 +927,13 @@ def test_some_cases(s, mode, u, errors):
         )
     else:
         assert not (
-            not an_info.is_transitional_different()
-            or not at_info.is_transitional_different()
-            or not un_info.is_transitional_different()
-            or not ut_info.is_transitional_different()
-            or not anl_info.is_transitional_different()
-            or not atl_info.is_transitional_different()
-            or not unl_info.is_transitional_different()
-            or not utl_info.is_transitional_different()
+            an_info.is_transitional_different() is False
+            or at_info.is_transitional_different() is False
+            or un_info.is_transitional_different() is False
+            or ut_info.is_transitional_different() is False
+            or anl_info.is_transitional_different() is False
+            or atl_info.is_transitional_different() is False
+            or unl_info.is_transitional_different() is False
+            or utl_info.is_transitional_different() is False
         )
         assert not (an == at or un == ut or anl == atl or unl == utl)

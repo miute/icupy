@@ -94,7 +94,7 @@ def test_next():
     assert it.set_to_start() == 0
 
     # UBool icu::ForwardCharacterIterator::hasNext()
-    while it.has_next():
+    while it.has_next() is True:
         # char16_t icu::CharacterIterator::current(void)
         current = it.current()
 
@@ -172,7 +172,7 @@ def test_previous():
     assert it.set_to_end() == 4
 
     # UBool icu::CharacterIterator::hasPrevious()
-    while it.has_previous():
+    while it.has_previous() is True:
         # char16_t icu::CharacterIterator::previous(void)
         c = it.previous()
         current = it.current()

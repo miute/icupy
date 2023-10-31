@@ -485,19 +485,19 @@ def test_is_boundary():
 
     # UBool icu::BreakIterator::isBoundary(int32_t offset)
     # [0, 3, 4, 7, 8, 11, 12]
-    assert bi.is_boundary(0)
-    assert not bi.is_boundary(1)
-    assert not bi.is_boundary(2)
-    assert bi.is_boundary(3)
-    assert bi.is_boundary(4)
-    assert not bi.is_boundary(5)
-    assert not bi.is_boundary(6)
-    assert bi.is_boundary(7)
-    assert bi.is_boundary(8)
-    assert not bi.is_boundary(9)
-    assert not bi.is_boundary(10)
-    assert bi.is_boundary(11)
-    assert bi.is_boundary(12)
+    assert bi.is_boundary(0) is True
+    assert bi.is_boundary(1) is False
+    assert bi.is_boundary(2) is False
+    assert bi.is_boundary(3) is True
+    assert bi.is_boundary(4) is True
+    assert bi.is_boundary(5) is False
+    assert bi.is_boundary(6) is False
+    assert bi.is_boundary(7) is True
+    assert bi.is_boundary(8) is True
+    assert bi.is_boundary(9) is False
+    assert bi.is_boundary(10) is False
+    assert bi.is_boundary(11) is True
+    assert bi.is_boundary(12) is True
 
 
 def test_next():

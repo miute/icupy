@@ -109,7 +109,8 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
           },
           py::arg("pattern"), py::arg("parse_error"));
 
-  df.def("are_significant_digits_used", &DecimalFormat::areSignificantDigitsUsed);
+  df.def("are_significant_digits_used",
+         [](const DecimalFormat &self) -> py::bool_ { return self.areSignificantDigitsUsed(); });
 
   df.def("clone", &DecimalFormat::clone);
 
@@ -172,25 +173,29 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("get_secondary_grouping_size", &DecimalFormat::getSecondaryGroupingSize);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-  df.def("is_decimal_pattern_match_required", &DecimalFormat::isDecimalPatternMatchRequired);
+  df.def("is_decimal_pattern_match_required",
+         [](const DecimalFormat &self) -> py::bool_ { return self.isDecimalPatternMatchRequired(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
-  df.def("is_decimal_separator_always_shown", &DecimalFormat::isDecimalSeparatorAlwaysShown);
+  df.def("is_decimal_separator_always_shown",
+         [](const DecimalFormat &self) -> py::bool_ { return self.isDecimalSeparatorAlwaysShown(); });
 
-  df.def("is_exponent_sign_always_shown", &DecimalFormat::isExponentSignAlwaysShown);
+  df.def("is_exponent_sign_always_shown",
+         [](const DecimalFormat &self) -> py::bool_ { return self.isExponentSignAlwaysShown(); });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("is_format_fail_if_more_than_max_digits", &DecimalFormat::isFormatFailIfMoreThanMaxDigits);
+  df.def("is_format_fail_if_more_than_max_digits",
+         [](const DecimalFormat &self) -> py::bool_ { return self.isFormatFailIfMoreThanMaxDigits(); });
 
-  df.def("is_parse_case_sensitive", &DecimalFormat::isParseCaseSensitive);
+  df.def("is_parse_case_sensitive", [](const DecimalFormat &self) -> py::bool_ { return self.isParseCaseSensitive(); });
 
-  df.def("is_parse_no_exponent", &DecimalFormat::isParseNoExponent);
+  df.def("is_parse_no_exponent", [](const DecimalFormat &self) -> py::bool_ { return self.isParseNoExponent(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-  df.def("is_scientific_notation", &DecimalFormat::isScientificNotation);
+  df.def("is_scientific_notation", [](const DecimalFormat &self) -> py::bool_ { return self.isScientificNotation(); });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("is_sign_always_shown", &DecimalFormat::isSignAlwaysShown);
+  df.def("is_sign_always_shown", [](const DecimalFormat &self) -> py::bool_ { return self.isSignAlwaysShown(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
@@ -225,15 +230,26 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("set_decimal_format_symbols", &DecimalFormat::setDecimalFormatSymbols, py::arg("symbols"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-  df.def("set_decimal_pattern_match_required", &DecimalFormat::setDecimalPatternMatchRequired, py::arg("new_value"));
+  df.def(
+      "set_decimal_pattern_match_required",
+      [](DecimalFormat &self, py::bool_ new_value) { self.setDecimalPatternMatchRequired(new_value); },
+      py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
-  df.def("set_decimal_separator_always_shown", &DecimalFormat::setDecimalSeparatorAlwaysShown, py::arg("new_value"));
+  df.def(
+      "set_decimal_separator_always_shown",
+      [](DecimalFormat &self, py::bool_ new_value) { self.setDecimalSeparatorAlwaysShown(new_value); },
+      py::arg("new_value"));
 
-  df.def("set_exponent_sign_always_shown", &DecimalFormat::setExponentSignAlwaysShown, py::arg("exp_sign_always"));
+  df.def(
+      "set_exponent_sign_always_shown",
+      [](DecimalFormat &self, py::bool_ new_value) { self.setExponentSignAlwaysShown(new_value); },
+      py::arg("exp_sign_always"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("set_format_fail_if_more_than_max_digits", &DecimalFormat::setFormatFailIfMoreThanMaxDigits, py::arg("value"));
+  df.def(
+      "set_format_fail_if_more_than_max_digits",
+      [](DecimalFormat &self, py::bool_ value) { self.setFormatFailIfMoreThanMaxDigits(value); }, py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   df.def("set_format_width", &DecimalFormat::setFormatWidth, py::arg("width"));
@@ -241,7 +257,9 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("set_grouping_size", &DecimalFormat::setGroupingSize, py::arg("new_value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  df.def("set_grouping_used", &DecimalFormat::setGroupingUsed, py::arg("new_value"));
+  df.def(
+      "set_grouping_used", [](DecimalFormat &self, py::bool_ new_value) { self.setGroupingUsed(new_value); },
+      py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   df.def("set_maximum_significant_digits", &DecimalFormat::setMaximumSignificantDigits, py::arg("max_"));
@@ -284,11 +302,15 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
   df.def("set_pad_position", &DecimalFormat::setPadPosition, py::arg("pad_pos"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("set_parse_case_sensitive", &DecimalFormat::setParseCaseSensitive, py::arg("value"));
+  df.def(
+      "set_parse_case_sensitive", [](DecimalFormat &self, py::bool_ value) { self.setParseCaseSensitive(value); },
+      py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("set_parse_no_exponent", &DecimalFormat::setParseNoExponent, py::arg("value"));
+  df.def(
+      "set_parse_no_exponent", [](DecimalFormat &self, py::bool_ value) { self.setParseNoExponent(value); },
+      py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   df.def(
@@ -307,15 +329,25 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def("set_rounding_increment", &DecimalFormat::setRoundingIncrement, py::arg("new_value"));
 
-  df.def("set_scientific_notation", &DecimalFormat::setScientificNotation, py::arg("use_scientific"));
+  df.def(
+      "set_scientific_notation",
+      [](DecimalFormat &self, py::bool_ use_scientific) { self.setScientificNotation(use_scientific); },
+      py::arg("use_scientific"));
 
   df.def("set_secondary_grouping_size", &DecimalFormat::setSecondaryGroupingSize, py::arg("new_value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("set_sign_always_shown", &DecimalFormat::setSignAlwaysShown, py::arg("new_value"));
+  df.def(
+      "set_sign_always_shown", [](DecimalFormat &self, py::bool_ new_value) { self.setSignAlwaysShown(new_value); },
+      py::arg("new_value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-  df.def("set_significant_digits_used", &DecimalFormat::setSignificantDigitsUsed, py::arg("use_significant_digits"));
+  df.def(
+      "set_significant_digits_used",
+      [](DecimalFormat &self, py::bool_ use_significant_digits) {
+        self.setSignificantDigitsUsed(use_significant_digits);
+      },
+      py::arg("use_significant_digits"));
 
   df.def("to_localized_pattern", &DecimalFormat::toLocalizedPattern, py::arg("result"));
 

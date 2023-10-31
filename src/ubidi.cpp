@@ -369,10 +369,10 @@ void init_ubidi(py::module &m) {
       py::arg("src_map"), py::arg("length"));
 
   m.def(
-      "ubidi_is_inverse", [](_UBiDiPtr &bidi) { return ubidi_isInverse(bidi); }, py::arg("bidi"));
+      "ubidi_is_inverse", [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); }, py::arg("bidi"));
 
   m.def(
-      "ubidi_is_order_paragraphs_ltr", [](_UBiDiPtr &bidi) { return ubidi_isOrderParagraphsLTR(bidi); },
+      "ubidi_is_order_paragraphs_ltr", [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isOrderParagraphsLTR(bidi); },
       py::arg("bidi"));
 
   m.def("ubidi_open", []() {
@@ -394,7 +394,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_order_paragraphs_ltr",
-      [](_UBiDiPtr &bidi, UBool order_paragraphs_ltr) { ubidi_orderParagraphsLTR(bidi, order_paragraphs_ltr); },
+      [](_UBiDiPtr &bidi, py::bool_ order_paragraphs_ltr) { ubidi_orderParagraphsLTR(bidi, order_paragraphs_ltr); },
       py::arg("bidi"), py::arg("order_paragraphs_ltr"));
 
   m.def(
@@ -479,7 +479,7 @@ void init_ubidi(py::module &m) {
       py::arg("bidi"), py::arg("prologue"), py::arg("pro_length"), py::arg("epilogue"), py::arg("epi_length"));
 
   m.def(
-      "ubidi_set_inverse", [](_UBiDiPtr &bidi, UBool is_inverse) { ubidi_setInverse(bidi, is_inverse); },
+      "ubidi_set_inverse", [](_UBiDiPtr &bidi, py::bool_ is_inverse) { ubidi_setInverse(bidi, is_inverse); },
       py::arg("bidi"), py::arg("is_inverse"));
 
   m.def(

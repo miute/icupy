@@ -56,44 +56,44 @@ def test_api():
     assert matcher.get_time_limit() == 10
 
     # UBool icu::RegexMatcher::hasAnchoringBounds()
-    assert matcher.has_anchoring_bounds()
+    assert matcher.has_anchoring_bounds() is True
 
     # RegexMatcher &icu::RegexMatcher::useAnchoringBounds(UBool b)
     result = matcher.use_anchoring_bounds(False)
     assert isinstance(result, RegexMatcher)
     assert result == matcher
-    assert not matcher.has_anchoring_bounds()
+    assert matcher.has_anchoring_bounds() is False
 
     # UBool icu::RegexMatcher::hasTransparentBounds()
-    assert not matcher.has_transparent_bounds()
+    assert matcher.has_transparent_bounds() is False
 
     # RegexMatcher &icu::RegexMatcher::useTransparentBounds(UBool b)
     result = matcher.use_transparent_bounds(True)
     assert isinstance(result, RegexMatcher)
     assert result == matcher
-    assert matcher.has_transparent_bounds()
+    assert matcher.has_transparent_bounds() is True
 
     matcher.use_anchoring_bounds(True)
     matcher.use_transparent_bounds(False)
-    assert matcher.find()  # "foo"
+    assert matcher.find() is True  # "foo"
 
     # UBool icu::RegexMatcher::hitEnd()
-    assert not matcher.hit_end()
+    assert matcher.hit_end() is False
 
     # UBool icu::RegexMatcher::requireEnd()
-    assert not matcher.require_end()
+    assert matcher.require_end() is False
 
-    assert matcher.find()  # "bar"
-    assert not matcher.hit_end()
-    assert not matcher.require_end()
+    assert matcher.find() is True  # "bar"
+    assert matcher.hit_end() is False
+    assert matcher.require_end() is False
 
-    assert matcher.find()  # "baz"
-    assert matcher.hit_end()
-    assert not matcher.require_end()
+    assert matcher.find() is True  # "baz"
+    assert matcher.hit_end() is True
+    assert matcher.require_end() is False
 
-    assert not matcher.find()
-    assert matcher.hit_end()
-    assert not matcher.require_end()
+    assert matcher.find() is False
+    assert matcher.hit_end() is True
+    assert matcher.require_end() is False
 
     # const UnicodeString &icu::RegexMatcher::input()
     result = matcher.input()
@@ -115,8 +115,8 @@ def test_append_replacement():
     src = UnicodeString("foo bar baz")
     matcher = RegexMatcher(regexp, src, 0)
 
-    assert matcher.find()
-    assert matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
 
     # [1]
     # RegexMatcher &icu::RegexMatcher::appendReplacement(
@@ -132,8 +132,8 @@ def test_append_replacement():
     assert dest1 == "foo abc"
 
     matcher.reset()
-    assert matcher.find()
-    assert matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
 
     dest1.remove()
     result = matcher.append_replacement(dest1, "abc")
@@ -142,8 +142,8 @@ def test_append_replacement():
     assert dest1 == "foo abc"
 
     matcher.reset()
-    assert matcher.find()
-    assert matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
 
     # [2]
     # RegexMatcher &icu::RegexMatcher::appendReplacement(
@@ -167,8 +167,8 @@ def test_append_tail():
     src = UnicodeString("foo bar baz")
     matcher = RegexMatcher(regexp, src, 0)
 
-    assert matcher.find()
-    assert matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
 
     # [1]
     # UnicodeString &icu::RegexMatcher::appendTail(UnicodeString &dest)
@@ -181,8 +181,8 @@ def test_append_tail():
     assert dest1 == "foo abc baz"
 
     matcher.reset()
-    assert matcher.find()
-    assert matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
 
     # [2]
     # UText *icu::RegexMatcher::appendTail(
@@ -245,22 +245,22 @@ def test_find():
     # [3]
     # UBool icu::RegexMatcher::find(UErrorCode &status)
     # (ICU>=55)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.start() == 1
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.start() == 6
-    assert not matcher.find()
+    assert matcher.find() is False
 
     # [2]
     # UBool icu::RegexMatcher::find(
     #       int64_t start,
     #       UErrorCode &status
     # )
-    assert matcher.find(2)
+    assert matcher.find(2) is True
     assert matcher.start() == 6
-    assert matcher.find(6)
+    assert matcher.find(6) is True
     assert matcher.start() == 6
-    assert not matcher.find(7)
+    assert matcher.find(7) is False
 
 
 def test_group():
@@ -348,14 +348,14 @@ def test_looking_at():
     #       int64_t startIndex,
     #       UErrorCode &status
     # )
-    assert matcher.looking_at(0)
-    assert matcher.looking_at(1)
-    assert matcher.looking_at(2)
-    assert not matcher.looking_at(3)
+    assert matcher.looking_at(0) is True
+    assert matcher.looking_at(1) is True
+    assert matcher.looking_at(2) is True
+    assert matcher.looking_at(3) is False
 
     # [2]
     # UBool icu::RegexMatcher::lookingAt(UErrorCode &status)
-    assert matcher.looking_at()
+    assert matcher.looking_at() is True
 
 
 def test_matches():
@@ -368,13 +368,13 @@ def test_matches():
     #       int64_t startIndex,
     #       UErrorCode &status
     # )
-    assert not matcher.matches(0)
-    assert not matcher.matches(4)
-    assert matcher.matches(8)
+    assert matcher.matches(0) is False
+    assert matcher.matches(4) is False
+    assert matcher.matches(8) is True
 
     # [2]
     # UBool icu::RegexMatcher::matches(UErrorCode &status)
-    assert not matcher.matches()
+    assert matcher.matches() is False
 
 
 def test_regex_matcher():
@@ -449,7 +449,7 @@ def test_region():
     assert matcher.region_start64() == 0
     assert matcher.region_end() == len(src)
     assert matcher.region_end64() == len(src)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "foo"
 
     # [1]
@@ -466,7 +466,7 @@ def test_region():
     assert matcher.region_start64() == 3
     assert matcher.region_end() == 7
     assert matcher.region_end64() == 7
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "ar"
 
     # [2]
@@ -482,7 +482,7 @@ def test_region():
     assert matcher.region_start64() == 3
     assert matcher.region_end() == 7
     assert matcher.region_end64() == 7
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "bar"
 
 
@@ -564,18 +564,18 @@ def test_reset():
     regexp = UnicodeString("\\w+")
     src1 = UnicodeString("foo")
     matcher = RegexMatcher(regexp, src1, 0)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "foo"
-    assert not matcher.find()
+    assert matcher.find() is False
 
     # [1]
     # RegexMatcher &icu::RegexMatcher::reset()
     result = matcher.reset()
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "foo"
-    assert not matcher.find()
+    assert matcher.find() is False
 
     # [2]
     # RegexMatcher &icu::RegexMatcher::reset(const UnicodeString &input)
@@ -583,11 +583,11 @@ def test_reset():
     result = matcher.reset(src2)
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "foo"
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "bar"
-    assert not matcher.find()
+    assert matcher.find() is False
 
     # [3]
     # RegexMatcher &icu::RegexMatcher::reset(
@@ -597,9 +597,9 @@ def test_reset():
     result = matcher.reset(4)
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "bar"
-    assert not matcher.find()
+    assert matcher.find() is False
 
     # [4]
     # RegexMatcher &icu::RegexMatcher::reset(UText *input)
@@ -607,11 +607,11 @@ def test_reset():
     result = matcher.reset(src4)
     assert isinstance(result, RegexMatcher)
     assert id(result) == id(matcher)
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "abc"
-    assert matcher.find()
+    assert matcher.find() is True
     assert matcher.group() == "xyz"
-    assert not matcher.find()
+    assert matcher.find() is False
     utext_close(src4)
 
 
@@ -656,9 +656,9 @@ def test_set_find_progress_callback():
     callback1 = URegexFindProgressCallbackPtr(_find_progress_callback1)
     context1 = ConstVoidPtr(None)
     matcher.set_find_progress_callback(callback1, context1)
-    assert matcher.find()
-    assert matcher.find()
-    assert not matcher.find()
+    assert matcher.find() is True
+    assert matcher.find() is True
+    assert matcher.find() is False
     assert result1 == [1, 5, 6]
 
     callback1a, context1a = matcher.get_find_progress_callback()
@@ -669,7 +669,7 @@ def test_set_find_progress_callback():
     callback2 = URegexFindProgressCallbackPtr(_find_progress_callback2)
     context2 = ConstVoidPtr(result2)
     matcher.set_find_progress_callback(callback2, context2)
-    assert matcher.find(0)
+    assert matcher.find(0) is True
     with pytest.raises(ICUError) as exc_info:
         matcher.find()
     assert exc_info.value.args[0] == UErrorCode.U_REGEX_STOPPED_BY_CALLER
@@ -678,17 +678,17 @@ def test_set_find_progress_callback():
     result1.clear()
     result2.clear()
     matcher.set_find_progress_callback(callback0, context0)
-    assert matcher.find(0)
-    assert matcher.find()
-    assert not matcher.find()
+    assert matcher.find(0) is True
+    assert matcher.find() is True
+    assert matcher.find() is False
     assert len(result1) == len(result2) == 0
 
     result1.clear()
     result2.clear()
     matcher.set_find_progress_callback(callback1a, context1a)
-    assert matcher.find(0)
-    assert matcher.find()
-    assert not matcher.find()
+    assert matcher.find(0) is True
+    assert matcher.find() is True
+    assert matcher.find() is False
     assert result1 == [1, 5, 6]
     assert len(result2) == 0
 

@@ -195,7 +195,9 @@ void init_rbbi(py::module &m) {
       },
       py::keep_alive<0, 1>(), py::arg("fill_in"));
 
-  bi.def("is_boundary", &BreakIterator::isBoundary, py::arg("offset"));
+  bi.def(
+      "is_boundary", [](BreakIterator &self, int32_t offset) -> py::bool_ { return self.isBoundary(offset); },
+      py::arg("offset"));
 
   bi.def("last", &BreakIterator::last);
 

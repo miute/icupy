@@ -680,21 +680,21 @@ def test_hash_code():
 def test_is_bogus():
     # UBool icu::Locale::isBogus(void)
     loc = Locale("en", "US")
-    assert not loc.is_bogus()
+    assert loc.is_bogus() is False
 
     # void icu::Locale::setToBogus()
     loc.set_to_bogus()
-    assert loc.is_bogus()
+    assert loc.is_bogus() is True
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_is_right_to_left():
     # UBool icu::Locale::isRightToLeft()
     loc = Locale("ar")
-    assert loc.is_right_to_left()
+    assert loc.is_right_to_left() is True
 
     loc = Locale("zh")
-    assert not loc.is_right_to_left()
+    assert loc.is_right_to_left() is False
 
 
 def test_locale():

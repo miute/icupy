@@ -35,7 +35,7 @@ void init_tzrule(py::module &m) {
       [](const TimeZoneRule &self, int32_t prev_raw_offset, int32_t prev_dst_savings) {
         UDate time = 0;
         auto result = self.getFinalStart(prev_raw_offset, prev_dst_savings, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("prev_raw_offset"), py::arg("prev_dst_savings"));
 
@@ -44,7 +44,7 @@ void init_tzrule(py::module &m) {
       [](const TimeZoneRule &self, int32_t prev_raw_offset, int32_t prev_dst_savings) {
         UDate time = 0;
         auto result = self.getFirstStart(prev_raw_offset, prev_dst_savings, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("prev_raw_offset"), py::arg("prev_dst_savings"));
 
@@ -52,25 +52,28 @@ void init_tzrule(py::module &m) {
 
   tzr.def(
       "get_next_start",
-      [](const TimeZoneRule &self, UDate base, int32_t prev_raw_offset, int32_t prev_dst_savings, UBool inclusive) {
+      [](const TimeZoneRule &self, UDate base, int32_t prev_raw_offset, int32_t prev_dst_savings, py::bool_ inclusive) {
         UDate time = 0;
         auto result = self.getNextStart(base, prev_raw_offset, prev_dst_savings, inclusive, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("base"), py::arg("prev_raw_offset"), py::arg("prev_dst_savings"), py::arg("inclusive"));
 
   tzr.def(
       "get_previous_start",
-      [](const TimeZoneRule &self, UDate base, int32_t prev_raw_offset, int32_t prev_dst_savings, UBool inclusive) {
+      [](const TimeZoneRule &self, UDate base, int32_t prev_raw_offset, int32_t prev_dst_savings, py::bool_ inclusive) {
         UDate time = 0;
         auto result = self.getPreviousStart(base, prev_raw_offset, prev_dst_savings, inclusive, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("base"), py::arg("prev_raw_offset"), py::arg("prev_dst_savings"), py::arg("inclusive"));
 
   tzr.def("get_raw_offset", &TimeZoneRule::getRawOffset);
 
-  tzr.def("is_equivalent_to", &TimeZoneRule::isEquivalentTo, py::arg("that"));
+  tzr.def(
+      "is_equivalent_to",
+      [](const TimeZoneRule &self, const TimeZoneRule &that) -> py::bool_ { return self.isEquivalentTo(that); },
+      py::arg("that"));
 
   //
   // icu::AnnualTimeZoneRule
@@ -125,7 +128,7 @@ void init_tzrule(py::module &m) {
       [](const AnnualTimeZoneRule &self, int32_t year, int32_t prev_raw_offset, int32_t prev_dst_savings) {
         UDate time = 0;
         auto result = self.getStartInYear(year, prev_raw_offset, prev_dst_savings, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("year"), py::arg("prev_raw_offset"), py::arg("prev_dst_savings"));
 
@@ -217,7 +220,7 @@ void init_tzrule(py::module &m) {
       [](const TimeArrayTimeZoneRule &self, int32_t index) {
         UDate time = 0;
         auto result = self.getStartTimeAt(index, time);
-        return py::make_tuple(result, time);
+        return py::make_tuple(py::bool_(result), time);
       },
       py::arg("index"));
 

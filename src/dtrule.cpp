@@ -42,7 +42,7 @@ void init_dtrule(py::module &m) {
           py::arg("millis_in_day"), py::arg("time_type"))
       .def(py::init<int32_t, int32_t, int32_t, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"),
            py::arg("week_in_month"), py::arg("day_of_week"), py::arg("millis_in_day"), py::arg("time_type"))
-      .def(py::init<int32_t, int32_t, int32_t, UBool, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"),
+      .def(py::init<int32_t, int32_t, int32_t, py::bool_, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"),
            py::arg("day_of_month"), py::arg("day_of_week"), py::arg("after"), py::arg("millis_in_day"),
            py::arg("time_type"))
       .def(py::init<const DateTimeRule &>(), py::arg("other"));

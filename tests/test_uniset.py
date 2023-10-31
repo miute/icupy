@@ -98,13 +98,13 @@ def test_api():
     assert test1.index_of(0x61) == -1
 
     # UBool icu::UnicodeSet::isBogus(void)
-    assert not test1.is_bogus()
+    assert test1.is_bogus() is False
 
     # UBool icu::UnicodeSet::isEmpty(void)
-    assert not test1.is_empty()
+    assert test1.is_empty() is False
 
     # UBool icu::UnicodeSet::isFrozen()
-    assert not test1.is_frozen()
+    assert test1.is_frozen() is False
 
     # int32_t icu::UnicodeSet::size(void)
     assert test1.size() == 10
@@ -120,9 +120,9 @@ def test_api():
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
 
-    assert not test1.is_bogus()
-    assert test1.is_empty()
-    assert not test1.is_frozen()
+    assert test1.is_bogus() is False
+    assert test1.is_empty() is True
+    assert test1.is_frozen() is False
     assert test1.size() == 0
     assert len(test1) == 0
 
@@ -131,9 +131,9 @@ def test_api():
     result = test1.freeze()
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
-    assert not test1.is_bogus()
-    assert not test1.is_empty()
-    assert test1.is_frozen()
+    assert test1.is_bogus() is False
+    assert test1.is_empty() is False
+    assert test1.is_frozen() is True
     assert test1.size() == 10
     assert len(test1) == 10
 
@@ -142,14 +142,14 @@ def test_api():
     #       int32_t pos
     # )
     pattern = UnicodeString("[0-9\u00DF{ab}]")
-    assert UnicodeSet.resembles_pattern(pattern, 0)
-    assert not UnicodeSet.resembles_pattern(pattern, 1)
+    assert UnicodeSet.resembles_pattern(pattern, 0) is True
+    assert UnicodeSet.resembles_pattern(pattern, 1) is False
 
-    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 0)
-    assert not UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 1)
+    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 0) is True
+    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 1) is False
 
     test2 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
-    assert not test2.is_bogus()
+    assert test2.is_bogus() is False
     assert test2.size() == 12
 
     # UnicodeString &icu::UnicodeSet::toPattern(
@@ -183,7 +183,7 @@ def test_api():
 
     # void icu::UnicodeSet::setToBogus()
     test2.set_to_bogus()
-    assert test2.is_bogus()
+    assert test2.is_bogus() is True
 
     # UnicodeSet.__repr__() -> str
     assert repr(test1) == "<UnicodeSet('[0-9]')>"
@@ -455,11 +455,11 @@ def test_contains():
 
     # [1]
     # UBool icu::UnicodeSet::contains(const UnicodeString &s)
-    assert test1.contains(UnicodeString("0"))
-    assert not test1.contains(UnicodeString("01"))
+    assert test1.contains(UnicodeString("0")) is True
+    assert test1.contains(UnicodeString("01")) is False
 
-    assert test1.contains("0")
-    assert not test1.contains("01")
+    assert test1.contains("0") is True
+    assert test1.contains("01") is False
 
     assert UnicodeString("0") in test1
     assert UnicodeString("01") not in test1
@@ -469,16 +469,16 @@ def test_contains():
 
     # [2]
     # UBool icu::UnicodeSet::contains(UChar32 c)
-    assert test1.contains(0x30)
-    assert not test1.contains(0x61)
+    assert test1.contains(0x30) is True
+    assert test1.contains(0x61) is False
 
     assert 0x30 in test1
     assert 0x61 not in test1
 
     # [3]
     # UBool icu::UnicodeSet::contains(UChar32 start, UChar32 end)
-    assert test1.contains(0x30, 0x39)
-    assert not test1.contains(0x61, 0x61)
+    assert test1.contains(0x30, 0x39) is True
+    assert test1.contains(0x61, 0x61) is False
 
 
 def test_contains_all():
@@ -486,16 +486,16 @@ def test_contains_all():
 
     # [1]
     # UBool icu::UnicodeSet::containsAll(const UnicodeSet &c)
-    assert test1.contains_all(UnicodeSet(0x30, 0x39))
-    assert not test1.contains_all(UnicodeSet(0x2F, 0x3A))
+    assert test1.contains_all(UnicodeSet(0x30, 0x39)) is True
+    assert test1.contains_all(UnicodeSet(0x2F, 0x3A)) is False
 
     # [2]
     # UBool icu::UnicodeSet::containsAll(const UnicodeString &s)
-    assert test1.contains_all(UnicodeString("0123456789"))
-    assert not test1.contains_all(UnicodeString("/0123456789:"))
+    assert test1.contains_all(UnicodeString("0123456789")) is True
+    assert test1.contains_all(UnicodeString("/0123456789:")) is False
 
-    assert test1.contains_all("0123456789")
-    assert not test1.contains_all("/0123456789:")
+    assert test1.contains_all("0123456789") is True
+    assert test1.contains_all("/0123456789:") is False
 
 
 def test_contains_none():
@@ -503,21 +503,21 @@ def test_contains_none():
 
     # [1]
     # UBool icu::UnicodeSet::containsNone(const UnicodeSet &c)
-    assert not test1.contains_none(UnicodeSet(0x2F, 0x3A))
-    assert test1.contains_none(UnicodeSet(0x2F, 0x2F))
+    assert test1.contains_none(UnicodeSet(0x2F, 0x3A)) is False
+    assert test1.contains_none(UnicodeSet(0x2F, 0x2F)) is True
 
     # [2]
     # UBool icu::UnicodeSet::containsNone(const UnicodeString &s)
-    assert not test1.contains_none(UnicodeString("/0123456789:"))
-    assert test1.contains_none(UnicodeString("/"))
+    assert test1.contains_none(UnicodeString("/0123456789:")) is False
+    assert test1.contains_none(UnicodeString("/")) is True
 
-    assert not test1.contains_none("/0123456789:")
-    assert test1.contains_none("/")
+    assert test1.contains_none("/0123456789:") is False
+    assert test1.contains_none("/") is True
 
     # [3]
     # UBool icu::UnicodeSet::containsNone(UChar32 start, UChar32 end)
-    assert not test1.contains_none(0x2F, 0x3A)
-    assert test1.contains_none(0x2F, 0x2F)
+    assert test1.contains_none(0x2F, 0x3A) is False
+    assert test1.contains_none(0x2F, 0x2F) is True
 
 
 def test_contains_some():
@@ -525,21 +525,21 @@ def test_contains_some():
 
     # [1]
     # UBool icu::UnicodeSet::containsSome(const UnicodeSet &s)
-    assert test1.contains_some(UnicodeSet(UnicodeString("[0-9{ab}]")))
-    assert not test1.contains_some(UnicodeSet(UnicodeString("[a-z{ab}]")))
+    assert test1.contains_some(UnicodeSet(UnicodeString("[0-9{ab}]"))) is True
+    assert test1.contains_some(UnicodeSet(UnicodeString("[a-z{ab}]"))) is False
 
     # [2]
     # UBool icu::UnicodeSet::containsSome(const UnicodeString &s)
-    assert test1.contains_some(UnicodeString("ab0123456789"))
-    assert not test1.contains_some(UnicodeString("ab"))
+    assert test1.contains_some(UnicodeString("ab0123456789")) is True
+    assert test1.contains_some(UnicodeString("ab")) is False
 
-    assert test1.contains_some("ab0123456789")
-    assert not test1.contains_some("ab")
+    assert test1.contains_some("ab0123456789") is True
+    assert test1.contains_some("ab") is False
 
     # [3]
     # UBool icu::UnicodeSet::containsSome(UChar32 start, UChar32 end)
-    assert test1.contains_some(0x2F, 0x3A)
-    assert not test1.contains_some(0x2F, 0x2F)
+    assert test1.contains_some(0x2F, 0x3A) is True
+    assert test1.contains_some(0x2F, 0x2F) is False
 
 
 def test_create_from():
@@ -613,8 +613,8 @@ def test_has_strings():
     test2 = UnicodeSet("[a-z{ab}]")
 
     # UBool icu::UnicodeSet::hasStrings()
-    assert not test1.has_strings()
-    assert test2.has_strings()
+    assert test1.has_strings() is False
+    assert test2.has_strings() is True
 
 
 def test_matches():

@@ -36,15 +36,15 @@ def test_api_59():
 
     # UBool icu::Edits::copyErrorTo(UErrorCode &outErrorCode)
     out_error_code = ErrorCode()
-    assert not edits.copy_error_to(out_error_code)
+    assert edits.copy_error_to(out_error_code) is False
     assert out_error_code == UErrorCode.U_ZERO_ERROR
 
     out_error_code.set(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
-    assert edits.copy_error_to(out_error_code)
+    assert edits.copy_error_to(out_error_code) is True
     assert out_error_code == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     # UBool icu::Edits::hasChanges()
-    assert edits.has_changes()
+    assert edits.has_changes() is True
 
     # int32_t icu::Edits::lengthDelta()
     assert edits.length_delta() == -3 + 10 - 100 + 1000
@@ -67,7 +67,7 @@ def test_api_59():
 
     # void icu::Edits::reset()
     edits.reset()
-    assert not edits.has_changes()
+    assert edits.has_changes() is False
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
@@ -241,10 +241,10 @@ def test_edits_iterator_59():
     #       int32_t i,
     #       UErrorCode &errorCode
     # )
-    assert ei.find_source_index(exp_src_index)
+    assert ei.find_source_index(exp_src_index) is True
 
     # UBool icu::Edits::Iterator::hasChange()
-    assert not ei.has_change()
+    assert ei.has_change() is False
 
     # int32_t icu::Edits::Iterator::newLength()
     assert ei.new_length() == exp_new_length
@@ -259,20 +259,20 @@ def test_edits_iterator_59():
     assert ei.source_index() == exp_src_index
 
     # UBool icu::Edits::Iterator::next(UErrorCode &errorCode)
-    assert ei.next()
+    assert ei.next() is True
     exp_src_index += exp_old_length
     exp_dest_index += exp_new_length
     exp_old_length = 103106
     exp_new_length = 104013
 
     assert ei.destination_index() == exp_dest_index
-    assert ei.has_change()
+    assert ei.has_change() is True
     assert ei.new_length() == exp_new_length
     assert ei.old_length() == exp_old_length
     assert ei.replacement_index() == exp_repl_index
     assert ei.source_index() == exp_src_index
 
-    assert not ei.next()
+    assert ei.next() is False
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
@@ -290,7 +290,7 @@ def test_edits_iterator_60():
     # )
     indices = []
     for i in range(len(src)):
-        assert ei.find_source_index(i)
+        assert ei.find_source_index(i) is True
         indices.append(ei.destination_index_from_source_index(i))
     assert indices == [0, 1, 2, 3, 5, 6, 7]
 
@@ -300,7 +300,7 @@ def test_edits_iterator_60():
     # )
     indices = []
     for i in range(len(src)):
-        assert ei.find_destination_index(i)
+        assert ei.find_destination_index(i) is True
         indices.append(ei.source_index())
     assert indices == [0, 0, 0, 3, 3, 4, 5]
 
@@ -310,6 +310,6 @@ def test_edits_iterator_60():
     # )
     indices = []
     for i in range(len(src)):
-        assert ei.find_destination_index(i)
+        assert ei.find_destination_index(i) is True
         indices.append(ei.source_index_from_destination_index(i))
     assert indices == [0, 1, 2, 3, 4, 4, 5]

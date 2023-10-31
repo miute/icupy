@@ -103,7 +103,7 @@ def test_api():
     assert result == pattern
 
     # UBool icu::MessageFormat::usesNamedArguments()
-    assert not fmt.uses_named_arguments()
+    assert fmt.uses_named_arguments() is False
 
     # UBool icu::MessageFormat::operator==(const Format &other)
     fmt1 = MessageFormat("{0} {1}", Locale.get_us())

@@ -53,5 +53,5 @@ void init_sortkey(py::module &m) {
 
   ck.def("hash_code", &CollationKey::hashCode);
 
-  ck.def("is_bogus", &CollationKey::isBogus);
+  ck.def("is_bogus", [](const CollationKey &self) -> py::bool_ { return self.isBogus(); });
 }

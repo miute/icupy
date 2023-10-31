@@ -124,7 +124,7 @@ void init_dcfmtsym(py::module &m) {
 
   dfs.def(
       "get_pattern_for_currency_spacing",
-      [](const DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency) -> const UnicodeString & {
+      [](const DecimalFormatSymbols &self, UCurrencySpacing type, py::bool_ before_currency) -> const UnicodeString & {
         ErrorCode error_code;
         auto &result = self.getPatternForCurrencySpacing(type, before_currency, error_code);
         if (error_code.isFailure()) {
@@ -138,7 +138,7 @@ void init_dcfmtsym(py::module &m) {
 
   dfs.def(
       "set_pattern_for_currency_spacing",
-      [](DecimalFormatSymbols &self, UCurrencySpacing type, UBool before_currency,
+      [](DecimalFormatSymbols &self, UCurrencySpacing type, py::bool_ before_currency,
          const icupy::UnicodeStringVariant &pattern) {
         self.setPatternForCurrencySpacing(type, before_currency, icupy::to_unistr(pattern));
       },
@@ -148,6 +148,6 @@ void init_dcfmtsym(py::module &m) {
       "set_symbol",
       [](DecimalFormatSymbols &self, DecimalFormatSymbols::ENumberFormatSymbol symbol,
          const icupy::UnicodeStringVariant &value,
-         const UBool propogate_digits) { self.setSymbol(symbol, icupy::to_unistr(value), propogate_digits); },
-      py::arg("symbol"), py::arg("value"), py::arg("propogate_digits") = true);
+         const py::bool_ propagate_digits) { self.setSymbol(symbol, icupy::to_unistr(value), propagate_digits); },
+      py::arg("symbol"), py::arg("value"), py::arg("propagate_digits") = true);
 }

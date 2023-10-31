@@ -33,11 +33,13 @@ void init_edits(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   ed.def(
-      "copy_error_to", [](const Edits &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      "copy_error_to",
+      [](const Edits &self, ErrorCode &out_error_code) -> py::bool_ { return self.copyErrorTo(out_error_code); },
       py::arg("out_error_code"));
 #else
   ed.def(
-      "copy_error_to", [](Edits &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      "copy_error_to",
+      [](Edits &self, ErrorCode &out_error_code) -> py::bool_ { return self.copyErrorTo(out_error_code); },
       py::arg("out_error_code"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
@@ -49,7 +51,7 @@ void init_edits(py::module &m) {
 
   ed.def("get_fine_iterator", &Edits::getFineIterator);
 
-  ed.def("has_changes", &Edits::hasChanges);
+  ed.def("has_changes", [](const Edits &self) -> py::bool_ { return self.hasChanges(); });
 
   ed.def("length_delta", &Edits::lengthDelta);
 
@@ -94,7 +96,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "find_destination_index",
-      [](Iterator &self, int32_t i) {
+      [](Iterator &self, int32_t i) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.findDestinationIndex(i, error_code);
         if (error_code.isFailure()) {
@@ -107,7 +109,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "find_source_index",
-      [](Iterator &self, int32_t i) {
+      [](Iterator &self, int32_t i) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.findSourceIndex(i, error_code);
         if (error_code.isFailure()) {
@@ -117,11 +119,11 @@ void init_edits(py::module &m) {
       },
       py::arg("i"));
 
-  it.def("has_change", &Iterator::hasChange);
+  it.def("has_change", [](const Iterator &self) -> py::bool_ { return self.hasChange(); });
 
   it.def("new_length", &Iterator::newLength);
 
-  it.def("next", [](Iterator &self) {
+  it.def("next", [](Iterator &self) -> py::bool_ {
     ErrorCode error_code;
     auto result = self.next(error_code);
     if (error_code.isFailure()) {

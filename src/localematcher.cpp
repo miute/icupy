@@ -150,7 +150,8 @@ void init_localematcher(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   lm.def(
       "is_match",
-      [](const LocaleMatcher &self, const icupy::LocaleVariant &desired, const icupy::LocaleVariant &supported) {
+      [](const LocaleMatcher &self, const icupy::LocaleVariant &desired,
+         const icupy::LocaleVariant &supported) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.isMatch(icupy::to_locale(desired), icupy::to_locale(supported), error_code);
         if (error_code.isFailure()) {
@@ -183,7 +184,8 @@ void init_localematcher(py::module &m) {
   });
 
   lmb.def(
-      "copy_error_to", [](const Builder &self, ErrorCode &out_error_code) { return self.copyErrorTo(out_error_code); },
+      "copy_error_to",
+      [](const Builder &self, ErrorCode &out_error_code) -> py::bool_ { return self.copyErrorTo(out_error_code); },
       py::arg("out_error_code"));
 
   lmb.def("set_default_locale", &Builder::setDefaultLocale, py::arg("default_locale"));

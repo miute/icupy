@@ -184,18 +184,18 @@ def test_equals():
     #       const UnicodeString &source,
     #       const UnicodeString &target
     # )
-    assert not coll.equals(source, target)
-    assert not coll.equals("ABC", target)
-    assert not coll.equals(source, "abc")
-    assert not coll.equals("ABC", "abc")
+    assert coll.equals(source, target) is False
+    assert coll.equals("ABC", target) is False
+    assert coll.equals(source, "abc") is False
+    assert coll.equals("ABC", "abc") is False
 
     coll.set_attribute(
         UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_PRIMARY
     )
-    assert coll.equals(source, target)
-    assert coll.equals("ABC", target)
-    assert coll.equals(source, "abc")
-    assert coll.equals("ABC", "abc")
+    assert coll.equals(source, target) is True
+    assert coll.equals("ABC", target) is True
+    assert coll.equals(source, "abc") is True
+    assert coll.equals("ABC", "abc") is True
 
 
 def test_get_attribute():
@@ -423,14 +423,14 @@ def test_get_functional_equivalent():
     )
     assert isinstance(result, Locale)
     assert result == Locale.get_japanese()
-    assert is_available
+    assert is_available is True
 
     result, is_available = Collator.get_functional_equivalent(
         "collation", "ja"
     )
     assert isinstance(result, Locale)
     assert result == Locale.get_japanese()
-    assert is_available
+    assert is_available is True
 
 
 def test_get_keywords():

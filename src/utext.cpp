@@ -205,7 +205,7 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_clone",
-      [](std::optional<_UTextPtr> &dest, const _UTextPtr &src, UBool deep, UBool read_only) {
+      [](std::optional<_UTextPtr> &dest, const _UTextPtr &src, py::bool_ deep, py::bool_ read_only) {
         ErrorCode error_code;
         auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only, error_code);
         if (error_code.isFailure()) {
@@ -229,7 +229,7 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_copy",
-      [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, int64_t dest_index, UBool move) {
+      [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, int64_t dest_index, py::bool_ move) {
         ErrorCode error_code;
         utext_copy(ut, native_start, native_limit, dest_index, move, error_code);
         if (error_code.isFailure()) {
@@ -242,7 +242,8 @@ void init_utext(py::module &m) {
       "utext_current32", [](_UTextPtr &ut) { return utext_current32(ut); }, py::arg("ut"));
 
   m.def(
-      "utext_equals", [](_UTextPtr &a, _UTextPtr &b) { return utext_equals(a, b); }, py::arg("a"), py::arg("b"));
+      "utext_equals", [](_UTextPtr &a, _UTextPtr &b) -> py::bool_ { return utext_equals(a, b); }, py::arg("a"),
+      py::arg("b"));
 
   m.def(
       "utext_extract",
@@ -269,17 +270,18 @@ void init_utext(py::module &m) {
       "utext_get_previous_native_index", [](_UTextPtr &ut) { return utext_getPreviousNativeIndex(ut); }, py::arg("ut"));
 
   m.def(
-      "utext_has_meta_data", [](_UTextPtr &ut) { return utext_hasMetaData(ut); }, py::arg("ut"));
+      "utext_has_meta_data", [](_UTextPtr &ut) -> py::bool_ { return utext_hasMetaData(ut); }, py::arg("ut"));
 
   m.def(
-      "utext_is_length_expensive", [](_UTextPtr &ut) { return utext_isLengthExpensive(ut); }, py::arg("ut"));
+      "utext_is_length_expensive", [](_UTextPtr &ut) -> py::bool_ { return utext_isLengthExpensive(ut); },
+      py::arg("ut"));
 
   m.def(
-      "utext_is_writable", [](_UTextPtr &ut) { return utext_isWritable(ut); }, py::arg("ut"));
+      "utext_is_writable", [](_UTextPtr &ut) -> py::bool_ { return utext_isWritable(ut); }, py::arg("ut"));
 
   m.def(
-      "utext_move_index32", [](_UTextPtr &ut, int32_t delta) { return utext_moveIndex32(ut, delta); }, py::arg("ut"),
-      py::arg("delta"));
+      "utext_move_index32", [](_UTextPtr &ut, int32_t delta) -> py::bool_ { return utext_moveIndex32(ut, delta); },
+      py::arg("ut"), py::arg("delta"));
 
   m.def(
       "utext_native_length", [](_UTextPtr &ut) { return utext_nativeLength(ut); }, py::arg("ut"));

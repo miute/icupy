@@ -53,10 +53,10 @@ def test_api():
     assert list(it) == ["a", "other"]
 
     # UBool icu::PluralRules::isKeyword(const UnicodeString &keyword)
-    assert rules1.is_keyword(UnicodeString("a"))
-    assert rules1.is_keyword("a")
-    assert not rules1.is_keyword(UnicodeString("b"))
-    assert not rules1.is_keyword("b")
+    assert rules1.is_keyword(UnicodeString("a")) is True
+    assert rules1.is_keyword("a") is True
+    assert rules1.is_keyword(UnicodeString("b")) is False
+    assert rules1.is_keyword("b") is False
 
 
 def test_clone():

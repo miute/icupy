@@ -316,10 +316,10 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def("hash_code", &Locale::hashCode);
 
-  loc.def("is_bogus", &Locale::isBogus);
+  loc.def("is_bogus", [](const Locale &self) -> py::bool_ { return self.isBogus(); });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-  loc.def("is_right_to_left", &Locale::isRightToLeft);
+  loc.def("is_right_to_left", [](const Locale &self) -> py::bool_ { return self.isRightToLeft(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)

@@ -41,7 +41,12 @@ void init_formattedvalue(py::module &m) {
 
   cfp.def("get_start", &ConstrainedFieldPosition::getStart);
 
-  cfp.def("matches_field", &ConstrainedFieldPosition::matchesField, py::arg("category"), py::arg("field"));
+  cfp.def(
+      "matches_field",
+      [](const ConstrainedFieldPosition &self, int32_t category, int32_t field) -> py::bool_ {
+        return self.matchesField(category, field);
+      },
+      py::arg("category"), py::arg("field"));
 
   cfp.def("reset", &ConstrainedFieldPosition::reset);
 
@@ -69,7 +74,7 @@ void init_formattedvalue(py::module &m) {
 
   fv.def(
       "next_position",
-      [](const FormattedValue &self, ConstrainedFieldPosition &cfpos) {
+      [](const FormattedValue &self, ConstrainedFieldPosition &cfpos) -> py::bool_ {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {

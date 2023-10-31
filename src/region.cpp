@@ -14,7 +14,9 @@ void init_region(py::module &m) {
   //
   py::class_<Region, UObject> reg(m, "Region");
 
-  reg.def("__contains__", &Region::contains, py::arg("item"));
+  reg.def(
+      "__contains__", [](const Region &self, const Region &item) -> py::bool_ { return self.contains(item); },
+      py::arg("item"));
 
   reg.def(
       "__eq__", [](const Region &self, const Region &other) { return self == other; }, py::is_operator(),
@@ -24,7 +26,9 @@ void init_region(py::module &m) {
       "__ne__", [](const Region &self, const Region &other) { return self != other; }, py::is_operator(),
       py::arg("other"));
 
-  reg.def("contains", &Region::contains, py::arg("other"));
+  reg.def(
+      "contains", [](const Region &self, const Region &other) -> py::bool_ { return self.contains(other); },
+      py::arg("other"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   reg.def_static(

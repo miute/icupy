@@ -16,8 +16,12 @@ from icupy.icu import (
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_constrained_field_position():
-    from icupy.icu import ConstrainedFieldPosition, ListFormatter
+    # fmt: off
+    from icupy.icu import (
+        ConstrainedFieldPosition, ListFormatter, UFieldCategory,
+    )
 
+    # fmt: on
     # icu::ConstrainedFieldPosition
     cfpos = ConstrainedFieldPosition()
 
@@ -29,12 +33,55 @@ def test_constrained_field_position():
         UnicodeString("world"),
     ]
     fl = fmt.format_strings_to_value(items, len(items))
-    assert fl.next_position(cfpos)
+    assert fl.next_position(cfpos) is True
     assert repr(cfpos) == (
         "<ConstrainedFieldPosition("
         "category=0x1003, field=0, start=0, limit=5"
         ")>"
     )
+
+    # int32_t icu::ConstrainedFieldPosition::getCategory() const
+    category = (
+        UFieldCategory.UFIELD_CATEGORY_LIST_SPAN
+        | UFieldCategory.UFIELD_CATEGORY_LIST
+    )
+    assert cfpos.get_category() == category
+
+    # int32_t icu::ConstrainedFieldPosition::getField() const
+    assert cfpos.get_field() == 0
+
+    # int32_t icu::ConstrainedFieldPosition::getLimit() const
+    assert cfpos.get_limit() == 5
+
+    # int32_t icu::ConstrainedFieldPosition::getStart() const
+    assert cfpos.get_start() == 0
+
+    # void icu::ConstrainedFieldPosition::reset()
+    cfpos.reset()
+    assert cfpos.get_field() == 0
+    assert cfpos.get_limit() == 0
+    assert cfpos.get_start() == 0
+
+    # UBool icu::ConstrainedFieldPosition::matchesField(
+    #   	int32_t category,
+    #       int32_t field
+    # ) const
+    assert cfpos.matches_field(0, 0) is True
+
+    # void icu::ConstrainedFieldPosition::constrainCategory(int32_t category)
+    category = UFieldCategory.UFIELD_CATEGORY_NUMBER
+    cfpos.constrain_category(category)
+    assert cfpos.matches_field(0, 0) is False
+    assert cfpos.matches_field(category, 0) is True
+
+    # void icu::ConstrainedFieldPosition::constrainField(
+    #   	int32_t category,
+    #       int32_t field
+    # )
+    category = UFieldCategory.UFIELD_CATEGORY_NUMBER
+    cfpos.constrain_field(category, 1)
+    assert cfpos.matches_field(category, 0) is False
+    assert cfpos.matches_field(category, 1) is True
 
 
 def test_field_position():
@@ -47,11 +94,18 @@ def test_field_position():
     append_to = UnicodeString()
     pos_iter = FieldPositionIterator()
     fmt.format(1215298800000, append_to, pos_iter)
+    # -> 'Jul 5, 2008, 11:00 PM'
     fpos1 = FieldPosition()
-    assert pos_iter.next(fpos1)
+    assert pos_iter.next(fpos1) is True  # 'Jul'
     assert (
         repr(fpos1) == "<FieldPosition(field=2, begin_index=0, end_index=3)>"
     )
+    assert pos_iter.next(fpos1) is True  # '5'
+    assert pos_iter.next(fpos1) is True  # '2008'
+    assert pos_iter.next(fpos1) is True  # '11'
+    assert pos_iter.next(fpos1) is True  # '00'
+    assert pos_iter.next(fpos1) is True  # 'PM'
+    assert pos_iter.next(fpos1) is False
 
     # FieldPosition *icu::FieldPosition::clone()
     # FieldPosition.__copy__() -> FieldPosition
@@ -94,6 +148,24 @@ def test_icu_error():
     # ErrorCode.__eq__(self, other: UErrorCode) -> bool
     assert error_code == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
+    # UBool icu::ErrorCode::isFailure() const
+    assert error_code.is_failure() is True
+
+    # UBool icu::ErrorCode::isSuccess() const
+    assert error_code.is_success() is False
+
+    # UErrorCode icu::ErrorCode::reset()
+    error_code.reset()
+    assert error_code == UErrorCode.U_ZERO_ERROR
+    assert error_code.is_failure() is False
+    assert error_code.is_success() is True
+
+    # void icu::ErrorCode::set(UErrorCode value)
+    error_code.set(UErrorCode.U_MEMORY_ALLOCATION_ERROR)
+    assert error_code == UErrorCode.U_MEMORY_ALLOCATION_ERROR
+    assert error_code.is_failure() is True
+    assert error_code.is_success() is False
+
     if U_ICU_VERSION_MAJOR_NUM >= 63:
         with pytest.raises(ICUError) as exc_info:
             _ = Locale.for_language_tag("x")
@@ -104,6 +176,7 @@ def test_icu_error():
         assert isinstance(ex.args[1], str)  # An error message
 
     # ErrorCode.__repr__() -> str
+    error_code = ex.args[0]
     assert repr(error_code) == "<ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)>"
 
 
@@ -184,9 +257,9 @@ def test_parse_position():
 
 
 def test_u_failure():
-    assert not u_failure(UErrorCode.U_USING_FALLBACK_WARNING)
-    assert not u_failure(UErrorCode.U_ZERO_ERROR)
-    assert u_failure(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
+    assert u_failure(UErrorCode.U_USING_FALLBACK_WARNING) is False
+    assert u_failure(UErrorCode.U_ZERO_ERROR) is False
+    assert u_failure(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR) is True
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
@@ -214,9 +287,9 @@ def test_u_get_version():
 
 
 def test_u_success():
-    assert u_success(UErrorCode.U_USING_FALLBACK_WARNING)
-    assert u_success(UErrorCode.U_ZERO_ERROR)
-    assert not u_success(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
+    assert u_success(UErrorCode.U_USING_FALLBACK_WARNING) is True
+    assert u_success(UErrorCode.U_ZERO_ERROR) is True
+    assert u_success(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR) is False
 
 
 def test_u_version_from_string():

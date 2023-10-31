@@ -151,7 +151,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
   nrfs_lnrf.def(
       "copy_error_to",
-      [](const _LocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) {
+      [](const _LocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) -> py::bool_ {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"));
@@ -213,7 +213,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
   nrfs_unrf.def(
       "copy_error_to",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) -> py::bool_ {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"));

@@ -150,7 +150,10 @@ void init_messagepattern(py::module &m) {
 
   part.def("hash_code", &MessagePattern::Part::hashCode);
 
-  part.def_static("has_numeric_value", &MessagePattern::Part::hasNumericValue, py::arg("type_"));
+  part.def_static(
+      "has_numeric_value",
+      [](UMessagePatternPartType type_) -> py::bool_ { return MessagePattern::Part::hasNumericValue(type_); },
+      py::arg("type_"));
 
   //
   // icu::MessagePattern
@@ -229,9 +232,9 @@ void init_messagepattern(py::module &m) {
 
   mp.def("hash_code", &MessagePattern::hashCode);
 
-  mp.def("has_named_arguments", &MessagePattern::hasNamedArguments);
+  mp.def("has_named_arguments", [](const MessagePattern &self) -> py::bool_ { return self.hasNamedArguments(); });
 
-  mp.def("has_numbered_arguments", &MessagePattern::hasNumberedArguments);
+  mp.def("has_numbered_arguments", [](const MessagePattern &self) -> py::bool_ { return self.hasNumberedArguments(); });
 
   mp.def(
       "parse",
@@ -287,7 +290,7 @@ void init_messagepattern(py::module &m) {
 
   mp.def(
       "part_substring_matches",
-      [](const MessagePattern &self, const Part &part, const icupy::UnicodeStringVariant &s) {
+      [](const MessagePattern &self, const Part &part, const icupy::UnicodeStringVariant &s) -> py::bool_ {
         return self.partSubstringMatches(part, icupy::to_unistr(s));
       },
       py::arg("part"), py::arg("s"));

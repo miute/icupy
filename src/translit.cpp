@@ -143,9 +143,12 @@ void init_translit(py::module &m) {
     return result;
   });
 
-  tl.def("filtered_transliterate",
-         py::overload_cast<Replaceable &, UTransPosition &, UBool>(&Transliterator::filteredTransliterate, py::const_),
-         py::arg("text"), py::arg("index"), py::arg("incremental"));
+  tl.def(
+      "filtered_transliterate",
+      [](const Transliterator &self, Replaceable &text, UTransPosition &index, py::bool_ incremental) {
+        self.filteredTransliterate(text, index, incremental);
+      },
+      py::arg("text"), py::arg("index"), py::arg("incremental"));
 
   tl.def("finish_transliteration", &Transliterator::finishTransliteration, py::arg("text"), py::arg("index"));
 
@@ -238,7 +241,12 @@ void init_translit(py::module &m) {
 
   tl.def("_set_maximum_context_length", &PyTransliterator::setMaximumContextLength, py::arg("max_context_length"));
 
-  tl.def("to_rules", &Transliterator::toRules, py::arg("result"), py::arg("escape_unprintable"));
+  tl.def(
+      "to_rules",
+      [](const Transliterator &self, UnicodeString &result, py::bool_ escape_unprintable) -> UnicodeString & {
+        return self.toRules(result, escape_unprintable);
+      },
+      py::arg("result"), py::arg("escape_unprintable"));
 
   tl.def("transliterate", py::overload_cast<Replaceable &>(&Transliterator::transliterate, py::const_), py::arg("text"))
       .def("transliterate",

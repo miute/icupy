@@ -223,17 +223,17 @@ def test_api():
         assert dest_map == [0, 1, 2, UBIDI_MAP_NOWHERE]
 
         # UBool ubidi_isInverse(UBiDi *pBiDi)
-        assert not ubidi_is_inverse(bidi)
+        assert ubidi_is_inverse(bidi) is False
 
         # UBool ubidi_isOrderParagraphsLTR(UBiDi *pBiDi)
-        assert not ubidi_is_order_paragraphs_ltr(bidi)
+        assert ubidi_is_order_paragraphs_ltr(bidi) is False
 
         # void ubidi_orderParagraphsLTR(UBiDi *pBiDi,
         #                               UBool orderParagraphsLTR
         # )
         ubidi_order_paragraphs_ltr(bidi, True)
         ubidi_set_para(bidi, text, -1, UBIDI_DEFAULT_LTR)
-        assert ubidi_is_order_paragraphs_ltr(bidi)
+        assert ubidi_is_order_paragraphs_ltr(bidi) is True
 
         # void ubidi_reorderLogical(const UBiDiLevel *levels,
         #                           int32_t length,

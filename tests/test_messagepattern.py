@@ -97,12 +97,12 @@ def test_api():
     assert hash(mp2) == mp2.hash_code()
 
     # UBool icu::MessagePattern::hasNamedArguments()
-    assert mp1.has_named_arguments()
-    assert not mp2.has_named_arguments()
+    assert mp1.has_named_arguments() is True
+    assert mp2.has_named_arguments() is False
 
     # UBool icu::MessagePattern::hasNumberedArguments()
-    assert not mp1.has_numbered_arguments()
-    assert mp2.has_numbered_arguments()
+    assert mp1.has_numbered_arguments() is False
+    assert mp2.has_numbered_arguments() is True
 
     # UBool icu::MessagePattern::operator!=(const MessagePattern &other)
     mp3 = MessagePattern(pattern, None)
@@ -119,8 +119,8 @@ def test_api():
     #       const Part &part,
     #       const UnicodeString &s
     # )
-    assert mp2.part_substring_matches(part, UnicodeString("1"))
-    assert mp2.part_substring_matches(part, "1")
+    assert mp2.part_substring_matches(part, UnicodeString("1")) is True
+    assert mp2.part_substring_matches(part, "1") is True
 
     # static int32_t icu::MessagePattern::validateArgumentName(
     #       const UnicodeString &name
@@ -372,10 +372,16 @@ def test_part():
     # static UBool icu::MessagePattern::Part::hasNumericValue(
     #       UMessagePatternPartType type
     # )
-    assert not MessagePattern.Part.has_numeric_value(
-        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START
+    assert (
+        not MessagePattern.Part.has_numeric_value(
+            UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_START
+        )
+        is True
     )
 
-    assert MessagePattern.Part.has_numeric_value(
-        UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT
+    assert (
+        MessagePattern.Part.has_numeric_value(
+            UMessagePatternPartType.UMSGPAT_PART_TYPE_ARG_INT
+        )
+        is True
     )

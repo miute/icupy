@@ -110,7 +110,7 @@ def test_builder():
     bld = LocaleMatcher.Builder().set_supported_locales(locales)
     bld.build()
     out_error_code = ErrorCode()
-    assert not bld.copy_error_to(out_error_code)
+    assert bld.copy_error_to(out_error_code) is False
     assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
 
@@ -143,24 +143,27 @@ def test_builder_set_max_distance():
         .set_max_distance(Locale("de-AT"), Locale.get_german())
         .build()
     )
-    assert matcher.is_match(Locale("de-LU"), Locale.get_german())
-    assert not matcher.is_match(Locale("da"), Locale("no"))
-    assert not matcher.is_match(
-        Locale.get_chinese(), Locale.get_traditional_chinese()
+    assert matcher.is_match(Locale("de-LU"), Locale.get_german()) is True
+    assert matcher.is_match(Locale("da"), Locale("no")) is False
+    assert (
+        matcher.is_match(
+            Locale.get_chinese(), Locale.get_traditional_chinese()
+        )
+        is False
     )
 
     matcher = (
         LocaleMatcher.Builder().set_max_distance("de-AT", Locale("de")).build()
     )
-    assert not matcher.is_match("da", Locale("no"))
+    assert matcher.is_match("da", Locale("no")) is False
 
     matcher = (
         LocaleMatcher.Builder().set_max_distance(Locale("de-AT"), "de").build()
     )
-    assert matcher.is_match(Locale("de-LU"), "de")
+    assert matcher.is_match(Locale("de-LU"), "de") is True
 
     matcher = LocaleMatcher.Builder().set_max_distance("de-AT", "de").build()
-    assert not matcher.is_match("zh", "zh_TW")
+    assert matcher.is_match("zh", "zh_TW") is False
 
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")

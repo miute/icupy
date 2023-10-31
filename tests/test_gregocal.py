@@ -86,15 +86,15 @@ def test_api():
     #       const Calendar &when,
     #       UErrorCode &status
     # )
-    assert not cal.after(cal2)
-    assert cal2.after(cal)
+    assert cal.after(cal2) is False
+    assert cal2.after(cal) is True
 
     # UBool icu::Calendar::before(
     #       const Calendar &when,
     #       UErrorCode &status
     # )
-    assert cal.before(cal2)
-    assert not cal2.before(cal)
+    assert cal.before(cal2) is True
+    assert cal2.before(cal) is False
 
     # [2]
     # void icu::Calendar::clear(UCalendarDateFields field)
@@ -114,9 +114,9 @@ def test_api():
     #       const Calendar &when,
     #       UErrorCode &status
     # )
-    assert not cal.equals(cal2)
-    assert not cal.equals(cal3)
-    assert cal.equals(cal4)
+    assert cal.equals(cal2) is False
+    assert cal.equals(cal3) is False
+    assert cal.equals(cal4) is True
 
     # int32_t icu::Calendar::fieldDifference(
     #       UDate when,
@@ -269,37 +269,37 @@ def test_api():
     )
 
     # UBool icu::Calendar::inDaylightTime(UErrorCode &status)
-    assert not cal.in_daylight_time()
-    assert not cal4.in_daylight_time()
+    assert cal.in_daylight_time() is False
+    assert cal4.in_daylight_time() is False
 
     # UBool icu::Calendar::isEquivalentTo(const Calendar &other)
-    assert not cal.is_equivalent_to(cal2)
-    assert cal.is_equivalent_to(cal3)
-    assert cal.is_equivalent_to(cal4)
+    assert cal.is_equivalent_to(cal2) is False
+    assert cal.is_equivalent_to(cal3) is True
+    assert cal.is_equivalent_to(cal4) is True
 
     # UBool icu::Calendar::isLenient(void)
-    assert cal2.is_lenient()
+    assert cal2.is_lenient() is True
 
     # void icu::Calendar::setLenient(UBool lenient)
     cal2.set_lenient(False)
-    assert not cal2.is_lenient()
+    assert cal2.is_lenient() is False
 
     # UBool icu::Calendar::isSet(UCalendarDateFields field)
-    assert cal2.is_set(UCalendarDateFields.UCAL_YEAR)
-    assert cal2.is_set(UCalendarDateFields.UCAL_MONTH)
-    assert cal2.is_set(UCalendarDateFields.UCAL_DATE)
+    assert cal2.is_set(UCalendarDateFields.UCAL_YEAR) is True
+    assert cal2.is_set(UCalendarDateFields.UCAL_MONTH) is True
+    assert cal2.is_set(UCalendarDateFields.UCAL_DATE) is True
 
     # [1]
     # UBool icu::Calendar::isWeekend(
     #       UDate date,
     #       UErrorCode &status
     # )
-    assert cal2.is_weekend(when)
-    assert not cal2.is_weekend(when3)
+    assert cal2.is_weekend(when) is True
+    assert cal2.is_weekend(when3) is False
 
     # [2]
     # UBool icu::Calendar::isWeekend(void)
-    assert cal2.is_weekend()
+    assert cal2.is_weekend() is True
 
     # UBool icu::Calendar::operator!=(const Calendar &that)
     assert cal != cal2
@@ -340,8 +340,8 @@ def test_api():
     assert cal4.get_gregorian_change() == -2208988800000.0
 
     # UBool icu::GregorianCalendar::isLeapYear(int32_t year)
-    assert cal4.is_leap_year(2008)
-    assert not cal4.is_leap_year(2009)
+    assert cal4.is_leap_year(2008) is True
+    assert cal4.is_leap_year(2009) is False
 
 
 def test_calendar_create_instance():

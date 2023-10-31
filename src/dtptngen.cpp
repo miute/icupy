@@ -29,7 +29,7 @@ void init_dtptngen(py::module &m) {
 
   dtpg.def(
       "add_pattern",
-      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern, UBool override,
+      [](DateTimePatternGenerator &self, const icupy::UnicodeStringVariant &pattern, py::bool_ override,
          UnicodeString &conflicting_pattern) {
         ErrorCode error_code;
         auto result = self.addPattern(icupy::to_unistr(pattern), override, conflicting_pattern, error_code);

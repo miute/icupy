@@ -271,6 +271,10 @@ def test_icu_49():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
 def test_icu_60():
+    from icupy.icu import Edits
+
+    # From icu/source/test/intltest/tstnorm.cpp
+    #  BasicNormalizerTest::TestComposeUTF8WithEdits()
     nfkc_cf = Normalizer2.get_nfkc_casefold_instance()
     src = (
         "  AÄA\u0308A\u0308\u00ad\u0323Ä\u0323,"
@@ -288,6 +292,34 @@ def test_icu_60():
     result = nfkc_cf.normalize_utf8(0, src)
     assert isinstance(result, bytes)
     assert result == expected
+
+    edits = Edits()
+    assert not edits.has_changes()
+    result = nfkc_cf.normalize_utf8(0, src, edits)
+    assert isinstance(result, bytes)
+    assert result == expected
+    assert edits.has_changes()
+    assert edits.number_of_changes() == 9
+    it = edits.get_fine_iterator()
+    result = []
+    while True:
+        if not it.next():
+            break
+        result.append((it.has_change(), it.old_length(), it.new_length()))
+    assert result == [
+        (False, 2, 2),  # 2 spaces
+        (True, 1, 1),  # A→a
+        (True, 2, 2),  # Ä→ä
+        (True, 3, 2),  # A\u0308→ä
+        (True, 7, 5),  # A\u0308\u00ad\u0323→ạ\u0308 removes the soft hyphen
+        (True, 4, 5),  # Ä\u0323→ạ\u0308
+        (False, 1, 1),  # comma
+        (True, 2, 0),  # U+00AD soft hyphen maps to empty
+        (True, 6, 3),  # \u1100\u1161→가
+        (True, 6, 3),  # 가\u11A8→각
+        (True, 6, 3),  # 가\u3133→갃
+        (False, 2, 2),  # 2 spaces
+    ]
 
     # UBool icu::Normalizer2::isNormalizedUTF8(
     #       StringPiece s,

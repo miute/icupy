@@ -30,9 +30,9 @@ void init_errorcode(py::module &m) {
 
   ec.def("get", &ErrorCode::get);
 
-  ec.def("is_failure", &ErrorCode::isFailure);
+  ec.def("is_failure", [](const ErrorCode &self) -> py::bool_ { return self.isFailure(); });
 
-  ec.def("is_success", &ErrorCode::isSuccess);
+  ec.def("is_success", [](const ErrorCode &self) -> py::bool_ { return self.isSuccess(); });
 
   ec.def("reset", &ErrorCode::reset);
 

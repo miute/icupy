@@ -46,9 +46,9 @@ def test_api():
     assert it1.get_max_expansion(order3) == 1
 
     # UBool icu::CollationElementIterator::isIgnorable(int32_t order)
-    assert not CollationElementIterator.is_ignorable(order1)
-    assert not CollationElementIterator.is_ignorable(order2)
-    assert not CollationElementIterator.is_ignorable(order3)
+    assert CollationElementIterator.is_ignorable(order1) is False
+    assert CollationElementIterator.is_ignorable(order2) is False
+    assert CollationElementIterator.is_ignorable(order3) is False
 
     # int32_t icu::CollationElementIterator::previous(UErrorCode &status)
     it1.set_offset(3)

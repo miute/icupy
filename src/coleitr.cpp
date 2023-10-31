@@ -50,7 +50,9 @@ void init_coleitr(py::module &m) {
 
   cei.def("get_offset", &CollationElementIterator::getOffset);
 
-  cei.def_static("is_ignorable", &CollationElementIterator::isIgnorable, py::arg("order"));
+  cei.def_static(
+      "is_ignorable", [](int32_t order) -> py::bool_ { return CollationElementIterator::isIgnorable(order); },
+      py::arg("order"));
 
   cei.def("next", [](CollationElementIterator &self) {
     ErrorCode error_code;

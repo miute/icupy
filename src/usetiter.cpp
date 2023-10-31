@@ -18,11 +18,11 @@ void init_usetiter(py::module &m) {
 
   usi.def("get_string", &UnicodeSetIterator::getString);
 
-  usi.def("is_string", &UnicodeSetIterator::isString);
+  usi.def("is_string", [](const UnicodeSetIterator &self) -> py::bool_ { return self.isString(); });
 
-  usi.def("next", &UnicodeSetIterator::next);
+  usi.def("next", [](UnicodeSetIterator &self) -> py::bool_ { return self.next(); });
 
-  usi.def("next_range", &UnicodeSetIterator::nextRange);
+  usi.def("next_range", [](UnicodeSetIterator &self) -> py::bool_ { return self.nextRange(); });
 
   usi.def("reset", py::overload_cast<>(&UnicodeSetIterator::reset))
       .def("reset", py::overload_cast<const UnicodeSet &>(&UnicodeSetIterator::reset), py::arg("set_"));

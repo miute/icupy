@@ -8,11 +8,16 @@ void init_idna(py::module &m) {
   //
   // icu::IDNAInfo
   //
-  py::class_<IDNAInfo, UMemory>(m, "IDNAInfo")
-      .def(py::init<>())
-      .def("get_errors", &IDNAInfo::getErrors)
-      .def("has_errors", &IDNAInfo::hasErrors)
-      .def("is_transitional_different", &IDNAInfo::isTransitionalDifferent);
+  py::class_<IDNAInfo, UMemory> info(m, "IDNAInfo");
+
+  info.def(py::init<>());
+
+  info.def("get_errors", &IDNAInfo::getErrors);
+
+  info.def("has_errors", [](const IDNAInfo &self) -> py::bool_ { return self.hasErrors(); });
+
+  info.def("is_transitional_different",
+           [](const IDNAInfo &self) -> py::bool_ { return self.isTransitionalDifferent(); });
 
   //
   // icu::IDNA

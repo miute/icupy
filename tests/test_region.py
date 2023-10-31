@@ -14,8 +14,8 @@ def test_api():
     territory = Region.get_instance("IT")  # Italy
 
     # UBool icu::Region::contains(const Region &other)
-    assert not territory.contains(continent)
-    assert continent.contains(territory)
+    assert territory.contains(continent) is False
+    assert continent.contains(territory) is True
 
     # __contains__(self, item: Region)
     assert continent not in territory
@@ -28,7 +28,7 @@ def test_api():
 
     result = territory.get_containing_region()
     assert isinstance(result, Region)
-    assert result.contains(territory)
+    assert result.contains(territory) is True
 
     # [2]
     # const Region *icu::Region::getContainingRegion(URegionType type)

@@ -133,12 +133,12 @@ def test_copy_error_to():
 
     # UBool icu::LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode)
     out_error_code = ErrorCode()
-    assert not bld.copy_error_to(out_error_code)
+    assert bld.copy_error_to(out_error_code) is False
     assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
 
     with pytest.raises(ICUError) as exc_info:
         bld.set_unicode_locale_keyword("123", "abc").build()
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
     out_error_code = ErrorCode()
-    assert bld.copy_error_to(out_error_code)
+    assert bld.copy_error_to(out_error_code) is True
     assert out_error_code.get() == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR

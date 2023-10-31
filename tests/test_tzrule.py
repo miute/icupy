@@ -100,7 +100,7 @@ def test_annual_time_zone_rule():
     #       UDate &result
     # )
     available, result1 = ar1.get_final_start(-1 * HOUR, 1 * HOUR)
-    assert not available
+    assert available is False
     assert isinstance(result1, (int, float))
 
     # UBool icu::AnnualTimeZoneRule::getFirstStart(
@@ -109,7 +109,7 @@ def test_annual_time_zone_rule():
     #       UDate &result
     # )
     available, result2 = ar1.get_first_start(-1 * HOUR, 1 * HOUR)
-    assert available
+    assert available is True
     assert isinstance(result2, (int, float))
 
     # UBool icu::AnnualTimeZoneRule::getNextStart(
@@ -120,7 +120,7 @@ def test_annual_time_zone_rule():
     #       UDate &result
     # )
     available, result3 = ar1.get_next_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert available
+    assert available is True
     assert isinstance(result3, (int, float))
 
     # UBool icu::AnnualTimeZoneRule::getPreviousStart(
@@ -131,7 +131,7 @@ def test_annual_time_zone_rule():
     #       UDate &result
     # )
     available, result4 = ar1.get_previous_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert available
+    assert available is True
     assert isinstance(result4, (int, float))
 
     # UBool icu::AnnualTimeZoneRule::getStartInYear(
@@ -141,13 +141,13 @@ def test_annual_time_zone_rule():
     #       UDate &result
     # )
     available, result5 = ar1.get_start_in_year(1966, -1 * HOUR, 1 * HOUR)
-    assert available
+    assert available is True
     assert isinstance(result5, (int, float))
 
     # UBool icu::AnnualTimeZoneRule::isEquivalentTo(const TimeZoneRule &that)
-    assert ar1.is_equivalent_to(ar2)
-    assert ar1.is_equivalent_to(ar3)
-    assert ar1.is_equivalent_to(ar4)
+    assert ar1.is_equivalent_to(ar2) is True
+    assert ar1.is_equivalent_to(ar3) is True
+    assert ar1.is_equivalent_to(ar4) is True
 
     # UBool icu::AnnualTimeZoneRule::operator!=(const TimeZoneRule &that)
     assert not (ar1 != ar2)
@@ -351,7 +351,7 @@ def test_initial_time_zone_rule():
     #       UDate &result
     # )
     available, _ = ir1.get_final_start(-1 * HOUR, 1 * HOUR)
-    assert not available
+    assert available is False
 
     # UBool icu::InitialTimeZoneRule::getFirstStart(
     #       int32_t prevRawOffset,
@@ -359,7 +359,7 @@ def test_initial_time_zone_rule():
     #       UDate &result
     # )
     available, _ = ir1.get_first_start(-1 * HOUR, 1 * HOUR)
-    assert not available
+    assert available is False
 
     # UBool icu::InitialTimeZoneRule::getNextStart(
     #       UDate base,
@@ -369,7 +369,7 @@ def test_initial_time_zone_rule():
     #       UDate &result
     # )
     available, _ = ir1.get_next_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert not available
+    assert available is False
 
     # UBool icu::InitialTimeZoneRule::getPreviousStart(
     #       UDate base,
@@ -379,11 +379,11 @@ def test_initial_time_zone_rule():
     #       UDate &result
     # )
     available, _ = ir1.get_previous_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert not available
+    assert available is False
 
     # UBool icu::InitialTimeZoneRule::isEquivalentTo(const TimeZoneRule &that)
-    assert ir1.is_equivalent_to(ir2)
-    assert ir1.is_equivalent_to(ir3)
+    assert ir1.is_equivalent_to(ir2) is True
+    assert ir1.is_equivalent_to(ir3) is True
 
     # UBool icu::InitialTimeZoneRule::operator!=(const TimeZoneRule &that)
     assert not (ir1 != ir2)
@@ -467,7 +467,7 @@ def test_time_array_time_zone_rule():
     assert (valid, result) == (True, start_times[1])
 
     valid, result = tr1.get_start_time_at(2)
-    assert not valid
+    assert valid is False
 
     # DateTimeRule::TimeRuleType icu::TimeArrayTimeZoneRule::getTimeType(void)
     assert tr1.get_time_type() == DateTimeRule.UTC_TIME
@@ -478,7 +478,7 @@ def test_time_array_time_zone_rule():
     #       UDate &result
     # )
     available, result1 = tr1.get_final_start(-1 * HOUR, 1 * HOUR)
-    assert available
+    assert available is True
     assert isinstance(result1, (int, float))
 
     # UBool icu::TimeArrayTimeZoneRule::getFirstStart(
@@ -487,7 +487,7 @@ def test_time_array_time_zone_rule():
     #       UDate &result
     # )
     available, result2 = tr1.get_first_start(-1 * HOUR, 1 * HOUR)
-    assert available
+    assert available is True
     assert isinstance(result2, (int, float))
 
     # UBool icu::TimeArrayTimeZoneRule::getNextStart(
@@ -498,7 +498,7 @@ def test_time_array_time_zone_rule():
     #       UDate &result
     # )
     available, result3 = tr1.get_next_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert available
+    assert available is True
     assert isinstance(result3, (int, float))
 
     # UBool icu::TimeArrayTimeZoneRule::getPreviousStart(
@@ -509,14 +509,14 @@ def test_time_array_time_zone_rule():
     #       UDate &result
     # )
     available, result4 = tr1.get_previous_start(0, -1 * HOUR, 1 * HOUR, False)
-    assert not available
+    assert available is False
     assert isinstance(result4, (int, float))
 
     # UBool icu::TimeArrayTimeZoneRule::isEquivalentTo(
     #       const TimeZoneRule &that
     # )
-    assert tr1.is_equivalent_to(tr2)
-    assert tr1.is_equivalent_to(tr3)
+    assert tr1.is_equivalent_to(tr2) is True
+    assert tr1.is_equivalent_to(tr3) is True
 
     # UBool icu::TimeArrayTimeZoneRule::operator!=(const TimeZoneRule &that)
     assert not (tr1 != tr2)
