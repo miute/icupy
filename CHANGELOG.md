@@ -1,58 +1,61 @@
 # Changelog
 
-## v0.18.0a2 / 2023-10-23
+## v0.18.0 / 2023-11-01
 
 - NEW
-  - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-rc) (partial)
+  - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-1) (partial) [(#53)](https://github.com/miute/icupy/pull/53)
+    - Add `icupy.icu.Measure.__ne__(other: UObject)`
+    - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`
+    - Add `icupy.icu.MeasureUnit.get_gasoline_energy_density()`
+    - Add `icupy.icu.Normalizer2.get_nfkc_simple_casefold_instance()`
+    - Add `icupy.icu.TimeZone.get_iana_id(id_: UnicodeString | str, iana_id: UnicodeString)`
+    - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I`
+    - Add `icupy.icu.ULineBreak.U_LB_AKSARA_PREBASE`
+    - Add `icupy.icu.ULineBreak.U_LB_AKSARA_START`
+    - Add `icupy.icu.ULineBreak.U_LB_AKSARA`
+    - Add `icupy.icu.ULineBreak.U_LB_VIRAMA_FINAL`
+    - Add `icupy.icu.ULineBreak.U_LB_VIRAMA`
+    - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_CONTINUE`
+    - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_START`
+    - Add `icupy.icu.UProperty.UCHAR_IDS_UNARY_OPERATOR`
+    - Add `icupy.icu.uspoof_are_bidi_confusable_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, s1: UnicodeString | str, s2: UnicodeString | str)`
+    - Add `icupy.icu.uspoof_are_bidi_confusable_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: bytes, length1: int, id2: bytes, length2: int)`
+    - Add `icupy.icu.uspoof_are_bidi_confusable(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: str, length1: int, id2: str, length2: int)`
+    - Add `icupy.icu.uspoof_get_bidi_skeleton_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: UnicodeString | str, dest: UnicodeString)`
+    - Add `icupy.icu.uspoof_get_bidi_skeleton_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: bytes, length: int = -1)`
+    - Add `icupy.icu.uspoof_get_bidi_skeleton(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: str, length: int = -1)`
   - Add support for Python 3.12
-  - Implement icu::number::SimpleNumberFormatter class
+  - Implement icu::number::SimpleNumberFormatter class [(#55)](https://github.com/miute/icupy/pull/55)
     - Add `icupy.icu.number.SimpleNumber` class
     - Add `icupy.icu.number.SimpleNumberFormatter` class
     - Add `icupy.icu.USimpleNumberSign` enum
-- ADDED
-  - Add `icupy.icu.Collator.compare_utf8(source: bytes, target: bytes)`
-  - Add `icupy.icu.IDNA.label_to_ascii_utf8(label: bytes, info: IDNAInfo)`
-  - Add `icupy.icu.IDNA.label_to_unicode_utf8(label: bytes, info: IDNAInfo)`
-  - Add `icupy.icu.IDNA.name_to_ascii_utf8(name: bytes, info: IDNAInfo)`
-  - Add `icupy.icu.IDNA.name_to_unicode_utf8(name: bytes, info: IDNAInfo)`
-  - Add `icupy.icu.Measure.__ne__(other: UObject)`
-  - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`
-  - Add `icupy.icu.MeasureUnit.get_gasoline_energy_density()`
-  - Add `icupy.icu.Normalizer2.get_nfkc_simple_casefold_instance()`
-  - Add `icupy.icu.Normalizer2.is_normalized_utf8(s: bytes)`
-  - Add `icupy.icu.Normalizer2.normalize_utf8(options: int, src: bytes)`
-  - Add `icupy.icu.TimeZone.get_iana_id(id_: UnicodeString | str, iana_id: UnicodeString)`
-  - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I`
-  - Add `icupy.icu.ULineBreak.U_LB_AKSARA_PREBASE`
-  - Add `icupy.icu.ULineBreak.U_LB_AKSARA_START`
-  - Add `icupy.icu.ULineBreak.U_LB_AKSARA`
-  - Add `icupy.icu.ULineBreak.U_LB_VIRAMA_FINAL`
-  - Add `icupy.icu.ULineBreak.U_LB_VIRAMA`
-  - Add `icupy.icu.UnicodeSet.span_utf8(b: bytes, length: int, span_condition: USetSpanCondition)`
-  - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_CONTINUE`
-  - Add `icupy.icu.UProperty.UCHAR_ID_COMPAT_MATH_START`
-  - Add `icupy.icu.UProperty.UCHAR_IDS_UNARY_OPERATOR`
-  - Add `icupy.icu.uspoof_are_bidi_confusable_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, s1: UnicodeString | str, s2: UnicodeString | str)`
-  - Add `icupy.icu.uspoof_are_bidi_confusable_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: bytes, length1: int, id2: bytes, length2: int)`
-  - Add `icupy.icu.uspoof_are_bidi_confusable(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id1: str, length1: int, id2: str, length2: int)`
-  - Add `icupy.icu.uspoof_get_bidi_skeleton_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: UnicodeString | str, dest: UnicodeString)`
-  - Add `icupy.icu.uspoof_get_bidi_skeleton_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: bytes, length: int = -1)`
-  - Add `icupy.icu.uspoof_get_bidi_skeleton(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: str, length: int = -1)`
 - CHANGED
   - Update pybind11 from 2.10.4 to 2.11.1
-  - Change argument type from `str` to `bytes`
+  - Change the argument type from `str` to `bytes`
     - `icupy.icu.UnicodeString.from_utf8(utf8: str)` → `icupy.icu.UnicodeString.from_utf8(utf8: bytes)`
     - `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: str, length1: int, id2: str, length2: int)` → `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: bytes, length1: int, id2: bytes, length2: int)`
-    - `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: str, length: int, check_result: _USpoofCheckerPtr | None = None)` → `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int, check_result: _USpoofCheckerPtr | None = None)`
     - `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: str, length: int = -1)` → `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int = -1)`
+    - `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: str, length: int, check_result: _USpoofCheckerPtr | None = None)` → `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int, check_result: _USpoofCheckerPtr | None = None)`
     - `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: str, length: int = -1) -> str` → `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: bytes, length: int = -1) -> bytes`
     - `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: str, length: int)` → `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: bytes, length: int = -1)`
 - FIXED
-  - Change argument type from `UnicodeString` to `UnicodeString | str`
+  - Add missing methods for UTF-8 strings [(#56)](https://github.com/miute/icupy/pull/56)
+    - Add `icupy.icu.Collator.compare_utf8(source: bytes, target: bytes)`
+    - Add `icupy.icu.IDNA.label_to_ascii_utf8(label: bytes, info: IDNAInfo)`
+    - Add `icupy.icu.IDNA.label_to_unicode_utf8(label: bytes, info: IDNAInfo)`
+    - Add `icupy.icu.IDNA.name_to_ascii_utf8(name: bytes, info: IDNAInfo)`
+    - Add `icupy.icu.IDNA.name_to_unicode_utf8(name: bytes, info: IDNAInfo)`
+    - Add `icupy.icu.Normalizer2.is_normalized_utf8(b: bytes)`
+    - Add `icupy.icu.Normalizer2.normalize_utf8(options: int, src: bytes, edits: Edits | None = None)`
+    - Add `icupy.icu.UnicodeSet.span_utf8(b: bytes, length: int, span_condition: USetSpanCondition)`
+  - Change the return/argument type of the C/C++ `UBool` type from `int` to `bool` [(#59)](https://github.com/miute/icupy/pull/59)
+  - Change the argument type from `UnicodeString` to `UnicodeString | str`
     - `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString, s2: UnicodeString)` → `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString | str, s2: UnicodeString | str)`
     - `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString, check_result: _USpoofCheckResultPtr | None = None)` → `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str, check_result: _USpoofCheckResultPtr | None = None)`
     - `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString)` → `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str)`
     - `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString, dest: UnicodeString)` → `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString | str, dest: UnicodeString)`
+  - Change an argument (Fix a typo)
+    - `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propogate_digits = True)` → `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propagate_digits = True)`
 
 ## v0.17.0 / 2023-07-10
 
