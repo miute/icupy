@@ -31,7 +31,7 @@
     - Add `icupy.icu.USimpleNumberSign` enum
 - CHANGED
   - Update pybind11 from 2.10.4 to 2.11.1
-  - Change argument type from `str` to `bytes`
+  - Change the argument type from `str` to `bytes`
     - `icupy.icu.UnicodeString.from_utf8(utf8: str)` → `icupy.icu.UnicodeString.from_utf8(utf8: bytes)`
     - `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: str, length1: int, id2: str, length2: int)` → `icupy.icu.uspoof_are_confusable_utf8(sc: _USpoofCheckerPtr, id1: bytes, length1: int, id2: bytes, length2: int)`
     - `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: str, length: int = -1)` → `icupy.icu.uspoof_check_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int = -1)`
@@ -48,12 +48,14 @@
     - Add `icupy.icu.Normalizer2.is_normalized_utf8(b: bytes)`
     - Add `icupy.icu.Normalizer2.normalize_utf8(options: int, src: bytes, edits: Edits | None = None)`
     - Add `icupy.icu.UnicodeSet.span_utf8(b: bytes, length: int, span_condition: USetSpanCondition)`
-  - Change the return type / argument type of the C/C++ `UBool` type from `int` to `bool` [(#59)](https://github.com/miute/icupy/pull/59)
-  - Change argument type from `UnicodeString` to `UnicodeString | str`
+  - Change the return/argument type of the C/C++ `UBool` type from `int` to `bool` [(#59)](https://github.com/miute/icupy/pull/59)
+  - Change the argument type from `UnicodeString` to `UnicodeString | str`
     - `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString, s2: UnicodeString)` → `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString | str, s2: UnicodeString | str)`
     - `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString, check_result: _USpoofCheckResultPtr | None = None)` → `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str, check_result: _USpoofCheckResultPtr | None = None)`
     - `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString)` → `icupy.icu.uspoof_check_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str)`
     - `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString, dest: UnicodeString)` → `icupy.icu.uspoof_get_skeleton_unicode_string(sc: _USpoofCheckerPtr, type_: int, id_: UnicodeString | str, dest: UnicodeString)`
+  - Change an argument (Fix a typo)
+    - `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propogate_digits = True)` → `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propagate_digits = True)`
 
 ## v0.17.0 / 2023-07-10
 
