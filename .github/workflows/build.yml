@@ -75,7 +75,7 @@ jobs:
           pyproject-build --wheel
 
       - name: Store wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-icupy-icu${{env.icu4c_latest_version}}
           path: dist/*.whl
