@@ -85,7 +85,7 @@ jobs:
 
       - name: Store coverage data
         if: matrix.icu-version == env.icu4c_latest_version
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-data
           path: |
@@ -133,7 +133,7 @@ jobs:
           files: coverage.xml, coverage-cpp.info
 
       - name: Store coverage reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: |
