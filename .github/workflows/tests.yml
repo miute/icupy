@@ -127,7 +127,7 @@ jobs:
           python -m tox -c tox-coverage.ini -e cov,cov-cpp
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
           files: coverage.xml, coverage-cpp.info
