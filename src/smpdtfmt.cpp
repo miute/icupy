@@ -86,8 +86,7 @@ void init_smpdtfmt(py::module &m) {
 
   sdf.def("__copy__", &SimpleDateFormat::clone);
 
-  sdf.def(
-      "__deepcopy__", [](const SimpleDateFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  sdf.def("__deepcopy__", [](const SimpleDateFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::SimpleDateFormat::adoptCalendar(Calendar *calendarToAdopt)".
   // FIXME: Implement "void icu::SimpleDateFormat::adoptDateFormatSymbols(DateFormatSymbols *newFormatSymbols)".

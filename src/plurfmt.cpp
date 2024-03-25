@@ -130,8 +130,7 @@ void init_plurfmt(py::module &m) {
 
   pf.def("__copy__", &PluralFormat::clone);
 
-  pf.def(
-      "___deepcopy__", [](const PluralFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  pf.def("___deepcopy__", [](const PluralFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   pf.def(
       "apply_pattern",

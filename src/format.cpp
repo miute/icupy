@@ -12,8 +12,7 @@ void init_format(py::module &m) {
 
   fmt.def("__copy__", &Format::clone);
 
-  fmt.def(
-      "__deepcopy__", [](const Format &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fmt.def("__deepcopy__", [](const Format &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   fmt.def(
       "__eq__", [](const Format &self, const Format &other) { return self == other; }, py::is_operator(),

@@ -21,8 +21,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def("__copy__", &Locale::clone);
 
-  loc.def(
-      "__deepcopy__", [](const Locale &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  loc.def("__deepcopy__", [](const Locale &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   loc.def(
       "__eq__", [](const Locale &self, const Locale &other) { return self == other; }, py::is_operator(),

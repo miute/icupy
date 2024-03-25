@@ -370,8 +370,7 @@ void init_uscript(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-  m.def(
-      "uscript_is_cased", [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); }, py::arg("script"));
+  m.def("uscript_is_cased", [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); }, py::arg("script"));
 
   m.def(
       "uscript_is_right_to_left", [](UScriptCode script) -> py::bool_ { return uscript_isRightToLeft(script); },

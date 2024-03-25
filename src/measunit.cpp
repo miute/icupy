@@ -80,8 +80,7 @@ void init_measunit(py::module &m) {
 
   mu.def("__copy__", &MeasureUnit::clone);
 
-  mu.def(
-      "__deepcopy__", [](const MeasureUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  mu.def("__deepcopy__", [](const MeasureUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   mu.def(
       "__eq__", [](const MeasureUnit &self, const UObject &other) { return self == other; }, py::is_operator(),

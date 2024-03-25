@@ -134,8 +134,7 @@ void init_tzfmt(py::module &m) {
 
   tzf.def("__copy__", &TimeZoneFormat::clone);
 
-  tzf.def(
-      "__deepcopy__", [](const TimeZoneFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tzf.def("__deepcopy__", [](const TimeZoneFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::TimeZoneFormat::adoptTimeZoneNames(TimeZoneNames *tznames)".
 

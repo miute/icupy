@@ -358,9 +358,12 @@ def test_api_58():
     # fmt: on
     # USpoofCheckResult *uspoof_openCheckResult(UErrorCode *status)
     # void uspoof_closeCheckResult(USpoofCheckResult *checkResult)
-    with gc(uspoof_open(), uspoof_close) as sc, gc(
-        uspoof_open_check_result(), uspoof_close_check_result
-    ) as check_result:
+    with (
+        gc(uspoof_open(), uspoof_close) as sc,
+        gc(
+            uspoof_open_check_result(), uspoof_close_check_result
+        ) as check_result,
+    ):
         id_ = "m\u0307"
 
         # int32_t uspoof_check2(

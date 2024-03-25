@@ -373,8 +373,7 @@ void init_gregocal(py::module &m) {
   cal.def("set_first_day_of_week", py::overload_cast<UCalendarDaysOfWeek>(&Calendar::setFirstDayOfWeek),
           py::arg("value"));
 
-  cal.def(
-      "set_lenient", [](Calendar &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
+  cal.def("set_lenient", [](Calendar &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
 
   cal.def("set_minimal_days_in_first_week", &Calendar::setMinimalDaysInFirstWeek, py::arg("value"));
 
@@ -493,8 +492,7 @@ void init_gregocal(py::module &m) {
 
   gc.def("__copy__", &GregorianCalendar::clone);
 
-  gc.def(
-      "__deepcopy__", [](const GregorianCalendar &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  gc.def("__deepcopy__", [](const GregorianCalendar &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   gc.def("__repr__", [](const Calendar &self) {
     std::stringstream ss;

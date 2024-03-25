@@ -131,8 +131,7 @@ void init_schriter(py::module &m) {
 
   uci.def("__copy__", &UCharCharacterIterator::clone);
 
-  uci.def(
-      "__deepcopy__", [](const UCharCharacterIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  uci.def("__deepcopy__", [](const UCharCharacterIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   uci.def("clone", &UCharCharacterIterator::clone);
 

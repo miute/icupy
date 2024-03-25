@@ -85,8 +85,7 @@ void init_rbnf(py::module &m) {
 
   rbnf.def("__copy__", &RuleBasedNumberFormat::clone);
 
-  rbnf.def(
-      "__deepcopy__", [](const RuleBasedNumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rbnf.def("__deepcopy__", [](const RuleBasedNumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::RuleBasedNumberFormat::adoptDecimalFormatSymbols(DecimalFormatSymbols
   //  *symbolsToAdopt)".

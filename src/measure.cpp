@@ -27,8 +27,7 @@ void init_measure(py::module &m) {
 
   meas.def("__copy__", &Measure::clone);
 
-  meas.def(
-      "__deepcopy__", [](const Measure &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  meas.def("__deepcopy__", [](const Measure &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   meas.def(
       "__eq__", [](const Measure &self, const UObject &other) { return self == other; }, py::is_operator(),
@@ -73,8 +72,7 @@ void init_measure(py::module &m) {
 
   ca.def("__copy__", &CurrencyAmount::clone);
 
-  ca.def(
-      "__deepcopy__", [](const CurrencyAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  ca.def("__deepcopy__", [](const CurrencyAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   ca.def("clone", &CurrencyAmount::clone);
 
@@ -109,8 +107,7 @@ void init_measure(py::module &m) {
 
   tua.def("__copy__", &TimeUnitAmount::clone);
 
-  tua.def(
-      "__deepcopy__", [](const TimeUnitAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tua.def("__deepcopy__", [](const TimeUnitAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tua.def("clone", &TimeUnitAmount::clone);
 

@@ -38,8 +38,7 @@ void init_tznames(py::module &m) {
 
   tzn.def("__copy__", &TimeZoneNames::clone);
 
-  tzn.def(
-      "__deepcopy__", [](const TimeZoneNames &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tzn.def("__deepcopy__", [](const TimeZoneNames &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tzn.def(
       "__eq__", [](const TimeZoneNames &self, const TimeZoneNames &other) { return self == other; }, py::is_operator(),
