@@ -67,8 +67,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
   //
   nf.def("__copy__", &NumberFormat::clone);
 
-  nf.def(
-      "___deepcopy__", [](const NumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  nf.def("___deepcopy__", [](const NumberFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   nf.def("clone", &NumberFormat::clone);
 
@@ -393,8 +392,7 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       "set_grouping_used", [](NumberFormat &self, py::bool_ new_value) { self.setGroupingUsed(new_value); },
       py::arg("new_value"));
 
-  nf.def(
-      "set_lenient", [](NumberFormat &self, py::bool_ enable) { self.setLenient(enable); }, py::arg("enable"));
+  nf.def("set_lenient", [](NumberFormat &self, py::bool_ enable) { self.setLenient(enable); }, py::arg("enable"));
 
   nf.def("set_maximum_fraction_digits", &NumberFormat::setMaximumFractionDigits, py::arg("new_value"));
 

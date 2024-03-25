@@ -23,8 +23,7 @@ void init_selfmt(py::module &m) {
 
   sf.def("__copy__", &SelectFormat::clone);
 
-  sf.def(
-      "___deepcopy__", [](const SelectFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  sf.def("___deepcopy__", [](const SelectFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   sf.def(
       "apply_pattern",

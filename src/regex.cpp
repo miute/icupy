@@ -577,8 +577,7 @@ void init_regex(py::module &m) {
 
   rp.def("__copy__", &RegexPattern::clone);
 
-  rp.def(
-      "__deepcopy__", [](const RegexPattern &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rp.def("__deepcopy__", [](const RegexPattern &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   rp.def(
       "__eq__", [](const RegexPattern &self, const RegexPattern &other) { return self == other; }, py::is_operator(),

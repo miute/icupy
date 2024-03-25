@@ -20,8 +20,7 @@ void init_uenum(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); }, py::arg("en"));
+  m.def("uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); }, py::arg("en"));
 
   m.def(
       "uenum_count",

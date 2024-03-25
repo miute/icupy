@@ -15,8 +15,7 @@ void init_dtintrv(py::module &m) {
 
   di.def("__copy__", &DateInterval::clone);
 
-  di.def(
-      "__deepcopy__", [](const DateInterval &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  di.def("__deepcopy__", [](const DateInterval &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   di.def(
       "__eq__", [](const DateInterval &self, const DateInterval &other) { return self == other; }, py::is_operator(),

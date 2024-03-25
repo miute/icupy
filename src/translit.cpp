@@ -60,8 +60,7 @@ void init_translit(py::module &m) {
 
   tl.def("__copy__", &Transliterator::clone);
 
-  tl.def(
-      "__deepcopy__", [](const Transliterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tl.def("__deepcopy__", [](const Transliterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tl.def(
       "adopt_filter",

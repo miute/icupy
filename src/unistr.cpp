@@ -20,8 +20,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   //
   rep.def("__copy__", &Replaceable::clone);
 
-  rep.def(
-      "__deepcopy__", [](const Replaceable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rep.def("__deepcopy__", [](const Replaceable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   rep.def("__len__", &Replaceable::length);
 
@@ -111,8 +110,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def("__copy__", &UnicodeString::clone);
 
-  us.def(
-      "__deepcopy__", [](const UnicodeString &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  us.def("__deepcopy__", [](const UnicodeString &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   us.def(
       "__eq__",

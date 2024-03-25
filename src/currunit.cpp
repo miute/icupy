@@ -22,8 +22,7 @@ void init_currunit(py::module &m) {
 
   cu.def("__copy__", &CurrencyUnit::clone);
 
-  cu.def(
-      "__deepcopy__", [](const CurrencyUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  cu.def("__deepcopy__", [](const CurrencyUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   cu.def("clone", &CurrencyUnit::clone);
 

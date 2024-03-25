@@ -117,8 +117,7 @@ void init_uniset(py::module &m) {
 
   us.def("__copy__", &UnicodeSet::clone);
 
-  us.def(
-      "__deepcopy__", [](const UnicodeSet &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  us.def("__deepcopy__", [](const UnicodeSet &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   us.def(
         "__eq__", [](const UnicodeSet &self, const UnicodeSet &other) { return self == other; }, py::is_operator(),
