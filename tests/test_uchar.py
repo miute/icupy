@@ -241,6 +241,38 @@ def test_u_get_binary_property_set():
     assert uniset.contains(0x3000)  # U+3000: Ideographic Space
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
+def test_u_get_id_types():
+    from icupy.icu import UIdentifierType, u_get_id_types, u_has_id_type
+
+    c = 0x1D1DE
+
+    # int32_t u_getIDTypes (
+    #       UChar32 c,
+    #       UIdentifierType *types,
+    #       int32_t capacity,
+    #       UErrorCode *pErrorCode
+    # )
+    types = u_get_id_types(c)
+    assert isinstance(types, list)
+    assert len(types) == 3
+    types.sort()
+    assert types == [
+        UIdentifierType.U_ID_TYPE_NOT_XID,
+        UIdentifierType.U_ID_TYPE_TECHNICAL,
+        UIdentifierType.U_ID_TYPE_UNCOMMON_USE,
+    ]
+
+    # bool u_hasIDType(
+    #       UChar32 c,
+    #       UIdentifierType type
+    # )
+    assert u_has_id_type(c, UIdentifierType.U_ID_TYPE_NOT_CHARACTER) is False
+    assert u_has_id_type(c, UIdentifierType.U_ID_TYPE_NOT_XID) is True
+    assert u_has_id_type(c, UIdentifierType.U_ID_TYPE_TECHNICAL) is True
+    assert u_has_id_type(c, UIdentifierType.U_ID_TYPE_UNCOMMON_USE) is True
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
 def test_u_get_int_property_map():
     # fmt: off

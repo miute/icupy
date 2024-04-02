@@ -597,6 +597,38 @@ void init_uchar(py::module &m) {
 #endif // U_HIDE_DEPRECATED_API
       .export_values();
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  //
+  // UIdentifierStatus
+  //
+  py::enum_<UIdentifierStatus>(m, "UIdentifierStatus", py::arithmetic(),
+                               "Identifier Status constants.\n\n"
+                               "See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.")
+      .value("U_ID_STATUS_RESTRICTED", U_ID_STATUS_RESTRICTED)
+      .value("U_ID_STATUS_ALLOWED", U_ID_STATUS_ALLOWED)
+      .export_values();
+
+  //
+  // UIdentifierType
+  //
+  py::enum_<UIdentifierType>(m, "UIdentifierType", py::arithmetic(),
+                             "Identifier Type constants.\n\n"
+                             "See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.")
+      .value("U_ID_TYPE_NOT_CHARACTER", U_ID_TYPE_NOT_CHARACTER)
+      .value("U_ID_TYPE_DEPRECATED", U_ID_TYPE_DEPRECATED)
+      .value("U_ID_TYPE_DEFAULT_IGNORABLE", U_ID_TYPE_DEFAULT_IGNORABLE)
+      .value("U_ID_TYPE_NOT_NFKC", U_ID_TYPE_NOT_NFKC)
+      .value("U_ID_TYPE_NOT_XID", U_ID_TYPE_NOT_XID)
+      .value("U_ID_TYPE_EXCLUSION", U_ID_TYPE_EXCLUSION)
+      .value("U_ID_TYPE_OBSOLETE", U_ID_TYPE_OBSOLETE)
+      .value("U_ID_TYPE_TECHNICAL", U_ID_TYPE_TECHNICAL)
+      .value("U_ID_TYPE_UNCOMMON_USE", U_ID_TYPE_UNCOMMON_USE)
+      .value("U_ID_TYPE_LIMITED_USE", U_ID_TYPE_LIMITED_USE)
+      .value("U_ID_TYPE_INCLUSION", U_ID_TYPE_INCLUSION)
+      .value("U_ID_TYPE_RECOMMENDED", U_ID_TYPE_RECOMMENDED)
+      .export_values();
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   //
   // UIndicPositionalCategory
@@ -1243,6 +1275,12 @@ void init_uchar(py::module &m) {
              "Used for UAX #50 Unicode Vertical Text Layout (https://www.unicode.org/reports/tr50/). New as a UCD "
              "property in Unicode 10.0.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+      .value("UCHAR_IDENTIFIER_STATUS", UCHAR_IDENTIFIER_STATUS,
+             "Enumerated property Identifier_Status.\n\n"
+             "Used for UTS #39 General Security Profile for Identifiers "
+             "(https://www.unicode.org/reports/tr39/#General_Security_Profile).")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -1321,6 +1359,14 @@ void init_uchar(py::module &m) {
              "*uscript_get_script_extensions* in uscript.h.")
       .value("UCHAR_OTHER_PROPERTY_START", UCHAR_OTHER_PROPERTY_START,
              "First constant for Unicode properties with unusual value types.")
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+      .value("UCHAR_IDENTIFIER_TYPE", UCHAR_IDENTIFIER_TYPE,
+             "Miscellaneous property Identifier_Type.\n\n"
+             "Used for UTS #39 General Security Profile for Identifiers "
+             "(https://www.unicode.org/reports/tr39/#General_Security_Profile).\n\n"
+             "Corresponds to *u_has_id_type()* and *u_get_id_types()*.\n\n"
+             "Each code point maps to a <i>set</i> of *UIdentifierType* values.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -1521,6 +1567,29 @@ void init_uchar(py::module &m) {
       },
       py::arg("c"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  m.def(
+      "u_get_id_types",
+      [](UChar32 c) {
+        int32_t size = 8;
+        std::vector<UIdentifierType> result(size);
+        ErrorCode error_code;
+        do {
+          error_code.reset();
+          size = u_getIDTypes(c, result.data(), static_cast<int32_t>(result.capacity()), error_code);
+          if (error_code == U_BUFFER_OVERFLOW_ERROR) {
+            result.reserve(size + 1);
+          }
+          result.resize(size);
+        } while (error_code == U_BUFFER_OVERFLOW_ERROR);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("c"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   m.def(
       "u_get_int_property_map",
@@ -1565,6 +1634,12 @@ void init_uchar(py::module &m) {
   m.def(
       "u_has_binary_property", [](UChar32 c, UProperty which) -> py::bool_ { return u_hasBinaryProperty(c, which); },
       py::arg("c"), py::arg("which"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  m.def(
+      "u_has_id_type", [](UChar32 c, UIdentifierType type) { return u_hasIDType(c, type); }, py::arg("c"),
+      py::arg("type_"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
   m.def("u_isalnum", [](UChar32 c) -> py::bool_ { return u_isalnum(c); }, py::arg("c"));
 

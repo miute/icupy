@@ -419,6 +419,26 @@ def test_localized_number_formatter_72():
     assert num.to_temp_string() == "2 Metern, 10 Zentimetern"
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
+def test_localized_number_formatter_75():
+    # UnlocalizedNumberFormatter
+    # icu::number::LocalizedNumberFormatter::withoutLocale() const &
+    lnf2 = (
+        NumberFormatter.with_()
+        .notation(Notation.compact_long())
+        .locale("fr")
+        .unit_width(UNumberUnitWidth.UNUM_UNIT_WIDTH_FULL_NAME)
+    )
+    unf2 = lnf2.without_locale()
+    assert isinstance(unf2, UnlocalizedNumberFormatter)
+    f = unf2.unit(MeasureUnit.create_meter())
+    # l1 = f.threshold(0).locale("ja-JP")
+    l1 = f.locale("ja-JP")
+    result1 = l1.format_double(2)
+    actual1 = result1.to_string()
+    assert actual1 == "2 メートル"
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_localized_number_formatter_to_format():
     # fmt: off

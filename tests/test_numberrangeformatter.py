@@ -311,6 +311,25 @@ def test_localized_number_range_formatter_64():
     ) == "1 m \u2013 5 m"  # 1 m - 5 m
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
+def test_localized_number_range_formatter_75():
+    # UnlocalizedNumberRangeFormatter
+    # icu::number::LocalizedNumberRangeFormatter::withoutLocale() const &
+    unf2 = (
+        NumberRangeFormatter.with_()
+        .identity_fallback(
+            UNumberRangeIdentityFallback.UNUM_IDENTITY_FALLBACK_RANGE
+        )
+        .locale("ar-EG")
+        .without_locale()
+    )
+    assert isinstance(unf2, UnlocalizedNumberRangeFormatter)
+    res2 = unf2.locale("ja-JP").format_formattable_range(
+        Formattable(5), Formattable(5)
+    )
+    assert res2.to_temp_string() == "5\uFF5E5"
+
+
 def test_number_range_formatter():
     # static UnlocalizedNumberRangeFormatter
     # icu::number::NumberRangeFormatter::with()

@@ -103,7 +103,7 @@ def test_for_locale_and_symbols_and_grouping_strategy():
     assert fv.to_temp_string() == "৯৮৭,৬৫৪,৩২১"
 
 
-def test_format():
+def test_format_73():
     fmt = SimpleNumberFormatter.for_locale("bn")
 
     # icu::number::SimpleNumber::SimpleNumber()
@@ -155,6 +155,14 @@ def test_format():
     # )
     value.set_sign(USimpleNumberSign.UNUM_SIMPLE_NUMBER_NO_SIGN)
 
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM > 74, reason="ICU4C>74")
+def test_format_74():
+    """Deprecated or Obsoleted in ICU 75."""
+    fmt = SimpleNumberFormatter.for_locale("bn")
+    value = SimpleNumber.for_int64(1250000)
+    assert isinstance(value, SimpleNumber)
+
     # void icu::number::SimpleNumber::truncateStart(
     #       uint32_t maximumIntegerDigits,
     #       UErrorCode &status
@@ -167,4 +175,25 @@ def test_format():
 
     with pytest.raises(ICUError) as exc_info:
         _ = fmt.format(value)  # Use of moved number
+    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
+def test_format_75():
+    snf = SimpleNumberFormatter.for_locale_and_grouping_strategy(
+        "en-US", UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
+    )
+
+    # void icu::number::SimpleNumber::setMaximumIntegerDigits(
+    #       uint32_t maximumIntegerDigits,
+    #       UErrorCode &status
+    # )
+    num = SimpleNumber.for_int64(918273645)
+    num.multiply_by_power_of_ten(-4)
+    num.set_maximum_integer_digits(4)
+    result = snf.format(num)
+    assert result.to_temp_string() == "1,827.3645"
+
+    with pytest.raises(ICUError) as exc_info:
+        _ = snf.format(num)  # Use of moved number
     assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR

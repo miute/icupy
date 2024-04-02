@@ -252,6 +252,10 @@ void init_numberformatter(py::module &, py::module &m2) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  lnf.def("without_locale", [](const LocalizedNumberFormatter &self) { return self.withoutLocale(); });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+
   //
   // icu::number::NumberFormatter
   //
