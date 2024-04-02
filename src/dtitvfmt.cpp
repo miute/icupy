@@ -25,8 +25,7 @@ void init_dtitvfmt(py::module &m) {
 
   fmt.def("__copy__", &DateIntervalFormat::clone);
 
-  fmt.def(
-      "__deepcopy__", [](const DateIntervalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fmt.def("__deepcopy__", [](const DateIntervalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::DateIntervalFormat::adoptTimeZone(TimeZone *zoneToAdopt)".
 

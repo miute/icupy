@@ -72,8 +72,7 @@ void init_resbund(py::module &m) {
 
   res.def("__copy__", &ResourceBundle::clone);
 
-  res.def(
-      "__deepcopy__", [](const ResourceBundle &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  res.def("__deepcopy__", [](const ResourceBundle &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   res.def("__iter__", [](ResourceBundle &self) -> ResourceBundle & {
     self.resetIterator();

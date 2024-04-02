@@ -263,11 +263,9 @@ void init_utypes(py::module &m) {
   //
   m.def("u_error_name", &u_errorName, py::arg("code"));
 
-  m.def(
-      "u_failure", [](UErrorCode code) -> py::bool_ { return U_FAILURE(code); }, py::arg("code"));
+  m.def("u_failure", [](UErrorCode code) -> py::bool_ { return U_FAILURE(code); }, py::arg("code"));
 
-  m.def(
-      "u_success", [](UErrorCode code) -> py::bool_ { return U_SUCCESS(code); }, py::arg("code"));
+  m.def("u_success", [](UErrorCode code) -> py::bool_ { return U_SUCCESS(code); }, py::arg("code"));
 
   m.attr("U_MILLIS_PER_DAY") = U_MILLIS_PER_DAY;
   m.attr("U_MILLIS_PER_HOUR") = U_MILLIS_PER_HOUR;

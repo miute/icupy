@@ -33,8 +33,7 @@ void init_currpinf(py::module &m) {
 
   cpi.def("__copy__", &CurrencyPluralInfo::clone);
 
-  cpi.def(
-      "__deepcopy__", [](const CurrencyPluralInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  cpi.def("__deepcopy__", [](const CurrencyPluralInfo &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   cpi.def(
       "__eq__", [](const CurrencyPluralInfo &self, const CurrencyPluralInfo &other) { return self == other; },

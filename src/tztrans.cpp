@@ -18,8 +18,7 @@ void init_tztrans(py::module &m) {
 
   tzt.def("__copy__", &TimeZoneTransition::clone);
 
-  tzt.def(
-      "__deepcopy__", [](const TimeZoneTransition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tzt.def("__deepcopy__", [](const TimeZoneTransition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tzt.def(
       "__eq__", [](const TimeZoneTransition &self, const TimeZoneTransition &other) { return self == other; },

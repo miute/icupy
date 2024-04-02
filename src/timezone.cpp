@@ -59,8 +59,7 @@ void init_timezone(py::module &m) {
   //
   tz.def("__copy__", &TimeZone::clone);
 
-  tz.def(
-      "__deepcopy__", [](const TimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tz.def("__deepcopy__", [](const TimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tz.def(
       "__eq__", [](const TimeZone &self, const TimeZone &other) { return self == other; }, py::is_operator(),
@@ -353,8 +352,7 @@ void init_timezone(py::module &m) {
   //
   btz.def("__copy__", &BasicTimeZone::clone);
 
-  btz.def(
-      "__deepcopy__", [](const BasicTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  btz.def("__deepcopy__", [](const BasicTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   btz.def("clone", &BasicTimeZone::clone);
 
@@ -451,8 +449,7 @@ void init_timezone(py::module &m) {
 
   rbtz.def("__copy__", &RuleBasedTimeZone::clone);
 
-  rbtz.def(
-      "__deepcopy__", [](const RuleBasedTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rbtz.def("__deepcopy__", [](const RuleBasedTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   rbtz.def(
       "add_transition_rule",
@@ -559,8 +556,7 @@ void init_timezone(py::module &m) {
 
   stz.def("__copy__", &SimpleTimeZone::clone);
 
-  stz.def(
-      "__deepcopy__", [](const SimpleTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  stz.def("__deepcopy__", [](const SimpleTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   stz.def("clone", &SimpleTimeZone::clone);
 
@@ -786,8 +782,7 @@ void init_timezone(py::module &m) {
 
   vtz.def("__copy__", &VTimeZone::clone);
 
-  vtz.def(
-      "__deepcopy__", [](const VTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  vtz.def("__deepcopy__", [](const VTimeZone &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   vtz.def("clone", &VTimeZone::clone);
 

@@ -1429,11 +1429,9 @@ void init_uchar(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "u_get_gc_mask", [](UChar32 c) { return U_GET_GC_MASK(c); }, py::arg("c"));
+  m.def("u_get_gc_mask", [](UChar32 c) { return U_GET_GC_MASK(c); }, py::arg("c"));
 
-  m.def(
-      "u_mask", [](UChar32 c) { return U_MASK(c); }, py::arg("c"));
+  m.def("u_mask", [](UChar32 c) { return U_MASK(c); }, py::arg("c"));
 
   m.def(
       "u_char_age",
@@ -1568,89 +1566,61 @@ void init_uchar(py::module &m) {
       "u_has_binary_property", [](UChar32 c, UProperty which) -> py::bool_ { return u_hasBinaryProperty(c, which); },
       py::arg("c"), py::arg("which"));
 
-  m.def(
-      "u_isalnum", [](UChar32 c) -> py::bool_ { return u_isalnum(c); }, py::arg("c"));
+  m.def("u_isalnum", [](UChar32 c) -> py::bool_ { return u_isalnum(c); }, py::arg("c"));
 
-  m.def(
-      "u_isalpha", [](UChar32 c) -> py::bool_ { return u_isalpha(c); }, py::arg("c"));
+  m.def("u_isalpha", [](UChar32 c) -> py::bool_ { return u_isalpha(c); }, py::arg("c"));
 
-  m.def(
-      "u_isbase", [](UChar32 c) -> py::bool_ { return u_isbase(c); }, py::arg("c"));
+  m.def("u_isbase", [](UChar32 c) -> py::bool_ { return u_isbase(c); }, py::arg("c"));
 
-  m.def(
-      "u_isblank", [](UChar32 c) -> py::bool_ { return u_isblank(c); }, py::arg("c"));
+  m.def("u_isblank", [](UChar32 c) -> py::bool_ { return u_isblank(c); }, py::arg("c"));
 
-  m.def(
-      "u_iscntrl", [](UChar32 c) -> py::bool_ { return u_iscntrl(c); }, py::arg("c"));
+  m.def("u_iscntrl", [](UChar32 c) -> py::bool_ { return u_iscntrl(c); }, py::arg("c"));
 
-  m.def(
-      "u_isdefined", [](UChar32 c) -> py::bool_ { return u_isdefined(c); }, py::arg("c"));
+  m.def("u_isdefined", [](UChar32 c) -> py::bool_ { return u_isdefined(c); }, py::arg("c"));
 
-  m.def(
-      "u_isdigit", [](UChar32 c) -> py::bool_ { return u_isdigit(c); }, py::arg("c"));
+  m.def("u_isdigit", [](UChar32 c) -> py::bool_ { return u_isdigit(c); }, py::arg("c"));
 
-  m.def(
-      "u_isgraph", [](UChar32 c) -> py::bool_ { return u_isgraph(c); }, py::arg("c"));
+  m.def("u_isgraph", [](UChar32 c) -> py::bool_ { return u_isgraph(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_id_ignorable", [](UChar32 c) -> py::bool_ { return u_isIDIgnorable(c); }, py::arg("c"));
+  m.def("u_is_id_ignorable", [](UChar32 c) -> py::bool_ { return u_isIDIgnorable(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_id_part", [](UChar32 c) -> py::bool_ { return u_isIDPart(c); }, py::arg("c"));
+  m.def("u_is_id_part", [](UChar32 c) -> py::bool_ { return u_isIDPart(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_id_start", [](UChar32 c) -> py::bool_ { return u_isIDStart(c); }, py::arg("c"));
+  m.def("u_is_id_start", [](UChar32 c) -> py::bool_ { return u_isIDStart(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_iso_control", [](UChar32 c) -> py::bool_ { return u_isISOControl(c); }, py::arg("c"));
+  m.def("u_is_iso_control", [](UChar32 c) -> py::bool_ { return u_isISOControl(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_java_id_part", [](UChar32 c) -> py::bool_ { return u_isJavaIDPart(c); }, py::arg("c"));
+  m.def("u_is_java_id_part", [](UChar32 c) -> py::bool_ { return u_isJavaIDPart(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_java_id_start", [](UChar32 c) -> py::bool_ { return u_isJavaIDStart(c); }, py::arg("c"));
+  m.def("u_is_java_id_start", [](UChar32 c) -> py::bool_ { return u_isJavaIDStart(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_java_space_char", [](UChar32 c) -> py::bool_ { return u_isJavaSpaceChar(c); }, py::arg("c"));
+  m.def("u_is_java_space_char", [](UChar32 c) -> py::bool_ { return u_isJavaSpaceChar(c); }, py::arg("c"));
 
-  m.def(
-      "u_islower", [](UChar32 c) -> py::bool_ { return u_islower(c); }, py::arg("c"));
+  m.def("u_islower", [](UChar32 c) -> py::bool_ { return u_islower(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_mirrored", [](UChar32 c) -> py::bool_ { return u_isMirrored(c); }, py::arg("c"));
+  m.def("u_is_mirrored", [](UChar32 c) -> py::bool_ { return u_isMirrored(c); }, py::arg("c"));
 
-  m.def(
-      "u_isprint", [](UChar32 c) -> py::bool_ { return u_isprint(c); }, py::arg("c"));
+  m.def("u_isprint", [](UChar32 c) -> py::bool_ { return u_isprint(c); }, py::arg("c"));
 
-  m.def(
-      "u_ispunct", [](UChar32 c) -> py::bool_ { return u_ispunct(c); }, py::arg("c"));
+  m.def("u_ispunct", [](UChar32 c) -> py::bool_ { return u_ispunct(c); }, py::arg("c"));
 
-  m.def(
-      "u_isspace", [](UChar32 c) -> py::bool_ { return u_isspace(c); }, py::arg("c"));
+  m.def("u_isspace", [](UChar32 c) -> py::bool_ { return u_isspace(c); }, py::arg("c"));
 
-  m.def(
-      "u_istitle", [](UChar32 c) -> py::bool_ { return u_istitle(c); }, py::arg("c"));
+  m.def("u_istitle", [](UChar32 c) -> py::bool_ { return u_istitle(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_ualphabetic", [](UChar32 c) -> py::bool_ { return u_isUAlphabetic(c); }, py::arg("c"));
+  m.def("u_is_ualphabetic", [](UChar32 c) -> py::bool_ { return u_isUAlphabetic(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_ulowercase", [](UChar32 c) -> py::bool_ { return u_isULowercase(c); }, py::arg("c"));
+  m.def("u_is_ulowercase", [](UChar32 c) -> py::bool_ { return u_isULowercase(c); }, py::arg("c"));
 
-  m.def(
-      "u_isupper", [](UChar32 c) -> py::bool_ { return u_isupper(c); }, py::arg("c"));
+  m.def("u_isupper", [](UChar32 c) -> py::bool_ { return u_isupper(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_uuppercase", [](UChar32 c) -> py::bool_ { return u_isUUppercase(c); }, py::arg("c"));
+  m.def("u_is_uuppercase", [](UChar32 c) -> py::bool_ { return u_isUUppercase(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_uwhite_space", [](UChar32 c) -> py::bool_ { return u_isUWhiteSpace(c); }, py::arg("c"));
+  m.def("u_is_uwhite_space", [](UChar32 c) -> py::bool_ { return u_isUWhiteSpace(c); }, py::arg("c"));
 
-  m.def(
-      "u_is_whitespace", [](UChar32 c) -> py::bool_ { return u_isWhitespace(c); }, py::arg("c"));
+  m.def("u_is_whitespace", [](UChar32 c) -> py::bool_ { return u_isWhitespace(c); }, py::arg("c"));
 
-  m.def(
-      "u_isxdigit", [](UChar32 c) -> py::bool_ { return u_isxdigit(c); }, py::arg("c"));
+  m.def("u_isxdigit", [](UChar32 c) -> py::bool_ { return u_isxdigit(c); }, py::arg("c"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   m.def(

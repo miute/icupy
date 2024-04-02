@@ -21,8 +21,7 @@ void init_rbbi(py::module &m) {
 
   bi.def("__copy__", &BreakIterator::clone);
 
-  bi.def(
-      "__deepcopy__", [](const BreakIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  bi.def("__deepcopy__", [](const BreakIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   bi.def(
       "__eq__", [](const BreakIterator &self, const BreakIterator &other) { return self == other; }, py::is_operator(),

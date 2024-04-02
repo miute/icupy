@@ -58,8 +58,7 @@ void init_tblcoll(py::module &m) {
   //
   coll.def("__copy__", &Collator::clone);
 
-  coll.def(
-      "__deepcopy__", [](const Collator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  coll.def("__deepcopy__", [](const Collator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   coll.def(
       "__eq__", [](const Collator &self, const Collator &other) { return self == other; }, py::is_operator(),
@@ -488,8 +487,7 @@ void init_tblcoll(py::module &m) {
 
   rbc.def("__copy__", &RuleBasedCollator::clone);
 
-  rbc.def(
-      "__deepcopy__", [](const RuleBasedCollator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rbc.def("__deepcopy__", [](const RuleBasedCollator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   rbc.def("clone", &RuleBasedCollator::clone);
 

@@ -63,8 +63,7 @@ void init_ulocdata(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "ulocdata_close", [](_ULocaleDataPtr &uld) { ulocdata_close(uld); }, py::arg("uld"));
+  m.def("ulocdata_close", [](_ULocaleDataPtr &uld) { ulocdata_close(uld); }, py::arg("uld"));
 
   m.def("ulocdata_get_cldr_version", []() {
     UVersionInfo version_array;

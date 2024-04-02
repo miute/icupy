@@ -307,8 +307,7 @@ void init_datefmt(py::module &m) {
       py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
-  df.def(
-      "set_lenient", [](DateFormat &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
+  df.def("set_lenient", [](DateFormat &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
 
   df.def("set_number_format", &DateFormat::setNumberFormat, py::arg("new_number_format"));
 

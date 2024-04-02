@@ -53,8 +53,7 @@ void init_msgfmt(py::module &m) {
 
   mf.def("__copy__", &MessageFormat::clone);
 
-  mf.def(
-      "__deepcopy__", [](const MessageFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  mf.def("__deepcopy__", [](const MessageFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::MessageFormat::adoptFormat(const UnicodeString &formatName, Format *formatToAdopt,
   //  UErrorCode &status)".

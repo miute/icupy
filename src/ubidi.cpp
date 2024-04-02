@@ -168,11 +168,9 @@ void init_ubidi(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "ubidi_close", [](_UBiDiPtr &bidi) { ubidi_close(bidi); }, py::arg("bidi"));
+  m.def("ubidi_close", [](_UBiDiPtr &bidi) { ubidi_close(bidi); }, py::arg("bidi"));
 
-  m.def(
-      "ubidi_count_paragraphs", [](_UBiDiPtr &bidi) { return ubidi_countParagraphs(bidi); }, py::arg("bidi"));
+  m.def("ubidi_count_paragraphs", [](_UBiDiPtr &bidi) { return ubidi_countParagraphs(bidi); }, py::arg("bidi"));
 
   m.def(
       "ubidi_count_runs",
@@ -209,11 +207,9 @@ void init_ubidi(py::module &m) {
       "ubidi_get_customized_class", [](_UBiDiPtr &bidi, UChar32 c) { return ubidi_getCustomizedClass(bidi, c); },
       py::arg("bidi"), py::arg("c"));
 
-  m.def(
-      "ubidi_get_direction", [](_UBiDiPtr &bidi) { return ubidi_getDirection(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_direction", [](_UBiDiPtr &bidi) { return ubidi_getDirection(bidi); }, py::arg("bidi"));
 
-  m.def(
-      "ubidi_get_length", [](_UBiDiPtr &bidi) { return ubidi_getLength(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_length", [](_UBiDiPtr &bidi) { return ubidi_getLength(bidi); }, py::arg("bidi"));
 
   m.def(
       "ubidi_get_level_at", [](_UBiDiPtr &bidi, int32_t char_index) { return ubidi_getLevelAt(bidi, char_index); },
@@ -301,21 +297,17 @@ void init_ubidi(py::module &m) {
       },
       py::arg("bidi"), py::arg("para_index"));
 
-  m.def(
-      "ubidi_get_para_level", [](_UBiDiPtr &bidi) { return ubidi_getParaLevel(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_para_level", [](_UBiDiPtr &bidi) { return ubidi_getParaLevel(bidi); }, py::arg("bidi"));
 
-  m.def(
-      "ubidi_get_processed_length", [](_UBiDiPtr &bidi) { return ubidi_getProcessedLength(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_processed_length", [](_UBiDiPtr &bidi) { return ubidi_getProcessedLength(bidi); }, py::arg("bidi"));
 
-  m.def(
-      "ubidi_get_reordering_mode", [](_UBiDiPtr &bidi) { return ubidi_getReorderingMode(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_reordering_mode", [](_UBiDiPtr &bidi) { return ubidi_getReorderingMode(bidi); }, py::arg("bidi"));
 
   m.def(
       "ubidi_get_reordering_options", [](_UBiDiPtr &bidi) { return ubidi_getReorderingOptions(bidi); },
       py::arg("bidi"));
 
-  m.def(
-      "ubidi_get_result_length", [](_UBiDiPtr &bidi) { return ubidi_getResultLength(bidi); }, py::arg("bidi"));
+  m.def("ubidi_get_result_length", [](_UBiDiPtr &bidi) { return ubidi_getResultLength(bidi); }, py::arg("bidi"));
 
   m.def(
       "ubidi_get_text", [](_UBiDiPtr &bidi) { return ubidi_getText(bidi); }, py::return_value_policy::reference,
@@ -368,8 +360,7 @@ void init_ubidi(py::module &m) {
       },
       py::arg("src_map"), py::arg("length"));
 
-  m.def(
-      "ubidi_is_inverse", [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); }, py::arg("bidi"));
+  m.def("ubidi_is_inverse", [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); }, py::arg("bidi"));
 
   m.def(
       "ubidi_is_order_paragraphs_ltr", [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isOrderParagraphsLTR(bidi); },

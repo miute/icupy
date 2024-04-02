@@ -18,8 +18,7 @@ void init_compactdecimalformat(py::module &m) {
 
   cdf.def("__copy__", &CompactDecimalFormat::clone);
 
-  cdf.def(
-      "__deepcopy__", [](const CompactDecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  cdf.def("__deepcopy__", [](const CompactDecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   cdf.def("clone", &CompactDecimalFormat::clone);
 

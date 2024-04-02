@@ -42,8 +42,7 @@ void init_usprep(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "usprep_close", [](_UStringPrepProfilePtr &profile) { usprep_close(profile); }, py::arg("profile"));
+  m.def("usprep_close", [](_UStringPrepProfilePtr &profile) { usprep_close(profile); }, py::arg("profile"));
 
   m.def(
       "usprep_open",

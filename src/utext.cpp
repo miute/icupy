@@ -238,8 +238,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), py::arg("dest_index"), py::arg("move"));
 
-  m.def(
-      "utext_current32", [](_UTextPtr &ut) { return utext_current32(ut); }, py::arg("ut"));
+  m.def("utext_current32", [](_UTextPtr &ut) { return utext_current32(ut); }, py::arg("ut"));
 
   m.def(
       "utext_equals", [](_UTextPtr &a, _UTextPtr &b) -> py::bool_ { return utext_equals(a, b); }, py::arg("a"),
@@ -260,34 +259,28 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"));
 
-  m.def(
-      "utext_freeze", [](_UTextPtr &ut) { utext_freeze(ut); }, py::arg("ut"));
+  m.def("utext_freeze", [](_UTextPtr &ut) { utext_freeze(ut); }, py::arg("ut"));
 
-  m.def(
-      "utext_get_native_index", [](_UTextPtr &ut) { return utext_getNativeIndex(ut); }, py::arg("ut"));
+  m.def("utext_get_native_index", [](_UTextPtr &ut) { return utext_getNativeIndex(ut); }, py::arg("ut"));
 
   m.def(
       "utext_get_previous_native_index", [](_UTextPtr &ut) { return utext_getPreviousNativeIndex(ut); }, py::arg("ut"));
 
-  m.def(
-      "utext_has_meta_data", [](_UTextPtr &ut) -> py::bool_ { return utext_hasMetaData(ut); }, py::arg("ut"));
+  m.def("utext_has_meta_data", [](_UTextPtr &ut) -> py::bool_ { return utext_hasMetaData(ut); }, py::arg("ut"));
 
   m.def(
       "utext_is_length_expensive", [](_UTextPtr &ut) -> py::bool_ { return utext_isLengthExpensive(ut); },
       py::arg("ut"));
 
-  m.def(
-      "utext_is_writable", [](_UTextPtr &ut) -> py::bool_ { return utext_isWritable(ut); }, py::arg("ut"));
+  m.def("utext_is_writable", [](_UTextPtr &ut) -> py::bool_ { return utext_isWritable(ut); }, py::arg("ut"));
 
   m.def(
       "utext_move_index32", [](_UTextPtr &ut, int32_t delta) -> py::bool_ { return utext_moveIndex32(ut, delta); },
       py::arg("ut"), py::arg("delta"));
 
-  m.def(
-      "utext_native_length", [](_UTextPtr &ut) { return utext_nativeLength(ut); }, py::arg("ut"));
+  m.def("utext_native_length", [](_UTextPtr &ut) { return utext_nativeLength(ut); }, py::arg("ut"));
 
-  m.def(
-      "utext_next32", [](_UTextPtr &ut) { return utext_next32(ut); }, py::arg("ut"));
+  m.def("utext_next32", [](_UTextPtr &ut) { return utext_next32(ut); }, py::arg("ut"));
 
   m.def(
       "utext_next32_from", [](_UTextPtr &ut, int64_t native_index) { return utext_next32From(ut, native_index); },
@@ -368,8 +361,7 @@ void init_utext(py::module &m) {
       },
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length") = -1);
 
-  m.def(
-      "utext_previous32", [](_UTextPtr &ut) { return utext_previous32(ut); }, py::arg("ut"));
+  m.def("utext_previous32", [](_UTextPtr &ut) { return utext_previous32(ut); }, py::arg("ut"));
 
   m.def(
       "utext_previous32_from",

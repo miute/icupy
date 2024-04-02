@@ -12,8 +12,7 @@ void init_strenum(py::module &m) {
 
   se.def("__copy__", &StringEnumeration::clone);
 
-  se.def(
-      "__deepcopy__", [](const StringEnumeration &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  se.def("__deepcopy__", [](const StringEnumeration &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   se.def(
       "__eq__", [](const StringEnumeration &self, const StringEnumeration &other) { return self == other; },
