@@ -30,8 +30,7 @@ void init_tmunit(py::module &m) {
 
   tu.def("__copy__", &TimeUnit::clone);
 
-  tu.def(
-      "__deepcopy__", [](const TimeUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tu.def("__deepcopy__", [](const TimeUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tu.def("clone", &TimeUnit::clone);
 

@@ -93,8 +93,7 @@ void init_ucnv(py::module &m) {
       py::arg("cnv"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
-  m.def(
-      "ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); }, py::arg("converter"));
+  m.def("ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); }, py::arg("converter"));
 
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"), py::arg("name2"));
 
@@ -350,8 +349,7 @@ void init_ucnv(py::module &m) {
       },
       py::return_value_policy::reference, py::arg("converter"));
 
-  m.def(
-      "ucnv_get_type", [](const _UConverterPtr &converter) { return ucnv_getType(converter); }, py::arg("converter"));
+  m.def("ucnv_get_type", [](const _UConverterPtr &converter) { return ucnv_getType(converter); }, py::arg("converter"));
 
   m.def(
       "ucnv_get_unicode_set",
@@ -437,8 +435,7 @@ void init_ucnv(py::module &m) {
       },
       py::arg("conv_name"), py::arg("standard"));
 
-  m.def(
-      "ucnv_reset", [](_UConverterPtr &converter) { ucnv_reset(converter); }, py::arg("converter"));
+  m.def("ucnv_reset", [](_UConverterPtr &converter) { ucnv_reset(converter); }, py::arg("converter"));
 
   m.def(
       "ucnv_reset_from_unicode", [](_UConverterPtr &converter) { ucnv_resetFromUnicode(converter); },

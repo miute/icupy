@@ -22,8 +22,7 @@ void init_fieldpos(py::module &m) {
 
   fp.def("__copy__", &FieldPosition::clone);
 
-  fp.def(
-      "__deepcopy__", [](const FieldPosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fp.def("__deepcopy__", [](const FieldPosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   fp.def(
       "__eq__", [](const FieldPosition &self, const FieldPosition &other) { return self == other; }, py::is_operator(),

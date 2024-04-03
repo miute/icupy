@@ -259,6 +259,9 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_KAWI", USCRIPT_KAWI)
       .value("USCRIPT_NAG_MUNDARI", USCRIPT_NAG_MUNDARI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 72)
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+      .value("USCRIPT_ARABIC_NASTALIQ", USCRIPT_ARABIC_NASTALIQ, "Aran")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 #ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -370,8 +373,7 @@ void init_uscript(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-  m.def(
-      "uscript_is_cased", [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); }, py::arg("script"));
+  m.def("uscript_is_cased", [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); }, py::arg("script"));
 
   m.def(
       "uscript_is_right_to_left", [](UScriptCode script) -> py::bool_ { return uscript_isRightToLeft(script); },

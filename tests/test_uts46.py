@@ -149,9 +149,11 @@ _test_cases = [
     [
         "a\\u2260b\\u226Ec\\u226Fd",
         "B",
-        "a\\uFFFDb\\uFFFDc\\uFFFDd"
-        if U_ICU_VERSION_MAJOR_NUM < 74
-        else "a\\u2260b\\u226Ec\\u226Fd",
+        (
+            "a\\uFFFDb\\uFFFDc\\uFFFDd"
+            if U_ICU_VERSION_MAJOR_NUM < 74
+            else "a\\u2260b\\u226Ec\\u226Fd"
+        ),
         IDNA.ERROR_DISALLOWED if U_ICU_VERSION_MAJOR_NUM < 74 else 0,
     ],
     # many deviation characters, test the special mapping code

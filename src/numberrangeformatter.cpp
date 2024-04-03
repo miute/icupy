@@ -112,6 +112,10 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       },
       py::arg("first"), py::arg("second"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  lnrf.def("without_locale", [](const LocalizedNumberRangeFormatter &self) { return self.withoutLocale(); });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+
   //
   // icu::number::NumberRangeFormatter
   //

@@ -275,8 +275,7 @@ void init_stsearch(py::module &m) {
 
   ss.def("__copy__", &StringSearch::clone);
 
-  ss.def(
-      "__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  ss.def("__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   ss.def("clone", &StringSearch::clone);
 

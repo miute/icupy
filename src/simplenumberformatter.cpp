@@ -60,6 +60,19 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
       },
       py::arg("power"), py::arg("rounding_mode"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 75)
+  sn.def(
+      "set_maximum_integer_digits",
+      [](SimpleNumber &self, uint32_t maximum_integer_digits) {
+        ErrorCode error_code;
+        self.setMaximumIntegerDigits(maximum_integer_digits, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+      },
+      py::arg("maximum_integer_digits"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+
   sn.def(
       "set_minimum_fraction_digits",
       [](SimpleNumber &self, uint32_t minimum_fraction_digits) {

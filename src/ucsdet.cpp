@@ -31,8 +31,7 @@ void init_ucsdet(py::module &m) {
   //
   // Functions
   //
-  m.def(
-      "ucsdet_close", [](_UCharsetDetectorPtr &ucsd) { ucsdet_close(ucsd); }, py::arg("ucsd"));
+  m.def("ucsdet_close", [](_UCharsetDetectorPtr &ucsd) { ucsdet_close(ucsd); }, py::arg("ucsd"));
 
   m.def(
       "ucsdet_detect",

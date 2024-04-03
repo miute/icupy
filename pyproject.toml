@@ -25,7 +25,7 @@ source = [
 [tool.black]
 line-length = 79
 target-version = [
-    "py311",
+    "py38",
 ]
 extend-exclude = """
 ^/src/third_party/

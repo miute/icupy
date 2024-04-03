@@ -15,8 +15,7 @@ void init_tzrule(py::module &m) {
 
   tzr.def("__copy__", &TimeZoneRule::clone);
 
-  tzr.def(
-      "__deepcopy__", [](const TimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tzr.def("__deepcopy__", [](const TimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   tzr.def(
       "__eq__", [](const TimeZoneRule &self, const TimeZoneRule &other) { return self == other; }, py::is_operator(),
@@ -98,8 +97,7 @@ void init_tzrule(py::module &m) {
 
   atzr.def("__copy__", &AnnualTimeZoneRule::clone);
 
-  atzr.def(
-      "__deepcopy__", [](const AnnualTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  atzr.def("__deepcopy__", [](const AnnualTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   atzr.def("__repr__", [](const AnnualTimeZoneRule &self) {
     std::stringstream ss;
@@ -147,8 +145,7 @@ void init_tzrule(py::module &m) {
 
   itzr.def("__copy__", &InitialTimeZoneRule::clone);
 
-  itzr.def(
-      "__deepcopy__", [](const InitialTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  itzr.def("__deepcopy__", [](const InitialTimeZoneRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   itzr.def("__repr__", [](const InitialTimeZoneRule &self) {
     std::stringstream ss;

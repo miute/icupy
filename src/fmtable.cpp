@@ -98,8 +98,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def("__copy__", &Formattable::clone);
 
-  fmt.def(
-      "__deepcopy__", [](const Formattable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fmt.def("__deepcopy__", [](const Formattable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   fmt.def(
       "__eq__", [](const Formattable &self, const Formattable &other) { return self == other; }, py::is_operator(),

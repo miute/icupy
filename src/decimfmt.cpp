@@ -61,8 +61,7 @@ void init_decimfmt(py::module & /*m*/, py::class_<DecimalFormat, NumberFormat> &
 
   df.def("__copy__", &DecimalFormat::clone);
 
-  df.def(
-      "__deepcopy__", [](const DecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  df.def("__deepcopy__", [](const DecimalFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   // FIXME: Implement "void icu::DecimalFormat::adoptCurrencyPluralInfo(CurrencyPluralInfo *toAdopt)".
   // FIXME: Implement "void icu::DecimalFormat::adoptDecimalFormatSymbols(DecimalFormatSymbols *symbolsToAdopt)".

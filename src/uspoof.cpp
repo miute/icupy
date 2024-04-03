@@ -272,8 +272,7 @@ void init_uspoof(py::module &m) {
       },
       py::arg("sc"));
 
-  m.def(
-      "uspoof_close", [](_USpoofCheckerPtr &sc) { uspoof_close(sc); }, py::arg("sc"));
+  m.def("uspoof_close", [](_USpoofCheckerPtr &sc) { uspoof_close(sc); }, py::arg("sc"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
   m.def(

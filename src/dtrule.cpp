@@ -49,8 +49,7 @@ void init_dtrule(py::module &m) {
 
   dtr.def("__copy__", &DateTimeRule::clone);
 
-  dtr.def(
-      "__deepcopy__", [](const DateTimeRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  dtr.def("__deepcopy__", [](const DateTimeRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
 
   dtr.def(
       "__eq__", [](const DateTimeRule &self, const DateTimeRule &other) { return self == other; }, py::is_operator(),
