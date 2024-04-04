@@ -1636,9 +1636,7 @@ void init_uchar(py::module &m) {
       py::arg("c"), py::arg("which"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
-  m.def(
-      "u_has_id_type", [](UChar32 c, UIdentifierType type) { return u_hasIDType(c, type); }, py::arg("c"),
-      py::arg("type_"));
+  m.def("u_has_id_type", &u_hasIDType, py::arg("c"), py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
   m.def("u_isalnum", [](UChar32 c) -> py::bool_ { return u_isalnum(c); }, py::arg("c"));
