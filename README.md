@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/icupy)](https://pypi.org/project/icupy/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/icupy)](https://pypi.org/project/icupy/)
-[![icu](https://img.shields.io/badge/icu-70.1%20%7C%2071.1%20%7C%2072.1%20%7C%2073.2%20%7C%2074.2%20%7C%2075rc-red)](https://icu.unicode.org/)
+[![icu](https://img.shields.io/badge/icu-70.1%20%7C%2071.1%20%7C%2072.1%20%7C%2073.2%20%7C%2074.2%20%7C%2075.1-red)](https://icu.unicode.org/)
 [![PyPI - License](https://img.shields.io/pypi/l/icupy)](https://pypi.org/project/icupy/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/miute/icupy/main.svg)](https://results.pre-commit.ci/latest/github/miute/icupy/main)
 [![tests](https://github.com/miute/icupy/actions/workflows/tests.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/tests.yml)
@@ -172,7 +172,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 ### Prerequisites
 
 - [Python](https://www.python.org/) >=3.8
-- [ICU4C](https://github.com/unicode-org/icu/releases) [(ICU - The International Components for Unicode)](https://icu.unicode.org/) (>=64 recommended)
+- [ICU4C](https://github.com/unicode-org/icu/releases) [(ICU - The International Components for Unicode)](https://icu.unicode.org/) (>=70 recommended)
 - C++17 compatible compiler (see [supported compilers](https://github.com/pybind/pybind11#supported-compilers))
 - [CMake](https://cmake.org/) >=3.7
 
@@ -183,7 +183,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   Install the following dependencies.
 
   - [Python](https://www.python.org/downloads/) >=3.8
-  - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=64 recommended)
+  - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=70 recommended)
   - Visual Studio 2015 Update 3 or newer. Visual Studio 2019 or newer recommended
   - [CMake](https://cmake.org/download/) >=3.7
     - *Note: Add CMake to the system PATH.*
