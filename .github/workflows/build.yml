@@ -15,6 +15,9 @@ jobs:
         os: [ubuntu-22.04, windows-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
+    outputs:
+      icu4c_latest_version: ${{steps.icu.outputs.icu4c_latest_version}}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,6 +48,7 @@ jobs:
           content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"$latest\")"`
           echo "icu4c=$content"
           echo "icu4c_latest_version=$latest" >> $GITHUB_ENV
+          echo "icu4c_latest_version=$latest" >> $GITHUB_OUTPUT
           echo "icu4c_target_json=$content" >> $GITHUB_ENV
 
       - name: Set up requirements (Ubuntu)
@@ -70,17 +74,33 @@ jobs:
           }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
-      - name: Build wheel
-        run: |
-          pyproject-build --wheel
+      - name: Build sdist
+        if: strategy.job-index == 0
+        run: python -m build --sdist
 
-      - name: Store wheel
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: Store distribution archives
         uses: actions/upload-artifact@v4
         with:
-          name: dist-icupy-icu${{env.icu4c_latest_version}}-${{matrix.os}}-${{matrix.python-version}}
-          path: dist/*.whl
+          name: dist-${{matrix.os}}-${{matrix.python-version}}
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
 
       - name: Run tests
         run: |
           python -m pip install --no-deps --no-index --find-links=./dist/ --force-reinstall icupy
           pytest
+
+  merge:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Merge artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: dist-icupy-icu${{needs.build.outputs.icu4c_latest_version}}
+          pattern: dist-*
+          delete-merged: true

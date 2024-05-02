@@ -1,9 +1,27 @@
 # Changelog
 
-## v0.18.0 / 2023-11-01
+## v0.19.0 (2024-05-02)
 
-- NEW
-  - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-1) (partial) [(#53)](https://github.com/miute/icupy/pull/53)
+- **NEW**
+  - Add support for [ICU 75](https://github.com/unicode-org/icu/releases/tag/release-75-1) ([#73](https://github.com/miute/icupy/pull/73), [#74](https://github.com/miute/icupy/pull/74))
+    - Add `icupy.icu.number.LocalizedNumberFormatter.without_locale()`
+    - Add `icupy.icu.number.LocalizedNumberRangeFormatter.without_locale()`
+    - Add `icupy.icu.number.SimpleNumber.set_maximum_integer_digits(maximum_integer_digits: int)`
+    - Add `icupy.icu.u_get_id_types(c: int)`
+    - Add `icupy.icu.u_has_id_type(c: int, type_: icupy.icu.UIdentifierType)`
+    - Add `icupy.icu.UIdentifierStatus` enum
+    - Add `icupy.icu.UIdentifierType` enum
+    - Add `icupy.icu.UProperty.UCHAR_IDENTIFIER_STATUS`
+    - Add `icupy.icu.UProperty.UCHAR_IDENTIFIER_TYPE`
+    - Add `icupy.icu.UScriptCode.USCRIPT_ARABIC_NASTALIQ`
+- **CHANGED**
+  - Update pybind11 from 2.11.1 to 2.12.0
+
+## v0.18.0 (2023-11-01)
+
+- **NEW**
+  - Add support for Python 3.12
+  - Add support for [ICU 74](https://github.com/unicode-org/icu/releases/tag/release-74-1) (partial) ([#53](https://github.com/miute/icupy/pull/53))
     - Add `icupy.icu.Measure.__ne__(other: UObject)`
     - Add `icupy.icu.MeasureUnit.create_gasoline_energy_density()`
     - Add `icupy.icu.MeasureUnit.get_gasoline_energy_density()`
@@ -24,12 +42,11 @@
     - Add `icupy.icu.uspoof_get_bidi_skeleton_unicode_string(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: UnicodeString | str, dest: UnicodeString)`
     - Add `icupy.icu.uspoof_get_bidi_skeleton_utf8(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: bytes, length: int = -1)`
     - Add `icupy.icu.uspoof_get_bidi_skeleton(sc: _USpoofCheckerPtr, direction: UBiDiDirection, id_: str, length: int = -1)`
-  - Add support for Python 3.12
-  - Implement icu::number::SimpleNumberFormatter class [(#55)](https://github.com/miute/icupy/pull/55)
+  - Implement `icu::number::SimpleNumberFormatter` class ([#55](https://github.com/miute/icupy/pull/55))
     - Add `icupy.icu.number.SimpleNumber` class
     - Add `icupy.icu.number.SimpleNumberFormatter` class
     - Add `icupy.icu.USimpleNumberSign` enum
-- CHANGED
+- **CHANGED**
   - Update pybind11 from 2.10.4 to 2.11.1
   - Change the argument type from `str` to `bytes`
     - `icupy.icu.UnicodeString.from_utf8(utf8: str)` → `icupy.icu.UnicodeString.from_utf8(utf8: bytes)`
@@ -38,8 +55,8 @@
     - `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: str, length: int, check_result: _USpoofCheckerPtr | None = None)` → `icupy.icu.uspoof_check2_utf8(sc: _USpoofCheckerPtr, id_: bytes, length: int, check_result: _USpoofCheckerPtr | None = None)`
     - `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: str, length: int = -1) -> str` → `icupy.icu.uspoof_get_skeleton_utf8(sc: _USpoofCheckerPtr, type_: int, id_: bytes, length: int = -1) -> bytes`
     - `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: str, length: int)` → `icupy.icu.utext_open_utf8(ut: _UTextPtr | None, s: bytes, length: int = -1)`
-- FIXED
-  - Add missing methods for UTF-8 strings [(#56)](https://github.com/miute/icupy/pull/56)
+- **FIXED**
+  - Add missing methods for UTF-8 strings ([#56](https://github.com/miute/icupy/pull/56))
     - Add `icupy.icu.Collator.compare_utf8(source: bytes, target: bytes)`
     - Add `icupy.icu.IDNA.label_to_ascii_utf8(label: bytes, info: IDNAInfo)`
     - Add `icupy.icu.IDNA.label_to_unicode_utf8(label: bytes, info: IDNAInfo)`
@@ -48,7 +65,7 @@
     - Add `icupy.icu.Normalizer2.is_normalized_utf8(b: bytes)`
     - Add `icupy.icu.Normalizer2.normalize_utf8(options: int, src: bytes, edits: Edits | None = None)`
     - Add `icupy.icu.UnicodeSet.span_utf8(b: bytes, length: int, span_condition: USetSpanCondition)`
-  - Change the return/argument type of the C/C++ `UBool` type from `int` to `bool` [(#59)](https://github.com/miute/icupy/pull/59)
+  - Change the return/argument type of the C/C++ `UBool` type from `int` to `bool` ([#59](https://github.com/miute/icupy/pull/59))
   - Change the argument type from `UnicodeString` to `UnicodeString | str`
     - `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString, s2: UnicodeString)` → `icupy.icu.uspoof_are_confusable_unicode_string(sc: _USpoofCheckerPtr, s1: UnicodeString | str, s2: UnicodeString | str)`
     - `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString, check_result: _USpoofCheckResultPtr | None = None)` → `icupy.icu.uspoof_check2_unicode_string(sc: _USpoofCheckerPtr, id_: UnicodeString | str, check_result: _USpoofCheckResultPtr | None = None)`
@@ -57,89 +74,87 @@
   - Change an argument (Fix a typo)
     - `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propogate_digits = True)` → `icupy.icu.DecimalFormatSymbols.set_symbol(symbol: ENumberFormatSymbol, value: UnicodeString | str, bool: propagate_digits = True)`
 
-## v0.17.0 / 2023-07-10
+## v0.17.0 (2023-07-10)
 
-- FIXED
+- **FIXED**
   - Add `icupy.icu.FormattedRelativeDateTime.__init__()`
   - Add `icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()`
   - Add `icupy.icu.MeasureUnit.get_milligram_ofglucose_per_deciliter()`
   - Add `icupy.icu.MessageFormat.get_locale(type_: ULocDataLocaleType)`
   - Add `icupy.icu.number.FormattedNumber.__init__()`
   - Add `icupy.icu.number.FormattedNumberRange.__init__()`
-- IMPROVED
+- **IMPROVED**
   - Refactoring
-- REMOVED
+- **REMOVED**
   - Drop support for Python 3.7
 
-## v0.16.0 / 2023-04-18
+## v0.16.0 (2023-04-18)
 
-- NEW
+- **NEW**
   - Add support for [ICU 73](https://github.com/unicode-org/icu/releases/tag/release-73-1) (partial)
-- ADDED
-  - Add `icupy.icu.Calendar.get_temporal_month_code()`
-  - Add `icupy.icu.Calendar.in_daylight_time()`
-  - Add `icupy.icu.Calendar.in_temporal_leap_year()`
-  - Add `icupy.icu.Calendar.set_temporal_month_code(temporal_month: str)`
-  - Add `icupy.icu.MeasureUnit.create_beaufort()`
-  - Add `icupy.icu.MeasureUnit.get_beaufort()`
-  - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_CEILING`
-  - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_FLOOR`
-  - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_ODD`
-  - Add `icupy.icu.UCalendarDateFields.UCAL_ORDINAL_MONTH`
-  - Add `icupy.icu.USET_SIMPLE_CASE_INSENSITIVE`
-- CHANGED
+    - Add `icupy.icu.Calendar.get_temporal_month_code()`
+    - Add `icupy.icu.Calendar.in_daylight_time()`
+    - Add `icupy.icu.Calendar.in_temporal_leap_year()`
+    - Add `icupy.icu.Calendar.set_temporal_month_code(temporal_month: str)`
+    - Add `icupy.icu.MeasureUnit.create_beaufort()`
+    - Add `icupy.icu.MeasureUnit.get_beaufort()`
+    - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_CEILING`
+    - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_FLOOR`
+    - Add `icupy.icu.NumberFormat.ERoundingMode.ROUND_HALF_ODD`
+    - Add `icupy.icu.UCalendarDateFields.UCAL_ORDINAL_MONTH`
+    - Add `icupy.icu.USET_SIMPLE_CASE_INSENSITIVE`
+    - Remove `icupy.icu.GregorianCalendar.in_daylight_time()`
+- **CHANGED**
   - Update pybind11 from 2.10.0 to 2.10.4
-- FIXED
+- **FIXED**
   - Move `get_actual_maximum(field: UCalendarDateFields)` of `icupy.icu.GregorianCalendar` class to `icupy.icu.Calendar` class
   - Move `get_actual_minimum(field: UCalendarDateFields)` of `icupy.icu.GregorianCalendar` class to `icupy.icu.Calendar` class
   - Move `roll(field: UCalendarDateFields, amount: int)` of `icupy.icu.GregorianCalendar` class to `icupy.icu.Calendar` class
-- REMOVED
-  - Remove `icupy.icu.GregorianCalendar.in_daylight_time()`
+- **REMOVED**
   - Remove `icupy.number` module
 
-## v0.15.0 / 2022-10-21
+## v0.15.0 (2022-10-21)
 
-- NEW
-  - Add support for ICU 72
+- **NEW**
   - Add support for Python 3.11
-  - Implement icu::DisplayOptions class
-    - Add `icupy.icu.DisplayOptions` class
-  - Implement Display options API (udisplayoptions)
-    - Add `icupy.icu.UDisplayOptionsCapitalization` enum
-    - Add `icupy.icu.UDisplayOptionsDisplayLength` enum
-    - Add `icupy.icu.UDisplayOptionsGrammaticalCase` enum
-    - Add `icupy.icu.UDisplayOptionsNameStyle` enum
-    - Add `icupy.icu.UDisplayOptionsNounClass` enum
-    - Add `icupy.icu.UDisplayOptionsPluralCategory` enum
-    - Add `icupy.icu.UDisplayOptionsSubstituteHandling` enum
-    - Add `icupy.icu.udispopt_from_grammatical_case_identifier(identifier: str)`
-    - Add `icupy.icu.udispopt_from_noun_class_identifier(identifier: str)`
-    - Add `icupy.icu.udispopt_from_plural_category_identifier(identifier: str)`
-    - Add `icupy.icu.udispopt_get_grammatical_case_identifier(grammatical_case: UDisplayOptionsGrammaticalCase)`
-    - Add `icupy.icu.udispopt_get_noun_class_identifier(noun_class: UDisplayOptionsNounClass)`
-    - Add `icupy.icu.udispopt_get_plural_category_identifier(plural_category: UDisplayOptionsPluralCategory)`
-- ADDED
-  - Add `icupy.icu.UBlockCode.UBLOCK_ARABIC_EXTENDED_C`
-  - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_H`
-  - Add `icupy.icu.UBlockCode.UBLOCK_CYRILLIC_EXTENDED_D`
-  - Add `icupy.icu.UBlockCode.UBLOCK_DEVANAGARI_EXTENDED_A`
-  - Add `icupy.icu.UBlockCode.UBLOCK_KAKTOVIK_NUMERALS`
-  - Add `icupy.icu.UBlockCode.UBLOCK_KAWI`
-  - Add `icupy.icu.UBlockCode.UBLOCK_NAG_MUNDARI`
-  - Add `icupy.icu.UScriptCode.USCRIPT_KAWI`
-  - Add `icupy.icu.UScriptCode.USCRIPT_NAG_MUNDARI`
-  - Add `icupy.icu.MeasureUnit.create_quarter()`
-  - Add `icupy.icu.MeasureUnit.create_tonne()`
-  - Add `icupy.icu.MeasureUnit.get_quarter()`
-  - Add `icupy.icu.MeasureUnit.get_tonne()`
-  - Add `icupy.icu.number.LocalizedNumberFormatter.display_options(display_options: DisplayOptions)`
-  - Add `icupy.icu.number.UnlocalizedNumberFormatter.display_options(display_options: DisplayOptions)`
-- FIXED
+  - Add support for ICU 72
+    - Add `icupy.icu.UBlockCode.UBLOCK_ARABIC_EXTENDED_C`
+    - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_H`
+    - Add `icupy.icu.UBlockCode.UBLOCK_CYRILLIC_EXTENDED_D`
+    - Add `icupy.icu.UBlockCode.UBLOCK_DEVANAGARI_EXTENDED_A`
+    - Add `icupy.icu.UBlockCode.UBLOCK_KAKTOVIK_NUMERALS`
+    - Add `icupy.icu.UBlockCode.UBLOCK_KAWI`
+    - Add `icupy.icu.UBlockCode.UBLOCK_NAG_MUNDARI`
+    - Add `icupy.icu.UScriptCode.USCRIPT_KAWI`
+    - Add `icupy.icu.UScriptCode.USCRIPT_NAG_MUNDARI`
+    - Add `icupy.icu.MeasureUnit.create_quarter()`
+    - Add `icupy.icu.MeasureUnit.create_tonne()`
+    - Add `icupy.icu.MeasureUnit.get_quarter()`
+    - Add `icupy.icu.MeasureUnit.get_tonne()`
+    - Add `icupy.icu.number.LocalizedNumberFormatter.display_options(display_options: DisplayOptions)`
+    - Add `icupy.icu.number.UnlocalizedNumberFormatter.display_options(display_options: DisplayOptions)`
+    - Implement `icu::DisplayOptions` class
+      - Add `icupy.icu.DisplayOptions` class
+    - Implement Display options API (udisplayoptions)
+      - Add `icupy.icu.UDisplayOptionsCapitalization` enum
+      - Add `icupy.icu.UDisplayOptionsDisplayLength` enum
+      - Add `icupy.icu.UDisplayOptionsGrammaticalCase` enum
+      - Add `icupy.icu.UDisplayOptionsNameStyle` enum
+      - Add `icupy.icu.UDisplayOptionsNounClass` enum
+      - Add `icupy.icu.UDisplayOptionsPluralCategory` enum
+      - Add `icupy.icu.UDisplayOptionsSubstituteHandling` enum
+      - Add `icupy.icu.udispopt_from_grammatical_case_identifier(identifier: str)`
+      - Add `icupy.icu.udispopt_from_noun_class_identifier(identifier: str)`
+      - Add `icupy.icu.udispopt_from_plural_category_identifier(identifier: str)`
+      - Add `icupy.icu.udispopt_get_grammatical_case_identifier(grammatical_case: UDisplayOptionsGrammaticalCase)`
+      - Add `icupy.icu.udispopt_get_noun_class_identifier(noun_class: UDisplayOptionsNounClass)`
+      - Add `icupy.icu.udispopt_get_plural_category_identifier(plural_category: UDisplayOptionsPluralCategory)`
+- **FIXED**
   - Fix return type of `icupy.icu.number.FormattedNumber.get_noun_class()`
 
-## v0.14.0 / 2022-08-29
+## v0.14.0 (2022-08-29)
 
-- CHANGED
+- **CHANGED**
   - Update pybind11 from 2.9.2 to 2.10.0
   - Change arguments and return type of `icupy.icu.Collator.get_bound(source: list[int], source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> list[int]` → `get_bound(source: bytes, source_length: int, bound_type: UColBoundMode, no_of_levels: int) -> bytes`
   - Change arguments of `icupy.icu.CollationKey.__init__(values: list[int], count: int)` → `__init__(values: bytes, count: int = -1)`
@@ -154,7 +169,7 @@
   - Change return type of `icupy.icu.u_get_version() -> list` → `tuple`
   - Change return type of `icupy.icu.u_version_from_string() -> list` → `tuple`
   - Change return type of `icupy.icu.ulocdata_get_cldr_version() -> list` → `tuple`
-- FIXED
+- **FIXED**
   - Raise `IndexError` when `icupy.icu._ConstChar16Ptr.__getitem__(...)` accessing beyond capacity
   - Change return type of `icupy.icu.UnicodeSet.__getitem__(index: slice) -> list[int]` → `UnicodeSet`
   - Change return type of `icupy.icu.UnicodeString.__getitem__(index: slice) -> str` → `UnicodeString`
@@ -162,7 +177,7 @@
   - Fix `icupy.icu.UnicodeString.__iadd__(other: UnicodeString | str | int)` to return itself
   - Fix return value of `icupy.icu.UnicodeString.extract_between(start: int, limit: int)`
   - Change `icupy.icu.UTextVector` to keep references
-- IMPROVED
+- **IMPROVED**
   - Add `icupy.icu._ConstChar16Ptr.__len__()`
   - Add `icupy.icu.UnicodeString.__setitem__(index: int, value: str | int)`
   - Reimplement `icupy.icu.UnicodeStringVector`
@@ -189,16 +204,16 @@
     - Add `UTextVector.extend(src: list[UnicodeString])`
     - Add `UTextVector.insert(index: int, src: UnicodeString)`
   - Change arguments of `icupy.icu.u_version_to_string(version_array: list[int])` → `u_version_to_string(version_array: list[int[4]])`
-- REMOVED
+- **REMOVED**
   - Remove `icupy.icu.UTextVector.__init__(n: int)`
 
-## v0.13.0 / 2022-07-12
+## v0.13.0 (2022-07-12)
 
-- CHANGED
+- **CHANGED**
   - Update pybind11 from 2.9.1 to 2.9.2
   - Change arguments of `icupy.icu.RuleBasedBreakIterator.__init__(compiled_rules: list[int], rule_length: int)` → `__init__(compiled_rules: bytes, rule_length: int)`
   - Change return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules() -> list[int]` → `bytes`
-- FIXED
+- **FIXED**
   - Fix comparison method of `icupy.icu._UTextPtr.__eq__(other: _UTextPtr)`
   - Fix comparison method of `icupy.icu._UTextPtr.__ne__(other: _UTextPtr)`
   - Fix keep alive policy of `icupy.icu.RuleBasedBreakIterator.__init__(compiled_rules: bytes, rule_length: int)`
@@ -216,7 +231,7 @@
   - Fix repr() format of `icupy.icu.UnicodeString`
   - Fix repr() format of `icupy.icu.UParseError`
   - Fix repr() format of `icupy.icu.UTransPosition`
-- IMPROVED
+- **IMPROVED**
   - Allow to create subclass of `icupy.icu.SearchIterator`
     - Add `SearchIterator.__init__(other: SearchIterator)`
     - Add `SearchIterator.__init__()`
@@ -253,85 +268,85 @@
   - Add `icupy.icu.UnicodeString.handle_replace_between(start: int, limit: int, text: UnicodeString | str)`
   - Change arguments of `icupy.icu.Transliterator.unregister(id_: UnicodeString)` → `unregister(id_: UnicodeString | str)`
 
-## v0.12.0 / 2022-04-09
+## v0.12.0 (2022-04-09)
 
-- NEW
+- **NEW**
   - Add support for ICU 71
-- ADDED
-  - Add `icupy.icu.DateTimePatternGenerator.get_date_time_format(style: UDateFormatStyle)`
-  - Add `icupy.icu.DateTimePatternGenerator.set_date_time_format(style: UDateFormatStyle, date_time_format: UnicodeString | str)`
+    - Add `icupy.icu.DateTimePatternGenerator.get_date_time_format(style: UDateFormatStyle)`
+    - Add `icupy.icu.DateTimePatternGenerator.set_date_time_format(style: UDateFormatStyle, date_time_format: UnicodeString | str)`
+    - Add `icupy.icu.number.FormattedNumber.get_noun_class()`
+    - Add `icupy.icu.number.Precision.increment_exact(mantissa: int, magnitude: int)`
+    - Add `icupy.icu.ucnv_clone(cnv: _UConverterPtr)`
+    - Add `icupy.icu.UNumberFormatFields.UNUM_APPROXIMATELY_SIGN_FIELD`
+- **ADDED**
   - Add `icupy.icu.RuleBasedCollator.__init__(bin: bytes, length: int, base: RuleBasedCollator)`
-  - Add `icupy.icu.number.FormattedNumber.get_noun_class()`
-  - Add `icupy.icu.number.Precision.increment_exact(mantissa: int, magnitude: int)`
   - Add `icupy.icu.u_string_has_binary_property(s: str, which: UProperty)`
-  - Add `icupy.icu.ucnv_clone(cnv:_UConverterPtr)`
   - Add `icupy.icu.NounClass` enum
-  - Add `icupy.icu.UNumberFormatFields.UNUM_APPROXIMATELY_SIGN_FIELD`
-- CHANGED
+- **CHANGED**
   - Change return type of `icupy.icu.RuleBasedCollator.clone_binary() -> list[int]` → `bytes`
-- IMPROVED
+- **IMPROVED**
   - Change arguments of `icupy.icu.DateFormatSymbols.__init__(locale: Locale)` → `__init__(locale: Locale | str)`
   - Change arguments of `icupy.icu.Collator.create_instance(loc: Locale)` → `create_instance(loc: Locale | str)`
   - Change arguments of `icupy.icu.Collator.get_display_name(object_locale: Locale, display_locale: Locale, name: UnicodeString)` → `get_display_name(object_locale: Locale | str, display_locale: Locale | str, name: UnicodeString)`
   - Change arguments of `icupy.icu.Collator.get_display_name(object_locale: Locale, name: UnicodeString)` → `get_display_name(object_locale: Locale | str, name: UnicodeString)`
   - Change arguments of `icupy.icu.Collator.get_functional_equivalent(keyword: str, locale: Locale)` → `get_functional_equivalent(keyword: str, locale: Locale | str)`
-- REMOVED
+- **REMOVED**
   - Remove `icupy.icu.ICUException`. Use `icupy.icu.ICUError` instead
   - Remove `icupy.__version__`. Use `importlib.metadata` or `importlib-metadata` package instead
 
-## v0.11.2 / 2022-03-02
+## v0.11.2 (2022-03-02)
 
-- NEW
+- **NEW**
   - Add `icupy.icu.U_GC_*_MASK` constants
-- ADDED
+- **ADDED**
   - Add `icupy.icu.UnicodeSet.__ne__(other: _ConstUSetPtr)`
   - Add `icupy.icu.UnicodeSet.__ne__(other: _USetPtr)`
-  - Add `icupy.icu.ucnv_cb_from_uwrite_bytes(arguments: UConverterFromUnicodearguments, source: str, length: int, offset_index: int)`
-  - Add `icupy.icu.ucnv_cb_from_uwrite_sub(arguments: UConverterFromUnicodearguments, offset_index: int)`
-  - Add `icupy.icu.ucnv_cb_to_uwrite_sub(arguments: UConverterToUnicodearguments, offset_index: int)`
-  - Add `icupy.icu.ucnv_cb_to_uwrite_uchars(arguments: UConverterToUnicodearguments, source: str, length: int, offset_index: int)`
-- CHANGED
+  - Add `icupy.icu.ucnv_cb_from_uwrite_bytes(arguments: UConverterFromUnicodeArgs, source: str, length: int, offset_index: int)`
+  - Add `icupy.icu.ucnv_cb_from_uwrite_sub(arguments: UConverterFromUnicodeArgs, offset_index: int)`
+  - Add `icupy.icu.ucnv_cb_to_uwrite_sub(arguments: UConverterToUnicodeArgs, offset_index: int)`
+  - Add `icupy.icu.ucnv_cb_to_uwrite_uchars(arguments: UConverterToUnicodeArgs, source: str, length: int, offset_index: int)`
+- **CHANGED**
   - Update pybind11 from 2.8.0 to 2.9.1
   - Change arguments of `icupy.icu.PluralRules.get_samples(keyword: UnicodeString | str)` → `get_samples(keyword: UnicodeString | str, dest_capacity: int)`
   - Change return type of `icupy.icu.Formattable.get_object() -> BasicTimeZone | Calendar | CurrencyAmount | DateInterval | TimeUnitAmount | TimeZone | UObject` → `BasicTimeZone | Calendar | CurrencyAmount | DateInterval | TimeUnitAmount | UObject`
-- FIXED
+- **FIXED**
   - Fix return value policy of `icupy.icu.BreakIterator.get_text()`
   - Fix comparison method of `icupy.icu.UnicodeSet.__eq__(other: _ConstUSetPtr)`
   - Fix comparison method of `icupy.icu.UnicodeSet.__eq__(other: _USetPtr)`
-- DEPRECATED
+- **DEPRECATED**
   - `icupy.icu.ICUException` is deprecated and will be removed in icupy 0.12
   - `icupy.icu.ucnv_cb_from_u_write_bytes()` is deprecated. Use `icupy.icu.ucnv_cb_from_uwrite_bytes()` instead
   - `icupy.icu.ucnv_cb_from_u_write_sub()` is deprecated. Use `icupy.icu.ucnv_cb_from_uwrite_sub()` instead
   - `icupy.icu.ucnv_cb_to_u_write_sub()` is deprecated. Use `icupy.icu.ucnv_cb_to_uwrite_sub()` instead
   - `icupy.icu.ucnv_cb_to_u_write_uchars()` is deprecated. Use `icupy.icu.ucnv_cb_to_uwrite_uchars()` instead
 
-## v0.11.1 / 2021-12-29
+## v0.11.1 (2021-12-29)
 
 Maintenance release.
 
-## v0.11.0 / 2021-12-09
+## v0.11.0 (2021-12-09)
 
-- NEW
+- **NEW**
   - Add support for Python 3.7
-  - Implement icu::CanonicalIterator class
-  - Implement icu::CaseMap class
-  - Implement icu::FilteredBreakIteratorBuilder class
-  - Implement icu::GenderInfo class
-  - Implement icu::LocaleDisplayNames class
-  - Implement icu::Region class
-  - Implement icu::ScientificNumberFormatter class
+  - Implement `icu::CanonicalIterator` class
+  - Implement `icu::CaseMap` class
+  - Implement `icu::FilteredBreakIteratorBuilder` class
+  - Implement `icu::GenderInfo` class
+  - Implement `icu::LocaleDisplayNames` class
+  - Implement `icu::Region` class
+  - Implement `icu::ScientificNumberFormatter` class
   - Implement Locale data API (ulocdata)
-  - Implement icu::NoUnit
+  - Implement `icu::NoUnit`
   - Add `icupy.icu.u_get_data_version()`
-  - Add `icupy.utils.gc()`
-- ADDED
+  - Add `icupy.utils.gc(obj: typing.Any, closer: collections.abc.Callable[[typing.Any], typing.Any])`
+- **ADDED**
   - Add `icupy.icu.ucnv_get_from_ucall_back(converter: _UConverterPtr)`
   - Add `icupy.icu.ucnv_get_to_ucall_back(converter: _UConverterPtr)`
   - Add `icupy.icu.ucnv_set_from_ucall_back(converter: _UConverterPtr, new_action: _UConverterFromUCallbackPtr, new_context: ConstVoidPtr)`
   - Add `icupy.icu.ucnv_set_to_ucall_back(converter: _UConverterPtr, new_action: _UConverterToUCallbackPtr, new_context: ConstVoidPtr)`
-- CHANGED
+- **CHANGED**
   - Change module name from `icupy.number` to `icupy.icu.number`
-- IMPROVED
+- **IMPROVED**
   - On Windows, add ICU4C DLL search path at initialization
   - Improve repr() format of `icupy.icu.ErrorCode`
   - Improve repr() format of `icupy.icu.Calendar`
@@ -341,51 +356,73 @@ Maintenance release.
   - Improve repr() format of `icupy.icu.InitialTimeZoneRule`
   - Improve repr() format of `icupy.icu.TimeArrayTimeZoneRule`
   - Improve repr() format of `icupy.icu.UnicodeString`
-- DEPRECATED
+- **DEPRECATED**
   - `icupy.number` submodule is deprecated. Use `icupy.icu.number` instead
   - `icupy.icu.ucnv_get_from_u_call_back()` is deprecated. Use `icupy.icu.ucnv_get_from_ucall_back()` instead
   - `icupy.icu.ucnv_get_to_u_call_back()` is deprecated. Use `icupy.icu.ucnv_get_to_ucall_back()` instead
   - `icupy.icu.ucnv_set_from_u_call_back()` is deprecated. Use `icupy.icu.ucnv_set_from_ucall_back()` instead
   - `icupy.icu.ucnv_set_to_u_call_back()` is deprecated. Use `icupy.icu.ucnv_set_to_ucall_back()` instead
 
-## v0.10.0 / 2021-11-06
+## v0.10.0 (2021-11-06)
 
-- NEW
-  - Add support for ICU 70
+- **NEW**
   - Add support for Python 3.10
+  - Add support for ICU 70
+    - Add `icupy.icu.MeasureUnit.create_item()`
+    - Add `icupy.icu.MeasureUnit.create_kilowatt_hour_per_100_kilometer()`
+    - Add `icupy.icu.MeasureUnit.get_item()`
+    - Add `icupy.icu.MeasureUnit.get_kilowatt_hour_per_100_kilometer()`
+    - Add `icupy.icu.TimeZone.create_enumeration()`
+    - Add `icupy.icu.TimeZone.create_enumeration_for_raw_offset(raw_offset: int)`
+    - Add `icupy.icu.TimeZone.create_enumeration_for_region(region: str)`
+    - Add `icupy.icu.UnicodeSet.has_strings()`
+    - Add `icupy.icu.UBlockCode.UBLOCK_ARABIC_EXTENDED_B`
+    - Add `icupy.icu.UBlockCode.UBLOCK_CYPRO_MINOAN`
+    - Add `icupy.icu.UBlockCode.UBLOCK_ETHIOPIC_EXTENDED_B`
+    - Add `icupy.icu.UBlockCode.UBLOCK_KANA_EXTENDED_B`
+    - Add `icupy.icu.UBlockCode.UBLOCK_LATIN_EXTENDED_F`
+    - Add `icupy.icu.UBlockCode.UBLOCK_LATIN_EXTENDED_G`
+    - Add `icupy.icu.UBlockCode.UBLOCK_OLD_UYGHUR`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TANGSA`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TOTO`
+    - Add `icupy.icu.UBlockCode.UBLOCK_UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED_A`
+    - Add `icupy.icu.UBlockCode.UBLOCK_VITHKUQI`
+    - Add `icupy.icu.UBlockCode.UBLOCK_ZNAMENNY_MUSICAL_NOTATION`
+    - Add `icupy.icu.UJoiningGroup.U_JG_THIN_YEH`
+    - Add `icupy.icu.UJoiningGroup.U_JG_VERTICAL_TAIL`
+    - Add `icupy.icu.UProperty.UCHAR_BASIC_EMOJI`
+    - Add `icupy.icu.UProperty.UCHAR_EMOJI_KEYCAP_SEQUENCE`
+    - Add `icupy.icu.UProperty.UCHAR_RGI_EMOJI_FLAG_SEQUENCE`
+    - Add `icupy.icu.UProperty.UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE`
+    - Add `icupy.icu.UProperty.UCHAR_RGI_EMOJI_TAG_SEQUENCE`
+    - Add `icupy.icu.UProperty.UCHAR_RGI_EMOJI_ZWJ_SEQUENCE`
+    - Add `icupy.icu.UProperty.UCHAR_RGI_EMOJI`
+    - Add `icupy.icu.UDateFormatSymbolType.UDAT_NARROW_QUARTERS`
+    - Add `icupy.icu.UDateFormatSymbolType.UDAT_STANDALONE_NARROW_QUARTERS`
+    - Add `icupy.icu.UScriptCode.USCRIPT_CYPRO_MINOAN`
+    - Add `icupy.icu.UScriptCode.USCRIPT_OLD_UYGHUR`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TANGSA`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TOTO`
+    - Add `icupy.icu.UScriptCode.USCRIPT_VITHKUQI`
+    - Add `icupy.icu.UErrorCode.U_INPUT_TOO_LONG_ERROR`
   - Implement Arabic shaping API (ushape)
   - Implement Bidi Transformations API (ubiditransform)
   - Implement StringPrep API (usprep)
   - Implement Unicode Security and Spoofing Detection API (uspoof)
   - Implement Universal Time Scale API (utmscale)
-  - Implement icu::UnicodeSetIterator class
-- ADDED
-  - Add `icupy.icu.MeasureUnit.create_item()`
-  - Add `icupy.icu.MeasureUnit.create_kilowatt_hour_per_100_kilometer()`
-  - Add `icupy.icu.MeasureUnit.get_item()`
-  - Add `icupy.icu.MeasureUnit.get_kilowatt_hour_per_100_kilometer()`
-  - Add `icupy.icu.TimeZone.create_enumeration()`
-  - Add `icupy.icu.TimeZone.create_enumeration_for_raw_offset(raw_offset: int)`
-  - Add `icupy.icu.TimeZone.create_enumeration_for_region(region: str)`
-  - Add `icupy.icu.UnicodeSet.has_strings()`
-- CHANGED
+  - Implement `icu::UnicodeSetIterator` class
+- **CHANGED**
   - Update pybind11 from 2.7.1 to 2.8.0
-  - Update `icupy.icu.UBlockCode` enum
-  - Update `icupy.icu.UJoiningGroup` enum
-  - Update `icupy.icu.UProperty` enum
-  - Update `icupy.icu.UDateFormatSymbolType` enum
-  - Update `icupy.icu.UScriptCode` enum
-  - Update `icupy.icu.UErrorCode` enum
 
-## v0.9.0 / 2021-10-04
+## v0.9.0 (2021-10-04)
 
-- NEW
-  - Implement icu::AlphabeticIndex class
-  - Implement icu::ListFormatter class
-  - Implement icu::MessagePattern class
-  - Implement icu::RelativeDateTimeFormatter class
-- CHANGED
-  - Update pybind11 to v2.7.1
+- **NEW**
+  - Implement `icu::AlphabeticIndex` class
+  - Implement `icu::ListFormatter` class
+  - Implement `icu::MessagePattern` class
+  - Implement `icu::RelativeDateTimeFormatter` class
+- **CHANGED**
+  - Update pybind11 from 2.6.2 to 2.7.1
   - Change default value of `icupy.icu.DateFormatSymbols.set_am_pm_strings(ampms: list[UnicodeString], count: int = None)` → `set_am_pm_strings(ampms: list[UnicodeString], count: int = -1)`
   - Change default value of `icupy.icu.DateFormatSymbols.set_era_names(era_names: list[UnicodeString], count: int = None)` → `set_era_names(era_names: list[UnicodeString], count: int = -1)`
   - Change default value of `icupy.icu.DateFormatSymbols.set_eras(eras: list[UnicodeString], count: int = None)` → `set_eras(eras: list[UnicodeString], count: int = -1)`
@@ -394,24 +431,24 @@ Maintenance release.
   - Change default value of `icupy.icu.DateFormatSymbols.set_short_months(short_months: list[UnicodeString], count: int = None)` → `set_short_months(short_months: list[UnicodeString], count: int = -1)`
   - Change default value of `icupy.icu.DateFormatSymbols.set_short_weekdays(abbrev_weekdays: list[UnicodeString], count: int = None)` → `set_short_weekdays(abbrev_weekdays: list[UnicodeString], count: int = -1)`
   - Change default value of `icupy.icu.DateFormatSymbols.set_weekdays(weekdays: list[UnicodeString], count: int = None)` → `set_weekdays(weekdays: list[UnicodeString], count: int = -1)`
-- IMPROVED
+- **IMPROVED**
   - Use CMake environment variables in \_build.py
 
-## v0.8.0 / 2021-09-16
+## v0.8.0 (2021-09-16)
 
-- NEW
-  - Implement icu::CompactDecimalFormat class
-  - Implement icu::CurrencyPluralInfo class
-  - Implement icu::DecimalFormat class
-  - Implement icu::MessageFormat class
-  - Implement icu::PluralFormat class
-  - Implement icu::PluralRules class
-  - Implement icu::RuleBasedNumberFormat class
-  - Implement icu::SelectFormat class
-- ADDED
+- **NEW**
+  - Implement `icu::CompactDecimalFormat` class
+  - Implement `icu::CurrencyPluralInfo` class
+  - Implement `icu::DecimalFormat` class
+  - Implement `icu::MessageFormat` class
+  - Implement `icu::PluralFormat` class
+  - Implement `icu::PluralRules` class
+  - Implement `icu::RuleBasedNumberFormat` class
+  - Implement `icu::SelectFormat` class
+- **ADDED**
   - Add `icupy.icu.DateFormat.get_number_format()`
   - Add `icupy.icu.DateFormat.set_number_format(new_number_format: NumberFormat)`
-- CHANGED
+- **CHANGED**
   - Rename `icupy.icu.ICUException` to `icupy.icu.ICUError`
   - Change arguments of `icupy.icu.DateFormatSymbols.set_am_pm_strings(ampms: UnicodeStringVector, count: int = None)` → `set_am_pm_strings(ampms: list[UnicodeString], count: int = None)`
   - Change arguments of `icupy.icu.DateFormatSymbols.set_era_names(era_names: UnicodeStringVector, count: int = None)` → `set_era_names(era_names: list[UnicodeString], count: int = None)`
@@ -428,28 +465,28 @@ Maintenance release.
   - Change arguments of `icupy.icu.DateFormatSymbols.set_zodiac_names(zodiac_names: UnicodeStringVector, count: int, context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)` → `set_zodiac_names(zodiac_names: list[UnicodeString], count: int, context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)`
   - Change return type of `icupy.icu.Collator.get_available_locales() -> StringEnumeration` → `list[Locale]`
   - Change return type of `icupy.icu.BreakIterator.get_available_locales() -> StringEnumeration` → `list[Locale]`
-- FIXED
+- **FIXED**
   - Add missing inherited methods
     - Add `icupy.icu.CompactDecimalFormat.format(...)`
     - Add `icupy.icu.DecimalFormat.format(...)`
     - Add `icupy.icu.MessageFormat.parse_object(...)`
-- IMPROVED
+- **IMPROVED**
   - Export enum members into parent scope
-- DEPRECATED
+- **DEPRECATED**
   - `icupy.icu.ICUException` is deprecated and will be removed in a future release. Use `icupy.icu.ICUError` instead
 
-## v0.7.0 / 2021-08-11
+## v0.7.0 (2021-08-11)
 
-## v0.6.0 / 2021-03-21
+## v0.6.0 (2021-03-21)
 
-## v0.5.0 / 2021-03-12
+## v0.5.0 (2021-03-12)
 
-## v0.4.0 / 2021-03-02
+## v0.4.0 (2021-03-02)
 
-## v0.3.0 / 2021-02-27
+## v0.3.0 (2021-02-27)
 
-## v0.2.0 / 2021-02-07
+## v0.2.0 (2021-02-07)
 
-## v0.1.0 / 2021-01-30
+## v0.1.0 (2021-01-30)
 
 Initial release.
