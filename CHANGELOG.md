@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.19.0 (2024-05-02)
+
+- **NEW**
+  - Add support for [ICU 75](https://github.com/unicode-org/icu/releases/tag/release-75-1) ([#73](https://github.com/miute/icupy/pull/73), [#74](https://github.com/miute/icupy/pull/74))
+    - Add `icupy.icu.number.LocalizedNumberFormatter.without_locale()`
+    - Add `icupy.icu.number.LocalizedNumberRangeFormatter.without_locale()`
+    - Add `icupy.icu.number.SimpleNumber.set_maximum_integer_digits(maximum_integer_digits: int)`
+    - Add `icupy.icu.u_get_id_types(c: int)`
+    - Add `icupy.icu.u_has_id_type(c: int, type_: icupy.icu.UIdentifierType)`
+    - Add `icupy.icu.UIdentifierStatus` enum
+    - Add `icupy.icu.UIdentifierType` enum
+    - Add `icupy.icu.UProperty.UCHAR_IDENTIFIER_STATUS`
+    - Add `icupy.icu.UProperty.UCHAR_IDENTIFIER_TYPE`
+    - Add `icupy.icu.UScriptCode.USCRIPT_ARABIC_NASTALIQ`
+- **CHANGED**
+  - Update pybind11 from 2.11.1 to 2.12.0
+
 ## v0.18.0 (2023-11-01)
 
 - **NEW**
