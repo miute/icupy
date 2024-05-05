@@ -1,0 +1,29 @@
+name: Parse icu-versions.json
+
+inputs:
+  icu-version:
+    required: false
+    type: string
+
+outputs:
+  latest-version:
+    value: ${{steps.parse-icu-versions.outputs.latest-version}}
+  json:
+    value: ${{steps.parse-icu-versions.outputs.json}}
+
+runs:
+  using: composite
+  steps:
+    - name: Parse icu-versions.json
+      id: parse-icu-versions
+      shell: bash
+      run: |
+        latest=`cat ./icu-versions.json | jq -r .latest`
+        target=${{inputs.icu-version}}
+        target=${target:=$latest}
+        echo "latest=$latest"
+        echo "target=$target"
+        content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"$target\")"`
+        echo "json=$content"
+        echo "latest-version=$latest" >> $GITHUB_OUTPUT
+        echo "json=$content" >> $GITHUB_OUTPUT

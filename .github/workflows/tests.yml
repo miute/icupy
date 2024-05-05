@@ -42,23 +42,18 @@ jobs:
       - run: mkdir -p build
 
       - name: Parse icu-versions.json
-        id: icu
-        shell: bash
-        run: |
-          latest=`cat ./icu-versions.json | jq -r .latest`
-          echo "latest=$latest"
-          content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"${{matrix.icu-version}}\")"`
-          echo "icu4c=$content"
-          echo "icu4c_latest_version=$latest" >> $GITHUB_ENV
-          echo "icu4c_target_json=$content" >> $GITHUB_ENV
+        id: parse-icu-versions
+        uses: ./.github/actions/parse-icu-versions
+        with:
+          icu-version: ${{matrix.icu-version}}
 
       - name: Set up requirements (Ubuntu)
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: build
         run: |
           sudo apt-get install -y lcov
-          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}}
-          sudo tar zxf ${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
+          curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
+          sudo tar zxf ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "CMAKE_GENERATOR=Unix Makefiles" >> $GITHUB_ENV
@@ -70,10 +65,10 @@ jobs:
           INSTALL_PREFIX: "${{github.workspace}}/build"
           ICU4C_DIR: "icu4c"
         run: |
-          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_win64_zip}}
-          7z x ${{fromJson(env.icu4c_target_json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
-          if ("x${{fromJson(env.icu4c_target_json).double_zipped_filename}}" -ne "x") {
-            7z x ${{env.ICU4C_DIR}}/${{fromJson(env.icu4c_target_json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
+          curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}}
+          7z x ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
+          if ("x${{fromJson(steps.parse-icu-versions.outputs.json).double_zipped_filename}}" -ne "x") {
+            7z x ${{env.ICU4C_DIR}}/${{fromJson(steps.parse-icu-versions.outputs.json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
           }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
@@ -84,10 +79,10 @@ jobs:
           python -m tox -c tox-coverage.ini
 
       - name: Store coverage data
-        if: matrix.icu-version == env.icu4c_latest_version
+        if: matrix.icu-version == steps.parse-icu-versions.outputs.latest-version
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-data-${{matrix.os}}-${{matrix.python-version}}
+          name: coverage-data-${{matrix.os}}-${{matrix.icu-version}}-${{matrix.python-version}}
           path: |
             coverage*.info
             .coverage*

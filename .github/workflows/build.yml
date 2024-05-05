@@ -7,16 +7,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  parse-icu-versions:
+    outputs:
+      latest-version: ${{steps.parse-icu-versions.outputs.latest-version}}
+      json: ${{steps.parse-icu-versions.outputs.json}}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse icu-versions.json
+        id: parse-icu-versions
+        uses: ./.github/actions/parse-icu-versions
+
   build:
     runs-on: ${{matrix.os}}
+    needs: parse-icu-versions
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, windows-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
-    outputs:
-      icu4c_latest_version: ${{steps.icu.outputs.icu4c_latest_version}}
 
     steps:
       - uses: actions/checkout@v4
@@ -39,24 +50,12 @@ jobs:
 
       - run: mkdir -p build
 
-      - name: Parse icu-versions.json
-        id: icu
-        shell: bash
-        run: |
-          latest=`cat ./icu-versions.json | jq -r .latest`
-          echo "latest=$latest"
-          content=`cat ./icu-versions.json | jq -c ".versions[] | select(.version == \"$latest\")"`
-          echo "icu4c=$content"
-          echo "icu4c_latest_version=$latest" >> $GITHUB_ENV
-          echo "icu4c_latest_version=$latest" >> $GITHUB_OUTPUT
-          echo "icu4c_target_json=$content" >> $GITHUB_ENV
-
       - name: Set up requirements (Ubuntu)
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: build
         run: |
-          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}}
-          sudo tar zxf ${{fromJson(env.icu4c_target_json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
+          curl -LO ${{fromJson(needs.parse-icu-versions.outputs.json).url}}/${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
+          sudo tar zxf ${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
@@ -67,10 +66,10 @@ jobs:
           INSTALL_PREFIX: "${{github.workspace}}/build"
           ICU4C_DIR: "icu4c"
         run: |
-          curl -LO ${{fromJson(env.icu4c_target_json).url}}/${{fromJson(env.icu4c_target_json).icu4c_win64_zip}}
-          7z x ${{fromJson(env.icu4c_target_json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
-          if ("x${{fromJson(env.icu4c_target_json).double_zipped_filename}}" -ne "x") {
-            7z x ${{env.ICU4C_DIR}}/${{fromJson(env.icu4c_target_json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
+          curl -LO ${{fromJson(needs.parse-icu-versions.outputs.json).url}}/${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_win64_zip}}
+          7z x ${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
+          if ("x${{fromJson(needs.parse-icu-versions.outputs.json).double_zipped_filename}}" -ne "x") {
+            7z x ${{env.ICU4C_DIR}}/${{fromJson(needs.parse-icu-versions.outputs.json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
           }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
@@ -96,11 +95,11 @@ jobs:
 
   merge:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [parse-icu-versions, build]
     steps:
       - name: Merge artifacts
         uses: actions/upload-artifact/merge@v4
         with:
-          name: dist-icupy-icu${{needs.build.outputs.icu4c_latest_version}}
+          name: dist-icupy-icu${{needs.parse-icu-versions.outputs.latest-version}}
           pattern: dist-*
           delete-merged: true
