@@ -17,7 +17,7 @@ runs:
     - name: Parse icu-versions.json
       id: parse-icu-versions
       shell: bash
-      run: |
+      run: |-
         latest=`cat ./icu-versions.json | jq -r .latest`
         target=${{inputs.icu-version}}
         target=${target:=$latest}

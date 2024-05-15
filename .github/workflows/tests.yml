@@ -2,10 +2,8 @@ name: tests
 
 on:
   push:
-    branches:
-      - 'main'
-    tags-ignore:
-      - '**'
+    branches: [main]
+    tags-ignore: ['**']
   pull_request:
   workflow_dispatch:
 
@@ -16,13 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        icu-version: ["70.1", "71.1", "72.1", "73.2", "74.2", "75.1"]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        icu-version: ['70.1', '71.1', '72.1', '73.2', '74.2', '75.1']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          submodules: recursive
 
       - name: Set up Python ${{matrix.python-version}}
         uses: actions/setup-python@v5
@@ -62,8 +60,8 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         working-directory: build
         env:
-          INSTALL_PREFIX: "${{github.workspace}}/build"
-          ICU4C_DIR: "icu4c"
+          INSTALL_PREFIX: ${{github.workspace}}/build
+          ICU4C_DIR: icu4c
         run: |
           curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}}
           7z x ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
@@ -97,7 +95,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: 3.x
 
       - name: Upgrade pip
         run: |
@@ -134,6 +132,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: |
+          path: |-
             coverage.xml
             coverage-cpp.info
