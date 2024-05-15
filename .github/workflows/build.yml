@@ -2,8 +2,7 @@ name: build wheels
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: [v*]
   workflow_dispatch:
 
 jobs:
@@ -27,12 +26,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          submodules: recursive
 
       - name: Set up Python ${{matrix.python-version}}
         uses: actions/setup-python@v5
@@ -63,8 +62,8 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         working-directory: build
         env:
-          INSTALL_PREFIX: "${{github.workspace}}/build"
-          ICU4C_DIR: "icu4c"
+          INSTALL_PREFIX: ${{github.workspace}}/build
+          ICU4C_DIR: icu4c
         run: |
           curl -LO ${{fromJson(needs.parse-icu-versions.outputs.json).url}}/${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_win64_zip}}
           7z x ${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
