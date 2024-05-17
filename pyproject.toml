@@ -1,12 +1,61 @@
 [build-system]
 requires = [
-    "setuptools>=42",
-    "wheel",
+    "setuptools>=61.0",
+    "tomli",
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "icupy"
+version = "0.19.0"
+requires-python = ">=3.8"
+description = "Python bindings for ICU4C"
+authors = [
+    { name = "Tetsuya Miura", email = "miute.dev@gmail.com" },
+]
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE" }
+keywords = [
+    "icu4c",
+    "unicode",
+    "binding",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Internationalization",
+    "Topic :: Software Development :: Localization",
+]
+
+[project.urls]
+ICU = "https://icu.unicode.org/home"
+Download = "https://github.com/miute/icupy/releases"
+Repository = "https://github.com/miute/icupy"
+Changelog = "https://github.com/miute/icupy/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+namespaces = false
+
 [tool.pytest.ini_options]
-addopts = "--tb=short -ra --color=yes"
+addopts = [
+    "--tb=short",
+    "-ra",
+    "--color=yes",
+]
 testpaths = [
     "tests",
 ]
@@ -26,9 +75,13 @@ source = [
 line-length = 79
 target-version = [
     "py38",
+    "py39",
+    "py310",
+    "py311",
+    "py312",
 ]
 extend-exclude = """
-^/src/third_party/
+^src/third_party
 """
 
 [tool.isort]
@@ -38,12 +91,24 @@ include_trailing_comma = true
 use_parentheses = true
 ensure_newline_before_comments = true
 extend_skip = [
-    "src/third_party/",
+    "src/third_party",
+]
+
+[tool.flake8]
+max-line-length = 88
+ignore = [
+    "E203",
+    "W503",
+]
+exclude = [
+    "src/third_party",
 ]
 
 [tool.mypy]
-python_version = "3.11"
 warn_unused_configs = true
 warn_return_any = true
 check_untyped_defs = true
 verbosity = 0
+exclude = [
+    "^src/third_party",
+]
