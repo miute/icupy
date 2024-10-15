@@ -1,5 +1,10 @@
 # Changelog
 
+## WIP
+
+- **NEW**
+  - Add support for Python 3.13
+
 ## v0.19.0 (2024-05-02)
 
 - **NEW**
