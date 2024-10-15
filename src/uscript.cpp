@@ -262,6 +262,15 @@ void init_uscript(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
       .value("USCRIPT_ARABIC_NASTALIQ", USCRIPT_ARABIC_NASTALIQ, "Aran")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("USCRIPT_GARAY", USCRIPT_GARAY, "Gara")
+      .value("USCRIPT_GURUNG_KHEMA", USCRIPT_GURUNG_KHEMA, "Gukh")
+      .value("USCRIPT_KIRAT_RAI", USCRIPT_KIRAT_RAI, "Krai")
+      .value("USCRIPT_OL_ONAL", USCRIPT_OL_ONAL, "Onao")
+      .value("USCRIPT_SUNUWAR", USCRIPT_SUNUWAR, "Sunu")
+      .value("USCRIPT_TODHRI", USCRIPT_TODHRI, "Todr")
+      .value("USCRIPT_TULU_TIGALARI", USCRIPT_TULU_TIGALARI, "Tutg")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")

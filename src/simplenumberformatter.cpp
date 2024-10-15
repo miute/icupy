@@ -106,6 +106,7 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
       },
       py::arg("sign"));
 
+#if (U_ICU_VERSION_MAJOR_NUM < 76)
   sn.def(
       "truncate_start",
       [](SimpleNumber &self, uint32_t maximum_integer_digits) {
@@ -116,6 +117,7 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
         }
       },
       py::arg("maximum_integer_digits"));
+#endif // (U_ICU_VERSION_MAJOR_NUM < 76)
 
   //
   // icu::number::SimpleNumberFormatter

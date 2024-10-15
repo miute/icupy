@@ -321,34 +321,18 @@ def test_char_at():
     assert test1.char_at(10) == -1
     assert test1.char_at(-1) == -1
 
-    # __getitem__(self, index: int) -> int
-    assert test1[9] == 0x39
-    with pytest.raises(IndexError):  # IndexError: list index out of range
-        _ = test1[10]
-    assert test1[-1] == 0x39
+    # # __getitem__(self, index: int) -> int
+    # assert test1[9] == 0x39
+    # with pytest.raises(IndexError):  # IndexError: list index out of range
+    #     _ = test1[10]
+    # assert test1[-1] == 0x39
 
-    # __getitem__(self, slice: slice) -> List[int]
-    assert isinstance(test1[:], UnicodeSet)
-    assert test1[1:4] == UnicodeSet(0x31, 0x33)
-    assert test1[1:6:2] == UnicodeSet("[135]")
-    with pytest.raises(ValueError):  # ValueError: slice step cannot be zero
-        _ = test1[::0]
-
-    test1.add(UnicodeString("ab"))
-    t = [c for c in test1]
-    assert t == [
-        0x30,
-        0x31,
-        0x32,
-        0x33,
-        0x34,
-        0x35,
-        0x36,
-        0x37,
-        0x38,
-        0x39,
-        -1,
-    ]
+    # # __getitem__(self, slice: slice) -> List[int]
+    # assert isinstance(test1[:], UnicodeSet)
+    # assert test1[1:4] == UnicodeSet(0x31, 0x33)
+    # assert test1[1:6:2] == UnicodeSet("[135]")
+    # with pytest.raises(ValueError):  # ValueError: slice step cannot be zero
+    #     _ = test1[::0]
 
 
 def test_clone():
@@ -394,6 +378,18 @@ def test_close_over():
     )
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test2)
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_code_points():
+    # from icu/source/test/intltest/usettest.cpp
+    #  UnicodeSetTest::TestCodePointIterator()
+    us = UnicodeSet("[abcçカ🚴]")
+
+    # U_HEADER_NESTED_NAMESPACE::USetCodePoints
+    # icu::UnicodeSet::codePoints() const
+    it = us.code_points()
+    assert [UnicodeString(x) for x in it] == ["a", "b", "c", "ç", "カ", "🚴"]
 
 
 def test_complement():
@@ -617,6 +613,45 @@ def test_has_strings():
     assert test2.has_strings() is True
 
 
+def test_iter():
+    # from icu/source/test/intltest/usettest.cpp
+    #  UnicodeSetTest::TestElementIterator()
+    us = UnicodeSet("[abcçカ🚴{}{abc}{de}]")
+
+    result = UnicodeString()
+    [result.append(' "').append(el).append('"') for el in us]
+    if U_ICU_VERSION_MAJOR_NUM < 76:
+        assert result == ' "a" "b" "c" "ç" "カ" "🚴" "" "" ""'
+    else:
+        assert result == ' "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de"'
+
+    us = UnicodeSet("[a-cA-D{}{abc}{de}]")
+    assert all(isinstance(x, UnicodeString) for x in us)
+    assert us[0] == "A"
+    assert us[1] == "B"
+    assert us[2] == "C"
+    assert us[3] == "D"
+    assert us[4] == "a"
+    assert us[5] == "b"
+    assert us[6] == "c"
+    if U_ICU_VERSION_MAJOR_NUM < 76:
+        assert len(us[7]) == 0
+        assert len(us[8]) == 0
+        assert len(us[9]) == 0
+    else:
+        assert len(us[7]) == 0
+        assert us[8] == "abc"
+        assert us[9] == "de"
+
+    with pytest.raises(IndexError):
+        _ = us[10]  # IndexError: elements index out of range
+
+    if U_ICU_VERSION_MAJOR_NUM < 76:
+        assert len(us[-1]) == 0
+    else:
+        assert us[-1] == "de"
+
+
 def test_matches():
     test1 = UnicodeSet(UnicodeString("[0-9{abc}]"))
     text = UnicodeString("abcd 789")
@@ -676,6 +711,22 @@ def test_operator_63():
     test1 = UnicodeSet.from_uset(uset)
     assert test1 == uset
     assert not (test1 != uset)
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_ranges():
+    # from icu/source/test/intltest/usettest.cpp
+    #  UnicodeSetTest::TestRangeIterator()
+    us = UnicodeSet("[abcçカ🚴]")
+
+    # U_HEADER_NESTED_NAMESPACE::USetRanges icu::UnicodeSet::ranges() const
+    ranges = [(it.range_start, it.range_end) for it in us.ranges()]
+    result = UnicodeString()
+    [
+        result.append(" ").append(start).append("-").append(end)
+        for (start, end) in ranges
+    ]
+    assert result == " a-c ç-ç カ-カ 🚴-🚴"
 
 
 def test_remove():
@@ -914,6 +965,19 @@ def test_span_back():
         )
         == 3
     )
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_strings():
+    # from icu/source/test/intltest/usettest.cpp
+    #  UnicodeSetTest::TestStringIterator()
+    us = UnicodeSet("[abcçカ🚴{}{abc}{de}]")
+
+    # U_HEADER_NESTED_NAMESPACE::USetStrings icu::UnicodeSet::strings() const
+    it = us.strings()
+    result = UnicodeString()
+    [result.append(' "').append(s).append('"') for s in it]
+    assert result == ' "" "abc" "de"'
 
 
 def test_unicode_set():

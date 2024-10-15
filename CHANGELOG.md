@@ -2,7 +2,50 @@
 
 ## WIP
 
+- **Breaking Changes**
+  - Change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `int` to `icupy.icu.UnicodeString`
+  - Remove `icupy.icu.UnicodeSet.__getitem__(slice: slice)`
 - **NEW**
+  - Add support for [ICU 76](https://github.com/unicode-org/icu/releases/tag/release-76-rc)
+    - Add `icupy.icu.Collator.equal_to(source: UnicodeString | str, target: UnicodeString | str)`
+    - Add `icupy.icu.Collator.greater_equal(source: UnicodeString | str, target: UnicodeString | str)`
+    - Add `icupy.icu.Collator.less_equal(source: UnicodeString | str, target: UnicodeString | str)`
+    - Add `icupy.icu.Collator.less(source: UnicodeString | str, target: UnicodeString | str)`
+    - Add `icupy.icu.Collator.not_equal_to(source: UnicodeString | str, target: UnicodeString | str)`
+    - Add `icupy.icu.MeasureUnit.create_light_speed()`
+    - Add `icupy.icu.MeasureUnit.create_night()`
+    - Add `icupy.icu.MeasureUnit.get_light_speed()`
+    - Add `icupy.icu.MeasureUnit.get_night()`
+    - Add `icupy.icu.UBlockCode.UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A`
+    - Add `icupy.icu.UBlockCode.UBLOCK_GARAY`
+    - Add `icupy.icu.UBlockCode.UBLOCK_GURUNG_KHEMA`
+    - Add `icupy.icu.UBlockCode.UBLOCK_KIRAT_RAI`
+    - Add `icupy.icu.UBlockCode.UBLOCK_MYANMAR_EXTENDED_C`
+    - Add `icupy.icu.UBlockCode.UBLOCK_OL_ONAL`
+    - Add `icupy.icu.UBlockCode.UBLOCK_SUNUWAR`
+    - Add `icupy.icu.UBlockCode.UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TODHRI`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TULU_TIGALARI`
+    - Add `icupy.icu.UIndicConjunctBreak.U_INCB_CONSONANT`
+    - Add `icupy.icu.UIndicConjunctBreak.U_INCB_EXTEND`
+    - Add `icupy.icu.UIndicConjunctBreak.U_INCB_LINKER`
+    - Add `icupy.icu.UIndicConjunctBreak.U_INCB_NONE`
+    - Add `icupy.icu.UIndicSyllabicCategory.U_INSC_REORDERING_KILLER`
+    - Add `icupy.icu.UJoiningGroup.U_JG_KASHMIRI_YEH`
+    - Add `icupy.icu.UnicodeSet.__iter__()`
+    - Add `icupy.icu.UnicodeSet.code_points()`
+    - Add `icupy.icu.UnicodeSet.ranges()`
+    - Add `icupy.icu.UnicodeSet.strings()`
+    - Add `icupy.icu.UProperty.UCHAR_INDIC_CONJUNCT_BREAK`
+    - Add `icupy.icu.UProperty.UCHAR_MODIFIER_COMBINING_MARK`
+    - Add `icupy.icu.UScriptCode.USCRIPT_GARAY`
+    - Add `icupy.icu.UScriptCode.USCRIPT_GURUNG_KHEMA`
+    - Add `icupy.icu.UScriptCode.USCRIPT_KIRAT_RAI`
+    - Add `icupy.icu.UScriptCode.USCRIPT_OL_ONAL`
+    - Add `icupy.icu.UScriptCode.USCRIPT_SUNUWAR`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TODHRI`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TULU_TIGALARI`
+    - Remove `icupy.icu.number.SimpleNumber.truncate_start(maximum_integer_digits: int)`
   - Add support for Python 3.13
 - **REMOVED**
   - Drop support for Python 3.8

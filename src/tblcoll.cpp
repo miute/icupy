@@ -160,6 +160,15 @@ void init_tblcoll(py::module &m) {
         return result;
       });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  coll.def(
+      "equal_to",
+      [](const Collator &self, icupy::UnicodeStringVariant &source, icupy::UnicodeStringVariant &target) {
+        return self.equal_to()(icupy::to_unistr(source), icupy::to_unistr(target));
+      },
+      py::arg("source"), py::arg("target"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
   coll.def(
       "equals",
       [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target)
@@ -378,6 +387,15 @@ void init_tblcoll(py::module &m) {
           -> py::bool_ { return self.greater(icupy::to_unistr(source), icupy::to_unistr(target)); },
       py::arg("source"), py::arg("target"));
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  coll.def(
+      "greater_equal",
+      [](const Collator &self, icupy::UnicodeStringVariant &source, icupy::UnicodeStringVariant &target) {
+        return self.greater_equal()(icupy::to_unistr(source), icupy::to_unistr(target));
+      },
+      py::arg("source"), py::arg("target"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
   coll.def(
       "greater_or_equal",
       [](const Collator &self, const icupy::UnicodeStringVariant &source, const icupy::UnicodeStringVariant &target)
@@ -385,6 +403,29 @@ void init_tblcoll(py::module &m) {
       py::arg("source"), py::arg("target"));
 
   coll.def("hash_code", &Collator::hashCode);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  coll.def(
+      "less",
+      [](const Collator &self, icupy::UnicodeStringVariant &source, icupy::UnicodeStringVariant &target) {
+        return self.less()(icupy::to_unistr(source), icupy::to_unistr(target));
+      },
+      py::arg("source"), py::arg("target"));
+
+  coll.def(
+      "less_equal",
+      [](const Collator &self, icupy::UnicodeStringVariant &source, icupy::UnicodeStringVariant &target) {
+        return self.less_equal()(icupy::to_unistr(source), icupy::to_unistr(target));
+      },
+      py::arg("source"), py::arg("target"));
+
+  coll.def(
+      "not_equal_to",
+      [](const Collator &self, icupy::UnicodeStringVariant &source, icupy::UnicodeStringVariant &target) {
+        return self.not_equal_to()(icupy::to_unistr(source), icupy::to_unistr(target));
+      },
+      py::arg("source"), py::arg("target"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   // TODO: Implement "static URegistryKey icu::Collator::registerFactory(CollatorFactory *toAdopt, UErrorCode &status)".
   // TODO: Implement "static URegistryKey icu::Collator::registerInstance(Collator *toAdopt, const Locale &locale,
