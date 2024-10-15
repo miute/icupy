@@ -437,9 +437,10 @@ def test_set_line():
     #                        UErrorCode *pErrorCode
     # )
     # void ubidi_close(UBiDi *pBiDi)
-    with gc(ubidi_open_sized(length, 0), ubidi_close) as para, gc(
-        ubidi_open_sized(length, 0), ubidi_close
-    ) as line:
+    with (
+        gc(ubidi_open_sized(length, 0), ubidi_close) as para,
+        gc(ubidi_open_sized(length, 0), ubidi_close) as line,
+    ):
         ubidi_set_para(para, text, -1, UBIDI_DEFAULT_LTR)
         assert ubidi_get_direction(para) == UBiDiDirection.UBIDI_MIXED
 
