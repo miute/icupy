@@ -280,7 +280,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [7] append(UChar32 srcChar)
-          "append", py::overload_cast<UChar32>(&UnicodeString::append), py::arg("src_char"));
+          "append", [](UnicodeString &self, UChar32 src_char) -> UnicodeString & { return self.append(src_char); },
+          py::arg("src_char"));
 
   us.def(
         // [1] caseCompare(const UnicodeString &text, uint32_t options)
