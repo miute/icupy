@@ -54,7 +54,7 @@ jobs:
         working-directory: build
         run: |
           curl -LO ${{fromJson(needs.parse-icu-versions.outputs.json).url}}/${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
-          sudo tar zxf ${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=2
+          sudo tar zxf ${{fromJson(needs.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=${{fromJson(needs.parse-icu-versions.outputs.json).strip-components || 2}}
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
