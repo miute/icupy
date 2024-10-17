@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## v0.20.0a1 (2024-10-18)
 
 - **Breaking Changes**
   - Change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `int` to `icupy.icu.UnicodeString`
@@ -47,6 +47,8 @@
     - Add `icupy.icu.UScriptCode.USCRIPT_TULU_TIGALARI`
     - Remove `icupy.icu.number.SimpleNumber.truncate_start(maximum_integer_digits: int)`
   - Add support for Python 3.13
+- **CHANGED**
+  - Update pybind11 from 2.12.0 to 2.13.6
 - **REMOVED**
   - Drop support for Python 3.8
 
