@@ -1910,6 +1910,35 @@ def test_measure_unit_74():
     )
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_measure_unit_76():
+    fmt = NumberFormatter.with_locale(Locale.get_us())
+
+    # static MeasureUnit icu::MeasureUnit::getLightSpeed()
+    assert (
+        fmt.unit(MeasureUnit.get_light_speed()).format_int(1).to_string()
+        == "1 light"
+    )
+
+    # static MeasureUnit icu::MeasureUnit::getNight()
+    assert (
+        fmt.unit(MeasureUnit.get_night()).format_int(1).to_string()
+        == "1 night"
+    )
+
+    # static MeasureUnit* icu::MeasureUnit::createLightSpeed(UErrorCode &status)
+    assert (
+        fmt.unit(MeasureUnit.create_light_speed()).format_int(1).to_string()
+        == "1 light"
+    )
+
+    # static MeasureUnit* icu::MeasureUnit::createNight(UErrorCode &status)
+    assert (
+        fmt.unit(MeasureUnit.create_night()).format_int(1).to_string()
+        == "1 night"
+    )
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(

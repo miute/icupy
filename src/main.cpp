@@ -109,7 +109,7 @@ void init_uldnames(py::module &m);
 void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
-void init_uniset(py::module &m);
+void init_uniset(py::module &m, py::module &ho_ns);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
@@ -174,6 +174,9 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   // icu::number namespace
   auto number = m.def_submodule("number");
+
+  // icu::U_HEADER_ONLY_NAMESPACE namespace
+  auto ho_ns = m.def_submodule("U_HEADER_ONLY_NAMESPACE");
 
   // icu::UMemory
   py::class_<UMemory>(m, "UMemory");
@@ -287,12 +290,12 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_edits(m);   // icu::Edits
   init_casemap(m); // icu::CaseMap
 
-  init_uniset(m);      // icu::UnicodeSet
-  init_usetiter(m);    // icu::UnicodeSetIterator
-  init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
-  init_tblcoll(m);     // icu::RuleBasedCollator
-  init_stsearch(m);    // icu::StringSearch
-  init_translit(m);    // icu::Transliterator
+  init_uniset(m, ho_ns); // icu::UnicodeSet
+  init_usetiter(m);      // icu::UnicodeSetIterator
+  init_normalizer2(m);   // icu::Normalizer2, icu::FilteredNormalizer2
+  init_tblcoll(m);       // icu::RuleBasedCollator
+  init_stsearch(m);      // icu::StringSearch
+  init_translit(m);      // icu::Transliterator
 
   init_alphaindex(m); // icu::AlphabeticIndex
 

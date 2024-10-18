@@ -12,7 +12,7 @@
 
 using namespace icu;
 
-void init_uniset(py::module &m) {
+void init_uniset(py::module &m, py::module &ho_ns) {
   //
   // icu::UMatchDegree
   //
@@ -53,6 +53,13 @@ void init_uniset(py::module &m) {
   //
   py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet");
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  //
+  // U_HEADER_ONLY_NAMESPACE::CodePointRange
+  //
+  py::class_<U_HEADER_ONLY_NAMESPACE::CodePointRange> cpr(ho_ns, "CodePointRange");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
   //
   // icu::UnicodeMatcher
   //
@@ -72,6 +79,22 @@ void init_uniset(py::module &m) {
         return self.toPattern(result, escape_unprintable);
       },
       py::arg("result"), py::arg("escape_unprintable") = false);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  //
+  // U_HEADER_ONLY_NAMESPACE::CodePointRange
+  //
+  cpr.def_property_readonly("range_start",
+                            [](const U_HEADER_ONLY_NAMESPACE::CodePointRange &self) { return self.rangeStart; });
+
+  cpr.def_property_readonly("range_end",
+                            [](const U_HEADER_ONLY_NAMESPACE::CodePointRange &self) { return self.rangeEnd; });
+
+  cpr.def(
+      "__iter__",
+      [](U_HEADER_ONLY_NAMESPACE::CodePointRange &self) { return py::make_iterator(self.begin(), self.end()); },
+      py::keep_alive<0, 1>());
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   //
   // icu::UnicodeSet
@@ -130,35 +153,45 @@ void init_uniset(py::module &m) {
           py::is_operator(), py::arg("other"));
 
   us.def(
-        "__getitem__",
-        [](const UnicodeSet &self, int32_t index) {
-          const auto size = self.size();
-          if (index < 0) {
-            index += size;
+      "__getitem__",
+      [](const UnicodeSet &self, int32_t index) {
+        const auto size = self.size();
+        if (index < 0) {
+          index += size;
+        }
+        if (index < 0 || index >= size) {
+          throw py::index_error("elements index out of range: " + std::to_string(index));
+        }
+
+        const auto range_count = self.getRangeCount();
+        int32_t characters = 0;
+        for (int32_t i = 0; i < range_count; ++i) {
+          const auto start_char = self.getRangeStart(i);
+          const auto end_char = self.getRangeEnd(i);
+          const auto base = characters;
+          characters += end_char - start_char + 1;
+          if (index < characters) {
+            return UnicodeString(start_char + index - base);
           }
-          if (index < 0 || index >= size) {
-            throw py::index_error("characters index out of range: " + std::to_string(index));
-          }
-          return self.charAt(index);
-        },
-        py::arg("index"))
-      .def(
-          "__getitem__",
-          [](const UnicodeSet &self, const py::slice &index) {
-            size_t start, stop, step, slice_length;
-            if (!index.compute(self.size(), &start, &stop, &step, &slice_length)) {
-              throw py::error_already_set();
-            }
-            UnicodeSet result;
-            for (size_t n = 0; n < slice_length; ++n) {
-              result.add(self.charAt(static_cast<int32_t>(start)));
-              start += step;
-            }
-            return result;
-          },
-          py::arg("index"));
+        }
+#if (U_ICU_VERSION_MAJOR_NUM < 76)
+        return UnicodeString();
+#else  // (U_ICU_VERSION_MAJOR_NUM >= 76)
+        const auto uset = self.toUSet();
+        int32_t length;
+        const auto uchars = uset_getString(uset, index - characters, &length);
+        return UnicodeString(uchars, length);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+      },
+      py::arg("index"));
 
   us.def("__hash__", &UnicodeSet::hashCode);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  us.def(
+      "__iter__", [](const UnicodeSet &self) { return py::make_iterator(self.begin(), self.end()); },
+      py::keep_alive<0, 1>());
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   us.def("__len__", &UnicodeSet::size);
 
@@ -258,6 +291,16 @@ void init_uniset(py::module &m) {
   us.def("clone_as_thawed", &UnicodeSet::cloneAsThawed);
 
   us.def("close_over", &UnicodeSet::closeOver, py::arg("attribute"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  us.def(
+      "code_points",
+      [](const UnicodeSet &self) {
+        auto it = self.codePoints();
+        return py::make_iterator(it.begin(), it.end());
+      },
+      py::keep_alive<0, 1>());
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   us.def("compact", &UnicodeSet::compact);
 
@@ -368,6 +411,16 @@ void init_uniset(py::module &m) {
 
   us.def("is_frozen", [](const UnicodeSet &self) -> py::bool_ { return self.isFrozen(); });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  us.def(
+      "ranges",
+      [](const UnicodeSet &self) {
+        auto it = self.ranges();
+        return py::make_iterator(it.begin(), it.end());
+      },
+      py::keep_alive<0, 1>());
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
   us.def(
         "remove",
         [](UnicodeSet &self, const icupy::UnicodeStringVariant &s) -> UnicodeSet & {
@@ -451,6 +504,16 @@ void init_uniset(py::module &m) {
       .def("span_back",
            py::overload_cast<const UnicodeString &, int32_t, USetSpanCondition>(&UnicodeSet::spanBack, py::const_),
            py::arg("s"), py::arg("limit"), py::arg("span_condition"));
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  us.def(
+      "strings",
+      [](const UnicodeSet &self) {
+        auto it = self.strings();
+        return py::make_iterator(it.begin(), it.end());
+      },
+      py::keep_alive<0, 1>());
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   us.def("to_uset", [](UnicodeSet &self) {
     auto uset = self.toUSet();

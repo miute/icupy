@@ -7,8 +7,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "icupy"
-version = "0.19.0"
-requires-python = ">=3.8"
+version = "0.20.0a1"
+requires-python = ">=3.9"
 description = "Python bindings for ICU4C"
 authors = [
     { name = "Tetsuya Miura", email = "miute.dev@gmail.com" },
@@ -28,11 +28,11 @@ classifiers = [
     "Operating System :: POSIX",
     "Programming Language :: C++",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development :: Internationalization",
     "Topic :: Software Development :: Localization",
@@ -74,11 +74,11 @@ source = [
 [tool.black]
 line-length = 79
 target-version = [
-    "py38",
     "py39",
     "py310",
     "py311",
     "py312",
+    "py313",
 ]
 extend-exclude = """
 ^src/third_party

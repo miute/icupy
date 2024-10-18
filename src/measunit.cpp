@@ -1059,6 +1059,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  mu.def_static("create_light_speed", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createLightSpeed(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static("create_light_year", []() {
     ErrorCode error_code;
@@ -1536,6 +1547,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  mu.def_static("create_night", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createNight(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_ohm", []() {
@@ -2405,7 +2427,13 @@ void init_measunit(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_knot", &MeasureUnit::getKnot);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  mu.def_static("get_light_speed", &MeasureUnit::getLightSpeed);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_light_year", &MeasureUnit::getLightYear);
 
   mu.def_static("get_liter", &MeasureUnit::getLiter);
@@ -2508,7 +2536,13 @@ void init_measunit(py::module &m) {
   mu.def_static("get_newton", &MeasureUnit::getNewton);
 
   mu.def_static("get_newton_meter", &MeasureUnit::getNewtonMeter);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  mu.def_static("get_night", &MeasureUnit::getNight);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_ohm", &MeasureUnit::getOhm);
 
   mu.def_static("get_ounce", &MeasureUnit::getOunce);
