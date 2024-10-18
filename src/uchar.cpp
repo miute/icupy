@@ -399,6 +399,19 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 74)
       .value("UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I", UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_I)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A", UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A, "[13460]")
+      .value("UBLOCK_GARAY", UBLOCK_GARAY, "[10D40]")
+      .value("UBLOCK_GURUNG_KHEMA", UBLOCK_GURUNG_KHEMA, "[16100]")
+      .value("UBLOCK_KIRAT_RAI", UBLOCK_KIRAT_RAI, "[16D40]")
+      .value("UBLOCK_MYANMAR_EXTENDED_C", UBLOCK_MYANMAR_EXTENDED_C, "[116D0]")
+      .value("UBLOCK_OL_ONAL", UBLOCK_OL_ONAL, "[1E5D0]")
+      .value("UBLOCK_SUNUWAR", UBLOCK_SUNUWAR, "[11BC0]")
+      .value("UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT", UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT,
+             "[1CC00]")
+      .value("UBLOCK_TODHRI", UBLOCK_TODHRI, "[105C0]")
+      .value("UBLOCK_TULU_TIGALARI", UBLOCK_TULU_TIGALARI, "[11380]")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -629,6 +642,15 @@ void init_uchar(py::module &m) {
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+  py::enum_<UIndicConjunctBreak>(m, "UIndicConjunctBreak", py::arithmetic(), "Indic Conjunct Break constants.")
+      .value("U_INCB_NONE", U_INCB_NONE)
+      .value("U_INCB_CONSONANT", U_INCB_CONSONANT)
+      .value("U_INCB_EXTEND", U_INCB_EXTEND)
+      .value("U_INCB_LINKER", U_INCB_LINKER)
+      .export_values();
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   //
   // UIndicPositionalCategory
@@ -697,6 +719,9 @@ void init_uchar(py::module &m) {
       .value("U_INSC_VOWEL", U_INSC_VOWEL)
       .value("U_INSC_VOWEL_DEPENDENT", U_INSC_VOWEL_DEPENDENT)
       .value("U_INSC_VOWEL_INDEPENDENT", U_INSC_VOWEL_INDEPENDENT)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("U_INSC_REORDERING_KILLER", U_INSC_REORDERING_KILLER)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
@@ -821,6 +846,9 @@ void init_uchar(py::module &m) {
       .value("U_JG_THIN_YEH", U_JG_THIN_YEH)
       .value("U_JG_VERTICAL_TAIL", U_JG_VERTICAL_TAIL)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("U_JG_KASHMIRI_YEH", U_JG_KASHMIRI_YEH)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -1179,6 +1207,11 @@ void init_uchar(py::module &m) {
              "Binary property ID_Compat_Math_Continue.\n\n"
              "Used in mathematical identifier profile in UAX #31.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("UCHAR_MODIFIER_COMBINING_MARK", UCHAR_MODIFIER_COMBINING_MARK,
+             "Binary property Modifier_Combining_Mark.\n\n"
+             "Used by the AMTRA algorithm in UAX #53.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -1281,6 +1314,11 @@ void init_uchar(py::module &m) {
              "Used for UTS #39 General Security Profile for Identifiers "
              "(https://www.unicode.org/reports/tr39/#General_Security_Profile).")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+      .value("UCHAR_INDIC_CONJUNCT_BREAK", UCHAR_INDIC_CONJUNCT_BREAK,
+             "Enumerated property Indic_Conjunct_Break.\n\n"
+             "Used in the grapheme cluster break algorithm in UAX #29.")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")

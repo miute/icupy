@@ -253,29 +253,35 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   //       "append", py::overload_cast<char16_t>(&UnicodeString::append), py::arg("src_char"))
   us.def(
         // [2] append(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
-        "append", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::append), py::arg("src_chars"),
-        py::arg("src_start"), py::arg("src_length"))
+        "append",
+        [](UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> UnicodeString & {
+          return self.append(src_chars, src_start, src_length);
+        },
+        py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
-          // [3] append(const UnicodeString &srcText)
+          // [4] append(const UnicodeString &srcText)
           "append",
           [](UnicodeString &self, const icupy::UnicodeStringVariant &src_text) -> UnicodeString & {
             return self.append(icupy::to_unistr(src_text));
           },
           py::arg("src_text"))
       .def(
-          // [4] append(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
-          "append", py::overload_cast<const UnicodeString &, int32_t, int32_t>(&UnicodeString::append),
+          // [5] append(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
+          "append",
+          [](UnicodeString &self, const UnicodeString &src_text, int32_t src_start,
+             int32_t src_length) -> UnicodeString & { return self.append(src_text, src_start, src_length); },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"))
       .def(
-          // [5] append(ConstChar16Ptr srcChars, int32_t srcLength)
+          // [6] append(ConstChar16Ptr srcChars, int32_t srcLength)
           "append",
           [](UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> UnicodeString & {
             return self.append(src_chars, src_length);
           },
           py::arg("src_chars"), py::arg("src_length"))
       .def(
-          // [6] append(UChar32 srcChar)
-          "append", py::overload_cast<UChar32>(&UnicodeString::append), py::arg("src_char"));
+          // [7] append(UChar32 srcChar)
+          "append", [](UnicodeString &self, UChar32 src_char) -> UnicodeString & { return self.append(src_char); },
+          py::arg("src_char"));
 
   us.def(
         // [1] caseCompare(const UnicodeString &text, uint32_t options)

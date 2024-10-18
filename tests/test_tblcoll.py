@@ -175,6 +175,21 @@ def test_create_instance():
     assert rules1 == rules2
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_equal_to():
+    # from icu/source/test/intltest/collationtest.cpp
+    #  CollationTest::TestCollatorPredicates()
+    coll = Collator.create_instance(Locale.get_root())
+
+    # auto icu::Collator::equal_to() const
+    assert coll.equal_to("aaa", "aaa") is True
+    assert coll.equal_to(UnicodeString("aaa"), "aaa") is True
+    assert coll.equal_to("aaa", UnicodeString("aaa")) is True
+    assert coll.equal_to(UnicodeString("aaa"), UnicodeString("aaa")) is True
+
+    assert coll.equal_to("aaa", "bbb") is False
+
+
 def test_equals():
     coll = Collator.create_instance(Locale.get_english())
     source = UnicodeString("ABC")
@@ -625,6 +640,23 @@ def test_greater():
     assert not coll.greater("ABC", "abc")
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_greater_equal():
+    # from icu/source/test/intltest/collationtest.cpp
+    #  CollationTest::TestCollatorPredicates()
+    coll = Collator.create_instance(Locale.get_root())
+
+    # auto icu::Collator::greater_equal() const
+    assert coll.greater_equal("aaa", "aaa") is True
+    assert coll.greater_equal(UnicodeString("aaa"), "aaa") is True
+    assert coll.greater_equal("bbb", UnicodeString("aaa")) is True
+    assert (
+        coll.greater_equal(UnicodeString("bbb"), UnicodeString("aaa")) is True
+    )
+
+    assert coll.greater_equal("aaa", "bbb") is False
+
+
 def test_greater_or_equal():
     coll = Collator.create_instance(Locale.get_english())
     source = UnicodeString("ABC")
@@ -661,6 +693,54 @@ def test_hash_code():
     assert hash(coll1) == coll1.hash_code()
     assert hash(coll2) == coll2.hash_code()
     assert hash(coll3) == coll3.hash_code()
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_less():
+    # from icu/source/test/intltest/collationtest.cpp
+    #  CollationTest::TestCollatorPredicates()
+    coll = Collator.create_instance(Locale.get_root())
+
+    # auto icu::Collator::less() const
+    assert coll.less("aaa", "bbb") is True
+    assert coll.less(UnicodeString("aaa"), "bbb") is True
+    assert coll.less("aaa", UnicodeString("bbb")) is True
+    assert coll.less(UnicodeString("aaa"), UnicodeString("bbb")) is True
+
+    assert coll.less("aaa", "aaa") is False
+    assert coll.less("bbb", "aaa") is False
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_less_equal():
+    # from icu/source/test/intltest/collationtest.cpp
+    #  CollationTest::TestCollatorPredicates()
+    coll = Collator.create_instance(Locale.get_root())
+
+    # auto icu::Collator::less_equal() const
+    assert coll.less_equal("aaa", "aaa") is True
+    assert coll.less_equal(UnicodeString("aaa"), "aaa") is True
+    assert coll.less_equal("aaa", UnicodeString("bbb")) is True
+    assert coll.less_equal(UnicodeString("aaa"), UnicodeString("bbb")) is True
+
+    assert coll.less_equal("bbb", "aaa") is False
+
+
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
+def test_not_equal_to():
+    # from icu/source/test/intltest/collationtest.cpp
+    #  CollationTest::TestCollatorPredicates()
+    coll = Collator.create_instance(Locale.get_root())
+
+    # auto icu::Collator::not_equal_to() const
+    assert coll.not_equal_to("aaa", "bbb") is True
+    assert coll.not_equal_to(UnicodeString("aaa"), "bbb") is True
+    assert coll.not_equal_to("aaa", UnicodeString("bbb")) is True
+    assert (
+        coll.not_equal_to(UnicodeString("aaa"), UnicodeString("bbb")) is True
+    )
+
+    assert coll.not_equal_to("aaa", "aaa") is False
 
 
 def test_operator():
