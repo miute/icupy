@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.20.0a1 (2024-10-18)
+## v0.20.0 (2024-10-26)
 
 - **Breaking Changes**
   - Change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `int` to `icupy.icu.UnicodeString`
