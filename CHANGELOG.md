@@ -6,7 +6,7 @@
   - Change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `int` to `icupy.icu.UnicodeString`
   - Remove `icupy.icu.UnicodeSet.__getitem__(slice: slice)`
 - **NEW**
-  - Add support for [ICU 76](https://github.com/unicode-org/icu/releases/tag/release-76-rc)
+  - Add support for [ICU 76.1](https://github.com/unicode-org/icu/releases/tag/release-76-1)
     - Add `icupy.icu.Collator.equal_to(source: UnicodeString | str, target: UnicodeString | str)`
     - Add `icupy.icu.Collator.greater_equal(source: UnicodeString | str, target: UnicodeString | str)`
     - Add `icupy.icu.Collator.less_equal(source: UnicodeString | str, target: UnicodeString | str)`
