@@ -479,7 +479,7 @@ def test_are_bidi_confusable():
 
     # fmt: on
     id1 = "J-2"
-    id2 = "J\u200F2\u2013\u200F"
+    id2 = "J\u200f2\u2013\u200f"
 
     with gc(uspoof_open(), uspoof_close) as sc:
         # uint32_t uspoof_areBidiConfusable(

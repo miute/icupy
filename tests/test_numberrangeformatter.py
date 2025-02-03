@@ -327,7 +327,7 @@ def test_localized_number_range_formatter_75():
     res2 = unf2.locale("ja-JP").format_formattable_range(
         Formattable(5), Formattable(5)
     )
-    assert res2.to_temp_string() == "5\uFF5E5"
+    assert res2.to_temp_string() == "5\uff5e5"
 
 
 def test_number_range_formatter():

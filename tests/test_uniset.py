@@ -39,7 +39,7 @@ def test_add():
 def test_add_all():
     test1 = UnicodeSet()
     assert test1.size() == 0
-    test2 = UnicodeSet(UnicodeString("[\u00DF{ab}]"))
+    test2 = UnicodeSet(UnicodeString("[\u00df{ab}]"))
     assert test2.size() == 2
 
     # [1]
@@ -141,14 +141,14 @@ def test_api():
     #       const UnicodeString &pattern,
     #       int32_t pos
     # )
-    pattern = UnicodeString("[0-9\u00DF{ab}]")
+    pattern = UnicodeString("[0-9\u00df{ab}]")
     assert UnicodeSet.resembles_pattern(pattern, 0) is True
     assert UnicodeSet.resembles_pattern(pattern, 1) is False
 
-    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 0) is True
-    assert UnicodeSet.resembles_pattern("[0-9\u00DF{ab}]", 1) is False
+    assert UnicodeSet.resembles_pattern("[0-9\u00df{ab}]", 0) is True
+    assert UnicodeSet.resembles_pattern("[0-9\u00df{ab}]", 1) is False
 
-    test2 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test2 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     assert test2.is_bogus() is False
     assert test2.size() == 12
 
@@ -160,12 +160,12 @@ def test_api():
     output = test2.to_pattern(result)
     assert isinstance(output, UnicodeString)
     assert id(result) == id(output)
-    assert result == "[0-9\xDF{ab}]"
+    assert result == "[0-9\xdf{ab}]"
 
     output = test2.to_pattern(result, False)
     assert isinstance(output, UnicodeString)
     assert id(result) == id(output)
-    assert result == "[0-9\xDF{ab}]"
+    assert result == "[0-9\xdf{ab}]"
 
     output = test2.to_pattern(result, True)
     assert isinstance(output, UnicodeString)
@@ -368,7 +368,7 @@ def test_clone():
 
 
 def test_close_over():
-    pattern = UnicodeString("[aq\u00DF{Bc}{bC}{Fi}]")
+    pattern = UnicodeString("[aq\u00df{Bc}{bC}{Fi}]")
     test1 = UnicodeSet(pattern)
     test2 = test1.clone()
 
@@ -423,7 +423,7 @@ def test_complement():
 
 
 def test_complement_all():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
     test2 = UnicodeSet(0x30, 0x39)
     assert test2.size() == 10
@@ -730,7 +730,7 @@ def test_ranges():
 
 
 def test_remove():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
 
     # [1]
@@ -746,7 +746,7 @@ def test_remove():
     assert id(result) == id(test1)
     assert test1.size() == 0
 
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     result = test1.remove("ab").remove(0xDF).remove(0x30, 0x39)
     assert isinstance(result, UnicodeSet)
     assert id(result) == id(test1)
@@ -754,7 +754,7 @@ def test_remove():
 
 
 def test_remove_all():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     assert test2.size() == 12
     test3 = UnicodeSet(0x30, 0x39)
@@ -781,7 +781,7 @@ def test_remove_all():
 
 
 def test_remove_all_strings():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
 
     # UnicodeSet &icu::UnicodeSet::removeAllStrings()
@@ -795,7 +795,7 @@ def test_remove_all_strings():
 
 
 def test_retain():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     test3 = test1.clone()
     assert test1.size() == 12
@@ -820,7 +820,7 @@ def test_retain():
 
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_retain_69():
-    test1 = UnicodeSet("[0-9\u00DF{ab}]")
+    test1 = UnicodeSet("[0-9\u00df{ab}]")
     test2 = test1.clone()
     test3 = test1.clone()
     assert test1.size() == 12
@@ -842,7 +842,7 @@ def test_retain_69():
 
 
 def test_retain_all():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     test3 = test1.clone()
     assert test1.size() == 12
@@ -875,7 +875,7 @@ def test_serialize():
     #       int32_t destCapacity,
     #       UErrorCode &ec
     # )
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
     dest = test1.serialize()
     assert isinstance(dest, list)
     assert dest == [
@@ -886,7 +886,7 @@ def test_serialize():
         0xDF + 1,
     ]
 
-    test2 = UnicodeSet(UnicodeString("[\U0001F000-\U0001F003]"))
+    test2 = UnicodeSet(UnicodeString("[\U0001f000-\U0001f003]"))
     dest = test2.serialize()
     assert isinstance(dest, list)
     assert dest == [
@@ -900,7 +900,7 @@ def test_serialize():
 
 
 def test_span():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
 
     # [1]
     # int32_t icu::UnicodeSet::span(
@@ -938,7 +938,7 @@ def test_span():
 
 
 def test_span_back():
-    test1 = UnicodeSet(UnicodeString("[0-9\u00DF{ab}]"))
+    test1 = UnicodeSet(UnicodeString("[0-9\u00df{ab}]"))
 
     # [1]
     # int32_t icu::UnicodeSet::spanBack(

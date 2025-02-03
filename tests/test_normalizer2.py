@@ -31,11 +31,11 @@ def test_api():
     result = n2.append(first, second).append(third)
     assert isinstance(result, UnicodeString)
     assert id(result) == id(first)
-    assert result == first == "\xC5B"
+    assert result == first == "\xc5B"
 
     first = UnicodeString("A", -1, US_INV)
-    result = n2.append(first, "\u030A").append(third)
-    assert result == first == "\xC5B"
+    result = n2.append(first, "\u030a").append(third)
+    assert result == first == "\xc5B"
 
     # UBool icu::Normalizer2::getDecomposition(
     #       UChar32 c,
@@ -75,7 +75,7 @@ def test_api():
     )
 
     assert n2.is_normalized("\u304c")
-    assert not n2.is_normalized("\u304B\u3099")
+    assert not n2.is_normalized("\u304b\u3099")
 
     # [1]
     # UnicodeString icu::Normalizer2::normalize(
@@ -136,7 +136,7 @@ def test_api():
 
     result = n2.quick_check("\u304c")
     assert result == UNormalizationCheckResult.UNORM_YES
-    result = n2.quick_check("\u304B\u3099")
+    result = n2.quick_check("\u304b\u3099")
     assert result == UNormalizationCheckResult.UNORM_MAYBE
 
     # int32_t icu::Normalizer2::spanQuickCheckYes(
@@ -149,7 +149,7 @@ def test_api():
     )
 
     assert n2.span_quick_check_yes("\u304c")
-    assert not n2.span_quick_check_yes("\u304B\u3099")
+    assert not n2.span_quick_check_yes("\u304b\u3099")
 
 
 def test_filtered_normalizer2():
@@ -278,7 +278,7 @@ def test_icu_60():
     nfkc_cf = Normalizer2.get_nfkc_casefold_instance()
     src = (
         "  AÄA\u0308A\u0308\u00ad\u0323Ä\u0323,"
-        "\u00ad\u1100\u1161가\u11A8가\u3133  "
+        "\u00ad\u1100\u1161가\u11a8가\u3133  "
     ).encode()
     expected = "  aääạ\u0308ạ\u0308,가각갃  ".encode()
 
@@ -335,4 +335,4 @@ def test_icu_74():
     # icu::Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode&)
     n2 = Normalizer2.get_nfkc_simple_casefold_instance()
     assert isinstance(n2, Normalizer2)
-    assert n2.normalize("aA\u0308 ßẞ \u1F80\u1F88") == "aä ßß \u1F80\u1F80"
+    assert n2.normalize("aA\u0308 ßẞ \u1f80\u1f88") == "aä ßß \u1f80\u1f80"

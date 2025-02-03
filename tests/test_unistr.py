@@ -539,8 +539,8 @@ def test_extract():
     #       UErrorCode &errorCode
     # )
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
-        utf8 = "a[\x5C\uFF71\u2160"
-        sjis = b"\x61\x5B\x5C\xB1\x87\x54"  # utf8.encode("cp932")
+        utf8 = "a[\x5c\uff71\u2160"
+        sjis = b"\x61\x5b\x5c\xb1\x87\x54"  # utf8.encode("cp932")
         test1 = UnicodeString(utf8, "utf-8")
         dest = test1.extract(cnv)
         assert isinstance(dest, bytes)
@@ -681,28 +681,28 @@ def test_extract_between():
 
     dest = test1.extract_between(0, 3)
     assert isinstance(dest, str)
-    assert dest == "a\U0001F338"  # "a\uD83C\uDF38" → "a\U0001F338"
+    assert dest == "a\U0001f338"  # "a\uD83C\uDF38" → "a\U0001F338"
 
     dest = test1.extract_between(0, 4)
     assert isinstance(dest, str)
-    assert dest == "a\U0001F338b"  # "a\uD83C\uDF38b" → "a\U0001F338b"
+    assert dest == "a\U0001f338b"  # "a\uD83C\uDF38b" → "a\U0001F338b"
 
     dest = test1.extract_between(0, 5)
     assert isinstance(dest, str)
     assert (
-        dest == "a\U0001F338b\x00"
+        dest == "a\U0001f338b\x00"
     )  # "a\uD83C\uDF38b\x00" → "a\U0001F338b\x00"
 
     dest = test1.extract_between(0, 6)
     assert isinstance(dest, str)
     assert (
-        dest == "a\U0001F338b\x00c"
+        dest == "a\U0001f338b\x00c"
     )  # "a\uD83C\uDF38b\x00c" → "a\U0001F338b\x00c"
 
     dest = test1.extract_between(0, 1000)
     assert isinstance(dest, str)
     assert (
-        dest == "a\U0001F338b\x00c"
+        dest == "a\U0001f338b\x00c"
     )  # "a\uD83C\uDF38b\x00c" → "a\U0001F338b\x00c"
 
     dest = test1.extract_between(3, 3)
@@ -929,7 +929,7 @@ def test_from_utf32():
 
 
 def test_from_utf8():
-    b1 = b"a\xF0\x9F\x8C\xB8b"
+    b1 = b"a\xf0\x9f\x8c\xb8b"
     expected = "a\U0001f338b"
 
     # static UnicodeString icu::UnicodeString::fromUTF8(StringPiece utf8)
@@ -2323,7 +2323,7 @@ def test_unicode_string():
     test4 = UnicodeString(0x1F338)
     assert test4.is_bogus() is False
     assert test4.is_empty() is False
-    assert test4 == "\U0001F338"
+    assert test4 == "\U0001f338"
 
     # [5]
     # icu::UnicodeString::UnicodeString(const char16_t *text)
@@ -2383,7 +2383,7 @@ def test_unicode_string():
     assert test21.is_empty() is False
     assert test21 == "bar"
 
-    utf8 = "a\U0001F338b"
+    utf8 = "a\U0001f338b"
     utf32be = utf8.encode("utf-32-be")
     test21a = UnicodeString(utf32be, len(utf32be), "utf-32-be")
     assert test21a.is_bogus() is False
