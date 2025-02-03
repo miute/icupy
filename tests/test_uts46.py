@@ -808,7 +808,7 @@ def test_not_std3():
     assert result == src
 
     dest.remove()
-    result = not3.name_to_unicode("a\u2260b\u226Ec\u226Fd", dest, info)
+    result = not3.name_to_unicode("a\u2260b\u226ec\u226fd", dest, info)
     assert info.has_errors() is False
     assert isinstance(result, UnicodeString)
     assert id(result) == id(dest)

@@ -120,14 +120,14 @@ class _TestTrans2(Transliterator):
 def test_adopt_filter():
     id1 = UnicodeString("Halfwidth-Fullwidth", -1)
     test1 = Transliterator.create_instance(id1, UTransDirection.UTRANS_FORWARD)
-    src = UnicodeString("123" "abc" "\uFF71\uFF72\uFF73\uFF74\uFF75", -1)
+    src = UnicodeString("123" "abc" "\uff71\uff72\uff73\uff74\uff75", -1)
 
     text = src.clone()
     test1.transliterate(text)
     assert (
-        text == "\uFF11\uFF12\uFF13"
-        "\uFF41\uFF42\uFF43"
-        "\u30A2\u30A4\u30A6\u30A8\u30AA"
+        text == "\uff11\uff12\uff13"
+        "\uff41\uff42\uff43"
+        "\u30a2\u30a4\u30a6\u30a8\u30aa"
     )
 
     # void icu::Transliterator::adoptFilter(UnicodeFilter *adoptedFilter)
@@ -135,15 +135,15 @@ def test_adopt_filter():
     test1.adopt_filter(uniset)
     text = src.clone()
     test1.transliterate(text)
-    assert text == "123" "\uFF41\uFF42\uFF43" "\u30A2\u30A4\u30A6\u30A8\u30AA"
+    assert text == "123" "\uff41\uff42\uff43" "\u30a2\u30a4\u30a6\u30a8\u30aa"
 
     test1.adopt_filter(None)
     text = src.clone()
     test1.transliterate(text)
     assert (
-        text == "\uFF11\uFF12\uFF13"
-        "\uFF41\uFF42\uFF43"
-        "\u30A2\u30A4\u30A6\u30A8\u30AA"
+        text == "\uff11\uff12\uff13"
+        "\uff41\uff42\uff43"
+        "\u30a2\u30a4\u30a6\u30a8\u30aa"
     )
 
 
@@ -633,13 +633,13 @@ def test_subclass_transliterate():
 def test_transliterate():
     id4 = UnicodeString("Hiragana-Katakana", -1)
     test4 = Transliterator.create_instance(id4, UTransDirection.UTRANS_FORWARD)
-    src = UnicodeString("\u3042\u3044\u3046\u3048\u304A", -1)
+    src = UnicodeString("\u3042\u3044\u3046\u3048\u304a", -1)
 
     # [1]
     # void icu::Transliterator::transliterate(Replaceable &text)
     text = src.clone()
     test4.transliterate(text)
-    assert text == "\u30A2\u30A4\u30A6\u30A8\u30AA"
+    assert text == "\u30a2\u30a4\u30a6\u30a8\u30aa"
 
     # [2]
     # int32_t icu::Transliterator::transliterate(
@@ -649,7 +649,7 @@ def test_transliterate():
     # )
     text = src.clone()
     result = test4.transliterate(text, 1, 3)
-    assert text == "\u3042\u30A4\u30A6\u3048\u304A"
+    assert text == "\u3042\u30a4\u30a6\u3048\u304a"
     assert result == 3
 
     # [3]
@@ -671,7 +671,7 @@ def test_transliterate():
     assert index.context_limit == 6
     assert index.start == 5
     assert index.limit == 5
-    assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
+    assert text == "\u3042\u30a4\u30a6\u30a8_\u304a"
 
     text = src.clone()
     index = UTransPosition(0, 5, 1, 4)
@@ -680,7 +680,7 @@ def test_transliterate():
     assert index.context_limit == 6
     assert index.start == 5
     assert index.limit == 5
-    assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
+    assert text == "\u3042\u30a4\u30a6\u30a8_\u304a"
 
     # [4]
     # void icu::Transliterator::transliterate(
@@ -701,7 +701,7 @@ def test_transliterate():
     assert index.context_limit == 6
     assert index.start == 5
     assert index.limit == 5
-    assert text == "\u3042\u30A4\u30A6\u30A8_\u304A"
+    assert text == "\u3042\u30a4\u30a6\u30a8_\u304a"
 
     # [5]
     # void icu::Transliterator::transliterate(
@@ -721,7 +721,7 @@ def test_transliterate():
     assert index.context_limit == 5
     assert index.start == 4
     assert index.limit == 4
-    assert text == "\u3042\u30A4\u30A6\u30A8\u304A"
+    assert text == "\u3042\u30a4\u30a6\u30a8\u304a"
 
     # UTransPosition.__repr__() -> str
     assert repr(index) == (

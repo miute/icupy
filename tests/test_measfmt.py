@@ -348,7 +348,7 @@ def test_get_unit_display_name():
 
     result = fmt2.get_unit_display_name(MeasureUnit.create_year())
     assert isinstance(result, UnicodeString)
-    assert result == "\u5E74"  # 年
+    assert result == "\u5e74"  # 年
 
 
 def test_parse_object():

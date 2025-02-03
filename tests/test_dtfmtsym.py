@@ -122,8 +122,8 @@ def test_get_era_names():
     assert isinstance(era_names, list)
     assert len(era_names) == 2
     assert all(isinstance(x, UnicodeString) for x in era_names)
-    assert era_names[0] == "\u7D00\u5143\u524D"  # 紀元前
-    assert era_names[1] == "\u897F\u66A6"  # 西暦
+    assert era_names[0] == "\u7d00\u5143\u524d"  # 紀元前
+    assert era_names[1] == "\u897f\u66a6"  # 西暦
 
     # void icu::DateFormatSymbols::setEraNames(
     #       const UnicodeString *eraNames,
@@ -148,8 +148,8 @@ def test_get_eras():
     assert isinstance(eras, list)
     assert len(eras) == 2
     assert all(isinstance(x, UnicodeString) for x in eras)
-    assert eras[0] == "\u7D00\u5143\u524D"  # 紀元前
-    assert eras[1] == "\u897F\u66A6"  # 西暦
+    assert eras[0] == "\u7d00\u5143\u524d"  # 紀元前
+    assert eras[1] == "\u897f\u66a6"  # 西暦
 
     # void icu::DateFormatSymbols::setEras(
     #       const UnicodeString *eras,
@@ -293,8 +293,8 @@ def test_get_quarters():
     assert isinstance(quarters, list)
     assert len(quarters) == 4
     assert all(isinstance(x, UnicodeString) for x in quarters)
-    assert quarters[0] == "\u7B2C1\u56DB\u534A\u671F"  # 第1四半期
-    assert quarters[3] == "\u7B2C4\u56DB\u534A\u671F"  # 第4四半期
+    assert quarters[0] == "\u7b2c1\u56db\u534a\u671f"  # 第1四半期
+    assert quarters[3] == "\u7b2c4\u56db\u534a\u671f"  # 第4四半期
 
     # void icu::DateFormatSymbols::setQuarters(
     #       const UnicodeString *quarters,
@@ -371,8 +371,8 @@ def test_get_short_weekdays():
     assert len(abbrev_weekdays) == 8
     assert all(isinstance(x, UnicodeString) for x in abbrev_weekdays)
     assert len(abbrev_weekdays[0]) == 0
-    assert abbrev_weekdays[1] == "\u65E5"  # 日
-    assert abbrev_weekdays[7] == "\u571F"  # 土
+    assert abbrev_weekdays[1] == "\u65e5"  # 日
+    assert abbrev_weekdays[7] == "\u571f"  # 土
 
     # void icu::DateFormatSymbols::setShortWeekdays(
     #       const UnicodeString *abbrevWeekdays,
@@ -399,8 +399,8 @@ def test_get_weekdays():
     assert len(weekdays1) == 8
     assert all(isinstance(x, UnicodeString) for x in weekdays1)
     assert len(weekdays1[0]) == 0
-    assert weekdays1[1] == "\u65E5\u66DC\u65E5"  # 日曜日
-    assert weekdays1[7] == "\u571F\u66DC\u65E5"  # 土曜日
+    assert weekdays1[1] == "\u65e5\u66dc\u65e5"  # 日曜日
+    assert weekdays1[7] == "\u571f\u66dc\u65e5"  # 土曜日
 
     # [1]
     # void icu::DateFormatSymbols::setWeekdays(
@@ -428,8 +428,8 @@ def test_get_weekdays():
     assert len(weekdays2) == 8
     assert all(isinstance(x, UnicodeString) for x in weekdays2)
     assert len(weekdays2[0]) == 0
-    assert weekdays2[1] == "\u65E5"  # 日
-    assert weekdays2[7] == "\u571F"  # 土
+    assert weekdays2[1] == "\u65e5"  # 日
+    assert weekdays2[7] == "\u571f"  # 土
 
     # [2]
     # void icu::DateFormatSymbols::setWeekdays(

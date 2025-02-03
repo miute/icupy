@@ -83,7 +83,7 @@ def test_compare():
     #       const StringPiece &target,
     #       UErrorCode &status
     # ) const
-    source = "a\uFFFDz".encode()
+    source = "a\ufffdz".encode()
     target = b"a\x80z"
     assert coll.compare_utf8(source, target) == UCollationResult.UCOL_EQUAL
 

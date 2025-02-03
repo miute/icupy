@@ -68,7 +68,7 @@ def test_api():
     #                                         int32_t *signatureLength,
     #                                         UErrorCode *pErrorCode
     # )
-    source = b"\xEF\xBB\xBF\x41\x42\x43"
+    source = b"\xef\xbb\xbf\x41\x42\x43"
     result = ucnv_detect_unicode_signature(source, len(source))
     assert result == "UTF-8"
     result = ucnv_detect_unicode_signature(source, 2)
@@ -95,7 +95,7 @@ def test_api():
         #                              UConverter *cnv,
         #                              UErrorCode &errorCode
         # )
-        sjis = b"\x61\x5B\x5C\xB1\x87\x54"
+        sjis = b"\x61\x5b\x5c\xb1\x87\x54"
         utf8 = sjis.decode("cp932")
         test1 = UnicodeString(sjis, -1, cnv)  # ibm-943 to utf-8
         source = test1.extract()
@@ -121,7 +121,7 @@ def test_api():
 
         assert ucnv_get_name(cnv) == "ibm-943_P130-1999"
         assert ucnv_get_platform(cnv) == UConverterPlatform.UCNV_IBM
-        assert ucnv_get_subst_chars(cnv) == b"\xFC\xFC"
+        assert ucnv_get_subst_chars(cnv) == b"\xfc\xfc"
         assert ucnv_get_type(cnv) == UConverterType.UCNV_MBCS
 
         uniset = UnicodeSet()
@@ -136,24 +136,24 @@ def test_api():
         ucnv_set_fallback(cnv, True)
         assert ucnv_uses_fallback(cnv) is True
 
-        test2 = UnicodeString("a\uFF71b\U0001f338c", -1)
+        test2 = UnicodeString("a\uff71b\U0001f338c", -1)
         dest = test2.extract(cnv)  # utf-8 to ibm-943
         # dest.decode("cp932") raises UnicodeDecodeError.
-        assert dest == b"a\xB1b\xFC\xFCc"
+        assert dest == b"a\xb1b\xfc\xfcc"
 
         sub = b"?"
         ucnv_set_subst_chars(cnv, sub, len(sub))
         assert ucnv_get_subst_chars(cnv) == sub
 
         dest = test2.extract(cnv)  # utf-8 to ibm-943
-        assert dest.decode("cp932") == "a\uFF71b?c"
+        assert dest.decode("cp932") == "a\uff71b?c"
 
         sub = "<??>"
         ucnv_set_subst_string(cnv, sub, len(sub))
         assert ucnv_get_subst_chars(cnv) == sub.encode()
 
         dest = test2.extract(cnv)  # utf-8 to ibm-943
-        assert dest.decode("cp932") == "a\uFF71b<??>c"
+        assert dest.decode("cp932") == "a\uff71b<??>c"
 
         ucnv_reset(cnv)
         ucnv_reset_from_unicode(cnv)
@@ -262,7 +262,7 @@ def test_deprecated_api():
         return _error_code
 
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
-        test1 = UnicodeString("a\uFF71b\U0001f338c", -1)
+        test1 = UnicodeString("a\uff71b\U0001f338c", -1)
 
         # ucnv_get_from_u_call_back() is deprecated
         with pytest.warns(RuntimeWarning):
@@ -334,7 +334,7 @@ def test_open_package():
 
     with gc(cnv, ucnv_close) as cnv:
         assert ucnv_get_name(cnv) == "test3"
-        assert ucnv_get_subst_chars(cnv) == b"\xFF"
+        assert ucnv_get_subst_chars(cnv) == b"\xff"
 
 
 def test_set_from_ucall_back():
@@ -414,7 +414,7 @@ def test_set_from_ucall_back():
     with gc(ucnv_open("ibm-943c"), ucnv_close) as cnv:
         assert ucnv_get_subst_chars(cnv) == b"\xfc\xfc"
 
-        test1 = UnicodeString("a\uFF71b\U0001f338c", -1)
+        test1 = UnicodeString("a\uff71b\U0001f338c", -1)
 
         dest = test1.extract(cnv)  # utf-8 to ibm-943c
         assert dest == b"a\xb1b\xfc\xfcc"
