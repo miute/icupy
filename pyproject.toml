@@ -1,13 +1,13 @@
 [build-system]
 requires = [
-    "setuptools>=61.0",
+    "setuptools",
     "tomli",
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "icupy"
-version = "0.20.0"
+version = "0.21.0.dev1"
 requires-python = ">=3.9"
 description = "Python bindings for ICU4C"
 authors = [
