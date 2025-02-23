@@ -65,7 +65,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def_static("create_canonical", &Locale::createCanonical, py::arg("name"));
 
-  loc.def_static("create_from_name", &Locale::createFromName, py::arg("name"));
+  loc.def_static("create_from_name", [](const char *name) { return Locale::createFromName(name); }, py::arg("name"));
 
   loc.def("create_keywords", [](const Locale &self) {
     ErrorCode error_code;

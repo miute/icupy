@@ -1939,6 +1939,33 @@ def test_measure_unit_76():
     )
 
 
+@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 77, reason="ICU4C<77")
+def test_measure_unit_77():
+    from icupy.icu import UMeasureUnitComplexity
+
+    unit = MeasureUnit.for_identifier("meter-per-second")
+
+    # MeasureUnit icu::MeasureUnit::withConstantDenominator(
+    #       uint64_t denominator,
+    #       UErrorCode &status
+    # ) const
+    unit = unit.with_constant_denominator(100)
+
+    # uint64_t icu::MeasureUnit::getConstantDenominator(UErrorCode &status) const
+    assert unit.get_constant_denominator() == 100
+
+    assert (
+        unit.get_complexity() == UMeasureUnitComplexity.UMEASURE_UNIT_COMPOUND
+    )
+
+    # static MeasureUnit* icu::MeasureUnit::createPortionPer1E9(UErrorCode &status)
+    unit1 = MeasureUnit.create_portion_per_1e9()
+
+    # static MeasureUnit icu::MeasureUnit::getPortionPer1E9()
+    unit2 = MeasureUnit.get_portion_per_1e9()
+    assert unit1 == unit2
+
+
 @pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
 def test_product():
     # MeasureUnit icu::MeasureUnit::product(
