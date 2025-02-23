@@ -187,11 +187,13 @@ void init_uniset(py::module &m, py::module &ho_ns) {
 
   us.def("__hash__", &UnicodeSet::hashCode);
 
+  /*
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   us.def(
       "__iter__", [](const UnicodeSet &self) { return py::make_iterator(self.begin(), self.end()); },
       py::keep_alive<0, 1>());
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+  */
 
   us.def("__len__", &UnicodeSet::size);
 

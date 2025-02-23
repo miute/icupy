@@ -1749,6 +1749,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 59)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+  mu.def_static("create_portion_per_1e9", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createPortionPer1E9(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static("create_pound", []() {
     ErrorCode error_code;
@@ -2226,6 +2237,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+  mu.def("get_constant_denominator", [](const MeasureUnit &self) {
+    ErrorCode error_code;
+    auto result = self.getConstantDenominator(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_cubic_centimeter", &MeasureUnit::getCubicCentimeter);
 
@@ -2590,7 +2612,13 @@ void init_measunit(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_point", &MeasureUnit::getPoint);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+  mu.def_static("get_portion_per_1e9", &MeasureUnit::getPortionPer1E9);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_pound", &MeasureUnit::getPound);
 
   mu.def_static("get_pound_foot", &MeasureUnit::getPoundFoot);
@@ -2736,6 +2764,20 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+  mu.def(
+      "with_constant_denominator",
+      [](const MeasureUnit &self, uint64_t denominator) {
+        ErrorCode error_code;
+        auto result = self.withConstantDenominator(denominator, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      py::arg("dimensionality"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   mu.def(

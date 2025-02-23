@@ -1,5 +1,14 @@
 # Changelog
 
+## WIP (2025-02-23)
+
+- **NEW**
+  - Add support for [ICU 77.1 RC](https://github.com/unicode-org/icu/releases/tag/release-77-rc)
+    - Add `icupy.icu.MeasureUnit.create_portion_per_1e9()`
+    - Add `icupy.icu.MeasureUnit.get_constant_denominator()`
+    - Add `icupy.icu.MeasureUnit.get_portion_per_1e9()`
+    - Add `icupy.icu.MeasureUnit.with_constant_denominator(denominator: int)`
+
 ## v0.20.0 (2024-10-26)
 
 - **Breaking Changes**
