@@ -48,7 +48,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: build
         run: |
-          sudo apt-get install -y ninja
           curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
           sudo tar zxf ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=${{fromJson(steps.parse-icu-versions.outputs.json).strip-components || 2}}
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
