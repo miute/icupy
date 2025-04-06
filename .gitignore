@@ -183,3 +183,6 @@ tests/**/*.txt
 
 coverage*.info
 htmlcov-cpp/
+
+# VSCode
+.vscode/

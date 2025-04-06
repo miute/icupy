@@ -1,25 +1,16 @@
 [build-system]
-requires = [
-    "setuptools",
-    "tomli",
-]
+requires = ["setuptools", "tomli"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "icupy"
-version = "0.21.0"
+version = "0.22.0.dev1"
 requires-python = ">=3.9"
 description = "Python bindings for ICU4C"
-authors = [
-    { name = "Tetsuya Miura", email = "miute.dev@gmail.com" },
-]
+authors = [{ name = "Tetsuya Miura", email = "miute.dev@gmail.com" }]
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
-keywords = [
-    "icu4c",
-    "unicode",
-    "binding",
-]
+keywords = ["icu4c", "unicode", "binding"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -45,41 +36,22 @@ Repository = "https://github.com/miute/icupy"
 Changelog = "https://github.com/miute/icupy/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
-where = [
-    "src",
-]
+where = ["src"]
 namespaces = false
 
 [tool.pytest.ini_options]
-addopts = [
-    "--tb=short",
-    "-ra",
-    "--color=yes",
-]
-testpaths = [
-    "tests",
-]
+addopts = ["--tb=short", "-ra", "--color=yes"]
+testpaths = ["tests"]
 
 [tool.coverage.run]
-source = [
-    "icupy",
-]
+source = ["icupy"]
 
 [tool.coverage.paths]
-source = [
-    "src/icupy",
-    "*/icupy",
-]
+source = ["src/icupy", "*/icupy"]
 
 [tool.black]
 line-length = 79
-target-version = [
-    "py39",
-    "py310",
-    "py311",
-    "py312",
-    "py313",
-]
+target-version = ["py39", "py310", "py311", "py312", "py313"]
 extend-exclude = """
 ^src/third_party
 """
@@ -90,25 +62,16 @@ multi_line_output = 5
 include_trailing_comma = true
 use_parentheses = true
 ensure_newline_before_comments = true
-extend_skip = [
-    "src/third_party",
-]
+extend_skip = ["src/third_party"]
 
 [tool.flake8]
 max-line-length = 88
-ignore = [
-    "E203",
-    "W503",
-]
-exclude = [
-    "src/third_party",
-]
+ignore = ["E203", "W503"]
+exclude = ["src/third_party"]
 
 [tool.mypy]
 warn_unused_configs = true
 warn_return_any = true
 check_untyped_defs = true
 verbosity = 0
-exclude = [
-    "^src/third_party",
-]
+exclude = ["^src/third_party"]
