@@ -7,7 +7,6 @@
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/miute/icupy/main.svg)](https://results.pre-commit.ci/latest/github/miute/icupy/main)
 [![tests](https://github.com/miute/icupy/actions/workflows/tests.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/tests.yml)
 [![build wheels](https://github.com/miute/icupy/actions/workflows/build.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/miute/icupy/branch/main/graph/badge.svg?token=QCW3K19ARA)](https://codecov.io/gh/miute/icupy)
 
 Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/index.html) using [pybind11](https://github.com/pybind/pybind11).
 
