@@ -30,7 +30,6 @@ jobs:
       - name: Upgrade pip
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
 
       - name: Install dependencies
         run: |
@@ -49,12 +48,11 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: build
         run: |
-          sudo apt-get install -y lcov
           curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
           sudo tar zxf ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=${{fromJson(steps.parse-icu-versions.outputs.json).strip-components || 2}}
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
-          echo "CMAKE_GENERATOR=Unix Makefiles" >> $GITHUB_ENV
+          echo "CMAKE_GENERATOR=Ninja" >> $GITHUB_ENV
 
       - name: Set up requirements (Windows)
         if: startsWith(matrix.os, 'windows')
@@ -70,69 +68,8 @@ jobs:
           }
           echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
 
-      - name: Run tests
+      - name: Run unit tests
         env:
           PLATFORM: ${{matrix.os}}
-        run: |
-          python -m tox -c tox-coverage.ini
-
-      - name: Store coverage data
-        if: matrix.icu-version == steps.parse-icu-versions.outputs.latest-version
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-data-${{matrix.os}}-${{matrix.icu-version}}-${{matrix.python-version}}
-          include-hidden-files: true
-          path: |
-            coverage*.info
-            .coverage*
-
-  report:
-    needs: test
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-
-      - name: Upgrade pip
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --user tox
-
-      - name: Set up requirements
-        run: |
-          sudo apt-get install -y lcov
-
-      - name: Restore coverage data
-        uses: actions/download-artifact@v4
-        with:
-          pattern: coverage-data-*
-          merge-multiple: true
-
-      - name: Report coverage statistics
-        run: |
-          python -m tox -c tox-coverage.ini -e cov,cov-cpp
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-        with:
-          fail_ci_if_error: true
-          files: coverage.xml, coverage-cpp.info
-
-      - name: Store coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: |-
-            coverage.xml
-            coverage-cpp.info
+        run: |-
+          python -m tox
