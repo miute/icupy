@@ -173,7 +173,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 - [Python](https://www.python.org/) >=3.9
 - [ICU4C](https://github.com/unicode-org/icu/releases) [(ICU - The International Components for Unicode)](https://icu.unicode.org/) (>=70 recommended)
 - C++17 compatible compiler (see [supported compilers](https://github.com/pybind/pybind11#supported-compilers))
-- [CMake](https://cmake.org/) >=3.7
+- [CMake](https://cmake.org/) >=3.15
 
 ### Installing prerequisites
 
@@ -184,7 +184,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   - [Python](https://www.python.org/downloads/) >=3.9
   - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=70 recommended)
   - Visual Studio 2015 Update 3 or newer. Visual Studio 2019 or newer recommended
-  - [CMake](https://cmake.org/download/) >=3.7
+  - [CMake](https://cmake.org/download/) >=3.15
     - *Note: Add CMake to the system PATH.*
 
 - Linux
