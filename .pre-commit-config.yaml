@@ -16,6 +16,13 @@ repos:
         args: [--autofix, --no-sort-keys]
         exclude: ^Pipfile.lock
 
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+      - id: taplo-lint
+        args: [--no-schema]
+
   - repo: https://github.com/lyz-code/yamlfix
     rev: 1.17.0
     hooks:
