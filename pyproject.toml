@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools", "tomli"]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "icupy"
@@ -9,12 +9,11 @@ requires-python = ">=3.9"
 description = "Python bindings for ICU4C"
 authors = [{ name = "Tetsuya Miura", email = "miute.dev@gmail.com" }]
 readme = { file = "README.md", content-type = "text/markdown" }
-license = { file = "LICENSE" }
+license = "MIT"
 keywords = ["icu4c", "unicode", "binding"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Programming Language :: C++",
@@ -32,12 +31,31 @@ classifiers = [
 [project.urls]
 ICU = "https://icu.unicode.org/home"
 Download = "https://github.com/miute/icupy/releases"
-Repository = "https://github.com/miute/icupy"
+Source = "https://github.com/miute/icupy"
 Changelog = "https://github.com/miute/icupy/blob/main/CHANGELOG.md"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-namespaces = false
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+cmake.version = ">=3.15"
+ninja.version = ">=1.11"
+ninja.make-fallback = false
+wheel.license-files = ["LICENSE"]
+sdist.exclude = ["*"]
+sdist.include = [
+  "/CHANGELOG*",
+  "/CMakeLists.txt",
+  "/LICENSE*",
+  "/pyproject.toml",
+  "/README*",
+  "/src/icupy/**/*.py",
+  "/src/*.cpp",
+  "/src/*.hpp",
+  "/src/third_party/pybind11/include/",
+  "/src/third_party/pybind11/tools/",
+  "/src/third_party/pybind11/CMakeLists.txt",
+  "/src/third_party/pybind11/LICEN[CS]E*",
+  "/src/third_party/pybind11/README*",
+]
 
 [tool.pytest.ini_options]
 addopts = ["--tb=short", "-ra", "--color=yes"]
