@@ -27,12 +27,16 @@ classifiers = [
   "Topic :: Software Development :: Internationalization",
   "Topic :: Software Development :: Localization",
 ]
+dependencies = []
 
 [project.urls]
 ICU = "https://icu.unicode.org/home"
 Download = "https://github.com/miute/icupy/releases"
 Source = "https://github.com/miute/icupy"
 Changelog = "https://github.com/miute/icupy/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = ["pytest>=8.3.5"]
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
@@ -56,6 +60,9 @@ sdist.include = [
   "/src/third_party/pybind11/LICEN[CS]E*",
   "/src/third_party/pybind11/README*",
 ]
+
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 addopts = ["--tb=short", "-ra", "--color=yes"]
