@@ -91,7 +91,7 @@ extend_skip = ["src/third_party"]
 
 [tool.flake8]
 max-line-length = 88
-ignore = ["E203", "W503"]
+ignore = ["E203", "F824", "W503"]
 exclude = ["src/third_party"]
 
 [tool.mypy]
