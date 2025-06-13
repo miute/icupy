@@ -3,26 +3,17 @@ from __future__ import annotations
 from collections.abc import Iterable
 from functools import partial
 
-# fmt: off
-from icupy.icu import (
-    ucsdet_close, ucsdet_detect, ucsdet_detect_all, ucsdet_enable_input_filter,
-    ucsdet_get_all_detectable_charsets, ucsdet_get_confidence,
-    ucsdet_get_language, ucsdet_get_name, ucsdet_get_uchars,
-    ucsdet_is_input_filter_enabled, ucsdet_open, ucsdet_set_declared_encoding,
-    ucsdet_set_text, uenum_close, uenum_count, uenum_next,
-)
+from icupy import icu
 from icupy.utils import gc
-
-# fmt: on
 
 
 def test_api():
-    with gc(ucsdet_open(), ucsdet_close) as ucsd:
-        en = ucsdet_get_all_detectable_charsets(ucsd)
-        assert uenum_count(en) > 0
-        charsets: Iterable[str] = iter(partial(uenum_next, en), None)
+    with gc(icu.ucsdet_open(), icu.ucsdet_close) as ucsd:
+        en = icu.ucsdet_get_all_detectable_charsets(ucsd)
+        assert icu.uenum_count(en) > 0
+        charsets: Iterable[str] = iter(partial(icu.uenum_next, en), None)
         assert "UTF-8" in charsets
-        uenum_close(en)
+        icu.uenum_close(en)
 
         utf8 = (
             "\u3042\u308b\u65e5\u306e\u66ae\u65b9\u306e\u4e8b\u3067\u3042"
@@ -44,36 +35,34 @@ def test_api():
             "\u306a\u3044\u3002"
         )
 
-        ucsdet_set_text(ucsd, utf8, -1)
-        ucsm = ucsdet_detect(ucsd)
+        icu.ucsdet_set_text(ucsd, utf8, -1)
+        ucsm = icu.ucsdet_detect(ucsd)
         assert ucsm
-        assert len(ucsdet_get_language(ucsm)) == 0
-        assert ucsdet_get_name(ucsm) == "UTF-8"
+        assert len(icu.ucsdet_get_language(ucsm)) == 0
+        assert icu.ucsdet_get_name(ucsm) == "UTF-8"
 
         text_in = utf8.encode("shift_jis")
-        ucsdet_set_text(ucsd, text_in, len(text_in))
-        ucsm = ucsdet_detect(ucsd)
+        icu.ucsdet_set_text(ucsd, text_in, len(text_in))
+        ucsm = icu.ucsdet_detect(ucsd)
         assert ucsm
-        assert ucsdet_get_language(ucsm) == "ja"
-        assert ucsdet_get_name(ucsm) == "Shift_JIS"
+        assert icu.ucsdet_get_language(ucsm) == "ja"
+        assert icu.ucsdet_get_name(ucsm) == "Shift_JIS"
 
-        matches = ucsdet_detect_all(ucsd)
+        matches = icu.ucsdet_detect_all(ucsd)
         assert isinstance(matches, list)
         assert len(matches) > 0
-        assert ucsdet_get_confidence(matches[0]) == 100
+        assert icu.ucsdet_get_confidence(matches[0]) == 100
         if len(matches) >= 2:
-            assert ucsdet_get_confidence(matches[0]) > ucsdet_get_confidence(
-                matches[1]
-            )
-        assert ucsdet_get_language(matches[0]) == "ja"
-        assert ucsdet_get_name(matches[0]) == "Shift_JIS"
+            assert icu.ucsdet_get_confidence(matches[0]) > icu.ucsdet_get_confidence(matches[1])
+        assert icu.ucsdet_get_language(matches[0]) == "ja"
+        assert icu.ucsdet_get_name(matches[0]) == "Shift_JIS"
 
-        buf = ucsdet_get_uchars(matches[0])
+        buf = icu.ucsdet_get_uchars(matches[0])
         assert isinstance(buf, str)
         assert buf == utf8
 
-        assert ucsdet_is_input_filter_enabled(ucsd) is False
-        assert ucsdet_enable_input_filter(ucsd, True) is False
-        assert ucsdet_is_input_filter_enabled(ucsd) is True
+        assert icu.ucsdet_is_input_filter_enabled(ucsd) is False
+        assert icu.ucsdet_enable_input_filter(ucsd, True) is False
+        assert icu.ucsdet_is_input_filter_enabled(ucsd) is True
 
-        ucsdet_set_declared_encoding(ucsd, "UTF-8", -1)
+        icu.ucsdet_set_declared_encoding(ucsd, "UTF-8", -1)

@@ -3,14 +3,14 @@ from __future__ import annotations
 import copy
 from collections.abc import Iterable
 
-from icupy.icu import Locale, StringEnumeration, UnicodeString
+from icupy import icu
 
 
 def test_clone():
     # StringEnumeration *icu::Locale::createKeywords(UErrorCode &status)
-    loc = Locale("de@calendar=buddhist;collation=phonebook")
+    loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it1 = loc.create_keywords()
-    assert isinstance(it1, StringEnumeration)
+    assert isinstance(it1, icu.StringEnumeration)
 
     # int32_t icu::StringEnumeration::count(UErrorCode &status)
     assert it1.count() == len(it1) == 2
@@ -23,7 +23,7 @@ def test_clone():
 
     # StringEnumeration *icu::StringEnumeration::clone()
     it2 = it1.clone()
-    assert isinstance(it2, StringEnumeration)
+    assert isinstance(it2, icu.StringEnumeration)
     assert len(it2) == 2
     assert it2.next() is not None
     assert it2.next() is None
@@ -47,9 +47,9 @@ def test_clone():
 
 
 def test_next():
-    loc = Locale("de@calendar=buddhist;collation=phonebook")
+    loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, icu.StringEnumeration)
     assert it.count() == 2
     assert len(it) == 2
 
@@ -79,13 +79,13 @@ def test_next():
 
 
 def test_operator():
-    loc1 = Locale("de@calendar=buddhist;collation=phonebook")
+    loc1 = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it1 = loc1.create_keywords()
-    assert isinstance(it1, StringEnumeration)
+    assert isinstance(it1, icu.StringEnumeration)
 
     loc2 = loc1.clone()
     it2 = loc2.create_keywords()
-    assert isinstance(it2, StringEnumeration)
+    assert isinstance(it2, icu.StringEnumeration)
 
     # UBool icu::StringEnumeration::operator!=(const StringEnumeration &that)
     assert not (it1 != it2)
@@ -95,9 +95,9 @@ def test_operator():
 
 
 def test_reset():
-    loc = Locale("de@calendar=buddhist;collation=phonebook")
+    loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, icu.StringEnumeration)
     assert it.count() == 2
     assert len(it) == 2
 
@@ -111,41 +111,41 @@ def test_reset():
 
 
 def test_snext():
-    loc = Locale("de@calendar=buddhist;collation=phonebook")
+    loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, icu.StringEnumeration)
     assert it.count() == 2
     assert len(it) == 2
 
     # const UnicodeString *icu::StringEnumeration::snext(UErrorCode &status)
     result = it.snext()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert str(result) in ["calendar", "collation"]
 
     result = it.snext()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert str(result) in ["calendar", "collation"]
 
     result = it.snext()
     assert result is None
 
-    assert UnicodeString("calendar", -1) in it
-    assert UnicodeString("collation", -1) in it
+    assert icu.UnicodeString("calendar", -1) in it
+    assert icu.UnicodeString("collation", -1) in it
 
     it.reset()
-    y: Iterable[UnicodeString] = iter(it.snext, None)
-    t: list[UnicodeString] = [x.clone() for x in y]
+    y: Iterable[icu.UnicodeString] = iter(it.snext, None)
+    t: list[icu.UnicodeString] = [x.clone() for x in y]
     assert len(t) == 2
-    assert all(isinstance(x, UnicodeString) for x in t)
+    assert all(isinstance(x, icu.UnicodeString) for x in t)
     t2 = [str(x) for x in t]
     assert "calendar" in t2
     assert "collation" in t2
 
 
 def test_unext():
-    loc = Locale("de@calendar=buddhist;collation=phonebook")
+    loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, icu.StringEnumeration)
     assert it.count() == 2
     assert len(it) == 2
 
@@ -168,7 +168,7 @@ def test_unext():
     assert "collation" in it
 
     it.reset()
-    y: Iterable[UnicodeString] = iter(it.unext, None)
+    y: Iterable[icu.UnicodeString] = iter(it.unext, None)
     t = list(y)
     assert len(t) == 2
     assert all(isinstance(x, str) for x in t)

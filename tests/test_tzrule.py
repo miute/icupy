@@ -1,23 +1,19 @@
 import copy
 
-# fmt: off
+from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
-from icupy.icu import (
-    AnnualTimeZoneRule, DateTimeRule, InitialTimeZoneRule,
-    TimeArrayTimeZoneRule, TimeZoneRule, TimeZoneTransition,
-    UCalendarDaysOfWeek, UCalendarMonths, UnicodeString,
-)
-
-# fmt: on
 
 
 def test_annual_time_zone_rule():
-    assert issubclass(AnnualTimeZoneRule, TimeZoneRule)
-    assert isinstance(AnnualTimeZoneRule.MAX_YEAR, int)
-    assert AnnualTimeZoneRule.MAX_YEAR > 0
+    assert issubclass(icu.AnnualTimeZoneRule, icu.TimeZoneRule)
+    assert isinstance(icu.AnnualTimeZoneRule.MAX_YEAR, int)
+    assert icu.AnnualTimeZoneRule.MAX_YEAR > 0
 
-    date_time_rule = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY, 11, 1 * HOUR, DateTimeRule.WALL_TIME
+    date_time_rule = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_FEBRUARY,
+        11,
+        1 * HOUR,
+        icu.DateTimeRule.WALL_TIME,
     )
 
     # [1]
@@ -29,13 +25,13 @@ def test_annual_time_zone_rule():
     #       int32_t startYear,
     #       int32_t endYear
     # )
-    ar1 = AnnualTimeZoneRule(
-        UnicodeString("a1"),
+    ar1 = icu.AnnualTimeZoneRule(
+        icu.UnicodeString("a1"),
         -1 * HOUR,
         1 * HOUR,
         date_time_rule,
         1966,
-        AnnualTimeZoneRule.MAX_YEAR,
+        icu.AnnualTimeZoneRule.MAX_YEAR,
     )
 
     # [2]
@@ -47,24 +43,24 @@ def test_annual_time_zone_rule():
     #       int32_t startYear,
     #       int32_t endYear
     # )
-    ar2 = AnnualTimeZoneRule(
-        UnicodeString("a2"),
+    ar2 = icu.AnnualTimeZoneRule(
+        icu.UnicodeString("a2"),
         -1 * HOUR,
         1 * HOUR,
         date_time_rule.clone(),
         1966,
-        AnnualTimeZoneRule.MAX_YEAR,
+        icu.AnnualTimeZoneRule.MAX_YEAR,
     )
 
     # [3]
     # icu::AnnualTimeZoneRule::AnnualTimeZoneRule(
     #       const AnnualTimeZoneRule &source
     # )
-    ar3 = AnnualTimeZoneRule(ar1)
+    ar3 = icu.AnnualTimeZoneRule(ar1)
 
     # AnnualTimeZoneRule *icu::AnnualTimeZoneRule::clone()
     ar4 = ar1.clone()
-    assert isinstance(ar4, AnnualTimeZoneRule)
+    assert isinstance(ar4, icu.AnnualTimeZoneRule)
 
     # AnnualTimeZoneRule.__copy__() -> AnnualTimeZoneRule
     # AnnualTimeZoneRule.__deepcopy__(Optional[memo]) -> AnnualTimeZoneRule
@@ -73,9 +69,9 @@ def test_annual_time_zone_rule():
     assert ar4 == ar4a == ar4b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
-    name = UnicodeString()
+    name = icu.UnicodeString()
     result = ar1.get_name(name)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(name)
     assert result == "a1"
 
@@ -86,7 +82,7 @@ def test_annual_time_zone_rule():
     assert ar1.get_dst_savings() == 1 * HOUR
 
     # int32_t icu::AnnualTimeZoneRule::getEndYear(void)
-    assert ar1.get_end_year() == AnnualTimeZoneRule.MAX_YEAR
+    assert ar1.get_end_year() == icu.AnnualTimeZoneRule.MAX_YEAR
 
     # const DateTimeRule *icu::AnnualTimeZoneRule::getRule(void)
     assert ar1.get_rule() == date_time_rule
@@ -177,12 +173,15 @@ def test_date_time_rule():
     #       int32_t millisInDay,
     #       TimeRuleType timeType
     # )
-    dr1 = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY, 11, 1 * HOUR, DateTimeRule.WALL_TIME
+    dr1 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_FEBRUARY,
+        11,
+        1 * HOUR,
+        icu.DateTimeRule.WALL_TIME,
     )
 
     # DateRuleType icu::DateTimeRule::getDateRuleType(void)
-    assert dr1.get_date_rule_type() == DateTimeRule.DOM
+    assert dr1.get_date_rule_type() == icu.DateTimeRule.DOM
 
     # int32_t icu::DateTimeRule::getRuleDayOfMonth(void)
     assert dr1.get_rule_day_of_month() == 11
@@ -194,13 +193,13 @@ def test_date_time_rule():
     assert dr1.get_rule_millis_in_day() == 1 * HOUR
 
     # int32_t icu::DateTimeRule::getRuleMonth(void)
-    assert dr1.get_rule_month() == UCalendarMonths.UCAL_FEBRUARY
+    assert dr1.get_rule_month() == icu.UCalendarMonths.UCAL_FEBRUARY
 
     # int32_t icu::DateTimeRule::getRuleWeekInMonth(void)
     assert dr1.get_rule_week_in_month() == 0
 
     # TimeRuleType icu::DateTimeRule::getTimeRuleType(void)
-    assert dr1.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr1.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [2]
     # icu::DateTimeRule::DateTimeRule(
@@ -210,20 +209,20 @@ def test_date_time_rule():
     #       int32_t millisInDay,
     #       TimeRuleType timeType
     # )
-    dr2 = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY,
+    dr2 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_FEBRUARY,
         -1,
-        UCalendarDaysOfWeek.UCAL_SATURDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SATURDAY,
         1 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    assert dr2.get_date_rule_type() == DateTimeRule.DOW
+    assert dr2.get_date_rule_type() == icu.DateTimeRule.DOW
     assert dr2.get_rule_day_of_month() == 0
-    assert dr2.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SATURDAY
+    assert dr2.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_SATURDAY
     assert dr2.get_rule_millis_in_day() == 1 * HOUR
-    assert dr2.get_rule_month() == UCalendarMonths.UCAL_FEBRUARY
+    assert dr2.get_rule_month() == icu.UCalendarMonths.UCAL_FEBRUARY
     assert dr2.get_rule_week_in_month() == -1
-    assert dr2.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr2.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [3]
     # icu::DateTimeRule::DateTimeRule(
@@ -234,36 +233,36 @@ def test_date_time_rule():
     #       int32_t millisInDay,
     #       TimeRuleType timeType
     # )
-    dr3 = DateTimeRule(
-        UCalendarMonths.UCAL_FEBRUARY,
+    dr3 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_FEBRUARY,
         11,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         True,
         1 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    assert dr3.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
+    assert dr3.get_date_rule_type() == icu.DateTimeRule.DOW_GEQ_DOM
     assert dr3.get_rule_day_of_month() == 11
-    assert dr3.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SUNDAY
+    assert dr3.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_SUNDAY
     assert dr3.get_rule_millis_in_day() == 1 * HOUR
-    assert dr3.get_rule_month() == UCalendarMonths.UCAL_FEBRUARY
+    assert dr3.get_rule_month() == icu.UCalendarMonths.UCAL_FEBRUARY
     assert dr3.get_rule_week_in_month() == 0
-    assert dr3.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr3.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [4]
     # icu::DateTimeRule::DateTimeRule(const DateTimeRule &source)
-    dr4 = DateTimeRule(dr1)
-    assert dr4.get_date_rule_type() == DateTimeRule.DOM
+    dr4 = icu.DateTimeRule(dr1)
+    assert dr4.get_date_rule_type() == icu.DateTimeRule.DOM
     assert dr4.get_rule_day_of_month() == 11
     assert dr4.get_rule_day_of_week() == 0
     assert dr4.get_rule_millis_in_day() == 1 * HOUR
-    assert dr4.get_rule_month() == UCalendarMonths.UCAL_FEBRUARY
+    assert dr4.get_rule_month() == icu.UCalendarMonths.UCAL_FEBRUARY
     assert dr4.get_rule_week_in_month() == 0
-    assert dr4.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr4.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # DateTimeRule *icu::DateTimeRule::clone()
     dr5 = dr1.clone()
-    assert isinstance(dr5, DateTimeRule)
+    assert isinstance(dr5, icu.DateTimeRule)
 
     # DateTimeRule.__copy__() -> DateTimeRule
     # DateTimeRule.__deepcopy__(Optional[memo]) -> DateTimeRule
@@ -306,7 +305,7 @@ def test_date_time_rule():
 
 
 def test_initial_time_zone_rule():
-    assert issubclass(InitialTimeZoneRule, TimeZoneRule)
+    assert issubclass(icu.InitialTimeZoneRule, icu.TimeZoneRule)
 
     # [1]
     # icu::InitialTimeZoneRule::InitialTimeZoneRule(
@@ -314,17 +313,17 @@ def test_initial_time_zone_rule():
     #       int32_t rawOffset,
     #       int32_t dstSavings
     # )
-    ir1 = InitialTimeZoneRule(UnicodeString("i1"), -1 * HOUR, 1 * HOUR)
+    ir1 = icu.InitialTimeZoneRule(icu.UnicodeString("i1"), -1 * HOUR, 1 * HOUR)
 
     # [2]
     # icu::InitialTimeZoneRule::InitialTimeZoneRule(
     #       const InitialTimeZoneRule &source
     # )
-    ir2 = InitialTimeZoneRule(ir1)
+    ir2 = icu.InitialTimeZoneRule(ir1)
 
     # InitialTimeZoneRule *icu::InitialTimeZoneRule::clone()
     ir3 = ir1.clone()
-    assert isinstance(ir3, InitialTimeZoneRule)
+    assert isinstance(ir3, icu.InitialTimeZoneRule)
 
     # InitialTimeZoneRule.__copy__() -> InitialTimeZoneRule
     # InitialTimeZoneRule.__deepcopy__(Optional[memo]) -> InitialTimeZoneRule
@@ -333,9 +332,9 @@ def test_initial_time_zone_rule():
     assert ir3 == ir3a == ir3b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
-    name = UnicodeString()
+    name = icu.UnicodeString()
     result = ir1.get_name(name)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(name)
     assert result == "i1"
 
@@ -395,14 +394,12 @@ def test_initial_time_zone_rule():
 
     # InitialTimeZoneRule.__repr__() -> str
     assert repr(ir1) == (
-        "<InitialTimeZoneRule("
-        "name='i1', raw_offset=-3600000, dst_savings=3600000"
-        ")>"
+        "<InitialTimeZoneRule(name='i1', raw_offset=-3600000, dst_savings=3600000)>"
     )
 
 
 def test_time_array_time_zone_rule():
-    assert issubclass(TimeArrayTimeZoneRule, TimeZoneRule)
+    assert issubclass(icu.TimeArrayTimeZoneRule, icu.TimeZoneRule)
     start_times = [0.0, 10000000.0]
 
     # [1]
@@ -414,24 +411,24 @@ def test_time_array_time_zone_rule():
     #       int32_t numStartTimes,
     #       DateTimeRule::TimeRuleType timeRuleType
     # )
-    tr1 = TimeArrayTimeZoneRule(
-        UnicodeString("t1"),
+    tr1 = icu.TimeArrayTimeZoneRule(
+        icu.UnicodeString("t1"),
         -1 * HOUR,
         1 * HOUR,
         start_times,
         len(start_times),
-        DateTimeRule.UTC_TIME,
+        icu.DateTimeRule.UTC_TIME,
     )
 
     # [2]
     # icu::TimeArrayTimeZoneRule::TimeArrayTimeZoneRule(
     #       const TimeArrayTimeZoneRule &source
     # )
-    tr2 = TimeArrayTimeZoneRule(tr1)
+    tr2 = icu.TimeArrayTimeZoneRule(tr1)
 
     # TimeArrayTimeZoneRule *icu::TimeArrayTimeZoneRule::clone()
     tr3 = tr1.clone()
-    assert isinstance(tr3, TimeArrayTimeZoneRule)
+    assert isinstance(tr3, icu.TimeArrayTimeZoneRule)
 
     # TimeArrayTimeZoneRule.__copy__() -> TimeArrayTimeZoneRule
     # TimeArrayTimeZoneRule.__deepcopy__(Optional[memo])
@@ -441,9 +438,9 @@ def test_time_array_time_zone_rule():
     assert tr3 == tr3a == tr3b
 
     # UnicodeString &icu::TimeZoneRule::getName(UnicodeString &name)
-    name = UnicodeString()
+    name = icu.UnicodeString()
     result = tr1.get_name(name)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(name)
     assert result == "t1"
 
@@ -470,7 +467,7 @@ def test_time_array_time_zone_rule():
     assert valid is False
 
     # DateTimeRule::TimeRuleType icu::TimeArrayTimeZoneRule::getTimeType(void)
-    assert tr1.get_time_type() == DateTimeRule.UTC_TIME
+    assert tr1.get_time_type() == icu.DateTimeRule.UTC_TIME
 
     # UBool icu::TimeArrayTimeZoneRule::getFinalStart(
     #       int32_t prevRawOffset,
@@ -536,26 +533,24 @@ def test_time_array_time_zone_rule():
 
 
 def test_time_zone_transition():
-    date_time_rule1 = DateTimeRule(
-        UCalendarMonths.UCAL_JULY,
+    date_time_rule1 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_JULY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    date_time_rule2 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY,
+    date_time_rule2 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_JANUARY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    from_ = AnnualTimeZoneRule(
-        "from", 0, 0, date_time_rule1, 0, AnnualTimeZoneRule.MAX_YEAR
+    from_ = icu.AnnualTimeZoneRule(
+        "from", 0, 0, date_time_rule1, 0, icu.AnnualTimeZoneRule.MAX_YEAR
     )
-    to = AnnualTimeZoneRule(
-        "to", 0, 0, date_time_rule2, 0, AnnualTimeZoneRule.MAX_YEAR
-    )
+    to = icu.AnnualTimeZoneRule("to", 0, 0, date_time_rule2, 0, icu.AnnualTimeZoneRule.MAX_YEAR)
     time = 1230681600000.0  # 2008-12-31T00:00:00
 
     # [1]
@@ -564,21 +559,21 @@ def test_time_zone_transition():
     #       const TimeZoneRule &from,
     #       const TimeZoneRule &to
     # )
-    tzt1 = TimeZoneTransition(time, from_, to)
+    tzt1 = icu.TimeZoneTransition(time, from_, to)
 
     # [2]
     # icu::TimeZoneTransition::TimeZoneTransition()
-    tzt2 = TimeZoneTransition()
+    tzt2 = icu.TimeZoneTransition()
 
     # [3]
     # icu::TimeZoneTransition::TimeZoneTransition(
     #       const TimeZoneTransition &source
     # )
-    tzt3 = TimeZoneTransition(tzt2)
+    tzt3 = icu.TimeZoneTransition(tzt2)
 
     # TimeZoneTransition *icu::TimeZoneTransition::clone()
     tzt4 = tzt1.clone()
-    assert isinstance(tzt4, TimeZoneTransition)
+    assert isinstance(tzt4, icu.TimeZoneTransition)
 
     # TimeZoneTransition.__copy__() -> TimeZoneTransition
     # TimeZoneTransition.__deepcopy__(Optional[memo]) -> TimeZoneTransition
@@ -588,7 +583,7 @@ def test_time_zone_transition():
 
     # const TimeZoneRule *icu::TimeZoneTransition::getFrom(void)
     result = tzt1.get_from()
-    assert isinstance(result, AnnualTimeZoneRule)
+    assert isinstance(result, icu.AnnualTimeZoneRule)
     assert result == from_
 
     assert tzt2.get_from() is None
@@ -599,7 +594,7 @@ def test_time_zone_transition():
 
     # const TimeZoneRule *icu::TimeZoneTransition::getTo(void)
     result = tzt1.get_to()
-    assert isinstance(result, AnnualTimeZoneRule)
+    assert isinstance(result, icu.AnnualTimeZoneRule)
     assert result == to
 
     assert tzt2.get_to() is None

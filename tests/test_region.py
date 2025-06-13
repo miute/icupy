@@ -1,17 +1,15 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 51:
+if icu.U_ICU_VERSION_MAJOR_NUM < 51:
     pytest.skip("ICU4C<51", allow_module_level=True)
-
-from icupy.icu import Region, StringEnumeration, URegionType
 
 
 def test_api():
-    world = Region.get_instance("001")
-    continent = Region.get_instance("039")  # Southern Europe
-    territory = Region.get_instance("IT")  # Italy
+    world = icu.Region.get_instance("001")
+    continent = icu.Region.get_instance("039")  # Southern Europe
+    territory = icu.Region.get_instance("IT")  # Italy
 
     # UBool icu::Region::contains(const Region &other)
     assert territory.contains(continent) is False
@@ -27,16 +25,16 @@ def test_api():
     assert result is None
 
     result = territory.get_containing_region()
-    assert isinstance(result, Region)
+    assert isinstance(result, icu.Region)
     assert result.contains(territory) is True
 
     # [2]
     # const Region *icu::Region::getContainingRegion(URegionType type)
-    result = world.get_containing_region(URegionType.URGN_CONTINENT)
+    result = world.get_containing_region(icu.URegionType.URGN_CONTINENT)
     assert result is None
 
-    result = territory.get_containing_region(URegionType.URGN_CONTINENT)
-    assert isinstance(result, Region)
+    result = territory.get_containing_region(icu.URegionType.URGN_CONTINENT)
+    assert isinstance(result, icu.Region)
 
     # int32_t icu::Region::getNumericCode()
     assert world.get_numeric_code() == 1
@@ -57,12 +55,12 @@ def test_api():
     assert result == "IT"
 
     # URegionType icu::Region::getType()
-    assert world.get_type() == URegionType.URGN_WORLD
-    assert continent.get_type() == URegionType.URGN_SUBCONTINENT
-    assert territory.get_type() == URegionType.URGN_TERRITORY
+    assert world.get_type() == icu.URegionType.URGN_WORLD
+    assert continent.get_type() == icu.URegionType.URGN_SUBCONTINENT
+    assert territory.get_type() == icu.URegionType.URGN_TERRITORY
 
     # bool icu::Region::operator!=(const Region &that)
-    region = Region.get_instance(380)
+    region = icu.Region.get_instance(380)
     assert continent != territory
     assert continent != region
     assert not (territory != region)
@@ -73,22 +71,22 @@ def test_api():
     assert territory == region
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
 def test_api_55():
     # static StringEnumeration *icu::Region::getAvailable(
     #       URegionType type,
     #       UErrorCode &status
     # )
-    territories = Region.get_available(URegionType.URGN_GROUPING)
-    assert isinstance(territories, StringEnumeration)
+    territories = icu.Region.get_available(icu.URegionType.URGN_GROUPING)
+    assert isinstance(territories, icu.StringEnumeration)
     assert len(territories) > 0
 
-    world = Region.get_instance("001")
+    world = icu.Region.get_instance("001")
 
     # [1]
     # StringEnumeration *icu::Region::getContainedRegions(UErrorCode &status)
     territories = world.get_contained_regions()
-    assert isinstance(territories, StringEnumeration)
+    assert isinstance(territories, icu.StringEnumeration)
     assert len(territories) > 0
 
     # [2]
@@ -96,17 +94,17 @@ def test_api_55():
     #       URegionType type,
     #       UErrorCode &status
     # )
-    territories = world.get_contained_regions(URegionType.URGN_TERRITORY)
-    assert isinstance(territories, StringEnumeration)
+    territories = world.get_contained_regions(icu.URegionType.URGN_TERRITORY)
+    assert isinstance(territories, icu.StringEnumeration)
     assert len(territories) > 0
 
     # StringEnumeration *icu::Region::getPreferredValues(UErrorCode &status)
     territories = world.get_preferred_values()
     assert territories is None
 
-    grouping = Region.get_instance("SU")
+    grouping = icu.Region.get_instance("SU")
     territories = grouping.get_preferred_values()
-    assert isinstance(territories, StringEnumeration)
+    assert isinstance(territories, icu.StringEnumeration)
     assert len(territories) > 0
 
 
@@ -116,13 +114,13 @@ def test_get_instance():
     #       const char *region_code,
     #       UErrorCode &status
     # )
-    region = Region.get_instance("EU")
-    assert isinstance(region, Region)
+    region = icu.Region.get_instance("EU")
+    assert isinstance(region, icu.Region)
 
     # [2]
     # static const Region *icu::Region::getInstance(
     #       int32_t code,
     #       UErrorCode &status
     # )
-    region = Region.get_instance(967)
-    assert isinstance(region, Region)
+    region = icu.Region.get_instance(967)
+    assert isinstance(region, icu.Region)

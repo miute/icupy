@@ -1,12 +1,6 @@
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, AlphabeticIndex, ConstVoidPtr, Locale,
-    RuleBasedCollator, UAlphabeticIndexLabelType, UnicodeSet, UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def test_add_labels():
@@ -15,15 +9,15 @@ def test_add_labels():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    index = AlphabeticIndex(Locale("en"))
-    result = index.add_labels(Locale("ja", "JP"))
-    assert isinstance(result, AlphabeticIndex)
+    index = icu.AlphabeticIndex(icu.Locale("en"))
+    result = index.add_labels(icu.Locale("ja", "JP"))
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_bucket_count() > 35
 
-    index = AlphabeticIndex(Locale("en"))
+    index = icu.AlphabeticIndex(icu.Locale("en"))
     result = index.add_labels("ja_JP")
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_bucket_count() > 35
 
@@ -32,18 +26,18 @@ def test_add_labels():
     #       const UnicodeSet &additions,
     #       UErrorCode &status
     # )
-    index = AlphabeticIndex(Locale("en"))
-    additions = UnicodeSet()
+    index = icu.AlphabeticIndex(icu.Locale("en"))
+    additions = icu.UnicodeSet()
     additions.add(0x410).add(0x415)
     result = index.add_labels(additions)
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     # underflow, A-Z, inflow, 2 Cyrillic, overflow
     assert index.get_bucket_count() == 31
 
 
 def test_add_record():
-    index = AlphabeticIndex(Locale.get_english())
+    index = icu.AlphabeticIndex(icu.Locale.get_english())
     obj3 = index
     obj4 = {"AlphabeticIndex": index}
 
@@ -58,22 +52,22 @@ def test_add_record():
     #       const void *data,
     #       UErrorCode &status
     # )
-    result = index.add_record(UnicodeString("Adam"), None)
-    assert isinstance(result, AlphabeticIndex)
+    result = index.add_record(icu.UnicodeString("Adam"), None)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
     result = index.add_record("Baker", None)
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
-    data3 = ConstVoidPtr(obj3)
-    result = index.add_record(UnicodeString("Charlie"), data3)
-    assert isinstance(result, AlphabeticIndex)
+    data3 = icu.ConstVoidPtr(obj3)
+    result = index.add_record(icu.UnicodeString("Charlie"), data3)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
-    data4 = ConstVoidPtr(obj4)
+    data4 = icu.ConstVoidPtr(obj4)
     result = index.add_record("Chad", data4)
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
     # int32_t icu::AlphabeticIndex::getRecordCount(UErrorCode &status)
@@ -83,7 +77,7 @@ def test_add_record():
     #       UErrorCode &status
     # )
     result = index.reset_bucket_iterator()
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
     # int32_t icu::AlphabeticIndex::getBucketRecordCount()
@@ -99,7 +93,7 @@ def test_add_record():
     result = index.get_record_data()
     assert result is None
     result = index.get_record_name()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "Adam"
     assert index.next_record() is False
 
@@ -109,7 +103,7 @@ def test_add_record():
     result = index.get_record_data()
     assert result is None
     result = index.get_record_name()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "Baker"
     assert index.next_record() is False
 
@@ -117,24 +111,24 @@ def test_add_record():
     assert index.get_bucket_record_count() == 2
     assert index.next_record() is True
     result = index.get_record_data()
-    assert isinstance(result, ConstVoidPtr)
+    assert isinstance(result, icu.ConstVoidPtr)
     assert result.to_object() == obj4
     result = index.get_record_name()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "Chad"
 
     assert index.next_record() is True
     result = index.get_record_data()
-    assert isinstance(result, ConstVoidPtr)
+    assert isinstance(result, icu.ConstVoidPtr)
     assert result.to_object() == obj3
     result = index.get_record_name()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "Charlie"
     assert index.next_record() is False
 
     # AlphabeticIndex &icu::AlphabeticIndex::resetRecordIterator()
     result = index.reset_record_iterator()
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
 
     assert index.next_record() is True
@@ -142,7 +136,7 @@ def test_add_record():
 
     # AlphabeticIndex &icu::AlphabeticIndex::clearRecords(UErrorCode &status)
     result = index.clear_records()
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_record_count() == 0
 
@@ -153,8 +147,8 @@ def test_api():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    index = AlphabeticIndex(Locale("en"))
-    index2 = AlphabeticIndex("en")
+    index = icu.AlphabeticIndex(icu.Locale("en"))
+    index2 = icu.AlphabeticIndex("en")
 
     # int32_t icu::AlphabeticIndex::getBucketCount(UErrorCode &status)
     assert index.get_bucket_count() == 28  # A-Z, underflow, overflow
@@ -174,27 +168,24 @@ def test_api():
     #       const UnicodeString &itemName,
     #       UErrorCode &status
     # )
-    assert index.get_bucket_index(UnicodeString("A")) == 1
+    assert index.get_bucket_index(icu.UnicodeString("A")) == 1
     assert index.get_bucket_index("B") == 2
 
     # const UnicodeString &icu::AlphabeticIndex::getBucketLabel()
     result = index.get_bucket_label()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "B"
 
     # UAlphabeticIndexLabelType icu::AlphabeticIndex::getBucketLabelType()
-    assert (
-        index.get_bucket_label_type()
-        == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL
-    )
+    assert index.get_bucket_label_type() == icu.UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL
 
     # const RuleBasedCollator &icu::AlphabeticIndex::getCollator()
     result = index.get_collator()
-    assert isinstance(result, RuleBasedCollator)
+    assert isinstance(result, icu.RuleBasedCollator)
 
     # const UnicodeString &icu::AlphabeticIndex::getInflowLabel()
     result = index.get_inflow_label()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\u2026"  # "…"
 
     # int32_t icu::AlphabeticIndex::getMaxLabelCount()
@@ -202,19 +193,19 @@ def test_api():
 
     # const UnicodeString &icu::AlphabeticIndex::getOverflowLabel()
     result = index.get_overflow_label()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\u2026"  # "…"
 
     # const UnicodeString &icu::AlphabeticIndex::getUnderflowLabel()
     result = index.get_underflow_label()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\u2026"  # "…"
 
     # AlphabeticIndex &icu::AlphabeticIndex::resetBucketIterator(
     #       UErrorCode &status
     # )
     result = index.reset_bucket_iterator()
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.next_bucket() is True
     assert index.get_bucket_index() == 0
@@ -223,13 +214,13 @@ def test_api():
     #       const UnicodeString &inflowLabel,
     #       UErrorCode &status
     # )
-    result = index.set_inflow_label(UnicodeString("I"))
-    assert isinstance(result, AlphabeticIndex)
+    result = index.set_inflow_label(icu.UnicodeString("I"))
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_inflow_label() == "I"
 
     result = index.set_inflow_label("i")
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_inflow_label() == "i"
 
@@ -238,7 +229,7 @@ def test_api():
     #       UErrorCode &status
     # )
     result = index.set_max_label_count(256)
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_max_label_count() == 256
 
@@ -246,13 +237,13 @@ def test_api():
     #       const UnicodeString &overflowLabel,
     #       UErrorCode &status
     # )
-    result = index.set_overflow_label(UnicodeString("O"))
-    assert isinstance(result, AlphabeticIndex)
+    result = index.set_overflow_label(icu.UnicodeString("O"))
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_overflow_label() == "O"
 
     result = index.set_overflow_label("o")
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_overflow_label() == "o"
 
@@ -260,47 +251,45 @@ def test_api():
     #       const UnicodeString &underflowLabel,
     #       UErrorCode &status
     # )
-    result = index.set_underflow_label(UnicodeString("U"))
-    assert isinstance(result, AlphabeticIndex)
+    result = index.set_underflow_label(icu.UnicodeString("U"))
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_underflow_label() == "U"
 
     result = index.set_underflow_label("u")
-    assert isinstance(result, AlphabeticIndex)
+    assert isinstance(result, icu.AlphabeticIndex)
     assert id(result) == id(index)
     assert index.get_underflow_label() == "u"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy.icu import Collator
-
     # [2]
     # icu::AlphabeticIndex::AlphabeticIndex(
     #       RuleBasedCollator *collator,
     #       UErrorCode &status
     # )
-    collator = Collator.create_instance(Locale.get_english())
-    index = AlphabeticIndex(collator)
-    index.add_labels(Locale.get_english())
+    collator = icu.Collator.create_instance(icu.Locale.get_english())
+    index = icu.AlphabeticIndex(collator)
+    index.add_labels(icu.Locale.get_english())
     assert index.get_bucket_count() == 28
 
     # const RuleBasedCollator &icu::AlphabeticIndex::getCollator()
     result = index.get_collator()
-    assert isinstance(result, RuleBasedCollator)
+    assert isinstance(result, icu.RuleBasedCollator)
     assert result == collator
 
     # ImmutableIndex *icu::AlphabeticIndex::buildImmutableIndex(
     #       UErrorCode &errorCode
     # )
     imm_index = index.build_immutable_index()
-    assert isinstance(imm_index, AlphabeticIndex.ImmutableIndex)
+    assert isinstance(imm_index, icu.AlphabeticIndex.ImmutableIndex)
 
     # const Bucket *icu::AlphabeticIndex::ImmutableIndex::getBucket(
     #       int32_t index
     # )
     bucket = imm_index.get_bucket(1)
-    assert isinstance(bucket, AlphabeticIndex.Bucket)
+    assert isinstance(bucket, icu.AlphabeticIndex.Bucket)
 
     # int32_t icu::AlphabeticIndex::ImmutableIndex::getBucketCount()
     assert imm_index.get_bucket_count() == 28
@@ -309,16 +298,13 @@ def test_api_51():
     #       const UnicodeString &name,
     #       UErrorCode &errorCode
     # )
-    assert imm_index.get_bucket_index(UnicodeString("A")) == 1
+    assert imm_index.get_bucket_index(icu.UnicodeString("A")) == 1
     assert imm_index.get_bucket_index("B") == 2
 
     # const UnicodeString &icu::AlphabeticIndex::Bucket::getLabel()
     result = bucket.get_label()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "A"
 
     # UAlphabeticIndexLabelType icu::AlphabeticIndex::Bucket::getLabelType()
-    assert (
-        bucket.get_label_type()
-        == UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL
-    )
+    assert bucket.get_label_type() == icu.UAlphabeticIndexLabelType.U_ALPHAINDEX_NORMAL

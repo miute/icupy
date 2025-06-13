@@ -1,21 +1,13 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 53:
+if icu.U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
-
-# fmt: off
-from icupy.icu import (
-    DecimalFormat, Locale, NumberFormat, RelativeDateTimeFormatter,
-    UDateAbsoluteUnit, UDateDirection, UDateRelativeUnit, UnicodeString,
-)
-
-# fmt: on
 
 
 def test_api():
-    fmt = RelativeDateTimeFormatter("en")
+    fmt = icu.RelativeDateTimeFormatter("en")
 
     # UnicodeString &icu::RelativeDateTimeFormatter::combineDateAndTime(
     #       const UnicodeString &relativeDateString,
@@ -23,70 +15,61 @@ def test_api():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     result = fmt.combine_date_and_time(
-        UnicodeString("yesterday"), UnicodeString("3:50"), append_to
+        icu.UnicodeString("yesterday"), icu.UnicodeString("3:50"), append_to
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "yesterday, 3:50"
 
     append_to.remove()
-    result = fmt.combine_date_and_time(
-        "yesterday", UnicodeString("3:50"), append_to
-    )
-    assert isinstance(result, UnicodeString)
+    result = fmt.combine_date_and_time("yesterday", icu.UnicodeString("3:50"), append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "yesterday, 3:50"
 
     append_to.remove()
-    result = fmt.combine_date_and_time(
-        UnicodeString("yesterday"), "3:50", append_to
-    )
-    assert isinstance(result, UnicodeString)
+    result = fmt.combine_date_and_time(icu.UnicodeString("yesterday"), "3:50", append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "yesterday, 3:50"
 
     append_to.remove()
     result = fmt.combine_date_and_time("yesterday", "3:50", append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "yesterday, 3:50"
 
     # const NumberFormat &icu::RelativeDateTimeFormatter::getNumberFormat()
     numfmt = fmt.get_number_format()
-    assert isinstance(numfmt, NumberFormat)
+    assert isinstance(numfmt, icu.NumberFormat)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_api_54():
-    from icupy.icu import UDateRelativeDateTimeFormatterStyle, UDisplayContext
-
-    fmt = RelativeDateTimeFormatter(
+    fmt = icu.RelativeDateTimeFormatter(
         "en",
         None,
-        UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_NARROW,
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE,
+        icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_NARROW,
+        icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE,
     )
 
     # UDisplayContext
     # icu::RelativeDateTimeFormatter::getCapitalizationContext()
     result = fmt.get_capitalization_context()
-    assert isinstance(result, UDisplayContext)
-    assert (
-        result
-        == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
-    )
+    assert isinstance(result, icu.UDisplayContext)
+    assert result == icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
 
     # UDateRelativeDateTimeFormatterStyle
     # icu::RelativeDateTimeFormatter::getFormatStyle()
     result = fmt.get_format_style()
-    assert isinstance(result, UDateRelativeDateTimeFormatterStyle)
-    assert result == UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_NARROW
+    assert isinstance(result, icu.UDateRelativeDateTimeFormatterStyle)
+    assert result == icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_NARROW
 
 
 def test_format():
-    fmt = RelativeDateTimeFormatter("en")
+    fmt = icu.RelativeDateTimeFormatter("en")
 
     # [2]
     # UnicodeString &icu::RelativeDateTimeFormatter::format(
@@ -96,25 +79,25 @@ def test_format():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     result = fmt.format(
         0.5,
-        UDateDirection.UDAT_DIRECTION_LAST,
-        UDateRelativeUnit.UDAT_RELATIVE_SECONDS,
+        icu.UDateDirection.UDAT_DIRECTION_LAST,
+        icu.UDateRelativeUnit.UDAT_RELATIVE_SECONDS,
         append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "0.5 seconds ago"
 
     append_to.remove()
     result = fmt.format(
         1,
-        UDateDirection.UDAT_DIRECTION_LAST,
-        UDateRelativeUnit.UDAT_RELATIVE_SECONDS,
+        icu.UDateDirection.UDAT_DIRECTION_LAST,
+        icu.UDateRelativeUnit.UDAT_RELATIVE_SECONDS,
         append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1 second ago"
 
@@ -127,20 +110,18 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(
-        UDateDirection.UDAT_DIRECTION_NEXT,
-        UDateAbsoluteUnit.UDAT_ABSOLUTE_DAY,
+        icu.UDateDirection.UDAT_DIRECTION_NEXT,
+        icu.UDateAbsoluteUnit.UDAT_ABSOLUTE_DAY,
         append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "tomorrow"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
 def test_format_57():
-    from icupy.icu import URelativeDateTimeUnit
-
-    fmt = RelativeDateTimeFormatter("en")
+    fmt = icu.RelativeDateTimeFormatter("en")
 
     # [1]
     # UnicodeString &icu::RelativeDateTimeFormatter::format(
@@ -149,28 +130,22 @@ def test_format_57():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
-    result = fmt.format(
-        0.5, URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to
-    )
-    assert isinstance(result, UnicodeString)
+    append_to = icu.UnicodeString()
+    result = fmt.format(0.5, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "in 0.5 seconds"
 
     append_to.remove()
-    result = fmt.format(
-        1, URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to
-    )
-    assert isinstance(result, UnicodeString)
+    result = fmt.format(1, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "in 1 second"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
 def test_format_numeric():
-    from icupy.icu import URelativeDateTimeUnit
-
-    fmt = RelativeDateTimeFormatter("en-US")
+    fmt = icu.RelativeDateTimeFormatter("en-US")
 
     # UnicodeString &icu::RelativeDateTimeFormatter::formatNumeric(
     #       double offset,
@@ -178,44 +153,30 @@ def test_format_numeric():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
-    result = fmt.format_numeric(
-        0.5, URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to
-    )
-    assert isinstance(result, UnicodeString)
+    append_to = icu.UnicodeString()
+    result = fmt.format_numeric(0.5, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "in 0.5 seconds"
 
     append_to.remove()
-    result = fmt.format_numeric(
-        1, URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to
-    )
-    assert isinstance(result, UnicodeString)
+    result = fmt.format_numeric(1, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_SECOND, append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "in 1 second"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_numeric_to_value():
-    # fmt: off
-    from icupy.icu import (
-        ConstrainedFieldPosition, FormattedRelativeDateTime, FormattedValue,
-        ICUError, UErrorCode, UFieldCategory, UnicodeStringAppendable,
-        UNumberFormatFields, URelativeDateTimeFormatterField,
-        URelativeDateTimeUnit,
-    )
-
-    # fmt: on
-
-    assert issubclass(FormattedRelativeDateTime, FormattedValue)
+    assert issubclass(icu.FormattedRelativeDateTime, icu.FormattedValue)
 
     # icu::FormattedRelativeDateTime::FormattedRelativeDateTime()
-    fv = FormattedRelativeDateTime()
-    with pytest.raises(ICUError) as exc_info:
+    fv = icu.FormattedRelativeDateTime()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fv.to_string()
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_STATE_ERROR
 
-    fmt = RelativeDateTimeFormatter("en-US")
+    fmt = icu.RelativeDateTimeFormatter("en-US")
 
     # FormattedRelativeDateTime
     # icu::RelativeDateTimeFormatter::formatNumericToValue(
@@ -223,19 +184,17 @@ def test_format_numeric_to_value():
     #       URelativeDateTimeUnit unit,
     #       UErrorCode &status
     # )
-    fv = fmt.format_numeric_to_value(
-        1.5, URelativeDateTimeUnit.UDAT_REL_UNIT_WEEK
-    )
-    assert isinstance(fv, FormattedRelativeDateTime)
+    fv = fmt.format_numeric_to_value(1.5, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_WEEK)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
 
     # Appendable &icu::FormattedRelativeDateTime::appendTo(
     #       Appendable &appendable,
     #       UErrorCode &status
     # )
-    s = UnicodeString("x")
-    appendable = UnicodeStringAppendable(s)
+    s = icu.UnicodeString("x")
+    appendable = icu.UnicodeStringAppendable(s)
     result = fv.append_to(appendable)
-    assert isinstance(result, UnicodeStringAppendable)
+    assert isinstance(result, icu.UnicodeStringAppendable)
     assert id(result) == id(appendable)
     assert s == "xin 1.5 weeks"
 
@@ -243,55 +202,35 @@ def test_format_numeric_to_value():
     #       ConstrainedFieldPosition &cfpos,
     #       UErrorCode &status
     # )
-    cfpos = ConstrainedFieldPosition()
+    cfpos = icu.ConstrainedFieldPosition()
     assert fv.next_position(cfpos)
-    assert (
-        cfpos.get_category()
-        == UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
-    )
-    assert (
-        cfpos.get_field()
-        == URelativeDateTimeFormatterField.UDAT_REL_LITERAL_FIELD
-    )
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
+    assert cfpos.get_field() == icu.URelativeDateTimeFormatterField.UDAT_REL_LITERAL_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (0, 2)
 
     assert fv.next_position(cfpos)
-    assert cfpos.get_category() == UFieldCategory.UFIELD_CATEGORY_NUMBER
-    assert cfpos.get_field() == UNumberFormatFields.UNUM_INTEGER_FIELD
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_NUMBER
+    assert cfpos.get_field() == icu.UNumberFormatFields.UNUM_INTEGER_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (3, 4)
 
     assert fv.next_position(cfpos)
-    assert cfpos.get_category() == UFieldCategory.UFIELD_CATEGORY_NUMBER
-    assert (
-        cfpos.get_field() == UNumberFormatFields.UNUM_DECIMAL_SEPARATOR_FIELD
-    )
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_NUMBER
+    assert cfpos.get_field() == icu.UNumberFormatFields.UNUM_DECIMAL_SEPARATOR_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (4, 5)
 
     assert fv.next_position(cfpos)
-    assert cfpos.get_category() == UFieldCategory.UFIELD_CATEGORY_NUMBER
-    assert cfpos.get_field() == UNumberFormatFields.UNUM_FRACTION_FIELD
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_NUMBER
+    assert cfpos.get_field() == icu.UNumberFormatFields.UNUM_FRACTION_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (5, 6)
 
     assert fv.next_position(cfpos)
-    assert (
-        cfpos.get_category()
-        == UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
-    )
-    assert (
-        cfpos.get_field()
-        == URelativeDateTimeFormatterField.UDAT_REL_NUMERIC_FIELD
-    )
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
+    assert cfpos.get_field() == icu.URelativeDateTimeFormatterField.UDAT_REL_NUMERIC_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (3, 6)
 
     assert fv.next_position(cfpos)
-    assert (
-        cfpos.get_category()
-        == UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
-    )
-    assert (
-        cfpos.get_field()
-        == URelativeDateTimeFormatterField.UDAT_REL_LITERAL_FIELD
-    )
+    assert cfpos.get_category() == icu.UFieldCategory.UFIELD_CATEGORY_RELATIVE_DATETIME
+    assert cfpos.get_field() == icu.URelativeDateTimeFormatterField.UDAT_REL_LITERAL_FIELD
     assert (cfpos.get_start(), cfpos.get_limit()) == (7, 12)
 
     assert not fv.next_position(cfpos)
@@ -300,28 +239,24 @@ def test_format_numeric_to_value():
     #       UErrorCode &status
     # )
     result = fv.to_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "in 1.5 weeks"
 
     # UnicodeString icu::FormattedRelativeDateTime::toTempString(
     #       UErrorCode &status
     # )
     result = fv.to_temp_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "in 1.5 weeks"
 
-    fv = fmt.format_numeric_to_value(
-        1, URelativeDateTimeUnit.UDAT_REL_UNIT_WEEK
-    )
-    assert isinstance(fv, FormattedRelativeDateTime)
+    fv = fmt.format_numeric_to_value(1, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_WEEK)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "in 1 week"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_format_to_value():
-    from icupy.icu import FormattedRelativeDateTime, URelativeDateTimeUnit
-
-    fmt = RelativeDateTimeFormatter("en-US")
+    fmt = icu.RelativeDateTimeFormatter("en-US")
 
     # [1]
     # FormattedRelativeDateTime icu::RelativeDateTimeFormatter::formatToValue(
@@ -329,12 +264,12 @@ def test_format_to_value():
     #       URelativeDateTimeUnit unit,
     #       UErrorCode &status
     # )
-    fv = fmt.format_to_value(1.0, URelativeDateTimeUnit.UDAT_REL_UNIT_DAY)
-    assert isinstance(fv, FormattedRelativeDateTime)
+    fv = fmt.format_to_value(1.0, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_DAY)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "tomorrow"
 
-    fv = fmt.format_to_value(3, URelativeDateTimeUnit.UDAT_REL_UNIT_DAY)
-    assert isinstance(fv, FormattedRelativeDateTime)
+    fv = fmt.format_to_value(3, icu.URelativeDateTimeUnit.UDAT_REL_UNIT_DAY)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "in 3 days"
 
     # [2]
@@ -346,18 +281,18 @@ def test_format_to_value():
     # )
     fv = fmt.format_to_value(
         12.0,
-        UDateDirection.UDAT_DIRECTION_LAST,
-        UDateRelativeUnit.UDAT_RELATIVE_HOURS,
+        icu.UDateDirection.UDAT_DIRECTION_LAST,
+        icu.UDateRelativeUnit.UDAT_RELATIVE_HOURS,
     )
-    assert isinstance(fv, FormattedRelativeDateTime)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "12 hours ago"
 
     fv = fmt.format_to_value(
         12,
-        UDateDirection.UDAT_DIRECTION_LAST,
-        UDateRelativeUnit.UDAT_RELATIVE_HOURS,
+        icu.UDateDirection.UDAT_DIRECTION_LAST,
+        icu.UDateRelativeUnit.UDAT_RELATIVE_HOURS,
     )
-    assert isinstance(fv, FormattedRelativeDateTime)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "12 hours ago"
 
     # [3]
@@ -367,10 +302,10 @@ def test_format_to_value():
     #       UErrorCode &status
     # )
     fv = fmt.format_to_value(
-        UDateDirection.UDAT_DIRECTION_NEXT,
-        UDateAbsoluteUnit.UDAT_ABSOLUTE_MONDAY,
+        icu.UDateDirection.UDAT_DIRECTION_NEXT,
+        icu.UDateAbsoluteUnit.UDAT_ABSOLUTE_MONDAY,
     )
-    assert isinstance(fv, FormattedRelativeDateTime)
+    assert isinstance(fv, icu.FormattedRelativeDateTime)
     assert fv.to_temp_string() == "next Monday"
 
 
@@ -379,15 +314,15 @@ def test_relative_date_time_formatter():
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       UErrorCode &status
     # )
-    fmt1 = RelativeDateTimeFormatter()
+    fmt1 = icu.RelativeDateTimeFormatter()
 
     # [2]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    _ = RelativeDateTimeFormatter(Locale("en"))
-    _ = RelativeDateTimeFormatter("en")
+    _ = icu.RelativeDateTimeFormatter(icu.Locale("en"))
+    _ = icu.RelativeDateTimeFormatter("en")
 
     # [3]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
@@ -395,22 +330,20 @@ def test_relative_date_time_formatter():
     #       NumberFormat *nfToAdopt,
     #       UErrorCode &status
     # )
-    _ = RelativeDateTimeFormatter(Locale("en"), DecimalFormat("0"))
-    _ = RelativeDateTimeFormatter(Locale("en"), None)
-    _ = RelativeDateTimeFormatter("en", DecimalFormat("0"))
-    _ = RelativeDateTimeFormatter("en", None)
+    _ = icu.RelativeDateTimeFormatter(icu.Locale("en"), icu.DecimalFormat("0"))
+    _ = icu.RelativeDateTimeFormatter(icu.Locale("en"), None)
+    _ = icu.RelativeDateTimeFormatter("en", icu.DecimalFormat("0"))
+    _ = icu.RelativeDateTimeFormatter("en", None)
 
     # [5]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       const RelativeDateTimeFormatter &other
     # )
-    _ = RelativeDateTimeFormatter(fmt1)
+    _ = icu.RelativeDateTimeFormatter(fmt1)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_relative_date_time_formatter_54():
-    from icupy.icu import UDateRelativeDateTimeFormatterStyle, UDisplayContext
-
     # [4]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       const Locale &locale,
@@ -419,30 +352,30 @@ def test_relative_date_time_formatter_54():
     #       UDisplayContext capitalizationContext,
     #       UErrorCode &status
     # )
-    _ = RelativeDateTimeFormatter(
-        Locale("en"),
-        DecimalFormat("0"),
-        UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
+    _ = icu.RelativeDateTimeFormatter(
+        icu.Locale("en"),
+        icu.DecimalFormat("0"),
+        icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
+        icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
     )
 
-    _ = RelativeDateTimeFormatter(
-        Locale("en"),
+    _ = icu.RelativeDateTimeFormatter(
+        icu.Locale("en"),
         None,
-        UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
+        icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
+        icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
     )
 
-    _ = RelativeDateTimeFormatter(
+    _ = icu.RelativeDateTimeFormatter(
         "en",
-        DecimalFormat("0"),
-        UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
+        icu.DecimalFormat("0"),
+        icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
+        icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
     )
 
-    _ = RelativeDateTimeFormatter(
+    _ = icu.RelativeDateTimeFormatter(
         "en",
         None,
-        UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
+        icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_LONG,
+        icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_BEGINNING_OF_SENTENCE,
     )

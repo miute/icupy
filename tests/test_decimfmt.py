@@ -2,19 +2,12 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    INT32_MAX, U_ICU_VERSION_MAJOR_NUM, CurrencyPluralInfo, DecimalFormat,
-    DecimalFormatSymbols, FieldPosition, FieldPositionIterator, Formattable,
-    Locale, NumberFormat, ParsePosition, UnicodeString, UParseError,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def test_api():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # UBool icu::DecimalFormat::areSignificantDigitsUsed()
     assert fmt.are_significant_digits_used() is False
@@ -32,21 +25,21 @@ def test_api():
     # void icu::DecimalFormat::setCurrencyPluralInfo(
     #       const CurrencyPluralInfo &info
     # )
-    info = CurrencyPluralInfo(Locale.get_france())
+    info = icu.CurrencyPluralInfo(icu.Locale.get_france())
     fmt.set_currency_plural_info(info)
     result = fmt.get_currency_plural_info()
-    assert isinstance(result, CurrencyPluralInfo)
+    assert isinstance(result, icu.CurrencyPluralInfo)
     assert result == info
 
     # const DecimalFormatSymbols *icu::DecimalFormat::getDecimalFormatSymbols()
     result = fmt.get_decimal_format_symbols()
-    assert isinstance(result, DecimalFormatSymbols)
+    assert isinstance(result, icu.DecimalFormatSymbols)
     assert result == symbols
 
     # void icu::DecimalFormat::setDecimalFormatSymbols(
     #       const DecimalFormatSymbols &symbols
     # )
-    symbols2 = DecimalFormatSymbols(Locale.get_france())
+    symbols2 = icu.DecimalFormatSymbols(icu.Locale.get_france())
     assert symbols != symbols2
     fmt.set_decimal_format_symbols(symbols2)
     assert fmt.get_decimal_format_symbols() == symbols2
@@ -96,14 +89,14 @@ def test_api():
     # UnicodeString &icu::DecimalFormat::getNegativePrefix(
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.get_negative_prefix(result)
-    assert isinstance(output, UnicodeString)
+    assert isinstance(output, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == "-"
 
     # void icu::DecimalFormat::setNegativePrefix(const UnicodeString &newValue)
-    fmt.set_negative_prefix(UnicodeString("\u2212"))
+    fmt.set_negative_prefix(icu.UnicodeString("\u2212"))
     assert fmt.get_negative_prefix(result) == "\u2212"  # "−"
     fmt.set_negative_prefix("\u2212")
     assert fmt.get_negative_prefix(result) == "\u2212"  # "−"
@@ -111,47 +104,47 @@ def test_api():
     # UnicodeString &icu::DecimalFormat::getNegativeSuffix(
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.get_negative_suffix(result)
-    assert isinstance(output, UnicodeString)
+    assert isinstance(output, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == " euros"
 
     # void icu::DecimalFormat::setNegativeSuffix(const UnicodeString &newValue)
-    fmt.set_negative_suffix(UnicodeString("%"))
+    fmt.set_negative_suffix(icu.UnicodeString("%"))
     assert fmt.get_negative_suffix(result) == "%"
     fmt.set_negative_suffix("%")
     assert fmt.get_negative_suffix(result) == "%"
 
     # UnicodeString icu::DecimalFormat::getPadCharacterString()
     result = fmt.get_pad_character_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\x20"
 
     # void icu::DecimalFormat::setPadCharacter(const UnicodeString &padChar)
-    fmt.set_pad_character(UnicodeString("_"))
+    fmt.set_pad_character(icu.UnicodeString("_"))
     assert fmt.get_pad_character_string() == "_"
     fmt.set_pad_character("_")
     assert fmt.get_pad_character_string() == "_"
 
     # EPadPosition icu::DecimalFormat::getPadPosition(void)
-    assert fmt.get_pad_position() == DecimalFormat.PAD_BEFORE_PREFIX
+    assert fmt.get_pad_position() == icu.DecimalFormat.PAD_BEFORE_PREFIX
 
     # void icu::DecimalFormat::setPadPosition(EPadPosition padPos)
-    fmt.set_pad_position(DecimalFormat.PAD_BEFORE_SUFFIX)
-    assert fmt.get_pad_position() == DecimalFormat.PAD_BEFORE_SUFFIX
+    fmt.set_pad_position(icu.DecimalFormat.PAD_BEFORE_SUFFIX)
+    assert fmt.get_pad_position() == icu.DecimalFormat.PAD_BEFORE_SUFFIX
 
     # UnicodeString &icu::DecimalFormat::getPositivePrefix(
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.get_positive_prefix(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert len(result) == 0
 
     # void icu::DecimalFormat::setPositivePrefix(const UnicodeString &newValue)
-    fmt.set_positive_prefix(UnicodeString("+"))
+    fmt.set_positive_prefix(icu.UnicodeString("+"))
     assert fmt.get_positive_prefix(result) == "+"
     fmt.set_positive_prefix("+")
     assert fmt.get_positive_prefix(result) == "+"
@@ -159,14 +152,14 @@ def test_api():
     # UnicodeString &icu::DecimalFormat::getPositiveSuffix(
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.get_positive_suffix(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == " euros"
 
     # void icu::DecimalFormat::setPositiveSuffix(const UnicodeString &newValue)
-    fmt.set_positive_suffix(UnicodeString("_"))
+    fmt.set_positive_suffix(icu.UnicodeString("_"))
     assert fmt.get_positive_suffix(result) == "_"
     fmt.set_positive_suffix("_")
     assert fmt.get_positive_suffix(result) == "_"
@@ -179,11 +172,11 @@ def test_api():
     assert fmt.get_rounding_increment() == 1.2
 
     # ERoundingMode icu::DecimalFormat::getRoundingMode(void)
-    assert fmt.get_rounding_mode() == DecimalFormat.ROUND_HALF_EVEN
+    assert fmt.get_rounding_mode() == icu.DecimalFormat.ROUND_HALF_EVEN
 
     # void icu::DecimalFormat::setRoundingMode(ERoundingMode roundingMode)
-    fmt.set_rounding_mode(DecimalFormat.ROUND_CEILING)
-    assert fmt.get_rounding_mode() == DecimalFormat.ROUND_CEILING
+    fmt.set_rounding_mode(icu.DecimalFormat.ROUND_CEILING)
+    assert fmt.get_rounding_mode() == icu.DecimalFormat.ROUND_CEILING
 
     # int32_t icu::DecimalFormat::getSecondaryGroupingSize(void)
     assert fmt.get_secondary_grouping_size() == 0
@@ -214,7 +207,7 @@ def test_api():
     assert fmt.is_scientific_notation() is False
 
     # UBool icu::DecimalFormat::operator==(const Format &other)
-    fmt2 = DecimalFormat("0", DecimalFormatSymbols(Locale.get_us()))
+    fmt2 = icu.DecimalFormat("0", icu.DecimalFormatSymbols(icu.Locale.get_us()))
     fmt3 = fmt2.clone()
     assert not (fmt == fmt2)
     assert not (fmt == fmt3)
@@ -242,66 +235,62 @@ def test_api():
     fmt.set_minimum_integer_digits(0)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_api_49():
-    from icupy.icu import CurrencyAmount
-
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # CurrencyAmount *icu::DecimalFormat::parseCurrency(
     #       const UnicodeString &text,
     #       ParsePosition &pos
     # )
-    pos = ParsePosition()
-    camt = fmt.parse_currency(UnicodeString("USD-1,234.00"), pos)
+    pos = icu.ParsePosition()
+    camt = fmt.parse_currency(icu.UnicodeString("USD-1,234.00"), pos)
     assert pos.get_error_index() == -1
-    assert isinstance(camt, CurrencyAmount)
+    assert isinstance(camt, icu.CurrencyAmount)
 
-    pos = ParsePosition()
-    camt = fmt.parse_currency(UnicodeString("-1,234.00"), pos)
+    pos = icu.ParsePosition()
+    camt = fmt.parse_currency(icu.UnicodeString("-1,234.00"), pos)
     assert pos.get_error_index() != -1
     assert camt is None
 
-    pos = ParsePosition()
+    pos = icu.ParsePosition()
     camt = fmt.parse_currency("USD-1,234.00", pos)
     assert pos.get_error_index() == -1
-    assert isinstance(camt, CurrencyAmount)
+    assert isinstance(camt, icu.CurrencyAmount)
 
-    pos = ParsePosition()
+    pos = icu.ParsePosition()
     camt = fmt.parse_currency("-1,234.00", pos)
     assert pos.get_error_index() != -1
     assert camt is None
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy.icu import UNumberFormatAttribute
-
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # int32_t icu::DecimalFormat::getAttribute(
     #       UNumberFormatAttribute attr,
     #       UErrorCode &status
     # )
-    assert fmt.get_attribute(UNumberFormatAttribute.UNUM_SCALE) == 0
+    assert fmt.get_attribute(icu.UNumberFormatAttribute.UNUM_SCALE) == 0
 
     # DecimalFormat &icu::DecimalFormat::setAttribute(
     #       UNumberFormatAttribute attr,
     #       int32_t newValue,
     #       UErrorCode &status
     # )
-    result = fmt.set_attribute(UNumberFormatAttribute.UNUM_SCALE, -2)
-    assert isinstance(result, DecimalFormat)
+    result = fmt.set_attribute(icu.UNumberFormatAttribute.UNUM_SCALE, -2)
+    assert isinstance(result, icu.DecimalFormat)
     assert id(result) == id(fmt)
-    assert fmt.get_attribute(UNumberFormatAttribute.UNUM_SCALE) == -2
+    assert fmt.get_attribute(icu.UNumberFormatAttribute.UNUM_SCALE) == -2
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
 def test_api_53():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # void icu::DecimalFormat::setGroupingUsed(UBool newValue)
     fmt.set_grouping_used(True)
@@ -310,22 +299,20 @@ def test_api_53():
     fmt.set_parse_integer_only(True)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
 def test_api_54():
-    from icupy.icu import UCurrencyUsage
-
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # UCurrencyUsage icu::DecimalFormat::getCurrencyUsage()
-    assert fmt.get_currency_usage() == UCurrencyUsage.UCURR_USAGE_STANDARD
+    assert fmt.get_currency_usage() == icu.UCurrencyUsage.UCURR_USAGE_STANDARD
 
     # void icu::DecimalFormat::setCurrencyUsage(
     #       UCurrencyUsage newUsage,
     #       UErrorCode *ec
     # )
-    fmt.set_currency_usage(UCurrencyUsage.UCURR_USAGE_CASH)
-    assert fmt.get_currency_usage() == UCurrencyUsage.UCURR_USAGE_CASH
+    fmt.set_currency_usage(icu.UCurrencyUsage.UCURR_USAGE_CASH)
+    assert fmt.get_currency_usage() == icu.UCurrencyUsage.UCURR_USAGE_CASH
 
     # UBool icu::DecimalFormat::isDecimalPatternMatchRequired(void)
     assert fmt.is_decimal_pattern_match_required() is False
@@ -335,10 +322,10 @@ def test_api_54():
     assert fmt.is_decimal_pattern_match_required() is True
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
 def test_api_62():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # int32_t icu::DecimalFormat::getMultiplierScale(void)
     assert fmt.get_multiplier_scale() == 0
@@ -348,12 +335,10 @@ def test_api_62():
     assert fmt.get_multiplier_scale() == 2
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_api_64():
-    from icupy.icu.number import LocalizedNumberFormatter
-
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("0", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("0", symbols)
 
     # int32_t icu::DecimalFormat::getMinimumGroupingDigits()
     assert fmt.get_minimum_grouping_digits() == -1
@@ -393,31 +378,31 @@ def test_api_64():
     # const number::LocalizedNumberFormatter *
     # icu::DecimalFormat::toNumberFormatter(UErrorCode &status)
     result = fmt.to_number_formatter()
-    assert isinstance(result, LocalizedNumberFormatter)
+    assert isinstance(result, icu.number.LocalizedNumberFormatter)
 
 
 def test_apply_localized_pattern():
-    fmt = DecimalFormat()
+    fmt = icu.DecimalFormat()
 
     # [1]
     # void icu::DecimalFormat::applyLocalizedPattern(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt.apply_localized_pattern(UnicodeString("0"))
+    fmt.apply_localized_pattern(icu.UnicodeString("0"))
 
     # UnicodeString &icu::DecimalFormat::toLocalizedPattern(
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.to_localized_pattern(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == "0"
 
     fmt.apply_localized_pattern("#,##0.#")
     output = fmt.to_localized_pattern(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == "#,##0.#"
 
@@ -427,37 +412,37 @@ def test_apply_localized_pattern():
     #       UParseError &parseError,
     #       UErrorCode &status
     # )
-    parse_error = UParseError()
-    fmt.apply_localized_pattern(UnicodeString("0"), parse_error)
+    parse_error = icu.UParseError()
+    fmt.apply_localized_pattern(icu.UnicodeString("0"), parse_error)
     assert parse_error.line <= 0
     assert parse_error.offset == 0
 
-    parse_error = UParseError()
+    parse_error = icu.UParseError()
     fmt.apply_localized_pattern("0", parse_error)
     assert parse_error.line <= 0
     assert parse_error.offset == 0
 
 
 def test_apply_pattern():
-    fmt = DecimalFormat()
+    fmt = icu.DecimalFormat()
 
     # [1]
     # void icu::DecimalFormat::applyPattern(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt.apply_pattern(UnicodeString("0"))
+    fmt.apply_pattern(icu.UnicodeString("0"))
 
     # UnicodeString &icu::DecimalFormat::toPattern(UnicodeString &result)
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = fmt.to_pattern(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == "0"
 
     fmt.apply_pattern("#,##0.#")
     output = fmt.to_pattern(result)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(output)
     assert result == "#,##0.#"
 
@@ -467,23 +452,23 @@ def test_apply_pattern():
     #       UParseError &parseError,
     #       UErrorCode &status
     # )
-    parse_error = UParseError()
-    fmt.apply_pattern(UnicodeString("0"), parse_error)
+    parse_error = icu.UParseError()
+    fmt.apply_pattern(icu.UnicodeString("0"), parse_error)
     assert parse_error.line <= 0
     assert parse_error.offset == 0
 
-    parse_error = UParseError()
+    parse_error = icu.UParseError()
     fmt.apply_pattern("0", parse_error)
     assert parse_error.line <= 0
     assert parse_error.offset == 0
 
 
 def test_clone():
-    fmt1 = DecimalFormat()
+    fmt1 = icu.DecimalFormat()
 
     # DecimalFormat *icu::DecimalFormat::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, DecimalFormat)
+    assert isinstance(fmt2, icu.DecimalFormat)
     assert fmt1 == fmt2
 
     fmt3 = copy.copy(fmt1)
@@ -494,21 +479,21 @@ def test_clone():
 
 
 def test_decimal_format():
-    assert issubclass(DecimalFormat, NumberFormat)
+    assert issubclass(icu.DecimalFormat, icu.NumberFormat)
 
     # [1]
     # icu::DecimalFormat::DecimalFormat(UErrorCode &status)
-    fmt1 = DecimalFormat()
+    fmt1 = icu.DecimalFormat()
 
     # [2]
     # icu::DecimalFormat::DecimalFormat(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt2 = DecimalFormat(UnicodeString("0"))
+    fmt2 = icu.DecimalFormat(icu.UnicodeString("0"))
     assert fmt1 != fmt2
 
-    fmt2a = DecimalFormat("0")
+    fmt2a = icu.DecimalFormat("0")
     assert fmt2 == fmt2a
 
     # [6]
@@ -517,26 +502,26 @@ def test_decimal_format():
     #       const DecimalFormatSymbols &symbols,
     #       UErrorCode &status
     # )
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt6 = DecimalFormat(UnicodeString("0"), symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt6 = icu.DecimalFormat(icu.UnicodeString("0"), symbols)
 
-    fmt6a = DecimalFormat("0", symbols)
+    fmt6a = icu.DecimalFormat("0", symbols)
     assert fmt6 == fmt6a
 
     # [7]
     # icu::DecimalFormat::DecimalFormat(const DecimalFormat &source)
-    fmt7 = DecimalFormat(fmt1)
+    fmt7 = icu.DecimalFormat(fmt1)
     assert fmt1 == fmt7
 
 
 def test_format():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("#,##0.#", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037
     s = "-1.045600e+04"
-    n32 = INT32_MAX
-    n64 = INT32_MAX + 1
-    append_to = UnicodeString()
+    n32 = icu.INT32_MAX
+    n64 = icu.INT32_MAX + 1
+    append_to = icu.UnicodeString()
 
     # [1]
     # UnicodeString &icu::NumberFormat::format(
@@ -546,9 +531,9 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = fmt.format(Formattable(d), append_to, pos)
-    assert isinstance(result, UnicodeString)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
+    result = fmt.format(icu.Formattable(d), append_to, pos)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -560,15 +545,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    result = fmt.format(Formattable(d), append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    pos_iter = icu.FieldPositionIterator()
+    result = fmt.format(icu.Formattable(d), append_to, pos_iter)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
     append_to.remove()
-    result = fmt.format(Formattable(d), append_to, None)
-    assert isinstance(result, UnicodeString)
+    result = fmt.format(icu.Formattable(d), append_to, None)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -579,7 +564,7 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(d, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -590,9 +575,9 @@ def test_format():
     #       FieldPosition &pos
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(d, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -604,15 +589,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(d, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
     append_to.remove()
     result = fmt.format(d, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -623,7 +608,7 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(n32, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,647"
 
@@ -634,9 +619,9 @@ def test_format():
     #       FieldPosition &pos
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(n32, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,647"
 
@@ -648,15 +633,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(n32, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,647"
 
     append_to.remove()
     result = fmt.format(n32, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,647"
 
@@ -667,7 +652,7 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(n64, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,648"
 
@@ -678,9 +663,9 @@ def test_format():
     #       FieldPosition &pos
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(n64, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,648"
 
@@ -692,15 +677,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(n64, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,648"
 
     append_to.remove()
     result = fmt.format(n64, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2,147,483,648"
 
@@ -712,15 +697,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(s, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
     append_to.remove()
     result = fmt.format(s, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
@@ -730,15 +715,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    result = fmt.format(Formattable(d), append_to)
-    assert isinstance(result, UnicodeString)
+    result = fmt.format(icu.Formattable(d), append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "-10,456"
 
 
 def test_parse():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("#,##0.#", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037
     s = "-10,456.0037"
 
@@ -748,18 +733,18 @@ def test_parse():
     #       Formattable &result,
     #       ParsePosition &parsePosition
     # )
-    result = Formattable()
-    parse_position = ParsePosition()
-    fmt.parse(UnicodeString(s), result, parse_position)
+    result = icu.Formattable()
+    parse_position = icu.ParsePosition()
+    fmt.parse(icu.UnicodeString(s), result, parse_position)
     assert parse_position.get_error_index() == -1
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
-    result = Formattable()
-    parse_position = ParsePosition()
+    result = icu.Formattable()
+    parse_position = icu.ParsePosition()
     fmt.parse(s, result, parse_position)
     assert parse_position.get_error_index() == -1
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
     # [3]
@@ -768,20 +753,20 @@ def test_parse():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    fmt.parse(UnicodeString(s), result)
-    assert result.get_type() == Formattable.DOUBLE
+    result = icu.Formattable()
+    fmt.parse(icu.UnicodeString(s), result)
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
-    result = Formattable()
+    result = icu.Formattable()
     fmt.parse(s, result)
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
 
 def test_parse_object():
-    symbols = DecimalFormatSymbols(Locale.get_us())
-    fmt = DecimalFormat("#,##0.#", symbols)
+    symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
+    fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037
     s = "-10,456.0037"
 
@@ -790,18 +775,18 @@ def test_parse_object():
     #       Formattable &result,
     #       ParsePosition &parse_pos
     # )
-    result = Formattable()
-    parse_pos = ParsePosition()
-    fmt.parse_object(UnicodeString(s), result, parse_pos)
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition()
+    fmt.parse_object(icu.UnicodeString(s), result, parse_pos)
     assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
-    result = Formattable()
-    parse_pos = ParsePosition()
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition()
     fmt.parse_object(s, result, parse_pos)
     assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
     # void icu::Format::parseObject(
@@ -809,12 +794,12 @@ def test_parse_object():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    fmt.parse_object(UnicodeString(s), result)
-    assert result.get_type() == Formattable.DOUBLE
+    result = icu.Formattable()
+    fmt.parse_object(icu.UnicodeString(s), result)
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d
 
-    result = Formattable()
+    result = icu.Formattable()
     fmt.parse_object(s, result)
-    assert result.get_type() == Formattable.DOUBLE
+    assert result.get_type() == icu.Formattable.DOUBLE
     assert result.get_double() == d

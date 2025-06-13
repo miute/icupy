@@ -1,21 +1,11 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 53:
+if icu.U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
 
 import copy
-
-# fmt: off
-from icupy.icu import (
-    CurrencyAmount, CurrencyUnit, FieldPosition, FieldPositionIterator,
-    Formattable, ICUError, Locale, Measure, MeasureFormat, MeasureUnit,
-    ParsePosition, TimeUnit, TimeUnitAmount, UErrorCode, ULocDataLocaleType,
-    UMeasureFormatWidth, UnicodeString,
-)
-
-# fmt: on
 
 
 def test_api():
@@ -25,17 +15,13 @@ def test_api():
     #       UMeasureFormatWidth width,
     #       UErrorCode &status
     # )
-    fmt1 = MeasureFormat(
-        Locale.get_us(), UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT
-    )
-    fmt2 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
-    fmt3 = MeasureFormat(
-        Locale.get_us(), UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW
-    )
+    fmt1 = icu.MeasureFormat(icu.Locale.get_us(), icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
+    fmt2 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
+    fmt3 = icu.MeasureFormat(icu.Locale.get_us(), icu.UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW)
 
     # [3]
     # icu::MeasureFormat::MeasureFormat(const MeasureFormat &other)
-    fmt4 = MeasureFormat(fmt1)
+    fmt4 = icu.MeasureFormat(fmt1)
 
     # UBool icu::Format::operator!=(const Format &other)
     assert not (fmt1 != fmt2)
@@ -52,35 +38,35 @@ def test_api():
     #       const Locale &locale,
     #       UErrorCode &ec
     # )
-    fmt4 = MeasureFormat.create_currency_format(Locale.get_us())
-    assert isinstance(fmt4, MeasureFormat)
+    fmt4 = icu.MeasureFormat.create_currency_format(icu.Locale.get_us())
+    assert isinstance(fmt4, icu.MeasureFormat)
 
-    fmt5 = MeasureFormat.create_currency_format("en-US")
-    assert isinstance(fmt5, MeasureFormat)
+    fmt5 = icu.MeasureFormat.create_currency_format("en-US")
+    assert isinstance(fmt5, icu.MeasureFormat)
     assert fmt4 == fmt5
 
     # [2]
     # static MeasureFormat *icu::MeasureFormat::createCurrencyFormat(
     #       UErrorCode &ec
     # )
-    fmt6 = MeasureFormat.create_currency_format()
-    assert isinstance(fmt6, MeasureFormat)
+    fmt6 = icu.MeasureFormat.create_currency_format()
+    assert isinstance(fmt6, icu.MeasureFormat)
 
     # Locale icu::Format::getLocale(
     #       ULocDataLocaleType type,
     #       UErrorCode &status
     # )
-    loc = fmt1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-    assert isinstance(loc, Locale)
-    assert loc == Locale("en-US")
+    loc = fmt1.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, icu.Locale)
+    assert loc == icu.Locale("en-US")
 
 
 def test_clone():
-    fmt1 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
+    fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
 
     # MeasureFormat *icu::MeasureFormat::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, MeasureFormat)
+    assert isinstance(fmt2, icu.MeasureFormat)
     assert fmt2 == fmt1
 
     fmt3 = copy.copy(fmt1)
@@ -91,7 +77,7 @@ def test_clone():
 
 
 def test_currency_amount():
-    assert issubclass(CurrencyAmount, Measure)
+    assert issubclass(icu.CurrencyAmount, icu.Measure)
 
     # [1]
     # icu::CurrencyAmount::CurrencyAmount(
@@ -99,8 +85,8 @@ def test_currency_amount():
     #       ConstChar16Ptr isoCode,
     #       UErrorCode &ec
     # )
-    camt1 = CurrencyAmount(Formattable(1), "USD")
-    camt2 = CurrencyAmount(Formattable("1.0"), "USD")
+    camt1 = icu.CurrencyAmount(icu.Formattable(1), "USD")
+    camt2 = icu.CurrencyAmount(icu.Formattable("1.0"), "USD")
     assert camt1 == camt2
 
     # [2]
@@ -109,17 +95,17 @@ def test_currency_amount():
     #       ConstChar16Ptr isoCode,
     #       UErrorCode &ec
     # )
-    camt3 = CurrencyAmount(1, "USD")
+    camt3 = icu.CurrencyAmount(1, "USD")
     assert camt1 != camt3
 
     # [3]
     # icu::CurrencyAmount::CurrencyAmount(const CurrencyAmount &other)
-    camt4 = CurrencyAmount(camt1)
+    camt4 = icu.CurrencyAmount(camt1)
     assert camt1 == camt4
 
     # CurrencyAmount *icu::CurrencyAmount::clone()
     camt5 = camt1.clone()
-    assert isinstance(camt5, CurrencyAmount)
+    assert isinstance(camt5, icu.CurrencyAmount)
     assert camt1 == camt5
 
     # CurrencyAmount.__copy__() -> CurrencyAmount
@@ -130,7 +116,7 @@ def test_currency_amount():
 
     # const CurrencyUnit &icu::CurrencyAmount::getCurrency()
     unit = camt1.get_currency()
-    assert isinstance(unit, CurrencyUnit)
+    assert isinstance(unit, icu.CurrencyUnit)
     assert unit.get_iso_currency() == "USD"
 
     # const char16_t *icu::CurrencyAmount::getISOCurrency()
@@ -140,8 +126,8 @@ def test_currency_amount():
 
 
 def test_format():
-    fmt1 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
-    fmt2 = MeasureFormat.create_currency_format("en-US")
+    fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
+    fmt2 = icu.MeasureFormat.create_currency_format("en-US")
 
     # [2]
     # UnicodeString &icu::Format::format(
@@ -150,43 +136,47 @@ def test_format():
     #       FieldPosition &pos,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    append_to = icu.UnicodeString()
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt1.format(
-        Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
+        icu.Formattable(icu.Measure(icu.Formattable(3.5), icu.MeasureUnit.create_foot())),
         append_to,
         pos,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "3.5 feet"
 
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt1.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to, pos
+        icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
+        append_to,
+        pos,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1.00 US dollars"
 
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt2.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to, pos
+        icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
+        append_to,
+        pos,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "$1.00"
 
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt1.format(
-        Formattable(TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)),
+        icu.Formattable(icu.TimeUnitAmount(icu.Formattable(2), icu.TimeUnit.UTIMEUNIT_DAY)),
         append_to,
         pos,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2 days"
 
@@ -197,47 +187,45 @@ def test_format():
     #       FieldPositionIterator *posIter,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
+    append_to = icu.UnicodeString()
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt1.format(
-            Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
+            icu.Formattable(icu.Measure(icu.Formattable(3.5), icu.MeasureUnit.create_foot())),
             append_to,
             pos_iter,
         )
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt1.format(
-            Formattable(CurrencyAmount(Formattable(1), "USD")),
+            icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
             append_to,
             pos_iter,
         )
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt2.format(
-            Formattable(CurrencyAmount(Formattable(1), "USD")),
+            icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
             append_to,
             pos_iter,
         )
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt1.format(
-            Formattable(
-                TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)
-            ),
+            icu.Formattable(icu.TimeUnitAmount(icu.Formattable(2), icu.TimeUnit.UTIMEUNIT_DAY)),
             append_to,
             pos_iter,
         )
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
     # UnicodeString &icu::Format::format(
@@ -245,44 +233,46 @@ def test_format():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     result = fmt1.format(
-        Formattable(Measure(Formattable(3.5), MeasureUnit.create_foot())),
+        icu.Formattable(icu.Measure(icu.Formattable(3.5), icu.MeasureUnit.create_foot())),
         append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "3.5 feet"
 
     append_to.remove()
     result = fmt1.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to
+        icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
+        append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1.00 US dollars"
 
     append_to.remove()
     result = fmt2.format(
-        Formattable(CurrencyAmount(Formattable(1), "USD")), append_to
+        icu.Formattable(icu.CurrencyAmount(icu.Formattable(1), "USD")),
+        append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "$1.00"
 
     append_to.remove()
     result = fmt1.format(
-        Formattable(TimeUnitAmount(Formattable(2), TimeUnit.UTIMEUNIT_DAY)),
+        icu.Formattable(icu.TimeUnitAmount(icu.Formattable(2), icu.TimeUnit.UTIMEUNIT_DAY)),
         append_to,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "2 days"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
 def test_format_measure_per_unit():
-    fmt = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
+    fmt = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
 
     # UnicodeString &icu::MeasureFormat::formatMeasurePerUnit(
     #       const Measure &measure,
@@ -291,21 +281,21 @@ def test_format_measure_per_unit():
     #       FieldPosition &pos,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    append_to = icu.UnicodeString()
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format_measure_per_unit(
-        Measure(Formattable(50), MeasureUnit.create_pound_force()),
-        MeasureUnit.create_square_inch(),
+        icu.Measure(icu.Formattable(50), icu.MeasureUnit.create_pound_force()),
+        icu.MeasureUnit.create_square_inch(),
         append_to,
         pos,
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in ("50 lbf/in\xb2", "50 psi")  # 50 lbf/in²
 
 
 def test_format_measures():
-    fmt = MeasureFormat("fr-FR", UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW)
+    fmt = icu.MeasureFormat("fr-FR", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW)
 
     # UnicodeString &icu::MeasureFormat::formatMeasures(
     #       const Measure *measures,
@@ -315,45 +305,45 @@ def test_format_measures():
     #       UErrorCode &status
     # )
     measures = [
-        Measure(Formattable(5), MeasureUnit.create_hour()),
-        Measure(Formattable(10), MeasureUnit.create_minute()),
+        icu.Measure(icu.Formattable(5), icu.MeasureUnit.create_hour()),
+        icu.Measure(icu.Formattable(10), icu.MeasureUnit.create_minute()),
     ]
-    append_to = UnicodeString()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    append_to = icu.UnicodeString()
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format_measures(measures, len(measures), append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "5h 10min"
 
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format_measures(measures, -1, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "5h 10min"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
 def test_get_unit_display_name():
-    fmt1 = MeasureFormat("en", UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
-    fmt2 = MeasureFormat("ja", UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
+    fmt1 = icu.MeasureFormat("en", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
+    fmt2 = icu.MeasureFormat("ja", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
 
     # UnicodeString icu::MeasureFormat::getUnitDisplayName(
     #       const MeasureUnit &unit,
     #       UErrorCode &status
     # )
-    result = fmt1.get_unit_display_name(MeasureUnit.create_year())
-    assert isinstance(result, UnicodeString)
+    result = fmt1.get_unit_display_name(icu.MeasureUnit.create_year())
+    assert isinstance(result, icu.UnicodeString)
     assert result == "years"
 
-    result = fmt2.get_unit_display_name(MeasureUnit.create_year())
-    assert isinstance(result, UnicodeString)
+    result = fmt2.get_unit_display_name(icu.MeasureUnit.create_year())
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\u5e74"  # 年
 
 
 def test_parse_object():
-    fmt1 = MeasureFormat("en-US", UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
-    fmt2 = MeasureFormat.create_currency_format("en-US")
+    fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
+    fmt2 = icu.MeasureFormat.create_currency_format("en-US")
 
     # [1]
     # void icu::MeasureFormat::parseObject(
@@ -361,36 +351,36 @@ def test_parse_object():
     #       Formattable &reslt,
     #       ParsePosition &pos
     # )
-    result = Formattable()
-    pos = ParsePosition(0)
-    fmt1.parse_object(UnicodeString("3.5 feet"), result, pos)
+    result = icu.Formattable()
+    pos = icu.ParsePosition(0)
+    fmt1.parse_object(icu.UnicodeString("3.5 feet"), result, pos)
     assert pos.get_index() == 0
 
-    result = Formattable()
-    pos = ParsePosition(0)
+    result = icu.Formattable()
+    pos = icu.ParsePosition(0)
     fmt1.parse_object("3.5 feet", result, pos)
     assert pos.get_index() == 0
 
-    result = Formattable()
-    pos = ParsePosition(0)
+    result = icu.Formattable()
+    pos = icu.ParsePosition(0)
     fmt1.parse_object("1.00 US dollars", result, pos)
     assert pos.get_index() == 0
 
-    result = Formattable()
-    pos = ParsePosition(0)
+    result = icu.Formattable()
+    pos = icu.ParsePosition(0)
     fmt2.parse_object("$1.00", result, pos)
     assert pos.get_index() != 0
     assert pos.get_error_index() == -1
-    assert result.get_type() == Formattable.OBJECT
+    assert result.get_type() == icu.Formattable.OBJECT
     camt = result.get_object()
-    assert isinstance(camt, CurrencyAmount)
+    assert isinstance(camt, icu.CurrencyAmount)
     num = camt.get_number()
-    assert num.get_type() == Formattable.LONG
+    assert num.get_type() == icu.Formattable.LONG
     assert num.get_long() == 1
     assert camt.get_iso_currency() == "USD"
 
-    result = Formattable()
-    pos = ParsePosition(0)
+    result = icu.Formattable()
+    pos = icu.ParsePosition(0)
     fmt1.parse_object("2 days", result, pos)
     assert pos.get_index() == 0
 
@@ -400,35 +390,35 @@ def test_parse_object():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
-        fmt1.parse_object(UnicodeString("3.5 feet"), result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
+        fmt1.parse_object(icu.UnicodeString("3.5 feet"), result)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
         fmt1.parse_object("3.5 feet", result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
         fmt1.parse_object("1.00 US dollars", result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
-    result = Formattable()
+    result = icu.Formattable()
     fmt2.parse_object("$1.00", result)
-    assert result.get_type() == Formattable.OBJECT
+    assert result.get_type() == icu.Formattable.OBJECT
     camt = result.get_object()
-    assert isinstance(camt, CurrencyAmount)
+    assert isinstance(camt, icu.CurrencyAmount)
     num = camt.get_number()
-    assert num.get_type() == Formattable.LONG
+    assert num.get_type() == icu.Formattable.LONG
     assert num.get_long() == 1
     assert camt.get_iso_currency() == "USD"
 
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
         fmt1.parse_object("2 days", result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
 
 def test_measure():
@@ -436,21 +426,21 @@ def test_measure():
     # icu::Measure::Measure(const Formattable &number,
     #                       MeasureUnit *adoptedUnit,
     #                       UErrorCode &ec)
-    meas1 = Measure(Formattable(100), MeasureUnit.create_meter())
-    meas2 = Measure(Formattable("100.0"), MeasureUnit.create_meter())
-    meas3 = Measure(Formattable(0.1), MeasureUnit.create_kilometer())
+    meas1 = icu.Measure(icu.Formattable(100), icu.MeasureUnit.create_meter())
+    meas2 = icu.Measure(icu.Formattable("100.0"), icu.MeasureUnit.create_meter())
+    meas3 = icu.Measure(icu.Formattable(0.1), icu.MeasureUnit.create_kilometer())
     assert meas1 == meas2
     assert meas1 != meas3
     assert meas2 != meas3
 
     # [2]
     # icu::Measure::Measure(const Measure &other)
-    meas4 = Measure(meas1)
+    meas4 = icu.Measure(meas1)
     assert meas1 == meas4
 
     # Measure *icu::Measure::clone()
     meas5 = meas4.clone()
-    assert isinstance(meas5, Measure)
+    assert isinstance(meas5, icu.Measure)
 
     # Measure.__copy__() -> Measure
     # Measure.__deepcopy__(Optional[memo]) -> Measure
@@ -460,17 +450,17 @@ def test_measure():
 
     # const Formattable &icu::Measure::getNumber()
     num = meas1.get_number()
-    assert isinstance(num, Formattable)
-    assert num.get_type() == Formattable.LONG
+    assert isinstance(num, icu.Formattable)
+    assert num.get_type() == icu.Formattable.LONG
     assert num.get_long() == 100
 
     # const MeasureUnit &icu::Measure::getUnit()
     unit = meas1.get_unit()
-    assert isinstance(unit, MeasureUnit)
+    assert isinstance(unit, icu.MeasureUnit)
 
 
 def test_time_unit_amount():
-    assert issubclass(TimeUnitAmount, Measure)
+    assert issubclass(icu.TimeUnitAmount, icu.Measure)
 
     # [1]
     # icu::TimeUnitAmount::TimeUnitAmount(
@@ -478,7 +468,7 @@ def test_time_unit_amount():
     #       TimeUnit::UTimeUnitFields timeUnitField,
     #       UErrorCode &status
     # )
-    tuamt1 = TimeUnitAmount(Formattable(1), TimeUnit.UTIMEUNIT_DAY)
+    tuamt1 = icu.TimeUnitAmount(icu.Formattable(1), icu.TimeUnit.UTIMEUNIT_DAY)
 
     # [2]
     # icu::TimeUnitAmount::TimeUnitAmount(
@@ -487,18 +477,18 @@ def test_time_unit_amount():
     #       UErrorCode &status
     # )
     # tuamt2 =
-    _ = TimeUnitAmount(1, TimeUnit.UTIMEUNIT_DAY)
+    _ = icu.TimeUnitAmount(1, icu.TimeUnit.UTIMEUNIT_DAY)
     # FIXME: TimeUnitAmount.__eq__(self, other: UObject) is not work.
     # assert tuamt1 == tuamt2
 
     # icu::TimeUnitAmount::TimeUnitAmount(const TimeUnitAmount &other)
-    tuamt3 = TimeUnitAmount(tuamt1)
+    tuamt3 = icu.TimeUnitAmount(tuamt1)
     assert tuamt1 == tuamt3
     # assert tuamt2 == tuamt3
 
     # TimeUnitAmount *icu::TimeUnitAmount::clone()
     tuamt4 = tuamt1.clone()
-    assert isinstance(tuamt4, TimeUnitAmount)
+    assert isinstance(tuamt4, icu.TimeUnitAmount)
     assert tuamt1 == tuamt4
     # assert tuamt2 == tuamt4
 
@@ -510,8 +500,8 @@ def test_time_unit_amount():
 
     # const TimeUnit &icu::TimeUnitAmount::getTimeUnit()
     unit = tuamt1.get_time_unit()
-    assert isinstance(unit, TimeUnit)
-    assert unit.get_time_unit_field() == TimeUnit.UTIMEUNIT_DAY
+    assert isinstance(unit, icu.TimeUnit)
+    assert unit.get_time_unit_field() == icu.TimeUnit.UTIMEUNIT_DAY
 
     # TimeUnit::UTimeUnitFields icu::TimeUnitAmount::getTimeUnitField()
-    assert tuamt1.get_time_unit_field() == TimeUnit.UTIMEUNIT_DAY
+    assert tuamt1.get_time_unit_field() == icu.TimeUnit.UTIMEUNIT_DAY

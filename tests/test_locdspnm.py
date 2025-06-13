@@ -1,35 +1,29 @@
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, Locale, LocaleDisplayNames, UDialectHandling,
-    UnicodeString, UScriptCode,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def test_api():
-    ldn = LocaleDisplayNames.create_instance(
-        Locale.get_us(), UDialectHandling.ULDN_DIALECT_NAMES
+    ldn = icu.LocaleDisplayNames.create_instance(
+        icu.Locale.get_us(), icu.UDialectHandling.ULDN_DIALECT_NAMES
     )
 
     # UDialectHandling icu::LocaleDisplayNames::getDialectHandling()
-    assert ldn.get_dialect_handling() == UDialectHandling.ULDN_DIALECT_NAMES
+    assert ldn.get_dialect_handling() == icu.UDialectHandling.ULDN_DIALECT_NAMES
 
     # const Locale &icu::LocaleDisplayNames::getLocale()
     result = ldn.get_locale()
-    assert isinstance(result, Locale)
-    assert result == Locale("en-US")
+    assert isinstance(result, icu.Locale)
+    assert result == icu.Locale("en-US")
 
-    temp = UnicodeString()
+    temp = icu.UnicodeString()
 
     # UnicodeString &icu::LocaleDisplayNames::keyDisplayName(
     #       const char *key,
     #       UnicodeString &result
     # )
     result = ldn.key_display_name("efg", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "efg"
 
@@ -39,7 +33,7 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.key_value_display_name("ca", "ijk", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "ijk"
 
@@ -48,7 +42,7 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.language_display_name("xy", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "xy"
 
@@ -58,7 +52,7 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.locale_display_name("xy", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "xy"
 
@@ -67,8 +61,8 @@ def test_api():
     #       const Locale &locale,
     #       UnicodeString &result
     # )
-    result = ldn.locale_display_name(Locale("xy"), temp)
-    assert isinstance(result, UnicodeString)
+    result = ldn.locale_display_name(icu.Locale("xy"), temp)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "xy"
 
@@ -77,7 +71,7 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.region_display_name("xy-Latn-wx", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "xy-Latn-wx"
 
@@ -87,7 +81,7 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.script_display_name("wxyz", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "wxyz"
 
@@ -96,8 +90,8 @@ def test_api():
     #       UScriptCode scriptCode,
     #       UnicodeString &result
     # )
-    result = ldn.script_display_name(UScriptCode.USCRIPT_LATIN, temp)
-    assert isinstance(result, UnicodeString)
+    result = ldn.script_display_name(icu.UScriptCode.USCRIPT_LATIN, temp)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "Latin"
 
@@ -106,42 +100,38 @@ def test_api():
     #       UnicodeString &result
     # )
     result = ldn.variant_display_name("abc", temp)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(temp)
     assert result == "abc"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_api_51():
-    from icupy.icu import UDisplayContext, UDisplayContextType
-
-    ldn = LocaleDisplayNames.create_instance(Locale.get_germany())
+    ldn = icu.LocaleDisplayNames.create_instance(icu.Locale.get_germany())
 
     # UDisplayContext icu::LocaleDisplayNames::getContext(
     #       UDisplayContextType type
     # )
-    result = ldn.get_context(
-        UDisplayContextType.UDISPCTX_TYPE_SUBSTITUTE_HANDLING
-    )
-    assert result == UDisplayContext.UDISPCTX_SUBSTITUTE
+    result = ldn.get_context(icu.UDisplayContextType.UDISPCTX_TYPE_SUBSTITUTE_HANDLING)
+    assert result == icu.UDisplayContext.UDISPCTX_SUBSTITUTE
 
 
 def test_create_instance():
-    temp = UnicodeString()
+    temp = icu.UnicodeString()
 
     # [1]
     # static LocaleDisplayNames *icu::LocaleDisplayNames::createInstance(
     #       const Locale &locale
     # )
-    ldn = LocaleDisplayNames.create_instance(Locale.get_germany())
-    assert isinstance(ldn, LocaleDisplayNames)
+    ldn = icu.LocaleDisplayNames.create_instance(icu.Locale.get_germany())
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp == "xy"
     ldn.locale_display_name("en", temp)
     assert temp == "Englisch"
 
-    ldn = LocaleDisplayNames.create_instance("de-DE")
-    assert isinstance(ldn, LocaleDisplayNames)
+    ldn = icu.LocaleDisplayNames.create_instance("de-DE")
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp == "xy"
     ldn.locale_display_name("en", temp)
@@ -152,30 +142,28 @@ def test_create_instance():
     #       const Locale &locale,
     #       UDialectHandling dialectHandling
     # )
-    ldn = LocaleDisplayNames.create_instance(
-        Locale.get_us(), UDialectHandling.ULDN_DIALECT_NAMES
+    ldn = icu.LocaleDisplayNames.create_instance(
+        icu.Locale.get_us(), icu.UDialectHandling.ULDN_DIALECT_NAMES
     )
-    assert isinstance(ldn, LocaleDisplayNames)
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp == "xy"
     ldn.locale_display_name("en", temp)
     assert temp == "English"
 
-    ldn = LocaleDisplayNames.create_instance(
-        "en-US", UDialectHandling.ULDN_DIALECT_NAMES
+    ldn = icu.LocaleDisplayNames.create_instance(
+        "en-US", icu.UDialectHandling.ULDN_DIALECT_NAMES
     )
-    assert isinstance(ldn, LocaleDisplayNames)
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp == "xy"
     ldn.locale_display_name("en", temp)
     assert temp == "English"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
 def test_create_instance_51():
-    from icupy.icu import UDisplayContext
-
-    temp = UnicodeString()
+    temp = icu.UnicodeString()
 
     # [3]
     # static LocaleDisplayNames *icu::LocaleDisplayNames::createInstance(
@@ -184,35 +172,35 @@ def test_create_instance_51():
     #       int32_t length
     # )
     contexts = [
-        UDisplayContext.UDISPCTX_NO_SUBSTITUTE,
-        UDisplayContext.UDISPCTX_DIALECT_NAMES,
+        icu.UDisplayContext.UDISPCTX_NO_SUBSTITUTE,
+        icu.UDisplayContext.UDISPCTX_DIALECT_NAMES,
     ]
-    ldn = LocaleDisplayNames.create_instance(
-        Locale.get_germany(), contexts, len(contexts)
+    ldn = icu.LocaleDisplayNames.create_instance(
+        icu.Locale.get_germany(), contexts, len(contexts)
     )
-    assert isinstance(ldn, LocaleDisplayNames)
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp.is_bogus()
     ldn.locale_display_name("en", temp)
     assert temp == "Englisch"
 
-    ldn = LocaleDisplayNames.create_instance("de-DE", contexts, len(contexts))
-    assert isinstance(ldn, LocaleDisplayNames)
+    ldn = icu.LocaleDisplayNames.create_instance("de-DE", contexts, len(contexts))
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp.is_bogus()
     ldn.locale_display_name("en", temp)
     assert temp == "Englisch"
 
     # length is optional
-    ldn = LocaleDisplayNames.create_instance(Locale.get_germany(), contexts)
-    assert isinstance(ldn, LocaleDisplayNames)
+    ldn = icu.LocaleDisplayNames.create_instance(icu.Locale.get_germany(), contexts)
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp.is_bogus()
     ldn.locale_display_name("en", temp)
     assert temp == "Englisch"
 
-    ldn = LocaleDisplayNames.create_instance("de-DE", contexts)
-    assert isinstance(ldn, LocaleDisplayNames)
+    ldn = icu.LocaleDisplayNames.create_instance("de-DE", contexts)
+    assert isinstance(ldn, icu.LocaleDisplayNames)
     ldn.locale_display_name("xy", temp)
     assert temp.is_bogus()
     ldn.locale_display_name("en", temp)

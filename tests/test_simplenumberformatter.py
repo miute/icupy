@@ -1,56 +1,45 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 73:
+if icu.U_ICU_VERSION_MAJOR_NUM < 73:
     pytest.skip("ICU4C<73", allow_module_level=True)
-
-# fmt: off
-from icupy.icu import (
-    DecimalFormatSymbols, ICUError, Locale, UErrorCode,
-    UNumberFormatRoundingMode, UNumberGroupingStrategy, USimpleNumberSign,
-)
-from icupy.icu.number import (
-    FormattedNumber, SimpleNumber, SimpleNumberFormatter,
-)
-
-# fmt: on
 
 
 def test_api():
     # icu::number::SimpleNumberFormatter::SimpleNumberFormatter()
-    fmt1 = SimpleNumberFormatter()
+    fmt1 = icu.number.SimpleNumberFormatter()
 
     # FormattedNumber icu::number::SimpleNumberFormatter::formatInt64(
     #       int64_t value,
     #       UErrorCode &status
     # ) const
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt1.format_int64(1)  # Default constructed formatter
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_STATE_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_STATE_ERROR
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM > 74, reason="ICU4C>74")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM > 74, reason="ICU4C>74")
 def test_deprecated_75():
     """Deprecated or Obsoleted in ICU 75."""
-    snf = SimpleNumberFormatter.for_locale_and_grouping_strategy(
-        "en-US", UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
+    snf = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
+        "en-US", icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
     )
 
     # void icu::number::SimpleNumber::truncateStart(
     #       uint32_t maximumIntegerDigits,
     #       UErrorCode &status
     # )
-    num = SimpleNumber.for_int64(918273645)
+    num = icu.number.SimpleNumber.for_int64(918273645)
     num.multiply_by_power_of_ten(-4)
     num.truncate_start(4)
 
     result = snf.format(num)
     assert result.to_temp_string() == "1,827.3645"
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = snf.format(num)  # Use of moved number
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
 def test_for_locale():
@@ -59,16 +48,16 @@ def test_for_locale():
     #       const icu::Locale &locale,
     #       UErrorCode &status
     # )
-    fmt1 = SimpleNumberFormatter.for_locale(Locale("de-CH"))
-    assert isinstance(fmt1, SimpleNumberFormatter)
+    fmt1 = icu.number.SimpleNumberFormatter.for_locale(icu.Locale("de-CH"))
+    assert isinstance(fmt1, icu.number.SimpleNumberFormatter)
     fv = fmt1.format_int64(-1000007)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "-1’000’007"
 
-    fmt2 = SimpleNumberFormatter.for_locale("de-CH")
-    assert isinstance(fmt2, SimpleNumberFormatter)
+    fmt2 = icu.number.SimpleNumberFormatter.for_locale("de-CH")
+    assert isinstance(fmt2, icu.number.SimpleNumberFormatter)
     fv = fmt2.format_int64(-1000007)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "-1’000’007"
 
 
@@ -79,20 +68,20 @@ def test_for_locale_and_grouping_strategy():
     #       UNumberGroupingStrategy groupingStrategy,
     #       UErrorCode &status
     # )
-    fmt1 = SimpleNumberFormatter.for_locale_and_grouping_strategy(
-        Locale("de-CH"), UNumberGroupingStrategy.UNUM_GROUPING_AUTO
+    fmt1 = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
+        icu.Locale("de-CH"), icu.UNumberGroupingStrategy.UNUM_GROUPING_AUTO
     )
-    assert isinstance(fmt1, SimpleNumberFormatter)
+    assert isinstance(fmt1, icu.number.SimpleNumberFormatter)
     fv = fmt1.format_int64(-1000007)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "-1’000’007"
 
-    fmt2 = SimpleNumberFormatter.for_locale_and_grouping_strategy(
-        "de-CH", UNumberGroupingStrategy.UNUM_GROUPING_AUTO
+    fmt2 = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
+        "de-CH", icu.UNumberGroupingStrategy.UNUM_GROUPING_AUTO
     )
-    assert isinstance(fmt2, SimpleNumberFormatter)
+    assert isinstance(fmt2, icu.number.SimpleNumberFormatter)
     fv = fmt2.format_int64(-1000007)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "-1’000’007"
 
 
@@ -104,48 +93,48 @@ def test_for_locale_and_symbols_and_grouping_strategy():
     #       UNumberGroupingStrategy groupingStrategy,
     #       UErrorCode &status
     # )
-    symbols = DecimalFormatSymbols("bn")
-    fmt1 = SimpleNumberFormatter.for_locale_and_symbols_and_grouping_strategy(
-        Locale("en-US"),
+    symbols = icu.DecimalFormatSymbols("bn")
+    fmt1 = icu.number.SimpleNumberFormatter.for_locale_and_symbols_and_grouping_strategy(
+        icu.Locale("en-US"),
         symbols,
-        UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED,
+        icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED,
     )
-    assert isinstance(fmt1, SimpleNumberFormatter)
+    assert isinstance(fmt1, icu.number.SimpleNumberFormatter)
     fv = fmt1.format_int64(987654321)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "৯৮৭,৬৫৪,৩২১"
 
-    fmt2 = SimpleNumberFormatter.for_locale_and_symbols_and_grouping_strategy(
+    fmt2 = icu.number.SimpleNumberFormatter.for_locale_and_symbols_and_grouping_strategy(
         "en-US",
         symbols,
-        UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED,
+        icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED,
     )
-    assert isinstance(fmt2, SimpleNumberFormatter)
+    assert isinstance(fmt2, icu.number.SimpleNumberFormatter)
     fv = fmt2.format_int64(987654321)
-    assert isinstance(fv, FormattedNumber)
+    assert isinstance(fv, icu.number.FormattedNumber)
     assert fv.to_temp_string() == "৯৮৭,৬৫৪,৩২১"
 
 
 def test_format_73():
-    fmt = SimpleNumberFormatter.for_locale("bn")
+    fmt = icu.number.SimpleNumberFormatter.for_locale("bn")
 
     # icu::number::SimpleNumber::SimpleNumber()
-    value = SimpleNumber()
+    value = icu.number.SimpleNumber()
 
     # FormattedNumber icu::number::SimpleNumberFormatter::format(
     #       SimpleNumber value,
     #       UErrorCode &status
     # ) const
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt.format(value)  # Default constructed number
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     # static SimpleNumber icu::number::SimpleNumber::forInt64(
     #       int64_t value,
     #       UErrorCode &status
     # )
-    value = SimpleNumber.for_int64(1250000)
-    assert isinstance(value, SimpleNumber)
+    value = icu.number.SimpleNumber.for_int64(1250000)
+    assert isinstance(value, icu.number.SimpleNumber)
 
     # void icu::number::SimpleNumber::multiplyByPowerOfTen(
     #       int32_t power,
@@ -158,7 +147,7 @@ def test_format_73():
     #       UNumberFormatRoundingMode roundingMode,
     #       UErrorCode &status
     # )
-    value.round_to(3, UNumberFormatRoundingMode.UNUM_ROUND_HALFUP)
+    value.round_to(3, icu.UNumberFormatRoundingMode.UNUM_ROUND_HALFUP)
 
     # void icu::number::SimpleNumber::setMinimumFractionDigits(
     #       uint32_t minimumFractionDigits,
@@ -176,25 +165,25 @@ def test_format_73():
     #       USimpleNumberSign sign,
     #       UErrorCode &status
     # )
-    value.set_sign(USimpleNumberSign.UNUM_SIMPLE_NUMBER_NO_SIGN)
+    value.set_sign(icu.USimpleNumberSign.UNUM_SIMPLE_NUMBER_NO_SIGN)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
 def test_format_75():
-    snf = SimpleNumberFormatter.for_locale_and_grouping_strategy(
-        "en-US", UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
+    snf = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
+        "en-US", icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
     )
 
     # void icu::number::SimpleNumber::setMaximumIntegerDigits(
     #       uint32_t maximumIntegerDigits,
     #       UErrorCode &status
     # )
-    num = SimpleNumber.for_int64(918273645)
+    num = icu.number.SimpleNumber.for_int64(918273645)
     num.multiply_by_power_of_ten(-4)
     num.set_maximum_integer_digits(4)
     result = snf.format(num)
     assert result.to_temp_string() == "1,827.3645"
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = snf.format(num)  # Use of moved number
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR

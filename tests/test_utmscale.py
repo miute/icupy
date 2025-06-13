@@ -1,10 +1,4 @@
-# fmt: off
-from icupy.icu import (
-    UDateTimeScale, UTimeScaleValue, utmscale_from_int64,
-    utmscale_get_time_scale_value, utmscale_to_int64,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def test_api():
@@ -13,8 +7,9 @@ def test_api():
     #       UTimeScaleValue value,
     #       UErrorCode *status
     # )
-    from_min = utmscale_get_time_scale_value(
-        UDateTimeScale.UDTS_JAVA_TIME, UTimeScaleValue.UTSV_FROM_MIN_VALUE
+    from_min = icu.utmscale_get_time_scale_value(
+        icu.UDateTimeScale.UDTS_JAVA_TIME,
+        icu.UTimeScaleValue.UTSV_FROM_MIN_VALUE,
     )
     assert isinstance(from_min, int)
 
@@ -23,9 +18,7 @@ def test_api():
     #       UDateTimeScale timeScale,
     #       UErrorCode *status
     # )
-    universal_time = utmscale_from_int64(
-        from_min, UDateTimeScale.UDTS_JAVA_TIME
-    )
+    universal_time = icu.utmscale_from_int64(from_min, icu.UDateTimeScale.UDTS_JAVA_TIME)
     assert isinstance(universal_time, int)
 
     # int64_t utmscale_toInt64(
@@ -33,6 +26,6 @@ def test_api():
     #       UDateTimeScale timeScale,
     #       UErrorCode *status
     # )
-    dt = utmscale_to_int64(universal_time, UDateTimeScale.UDTS_JAVA_TIME)
+    dt = icu.utmscale_to_int64(universal_time, icu.UDateTimeScale.UDTS_JAVA_TIME)
     assert isinstance(dt, int)
     assert dt == from_min

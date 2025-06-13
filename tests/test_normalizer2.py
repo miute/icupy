@@ -1,12 +1,6 @@
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, US_INV, FilteredNormalizer2, Normalizer2,
-    UnicodeSet, UnicodeString, UNormalization2Mode, UNormalizationCheckResult,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def test_api():
@@ -16,24 +10,22 @@ def test_api():
     #       UNormalization2Mode mode,
     #       UErrorCode &errorCode
     # )
-    n2 = Normalizer2.get_instance(
-        None, "nfc", UNormalization2Mode.UNORM2_COMPOSE
-    )
+    n2 = icu.Normalizer2.get_instance(None, "nfc", icu.UNormalization2Mode.UNORM2_COMPOSE)
 
     # UnicodeString &icu::Normalizer2::append(
     #       UnicodeString &first,
     #       const UnicodeString &second,
     #       UErrorCode &errorCode
     # )
-    first = UnicodeString("A", -1, US_INV)
-    second = UnicodeString("\\u030A", -1, US_INV).unescape()
-    third = UnicodeString("B", -1, US_INV)
+    first = icu.UnicodeString("A", -1, icu.US_INV)
+    second = icu.UnicodeString("\\u030A", -1, icu.US_INV).unescape()
+    third = icu.UnicodeString("B", -1, icu.US_INV)
     result = n2.append(first, second).append(third)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(first)
     assert result == first == "\xc5B"
 
-    first = UnicodeString("A", -1, US_INV)
+    first = icu.UnicodeString("A", -1, icu.US_INV)
     result = n2.append(first, "\u030a").append(third)
     assert result == first == "\xc5B"
 
@@ -41,9 +33,9 @@ def test_api():
     #       UChar32 c,
     #       UnicodeString &decomposition
     # )
-    decomposition = UnicodeString()
+    decomposition = icu.UnicodeString()
     assert n2.get_decomposition(0xC5, decomposition)
-    assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()
+    assert decomposition == icu.UnicodeString("A\\u030A", -1, icu.US_INV).unescape()
 
     # UBool icu::Normalizer2::hasBoundaryAfter(UChar32 c)
     # U+304C: Hiragana Letter Ga
@@ -69,10 +61,8 @@ def test_api():
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    assert n2.is_normalized(UnicodeString(0x304C))
-    assert not n2.is_normalized(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
-    )
+    assert n2.is_normalized(icu.UnicodeString(0x304C))
+    assert not n2.is_normalized(icu.UnicodeString("\\u304B\\u3099", -1, icu.US_INV).unescape())
 
     assert n2.is_normalized("\u304c")
     assert not n2.is_normalized("\u304b\u3099")
@@ -82,9 +72,9 @@ def test_api():
     #       const UnicodeString &src,
     #       UErrorCode &errorCode
     # )
-    src = UnicodeString("a\\u0306", -1, US_INV).unescape()
+    src = icu.UnicodeString("a\\u0306", -1, icu.US_INV).unescape()
     result = n2.normalize(src)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "\u0103"
 
     result = n2.normalize("a\u0306")
@@ -96,9 +86,9 @@ def test_api():
     #       UnicodeString &dest,
     #       UErrorCode &errorCode
     # )
-    dest = UnicodeString()
+    dest = icu.UnicodeString()
     result = n2.normalize(src, dest)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert result == dest == "\u0103"
 
@@ -111,15 +101,15 @@ def test_api():
     #       const UnicodeString &second,
     #       UErrorCode &errorCode
     # )
-    first = UnicodeString("A", -1, US_INV)
-    second = UnicodeString("a\\u0306", -1, US_INV).unescape()
-    third = UnicodeString("b")
+    first = icu.UnicodeString("A", -1, icu.US_INV)
+    second = icu.UnicodeString("a\\u0306", -1, icu.US_INV).unescape()
+    third = icu.UnicodeString("b")
     result = n2.normalize_second_and_append(first, second).append(third)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(first)
     assert result == first == "A\u0103b"
 
-    first = UnicodeString("A", -1, US_INV)
+    first = icu.UnicodeString("A", -1, icu.US_INV)
     result = n2.normalize_second_and_append(first, "a\u0306").append(third)
     assert result == first == "A\u0103b"
 
@@ -127,25 +117,23 @@ def test_api():
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    result = n2.quick_check(UnicodeString(0x304C))
-    assert result == UNormalizationCheckResult.UNORM_YES
-    result = n2.quick_check(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
-    )
-    assert result == UNormalizationCheckResult.UNORM_MAYBE
+    result = n2.quick_check(icu.UnicodeString(0x304C))
+    assert result == icu.UNormalizationCheckResult.UNORM_YES
+    result = n2.quick_check(icu.UnicodeString("\\u304B\\u3099", -1, icu.US_INV).unescape())
+    assert result == icu.UNormalizationCheckResult.UNORM_MAYBE
 
     result = n2.quick_check("\u304c")
-    assert result == UNormalizationCheckResult.UNORM_YES
+    assert result == icu.UNormalizationCheckResult.UNORM_YES
     result = n2.quick_check("\u304b\u3099")
-    assert result == UNormalizationCheckResult.UNORM_MAYBE
+    assert result == icu.UNormalizationCheckResult.UNORM_MAYBE
 
     # int32_t icu::Normalizer2::spanQuickCheckYes(
     #       const UnicodeString &s,
     #       UErrorCode &errorCode
     # )
-    assert n2.span_quick_check_yes(UnicodeString(0x304C))
+    assert n2.span_quick_check_yes(icu.UnicodeString(0x304C))
     assert not n2.span_quick_check_yes(
-        UnicodeString("\\u304B\\u3099", -1, US_INV).unescape()
+        icu.UnicodeString("\\u304B\\u3099", -1, icu.US_INV).unescape()
     )
 
     assert n2.span_quick_check_yes("\u304c")
@@ -157,26 +145,24 @@ def test_filtered_normalizer2():
     #       const Normalizer2 &n2,
     #       const UnicodeSet &filterSet
     # )
-    n2 = Normalizer2.get_instance(
-        None, "nfc", UNormalization2Mode.UNORM2_COMPOSE
-    )
-    filter_set = UnicodeSet(UnicodeString("[^\\u00a0-\\u00ff]", -1, US_INV))
-    fn2 = FilteredNormalizer2(n2, filter_set)
+    n2 = icu.Normalizer2.get_instance(None, "nfc", icu.UNormalization2Mode.UNORM2_COMPOSE)
+    filter_set = icu.UnicodeSet(icu.UnicodeString("[^\\u00a0-\\u00ff]", -1, icu.US_INV))
+    fn2 = icu.FilteredNormalizer2(n2, filter_set)
 
-    decomposition = UnicodeString()
+    decomposition = icu.UnicodeString()
     assert n2.get_decomposition(0xE4, decomposition)
-    assert decomposition == UnicodeString("a\\u0308", -1, US_INV).unescape()
+    assert decomposition == icu.UnicodeString("a\\u0308", -1, icu.US_INV).unescape()
 
     assert n2.get_decomposition(0x100, decomposition)
-    assert decomposition == UnicodeString("A\\u0304", -1, US_INV).unescape()
+    assert decomposition == icu.UnicodeString("A\\u0304", -1, icu.US_INV).unescape()
 
     assert not fn2.get_decomposition(0xE4, decomposition)
 
     assert fn2.get_decomposition(0x100, decomposition)
-    assert decomposition == UnicodeString("A\\u0304", -1, US_INV).unescape()
+    assert decomposition == icu.UnicodeString("A\\u0304", -1, icu.US_INV).unescape()
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_get_instance():
     # static const Normalizer2 *icu::Normalizer2::getInstance(
     #       const char *packageName,
@@ -184,72 +170,63 @@ def test_get_instance():
     #       UNormalization2Mode mode,
     #       UErrorCode &errorCode
     # )
-    nfkc1 = Normalizer2.get_instance(
-        None, "nfkc", UNormalization2Mode.UNORM2_COMPOSE
-    )
-    assert isinstance(nfkc1, Normalizer2)
+    nfkc1 = icu.Normalizer2.get_instance(None, "nfkc", icu.UNormalization2Mode.UNORM2_COMPOSE)
+    assert isinstance(nfkc1, icu.Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFCInstance(
     #       UErrorCode &errorCode
     # )
-    nfc = Normalizer2.get_nfc_instance()
-    assert isinstance(nfc, Normalizer2)
+    nfc = icu.Normalizer2.get_nfc_instance()
+    assert isinstance(nfc, icu.Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFDInstance(
     #       UErrorCode &errorCode
     # )
-    nfd = Normalizer2.get_nfd_instance()
-    assert isinstance(nfd, Normalizer2)
+    nfd = icu.Normalizer2.get_nfd_instance()
+    assert isinstance(nfd, icu.Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFKCCasefoldInstance(
     #       UErrorCode &errorCode
     # )
-    nfkc_cf = Normalizer2.get_nfkc_casefold_instance()
-    assert isinstance(nfkc_cf, Normalizer2)
+    nfkc_cf = icu.Normalizer2.get_nfkc_casefold_instance()
+    assert isinstance(nfkc_cf, icu.Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFKCInstance(
     #       UErrorCode &errorCode
     # )
-    nfkc2 = Normalizer2.get_nfkc_instance()
-    assert isinstance(nfkc2, Normalizer2)
+    nfkc2 = icu.Normalizer2.get_nfkc_instance()
+    assert isinstance(nfkc2, icu.Normalizer2)
 
     # static const Normalizer2 *icu::Normalizer2::getNFKDInstance(
     #       UErrorCode &errorCode
     # )
-    nfkd = Normalizer2.get_nfkd_instance()
-    assert isinstance(nfkd, Normalizer2)
+    nfkd = icu.Normalizer2.get_nfkd_instance()
+    assert isinstance(nfkd, icu.Normalizer2)
 
-    source = UnicodeString("\\u1E9B\\u0323\\xDF", -1, US_INV).unescape()
+    source = icu.UnicodeString("\\u1E9B\\u0323\\xDF", -1, icu.US_INV).unescape()
 
     result = nfkc1.normalize(source)
-    assert result == UnicodeString("\\u1E69\\xDF", -1, US_INV).unescape()
+    assert result == icu.UnicodeString("\\u1E69\\xDF", -1, icu.US_INV).unescape()
 
     result = nfkc2.normalize(source)
-    assert result == UnicodeString("\\u1E69\\xDF", -1, US_INV).unescape()
+    assert result == icu.UnicodeString("\\u1E69\\xDF", -1, icu.US_INV).unescape()
 
     result = nfkc_cf.normalize(source)
-    assert result == UnicodeString("\\u1E69ss", -1, US_INV).unescape()
+    assert result == icu.UnicodeString("\\u1E69ss", -1, icu.US_INV).unescape()
 
     result = nfc.normalize(source)
-    assert (
-        result == UnicodeString("\\u1E9B\\u0323\\xDF", -1, US_INV).unescape()
-    )
+    assert result == icu.UnicodeString("\\u1E9B\\u0323\\xDF", -1, icu.US_INV).unescape()
 
     result = nfd.normalize(source)
-    assert (
-        result
-        == UnicodeString("\\u017F\\u0323\\u0307\\xDF", -1, US_INV).unescape()
-    )
+    assert result == icu.UnicodeString("\\u017F\\u0323\\u0307\\xDF", -1, icu.US_INV).unescape()
 
     result = nfkd.normalize(source)
-    assert (
-        result == UnicodeString("s\\u0323\\u0307\\xDF", -1, US_INV).unescape()
-    )
+    assert result == icu.UnicodeString("s\\u0323\\u0307\\xDF", -1, icu.US_INV).unescape()
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
 def test_icu_49():
-    n2 = Normalizer2.get_nfc_instance()
+    n2 = icu.Normalizer2.get_nfc_instance()
 
     # UChar32 icu::Normalizer2::composePair(
     #       UChar32 a,
@@ -264,21 +241,18 @@ def test_icu_49():
     #       UChar32 c,
     #       UnicodeString &decomposition
     # )
-    decomposition = UnicodeString()
+    decomposition = icu.UnicodeString()
     assert n2.get_raw_decomposition(0xC5, decomposition)
-    assert decomposition == UnicodeString("A\\u030A", -1, US_INV).unescape()
+    assert decomposition == icu.UnicodeString("A\\u030A", -1, icu.US_INV).unescape()
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
 def test_icu_60():
-    from icupy.icu import Edits
-
     # From icu/source/test/intltest/tstnorm.cpp
     #  BasicNormalizerTest::TestComposeUTF8WithEdits()
-    nfkc_cf = Normalizer2.get_nfkc_casefold_instance()
+    nfkc_cf = icu.Normalizer2.get_nfkc_casefold_instance()
     src = (
-        "  AÄA\u0308A\u0308\u00ad\u0323Ä\u0323,"
-        "\u00ad\u1100\u1161가\u11a8가\u3133  "
+        "  AÄA\u0308A\u0308\u00ad\u0323Ä\u0323,\u00ad\u1100\u1161가\u11a8가\u3133  "
     ).encode()
     expected = "  aääạ\u0308ạ\u0308,가각갃  ".encode()
 
@@ -293,7 +267,7 @@ def test_icu_60():
     assert isinstance(result, bytes)
     assert result == expected
 
-    edits = Edits()
+    edits = icu.Edits()
     assert not edits.has_changes()
     result = nfkc_cf.normalize_utf8(0, src, edits)
     assert isinstance(result, bytes)
@@ -329,10 +303,10 @@ def test_icu_60():
     assert nfkc_cf.is_normalized_utf8(expected) is True
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
 def test_icu_74():
     # static const Normalizer2 *
     # icu::Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode&)
-    n2 = Normalizer2.get_nfkc_simple_casefold_instance()
-    assert isinstance(n2, Normalizer2)
+    n2 = icu.Normalizer2.get_nfkc_simple_casefold_instance()
+    assert isinstance(n2, icu.Normalizer2)
     assert n2.normalize("aA\u0308 ßẞ \u1f80\u1f88") == "aä ßß \u1f80\u1f80"
