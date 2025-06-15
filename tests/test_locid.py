@@ -6,7 +6,7 @@ from icupy import icu
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_add_likely_subtags():
+def test_add_likely_subtags() -> None:
     # void icu::Locale::addLikelySubtags(UErrorCode &status)
     loc = icu.Locale("sr")
     loc.add_likely_subtags()
@@ -14,7 +14,7 @@ def test_add_likely_subtags():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_canonicalize():
+def test_canonicalize() -> None:
     # "aa_Deva_IN_SAAHO@calendar=japanese"
     loc = icu.Locale.for_language_tag("aa-Deva-IN-SAAHO-u-ca-japanese")
 
@@ -25,7 +25,7 @@ def test_canonicalize():
     assert loc.to_language_tag() == "ssy-Deva-IN-u-ca-japanese"
 
 
-def test_clone():
+def test_clone() -> None:
     test1 = icu.Locale.get_us()
 
     # Locale *icu::Locale::clone()
@@ -41,7 +41,7 @@ def test_clone():
     assert test1.get_name() == test4.get_name()
 
 
-def test_constants():
+def test_constants() -> None:
     # static const Locale &icu::Locale::getCanada(void)
     loc = icu.Locale.get_canada()
     assert isinstance(loc, icu.Locale)
@@ -175,14 +175,14 @@ def test_constants():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_create_canonical():
+def test_create_canonical() -> None:
     # static Locale icu::Locale::createCanonical(const char *name)
     loc = icu.Locale.create_canonical("aa-Deva-IN-SAAHO-u-ca-japanese")
     assert isinstance(loc, icu.Locale)
     assert loc.to_language_tag() == "ssy-Deva-IN-u-ca-japanese"
 
 
-def test_create_from_name():
+def test_create_from_name() -> None:
     # static Locale icu::Locale::createFromName(const char *name)
     loc = icu.Locale.create_from_name(None)
     assert isinstance(loc, icu.Locale)
@@ -196,7 +196,7 @@ def test_create_from_name():
     assert len(loc.get_variant()) == 0
 
 
-def test_create_keywords():
+def test_create_keywords() -> None:
     # StringEnumeration *icu::Locale::createKeywords(UErrorCode &status)
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.create_keywords()
@@ -216,7 +216,7 @@ def test_create_keywords():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_create_unicode_keywords():
+def test_create_unicode_keywords() -> None:
     # StringEnumeration *icu::Locale::createUnicodeKeywords(UErrorCode &status)
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     result = loc.create_unicode_keywords()
@@ -236,7 +236,7 @@ def test_create_unicode_keywords():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_for_language_tag():
+def test_for_language_tag() -> None:
     # static Locale icu::Locale::forLanguageTag(
     #       StringPiece tag,
     #       UErrorCode &status
@@ -246,7 +246,7 @@ def test_for_language_tag():
     assert loc.get_name() == "af@calendar=coptic;t=ar-i0-handwrit;x=foo"
 
 
-def test_get_available_locales():
+def test_get_available_locales() -> None:
     # static const Locale *icu::Locale::getAvailableLocales(int32_t &count)
     result = icu.Locale.get_available_locales()
     assert isinstance(result, list)
@@ -256,19 +256,19 @@ def test_get_available_locales():
     assert icu.Locale.get_root() not in result
 
 
-def test_get_base_name():
+def test_get_base_name() -> None:
     # const char *icu::Locale::getBaseName()
     loc = icu.Locale("de_DE@calendar=buddhist;collation=phonebook")
     assert loc.get_base_name() == "de_DE"
 
 
-def test_get_country():
+def test_get_country() -> None:
     # const char *icu::Locale::getCountry()
     loc = icu.Locale("de_DE@calendar=buddhist;collation=phonebook")
     assert loc.get_country() == "DE"
 
 
-def test_get_default():
+def test_get_default() -> None:
     # static const Locale &icu::Locale::getDefault(void)
     loc = icu.Locale.get_default()
     assert isinstance(loc, icu.Locale)
@@ -276,7 +276,7 @@ def test_get_default():
     assert len(loc.get_name()) > 0
 
 
-def test_get_display_country():
+def test_get_display_country() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -315,7 +315,7 @@ def test_get_display_country():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_display_language():
+def test_get_display_language() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -354,7 +354,7 @@ def test_get_display_language():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_display_name():
+def test_get_display_name() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -391,7 +391,7 @@ def test_get_display_name():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_display_script():
+def test_get_display_script() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -431,7 +431,7 @@ def test_get_display_script():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_display_variant():
+def test_get_display_variant() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -469,19 +469,19 @@ def test_get_display_variant():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_iso3_country():
+def test_get_iso3_country() -> None:
     # const char *icu::Locale::getISO3Country()
     loc = icu.Locale.get_us()
     assert loc.get_iso3_country() == "USA"
 
 
-def test_get_iso3_language():
+def test_get_iso3_language() -> None:
     # const char *icu::Locale::getISO3Language()
     loc = icu.Locale.get_us()
     assert loc.get_iso3_language() == "eng"
 
 
-def test_get_iso_countries():
+def test_get_iso_countries() -> None:
     # static const char * const *icu::Locale::getISOCountries()
     result = icu.Locale.get_iso_countries()
     assert isinstance(result, list)
@@ -490,7 +490,7 @@ def test_get_iso_countries():
     assert all(len(x) == 2 for x in result)
 
 
-def test_get_iso_languages():
+def test_get_iso_languages() -> None:
     # static const char * const *icu::Locale::getISOLanguages()
     result = icu.Locale.get_iso_languages()
     assert isinstance(result, list)
@@ -499,7 +499,7 @@ def test_get_iso_languages():
     assert all(2 <= len(x) <= 3 for x in result)
 
 
-def test_get_keyword_value():
+def test_get_keyword_value() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
 
     # [3]
@@ -527,7 +527,7 @@ def test_get_keyword_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_get_keywords():
+def test_get_keywords() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
 
     # void icu::Locale::getKeywords(
@@ -553,13 +553,13 @@ def test_get_keywords():
     assert len(result) == 0
 
 
-def test_get_lcid():
+def test_get_lcid() -> None:
     # uint32_t icu::Locale::getLCID(void)
     loc = icu.Locale("en", "US")
     assert loc.get_lcid() == 0x409
 
 
-def test_get_name():
+def test_get_name() -> None:
     # const char *icu::Locale::getName()
     loc = icu.Locale("de", "DE")
     loc.set_keyword_value("collation", "phonebook")
@@ -571,7 +571,7 @@ def test_get_name():
     assert repr(loc) == "Locale('de_DE@calendar=buddhist;collation=phonebook')"
 
 
-def test_get_script():
+def test_get_script() -> None:
     # const char *icu::Locale::getScript()
     loc = icu.Locale("no", "NO", "NY")
     assert len(loc.get_script()) == 0
@@ -581,7 +581,7 @@ def test_get_script():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_get_unicode_keyword_value():
+def test_get_unicode_keyword_value() -> None:
     # [2]
     # template<typename StringClass>
     # StringClass icu::Locale::getUnicodeKeywordValue(
@@ -608,7 +608,7 @@ def test_get_unicode_keyword_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_get_unicode_keywords():
+def test_get_unicode_keywords() -> None:
     # void icu::Locale::getUnicodeKeywords(
     #       OutputIterator iterator,
     #       UErrorCode &status
@@ -633,7 +633,7 @@ def test_get_unicode_keywords():
     assert len(result) == 0
 
 
-def test_get_variant():
+def test_get_variant() -> None:
     # const char *icu::Locale::getVariant()
     loc = icu.Locale("no", "NO", "NY")
     assert loc.get_variant() == "NY"
@@ -642,7 +642,7 @@ def test_get_variant():
     assert len(loc.get_variant()) == 0
 
 
-def test_hash_code():
+def test_hash_code() -> None:
     # int32_t icu::Locale::hashCode(void)
     test1 = icu.Locale("en", "US")
     test2 = icu.Locale("en", "US")
@@ -665,7 +665,7 @@ def test_hash_code():
     assert hash(test2) == test2.hash_code()
 
 
-def test_is_bogus():
+def test_is_bogus() -> None:
     # UBool icu::Locale::isBogus(void)
     loc = icu.Locale("en", "US")
     assert loc.is_bogus() is False
@@ -676,7 +676,7 @@ def test_is_bogus():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_is_right_to_left():
+def test_is_right_to_left() -> None:
     # UBool icu::Locale::isRightToLeft()
     loc = icu.Locale("ar")
     assert loc.is_right_to_left() is True
@@ -685,7 +685,7 @@ def test_is_right_to_left():
     assert loc.is_right_to_left() is False
 
 
-def test_locale():
+def test_locale() -> None:
     # [1]
     # icu::Locale::Locale()
     test1 = icu.Locale()
@@ -726,14 +726,14 @@ def test_locale():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_minimize_subtags():
+def test_minimize_subtags() -> None:
     # void icu::Locale::minimizeSubtags(UErrorCode &status)
     loc = icu.Locale("zh_Hant_TW")
     loc.minimize_subtags()
     assert loc.get_name() == "zh_TW"
 
 
-def test_operator():
+def test_operator() -> None:
     test1 = icu.Locale("en", "US")
     test2 = icu.Locale("en", "US")
     test3 = icu.Locale("en", "GB")
@@ -747,7 +747,7 @@ def test_operator():
     assert not (test1 == test3)
 
 
-def test_set_default():
+def test_set_default() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -771,7 +771,7 @@ def test_set_default():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_set_keyword_value():
+def test_set_keyword_value() -> None:
     # [1]
     # void icu::Locale::setKeywordValue(
     #       const char *keywordName,
@@ -795,7 +795,7 @@ def test_set_keyword_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_set_unicode_keyword_value():
+def test_set_unicode_keyword_value() -> None:
     # void icu::Locale::setUnicodeKeywordValue(
     #       StringPiece keywordName,
     #       StringPiece keywordValue,
@@ -818,7 +818,7 @@ def test_set_unicode_keyword_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_to_language_tag():
+def test_to_language_tag() -> None:
     # [2]
     # template<typename StringClass>
     # StringClass icu::Locale::toLanguageTag(UErrorCode &status)

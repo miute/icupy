@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 58:
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     # UBiDiTransform *ubiditransform_open(UErrorCode *pErrorCode)
     # void ubiditransform_close(UBiDiTransform *pBidiTransform)
     with gc(icu.ubiditransform_open(), icu.ubiditransform_close) as transform:

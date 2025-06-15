@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import copy
 from collections.abc import Iterable
 
 from icupy import icu
 
 
-def test_clone():
+def test_clone() -> None:
     # StringEnumeration *icu::Locale::createKeywords(UErrorCode &status)
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it1 = loc.create_keywords()
@@ -46,7 +44,7 @@ def test_clone():
     assert "collation" in t4
 
 
-def test_next():
+def test_next() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
     assert isinstance(it, icu.StringEnumeration)
@@ -78,7 +76,7 @@ def test_next():
     assert "collation" in t
 
 
-def test_operator():
+def test_operator() -> None:
     loc1 = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it1 = loc1.create_keywords()
     assert isinstance(it1, icu.StringEnumeration)
@@ -94,7 +92,7 @@ def test_operator():
     assert it1 == it2
 
 
-def test_reset():
+def test_reset() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
     assert isinstance(it, icu.StringEnumeration)
@@ -110,7 +108,7 @@ def test_reset():
     assert it.next() is not None
 
 
-def test_snext():
+def test_snext() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
     assert isinstance(it, icu.StringEnumeration)
@@ -142,7 +140,7 @@ def test_snext():
     assert "collation" in t2
 
 
-def test_unext():
+def test_unext() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     it = loc.create_keywords()
     assert isinstance(it, icu.StringEnumeration)

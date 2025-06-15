@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     gen1 = icu.DateTimePatternGenerator.create_instance(icu.Locale("en_US"))
     gen2 = icu.DateTimePatternGenerator.create_instance("en_US")
     gen3 = icu.DateTimePatternGenerator.create_instance(icu.Locale("en_US@calendar=japanese"))
@@ -254,7 +254,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
-def test_api_71():
+def test_api_71() -> None:
     dtpg = icu.DateTimePatternGenerator.create_instance(icu.Locale("en_US"))
 
     # const UnicodeString &icu::DateTimePatternGenerator::getDateTimeFormat(
@@ -277,7 +277,7 @@ def test_api_71():
     assert dtpg.get_date_time_format(icu.UDateFormatStyle.UDAT_FULL) == "{1} 'at' {0}"
 
 
-def test_clone():
+def test_clone() -> None:
     gen1 = icu.DateTimePatternGenerator.create_instance("en_US")
 
     # DateTimePatternGenerator *icu::DateTimePatternGenerator::clone()
@@ -292,7 +292,7 @@ def test_clone():
     assert gen4 == gen1
 
 
-def test_create_empty_instance():
+def test_create_empty_instance() -> None:
     # static DateTimePatternGenerator *
     # icu::DateTimePatternGenerator::createEmptyInstance(UErrorCode &status)
     gen = icu.DateTimePatternGenerator.create_empty_instance()
@@ -332,7 +332,7 @@ def test_create_empty_instance():
     assert list(it2) == ["HHmm", "MMMMd", "MMMMMdd"]
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     # [1]
     # static DateTimePatternGenerator *
     # icu::DateTimePatternGenerator::createInstance(
@@ -353,7 +353,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_get_default_hour_cycle():
+def test_get_default_hour_cycle() -> None:
     gen = icu.DateTimePatternGenerator.create_instance(icu.Locale("en_US"))
 
     # UDateFormatHourCycle icu::DateTimePatternGenerator::getDefaultHourCycle(
@@ -363,7 +363,7 @@ def test_get_default_hour_cycle():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
-def test_get_field_display_name():
+def test_get_field_display_name() -> None:
     gen = icu.DateTimePatternGenerator.create_instance(icu.Locale("en_US"))
 
     # UnicodeString icu::DateTimePatternGenerator::getFieldDisplayName(
@@ -379,7 +379,7 @@ def test_get_field_display_name():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
-def test_static_get_skeleton():
+def test_static_get_skeleton() -> None:
     # static UnicodeString
     # icu::DateTimePatternGenerator::staticGetBaseSkeleton(
     #       const UnicodeString &pattern,

@@ -6,7 +6,7 @@ from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 
 
-def test_basic_time_zone():
+def test_basic_time_zone() -> None:
     assert issubclass(icu.BasicTimeZone, icu.TimeZone)
 
     zone1 = icu.TimeZone.create_time_zone("America/Los_Angeles")
@@ -101,7 +101,7 @@ def test_basic_time_zone():
     assert zone5.has_equivalent_transitions(zone6, start, end, True) is True
 
 
-def test_basic_time_zone_get_offset():
+def test_basic_time_zone_get_offset() -> None:
     zone = icu.TimeZone.create_time_zone("America/Los_Angeles")
     assert isinstance(zone, icu.BasicTimeZone)
 
@@ -119,7 +119,7 @@ def test_basic_time_zone_get_offset():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_basic_time_zone_get_offset_from_local():
+def test_basic_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
     zone = icu.TimeZone.create_time_zone("America/Los_Angeles")
@@ -143,7 +143,7 @@ def test_basic_time_zone_get_offset_from_local():
     assert dst_offset == 0
 
 
-def test_rule_based_time_zone():
+def test_rule_based_time_zone() -> None:
     assert issubclass(icu.RuleBasedTimeZone, icu.BasicTimeZone)
     assert issubclass(icu.RuleBasedTimeZone, icu.TimeZone)
     initial_rule1 = icu.InitialTimeZoneRule("STD", 0, 0)
@@ -345,7 +345,7 @@ def test_rule_based_time_zone():
     assert zone2.use_daylight_time() is False
 
 
-def test_rule_based_time_zone_get_offset():
+def test_rule_based_time_zone_get_offset() -> None:
     initial_rule = icu.InitialTimeZoneRule("r1(STD)", 8 * HOUR, 0)
     zone = icu.RuleBasedTimeZone("r1", initial_rule)
     dr1 = icu.DateTimeRule(
@@ -438,7 +438,7 @@ def test_rule_based_time_zone_get_offset():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_rule_based_time_zone_get_offset_from_local():
+def test_rule_based_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
     zone = icu.RuleBasedTimeZone(
@@ -497,7 +497,7 @@ def test_rule_based_time_zone_get_offset_from_local():
     assert dst_offset == 0
 
 
-def test_simple_time_zone():
+def test_simple_time_zone() -> None:
     assert issubclass(icu.SimpleTimeZone, icu.BasicTimeZone)
     assert issubclass(icu.SimpleTimeZone, icu.TimeZone)
 
@@ -801,7 +801,7 @@ def test_simple_time_zone():
     assert zone5.use_daylight_time() is True
 
 
-def test_simple_time_zone_get_offset():
+def test_simple_time_zone_get_offset() -> None:
     zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
@@ -904,7 +904,7 @@ def test_simple_time_zone_get_offset():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_simple_time_zone_get_offset_from_local():
+def test_simple_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
     zone = icu.SimpleTimeZone(
@@ -938,7 +938,7 @@ def test_simple_time_zone_get_offset_from_local():
     assert dst_offset == 0
 
 
-def test_simple_time_zone_set_end_rule():
+def test_simple_time_zone_set_end_rule() -> None:
     zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
@@ -1114,7 +1114,7 @@ def test_simple_time_zone_set_end_rule():
     assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
 
-def test_simple_time_zone_set_start_rule():
+def test_simple_time_zone_set_start_rule() -> None:
     zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
@@ -1290,7 +1290,7 @@ def test_simple_time_zone_set_start_rule():
     assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
 
-def test_time_zone():
+def test_time_zone() -> None:
     id_ = icu.UnicodeString("PST")
 
     # static TimeZone *icu::TimeZone::createDefault(void)
@@ -1460,7 +1460,7 @@ def test_time_zone():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM > 69, reason="ICU4C>69")
-def test_time_zone_create_enumeration_69():
+def test_time_zone_create_enumeration_69() -> None:
     # **Deprecated in ICU 70**
     # [1]
     # static StringEnumeration *icu::TimeZone::createEnumeration()
@@ -1497,7 +1497,7 @@ def test_time_zone_create_enumeration_69():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_time_zone_create_enumeration_70():
+def test_time_zone_create_enumeration_70() -> None:
     # [4]
     # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       UErrorCode &status
@@ -1533,14 +1533,14 @@ def test_time_zone_create_enumeration_70():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_time_zone_detect_host_time_zone():
+def test_time_zone_detect_host_time_zone() -> None:
     # static TimeZone *icu::TimeZone::detectHostTimeZone()
     zone = icu.TimeZone.detect_host_time_zone()
     assert isinstance(zone, icu.BasicTimeZone)
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_time_zone_get_iana_id():
+def test_time_zone_get_iana_id() -> None:
     # static UnicodeString &
     # icu::TimeZone::getIanaID(
     #       const UnicodeString &id,
@@ -1560,14 +1560,14 @@ def test_time_zone_get_iana_id():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_time_zone_get_unknown():
+def test_time_zone_get_unknown() -> None:
     # static const TimeZone &icu::TimeZone::getUnknown()
     zone = icu.TimeZone.get_unknown()
     assert isinstance(zone, icu.BasicTimeZone)
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_time_zone_get_windows_id():
+def test_time_zone_get_windows_id() -> None:
     # static UnicodeString &icu::TimeZone::getWindowsID(
     #       const UnicodeString &id,
     #       UnicodeString &winid,
@@ -1608,7 +1608,7 @@ def test_time_zone_get_windows_id():
     )
 
 
-def test_time_zone_has_same_rules():
+def test_time_zone_has_same_rules() -> None:
     # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     id_ = "Europe/Moscow"
     otz = icu.TimeZone.create_time_zone(id_)
@@ -1625,7 +1625,7 @@ def test_time_zone_has_same_rules():
     assert vtz2.has_same_rules(stz2) is True
 
 
-def test_vtime_zone():
+def test_vtime_zone() -> None:
     assert issubclass(icu.VTimeZone, icu.BasicTimeZone)
     assert issubclass(icu.VTimeZone, icu.TimeZone)
 
@@ -1862,7 +1862,7 @@ def test_vtime_zone():
     assert len(result3) > 0
 
 
-def test_vtime_zone_get_offset():
+def test_vtime_zone_get_offset() -> None:
     basic_tz = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
@@ -1940,7 +1940,7 @@ def test_vtime_zone_get_offset():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_vtime_zone_get_offset_from_local():
+def test_vtime_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
     zone = icu.VTimeZone.create_vtime_zone_by_id("America/Los_Angeles")

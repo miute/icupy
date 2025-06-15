@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.DateIntervalFormat, icu.Format)
 
     fmt1 = icu.DateIntervalFormat.create_instance("yMMMd", icu.Locale.get_english())
@@ -57,7 +57,7 @@ def test_api():
     assert fmt2.get_time_zone() == zone
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.DateIntervalFormat.create_instance("yMMMd", icu.Locale.get_english())
 
     # DateIntervalFormat *icu::DateIntervalFormat::clone()
@@ -72,7 +72,7 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     dtitvinf = icu.DateIntervalInfo(icu.Locale.get_english())
 
     # [1]
@@ -142,7 +142,7 @@ def test_create_instance():
     assert fmt4 == fmt4a
 
 
-def test_date_interval():
+def test_date_interval() -> None:
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
     to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
 
@@ -182,7 +182,7 @@ def test_date_interval():
     assert itv2.get_to_date() == to_date
 
 
-def test_date_interval_info():
+def test_date_interval_info() -> None:
     # [2]
     # icu::DateIntervalInfo::DateIntervalInfo(
     #       const Locale &locale,
@@ -315,7 +315,7 @@ def test_date_interval_info():
     )
 
 
-def test_format():
+def test_format() -> None:
     en_locale = icu.Locale.get_english()
     fmt = icu.DateIntervalFormat.create_instance("yMMMd", en_locale)
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
@@ -417,7 +417,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_format_to_value():
+def test_format_to_value() -> None:
     from_date = 1366934400000.0  # 2013-04-26T00:00:00Z
     to_date = 1367107200000.0  # 2013-04-28T00:00:00Z
 
@@ -457,7 +457,7 @@ def test_format_to_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_formatted_date_interval():
+def test_formatted_date_interval() -> None:
     assert issubclass(icu.FormattedDateInterval, icu.FormattedValue)
 
     # icu::FormattedDateInterval::FormattedDateInterval()
@@ -542,7 +542,7 @@ def test_formatted_date_interval():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_get_context():
+def test_get_context() -> None:
     fmt = icu.DateIntervalFormat.create_instance("yMMMd", icu.Locale.get_english())
 
     # UDisplayContext icu::DateIntervalFormat::getContext(
@@ -565,7 +565,7 @@ def test_get_context():
     )
 
 
-def test_get_time_zone_upcasting():
+def test_get_time_zone_upcasting() -> None:
     fmt = icu.DateIntervalFormat.create_instance("yMMMd")
 
     fmt.set_time_zone(icu.TimeZone.get_gmt())

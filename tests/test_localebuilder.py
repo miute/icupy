@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 64:
     pytest.skip("ICU4C<64", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     # icu::LocaleBuilder::LocaleBuilder()
     bld = icu.LocaleBuilder()
 
@@ -125,7 +125,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
-def test_copy_error_to():
+def test_copy_error_to() -> None:
     bld = icu.LocaleBuilder()
     bld.set_language("en").build()
 

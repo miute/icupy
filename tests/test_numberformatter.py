@@ -9,7 +9,7 @@ import copy
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_formatted_number_62():
+def test_formatted_number_62() -> None:
     fmt = (
         icu.number.NumberFormatter.with_()
         .notation(icu.number.Notation.compact_short())
@@ -37,7 +37,7 @@ def test_formatted_number_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_formatted_number_64():
+def test_formatted_number_64() -> None:
     assert issubclass(icu.number.FormattedNumber, icu.FormattedValue)
 
     # icu::number::FormattedNumber::FormattedNumber()
@@ -86,7 +86,7 @@ def test_formatted_number_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
-def test_formatted_number_65():
+def test_formatted_number_65() -> None:
     fmt = (
         icu.number.NumberFormatter.with_()
         .notation(icu.number.Notation.compact_short())
@@ -106,7 +106,7 @@ def test_formatted_number_65():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_formatted_number_68():
+def test_formatted_number_68() -> None:
     fmt = (
         icu.number.NumberFormatter.with_()
         .usage("person")
@@ -125,7 +125,7 @@ def test_formatted_number_68():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM != 71, reason="ICU4C!=71")
-def test_formatted_number_get_noun_class_71():
+def test_formatted_number_get_noun_class_71() -> None:
     fmt = (
         icu.number.NumberFormatter.with_()
         .unit(icu.MeasureUnit.for_identifier("cubic-meter"))
@@ -139,7 +139,7 @@ def test_formatted_number_get_noun_class_71():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
-def test_formatted_number_get_noun_class_72():
+def test_formatted_number_get_noun_class_72() -> None:
     fmt = (
         icu.number.NumberFormatter.with_()
         .unit(icu.MeasureUnit.for_identifier("cubic-meter"))
@@ -153,7 +153,7 @@ def test_formatted_number_get_noun_class_72():
     assert num.get_noun_class() == icu.UDisplayOptionsNounClass.UDISPOPT_NOUN_CLASS_MASCULINE
 
 
-def test_integer_width():
+def test_integer_width() -> None:
     # icu::number::IntegerWidth
     assert isinstance(icu.number.IntegerWidth.zero_fill_to(3), icu.number.IntegerWidth)
     assert isinstance(
@@ -162,7 +162,7 @@ def test_integer_width():
     )
 
 
-def test_localized_number_formatter_60():
+def test_localized_number_formatter_60() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
     assert isinstance(fmt, icu.number.LocalizedNumberFormatter)
 
@@ -244,7 +244,7 @@ def test_localized_number_formatter_60():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
-def test_localized_number_formatter_61():
+def test_localized_number_formatter_61() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
     assert isinstance(fmt, icu.number.LocalizedNumberFormatter)
 
@@ -264,7 +264,7 @@ def test_localized_number_formatter_61():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_localized_number_formatter_62():
+def test_localized_number_formatter_62() -> None:
     # [1]
     # icu::number::LocalizedNumberFormatter::LocalizedNumberFormatter()
     fmt = icu.number.LocalizedNumberFormatter()
@@ -325,7 +325,7 @@ def test_localized_number_formatter_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_localized_number_formatter_64():
+def test_localized_number_formatter_64() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us()).notation(
         icu.number.Notation.engineering()
     )
@@ -347,7 +347,7 @@ def test_localized_number_formatter_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_localized_number_formatter_68():
+def test_localized_number_formatter_68() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
     assert isinstance(fmt, icu.number.LocalizedNumberFormatter)
 
@@ -360,7 +360,7 @@ def test_localized_number_formatter_68():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
-def test_localized_number_formatter_72():
+def test_localized_number_formatter_72() -> None:
     bld = icu.DisplayOptions.builder()
     display_options = bld.set_grammatical_case(
         icu.UDisplayOptionsGrammaticalCase.UDISPOPT_GRAMMATICAL_CASE_DATIVE
@@ -383,7 +383,7 @@ def test_localized_number_formatter_72():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
-def test_localized_number_formatter_75():
+def test_localized_number_formatter_75() -> None:
     # UnlocalizedNumberFormatter
     # icu::number::LocalizedNumberFormatter::withoutLocale() const &
     lnf2 = (
@@ -403,7 +403,7 @@ def test_localized_number_formatter_75():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_localized_number_formatter_to_format():
+def test_localized_number_formatter_to_format() -> None:
     # [1]
     # icu::number::LocalizedNumberFormatter::LocalizedNumberFormatter()
     fmt = icu.number.LocalizedNumberFormatter()
@@ -517,7 +517,7 @@ def test_localized_number_formatter_to_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_no_unit():
+def test_no_unit() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     unit = icu.NoUnit.base()
@@ -533,7 +533,7 @@ def test_no_unit():
     assert fmt.unit(unit).format_int(1).to_string() == "1\u2030"  # 1‰
 
 
-def test_number_formatter_60():
+def test_number_formatter_60() -> None:
     # static UnlocalizedNumberFormatter icu::number::NumberFormatter::with()
     fmt = icu.number.NumberFormatter.with_()
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
@@ -549,7 +549,7 @@ def test_number_formatter_60():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_number_formatter_62():
+def test_number_formatter_62() -> None:
     # [1]
     # static UnlocalizedNumberFormatter
     # icu::number::NumberFormatter::forSkeleton(
@@ -566,7 +566,7 @@ def test_number_formatter_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_number_formatter_64():
+def test_number_formatter_64() -> None:
     # [2]
     # static UnlocalizedNumberFormatter
     # icu::number::NumberFormatter::forSkeleton(
@@ -585,7 +585,7 @@ def test_number_formatter_64():
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
 
 
-def test_notation():
+def test_notation() -> None:
     # icu::number::Notation
     assert isinstance(icu.number.Notation.compact_long(), icu.number.Notation)
     assert isinstance(icu.number.Notation.compact_short(), icu.number.Notation)
@@ -611,7 +611,7 @@ def test_notation():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_precision_60_62():
+def test_precision_60_62() -> None:
     # icu::number::Precision
     assert isinstance(
         icu.number.Precision.currency(icu.UCurrencyUsage.UCURR_USAGE_STANDARD),
@@ -662,7 +662,7 @@ def test_precision_60_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_precision_62():
+def test_precision_62() -> None:
     # icu::number::Precision
     assert isinstance(icu.number.Precision.fixed_significant_digits(3), icu.number.Precision)
     assert isinstance(icu.number.Precision.max_significant_digits(4), icu.number.Precision)
@@ -674,7 +674,7 @@ def test_precision_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_precision_69():
+def test_precision_69() -> None:
     # icu::number::Precision
     assert isinstance(
         (
@@ -699,7 +699,7 @@ def test_precision_69():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
-def test_precision_71():
+def test_precision_71() -> None:
     # static IncrementPrecision icu::number::Precision::incrementExact(
     #       uint64_t mantissa,
     #       int16_t magnitude
@@ -711,7 +711,7 @@ def test_precision_71():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_scale():
+def test_scale() -> None:
     # icu::number::Scale
     assert isinstance(icu.number.Scale.by_decimal("5.2"), icu.number.Scale)
     assert isinstance(icu.number.Scale.by_double(5.2), icu.number.Scale)
@@ -720,7 +720,7 @@ def test_scale():
     assert isinstance(icu.number.Scale.power_of_ten(2), icu.number.Scale)
 
 
-def test_unlocalized_number_formatter_60():
+def test_unlocalized_number_formatter_60() -> None:
     fmt = icu.number.NumberFormatter.with_()
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
 
@@ -790,7 +790,7 @@ def test_unlocalized_number_formatter_60():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 61, reason="ICU4C<61")
-def test_unlocalized_number_formatter_61():
+def test_unlocalized_number_formatter_61() -> None:
     fmt = icu.number.NumberFormatter.with_()
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
 
@@ -810,7 +810,7 @@ def test_unlocalized_number_formatter_61():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_unlocalized_number_formatter_62():
+def test_unlocalized_number_formatter_62() -> None:
     # [1]
     # icu::number::UnlocalizedNumberFormatter::UnlocalizedNumberFormatter()
     fmt = icu.number.UnlocalizedNumberFormatter()
@@ -856,7 +856,7 @@ def test_unlocalized_number_formatter_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_unlocalized_number_formatter_64():
+def test_unlocalized_number_formatter_64() -> None:
     fmt = icu.number.NumberFormatter.with_().notation(icu.number.Notation.engineering())
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
     assert fmt.locale("en-US").format_double(0.8765).to_string() == "876.5E-3"
@@ -876,7 +876,7 @@ def test_unlocalized_number_formatter_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_unlocalized_number_formatter_68():
+def test_unlocalized_number_formatter_68() -> None:
     fmt = icu.number.NumberFormatter.with_()
     assert isinstance(fmt, icu.number.UnlocalizedNumberFormatter)
 
@@ -889,7 +889,7 @@ def test_unlocalized_number_formatter_68():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
-def test_unlocalized_number_formatter_72():
+def test_unlocalized_number_formatter_72() -> None:
     bld = icu.DisplayOptions.builder()
     display_options = bld.set_grammatical_case(
         icu.UDisplayOptionsGrammaticalCase.UDISPOPT_GRAMMATICAL_CASE_DATIVE

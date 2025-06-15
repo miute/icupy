@@ -6,7 +6,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_append():
+def test_append() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::append(char16_t srcChar)
     test1 = icu.UnicodeString()
@@ -86,7 +86,7 @@ def test_append():
     assert test1 == "foo bar baz"
 
 
-def test_case_compare():
+def test_case_compare() -> None:
     s = "\x61\u0308\x62"
     test1 = icu.UnicodeString("a\\u0308b").unescape()
     test2 = icu.UnicodeString(s)
@@ -189,7 +189,7 @@ def test_case_compare():
     )
 
 
-def test_char_at():
+def test_char_at() -> None:
     test1 = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     assert test1.length() == 4
     assert len(test1) == 4
@@ -252,7 +252,7 @@ def test_char_at():
     assert test1 == "A\U0001f363B"
 
 
-def test_clone():
+def test_clone() -> None:
     test1 = icu.UnicodeString(0x1F338)
 
     # UnicodeString *icu::UnicodeString::clone()
@@ -268,7 +268,7 @@ def test_clone():
     assert test4 == test1
 
 
-def test_compare():
+def test_compare() -> None:
     test1 = icu.UnicodeString("foo bar")
     test2 = icu.UnicodeString("foo bar")
     test3 = icu.UnicodeString("foo bar baz")
@@ -343,7 +343,7 @@ def test_compare():
     assert test1.compare_between(0, len(test1), str(test3), 0, len(test3)) < 0
 
 
-def test_compare_code_point_order():
+def test_compare_code_point_order() -> None:
     s = "\x61\u0308\x62"
     test1 = icu.UnicodeString("a\\u0308b").unescape()
     test2 = icu.UnicodeString(s)
@@ -409,7 +409,7 @@ def test_compare_code_point_order():
     assert test1.compare_code_point_order_between(0, len(test2), str(test2), 0, len(test1)) == 0
 
 
-def test_constants():
+def test_constants() -> None:
     assert icu.UnicodeString.SENTINEL == icu.U_SENTINEL
     assert icu.UnicodeString.COMPARE_CODE_POINT_ORDER == icu.U_COMPARE_CODE_POINT_ORDER
     assert icu.UnicodeString.FOLD_CASE_DEFAULT == icu.U_FOLD_CASE_DEFAULT
@@ -421,13 +421,13 @@ def test_constants():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_constants_60():
+def test_constants_60() -> None:
     assert icu.UnicodeString.TITLECASE_ADJUST_TO_CASED == icu.U_TITLECASE_ADJUST_TO_CASED
     assert icu.UnicodeString.TITLECASE_SENTENCES == icu.U_TITLECASE_SENTENCES
     assert icu.UnicodeString.TITLECASE_WHOLE_STRING == icu.U_TITLECASE_WHOLE_STRING
 
 
-def test_copy():
+def test_copy() -> None:
     # void icu::UnicodeString::copy(
     #       int32_t start,
     #       int32_t limit,
@@ -438,7 +438,7 @@ def test_copy():
     assert test1 == "abcb"
 
 
-def test_ends_with():
+def test_ends_with() -> None:
     test1 = icu.UnicodeString("foo bar")
     test2 = icu.UnicodeString("foo")
     test3 = icu.UnicodeString("bar")
@@ -479,7 +479,7 @@ def test_ends_with():
     assert test1.ends_with(s3, -1) is True
 
 
-def test_extract():
+def test_extract() -> None:
     # [1]
     # int32_t icu::UnicodeString::extract(
     #       char *dest,
@@ -611,7 +611,7 @@ def test_extract():
     assert len(target) == 0
 
 
-def test_extract_between():
+def test_extract_between() -> None:
     src = "a\\uD83C\\uDF38b\\x00c"
     test1 = icu.UnicodeString(src, -1, icu.US_INV).unescape()
     test2 = test1.clone()
@@ -711,7 +711,7 @@ def test_extract_between():
     assert len(target) == 0
 
 
-def test_fast_copy_from():
+def test_fast_copy_from() -> None:
     test1 = icu.UnicodeString(0x1F338)
     test2 = icu.UnicodeString("foo bar baz")
 
@@ -721,7 +721,7 @@ def test_fast_copy_from():
     assert id(test1) == id(test3)
 
 
-def test_find_and_replace():
+def test_find_and_replace() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::findAndReplace(
     #       const UnicodeString &oldText,
@@ -833,7 +833,7 @@ def test_find_and_replace():
     assert test3 == "Foo bar Baz"
 
 
-def test_fold_case():
+def test_fold_case() -> None:
     # U+0041: Latin Capital Letter A
     # U+0398: Greek Capital Letter Theta
     # U+0414: Cyrillic Capital Letter De
@@ -869,7 +869,7 @@ def test_fold_case():
     assert test3 == "\u0131"
 
 
-def test_from_utf32():
+def test_from_utf32() -> None:
     s1 = "a\U0001f338b"
 
     # static UnicodeString icu::UnicodeString::fromUTF32(
@@ -890,7 +890,7 @@ def test_from_utf32():
     assert s2 == s1
 
 
-def test_from_utf8():
+def test_from_utf8() -> None:
     b1 = b"a\xf0\x9f\x8c\xb8b"
     expected = "a\U0001f338b"
 
@@ -918,7 +918,7 @@ def test_from_utf8():
     assert repr(test2) == "UnicodeString('\\'Julius\\x09C\\u04d5sar\\'', text_length=14)"
 
 
-def test_get_buffer():
+def test_get_buffer() -> None:
     test1 = icu.UnicodeString("abc", -1, icu.US_INV)
     test1.append(icu.UnicodeString("\\uD83C \\uDF38").unescape())
 
@@ -994,7 +994,7 @@ def test_get_buffer():
     assert test1.get_terminated_buffer() is None
 
 
-def test_handle_replace_between():
+def test_handle_replace_between() -> None:
     # virtual void icu::UnicodeString::handleReplaceBetween(
     #       int32_t start,
     #       int32_t limit,
@@ -1013,7 +1013,7 @@ def test_handle_replace_between():
     assert test1 == "FOO BAR BAZ"
 
 
-def test_hash_code():
+def test_hash_code() -> None:
     test1 = icu.UnicodeString("abc")
     test2 = icu.UnicodeString("abc")
 
@@ -1036,7 +1036,7 @@ def test_hash_code():
     assert hash(test2) == test2.hash_code()
 
 
-def test_index_of():
+def test_index_of() -> None:
     raw_text = (
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
         "sed do eiusmod tempor incididunt ut labore et dolore magna "
@@ -1162,7 +1162,7 @@ def test_index_of():
     assert test2 in test1
 
 
-def test_insert():
+def test_insert() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::insert(
     #       int32_t start,
@@ -1248,7 +1248,7 @@ def test_insert():
     assert test1 == "foo bar baz"
 
 
-def test_last_index_of():
+def test_last_index_of() -> None:
     text = (
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
         "sed do eiusmod tempor incididunt ut labore et dolore magna "
@@ -1370,7 +1370,7 @@ def test_last_index_of():
     assert test3.last_index_of(0xD841, 10, 8) == 17
 
 
-def test_move_index32():
+def test_move_index32() -> None:
     test1 = icu.UnicodeString("a\U00010000b\U0010ffff\u2029")
 
     # int32_t icu::UnicodeString::moveIndex32(
@@ -1382,7 +1382,7 @@ def test_move_index32():
     assert test1.move_index32(test1.length(), -2) == 4
 
 
-def test_operator():
+def test_operator() -> None:
     test1 = icu.UnicodeString("foo bar baz", -1, icu.US_INV)
     test2 = icu.UnicodeString("foo bar baz")
     test3 = icu.UnicodeString("foo bar")
@@ -1505,7 +1505,7 @@ def test_operator():
     assert id(test7) == object_id
 
 
-def test_operator_setitem():
+def test_operator_setitem() -> None:
     test1 = icu.UnicodeString("abcd")
 
     # UnicodeString.__setitem__(index: int, value: str|int)
@@ -1543,7 +1543,7 @@ def test_operator_setitem():
         test1[0] = 0x10000  # [0, 0xffff]
 
 
-def test_pad_leading():
+def test_pad_leading() -> None:
     # UBool icu::UnicodeString::padLeading(
     #       int32_t targetLength,
     #       char16_t padChar = 0x0020
@@ -1557,7 +1557,7 @@ def test_pad_leading():
     assert test1 == ".......foo"
 
 
-def test_pad_trailing():
+def test_pad_trailing() -> None:
     # UBool icu::UnicodeString::padTrailing(
     #       int32_t targetLength,
     #       char16_t padChar = 0x0020
@@ -1571,7 +1571,7 @@ def test_pad_trailing():
     assert test1 == "foo......."
 
 
-def test_remove():
+def test_remove() -> None:
     test1 = icu.UnicodeString("foo bar baz")
 
     # [2]
@@ -1613,7 +1613,7 @@ def test_remove():
     assert test1 == "foo"
 
 
-def test_replace():
+def test_replace() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::replace(
     #       int32_t start,
@@ -1710,7 +1710,7 @@ def test_replace():
     assert test1 == "\U0001f30d\U0001f30f\U0001f30e"
 
 
-def test_replace_between():
+def test_replace_between() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::replaceBetween(
     #       int32_t start,
@@ -1766,7 +1766,7 @@ def test_replace_between():
     assert test1 == "FOO BAR BAZ"
 
 
-def test_retain_between():
+def test_retain_between() -> None:
     # UnicodeString &icu::UnicodeString::retainBetween(
     #       int32_t start,
     #       int32_t limit = INT32_MAX
@@ -1784,7 +1784,7 @@ def test_retain_between():
     assert test1 == "bar baz"
 
 
-def test_reverse():
+def test_reverse() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::reverse(
     #       int32_t start,
@@ -1805,7 +1805,7 @@ def test_reverse():
     assert test1 == "9876543210"
 
 
-def test_set_to():
+def test_set_to() -> None:
     # [2]
     # UnicodeString &icu::UnicodeString::setTo(char16_t srcChar)
     test1 = icu.UnicodeString("a\U0001f338b", -1, icu.US_INV)
@@ -1874,7 +1874,7 @@ def test_set_to():
     assert test1 == "\U0001f338"
 
 
-def test_starts_with():
+def test_starts_with() -> None:
     test1 = icu.UnicodeString("foo bar")
     test2 = icu.UnicodeString("foo")
     test3 = icu.UnicodeString("bar")
@@ -1915,7 +1915,7 @@ def test_starts_with():
     assert test1.starts_with(s3, -1) is False
 
 
-def test_swap():
+def test_swap() -> None:
     test1 = icu.UnicodeString("abcd", 4, icu.US_INV)
     test2 = icu.UnicodeString(100, 0x7A, 100)
 
@@ -1927,7 +1927,7 @@ def test_swap():
     assert test2 == "abcd"
 
 
-def test_temp_sub_string():
+def test_temp_sub_string() -> None:
     # UnicodeString icu::UnicodeString::tempSubString(
     #       int32_t start = 0,
     #       int32_t length = INT32_MAX
@@ -1963,7 +1963,7 @@ def test_temp_sub_string():
     assert test1 == "abcdbc"
 
 
-def test_to_lower():
+def test_to_lower() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -2009,7 +2009,7 @@ def test_to_lower():
             icu.Locale.set_default(default_locale)
 
 
-def test_to_title():
+def test_to_title() -> None:
     # [1]
     # UnicodeString &icu::UnicodeString::toTitle(BreakIterator *titleIter)
     test1 = icu.UnicodeString("sTrA\\u00dfE", -1, icu.US_INV).unescape()
@@ -2098,7 +2098,7 @@ def test_to_title():
     assert test1 == icu.UnicodeString(" john. smith")
 
 
-def test_to_upper():
+def test_to_upper() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -2168,7 +2168,7 @@ def test_to_upper():
             icu.Locale.set_default(default_locale)
 
 
-def test_trim():
+def test_trim() -> None:
     test1 = icu.UnicodeString("  \\U0001f338  ", -1, icu.US_INV).unescape()
     assert len(test1) == 6
 
@@ -2180,7 +2180,7 @@ def test_trim():
     assert test1 == "a\U0001f338b"
 
 
-def test_truncate():
+def test_truncate() -> None:
     test1 = icu.UnicodeString("foo bar baz", -1, icu.US_INV).unescape()
 
     # UBool icu::UnicodeString::truncate(int32_t targetLength)
@@ -2192,7 +2192,7 @@ def test_truncate():
     assert test1 == "foo bar"
 
 
-def test_unescape():
+def test_unescape() -> None:
     # From icu/source/test/intltest/ustrtest.cpp:
     # void UnicodeStringTest::TestUnescape(void)
     s = "abc\\u4567 \\n\\r \\U00101234xyz\\x1\\x{5289}\\x1b"
@@ -2217,7 +2217,7 @@ def test_unescape():
     assert result2 == out
 
 
-def test_unicode_string():
+def test_unicode_string() -> None:
     # [1]
     # icu::UnicodeString::UnicodeString()
     test1 = icu.UnicodeString()
@@ -2369,7 +2369,7 @@ def test_unicode_string():
     assert test27 == "bar"
 
 
-def test_unicode_string_appendable():
+def test_unicode_string_appendable() -> None:
     assert issubclass(icu.UnicodeStringAppendable, icu.Appendable)
 
     dest = icu.UnicodeString()
@@ -2392,7 +2392,7 @@ def test_unicode_string_appendable():
     assert dest == "a\U0001f338b\U0001f338cdef"
 
 
-def test_unicode_string_vector():
+def test_unicode_string_vector() -> None:
     # [1]
     # UnicodeStringVector.__init__()
     t1 = icu.UnicodeStringVector()
@@ -2444,7 +2444,7 @@ def test_unicode_string_vector():
     assert t5[2] == "baz"
 
 
-def test_unicode_string_vector_api():
+def test_unicode_string_vector_api() -> None:
     t1 = icu.UnicodeStringVector(["foo"])
 
     # UnicodeStringVector.append(item: UnicodeString|str)
@@ -2550,7 +2550,7 @@ def test_unicode_string_vector_api():
     assert len(t1) == 0
 
 
-def test_unicode_string_vector_operators():
+def test_unicode_string_vector_operators() -> None:
     t1 = icu.UnicodeStringVector(["foo", "bar", "baz"])
     t2 = icu.UnicodeStringVector(t1)
     t3 = icu.UnicodeStringVector(["foo", "bar", "baz", "qux"])

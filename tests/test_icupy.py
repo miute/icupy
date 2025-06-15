@@ -7,7 +7,7 @@ from icupy import icu
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_constrained_field_position():
+def test_constrained_field_position() -> None:
     # icu::ConstrainedFieldPosition
     cfpos = icu.ConstrainedFieldPosition()
 
@@ -67,7 +67,7 @@ def test_constrained_field_position():
     assert cfpos.matches_field(category, 1) is True
 
 
-def test_field_position():
+def test_field_position() -> None:
     # icu::FieldPosition
     # FieldPosition.__repr__() -> str
     fmt = icu.DateFormat.create_date_time_instance(
@@ -102,7 +102,7 @@ def test_field_position():
     assert fpos1 != fpos2
 
 
-def test_icu_error():
+def test_icu_error() -> None:
     assert issubclass(icu.ICUError, Exception)
 
     fmt = icu.DateFormat.create_date_time_instance(
@@ -162,7 +162,7 @@ def test_icu_error():
 
 
 @pytest.mark.skipif(not sys.platform.startswith("win"), reason="On Windows only")
-def test_import():
+def test_import() -> None:
     import importlib
     import os
     import tempfile
@@ -182,7 +182,7 @@ def test_import():
             del os.environ["ICU_ROOT"]
 
 
-def test_parse_position():
+def test_parse_position() -> None:
     # icu::ParsePosition
     pos1 = icu.ParsePosition()
     pos2 = icu.ParsePosition(1)
@@ -235,14 +235,14 @@ def test_parse_position():
     assert repr(pos) == "<ParsePosition(index=0, error_index=18)>"
 
 
-def test_u_failure():
+def test_u_failure() -> None:
     assert icu.u_failure(icu.UErrorCode.U_USING_FALLBACK_WARNING) is False
     assert icu.u_failure(icu.UErrorCode.U_ZERO_ERROR) is False
     assert icu.u_failure(icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR) is True
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_u_get_data_version():
+def test_u_get_data_version() -> None:
     # void u_getDataVersion(
     #       UVersionInfo dataVersionFillin,
     #       UErrorCode *status
@@ -254,7 +254,7 @@ def test_u_get_data_version():
     assert all(x >= 0 for x in data_version)
 
 
-def test_u_get_version():
+def test_u_get_version() -> None:
     # void u_getVersion(UVersionInfo versionArray)
     version_array = icu.u_get_version()
     assert isinstance(version_array, tuple)
@@ -263,13 +263,13 @@ def test_u_get_version():
     assert all(x >= 0 for x in version_array)
 
 
-def test_u_success():
+def test_u_success() -> None:
     assert icu.u_success(icu.UErrorCode.U_USING_FALLBACK_WARNING) is True
     assert icu.u_success(icu.UErrorCode.U_ZERO_ERROR) is True
     assert icu.u_success(icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR) is False
 
 
-def test_u_version_from_string():
+def test_u_version_from_string() -> None:
     # void u_versionFromString(
     #       UVersionInfo versionArray,
     #       const char *versionString
@@ -283,7 +283,7 @@ def test_u_version_from_string():
     assert version_array[3] == 89
 
 
-def test_u_version_to_string():
+def test_u_version_to_string() -> None:
     # void u_versionToString(
     #       const UVersionInfo versionArray,
     #       char *versionString
@@ -306,7 +306,7 @@ def test_u_version_to_string():
         _ = icu.u_version_to_string([256, 0, 0, 0])  # [0, 255]
 
 
-def test_uparse_error():
+def test_uparse_error() -> None:
     # UParseError.__repr__() -> str
     pattern = icu.UnicodeString("I see {many}")
     parse_error = icu.UParseError()

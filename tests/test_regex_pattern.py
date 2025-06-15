@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_clone():
+def test_clone() -> None:
     regex = icu.UnicodeString("\\w+")
     test1 = icu.RegexPattern.compile(regex, 0)
     assert isinstance(test1, icu.RegexPattern)
@@ -22,7 +22,7 @@ def test_clone():
     assert test4.pattern() == regex
 
 
-def test_compile():
+def test_compile() -> None:
     s = "\\w+"
 
     # [1]
@@ -125,7 +125,7 @@ def test_compile():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_group_number_from_name():
+def test_group_number_from_name() -> None:
     regex = icu.UnicodeString("01(?<A>23(?<B>45)67)(?<C>.*)")
     pattern = icu.RegexPattern.compile(regex, 0)
 
@@ -153,7 +153,7 @@ def test_group_number_from_name():
     assert pattern.group_number_from_name("C") == 3
 
 
-def test_matcher():
+def test_matcher() -> None:
     regex = icu.UnicodeString("\\w+")
     pattern = icu.RegexPattern.compile(regex, 0)
 
@@ -176,7 +176,7 @@ def test_matcher():
     assert len(matcher2.input()) == 0
 
 
-def test_matches():
+def test_matches() -> None:
     regex1 = icu.UnicodeString("[A-Za-z]+")
     src1a = icu.UnicodeString("abc")
     src1b = icu.UnicodeString("123")
@@ -221,7 +221,7 @@ def test_matches():
     icu.utext_close(src2b)
 
 
-def test_operator():
+def test_operator() -> None:
     regex = icu.UnicodeString("\\w+")
     test1 = icu.RegexPattern.compile(regex, 0)
     test2 = icu.RegexPattern.compile(regex, icu.URegexpFlag.UREGEX_CASE_INSENSITIVE)
@@ -236,7 +236,7 @@ def test_operator():
     assert test1 == test3
 
 
-def test_pattern_text():
+def test_pattern_text() -> None:
     regex = icu.UnicodeString("\\w+")
     pattern = icu.RegexPattern.compile(regex, 0)
 
@@ -252,7 +252,7 @@ def test_pattern_text():
     icu.utext_close(result2)
 
 
-def test_regex_pattern():
+def test_regex_pattern() -> None:
     # [1]
     # icu::RegexPattern::RegexPattern()
     test1 = icu.RegexPattern()
@@ -268,7 +268,7 @@ def test_regex_pattern():
     assert test2.pattern() == "\\w+"
 
 
-def test_split():
+def test_split() -> None:
     regex = icu.UnicodeString("\\s+")
     pattern = icu.RegexPattern.compile(regex, 0)
     src1 = icu.UnicodeString("foo bar baz")

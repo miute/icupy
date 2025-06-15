@@ -1,7 +1,7 @@
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
     coll.set_attribute(icu.UColAttribute.UCOL_STRENGTH, icu.UColAttributeValue.UCOL_TERTIARY)
     source = icu.UnicodeString("Abcd")

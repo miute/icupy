@@ -9,7 +9,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 59:
 
 
 # From icu/source/test/intltest/strcase.cpp
-def test_api_59():
+def test_api_59() -> None:
     # [1]
     # icu::Edits::Edits()
     edits = icu.Edits()
@@ -69,7 +69,7 @@ def test_api_59():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_api_60():
+def test_api_60() -> None:
     other = icu.Edits()
     other.add_unchanged(1)
     other.add_unchanged(10000)
@@ -209,7 +209,7 @@ def test_api_60():
     assert t1 == t2
 
 
-def test_edits_iterator_59():
+def test_edits_iterator_59() -> None:
     edits = icu.Edits()
     edits.add_unchanged(1)
     edits.add_unchanged(10000)
@@ -274,7 +274,7 @@ def test_edits_iterator_59():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_edits_iterator_60():
+def test_edits_iterator_60() -> None:
     src = "abcßDeF"
     edits = icu.Edits()
     icu.CaseMap.fold(0, src, -1, edits)

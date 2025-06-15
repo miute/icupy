@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 50:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     rules = icu.PluralRules.create_rules("odd: n mod 2 is 1")
     fmt = icu.PluralFormat(rules)
 
@@ -49,7 +49,7 @@ def test_api():
     assert not (fmt2 == fmt3)
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.PluralFormat(icu.Locale.get_english())
 
     # PluralFormat *icu::PluralFormat::clone()
@@ -64,7 +64,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
+def test_format() -> None:
     # From icu/source/test/intltest/plurfmts.cpp
     pattern = "one{#st file}two{#nd file}few{#rd file}other{#th file}"
     fmt = icu.PluralFormat(
@@ -164,7 +164,7 @@ def test_format():
     assert result == "3rd file"
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     pattern = "one{#st file}two{#nd file}few{#rd file}other{#th file}"
     fmt = icu.PluralFormat(
         icu.Locale.get_english(), icu.UPluralType.UPLURAL_TYPE_ORDINAL, pattern
@@ -204,7 +204,7 @@ def test_parse_object():
     assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
 
-def test_plural_format():
+def test_plural_format() -> None:
     locale = icu.Locale.get_default()
     rules = icu.PluralRules.create_default_rules()
     pattern = icu.UnicodeString("other{#}")

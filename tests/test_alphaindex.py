@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_add_labels():
+def test_add_labels() -> None:
     # [1]
     # AlphabeticIndex &icu::AlphabeticIndex::addLabels(
     #       const Locale &locale,
@@ -36,7 +36,7 @@ def test_add_labels():
     assert index.get_bucket_count() == 31
 
 
-def test_add_record():
+def test_add_record() -> None:
     index = icu.AlphabeticIndex(icu.Locale.get_english())
     obj3 = index
     obj4 = {"AlphabeticIndex": index}
@@ -141,7 +141,7 @@ def test_add_record():
     assert index.get_record_count() == 0
 
 
-def test_api():
+def test_api() -> None:
     # [1]
     # icu::AlphabeticIndex::AlphabeticIndex(
     #       const Locale &locale,
@@ -263,7 +263,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_api_51():
+def test_api_51() -> None:
     # [2]
     # icu::AlphabeticIndex::AlphabeticIndex(
     #       RuleBasedCollator *collator,

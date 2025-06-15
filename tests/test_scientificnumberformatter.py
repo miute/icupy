@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 55:
 import copy
 
 
-def test_clone():
+def test_clone() -> None:
     decfmt = icu.NumberFormat.create_scientific_instance("en")
     decfmt.apply_pattern("0.00E+0")
     fmt1 = icu.ScientificNumberFormatter.create_superscript_instance(decfmt)
@@ -33,7 +33,7 @@ def test_clone():
     assert append_to == "6.02\u00d710\u207a\u00b2\u00b3"
 
 
-def test_create_markup_instance():
+def test_create_markup_instance() -> None:
     # [1]
     # static ScientificNumberFormatter *
     # icu::ScientificNumberFormatter::createMarkupInstance(
@@ -112,7 +112,7 @@ def test_create_markup_instance():
     assert isinstance(fmt, icu.ScientificNumberFormatter)
 
 
-def test_create_superscript_instance():
+def test_create_superscript_instance() -> None:
     # [1]
     # static ScientificNumberFormatter *
     # icu::ScientificNumberFormatter::createSuperscriptInstance(
@@ -138,7 +138,7 @@ def test_create_superscript_instance():
     assert isinstance(fmt, icu.ScientificNumberFormatter)
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.ScientificNumberFormatter.create_markup_instance("en", "<sup>", "</sup>")
 
     # UnicodeString &icu::ScientificNumberFormatter::format(

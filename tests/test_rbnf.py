@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/intltest/itrbnf.cpp
     rules = (
         "%main:"
@@ -79,7 +79,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_api_49():
+def test_api_49() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_ORDINAL, icu.Locale.get_us())
 
     # void icu::RuleBasedNumberFormat::setDecimalFormatSymbols(
@@ -97,7 +97,7 @@ def test_api_49():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_api_53():
+def test_api_53() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
 
     # UDisplayContext icu::NumberFormat::getContext(
@@ -121,7 +121,7 @@ def test_api_53():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_api_60():
+def test_api_60() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
 
     # ERoundingMode icu::RuleBasedNumberFormat::getRoundingMode(void)
@@ -134,7 +134,7 @@ def test_api_60():
     assert fmt.get_rounding_mode() == icu.RuleBasedNumberFormat.ROUND_HALF_EVEN
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
 
     # RuleBasedNumberFormat *icu::RuleBasedNumberFormat::clone()
@@ -149,7 +149,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
     d = -10456.0037
     s = "-1.045600e+04"
@@ -409,7 +409,7 @@ def test_format():
     assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
 
-def test_get_rule_set_display_name():
+def test_get_rule_set_display_name() -> None:
     # From icu/source/test/intltest/itrbnf.cpp
     rules = (
         "%main:"
@@ -473,7 +473,7 @@ def test_get_rule_set_display_name():
     assert result == "das Main"
 
 
-def test_parse():
+def test_parse() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
     d = -10456.0037
     s = "minus ten thousand four hundred fifty-six point zero zero three seven"
@@ -517,7 +517,7 @@ def test_parse():
     assert result.get_double() == d
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.RuleBasedNumberFormat(icu.URBNFRuleSetTag.URBNF_SPELLOUT, icu.Locale.get_us())
     d = -10456.0037
     s = "minus ten thousand four hundred fifty-six point zero zero three seven"
@@ -559,7 +559,7 @@ def test_parse_object():
     assert result.get_double() == d
 
 
-def test_rule_based_number_format():
+def test_rule_based_number_format() -> None:
     assert issubclass(icu.RuleBasedNumberFormat, icu.NumberFormat)
 
     rules = icu.UnicodeString("=#,##0=;1,000,000: <##0.###< million;")

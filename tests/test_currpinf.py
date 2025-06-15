@@ -3,7 +3,7 @@ import copy
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     cpi1 = icu.CurrencyPluralInfo(icu.Locale.get_us())
     cpi2 = cpi1.clone()
     cpi3 = icu.CurrencyPluralInfo(icu.Locale.get_uk())
@@ -70,7 +70,7 @@ def test_api():
     cpi2.set_plural_rules("a: n mod 10 is 2")
 
 
-def test_clone():
+def test_clone() -> None:
     cpi1 = icu.CurrencyPluralInfo()
 
     # CurrencyPluralInfo *icu::CurrencyPluralInfo::clone()
@@ -85,7 +85,7 @@ def test_clone():
     assert cpi1 == cpi4
 
 
-def test_currency_plural_info():
+def test_currency_plural_info() -> None:
     default_locale = icu.Locale.get_default()
 
     try:

@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 53:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     # [1]
     # icu::MeasureFormat::MeasureFormat(
     #       const Locale &locale,
@@ -61,7 +61,7 @@ def test_api():
     assert loc == icu.Locale("en-US")
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
 
     # MeasureFormat *icu::MeasureFormat::clone()
@@ -76,7 +76,7 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_currency_amount():
+def test_currency_amount() -> None:
     assert issubclass(icu.CurrencyAmount, icu.Measure)
 
     # [1]
@@ -125,7 +125,7 @@ def test_currency_amount():
     assert iso_code == "USD"
 
 
-def test_format():
+def test_format() -> None:
     fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
     fmt2 = icu.MeasureFormat.create_currency_format("en-US")
 
@@ -271,7 +271,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_format_measure_per_unit():
+def test_format_measure_per_unit() -> None:
     fmt = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_SHORT)
 
     # UnicodeString &icu::MeasureFormat::formatMeasurePerUnit(
@@ -294,7 +294,7 @@ def test_format_measure_per_unit():
     assert result in ("50 lbf/in\xb2", "50 psi")  # 50 lbf/in²
 
 
-def test_format_measures():
+def test_format_measures() -> None:
     fmt = icu.MeasureFormat("fr-FR", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_NARROW)
 
     # UnicodeString &icu::MeasureFormat::formatMeasures(
@@ -324,7 +324,7 @@ def test_format_measures():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
-def test_get_unit_display_name():
+def test_get_unit_display_name() -> None:
     fmt1 = icu.MeasureFormat("en", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
     fmt2 = icu.MeasureFormat("ja", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
 
@@ -341,7 +341,7 @@ def test_get_unit_display_name():
     assert result == "\u5e74"  # 年
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt1 = icu.MeasureFormat("en-US", icu.UMeasureFormatWidth.UMEASFMT_WIDTH_WIDE)
     fmt2 = icu.MeasureFormat.create_currency_format("en-US")
 
@@ -421,7 +421,7 @@ def test_parse_object():
     assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
 
-def test_measure():
+def test_measure() -> None:
     # [1]
     # icu::Measure::Measure(const Formattable &number,
     #                       MeasureUnit *adoptedUnit,
@@ -459,7 +459,7 @@ def test_measure():
     assert isinstance(unit, icu.MeasureUnit)
 
 
-def test_time_unit_amount():
+def test_time_unit_amount() -> None:
     assert issubclass(icu.TimeUnitAmount, icu.Measure)
 
     # [1]

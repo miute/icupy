@@ -6,7 +6,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_open():
+def test_open() -> None:
     path = Path(__file__).resolve().parent / "testdata"
     try:
         # UStringPrepProfile *usprep_open(
@@ -28,7 +28,7 @@ def test_open():
         )
 
 
-def test_open_by_type():
+def test_open_by_type() -> None:
     # From icu/source/test/cintltst/spreptst.c
 
     # UStringPrepProfile *usprep_openByType(

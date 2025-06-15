@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/intltest/selfmts.cpp
     fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
@@ -38,7 +38,7 @@ def test_api():
     assert not (fmt2 == fmt3)
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # SelectFormat *icu::SelectFormat::clone()
@@ -53,7 +53,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
     append_to = icu.UnicodeString()
 
@@ -124,7 +124,7 @@ def test_format():
     assert result == "feminineVerbValue"
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # void icu::SelectFormat::parseObject(
@@ -161,7 +161,7 @@ def test_parse_object():
     assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
 
-def test_select_format():
+def test_select_format() -> None:
     pattern = icu.UnicodeString("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # [1]

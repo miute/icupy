@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     fmt2 = icu.Formattable(1231027200000.0, icu.Formattable.IS_DATE)
     fmt3 = icu.Formattable(float(icu.INT32_MAX + 1))
     fmt4 = icu.Formattable(icu.INT32_MAX)
@@ -186,7 +186,7 @@ def test_api():
     assert fmt1 != fmt8
 
 
-def test_clone():
+def test_clone() -> None:
     fmt2 = icu.Formattable(1231027200000.0, icu.Formattable.IS_DATE)
     fmt3 = icu.Formattable(float(icu.INT32_MAX))
     fmt4 = icu.Formattable(icu.INT32_MAX)
@@ -210,7 +210,7 @@ def test_clone():
     assert test3.get_array() == array
 
 
-def test_formattable():
+def test_formattable() -> None:
     # [1]
     # icu::Formattable::Formattable()
     fmt1 = icu.Formattable()
@@ -304,7 +304,7 @@ def test_formattable():
     assert fmt12.get_array() == array
 
 
-def test_get_object_upcasting():
+def test_get_object_upcasting() -> None:
     fmt = icu.Formattable(icu.TimeZone.get_gmt())
     zone = fmt.get_object()
     assert isinstance(zone, icu.SimpleTimeZone)

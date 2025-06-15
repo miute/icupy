@@ -6,7 +6,7 @@ import pytest
 from icupy import icu
 
 
-def test_clone():
+def test_clone() -> None:
     test1 = icu.Collator.create_instance(icu.Locale.get_japanese())
     rules1 = test1.get_rules()
 
@@ -25,7 +25,7 @@ def test_clone():
     assert rules4 == rules1
 
 
-def test_compare():
+def test_compare() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
     source = icu.UnicodeString("ABC")
     target = icu.UnicodeString("abc")
@@ -78,7 +78,7 @@ def test_compare():
     assert coll.compare_utf8(source, target) == icu.UCollationResult.UCOL_EQUAL
 
 
-def test_create_collation_element_iterator():
+def test_create_collation_element_iterator() -> None:
     coll = icu.Collator.create_instance(icu.Locale("es"))
 
     # [1]
@@ -142,7 +142,7 @@ def test_create_collation_element_iterator():
     assert it2a.next() == icu.CollationElementIterator.NULLORDER
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     # [1]
     # static Collator *icu::Collator::createInstance(
     #       const Locale &loc,
@@ -166,7 +166,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_equal_to():
+def test_equal_to() -> None:
     # from icu/source/test/intltest/collationtest.cpp
     #  CollationTest::TestCollatorPredicates()
     coll = icu.Collator.create_instance(icu.Locale.get_root())
@@ -180,7 +180,7 @@ def test_equal_to():
     assert coll.equal_to("aaa", "bbb") is False
 
 
-def test_equals():
+def test_equals() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
     source = icu.UnicodeString("ABC")
     target = icu.UnicodeString("abc")
@@ -201,7 +201,7 @@ def test_equals():
     assert coll.equals("ABC", "abc") is True
 
 
-def test_get_attribute():
+def test_get_attribute() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_canada_french())
 
     # UColAttributeValue icu::RuleBasedCollator::getAttribute(
@@ -253,7 +253,7 @@ def test_get_attribute():
     )
 
 
-def test_get_available_locales():
+def test_get_available_locales() -> None:
     # [1]
     # static const Locale *icu::Collator::getAvailableLocales(
     #       int32_t &count
@@ -265,7 +265,7 @@ def test_get_available_locales():
     assert icu.Locale("ja") in it
 
 
-def test_get_bound():
+def test_get_bound() -> None:
     coll = icu.Collator.create_instance(icu.Locale("sh"))
     source = coll.get_sort_key("Smith", -1)
 
@@ -293,7 +293,7 @@ def test_get_bound():
     assert result2 == result2a
 
 
-def test_get_collation_key():
+def test_get_collation_key() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
 
     # [1]
@@ -327,7 +327,7 @@ def test_get_collation_key():
     assert key2.compare_to(key1) == icu.UCollationResult.UCOL_LESS
 
 
-def test_get_display_name():
+def test_get_display_name() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -386,7 +386,7 @@ def test_get_display_name():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_equivalent_reorder_codes():
+def test_get_equivalent_reorder_codes() -> None:
     # static int32_t icu::Collator::getEquivalentReorderCodes(
     #       int32_t reorderCode,
     #       int32_t *dest,
@@ -402,7 +402,7 @@ def test_get_equivalent_reorder_codes():
     ]
 
 
-def test_get_functional_equivalent():
+def test_get_functional_equivalent() -> None:
     # static Locale icu::Collator::getFunctionalEquivalent(
     #       const char *keyword,
     #       const Locale &locale,
@@ -422,7 +422,7 @@ def test_get_functional_equivalent():
     assert is_available is True
 
 
-def test_get_keywords():
+def test_get_keywords() -> None:
     # static StringEnumeration *icu::Collator::getKeywords(UErrorCode &status)
     keywords = icu.Collator.get_keywords()
     assert isinstance(keywords, icu.StringEnumeration)
@@ -456,7 +456,7 @@ def test_get_keywords():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_get_max_variable():
+def test_get_max_variable() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_japanese())
 
     # UColReorderCode icu::Collator::getMaxVariable()
@@ -478,7 +478,7 @@ def test_get_max_variable():
     assert weight1 != weight2
 
 
-def test_get_reorder_codes():
+def test_get_reorder_codes() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_japanese())
 
     # int32_t icu::Collator::getReorderCodes(
@@ -509,7 +509,7 @@ def test_get_reorder_codes():
     assert dest == reorder_codes
 
 
-def test_get_rules():
+def test_get_rules() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_japanese())
 
     # [1]
@@ -531,7 +531,7 @@ def test_get_rules():
     assert rules3 != rules1
 
 
-def test_get_sort_key():
+def test_get_sort_key() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_japanese())
 
     # [1]
@@ -561,7 +561,7 @@ def test_get_sort_key():
     assert result1 > result2
 
 
-def test_get_tailored_set():
+def test_get_tailored_set() -> None:
     coll1 = icu.Collator.create_instance(icu.Locale.get_english())
 
     # UnicodeSet *icu::Collator::getTailoredSet(UErrorCode &status)
@@ -575,7 +575,7 @@ def test_get_tailored_set():
     assert len(uniset2) > 0
 
 
-def test_get_version():
+def test_get_version() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_japanese())
 
     # void icu::Collator::getVersion(UVersionInfo info)
@@ -586,7 +586,7 @@ def test_get_version():
     assert info[0] > 0
 
 
-def test_greater():
+def test_greater() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
     source = icu.UnicodeString("ABC")
     target = icu.UnicodeString("abc")
@@ -608,7 +608,7 @@ def test_greater():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_greater_equal():
+def test_greater_equal() -> None:
     # from icu/source/test/intltest/collationtest.cpp
     #  CollationTest::TestCollatorPredicates()
     coll = icu.Collator.create_instance(icu.Locale.get_root())
@@ -622,7 +622,7 @@ def test_greater_equal():
     assert coll.greater_equal("aaa", "bbb") is False
 
 
-def test_greater_or_equal():
+def test_greater_or_equal() -> None:
     coll = icu.Collator.create_instance(icu.Locale.get_english())
     source = icu.UnicodeString("ABC")
     target = icu.UnicodeString("abc")
@@ -643,7 +643,7 @@ def test_greater_or_equal():
     assert coll.greater_or_equal("ABC", "abc")
 
 
-def test_hash_code():
+def test_hash_code() -> None:
     coll1 = icu.Collator.create_instance(icu.Locale.get_english())
     coll2 = icu.Collator.create_instance(icu.Locale("da", "DK", ""))
     coll3 = icu.Collator.create_instance(icu.Locale.get_english())
@@ -659,7 +659,7 @@ def test_hash_code():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_less():
+def test_less() -> None:
     # from icu/source/test/intltest/collationtest.cpp
     #  CollationTest::TestCollatorPredicates()
     coll = icu.Collator.create_instance(icu.Locale.get_root())
@@ -675,7 +675,7 @@ def test_less():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_less_equal():
+def test_less_equal() -> None:
     # from icu/source/test/intltest/collationtest.cpp
     #  CollationTest::TestCollatorPredicates()
     coll = icu.Collator.create_instance(icu.Locale.get_root())
@@ -690,7 +690,7 @@ def test_less_equal():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_not_equal_to():
+def test_not_equal_to() -> None:
     # from icu/source/test/intltest/collationtest.cpp
     #  CollationTest::TestCollatorPredicates()
     coll = icu.Collator.create_instance(icu.Locale.get_root())
@@ -704,7 +704,7 @@ def test_not_equal_to():
     assert coll.not_equal_to("aaa", "aaa") is False
 
 
-def test_operator():
+def test_operator() -> None:
     coll1 = icu.Collator.create_instance(icu.Locale.get_english())
     coll2 = icu.Collator.create_instance(icu.Locale("da", "DK", ""))
     coll3 = icu.Collator.create_instance(icu.Locale.get_english())
@@ -717,7 +717,7 @@ def test_operator():
     assert coll2 != coll3
 
 
-def test_rule_based_collator():
+def test_rule_based_collator() -> None:
     assert issubclass(icu.RuleBasedCollator, icu.Collator)
 
     base = icu.Collator.create_instance(icu.Locale.get_japanese())
@@ -826,7 +826,7 @@ def test_rule_based_collator():
     assert buffer == buffer3
 
 
-def test_sort():
+def test_sort() -> None:
     # From
     #  https://unicode-org.github.io/icu/userguide/collation/customization/#simple-tailoring-examples
     src = [
@@ -842,7 +842,7 @@ def test_sort():
     rules = base.get_rules() + icu.UnicodeString("& C < č <<< Č < ć <<< Ć")
     coll = icu.RuleBasedCollator(rules)
 
-    def _cmp(_a, _b):
+    def _cmp(_a: str, _b: str) -> int:
         nonlocal coll
         _result = coll.compare(_a, -1, _b, -1)
         return (

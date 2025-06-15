@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     fmt = icu.ListFormatter.create_instance(icu.Locale("en", "US"))
 
     # [2]
@@ -35,7 +35,7 @@ def test_api():
     assert result == "Alice, Bob, Charlie, and Delta"
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     # [1]
     # static ListFormatter *icu::ListFormatter::createInstance(
     #       const Locale &locale,
@@ -56,7 +56,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_create_instance_67():
+def test_create_instance_67() -> None:
     # [2]
     # static ListFormatter *icu::ListFormatter::createInstance(
     #       const Locale &locale,
@@ -80,7 +80,7 @@ def test_create_instance_67():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_format_strings_to_value():
+def test_format_strings_to_value() -> None:
     assert issubclass(icu.FormattedList, icu.FormattedValue)
 
     # icu::FormattedList::FormattedList()
@@ -180,7 +180,7 @@ def test_format_strings_to_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_list_formatter_52():
+def test_list_formatter_52() -> None:
     fmt = icu.ListFormatter.create_instance(icu.Locale("en", "US"))
     assert isinstance(fmt, icu.ListFormatter)
 

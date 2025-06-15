@@ -2,7 +2,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     # void ulocdata_getCLDRVersion(
     #       UVersionInfo versionArray,
     #       UErrorCode *status

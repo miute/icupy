@@ -4,7 +4,7 @@ from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 
 
-def test_annual_time_zone_rule():
+def test_annual_time_zone_rule() -> None:
     assert issubclass(icu.AnnualTimeZoneRule, icu.TimeZoneRule)
     assert isinstance(icu.AnnualTimeZoneRule.MAX_YEAR, int)
     assert icu.AnnualTimeZoneRule.MAX_YEAR > 0
@@ -165,7 +165,7 @@ def test_annual_time_zone_rule():
     )
 
 
-def test_date_time_rule():
+def test_date_time_rule() -> None:
     # [1]
     # icu::DateTimeRule::DateTimeRule(
     #       int32_t month,
@@ -304,7 +304,7 @@ def test_date_time_rule():
     )
 
 
-def test_initial_time_zone_rule():
+def test_initial_time_zone_rule() -> None:
     assert issubclass(icu.InitialTimeZoneRule, icu.TimeZoneRule)
 
     # [1]
@@ -398,7 +398,7 @@ def test_initial_time_zone_rule():
     )
 
 
-def test_time_array_time_zone_rule():
+def test_time_array_time_zone_rule() -> None:
     assert issubclass(icu.TimeArrayTimeZoneRule, icu.TimeZoneRule)
     start_times = [0.0, 10000000.0]
 
@@ -532,7 +532,7 @@ def test_time_array_time_zone_rule():
     )
 
 
-def test_time_zone_transition():
+def test_time_zone_transition() -> None:
     date_time_rule1 = icu.DateTimeRule(
         icu.UCalendarMonths.UCAL_JULY,
         1,

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import copy
-from typing import Union
 
 import pytest
 
@@ -10,8 +11,8 @@ from icupy import icu
 class _TestSearch(icu.SearchIterator):
     def __init__(
         self,
-        pattern: Union[icu.UnicodeString, str],
-        text: Union[icu.StringCharacterIterator, icu.UnicodeString, str],
+        pattern: icu.UnicodeString | str,
+        text: icu.StringCharacterIterator | icu.UnicodeString | str,
     ) -> None:
         super().__init__(text)
         self._pattern = pattern
@@ -62,7 +63,7 @@ class _TestSearch(icu.SearchIterator):
             self._offset = position
 
 
-def test_api():
+def test_api() -> None:
     pattern = icu.UnicodeString("abab")
     text = icu.UnicodeString("abababab")
     breakiter = icu.BreakIterator.create_character_instance(icu.Locale.get_us())
@@ -211,7 +212,7 @@ def test_api():
     assert result == text
 
 
-def test_clone():
+def test_clone() -> None:
     pattern = icu.UnicodeString("fox")
     text = icu.UnicodeString("The quick brown fox jumps over the lazy dog.")
     breakiter = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
@@ -242,7 +243,7 @@ def test_clone():
     assert test5 == test1
 
 
-def test_operator():
+def test_operator() -> None:
     pattern = icu.UnicodeString("fox")
     text = icu.UnicodeString("The quick brown fox jumps over the lazy dog.")
     breakiter = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
@@ -265,7 +266,7 @@ def test_operator():
     assert test1 == test2
 
 
-def test_set_text():
+def test_set_text() -> None:
     pattern = icu.UnicodeString("a")
     text = icu.UnicodeString("abc")
     coll = icu.Collator.create_instance(icu.Locale.get_us())
@@ -295,7 +296,7 @@ def test_set_text():
     assert it.get_text() == text
 
 
-def test_string_search():
+def test_string_search() -> None:
     assert issubclass(icu.StringSearch, icu.SearchIterator)
 
     pattern = icu.UnicodeString("fox")
@@ -477,7 +478,7 @@ def test_string_search():
     assert test5.get_text() == text1
 
 
-def test_subclass_next():
+def test_subclass_next() -> None:
     pattern = icu.UnicodeString("abc")
     text = icu.UnicodeString("abc abcd abc")
     si = _TestSearch(pattern, text)
@@ -507,7 +508,7 @@ def test_subclass_next():
     assert si.get_offset() == 0
 
 
-def test_subclass_previous():
+def test_subclass_previous() -> None:
     pattern = icu.UnicodeString("abc")
     text = icu.UnicodeString("abc abcd abc")
     si = _TestSearch(pattern, text)
@@ -534,7 +535,7 @@ def test_subclass_previous():
     assert si.get_matched_length() == 0
 
 
-def test_subclass_set_text():
+def test_subclass_set_text() -> None:
     pattern = "abc"
     text = "abc abcd abc"
     si = _TestSearch(pattern, text)

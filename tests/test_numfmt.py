@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.NumberFormat, icu.Format)
     assert issubclass(icu.DecimalFormat, icu.NumberFormat)
 
@@ -45,7 +45,7 @@ def test_api():
     assert fmt.is_parse_integer_only() is False
 
 
-def test_create_currency_instance():
+def test_create_currency_instance() -> None:
     default_locale = icu.Locale.get_default()
 
     try:
@@ -81,7 +81,7 @@ def test_create_currency_instance():
         icu.Locale.set_default(default_locale)
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     default_locale = icu.Locale.get_default()
 
     try:
@@ -208,7 +208,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_create_instance_53():
+def test_create_instance_53() -> None:
     # UNUM_CURRENCY_ACCOUNTING
     test = icu.NumberFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberFormatStyle.UNUM_CURRENCY_ACCOUNTING
@@ -217,7 +217,7 @@ def test_create_instance_53():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_create_instance_54():
+def test_create_instance_54() -> None:
     # UNUM_CASH_CURRENCY
     test = icu.NumberFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberFormatStyle.UNUM_CASH_CURRENCY
@@ -226,7 +226,7 @@ def test_create_instance_54():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 56, reason="ICU4C<56")
-def test_create_instance_56():
+def test_create_instance_56() -> None:
     # UNUM_DECIMAL_COMPACT_SHORT -> U_UNSUPPORTED_ERROR (ICU 69+)
     with pytest.raises(icu.ICUError) as exc_info:
         _ = icu.NumberFormat.create_instance(
@@ -250,7 +250,7 @@ def test_create_instance_56():
     assert isinstance(test, icu.DecimalFormat)
 
 
-def test_create_percent_instance():
+def test_create_percent_instance() -> None:
     default_locale = icu.Locale.get_default()
 
     try:
@@ -286,7 +286,7 @@ def test_create_percent_instance():
         icu.Locale.set_default(default_locale)
 
 
-def test_create_scientific_instance():
+def test_create_scientific_instance() -> None:
     default_locale = icu.Locale.get_default()
 
     try:

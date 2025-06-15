@@ -1,7 +1,7 @@
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # int64_t utmscale_getTimeScaleValue(
     #       UDateTimeScale timeScale,
     #       UTimeScaleValue value,

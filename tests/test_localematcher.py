@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 65:
     pytest.skip("ICU4C<65", allow_module_level=True)
 
 
-def test_builder():
+def test_builder() -> None:
     locales = [icu.Locale("fr"), icu.Locale("en_GB"), icu.Locale("en")]
 
     # icu::LocaleMatcher::Builder::Builder()
@@ -105,7 +105,7 @@ def test_builder():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_builder_set_direction():
+def test_builder_set_direction() -> None:
     # Builder &icu::LocaleMatcher::Builder::setDirection(
     #       ULocMatchDirection direction
     # )
@@ -121,7 +121,7 @@ def test_builder_set_direction():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_builder_set_max_distance():
+def test_builder_set_max_distance() -> None:
     # Builder &icu::LocaleMatcher::Builder::setMaxDistance(
     #       const Locale &desired,
     #       const Locale &supported
@@ -149,7 +149,7 @@ def test_builder_set_max_distance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_builder_set_no_default_locale():
+def test_builder_set_no_default_locale() -> None:
     # Builder &icu::LocaleMatcher::Builder::setNoDefaultLocale()
     locales = [icu.Locale("fr"), icu.Locale("en_GB"), icu.Locale("en")]
     matcher = (
@@ -164,7 +164,7 @@ def test_builder_set_no_default_locale():
     assert matcher.get_best_match("ja_JP") is None
 
 
-def test_get_best_match_result():
+def test_get_best_match_result() -> None:
     locales = [icu.Locale("fr"), icu.Locale("en-GB")]
     matcher = (
         icu.LocaleMatcher.Builder()

@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 73:
     pytest.skip("ICU4C<73", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     # icu::number::SimpleNumberFormatter::SimpleNumberFormatter()
     fmt1 = icu.number.SimpleNumberFormatter()
 
@@ -20,7 +20,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM > 74, reason="ICU4C>74")
-def test_deprecated_75():
+def test_deprecated_75() -> None:
     """Deprecated or Obsoleted in ICU 75."""
     snf = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
         "en-US", icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
@@ -42,7 +42,7 @@ def test_deprecated_75():
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
-def test_for_locale():
+def test_for_locale() -> None:
     # static SimpleNumberFormatter
     # icu::number::SimpleNumberFormatter::forLocale(
     #       const icu::Locale &locale,
@@ -61,7 +61,7 @@ def test_for_locale():
     assert fv.to_temp_string() == "-1’000’007"
 
 
-def test_for_locale_and_grouping_strategy():
+def test_for_locale_and_grouping_strategy() -> None:
     # static SimpleNumberFormatter
     # icu::number::SimpleNumberFormatter::forLocaleAndGroupingStrategy(
     #       const icu::Locale &locale,
@@ -85,7 +85,7 @@ def test_for_locale_and_grouping_strategy():
     assert fv.to_temp_string() == "-1’000’007"
 
 
-def test_for_locale_and_symbols_and_grouping_strategy():
+def test_for_locale_and_symbols_and_grouping_strategy() -> None:
     # static SimpleNumberFormatter
     # icu::number::SimpleNumberFormatter::forLocaleAndSymbolsAndGroupingStrategy(
     #   	const icu::Locale &locale,
@@ -115,7 +115,7 @@ def test_for_locale_and_symbols_and_grouping_strategy():
     assert fv.to_temp_string() == "৯৮৭,৬৫৪,৩২১"
 
 
-def test_format_73():
+def test_format_73() -> None:
     fmt = icu.number.SimpleNumberFormatter.for_locale("bn")
 
     # icu::number::SimpleNumber::SimpleNumber()
@@ -169,7 +169,7 @@ def test_format_73():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
-def test_format_75():
+def test_format_75() -> None:
     snf = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
         "en-US", icu.UNumberGroupingStrategy.UNUM_GROUPING_ON_ALIGNED
     )

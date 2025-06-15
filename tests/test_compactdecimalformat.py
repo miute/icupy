@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 51:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.CompactDecimalFormat, icu.DecimalFormat)
 
     # static CompactDecimalFormat *icu::CompactDecimalFormat::createInstance(
@@ -32,7 +32,7 @@ def test_api():
     assert fmt == fmt3
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.CompactDecimalFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberCompactStyle.UNUM_SHORT
     )
@@ -49,7 +49,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.CompactDecimalFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberCompactStyle.UNUM_SHORT
     )
@@ -240,7 +240,7 @@ def test_format():
     assert result == "-10K"
 
 
-def test_parse():
+def test_parse() -> None:
     fmt = icu.CompactDecimalFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberCompactStyle.UNUM_SHORT
     )
@@ -282,7 +282,7 @@ def test_parse():
     assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.CompactDecimalFormat.create_instance(
         icu.Locale.get_us(), icu.UNumberCompactStyle.UNUM_SHORT
     )

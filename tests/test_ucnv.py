@@ -7,7 +7,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     assert icu.ucnv_compare_names("UTF-8", "utf8") == 0
     assert icu.ucnv_compare_names("UTF-8", "utf80") != 0
 
@@ -155,7 +155,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 71, reason="ICU4C<71")
-def test_clone():
+def test_clone() -> None:
     with gc(icu.ucnv_open("ibm-943c"), icu.ucnv_close) as cnv1:
         test1 = icu.UnicodeString("a\uff71b\U0001f338c", -1)
 
@@ -174,7 +174,7 @@ def test_clone():
             assert dest == b"a\xb1b&#127800;c"
 
 
-def test_deprecated_api():
+def test_deprecated_api() -> None:
     def _from_u_callback1(
         _context: object,
         _args: icu.UConverterFromUnicodeArgs,
@@ -288,7 +288,7 @@ def test_deprecated_api():
             icu.ucnv_set_to_u_call_back(cnv, old_action1, old_context1)
 
 
-def test_open_package():
+def test_open_package() -> None:
     path = Path(__file__).joinpath("..", "testdata").resolve()
     cnv = None
     try:
@@ -307,7 +307,7 @@ def test_open_package():
         assert icu.ucnv_get_subst_chars(cnv) == b"\xff"
 
 
-def test_set_from_ucall_back():
+def test_set_from_ucall_back() -> None:
     result1, result2, result3 = [], [], []
 
     # void (* UConverterFromUCallback)(const void *context,
@@ -465,7 +465,7 @@ def test_set_from_ucall_back():
         assert dest == b"a\xb1b?c"
 
 
-def test_set_to_ucall_back():
+def test_set_to_ucall_back() -> None:
     result1, result2, result3 = [], [], []
 
     # void (* UConverterToUCallback)(const void *context,

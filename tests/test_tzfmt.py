@@ -10,7 +10,7 @@ import copy
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.TimeZoneFormat, icu.Format)
 
     # static TimeZoneFormat *icu::TimeZoneFormat::createInstance(
@@ -194,7 +194,7 @@ def test_api():
     assert result == -8.5 * HOUR
 
 
-def test_clone():
+def test_clone() -> None:
     # TimeZoneFormat *icu::TimeZoneFormat::clone()
     fmt1 = icu.TimeZoneFormat.create_instance("en")
 
@@ -209,7 +209,7 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
     zone = icu.TimeZone.create_time_zone("Asia/Tokyo")
     assert zone.get_raw_offset() == 9 * HOUR
@@ -299,7 +299,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_icu_51():
+def test_icu_51() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
     offset = int(-8.5 * HOUR)
     result = icu.UnicodeString()
@@ -355,7 +355,7 @@ def test_icu_51():
     assert result == offset
 
 
-def test_parse():
+def test_parse() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
     tzid = icu.UnicodeString()
 
@@ -494,7 +494,7 @@ def test_parse():
     assert tz is None
 
 
-def test_parse_upcasting():
+def test_parse_upcasting() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
 
     pos = icu.ParsePosition(0)
@@ -537,7 +537,7 @@ def test_parse_upcasting():
     assert zone is None
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
 
     # void icu::TimeZoneFormat::parseObject(

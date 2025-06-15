@@ -10,7 +10,7 @@ def _int28_to_uint28(n: int) -> int:
     return n if n >= 0 else 2**28 + n
 
 
-def test_api():
+def test_api() -> None:
     # UResourceBundle *ures_openDirect(
     #       const char *packageName,
     #       const char *locale,
@@ -89,7 +89,7 @@ def test_api():
     assert str(result2) in ["sr_Latn", "legacy"]
 
 
-def test_api2():
+def test_api2() -> None:
     path = Path(__file__).resolve().parent / "testdata"
     rb = None
     try:
@@ -279,7 +279,7 @@ def test_api2():
     assert version_info == (55, 0, 0, 0)
 
 
-def test_clone():
+def test_clone() -> None:
     test1 = icu.ResourceBundle(None, icu.Locale.get_us())
 
     # ResourceBundle *icu::ResourceBundle::clone()
@@ -297,7 +297,7 @@ def test_clone():
     assert test4.get_key() == test1.get_key()
 
 
-def test_resource_bundle():
+def test_resource_bundle() -> None:
     default_locale = icu.Locale.get_default()
     if str(default_locale) == "ja_JP":
         res_locale = icu.Locale.get_us()

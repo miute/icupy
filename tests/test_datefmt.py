@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.DateFormat, icu.Format)
 
     # static const Locale *icu::DateFormat::getAvailableLocales(int32_t &count)
@@ -92,7 +92,7 @@ def test_api():
     assert fmt2.is_lenient() is False
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.DateFormat.create_instance()
 
     # DateFormat *icu::DateFormat::clone()
@@ -107,7 +107,7 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     # static DateFormat *icu::DateFormat::createDateInstance(
     #       EStyle style = kDefault,
     #       const Locale &aLocale = Locale::getDefault()
@@ -176,7 +176,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_create_instance_for_skeleton():
+def test_create_instance_for_skeleton() -> None:
     # [2]
     # static DateFormat *icu::DateFormat::createInstanceForSkeleton(
     #       const UnicodeString &skeleton,
@@ -205,7 +205,7 @@ def test_create_instance_for_skeleton():
     assert fmt3 == fmt3a
 
 
-def test_format():
+def test_format() -> None:
     date = 1215298800000.0  # 2008-07-05T23:00:00Z
     zone = icu.TimeZone.get_gmt()
     cal = icu.GregorianCalendar(zone)
@@ -411,7 +411,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_get_boolean_attribute():
+def test_get_boolean_attribute() -> None:
     fmt = icu.DateFormat.create_date_time_instance(
         icu.DateFormat.MEDIUM, icu.DateFormat.SHORT, icu.Locale.get_english()
     )
@@ -442,7 +442,7 @@ def test_get_boolean_attribute():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_get_context():
+def test_get_context() -> None:
     fmt = icu.DateFormat.create_date_time_instance(
         icu.DateFormat.MEDIUM, icu.DateFormat.SHORT, icu.Locale.get_english()
     )
@@ -467,7 +467,7 @@ def test_get_context():
     )
 
 
-def test_get_time_zone_upcasting():
+def test_get_time_zone_upcasting() -> None:
     fmt = icu.DateFormat.create_date_time_instance()
 
     fmt.set_time_zone(icu.TimeZone.get_gmt())
@@ -482,7 +482,7 @@ def test_get_time_zone_upcasting():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_is_calendar_lenient():
+def test_is_calendar_lenient() -> None:
     fmt = icu.DateFormat.create_date_time_instance(
         icu.DateFormat.MEDIUM, icu.DateFormat.SHORT, icu.Locale.get_english()
     )
@@ -499,7 +499,7 @@ def test_is_calendar_lenient():
     assert cal.is_lenient() is False
 
 
-def test_parse():
+def test_parse() -> None:
     fmt = icu.DateFormat.create_date_time_instance(
         icu.DateFormat.SHORT, icu.DateFormat.LONG, icu.Locale.get_english()
     )
@@ -559,7 +559,7 @@ def test_parse():
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.DateFormat.create_date_time_instance(
         icu.DateFormat.SHORT, icu.DateFormat.LONG, icu.Locale.get_english()
     )

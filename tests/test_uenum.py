@@ -5,7 +5,7 @@ from icupy.utils import gc
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
-def test_open_char_strings_enumeration():
+def test_open_char_strings_enumeration() -> None:
     strings = ["abc", "\uff11\uff12", "\U0001f338\U0001f339"]
     with gc(
         icu.uenum_open_char_strings_enumeration(strings, len(strings)),
@@ -29,7 +29,7 @@ def test_open_char_strings_enumeration():
         assert icu.uenum_next(en) == strings[0]
 
 
-def test_open_from_string_enumeration():
+def test_open_from_string_enumeration() -> None:
     loc = icu.Locale("de@calendar=buddhist;collation=phonebook")
     adopted = loc.create_keywords()
     with gc(icu.uenum_open_from_string_enumeration(adopted), icu.uenum_close) as en:
@@ -42,7 +42,7 @@ def test_open_from_string_enumeration():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
-def test_open_uchar_strings_enumeration():
+def test_open_uchar_strings_enumeration() -> None:
     strings = ["abc", "\uff11\uff12", "\U0001f338\U0001f339"]
     with gc(
         icu.uenum_open_uchar_strings_enumeration(strings, len(strings)),

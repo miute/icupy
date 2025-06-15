@@ -1,7 +1,7 @@
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/intltest/canittst.cpp
 
     # icu::CanonicalIterator::CanonicalIterator(

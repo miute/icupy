@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_add():
+def test_add() -> None:
     test1 = icu.UnicodeSet()
     assert test1.size() == 0
 
@@ -28,7 +28,7 @@ def test_add():
     assert test1.size() == 14  # [0-9ab\u00DF{ab}{cd}{ef}]
 
 
-def test_add_all():
+def test_add_all() -> None:
     test1 = icu.UnicodeSet()
     assert test1.size() == 0
     test2 = icu.UnicodeSet(icu.UnicodeString("[\u00df{ab}]"))
@@ -50,7 +50,7 @@ def test_add_all():
     assert test1.size() == 2 + 10 + 4  # [0-9c-f\u00DF{ab}]
 
 
-def test_add_match_set_to():
+def test_add_match_set_to() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9]"))
     test2 = icu.UnicodeSet(icu.UnicodeString("[a-z]"))
     assert test1.size() == 10
@@ -65,7 +65,7 @@ def test_add_match_set_to():
     assert test2.contains(0x61, 0x7A)
 
 
-def test_api():
+def test_api() -> None:
     assert icu.UnicodeSet.IGNORE_SPACE == icu.USET_IGNORE_SPACE
     assert icu.UnicodeSet.CASE_INSENSITIVE == icu.USET_CASE_INSENSITIVE
     assert icu.UnicodeSet.ADD_CASE_MAPPINGS == icu.USET_ADD_CASE_MAPPINGS
@@ -184,7 +184,7 @@ def test_api():
     assert repr(test3) == "<UnicodeSet('[\\u0000-\\u0010\"\\'\\\\]')>"
 
 
-def test_apply_int_property_value():
+def test_apply_int_property_value() -> None:
     test1 = icu.UnicodeSet()
     assert test1.size() == 0
 
@@ -207,7 +207,7 @@ def test_apply_int_property_value():
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
-def test_apply_pattern():
+def test_apply_pattern() -> None:
     # [1]
     # UnicodeSet &icu::UnicodeSet::applyPattern(
     #       const UnicodeString &pattern,
@@ -263,7 +263,7 @@ def test_apply_pattern():
     assert exc_info.value.args[0] == icu.UErrorCode.U_MALFORMED_SET
 
 
-def test_apply_property_alias():
+def test_apply_property_alias() -> None:
     test1 = icu.UnicodeSet()
 
     # UnicodeSet &icu::UnicodeSet::applyPropertyAlias(
@@ -304,7 +304,7 @@ def test_apply_property_alias():
     assert test1.contains(0x05B2)
 
 
-def test_char_at():
+def test_char_at() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
     assert test1.size() == 10
 
@@ -327,7 +327,7 @@ def test_char_at():
     #     _ = test1[::0]
 
 
-def test_clone():
+def test_clone() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
     assert not test1.is_frozen()
 
@@ -359,7 +359,7 @@ def test_clone():
     assert test6.is_frozen()
 
 
-def test_close_over():
+def test_close_over() -> None:
     pattern = icu.UnicodeString("[aq\u00df{Bc}{bC}{Fi}]")
     test1 = icu.UnicodeSet(pattern)
     test2 = test1.clone()
@@ -373,7 +373,7 @@ def test_close_over():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_code_points():
+def test_code_points() -> None:
     # from icu/source/test/intltest/usettest.cpp
     #  UnicodeSetTest::TestCodePointIterator()
     us = icu.UnicodeSet("[abcçカ🚴]")
@@ -391,7 +391,7 @@ def test_code_points():
     ]
 
 
-def test_complement():
+def test_complement() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeSet.MIN_VALUE, icu.UnicodeSet.MAX_VALUE)
 
     # [1]
@@ -421,7 +421,7 @@ def test_complement():
     assert test1.contains("cd")
 
 
-def test_complement_all():
+def test_complement_all() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
     test2 = icu.UnicodeSet(0x30, 0x39)
@@ -443,7 +443,7 @@ def test_complement_all():
     assert test1.contains("ab")
 
 
-def test_contains():
+def test_contains() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
 
     # [1]
@@ -474,7 +474,7 @@ def test_contains():
     assert test1.contains(0x61, 0x61) is False
 
 
-def test_contains_all():
+def test_contains_all() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
 
     # [1]
@@ -491,7 +491,7 @@ def test_contains_all():
     assert test1.contains_all("/0123456789:") is False
 
 
-def test_contains_none():
+def test_contains_none() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
 
     # [1]
@@ -513,7 +513,7 @@ def test_contains_none():
     assert test1.contains_none(0x2F, 0x2F) is True
 
 
-def test_contains_some():
+def test_contains_some() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
 
     # [1]
@@ -535,7 +535,7 @@ def test_contains_some():
     assert test1.contains_some(0x2F, 0x2F) is False
 
 
-def test_create_from():
+def test_create_from() -> None:
     # static UnicodeSet *icu::UnicodeSet::createFrom(const UnicodeString &s)
     test1 = icu.UnicodeSet.create_from(icu.UnicodeString("ab"))
     assert isinstance(test1, icu.UnicodeSet)
@@ -548,7 +548,7 @@ def test_create_from():
     assert test1a.contains(icu.UnicodeString("ab"))
 
 
-def test_create_from_all():
+def test_create_from_all() -> None:
     # static UnicodeSet *icu::UnicodeSet::createFromAll(const UnicodeString &s)
     test1 = icu.UnicodeSet.create_from_all(icu.UnicodeString("ab"))
     assert isinstance(test1, icu.UnicodeSet)
@@ -562,7 +562,7 @@ def test_create_from_all():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_from_uset():
+def test_from_uset() -> None:
     # [1]
     # const UnicodeSet *icu::UnicodeSet::fromUSet(const USet *uset)
     uset1 = icu.u_get_binary_property_set(icu.UProperty.UCHAR_POSIX_BLANK)
@@ -581,7 +581,7 @@ def test_from_uset():
     assert test2 == test1
 
 
-def test_hash_code():
+def test_hash_code() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
     test2 = icu.UnicodeSet()
 
@@ -599,7 +599,7 @@ def test_hash_code():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_has_strings():
+def test_has_strings() -> None:
     test1 = icu.UnicodeSet("[a-z]")
     test2 = icu.UnicodeSet("[a-z{ab}]")
 
@@ -608,7 +608,7 @@ def test_has_strings():
     assert test2.has_strings() is True
 
 
-def test_iter():
+def test_iter() -> None:
     # from icu/source/test/intltest/usettest.cpp
     #  UnicodeSetTest::TestElementIterator()
     us = icu.UnicodeSet("[abcçカ🚴{}{abc}{de}]")
@@ -647,7 +647,7 @@ def test_iter():
         assert us[-1] == "de"
 
 
-def test_matches():
+def test_matches() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9{abc}]"))
     text = icu.UnicodeString("abcd 789")
 
@@ -672,7 +672,7 @@ def test_matches():
     assert offset == 6
 
 
-def test_operator():
+def test_operator() -> None:
     test1 = icu.UnicodeSet(0x30, 0x39)
     test2 = icu.UnicodeSet(icu.UnicodeString("[0-9]"))
     test3 = icu.UnicodeSet(icu.UnicodeString("[0-9{ab}]"))
@@ -698,7 +698,7 @@ def test_operator():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_operator_63():
+def test_operator_63() -> None:
     # UnicodeSet.__eq__(_ConstUSetPtr) -> bool
     uset = icu.u_get_binary_property_set(icu.UProperty.UCHAR_POSIX_BLANK)
     test1 = icu.UnicodeSet.from_uset(uset)
@@ -707,7 +707,7 @@ def test_operator_63():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_ranges():
+def test_ranges() -> None:
     # from icu/source/test/intltest/usettest.cpp
     #  UnicodeSetTest::TestRangeIterator()
     us = icu.UnicodeSet("[abcçカ🚴]")
@@ -719,7 +719,7 @@ def test_ranges():
     assert result == " a-c ç-ç カ-カ 🚴-🚴"
 
 
-def test_remove():
+def test_remove() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
 
@@ -743,7 +743,7 @@ def test_remove():
     assert test1.size() == 0
 
 
-def test_remove_all():
+def test_remove_all() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     assert test2.size() == 12
@@ -770,7 +770,7 @@ def test_remove_all():
     assert test2.contains(icu.UnicodeString("ab"))
 
 
-def test_remove_all_strings():
+def test_remove_all_strings() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     assert test1.size() == 12
 
@@ -784,7 +784,7 @@ def test_remove_all_strings():
     assert not test1.contains("ab")
 
 
-def test_retain():
+def test_retain() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     test3 = test1.clone()
@@ -809,7 +809,7 @@ def test_retain():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_retain_69():
+def test_retain_69() -> None:
     test1 = icu.UnicodeSet("[0-9\u00df{ab}]")
     test2 = test1.clone()
     test3 = test1.clone()
@@ -831,7 +831,7 @@ def test_retain_69():
     assert test3.contains("ab")
 
 
-def test_retain_all():
+def test_retain_all() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
     test2 = test1.clone()
     test3 = test1.clone()
@@ -859,7 +859,7 @@ def test_retain_all():
     assert test3.size() == 0
 
 
-def test_serialize():
+def test_serialize() -> None:
     # int32_t icu::UnicodeSet::serialize(
     #       uint16_t *dest,
     #       int32_t destCapacity,
@@ -889,7 +889,7 @@ def test_serialize():
     ]
 
 
-def test_span():
+def test_span() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
 
     # [1]
@@ -927,7 +927,7 @@ def test_span():
     assert test1.span_utf8(b, 1, icu.USetSpanCondition.USET_SPAN_CONTAINED) == 0
 
 
-def test_span_back():
+def test_span_back() -> None:
     test1 = icu.UnicodeSet(icu.UnicodeString("[0-9\u00df{ab}]"))
 
     # [1]
@@ -955,7 +955,7 @@ def test_span_back():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_strings():
+def test_strings() -> None:
     # from icu/source/test/intltest/usettest.cpp
     #  UnicodeSetTest::TestStringIterator()
     us = icu.UnicodeSet("[abcçカ🚴{}{abc}{de}]")
@@ -967,7 +967,7 @@ def test_strings():
     assert result == ' "" "abc" "de"'
 
 
-def test_unicode_set():
+def test_unicode_set() -> None:
     # [1]
     # icu::UnicodeSet::UnicodeSet()
     test1 = icu.UnicodeSet()

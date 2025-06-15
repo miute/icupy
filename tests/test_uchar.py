@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # U_GET_GC_MASK(c)
     # U_MASK(x)
     assert icu.u_get_gc_mask(0x41) == icu.U_GC_LU_MASK == icu.u_mask(icu.u_char_type(0x41))
@@ -165,7 +165,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_api_70():
+def test_api_70() -> None:
     # UBool u_stringHasBinaryProperty(
     #       const UChar *s,
     #       int32_t length,
@@ -175,7 +175,7 @@ def test_api_70():
     assert icu.u_string_has_binary_property("\uff11", icu.UCHAR_BASIC_EMOJI) is False
 
 
-def test_u_char_age():
+def test_u_char_age() -> None:
     # void u_charAge(UChar32 c,
     #                UVersionInfo versionArray
     # )
@@ -190,7 +190,7 @@ def test_u_char_age():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_u_get_binary_property_set():
+def test_u_get_binary_property_set() -> None:
     # const USet *u_getBinaryPropertySet(UProperty property,
     #                                    UErrorCode *pErrorCode
     # )
@@ -203,7 +203,7 @@ def test_u_get_binary_property_set():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
-def test_u_get_id_types():
+def test_u_get_id_types() -> None:
     c = 0x1D1DE
 
     # int32_t u_getIDTypes (
@@ -233,7 +233,7 @@ def test_u_get_id_types():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_u_get_int_property_map():
+def test_u_get_int_property_map() -> None:
     # UCPMap *u_getIntPropertyMap(UProperty property,
     #                             UErrorCode *pErrorCode
     # )
@@ -300,7 +300,7 @@ def test_u_get_int_property_map():
     assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH | 0x2000
 
 
-def test_u_get_unicode_version():
+def test_u_get_unicode_version() -> None:
     # void u_getUnicodeVersion(UVersionInfo versionArray)
     version_array = icu.u_get_unicode_version()
     assert isinstance(version_array, tuple)

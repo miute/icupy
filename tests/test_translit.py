@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import copy
-from typing import List, Union
 
 import pytest
 
@@ -11,7 +12,7 @@ class _TestTrans(icu.Transliterator):
     #       const UnicodeString &ID,
     #       UnicodeFilter *adoptedFilter
     # )
-    def __init__(self, id_: Union[icu.UnicodeString, str]) -> None:
+    def __init__(self, id_: icu.UnicodeString | str) -> None:
         super().__init__(id_, None)
         self.num_calls: int = 0
 
@@ -38,12 +39,12 @@ class _TestTrans2(icu.Transliterator):
     # )
     def __init__(
         self,
-        id_: Union[icu.UnicodeString, str],
+        id_: icu.UnicodeString | str,
         filter_set: icu.UnicodeSet = None,
     ) -> None:
         super().__init__("Null", filter_set)
         self.num_calls: int = 0
-        self._trans: List[icu.Transliterator] = []
+        self._trans: list[icu.Transliterator] = []
         for basic_id in str(id_).strip(";").split(";"):
             basic_id = basic_id.strip()
             if len(basic_id) == 0:
@@ -57,7 +58,7 @@ class _TestTrans2(icu.Transliterator):
             if t:
                 self._trans.append(t)
 
-        names: List[str] = []
+        names: list[str] = []
         x = 0
         for t in self._trans:
             names.append(str(t.get_id()))
@@ -117,7 +118,7 @@ class _TestTrans2(icu.Transliterator):
             result.add_all(t.get_source_set(temp))
 
 
-def test_adopt_filter():
+def test_adopt_filter() -> None:
     id1 = icu.UnicodeString("Halfwidth-Fullwidth", -1)
     test1 = icu.Transliterator.create_instance(id1, icu.UTransDirection.UTRANS_FORWARD)
     src = icu.UnicodeString("123abc\uff71\uff72\uff73\uff74\uff75", -1)
@@ -139,7 +140,7 @@ def test_adopt_filter():
     assert text == "\uff11\uff12\uff13\uff41\uff42\uff43\u30a2\u30a4\u30a6\u30a8\u30aa"
 
 
-def test_api():
+def test_api() -> None:
     id4 = icu.UnicodeString("Katakana-Latin", -1)
     trans = icu.Transliterator.create_instance(id4, icu.UTransDirection.UTRANS_FORWARD)
 
@@ -206,7 +207,7 @@ def test_api():
     assert len(rules) > 0
 
 
-def test_clone():
+def test_clone() -> None:
     id1 = icu.UnicodeString("NFD;Jamo-Latin;Latin-Greek", -1)
     test1 = icu.Transliterator.create_instance(id1, icu.UTransDirection.UTRANS_FORWARD)
 
@@ -222,7 +223,7 @@ def test_clone():
     assert test4.get_id() == test1.get_id()
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     # static Transliterator *icu::Transliterator::createFromRules(
     #       const UnicodeString &ID,
     #       const UnicodeString &rules,
@@ -319,7 +320,7 @@ def test_create_instance():
     assert test5.get_id() == "Katakana-Hiragana"
 
 
-def test_get_available_ids():
+def test_get_available_ids() -> None:
     # static StringEnumeration *icu::Transliterator::getAvailableIDs(
     #       UErrorCode &ec
     # )
@@ -329,7 +330,7 @@ def test_get_available_ids():
     assert "Hiragana-Katakana" in ids
 
 
-def test_get_available_variant():
+def test_get_available_variant() -> None:
     source = icu.UnicodeString()
     target = icu.UnicodeString()
     variant = icu.UnicodeString()
@@ -401,7 +402,7 @@ def test_get_available_variant():
     assert count > 0
 
 
-def test_get_display_name():
+def test_get_display_name() -> None:
     # [1]
     # static UnicodeString &icu::Transliterator::getDisplayName(
     #       const UnicodeString &ID,
@@ -453,7 +454,7 @@ def test_get_display_name():
     assert len(result) > 0
 
 
-def test_register_instance():
+def test_register_instance() -> None:
     id3 = icu.UnicodeString("Any-MyTransliterator", -1)
     rules3 = icu.UnicodeString(
         "pre {alpha} post > | @ ALPHA ;eALPHA > beta ;pre {beta} post > BETA @@ | ;post > xyz",
@@ -507,7 +508,7 @@ def test_register_instance():
     assert "Any-MyRule3" in ids
 
 
-def test_subclass_filtered_transliterate():
+def test_subclass_filtered_transliterate() -> None:
     tid = "Halfwidth-Fullwidth; Lower; Hiragana-Katakana; Katakana-Latin"
     filter_set = icu.UnicodeSet("[^0-9]")
     t = _TestTrans2(tid, filter_set)
@@ -525,7 +526,7 @@ def test_subclass_filtered_transliterate():
     assert t.num_calls == 6
 
 
-def test_subclass_handle_get_source_set():
+def test_subclass_handle_get_source_set() -> None:
     tid = "Seoridf-Sweorie"
     t1 = _TestTrans(tid)
 
@@ -567,7 +568,7 @@ def test_subclass_handle_get_source_set():
     assert result.contains(0xFF10, 0xFF19)  # "０" - "９" (FULLWIDTH DIGIT)
 
 
-def test_subclass_register_instance():
+def test_subclass_register_instance() -> None:
     tid = "Seoridf-Sweorie"
     t = _TestTrans(tid)
     assert t.get_id() == tid
@@ -585,7 +586,7 @@ def test_subclass_register_instance():
     assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_ID
 
 
-def test_subclass_transliterate():
+def test_subclass_transliterate() -> None:
     tid = "Seoridf-Sweorie"
     t = _TestTrans(tid)
     assert t.get_id() == tid
@@ -602,7 +603,7 @@ def test_subclass_transliterate():
     assert t.num_calls == 6
 
 
-def test_transliterate():
+def test_transliterate() -> None:
     id4 = icu.UnicodeString("Hiragana-Katakana", -1)
     test4 = icu.Transliterator.create_instance(id4, icu.UTransDirection.UTRANS_FORWARD)
     src = icu.UnicodeString("\u3042\u3044\u3046\u3048\u304a", -1)

@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     ldn = icu.LocaleDisplayNames.create_instance(
         icu.Locale.get_us(), icu.UDialectHandling.ULDN_DIALECT_NAMES
     )
@@ -106,7 +106,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_api_51():
+def test_api_51() -> None:
     ldn = icu.LocaleDisplayNames.create_instance(icu.Locale.get_germany())
 
     # UDisplayContext icu::LocaleDisplayNames::getContext(
@@ -116,7 +116,7 @@ def test_api_51():
     assert result == icu.UDisplayContext.UDISPCTX_SUBSTITUTE
 
 
-def test_create_instance():
+def test_create_instance() -> None:
     temp = icu.UnicodeString()
 
     # [1]
@@ -162,7 +162,7 @@ def test_create_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_create_instance_51():
+def test_create_instance_51() -> None:
     temp = icu.UnicodeString()
 
     # [3]

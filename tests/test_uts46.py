@@ -637,7 +637,7 @@ def _is_ascii(s: icu.UnicodeString) -> bool:
     return True
 
 
-def test_api():
+def test_api() -> None:
     # UnicodeString &icu::IDNA::nameToASCII(
     #       const UnicodeString &name,
     #       UnicodeString &dest,
@@ -743,7 +743,7 @@ def test_api():
     assert result == b"\x61\x73\x73"
 
 
-def test_not_std3():
+def test_not_std3() -> None:
     not3 = icu.IDNA.create_uts46_instance(icu.IDNA.CHECK_BIDI)
 
     # '\x00A_2+2=4\n.eßen.net'
@@ -808,7 +808,7 @@ def test_not_std3():
 
 
 @pytest.mark.parametrize(("s", "mode", "u", "errors"), _test_cases)
-def test_some_cases(s, mode, u, errors):
+def test_some_cases(s: str, mode: str, u: str, errors: int) -> None:
     # ctou(chars) -> UnicodeString(chars, -1, US_INV).unescape()
     src = icu.UnicodeString(s, -1, icu.US_INV).unescape()
     expected = icu.UnicodeString(u, -1, icu.US_INV).unescape()

@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     assert icu.uscript_breaks_between_letters(icu.UScriptCode.USCRIPT_JAPANESE) is True
     assert icu.uscript_breaks_between_letters(icu.UScriptCode.USCRIPT_LATIN) is False
 

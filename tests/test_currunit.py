@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 62:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.CurrencyUnit, icu.MeasureUnit)
 
     # [2]
@@ -51,7 +51,7 @@ def test_api():
     assert fmt.unit(unit2).format_double(100).to_string() == "\xa5100"  # ¥100
 
 
-def test_clone():
+def test_clone() -> None:
     unit1 = icu.CurrencyUnit("USD")
 
     # CurrencyUnit *icu::CurrencyUnit::clone()

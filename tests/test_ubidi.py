@@ -2,7 +2,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     text = "bahrain \u0645\u0635\u0631 kuwait"
 
     # UBiDi *ubidi_open(void)
@@ -255,7 +255,7 @@ def test_api():
         )
 
 
-def test_set_class_callback():
+def test_set_class_callback() -> None:
     # From icu/source/test/intltest/bidiconf.cpp
     char_from_bidi_class = [
         0x6C,  # U_LEFT_TO_RIGHT
@@ -357,7 +357,7 @@ def test_set_class_callback():
         assert result == icu.UCharDirection.U_EUROPEAN_NUMBER
 
 
-def test_set_context():
+def test_set_context() -> None:
     with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
         prologue = "<code>abc \u05d0\u05d1</code>"
         text = "<code>\u05d2\u05d3\u05d4 xyz</code>"
@@ -399,7 +399,7 @@ def test_set_context():
         assert dest == expected
 
 
-def test_set_line():
+def test_set_line() -> None:
     text = "bahrain \u0645\u0635\u0631 kuwait"
     length = icu.u_strlen(text)
 
@@ -443,7 +443,7 @@ def test_set_line():
         assert icu.ubidi_get_direction(line) == icu.UBiDiDirection.UBIDI_LTR
 
 
-def test_set_para():
+def test_set_para() -> None:
     text = "car means CAR."
     length = icu.u_strlen(text)
 
@@ -488,7 +488,7 @@ def test_set_para():
         ]  # fmt: skip
 
 
-def test_write_reordered():
+def test_write_reordered() -> None:
     text = "bahrain \u0645\u0635\u0631 kuwait"
     length = icu.u_strlen(text)
 

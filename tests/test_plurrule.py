@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     s1 = "a: n mod 10 is 2"
     s2 = "b: n mod 10 is 2"
 
@@ -53,7 +53,7 @@ def test_api():
     assert rules1.is_keyword("b") is False
 
 
-def test_clone():
+def test_clone() -> None:
     rules1 = icu.PluralRules.create_default_rules()
 
     # PluralRules *icu::PluralRules::clone()
@@ -68,7 +68,7 @@ def test_clone():
     assert rules1 == rules4
 
 
-def test_create_default_rules():
+def test_create_default_rules() -> None:
     # static PluralRules *icu::PluralRules::createDefaultRules(
     #       UErrorCode &status
     # )
@@ -76,7 +76,7 @@ def test_create_default_rules():
     assert isinstance(rules, icu.PluralRules)
 
 
-def test_for_locale():
+def test_for_locale() -> None:
     # [1]
     # static PluralRules *icu::PluralRules::forLocale(
     #       const Locale &locale,
@@ -91,7 +91,7 @@ def test_for_locale():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
-def test_for_locale_50():
+def test_for_locale_50() -> None:
     # [2]
     # static PluralRules *icu::PluralRules::forLocale(
     #       const Locale &locale,
@@ -106,7 +106,7 @@ def test_for_locale_50():
     assert rules2 == rules2a
 
 
-def test_get_samples():
+def test_get_samples() -> None:
     rules = icu.PluralRules.for_locale(icu.Locale("fr"))
 
     # [1]
@@ -134,7 +134,7 @@ def test_get_samples():
         _ = rules.get_samples(icu.UnicodeString("other"), -1)
 
 
-def test_select():
+def test_select() -> None:
     rules = icu.PluralRules.create_rules("a: n not in 0..100;")
 
     # [5]
@@ -155,7 +155,7 @@ def test_select():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_select_64():
+def test_select_64() -> None:
     rules = icu.PluralRules.create_rules("a: n not in 0..100;")
     fmt = icu.number.NumberFormatter.with_locale("en")
 
@@ -172,7 +172,7 @@ def test_select_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_select_68():
+def test_select_68() -> None:
     rules = icu.PluralRules.for_locale("fr")
     fmt = (
         icu.number.NumberRangeFormatter.with_locale("fr")

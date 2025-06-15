@@ -4,7 +4,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     s = "\x41\U0001f338\x42"
     with gc(icu.utext_open_uchars(None, s, -1), icu.utext_close) as ut:
         assert ut.magic
@@ -62,7 +62,7 @@ def test_api():
         assert result.endswith(")>)>")
 
 
-def test_clone_uchars():
+def test_clone_uchars() -> None:
     s1 = "ABC"
     s2 = "abc"
     ut1 = icu.utext_open_uchars(None, s1, -1)
@@ -121,7 +121,7 @@ def test_clone_uchars():
     assert icu.utext_close(ut1) is None
 
 
-def test_clone_unicode_string():
+def test_clone_unicode_string() -> None:
     s1 = icu.UnicodeString("ABC")
     s2 = icu.UnicodeString("abc")
     ut1 = icu.utext_open_unicode_string(None, s1)
@@ -180,7 +180,7 @@ def test_clone_unicode_string():
     assert icu.utext_close(ut1) is None
 
 
-def test_copy():
+def test_copy() -> None:
     s1 = "ABC"
     with gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1:
         assert not icu.utext_is_writable(ut1)
@@ -202,7 +202,7 @@ def test_copy():
         assert icu.utext_extract(ut2, 0, icu.utext_native_length(ut2)) == "ABCBA"
 
 
-def test_equals():
+def test_equals() -> None:
     s1 = "ABC"
     with gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1:
         with gc(icu.utext_clone(None, ut1, False, True), icu.utext_close) as ut2:
@@ -217,7 +217,7 @@ def test_equals():
             assert icu.utext_equals(ut1, ut2) is True
 
 
-def test_freeze():
+def test_freeze() -> None:
     s = icu.UnicodeString("ABC")
     with gc(icu.utext_open_unicode_string(None, s), icu.utext_close) as ut:
         assert icu.utext_is_writable(ut)
@@ -225,7 +225,7 @@ def test_freeze():
         assert not icu.utext_is_writable(ut)
 
 
-def test_open_character_iterator():
+def test_open_character_iterator() -> None:
     src1 = icu.UnicodeString("\x41\U0001f338\x42")
     src2 = icu.UnicodeString("\x61\U0001f338\x62")
     it1 = icu.StringCharacterIterator(src1)
@@ -252,7 +252,7 @@ def test_open_character_iterator():
         assert dest1 == "A\U0001f338B"
 
 
-def test_open_const_unicode_string():
+def test_open_const_unicode_string() -> None:
     s1 = icu.UnicodeString("\x41\U0001f338\x42")
     s2 = icu.UnicodeString("\x61\U0001f338\x62")
     with gc(icu.utext_open_const_unicode_string(None, s1), icu.utext_close) as ut1:
@@ -277,7 +277,7 @@ def test_open_const_unicode_string():
         assert dest1 == "A\U0001f338B"
 
 
-def test_open_replaceable():
+def test_open_replaceable() -> None:
     s1 = icu.UnicodeString("\x41\U0001f338\x42")
     s2 = icu.UnicodeString("\x61\U0001f338\x62")
     with gc(icu.utext_open_replaceable(None, s1), icu.utext_close) as ut1:
@@ -302,7 +302,7 @@ def test_open_replaceable():
         assert dest1 == "A\U0001f338B"
 
 
-def test_open_uchars():
+def test_open_uchars() -> None:
     s1 = "\x41\U0001f338\x42"
     s2 = "\x61\U0001f338\x62"
     with gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1:
@@ -332,7 +332,7 @@ def test_open_uchars():
         assert len(dest1) == 0
 
 
-def test_open_unicode_string():
+def test_open_unicode_string() -> None:
     s1 = icu.UnicodeString("\x41\U0001f338\x42")
     s2 = icu.UnicodeString("\x61\U0001f338\x62")
     with gc(icu.utext_open_unicode_string(None, s1), icu.utext_close) as ut1:
@@ -357,7 +357,7 @@ def test_open_unicode_string():
         assert dest1 == "A\U0001f338B"
 
 
-def test_open_utf8():
+def test_open_utf8() -> None:
     b1 = "\x41\U0001f338\x42".encode()
     b2 = "\x61\U0001f338\x62".encode()
     with gc(icu.utext_open_utf8(None, b1, -1), icu.utext_close) as ut1:
@@ -398,7 +398,7 @@ def test_open_utf8():
         assert dest1 == "a\U0001f338b"
 
 
-def test_replace():
+def test_replace() -> None:
     s1 = "ABC"
     with gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1:
         assert not icu.utext_is_writable(ut1)
@@ -415,7 +415,7 @@ def test_replace():
         assert icu.utext_extract(ut2, 0, icu.utext_native_length(ut2)) == "AabcC"
 
 
-def test_utext_vector1():
+def test_utext_vector1() -> None:
     # [1]
     # UTextVector()
     t = icu.UTextVector()
@@ -573,7 +573,7 @@ def test_utext_vector1():
     assert reversed(t) is None  # UTextVector does not support reverse iterator
 
 
-def test_utext_vector2():
+def test_utext_vector2() -> None:
     # [2]
     # UTextVector(iterable: list[UnicodeString])
     src = [
@@ -603,7 +603,7 @@ def test_utext_vector2():
     ]
 
 
-def test_utext_vector2_2():
+def test_utext_vector2_2() -> None:
     # [2]´
     # UTextVector(iterable: list[UnicodeString])
     src = icu.UnicodeStringVector(3)

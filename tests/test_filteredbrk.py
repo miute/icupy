@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 56:
 import copy
 
 
-def test_break_iterator_adopt_text():
+def test_break_iterator_adopt_text() -> None:
     where = icu.Locale.get_english()
     builder = icu.FilteredBreakIteratorBuilder.create_instance(where)
     assert isinstance(builder, icu.FilteredBreakIteratorBuilder)
@@ -28,7 +28,7 @@ def test_break_iterator_adopt_text():
     assert fbi.next() == icu.BreakIterator.DONE
 
 
-def test_break_iterator_api():
+def test_break_iterator_api() -> None:
     where = icu.Locale.get_english()
     builder = icu.FilteredBreakIteratorBuilder.create_instance(where)
     assert isinstance(builder, icu.FilteredBreakIteratorBuilder)
@@ -141,7 +141,7 @@ def test_break_iterator_api():
     icu.utext_close(ut)
 
 
-def test_break_iterator_clone():
+def test_break_iterator_clone() -> None:
     where = icu.Locale.get_english()
     builder = icu.FilteredBreakIteratorBuilder.create_instance(where)
     fbi = builder.build(icu.BreakIterator.create_sentence_instance(where))
@@ -152,7 +152,7 @@ def test_break_iterator_clone():
 
 
 @pytest.mark.xfail(reason="FIXME: Filtered BreakIterator.__eq__(BreakIterator) is not work")
-def test_break_iterator_eq():
+def test_break_iterator_eq() -> None:
     where = icu.Locale.get_english()
     builder = icu.FilteredBreakIteratorBuilder.create_instance(where)
     fbi = builder.build(icu.BreakIterator.create_sentence_instance(where))
@@ -169,7 +169,7 @@ def test_break_iterator_eq():
 
 
 @pytest.mark.xfail(reason="FIXME: Filtered BreakIterator.__ne__(BreakIterator) is not work")
-def test_break_iterator_ne():
+def test_break_iterator_ne() -> None:
     where = icu.Locale.get_english()
     builder = icu.FilteredBreakIteratorBuilder.create_instance(where)
     fbi = builder.build(icu.BreakIterator.create_sentence_instance(where))
@@ -181,7 +181,7 @@ def test_break_iterator_ne():
     assert not (fbi != fbi2)
 
 
-def test_filtered_break_iterator_builder_56():
+def test_filtered_break_iterator_builder_56() -> None:
     # [1]
     # static FilteredBreakIteratorBuilder *
     # icu::FilteredBreakIteratorBuilder::createInstance(
@@ -263,7 +263,7 @@ def test_filtered_break_iterator_builder_56():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_filtered_break_iterator_builder_60():
+def test_filtered_break_iterator_builder_60() -> None:
     # static FilteredBreakIteratorBuilder *
     # icu::FilteredBreakIteratorBuilder::createEmptyInstance(UErrorCode &status)
     builder = icu.FilteredBreakIteratorBuilder.create_empty_instance()

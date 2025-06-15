@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # static UnicodeString icu::MessageFormat::autoQuoteApostrophe(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
@@ -104,7 +104,7 @@ def test_api():
     assert not (fmt2 == fmt3)
 
 
-def test_apply_pattern():
+def test_apply_pattern() -> None:
     fmt1 = icu.MessageFormat("{0} {1}")
     fmt2 = fmt1.clone()
     assert fmt1 == fmt2
@@ -189,7 +189,7 @@ def test_apply_pattern():
     assert fmt1 == fmt2
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.MessageFormat("{0} {1}")
 
     # MessageFormat *icu::MessageFormat::clone()
@@ -204,7 +204,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.MessageFormat(
         "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
         icu.Locale.get_us(),
@@ -374,7 +374,7 @@ def test_format():
     )
 
 
-def test_message_format():
+def test_message_format() -> None:
     pattern = icu.UnicodeString("{0} {1}")
     new_locale = icu.Locale.get_us()
 
@@ -433,7 +433,7 @@ def test_message_format():
     assert fmt1 == fmt4
 
 
-def test_parse():
+def test_parse() -> None:
     # From icu/source/test/intltest/tmsgfmt.cpp
     fmt = icu.MessageFormat("{0} =sep= {1}", icu.Locale.get_us())
     s = "abc =sep= def"
@@ -549,7 +549,7 @@ def test_parse():
     assert objs[1].get_string() == "def"
 
 
-def test_set_format():
+def test_set_format() -> None:
     fmt = icu.MessageFormat("{0,date} {1,time}", icu.Locale.get_us())
     dtfmt0 = icu.SimpleDateFormat("yyyy.MM.dd")
     dtfmt1 = icu.SimpleDateFormat("HH:mm:ss z")
@@ -598,7 +598,7 @@ def test_set_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_set_format_62():
+def test_set_format_62() -> None:
     fmt = icu.MessageFormat("{0,number,currency}", icu.Locale.get_us())
     obj = icu.Formattable([icu.Formattable(444444.55)])
     append_to = icu.UnicodeString()
@@ -614,7 +614,7 @@ def test_set_format_62():
     assert fmt.format(obj, append_to) == "USD\xa0444,444.55"
 
 
-def test_set_formats():
+def test_set_formats() -> None:
     fmt = icu.MessageFormat(
         "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
         icu.Locale.get_us(),

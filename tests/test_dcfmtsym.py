@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     sym1 = icu.DecimalFormatSymbols(icu.Locale.get_us())
     sym2 = icu.DecimalFormatSymbols(icu.Locale.get_france())
     sym3 = icu.DecimalFormatSymbols(sym1)
@@ -130,7 +130,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_create_with_last_resort_data():
+def test_create_with_last_resort_data() -> None:
     # static DecimalFormatSymbols *
     # icu::DecimalFormatSymbols::createWithLastResortData(
     #       UErrorCode &status
@@ -139,7 +139,7 @@ def test_create_with_last_resort_data():
     assert isinstance(sym, icu.DecimalFormatSymbols)
 
 
-def test_decimal_format_symbols():
+def test_decimal_format_symbols() -> None:
     # [1]
     # icu::DecimalFormatSymbols::DecimalFormatSymbols(
     #       const Locale &locale,
@@ -173,7 +173,7 @@ def test_decimal_format_symbols():
     assert sym4 == sym1
 
 
-def test_numbering_system():
+def test_numbering_system() -> None:
     # [1]
     # static NumberingSystem *icu::NumberingSystem::createInstance(
     #       const Locale &inLocale,

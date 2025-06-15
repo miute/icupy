@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 72:
     pytest.skip("ICU4C<72", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     # UDisplayOptionsGrammaticalCase
     # udispopt_fromGrammaticalCaseIdentifier(const char *identifier)
     result = icu.udispopt_from_grammatical_case_identifier("")
@@ -58,7 +58,7 @@ def test_api():
     assert isinstance(result, str)
 
 
-def test_builder():
+def test_builder() -> None:
     # static icu::DisplayOptions::Builder icu::DisplayOptions::builder()
     bld = icu.DisplayOptions.builder()
     assert isinstance(bld, icu.DisplayOptions.Builder)

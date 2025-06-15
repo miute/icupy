@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 50:
     pytest.skip("ICU4C<50", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     # static const GenderInfo *icu::GenderInfo::getInstance(
     #       const Locale &locale,
     #       UErrorCode &status

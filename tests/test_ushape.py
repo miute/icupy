@@ -1,7 +1,7 @@
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/cintltst/cbiditst.c
     source = "\x31\u0627\x32\u06f3\x61\x34"
 

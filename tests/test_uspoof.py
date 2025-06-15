@@ -6,7 +6,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/cintltst/spooftest.c
 
     # USpoofChecker *uspoof_open(UErrorCode *status)
@@ -261,7 +261,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_api_51():
+def test_api_51() -> None:
     # const USet *uspoof_getInclusionSet(UErrorCode *status)
     uset = icu.uspoof_get_inclusion_set()
     uniset1 = icu.UnicodeSet.from_uset(uset)
@@ -305,7 +305,7 @@ def test_api_51():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 58, reason="ICU4C<58")
-def test_api_58():
+def test_api_58() -> None:
     # From icu/source/test/intltest/itspoof.cpp
 
     # USpoofCheckResult *uspoof_openCheckResult(UErrorCode *status)
@@ -407,7 +407,7 @@ def test_api_58():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_are_bidi_confusable():
+def test_are_bidi_confusable() -> None:
     # From icu/source/test/intltest/itspoof.cpp
     id1 = "J-2"
     id2 = "J\u200f2\u2013\u200f"
@@ -503,7 +503,7 @@ def test_are_bidi_confusable():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_get_bidi_skeleton():
+def test_get_bidi_skeleton() -> None:
     # From icu/source/test/intltest/itspoof.cpp
     id_ = "A1<שׂ"
 
@@ -568,7 +568,7 @@ def test_get_bidi_skeleton():
         assert dest.decode() == "Al<ש\u0307"
 
 
-def test_open_from_serialized():
+def test_open_from_serialized() -> None:
     with gc(icu.uspoof_open(), icu.uspoof_close) as sc:
         # int32_t uspoof_serialize(
         #       USpoofChecker *sc,
@@ -600,7 +600,7 @@ def test_open_from_serialized():
             assert uniset1 == uniset2
 
 
-def test_open_from_source():
+def test_open_from_source() -> None:
     parent = Path(__file__).resolve().parent
     path1 = parent / "confusables.txt"
     path2 = parent / "confusablesWholeScript.txt"
@@ -663,7 +663,7 @@ def test_open_from_source():
         )
 
 
-def test_set_allowed_chars():
+def test_set_allowed_chars() -> None:
     with gc(icu.uspoof_open(), icu.uspoof_close) as sc:
         # void uspoof_setAllowedChars(
         #       USpoofChecker *sc,
@@ -678,7 +678,7 @@ def test_set_allowed_chars():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_set_allowed_chars_63():
+def test_set_allowed_chars_63() -> None:
     with gc(icu.uspoof_open(), icu.uspoof_close) as sc:
         # const USet *u_getBinaryPropertySet(
         #       UProperty property,

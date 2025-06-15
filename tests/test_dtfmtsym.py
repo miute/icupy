@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols("ja_JP")
@@ -45,7 +45,7 @@ def test_api():
     assert len(uchars) > 0
 
 
-def test_date_format_symbols():
+def test_date_format_symbols() -> None:
     locale = (
         icu.Locale("en_US") if str(icu.Locale.get_default()) == "ja_JP" else icu.Locale("ja_JP")
     )
@@ -76,7 +76,7 @@ def test_date_format_symbols():
     assert sym2 == sym5
 
 
-def test_get_am_pm_strings():
+def test_get_am_pm_strings() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -104,7 +104,7 @@ def test_get_am_pm_strings():
     assert sym3.get_am_pm_strings() == ampms
 
 
-def test_get_era_names():
+def test_get_era_names() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -130,7 +130,7 @@ def test_get_era_names():
     assert sym3.get_era_names() == era_names
 
 
-def test_get_eras():
+def test_get_eras() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -156,7 +156,7 @@ def test_get_eras():
     assert sym3.get_eras() == eras
 
 
-def test_get_months():
+def test_get_months() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -234,7 +234,7 @@ def test_get_months():
     )
 
 
-def test_get_narrow_eras():
+def test_get_narrow_eras() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -262,7 +262,7 @@ def test_get_narrow_eras():
     assert sym3.get_narrow_eras() == narrow_eras
 
 
-def test_get_quarters():
+def test_get_quarters() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -307,7 +307,7 @@ def test_get_quarters():
     )
 
 
-def test_get_short_months():
+def test_get_short_months() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -335,7 +335,7 @@ def test_get_short_months():
     assert sym3.get_short_months() == short_months
 
 
-def test_get_short_weekdays():
+def test_get_short_weekdays() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -364,7 +364,7 @@ def test_get_short_weekdays():
     assert sym3.get_short_weekdays() == abbrev_weekdays
 
 
-def test_get_weekdays():
+def test_get_weekdays() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_japan())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -447,7 +447,7 @@ def test_get_weekdays():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_get_year_names():
+def test_get_year_names() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_china())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
@@ -586,7 +586,7 @@ def test_get_year_names():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_get_zodiac_names():
+def test_get_zodiac_names() -> None:
     sym = icu.DateFormatSymbols(icu.Locale.get_china())
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))

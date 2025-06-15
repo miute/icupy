@@ -7,7 +7,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 59:
 
 
 # From icu/source/test/intltest/strcase.cpp
-def test_api():
+def test_api() -> None:
     # static int32_t icu::CaseMap::fold(
     #       uint32_t options,
     #       const char16_t *src,

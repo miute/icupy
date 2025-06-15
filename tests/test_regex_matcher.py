@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import pytest
 
 from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -100,7 +98,7 @@ def test_api():
     assert pattern.pattern() == regexp
 
 
-def test_append_replacement():
+def test_append_replacement() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -152,7 +150,7 @@ def test_append_replacement():
     icu.utext_close(replacement2)
 
 
-def test_append_tail():
+def test_append_tail() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -190,7 +188,7 @@ def test_append_tail():
     icu.utext_close(replacement2)
 
 
-def test_end():
+def test_end() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
     src = icu.UnicodeString("0123456789")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -224,7 +222,7 @@ def test_end():
     assert matcher.end64() == 10
 
 
-def test_find():
+def test_find() -> None:
     regexp = icu.UnicodeString("abc")
     src = icu.UnicodeString(".abc..abc..")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -253,7 +251,7 @@ def test_find():
     assert matcher.find(7) is False
 
 
-def test_group():
+def test_group() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
     src = icu.UnicodeString("0123456789")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -328,7 +326,7 @@ def test_group():
     icu.utext_close(dest)
 
 
-def test_looking_at():
+def test_looking_at() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -348,7 +346,7 @@ def test_looking_at():
     assert matcher.looking_at() is True
 
 
-def test_matches():
+def test_matches() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -367,7 +365,7 @@ def test_matches():
     assert matcher.matches() is False
 
 
-def test_regex_matcher():
+def test_regex_matcher() -> None:
     s = "\\w+"
 
     # [1]
@@ -431,7 +429,7 @@ def test_regex_matcher():
     icu.utext_close(src4)
 
 
-def test_region():
+def test_region() -> None:
     regexp = icu.UnicodeString("\\w+")
     src = icu.UnicodeString("foo bar baz")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -476,7 +474,7 @@ def test_region():
     assert matcher.group() == "bar"
 
 
-def test_replace_all():
+def test_replace_all() -> None:
     regexp = icu.UnicodeString("abc")
     src = icu.UnicodeString(".abc..abc..")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -513,7 +511,7 @@ def test_replace_all():
     icu.utext_close(dest)
 
 
-def test_replace_first():
+def test_replace_first() -> None:
     regexp = icu.UnicodeString("abc")
     src = icu.UnicodeString(".abc..abc..")
     matcher = icu.RegexMatcher(regexp, src, 0)
@@ -550,7 +548,7 @@ def test_replace_first():
     icu.utext_close(dest)
 
 
-def test_reset():
+def test_reset() -> None:
     regexp = icu.UnicodeString("\\w+")
     src1 = icu.UnicodeString("foo")
     matcher = icu.RegexMatcher(regexp, src1, 0)
@@ -605,7 +603,7 @@ def test_reset():
     icu.utext_close(src4)
 
 
-def test_set_find_progress_callback():
+def test_set_find_progress_callback() -> None:
     result1 = []
 
     # UBool URegexFindProgressCallback(
@@ -683,7 +681,7 @@ def test_set_find_progress_callback():
     assert len(result2) == 0
 
 
-def test_set_match_callback():
+def test_set_match_callback() -> None:
     result1 = []
 
     # UBool URegexMatchCallback(const void *context, int32_t steps)
@@ -754,7 +752,7 @@ def test_set_match_callback():
     assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
-def test_split():
+def test_split() -> None:
     regexp = icu.UnicodeString("\\s+")
     matcher = icu.RegexMatcher(regexp, 0)
     src1 = icu.UnicodeString("foo bar baz")
@@ -815,7 +813,7 @@ def test_split():
     icu.utext_close(src2)
 
 
-def test_start():
+def test_start() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
     src = icu.UnicodeString("0123456789")
     matcher = icu.RegexMatcher(regexp, src, 0)

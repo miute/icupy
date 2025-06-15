@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 50:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     # static TimeZoneNames *icu::TimeZoneNames::createInstance(
     #       const Locale &locale,
     #       UErrorCode &status
@@ -174,7 +174,7 @@ def test_api():
     assert result.is_bogus()
 
 
-def test_clone():
+def test_clone() -> None:
     tzn1 = icu.TimeZoneNames.create_instance(icu.Locale("en"))
 
     # TimeZoneNames *icu::TimeZoneNames::clone()
@@ -190,7 +190,7 @@ def test_clone():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_create_tzdb_instance():
+def test_create_tzdb_instance() -> None:
     # static TimeZoneNames *icu::TimeZoneNames::createTZDBInstance(
     #       const Locale &locale,
     #       UErrorCode &status

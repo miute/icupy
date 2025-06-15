@@ -1,7 +1,7 @@
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     pattern = "I don't '{know}' {gender,select,female{h''er}other{h'im}}."
     mp1 = icu.MessagePattern(pattern, None)
 
@@ -109,7 +109,7 @@ def test_api():
     assert icu.MessagePattern.validate_argument_name("3") == 3
 
 
-def test_message_pattern():
+def test_message_pattern() -> None:
     # [1]
     # icu::MessagePattern::MessagePattern(UErrorCode &errorCode)
     mp1 = icu.MessagePattern()
@@ -157,7 +157,7 @@ def test_message_pattern():
     assert mp4.count_parts() == 5
 
 
-def test_parse():
+def test_parse() -> None:
     pattern = icu.UnicodeString(
         "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}."
     )
@@ -196,7 +196,7 @@ def test_parse():
     assert mp.count_parts() == 19
 
 
-def test_parse_choice_style():
+def test_parse_choice_style() -> None:
     pattern = icu.UnicodeString("0#are no files|1#is one file|1<are {0, number} files")
 
     # MessagePattern &icu::MessagePattern::parseChoiceStyle(
@@ -233,7 +233,7 @@ def test_parse_choice_style():
     assert mp.count_parts() == 16
 
 
-def test_parse_plural_style():
+def test_parse_plural_style() -> None:
     pattern = icu.UnicodeString("one{#st file}two{#nd file}few{#rd file}other{#th file}")
 
     # MessagePattern &icu::MessagePattern::parsePluralStyle(
@@ -270,7 +270,7 @@ def test_parse_plural_style():
     assert mp.count_parts() == 16
 
 
-def test_parse_select_style():
+def test_parse_select_style() -> None:
     pattern = icu.UnicodeString("female{h''er}other{h'im}")
 
     # MessagePattern &icu::MessagePattern::parseSelectStyle(
@@ -307,7 +307,7 @@ def test_parse_select_style():
     assert mp.count_parts() == 8
 
 
-def test_part():
+def test_part() -> None:
     pattern = "I don't '{know}' {gender,select,female{h''er}other{h'im}}."
     mp3 = icu.MessagePattern(pattern, None)
 

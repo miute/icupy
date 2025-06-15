@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -236,7 +236,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_api_49():
+def test_api_49() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -266,7 +266,7 @@ def test_api_49():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
-def test_api_51():
+def test_api_51() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -288,7 +288,7 @@ def test_api_51():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_api_53():
+def test_api_53() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -300,7 +300,7 @@ def test_api_53():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_api_54():
+def test_api_54() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -323,7 +323,7 @@ def test_api_54():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_api_62():
+def test_api_62() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -336,7 +336,7 @@ def test_api_62():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_api_64():
+def test_api_64() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("0", symbols)
 
@@ -381,7 +381,7 @@ def test_api_64():
     assert isinstance(result, icu.number.LocalizedNumberFormatter)
 
 
-def test_apply_localized_pattern():
+def test_apply_localized_pattern() -> None:
     fmt = icu.DecimalFormat()
 
     # [1]
@@ -423,7 +423,7 @@ def test_apply_localized_pattern():
     assert parse_error.offset == 0
 
 
-def test_apply_pattern():
+def test_apply_pattern() -> None:
     fmt = icu.DecimalFormat()
 
     # [1]
@@ -463,7 +463,7 @@ def test_apply_pattern():
     assert parse_error.offset == 0
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.DecimalFormat()
 
     # DecimalFormat *icu::DecimalFormat::clone()
@@ -478,7 +478,7 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_decimal_format():
+def test_decimal_format() -> None:
     assert issubclass(icu.DecimalFormat, icu.NumberFormat)
 
     # [1]
@@ -514,7 +514,7 @@ def test_decimal_format():
     assert fmt1 == fmt7
 
 
-def test_format():
+def test_format() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037
@@ -721,7 +721,7 @@ def test_format():
     assert result == "-10,456"
 
 
-def test_parse():
+def test_parse() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037
@@ -764,7 +764,7 @@ def test_parse():
     assert result.get_double() == d
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     symbols = icu.DecimalFormatSymbols(icu.Locale.get_us())
     fmt = icu.DecimalFormat("#,##0.#", symbols)
     d = -10456.0037

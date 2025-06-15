@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 51:
     pytest.skip("ICU4C<51", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     world = icu.Region.get_instance("001")
     continent = icu.Region.get_instance("039")  # Southern Europe
     territory = icu.Region.get_instance("IT")  # Italy
@@ -72,7 +72,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_api_55():
+def test_api_55() -> None:
     # static StringEnumeration *icu::Region::getAvailable(
     #       URegionType type,
     #       UErrorCode &status
@@ -108,7 +108,7 @@ def test_api_55():
     assert len(territories) > 0
 
 
-def test_get_instance():
+def test_get_instance() -> None:
     # [1]
     # static const Region *icu::Region::getInstance(
     #       const char *region_code,

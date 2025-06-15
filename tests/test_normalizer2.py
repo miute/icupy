@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # static const Normalizer2 *icu::Normalizer2::getInstance(
     #       const char *packageName,
     #       const char *name,
@@ -140,7 +140,7 @@ def test_api():
     assert not n2.span_quick_check_yes("\u304b\u3099")
 
 
-def test_filtered_normalizer2():
+def test_filtered_normalizer2() -> None:
     # icu::FilteredNormalizer2::FilteredNormalizer2(
     #       const Normalizer2 &n2,
     #       const UnicodeSet &filterSet
@@ -163,7 +163,7 @@ def test_filtered_normalizer2():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_instance():
+def test_get_instance() -> None:
     # static const Normalizer2 *icu::Normalizer2::getInstance(
     #       const char *packageName,
     #       const char *name,
@@ -225,7 +225,7 @@ def test_get_instance():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_icu_49():
+def test_icu_49() -> None:
     n2 = icu.Normalizer2.get_nfc_instance()
 
     # UChar32 icu::Normalizer2::composePair(
@@ -247,7 +247,7 @@ def test_icu_49():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_icu_60():
+def test_icu_60() -> None:
     # From icu/source/test/intltest/tstnorm.cpp
     #  BasicNormalizerTest::TestComposeUTF8WithEdits()
     nfkc_cf = icu.Normalizer2.get_nfkc_casefold_instance()
@@ -304,7 +304,7 @@ def test_icu_60():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_icu_74():
+def test_icu_74() -> None:
     # static const Normalizer2 *
     # icu::Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode&)
     n2 = icu.Normalizer2.get_nfkc_simple_casefold_instance()

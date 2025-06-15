@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 62:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     assert issubclass(icu.TimeUnit, icu.MeasureUnit)
 
     # static TimeUnit *icu::TimeUnit::createInstance(
@@ -51,7 +51,7 @@ def test_api():
     assert fmt.unit(unit2).format_int(1).to_string() == "1 wk"
 
 
-def test_clone():
+def test_clone() -> None:
     unit1 = icu.TimeUnit.create_instance(icu.TimeUnit.UTIMEUNIT_MONTH)
 
     # TimeUnit *icu::TimeUnit::clone()

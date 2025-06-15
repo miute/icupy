@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import copy
 from collections.abc import Iterable
 
 from icupy import icu
 
 
-def test_clone():
+def test_clone() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it1 = icu.StringCharacterIterator(src)
 
@@ -22,7 +20,7 @@ def test_clone():
     assert it1 == it2 == it3 == it4
 
 
-def test_iter():
+def test_iter() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -52,7 +50,7 @@ def test_iter():
     assert reversed(it) == []
 
 
-def test_move():
+def test_move() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -65,7 +63,7 @@ def test_move():
     assert it.move(1, icu.StringCharacterIterator.END) == 4
 
 
-def test_move32():
+def test_move32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -78,7 +76,7 @@ def test_move32():
     assert it.move32(1, icu.StringCharacterIterator.END) == 4
 
 
-def test_next():
+def test_next() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -119,7 +117,7 @@ def test_next():
     assert t == [0x61, 0xD83C, 0xDF38, 0x62]
 
 
-def test_next32():
+def test_next32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -156,7 +154,7 @@ def test_next32():
     assert t == [0x61, 0x1F338, 0x62]
 
 
-def test_previous():
+def test_previous() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -183,7 +181,7 @@ def test_previous():
     assert t == [0x62, 0xDF38, 0xD83C, 0x61]
 
 
-def test_previous32():
+def test_previous32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -206,7 +204,7 @@ def test_previous32():
     assert t == [0x62, 0x1F338, 0x61]
 
 
-def test_set_index():
+def test_set_index() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -233,7 +231,7 @@ def test_set_index():
     assert it.start_index() == 0
 
 
-def test_set_index32():
+def test_set_index32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -251,7 +249,7 @@ def test_set_index32():
     assert it.get_index() == 3
 
 
-def test_set_text():
+def test_set_text() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
@@ -275,7 +273,7 @@ def test_set_text():
     assert str(it) == "a\U0001f338b"
 
 
-def test_string_character_iterator():
+def test_string_character_iterator() -> None:
     assert issubclass(icu.CharacterIterator, icu.ForwardCharacterIterator)
     assert issubclass(icu.UCharCharacterIterator, icu.CharacterIterator)
     assert issubclass(icu.StringCharacterIterator, icu.UCharCharacterIterator)

@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 62:
 import copy
 
 
-def test_api():
+def test_api() -> None:
     # [1]
     # static int32_t icu::MeasureUnit::getAvailable(
     #       const char *type,
@@ -66,7 +66,7 @@ def test_api():
     assert not (unit2 == unit3)
 
 
-def test_clone():
+def test_clone() -> None:
     unit1 = icu.MeasureUnit.get_kilometer()
 
     # MeasureUnit *icu::MeasureUnit::clone()
@@ -82,7 +82,7 @@ def test_clone():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_for_identifier():
+def test_for_identifier() -> None:
     # static MeasureUnit icu::MeasureUnit::forIdentifier(
     #       StringPiece identifier,
     #       UErrorCode &status
@@ -97,7 +97,7 @@ def test_for_identifier():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_get_complexity():
+def test_get_complexity() -> None:
     # UMeasureUnitComplexity icu::MeasureUnit::getComplexity(
     #       UErrorCode &status
     # )
@@ -112,7 +112,7 @@ def test_get_complexity():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_get_dimensionality():
+def test_get_dimensionality() -> None:
     # int32_t icu::MeasureUnit::getDimensionality(UErrorCode &status)
     unit = icu.MeasureUnit.create_cubic_meter()
     assert unit.get_dimensionality() == 3
@@ -122,13 +122,13 @@ def test_get_dimensionality():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_get_prefix():
+def test_get_prefix() -> None:
     # UMeasurePrefix icu::MeasureUnit::getPrefix(UErrorCode &status)
     unit = icu.MeasureUnit.get_kilometer()
     assert unit.get_prefix() == icu.UMeasurePrefix.UMEASURE_PREFIX_KILO
 
 
-def test_measure_unit_53():
+def test_measure_unit_53() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_acre()).format_int(1).to_string()) == "1 ac"
@@ -250,7 +250,7 @@ def test_measure_unit_53():
     assert (fmt.unit(icu.MeasureUnit.create_year()).format_int(1).to_string()) == "1 yr"
 
 
-def test_measure_unit_54():
+def test_measure_unit_54() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_acre_foot()).format_int(1).to_string()) == "1 ac ft"
@@ -451,7 +451,7 @@ def test_measure_unit_54():
     assert (fmt.unit(icu.MeasureUnit.create_volt()).format_int(1).to_string()) == "1 V"
 
 
-def test_measure_unit_56():
+def test_measure_unit_56() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_century()).format_int(1).to_string()) == "1 c"
@@ -479,7 +479,7 @@ def test_measure_unit_56():
     ) == "1 rev"
 
 
-def test_measure_unit_57():
+def test_measure_unit_57() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (
@@ -506,14 +506,14 @@ def test_measure_unit_57():
     ) == "1 ppm"
 
 
-def test_measure_unit_59():
+def test_measure_unit_59() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_point()).format_int(1).to_string()) == "1 pt"
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 63, reason="ICU4C<63")
-def test_measure_unit_63():
+def test_measure_unit_63() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_atmosphere()).format_int(1).to_string()) == "1 atm"
@@ -528,7 +528,7 @@ def test_measure_unit_63():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_measure_unit_64():
+def test_measure_unit_64() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_barrel()).format_int(1).to_string()) == "1 bbl"
@@ -1013,7 +1013,7 @@ def test_measure_unit_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
-def test_measure_unit_65():
+def test_measure_unit_65() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_bar()).format_int(1).to_string()) == "1 bar"
@@ -1076,7 +1076,7 @@ def test_measure_unit_65():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_measure_unit_68():
+def test_measure_unit_68() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (fmt.unit(icu.MeasureUnit.create_candela()).format_int(1).to_string()) == "1 cd"
@@ -1185,7 +1185,7 @@ def test_measure_unit_68():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_measure_unit_69():
+def test_measure_unit_69() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (
@@ -1212,7 +1212,7 @@ def test_measure_unit_69():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_measure_unit_70():
+def test_measure_unit_70() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     # static MeasureUnit *icu::MeasureUnit::createItem(UErrorCode &status)
@@ -1239,7 +1239,7 @@ def test_measure_unit_70():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 72, reason="ICU4C<72")
-def test_measure_unit_72():
+def test_measure_unit_72() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     # static MeasureUnit *icu::MeasureUnit::createQuarter(UErrorCode &status)
@@ -1256,7 +1256,7 @@ def test_measure_unit_72():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
-def test_measure_unit_73():
+def test_measure_unit_73() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     # static MeasureUnit * icu::MeasureUnit::createBeaufort(UErrorCode &status)
@@ -1267,7 +1267,7 @@ def test_measure_unit_73():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_measure_unit_74():
+def test_measure_unit_74() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     # static MeasureUnit *
@@ -1285,7 +1285,7 @@ def test_measure_unit_74():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
-def test_measure_unit_76():
+def test_measure_unit_76() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     # static MeasureUnit icu::MeasureUnit::getLightSpeed()
@@ -1302,7 +1302,7 @@ def test_measure_unit_76():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 77, reason="ICU4C<77")
-def test_measure_unit_77():
+def test_measure_unit_77() -> None:
     unit = icu.MeasureUnit.for_identifier("meter-per-second")
 
     # MeasureUnit icu::MeasureUnit::withConstantDenominator(
@@ -1325,7 +1325,7 @@ def test_measure_unit_77():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_product():
+def test_product() -> None:
     # MeasureUnit icu::MeasureUnit::product(
     #       const MeasureUnit &other,
     #       UErrorCode &status
@@ -1340,7 +1340,7 @@ def test_product():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_reciprocal():
+def test_reciprocal() -> None:
     # MeasureUnit icu::MeasureUnit::reciprocal(UErrorCode &status)
     unit = icu.MeasureUnit.for_identifier("meter-per-second")
     unit2 = unit.reciprocal()
@@ -1349,7 +1349,7 @@ def test_reciprocal():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_split_to_single_units():
+def test_split_to_single_units() -> None:
     unit = icu.MeasureUnit.create_newton_meter()
 
     # std::pair<LocalArray<MeasureUnit>, int32_t>
@@ -1370,7 +1370,7 @@ def test_split_to_single_units():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 67, reason="ICU4C<67")
-def test_with_dimensionality():
+def test_with_dimensionality() -> None:
     unit = icu.MeasureUnit.create_kilometer()
 
     # MeasureUnit icu::MeasureUnit::withDimensionality(
@@ -1387,7 +1387,7 @@ def test_with_dimensionality():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_with_prefix():
+def test_with_prefix() -> None:
     unit = icu.MeasureUnit.create_byte()
 
     # MeasureUnit icu::MeasureUnit::withPrefix(

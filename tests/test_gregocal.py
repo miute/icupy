@@ -6,7 +6,7 @@ from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
 
 
-def test_api():
+def test_api() -> None:
     # static const Locale *icu::Calendar::getAvailableLocales(
     #       int32_t &count
     # )
@@ -327,7 +327,7 @@ def test_api():
     assert cal4.is_leap_year(2009) is False
 
 
-def test_calendar_create_instance():
+def test_calendar_create_instance() -> None:
     locale1 = icu.Locale.get_english()
     locale2 = icu.Locale.get_default()
     zone1 = icu.SimpleTimeZone(8 * HOUR, "s2")
@@ -384,7 +384,7 @@ def test_calendar_create_instance():
     assert cal6.get_time_zone() == zone2
 
 
-def test_clone():
+def test_clone() -> None:
     cal1 = icu.GregorianCalendar(icu.TimeZone.get_gmt())
     cal1.set_time(1215298800000.0)  # 2008-07-05T23:00:00Z
 
@@ -399,7 +399,7 @@ def test_clone():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_repeated_wall_time_option():
+def test_get_repeated_wall_time_option() -> None:
     zone = icu.SimpleTimeZone(8 * HOUR, "s2")
     cal = icu.Calendar.create_instance(zone)
 
@@ -416,7 +416,7 @@ def test_get_repeated_wall_time_option():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_skipped_wall_time_option():
+def test_get_skipped_wall_time_option() -> None:
     zone = icu.SimpleTimeZone(8 * HOUR, "s2")
     cal = icu.Calendar.create_instance(zone)
 
@@ -430,7 +430,7 @@ def test_get_skipped_wall_time_option():
     assert cal.get_skipped_wall_time_option() == icu.UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
 
 
-def test_get_time_zone_upcasting():
+def test_get_time_zone_upcasting() -> None:
     cal = icu.Calendar.create_instance()
 
     cal.set_time_zone(icu.TimeZone.get_gmt())
@@ -452,7 +452,7 @@ def test_get_time_zone_upcasting():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_type():
+def test_get_type() -> None:
     # const char *icu::Calendar::getType()
     cal1 = icu.Calendar.create_instance("ja")
     result = cal1.get_type()
@@ -465,7 +465,7 @@ def test_get_type():
     assert result == "japanese"
 
 
-def test_gregorian_calendar():
+def test_gregorian_calendar() -> None:
     assert issubclass(icu.GregorianCalendar, icu.Calendar)
     locale1 = icu.Locale.get_english()
     locale2 = icu.Locale.get_default()
@@ -560,7 +560,7 @@ def test_gregorian_calendar():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
-def test_in_temporal_leap_year():
+def test_in_temporal_leap_year() -> None:
     gc = icu.GregorianCalendar()
     gc.clear()
     gc.set(2024, icu.UCalendarMonths.UCAL_JANUARY, 1)
@@ -578,7 +578,7 @@ def test_in_temporal_leap_year():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
-def test_set_temporal_month_code():
+def test_set_temporal_month_code() -> None:
     gc = icu.GregorianCalendar()
     gc.clear()
     gc.set(2022, icu.UCalendarMonths.UCAL_JANUARY, 11)

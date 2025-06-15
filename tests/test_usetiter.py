@@ -3,7 +3,7 @@ import pytest
 from icupy import icu
 
 
-def test_next():
+def test_next() -> None:
     # [1]
     # icu::UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet &set)
     uniset = icu.UnicodeSet("[a\\U0001abcd{ab}]")
@@ -43,7 +43,7 @@ def test_next():
     assert it.get_string() == "a"
 
 
-def test_next_range():
+def test_next_range() -> None:
     # [2]
     # icu::UnicodeSetIterator::UnicodeSetIterator()
     it = icu.UnicodeSetIterator()
@@ -76,7 +76,7 @@ def test_next_range():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_skip_to_strings():
+def test_skip_to_strings() -> None:
     uniset = icu.UnicodeSet("[a0-9{ab}]")
     it = icu.UnicodeSetIterator(uniset)
 

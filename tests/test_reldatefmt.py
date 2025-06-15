@@ -6,7 +6,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 53:
     pytest.skip("ICU4C<53", allow_module_level=True)
 
 
-def test_api():
+def test_api() -> None:
     fmt = icu.RelativeDateTimeFormatter("en")
 
     # UnicodeString &icu::RelativeDateTimeFormatter::combineDateAndTime(
@@ -47,7 +47,7 @@ def test_api():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_api_54():
+def test_api_54() -> None:
     fmt = icu.RelativeDateTimeFormatter(
         "en",
         None,
@@ -68,7 +68,7 @@ def test_api_54():
     assert result == icu.UDateRelativeDateTimeFormatterStyle.UDAT_STYLE_NARROW
 
 
-def test_format():
+def test_format() -> None:
     fmt = icu.RelativeDateTimeFormatter("en")
 
     # [2]
@@ -120,7 +120,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
-def test_format_57():
+def test_format_57() -> None:
     fmt = icu.RelativeDateTimeFormatter("en")
 
     # [1]
@@ -144,7 +144,7 @@ def test_format_57():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 57, reason="ICU4C<57")
-def test_format_numeric():
+def test_format_numeric() -> None:
     fmt = icu.RelativeDateTimeFormatter("en-US")
 
     # UnicodeString &icu::RelativeDateTimeFormatter::formatNumeric(
@@ -167,7 +167,7 @@ def test_format_numeric():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_format_numeric_to_value():
+def test_format_numeric_to_value() -> None:
     assert issubclass(icu.FormattedRelativeDateTime, icu.FormattedValue)
 
     # icu::FormattedRelativeDateTime::FormattedRelativeDateTime()
@@ -255,7 +255,7 @@ def test_format_numeric_to_value():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_format_to_value():
+def test_format_to_value() -> None:
     fmt = icu.RelativeDateTimeFormatter("en-US")
 
     # [1]
@@ -309,7 +309,7 @@ def test_format_to_value():
     assert fv.to_temp_string() == "next Monday"
 
 
-def test_relative_date_time_formatter():
+def test_relative_date_time_formatter() -> None:
     # [1]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       UErrorCode &status
@@ -343,7 +343,7 @@ def test_relative_date_time_formatter():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 54, reason="ICU4C<54")
-def test_relative_date_time_formatter_54():
+def test_relative_date_time_formatter_54() -> None:
     # [4]
     # icu::RelativeDateTimeFormatter::RelativeDateTimeFormatter(
     #       const Locale &locale,

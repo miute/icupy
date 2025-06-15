@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from collections.abc import Iterable
 from functools import partial
 
@@ -7,7 +5,7 @@ from icupy import icu
 from icupy.utils import gc
 
 
-def test_api():
+def test_api() -> None:
     with gc(icu.ucsdet_open(), icu.ucsdet_close) as ucsd:
         en = icu.ucsdet_get_all_detectable_charsets(ucsd)
         assert icu.uenum_count(en) > 0

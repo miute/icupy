@@ -8,7 +8,7 @@ if icu.U_ICU_VERSION_MAJOR_NUM < 63:
 import copy
 
 
-def test_formatted_number_range_63():
+def test_formatted_number_range_63() -> None:
     fmt = (
         icu.number.NumberRangeFormatter.with_locale("en-US")
         .number_formatter_first(
@@ -50,7 +50,7 @@ def test_formatted_number_range_63():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_formatted_number_range_64():
+def test_formatted_number_range_64() -> None:
     assert issubclass(icu.number.FormattedNumberRange, icu.FormattedValue)
 
     # icu::number::FormattedNumberRange::FormattedNumberRange()
@@ -82,7 +82,7 @@ def test_formatted_number_range_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 68, reason="ICU4C<68")
-def test_formatted_number_range_68():
+def test_formatted_number_range_68() -> None:
     fmt = (
         icu.number.NumberRangeFormatter.with_locale("en-US")
         .number_formatter_first(
@@ -109,7 +109,7 @@ def test_formatted_number_range_68():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_formatted_number_range_69():
+def test_formatted_number_range_69() -> None:
     fmt = (
         icu.number.NumberRangeFormatter.with_locale("en-US")
         .number_formatter_first(
@@ -168,7 +168,7 @@ def test_formatted_number_range_69():
     assert not num.next_position(cfpos)
 
 
-def test_localized_number_range_formatter_63():
+def test_localized_number_range_formatter_63() -> None:
     # [1]
     # icu::number::LocalizedNumberRangeFormatter::LocalizedNumberRangeFormatter()
     fmt = icu.number.LocalizedNumberRangeFormatter()
@@ -241,7 +241,7 @@ def test_localized_number_range_formatter_63():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_localized_number_range_formatter_64():
+def test_localized_number_range_formatter_64() -> None:
     formatter = icu.number.NumberFormatter.with_().unit(icu.MeasureUnit.create_meter())
     fmt = (
         icu.number.NumberRangeFormatter.with_locale("en-US")
@@ -274,7 +274,7 @@ def test_localized_number_range_formatter_64():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 75, reason="ICU4C<75")
-def test_localized_number_range_formatter_75():
+def test_localized_number_range_formatter_75() -> None:
     # UnlocalizedNumberRangeFormatter
     # icu::number::LocalizedNumberRangeFormatter::withoutLocale() const &
     unf2 = (
@@ -288,7 +288,7 @@ def test_localized_number_range_formatter_75():
     assert res2.to_temp_string() == "5\uff5e5"
 
 
-def test_number_range_formatter():
+def test_number_range_formatter() -> None:
     # static UnlocalizedNumberRangeFormatter
     # icu::number::NumberRangeFormatter::with()
     fmt = icu.number.NumberRangeFormatter.with_()
@@ -303,7 +303,7 @@ def test_number_range_formatter():
     assert isinstance(fmt, icu.number.LocalizedNumberRangeFormatter)
 
 
-def test_unlocalized_number_range_formatter_63():
+def test_unlocalized_number_range_formatter_63() -> None:
     # [1]
     # icu::number::UnlocalizedNumberRangeFormatter::UnlocalizedNumberRangeFormatter()
     fmt = icu.number.UnlocalizedNumberRangeFormatter()
@@ -374,7 +374,7 @@ def test_unlocalized_number_range_formatter_63():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
-def test_unlocalized_number_range_formatter_64():
+def test_unlocalized_number_range_formatter_64() -> None:
     formatter = icu.number.NumberFormatter.with_().unit(icu.MeasureUnit.create_meter())
     fmt = (
         icu.number.NumberRangeFormatter.with_()

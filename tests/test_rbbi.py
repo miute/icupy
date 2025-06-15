@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_adopt_text():
+def test_adopt_text() -> None:
     bi = icu.BreakIterator.create_line_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     it = icu.StringCharacterIterator(src)
@@ -23,7 +23,7 @@ def test_adopt_text():
     assert bi.next() == icu.BreakIterator.DONE
 
 
-def test_clone():
+def test_clone() -> None:
     bi1 = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi1.set_text(src)
@@ -45,7 +45,7 @@ def test_clone():
     assert bi1.current() == bi4.current()
 
 
-def test_create_character_instance():
+def test_create_character_instance() -> None:
     # static BreakIterator *icu::BreakIterator::createCharacterInstance(
     #       const Locale &where,
     #       UErrorCode &status
@@ -82,7 +82,7 @@ def test_create_character_instance():
     assert loc.get_name() == "en_US"
 
 
-def test_create_line_instance():
+def test_create_line_instance() -> None:
     # static BreakIterator *icu::BreakIterator::createLineInstance(
     #       const Locale &where,
     #       UErrorCode &status
@@ -110,7 +110,7 @@ def test_create_line_instance():
     assert loc.get_name() == "en_US"
 
 
-def test_create_sentence_instance():
+def test_create_sentence_instance() -> None:
     # static BreakIterator *icu::BreakIterator::createSentenceInstance(
     #       const Locale &where,
     #       UErrorCode &status
@@ -136,7 +136,7 @@ def test_create_sentence_instance():
     assert loc.get_name() == "en_US"
 
 
-def test_create_title_instance():
+def test_create_title_instance() -> None:
     # **Deprecated in ICU 64**
     # static BreakIterator *icu::BreakIterator::createTitleInstance(
     #       const Locale &where,
@@ -165,7 +165,7 @@ def test_create_title_instance():
     assert loc.get_name() == "en_US"
 
 
-def test_create_word_instance():
+def test_create_word_instance() -> None:
     # static BreakIterator *icu::BreakIterator::createWordInstance(
     #       const Locale &where,
     #       UErrorCode &status
@@ -196,7 +196,7 @@ def test_create_word_instance():
     assert loc.get_name() == "en_US"
 
 
-def test_following():
+def test_following() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi.set_text(src)
@@ -212,7 +212,7 @@ def test_following():
     assert bi.following(12) == icu.BreakIterator.DONE
 
 
-def test_get_available_locales():
+def test_get_available_locales() -> None:
     # [1]
     # static const Locale *icu::BreakIterator::getAvailableLocales(
     #       int32_t &count
@@ -224,7 +224,7 @@ def test_get_available_locales():
     assert icu.Locale("ja") in it
 
 
-def test_get_display_name():
+def test_get_display_name() -> None:
     default_locale = None
     try:
         default_locale = icu.Locale.get_default()
@@ -282,7 +282,7 @@ def test_get_display_name():
             icu.Locale.set_default(default_locale)
 
 
-def test_get_locale():
+def test_get_locale() -> None:
     bi1 = icu.BreakIterator.create_word_instance(icu.Locale.get_english())
     bi2 = icu.BreakIterator.create_word_instance(icu.Locale.get_french())
 
@@ -308,7 +308,7 @@ def test_get_locale():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_get_rule_status():
+def test_get_rule_status() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz!")
     bi.set_text(src)
@@ -332,7 +332,7 @@ def test_get_rule_status():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_get_rule_status_vec():
+def test_get_rule_status_vec() -> None:
     # From icu/source/test/intltest/rbbiapts.cpp:
     # void RBBIAPITest::TestRuleStatusVec()
     rules = icu.UnicodeString(
@@ -386,7 +386,7 @@ def test_get_rule_status_vec():
     assert values == [0]
 
 
-def test_get_rules():
+def test_get_rules() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
 
     # const UnicodeString &icu::RuleBasedBreakIterator::getRules(void)
@@ -395,7 +395,7 @@ def test_get_rules():
     assert rules.length() > 0
 
 
-def test_get_text():
+def test_get_text() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
 
     # CharacterIterator &icu::BreakIterator::getText(void)
@@ -412,7 +412,7 @@ def test_get_text():
     assert dest == src
 
 
-def test_get_utext():
+def test_get_utext() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
 
     # UText *icu::BreakIterator::getUText(
@@ -437,7 +437,7 @@ def test_get_utext():
     icu.utext_close(ut1)
 
 
-def test_hash_code():
+def test_hash_code() -> None:
     bi1 = icu.BreakIterator.create_character_instance(icu.Locale.get_us())
     bi2 = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     bi3 = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
@@ -468,7 +468,7 @@ def test_hash_code():
     assert hash(bi3) == bi3.hash_code()
 
 
-def test_is_boundary():
+def test_is_boundary() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi.set_text(src)
@@ -490,7 +490,7 @@ def test_is_boundary():
     assert bi.is_boundary(12) is True
 
 
-def test_next():
+def test_next() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi.set_text(src)
@@ -520,7 +520,7 @@ def test_next():
     assert bi.next() == icu.BreakIterator.DONE
 
 
-def test_operator():
+def test_operator() -> None:
     bi1 = icu.BreakIterator.create_character_instance(icu.Locale.get_us())
     bi2 = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     bi3 = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
@@ -550,7 +550,7 @@ def test_operator():
     assert bi2 == bi3
 
 
-def test_preceding():
+def test_preceding() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi.set_text(src)
@@ -566,7 +566,7 @@ def test_preceding():
     assert bi.preceding(0) == icu.BreakIterator.DONE
 
 
-def test_previous():
+def test_previous() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src = icu.UnicodeString("foo bar baz.")
     bi.set_text(src)
@@ -582,7 +582,7 @@ def test_previous():
     assert bi.previous() == icu.BreakIterator.DONE
 
 
-def test_rule_based_break_iterator():
+def test_rule_based_break_iterator() -> None:
     src = icu.UnicodeString("foo.")
 
     # [1]
@@ -669,7 +669,7 @@ def test_rule_based_break_iterator():
     pass  # NotImplemented
 
 
-def test_set_text():
+def test_set_text() -> None:
     bi = icu.BreakIterator.create_word_instance(icu.Locale.get_us())
     src1 = icu.UnicodeString("foo bar baz.")
     src2 = icu.UnicodeString("lorem ipsum")

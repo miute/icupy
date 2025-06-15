@@ -5,7 +5,7 @@ import pytest
 from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     fmt1 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
     fmt2 = fmt1.clone()
     fmt3 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_french())
@@ -84,7 +84,7 @@ def test_api():
     assert fmt2.get_date_format_symbols() == new_format_symbols
 
 
-def test_clone():
+def test_clone() -> None:
     fmt1 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # SimpleDateFormat *icu::SimpleDateFormat::clone()
@@ -99,7 +99,7 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_format():
+def test_format() -> None:
     locale = icu.Locale.get_english()
     tz = icu.TimeZone.create_time_zone("PST")
     cal = icu.GregorianCalendar(tz, locale)
@@ -275,7 +275,7 @@ def test_format():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_get_context():
+def test_get_context() -> None:
     fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # UDisplayContext icu::DateFormat::getContext(
@@ -299,7 +299,7 @@ def test_get_context():
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
-def test_get_time_zone_format():
+def test_get_time_zone_format() -> None:
     fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # *ICU 49 technology preview*
@@ -318,7 +318,7 @@ def test_get_time_zone_format():
     assert fmt.get_time_zone_format() == tzf2
 
 
-def test_parse():
+def test_parse() -> None:
     locale = icu.Locale.get_english()
     tz = icu.TimeZone.create_time_zone("PST")
     fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
@@ -378,7 +378,7 @@ def test_parse():
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
-def test_parse_object():
+def test_parse_object() -> None:
     fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
     date = 837036536000.0  # 1996-07-10T15:08:56-07:00
 
@@ -418,7 +418,7 @@ def test_parse_object():
     assert result.get_date() == date
 
 
-def test_simple_date_format():
+def test_simple_date_format() -> None:
     assert issubclass(icu.DateFormat, icu.Format)
     assert issubclass(icu.SimpleDateFormat, icu.DateFormat)
     locale = icu.Locale.get_english()
