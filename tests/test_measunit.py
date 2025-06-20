@@ -490,12 +490,9 @@ def test_measure_unit_57() -> None:
         fmt.unit(icu.MeasureUnit.create_mile_per_gallon_imperial()).format_int(1).to_string()
     ) == "1 mpg Imp."
 
-    try:
-        assert (
-            fmt.unit(icu.MeasureUnit.create_milligram_per_deciliter()).format_int(1).to_string()
-        ) == "1 mg/dL"
-    except icu.ICUError as ex:
-        assert ex.args[0] == icu.UErrorCode.U_MISSING_RESOURCE_ERROR  # ICU 69.1
+    assert (
+        fmt.unit(icu.MeasureUnit.create_milligram_per_deciliter()).format_int(1).to_string()
+    ) == "1 mg/dL"
 
     assert (
         fmt.unit(icu.MeasureUnit.create_millimole_per_liter()).format_int(1).to_string()
@@ -852,12 +849,9 @@ def test_measure_unit_64() -> None:
 
     assert (fmt.unit(icu.MeasureUnit.get_milligram()).format_int(1).to_string()) == "1 mg"
 
-    try:
-        assert (
-            fmt.unit(icu.MeasureUnit.get_milligram_per_deciliter()).format_int(1).to_string()
-        ) == "1 mg/dL"
-    except icu.ICUError as ex:
-        assert ex.args[0] == icu.UErrorCode.U_MISSING_RESOURCE_ERROR  # ICU 69.1
+    assert (
+        fmt.unit(icu.MeasureUnit.get_milligram_per_deciliter()).format_int(1).to_string()
+    ) == "1 mg/dL"
 
     assert (fmt.unit(icu.MeasureUnit.get_milliliter()).format_int(1).to_string()) == "1 mL"
 

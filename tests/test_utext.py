@@ -204,17 +204,19 @@ def test_copy() -> None:
 
 def test_equals() -> None:
     s1 = "ABC"
-    with gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1:
-        with gc(icu.utext_clone(None, ut1, False, True), icu.utext_close) as ut2:
-            icu.utext_set_native_index(ut1, 0)
-            icu.utext_set_native_index(ut2, 0)
-            assert icu.utext_equals(ut1, ut2) is True
+    with (
+        gc(icu.utext_open_uchars(None, s1, -1), icu.utext_close) as ut1,
+        gc(icu.utext_clone(None, ut1, False, True), icu.utext_close) as ut2,
+    ):
+        icu.utext_set_native_index(ut1, 0)
+        icu.utext_set_native_index(ut2, 0)
+        assert icu.utext_equals(ut1, ut2) is True
 
-            assert icu.utext_next32(ut1) != icu.U_SENTINEL
-            assert icu.utext_equals(ut1, ut2) is False
+        assert icu.utext_next32(ut1) != icu.U_SENTINEL
+        assert icu.utext_equals(ut1, ut2) is False
 
-            assert icu.utext_next32(ut2) != icu.U_SENTINEL
-            assert icu.utext_equals(ut1, ut2) is True
+        assert icu.utext_next32(ut2) != icu.U_SENTINEL
+        assert icu.utext_equals(ut1, ut2) is True
 
 
 def test_freeze() -> None:

@@ -226,7 +226,7 @@ def test_deprecated_api() -> None:
         _error_code: icu.UErrorCode,
     ) -> icu.UErrorCode:
         if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            _source = "".join(["\\x{:02x}".format(x) for x in _code_units])
+            _source = "".join([f"\\x{x:02x}" for x in _code_units])
             icu.ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
             _error_code = icu.UErrorCode.U_ZERO_ERROR
         return _error_code
@@ -505,7 +505,7 @@ def test_set_to_ucall_back() -> None:
         result2.append((_reason, _error_code, _code_units))
         assert icu.ucnv_get_name(_args.converter) == "UTF-8"
         if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            _source = "".join(["\\x{:02x}".format(x) for x in _code_units])
+            _source = "".join([f"\\x{x:02x}" for x in _code_units])
             icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
             _error_code = icu.UErrorCode.U_ZERO_ERROR
         return _error_code
@@ -524,7 +524,7 @@ def test_set_to_ucall_back() -> None:
         result3.append((_reason, _error_code, _code_units))
         assert icu.ucnv_get_name(_args.converter) == "UTF-8"
         if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            _source = "".join(["%x{:02X}".format(x) for x in _code_units])
+            _source = "".join([f"%x{x:02X}" for x in _code_units])
             icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
             _error_code = icu.UErrorCode.U_ZERO_ERROR
         return _error_code

@@ -631,10 +631,7 @@ else:  # U_ICU_VERSION_MAJOR_NUM <= 67
 
 def _is_ascii(s: icu.UnicodeString) -> bool:
     p = s.get_buffer()
-    for i in range(s.length()):
-        if p[i] >= 0x80:
-            return False
-    return True
+    return all(p[i] < 0x80 for i in range(s.length()))
 
 
 def test_api() -> None:

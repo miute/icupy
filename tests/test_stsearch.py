@@ -31,8 +31,7 @@ class _TestSearch(icu.SearchIterator):
         match: int = text.index_of(self._pattern, position)
         if match < 0:
             self._set_match_not_found()
-            match = icu.USEARCH_DONE
-            return match
+            return icu.USEARCH_DONE  # type: ignore[no-any-return]
         self._set_match_start(match)
         self._offset = match
         self._set_match_length(len(self._pattern))
@@ -47,8 +46,7 @@ class _TestSearch(icu.SearchIterator):
         match: int = text.last_index_of(self._pattern, 0, position)
         if match < 0:
             self._set_match_not_found()
-            match = icu.USEARCH_DONE
-            return match
+            return icu.USEARCH_DONE  # type: ignore[no-any-return]
         self._set_match_start(match)
         self._offset = match
         self._set_match_length(len(self._pattern))

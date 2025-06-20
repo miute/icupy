@@ -141,7 +141,7 @@ def test_append_replacement() -> None:
     # )
     s2 = icu.UnicodeString()
     dest2 = icu.utext_open_unicode_string(None, s2)
-    replacement2 = icu.utext_open_utf8(None, "abc".encode(), -1)
+    replacement2 = icu.utext_open_utf8(None, b"abc", -1)
     result = matcher.append_replacement(dest2, replacement2)
     assert isinstance(result, icu.RegexMatcher)
     assert id(result) == id(matcher)
@@ -179,7 +179,7 @@ def test_append_tail() -> None:
     # )
     s2 = icu.UnicodeString()
     dest2 = icu.utext_open_unicode_string(None, s2)
-    replacement2 = icu.utext_open_utf8(None, "abc".encode(), -1)
+    replacement2 = icu.utext_open_utf8(None, b"abc", -1)
     matcher.append_replacement(dest2, replacement2)
     result = matcher.append_tail(dest2)
     assert result == dest2
@@ -420,7 +420,7 @@ def test_regex_matcher() -> None:
     #       UErrorCode &status
     # )
     regexp4 = icu.utext_open_utf8(None, s.encode(), -1)
-    src4 = icu.utext_open_utf8(None, "foo bar baz".encode(), -1)
+    src4 = icu.utext_open_utf8(None, b"foo bar baz", -1)
     test4 = icu.RegexMatcher(regexp4, src4, icu.URegexpFlag.UREGEX_CASE_INSENSITIVE)
     pattern4 = test4.pattern()
     assert pattern4.pattern() == s
@@ -498,11 +498,11 @@ def test_replace_all() -> None:
     #       UText *dest,
     #       UErrorCode &status
     # )
-    replacement = icu.utext_open_utf8(None, "xyz".encode(), -1)
+    replacement = icu.utext_open_utf8(None, b"xyz", -1)
     dest = matcher.replace_all(replacement, None)
     assert icu.utext_extract(dest, 0, icu.utext_native_length(dest)) == ".xyz..xyz.."
 
-    icu.utext_open_utf8(replacement, "ABC".encode(), -1)
+    icu.utext_open_utf8(replacement, b"ABC", -1)
     icu.utext_replace(dest, 0, icu.utext_native_length(dest), "", -1)
     result = matcher.replace_all(replacement, dest)
     assert result == dest
@@ -535,11 +535,11 @@ def test_replace_first() -> None:
     #       UText *dest,
     #       UErrorCode &status
     # )
-    replacement = icu.utext_open_utf8(None, "xyz".encode(), -1)
+    replacement = icu.utext_open_utf8(None, b"xyz", -1)
     dest = matcher.replace_first(replacement, None)
     assert icu.utext_extract(dest, 0, icu.utext_native_length(dest)) == ".xyz..abc.."
 
-    icu.utext_open_utf8(replacement, "ABC".encode(), -1)
+    icu.utext_open_utf8(replacement, b"ABC", -1)
     icu.utext_replace(dest, 0, icu.utext_native_length(dest), "", -1)
     result = matcher.replace_first(replacement, dest)
     assert result == dest
@@ -591,7 +591,7 @@ def test_reset() -> None:
 
     # [4]
     # RegexMatcher &icu::RegexMatcher::reset(UText *input)
-    src4 = icu.utext_open_utf8(None, "abc xyz".encode(), -1)
+    src4 = icu.utext_open_utf8(None, b"abc xyz", -1)
     result = matcher.reset(src4)
     assert isinstance(result, icu.RegexMatcher)
     assert id(result) == id(matcher)
@@ -619,9 +619,7 @@ def test_set_find_progress_callback() -> None:
     def _find_progress_callback2(_context: object, _match_index: int) -> bool:
         assert isinstance(_context, list)
         _context.append(_match_index)
-        if _match_index >= 5:
-            return False
-        return True
+        return _match_index < 5
 
     regexp = icu.UnicodeString("abc")
     src = icu.UnicodeString(".abc..abc..")
@@ -694,9 +692,7 @@ def test_set_match_callback() -> None:
     def _match_callback2(_context: object, _steps: int) -> bool:
         assert isinstance(_context, list)
         _context.append(_steps)
-        if _steps >= 5:
-            return False
-        return True
+        return _steps < 5
 
     regexp = icu.UnicodeString("((.)+\\2)+x")
     matcher = icu.RegexMatcher(regexp, 0)

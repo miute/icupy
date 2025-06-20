@@ -522,7 +522,7 @@ def test_extract() -> None:
     #       Char16Ptr dst,
     #       int32_t dstStart = 0
     # )
-    pass  # Same as [7]
+    # Same as [7]
 
     # [4]
     # void icu::UnicodeString::extract(

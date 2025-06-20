@@ -26,19 +26,19 @@ def test_clone() -> None:
     assert it2.next() is not None
     assert it2.next() is None
 
-    t2 = [x for x in iter(it2)]
+    t2 = list(it2)
     assert len(t2) == 2
     assert "calendar" in t2
     assert "collation" in t2
 
     it3 = copy.copy(it1)
-    t3 = [x for x in iter(it3)]
+    t3 = list(it3)
     assert len(t3) == 2
     assert "calendar" in t3
     assert "collation" in t3
 
     it4 = copy.deepcopy(it1)
-    t4 = [x for x in iter(it4)]
+    t4 = list(it4)
     assert len(t4) == 2
     assert "calendar" in t4
     assert "collation" in t4
@@ -69,7 +69,7 @@ def test_next() -> None:
     assert "calendar" in it
     assert "collation" in it
 
-    t = [x for x in iter(it)]
+    t = list(it)
     assert len(t) == 2
     assert all(isinstance(x, str) for x in t)
     assert "calendar" in t

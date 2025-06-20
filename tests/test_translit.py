@@ -46,7 +46,7 @@ class _TestTrans2(icu.Transliterator):
         self.num_calls: int = 0
         self._trans: list[icu.Transliterator] = []
         for basic_id in str(id_).strip(";").split(";"):
-            basic_id = basic_id.strip()
+            basic_id = basic_id.strip()  # noqa: PLW2901
             if len(basic_id) == 0:
                 # static Transliterator *icu::Transliterator::createBasicInstance(
                 #       const UnicodeString &id,

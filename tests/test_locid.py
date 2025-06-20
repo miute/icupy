@@ -202,7 +202,7 @@ def test_create_keywords() -> None:
     result = loc.create_keywords()
     assert isinstance(result, icu.StringEnumeration)
     assert len(result) == 2
-    t = [x for x in result]
+    t = list(result)
     assert "calendar" in t
     assert "collation" in t
 
@@ -222,7 +222,7 @@ def test_create_unicode_keywords() -> None:
     result = loc.create_unicode_keywords()
     assert isinstance(result, icu.StringEnumeration)
     assert len(result) == 2
-    t = [x for x in result]
+    t = list(result)
     assert "ca" in t
     assert "co" in t
 

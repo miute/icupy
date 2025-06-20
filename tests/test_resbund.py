@@ -112,7 +112,7 @@ def test_api2() -> None:
     assert test1.get_key() is None
     assert test1.get_name() == "testtypes"
 
-    resources = list()
+    resources = []
 
     # UBool icu::ResourceBundle::hasNext(void)
     while test1.has_next():
@@ -141,7 +141,7 @@ def test_api2() -> None:
         assert result.get_key() is not None
         assert result.get_key() == expected.get_key()
 
-    resources2 = [x for x in test1]
+    resources2 = list(test1)
     assert len(resources2) == len(resources)
     for res1, res2 in zip(resources, resources2):
         assert res1.get_key() is not None

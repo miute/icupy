@@ -587,7 +587,7 @@ def test_rule_based_break_iterator() -> None:
 
     # [1]
     # icu::RuleBasedBreakIterator::RuleBasedBreakIterator()
-    pass  # NotImplemented
+    # NotImplemented
 
     # [3]
     # icu::RuleBasedBreakIterator::RuleBasedBreakIterator(
@@ -666,7 +666,7 @@ def test_rule_based_break_iterator() -> None:
     #       UDataMemory *image,
     #       UErrorCode &status
     # )
-    pass  # NotImplemented
+    # NotImplemented
 
 
 def test_set_text() -> None:

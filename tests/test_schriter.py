@@ -30,11 +30,11 @@ def test_iter() -> None:
     assert list(it) == ["a", "\U0001f338", "b"]
 
     y: Iterable[int] = iter(it.next, icu.StringCharacterIterator.DONE)
-    t: list[int] = [it.first()] + [c for c in y]
+    t: list[int] = [it.first(), *list(y)]
     assert t == [0x61, 0xD83C, 0xDF38, 0x62]
 
     y = iter(it.next32, icu.StringCharacterIterator.DONE)
-    t = [it.first32()] + [c for c in y]
+    t = [it.first32(), *list(y)]
     assert t == [0x61, 0x1F338, 0x62]
 
     assert reversed(it) == ["b", "\U0001f338", "a"]
@@ -80,7 +80,7 @@ def test_next() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
-    t = list()
+    t = []
 
     # int32_t icu::CharacterIterator::setToStart()
     assert it.set_to_start() == 0
@@ -121,7 +121,7 @@ def test_next32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
-    t = list()
+    t = []
     it.set_to_start()
     while it.has_next():
         # UChar32 icu::CharacterIterator::current32(void)
@@ -158,7 +158,7 @@ def test_previous() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
-    t = list()
+    t = []
 
     # int32_t icu::CharacterIterator::setToEnd()
     assert it.set_to_end() == 4
@@ -185,7 +185,7 @@ def test_previous32() -> None:
     src = icu.UnicodeString("a\\uD83C\\uDF38b").unescape()
     it = icu.StringCharacterIterator(src)
 
-    t = list()
+    t = []
     it.set_to_end()
     while it.has_previous():
         # UChar32 icu::CharacterIterator::previous32(void)
