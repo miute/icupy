@@ -8,11 +8,9 @@ if sys.platform.startswith("win"):
     import os
     from pathlib import Path
 
-    path = (  # type: ignore
-        Path(os.getenv("ICU_ROOT", "C:/icu")) / "bin64"
-        if sys.maxsize > 2**32
-        else "bin"
-    ).resolve()
+    path = (
+        Path(os.getenv("ICU_ROOT", "C:/icu")) / "bin64" if sys.maxsize > 2**32 else "bin"
+    ).resolve()  # type: ignore
     if not path.is_dir():
         raise FileNotFoundError(
             "%s is not a valid directory. "

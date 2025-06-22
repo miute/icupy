@@ -1,47 +1,39 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 55:
+if icu.U_ICU_VERSION_MAJOR_NUM < 55:
     pytest.skip("ICU4C<55", allow_module_level=True)
 
 import copy
 
-# fmt: off
-from icupy.icu import (
-    Formattable, Locale, NumberFormat, ScientificNumberFormatter,
-    UnicodeString,
-)
 
-# fmt: on
-
-
-def test_clone():
-    decfmt = NumberFormat.create_scientific_instance("en")
+def test_clone() -> None:
+    decfmt = icu.NumberFormat.create_scientific_instance("en")
     decfmt.apply_pattern("0.00E+0")
-    fmt1 = ScientificNumberFormatter.create_superscript_instance(decfmt)
-    append_to = UnicodeString()
+    fmt1 = icu.ScientificNumberFormatter.create_superscript_instance(decfmt)
+    append_to = icu.UnicodeString()
 
     # ScientificNumberFormatter *icu::ScientificNumberFormatter::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, ScientificNumberFormatter)
+    assert isinstance(fmt2, icu.ScientificNumberFormatter)
 
     append_to.remove()
-    fmt2.format(Formattable(6.02e23), append_to)
+    fmt2.format(icu.Formattable(6.02e23), append_to)
     assert append_to == "6.02\u00d710\u207a\u00b2\u00b3"
 
     fmt3 = copy.copy(fmt1)
     append_to.remove()
-    fmt3.format(Formattable(6.02e23), append_to)
+    fmt3.format(icu.Formattable(6.02e23), append_to)
     assert append_to == "6.02\u00d710\u207a\u00b2\u00b3"
 
     fmt4 = copy.deepcopy(fmt1)
     append_to.remove()
-    fmt4.format(Formattable(6.02e23), append_to)
+    fmt4.format(icu.Formattable(6.02e23), append_to)
     assert append_to == "6.02\u00d710\u207a\u00b2\u00b3"
 
 
-def test_create_markup_instance():
+def test_create_markup_instance() -> None:
     # [1]
     # static ScientificNumberFormatter *
     # icu::ScientificNumberFormatter::createMarkupInstance(
@@ -50,47 +42,47 @@ def test_create_markup_instance():
     #       const UnicodeString &endMarkup,
     #       UErrorCode &status
     # )
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(), UnicodeString("<sup>"), UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        icu.Locale.get_english(),
+        icu.UnicodeString("<sup>"),
+        icu.UnicodeString("</sup>"),
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        "en", UnicodeString("<sup>"), UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        "en", icu.UnicodeString("<sup>"), icu.UnicodeString("</sup>")
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(), "<sup>", UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        icu.Locale.get_english(), "<sup>", icu.UnicodeString("</sup>")
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(), UnicodeString("<sup>"), "</sup>"
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        icu.Locale.get_english(), icu.UnicodeString("<sup>"), "</sup>"
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        "en", "<sup>", UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        "en", "<sup>", icu.UnicodeString("</sup>")
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        "en", UnicodeString("<sup>"), "</sup>"
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        "en", icu.UnicodeString("<sup>"), "</sup>"
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        Locale.get_english(), "<sup>", "</sup>"
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        icu.Locale.get_english(), "<sup>", "</sup>"
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        "en", "<sup>", "</sup>"
-    )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    fmt = icu.ScientificNumberFormatter.create_markup_instance("en", "<sup>", "</sup>")
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    decfmt = NumberFormat.create_scientific_instance("en")
+    decfmt = icu.NumberFormat.create_scientific_instance("en")
     decfmt.apply_pattern("0.00E+0")
 
     # [2]
@@ -101,43 +93,39 @@ def test_create_markup_instance():
     #       const UnicodeString &endMarkup,
     #       UErrorCode &status
     # )
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt, UnicodeString("<sup>"), UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        decfmt, icu.UnicodeString("<sup>"), icu.UnicodeString("</sup>")
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt, "<sup>", UnicodeString("</sup>")
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        decfmt, "<sup>", icu.UnicodeString("</sup>")
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt, UnicodeString("<sup>"), "</sup>"
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(
+        decfmt, icu.UnicodeString("<sup>"), "</sup>"
     )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        decfmt, "<sup>", "</sup>"
-    )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    fmt = icu.ScientificNumberFormatter.create_markup_instance(decfmt, "<sup>", "</sup>")
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
 
-def test_create_superscript_instance():
+def test_create_superscript_instance() -> None:
     # [1]
     # static ScientificNumberFormatter *
     # icu::ScientificNumberFormatter::createSuperscriptInstance(
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    fmt = ScientificNumberFormatter.create_superscript_instance(
-        Locale.get_english()
-    )
-    assert isinstance(fmt, ScientificNumberFormatter)
+    fmt = icu.ScientificNumberFormatter.create_superscript_instance(icu.Locale.get_english())
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    fmt = ScientificNumberFormatter.create_superscript_instance("en")
-    assert isinstance(fmt, ScientificNumberFormatter)
+    fmt = icu.ScientificNumberFormatter.create_superscript_instance("en")
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
-    decfmt = NumberFormat.create_scientific_instance("en")
+    decfmt = icu.NumberFormat.create_scientific_instance("en")
     decfmt.apply_pattern("0.00E+0")
 
     # [2]
@@ -146,22 +134,20 @@ def test_create_superscript_instance():
     #       DecimalFormat *fmtToAdopt,
     #       UErrorCode &status
     # )
-    fmt = ScientificNumberFormatter.create_superscript_instance(decfmt)
-    assert isinstance(fmt, ScientificNumberFormatter)
+    fmt = icu.ScientificNumberFormatter.create_superscript_instance(decfmt)
+    assert isinstance(fmt, icu.ScientificNumberFormatter)
 
 
-def test_format():
-    fmt = ScientificNumberFormatter.create_markup_instance(
-        "en", "<sup>", "</sup>"
-    )
+def test_format() -> None:
+    fmt = icu.ScientificNumberFormatter.create_markup_instance("en", "<sup>", "</sup>")
 
     # UnicodeString &icu::ScientificNumberFormatter::format(
     #       const Formattable &number,
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    append_to = UnicodeString("String: ")
-    result = fmt.format(Formattable(1.23456e-78), append_to)
-    assert isinstance(result, UnicodeString)
+    append_to = icu.UnicodeString("String: ")
+    result = fmt.format(icu.Formattable(1.23456e-78), append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "String: 1.23456\u00d710<sup>-78</sup>"

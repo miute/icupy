@@ -1,25 +1,17 @@
-# fmt: off
-from icupy.icu import (
-    CollationKey, Collator, Locale, UColAttribute, UColAttributeValue,
-    UCollationResult, UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 
-def test_api():
-    coll = Collator.create_instance(Locale.get_english())
-    coll.set_attribute(
-        UColAttribute.UCOL_STRENGTH, UColAttributeValue.UCOL_TERTIARY
-    )
-    source = UnicodeString("Abcd")
+def test_api() -> None:
+    coll = icu.Collator.create_instance(icu.Locale.get_english())
+    coll.set_attribute(icu.UColAttribute.UCOL_STRENGTH, icu.UColAttributeValue.UCOL_TERTIARY)
+    source = icu.UnicodeString("Abcd")
 
     # [1]
     # icu::CollationKey::CollationKey()
-    key = CollationKey()
+    key = icu.CollationKey()
     coll.get_collation_key(source, key)
 
-    key1 = CollationKey()
+    key1 = icu.CollationKey()
 
     # const uint8_t *icu::CollationKey::getByteArray(int32_t &count)
     values = key.get_byte_array()
@@ -31,34 +23,34 @@ def test_api():
     #       const uint8_t *values,
     #       int32_t count
     # )
-    key2 = CollationKey(values, len(values))
-    key2a = CollationKey(values)
+    key2 = icu.CollationKey(values, len(values))
+    key2a = icu.CollationKey(values)
     assert key2 == key2a
 
     # [3]
     # icu::CollationKey::CollationKey(const CollationKey &other)
-    key3 = CollationKey(key)
+    key3 = icu.CollationKey(key)
 
     # [2]
     # UCollationResult icu::CollationKey::compareTo(
     #       const CollationKey &target,
     #       UErrorCode &status
     # )
-    assert key.compare_to(key1) == UCollationResult.UCOL_GREATER
-    assert key.compare_to(key2) == UCollationResult.UCOL_EQUAL
-    assert key.compare_to(key3) == UCollationResult.UCOL_EQUAL
+    assert key.compare_to(key1) == icu.UCollationResult.UCOL_GREATER
+    assert key.compare_to(key2) == icu.UCollationResult.UCOL_EQUAL
+    assert key.compare_to(key3) == icu.UCollationResult.UCOL_EQUAL
 
-    assert key1.compare_to(key) == UCollationResult.UCOL_LESS
-    assert key1.compare_to(key2) == UCollationResult.UCOL_LESS
-    assert key1.compare_to(key3) == UCollationResult.UCOL_LESS
+    assert key1.compare_to(key) == icu.UCollationResult.UCOL_LESS
+    assert key1.compare_to(key2) == icu.UCollationResult.UCOL_LESS
+    assert key1.compare_to(key3) == icu.UCollationResult.UCOL_LESS
 
-    assert key2.compare_to(key) == UCollationResult.UCOL_EQUAL
-    assert key2.compare_to(key1) == UCollationResult.UCOL_GREATER
-    assert key2.compare_to(key3) == UCollationResult.UCOL_EQUAL
+    assert key2.compare_to(key) == icu.UCollationResult.UCOL_EQUAL
+    assert key2.compare_to(key1) == icu.UCollationResult.UCOL_GREATER
+    assert key2.compare_to(key3) == icu.UCollationResult.UCOL_EQUAL
 
-    assert key3.compare_to(key) == UCollationResult.UCOL_EQUAL
-    assert key3.compare_to(key1) == UCollationResult.UCOL_GREATER
-    assert key3.compare_to(key2) == UCollationResult.UCOL_EQUAL
+    assert key3.compare_to(key) == icu.UCollationResult.UCOL_EQUAL
+    assert key3.compare_to(key1) == icu.UCollationResult.UCOL_GREATER
+    assert key3.compare_to(key2) == icu.UCollationResult.UCOL_EQUAL
 
     # int32_t icu::CollationKey::hashCode(void)
     assert key1.hash_code() != key.hash_code()

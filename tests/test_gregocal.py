@@ -2,26 +2,18 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
-from icupy.icu import (
-    Calendar, GregorianCalendar, Locale, SimpleTimeZone, StringEnumeration,
-    TimeZone, UCalendarDateFields, UCalendarDaysOfWeek, UCalendarMonths,
-    UCalendarWallTimeOption, UCalendarWeekdayType, ULocDataLocaleType,
-)
-
-# fmt: on
 
 
-def test_api():
+def test_api() -> None:
     # static const Locale *icu::Calendar::getAvailableLocales(
     #       int32_t &count
     # )
-    result = Calendar.get_available_locales()
+    result = icu.Calendar.get_available_locales()
     assert isinstance(result, list)
     assert len(result) > 0
-    assert all(isinstance(x, Locale) for x in result)
+    assert all(isinstance(x, icu.Locale) for x in result)
 
     # static StringEnumeration *icu::Calendar::getKeywordValuesForLocale(
     #       const char *key,
@@ -29,32 +21,30 @@ def test_api():
     #       UBool commonlyUsed,
     #       UErrorCode &status
     # )
-    it1 = Calendar.get_keyword_values_for_locale(
-        "calendar", Locale("he"), True
-    )
-    assert isinstance(it1, StringEnumeration)
+    it1 = icu.Calendar.get_keyword_values_for_locale("calendar", icu.Locale("he"), True)
+    assert isinstance(it1, icu.StringEnumeration)
     assert "hebrew" in it1
 
-    it2 = Calendar.get_keyword_values_for_locale("calendar", "he", True)
-    assert isinstance(it2, StringEnumeration)
+    it2 = icu.Calendar.get_keyword_values_for_locale("calendar", "he", True)
+    assert isinstance(it2, icu.StringEnumeration)
     assert "hebrew" in it2
 
     # static UDate icu::Calendar::getNow(void)
-    result = Calendar.get_now()
+    result = icu.Calendar.get_now()
     assert isinstance(result, float)
     assert result > 0
 
     when = 1215300615000.0  # 2008-07-05T23:30:15Z
     when2 = 1215304215000.0  # 2008-07-06T00:30:15Z
     when3 = 1215097200000.0  # 2008-07-04T00:00:00Z
-    zone = TimeZone.get_gmt()
-    zone2 = TimeZone.create_default()
-    cal = Calendar.create_instance("en")
-    assert isinstance(cal, GregorianCalendar)
+    zone = icu.TimeZone.get_gmt()
+    zone2 = icu.TimeZone.create_default()
+    cal = icu.Calendar.create_instance("en")
+    assert isinstance(cal, icu.GregorianCalendar)
 
     # const TimeZone &icu::Calendar::getTimeZone(void)
     result = cal.get_time_zone()
-    assert isinstance(result, TimeZone)
+    assert isinstance(result, icu.TimeZone)
     assert result == zone2
 
     # void icu::Calendar::setTimeZone(const TimeZone &zone)
@@ -79,7 +69,7 @@ def test_api():
     #       UErrorCode &status
     # )
     cal2 = cal.clone()
-    cal2.add(UCalendarDateFields.UCAL_HOUR_OF_DAY, 1)
+    cal2.add(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY, 1)
     assert cal2.get_time() == when2  # 2008-07-06T00:30:15Z
 
     # UBool icu::Calendar::after(
@@ -99,7 +89,7 @@ def test_api():
     # [2]
     # void icu::Calendar::clear(UCalendarDateFields field)
     cal3 = cal2.clone()
-    cal3.clear(UCalendarDateFields.UCAL_SECOND)
+    cal3.clear(icu.UCalendarDateFields.UCAL_SECOND)
     assert cal3.get_time() == 1215304200000.0  # 2008-07-06T00:30:00Z
 
     # [3]
@@ -107,7 +97,7 @@ def test_api():
     cal3.clear()
     assert cal3.get_time() == 0
 
-    cal4 = GregorianCalendar(zone, "en")
+    cal4 = icu.GregorianCalendar(zone, "en")
     cal4.set_time(when)
 
     # UBool icu::Calendar::equals(
@@ -123,13 +113,11 @@ def test_api():
     #       UCalendarDateFields field,
     #       UErrorCode &status
     # )
-    assert (
-        cal.field_difference(when2, UCalendarDateFields.UCAL_HOUR_OF_DAY) == 1
-    )
-    assert cal.field_difference(when2, UCalendarDateFields.UCAL_MINUTE) == 0
+    assert cal.field_difference(when2, icu.UCalendarDateFields.UCAL_HOUR_OF_DAY) == 1
+    assert cal.field_difference(when2, icu.UCalendarDateFields.UCAL_MINUTE) == 0
 
     year = 2008
-    month = UCalendarMonths.UCAL_JULY
+    month = icu.UCalendarMonths.UCAL_JULY
     date = 5
     hour = 23
     minute = 30
@@ -147,13 +135,13 @@ def test_api():
     #       UCalendarDateFields field,
     #       UErrorCode &status
     # )
-    assert cal3.get(UCalendarDateFields.UCAL_ERA) == GregorianCalendar.AD
-    assert cal3.get(UCalendarDateFields.UCAL_YEAR) == year
-    assert cal3.get(UCalendarDateFields.UCAL_MONTH) == month
-    assert cal3.get(UCalendarDateFields.UCAL_DATE) == date
-    assert cal3.get(UCalendarDateFields.UCAL_HOUR_OF_DAY) == 0
-    assert cal3.get(UCalendarDateFields.UCAL_MINUTE) == 0
-    assert cal3.get(UCalendarDateFields.UCAL_SECOND) == 0
+    assert cal3.get(icu.UCalendarDateFields.UCAL_ERA) == icu.GregorianCalendar.AD
+    assert cal3.get(icu.UCalendarDateFields.UCAL_YEAR) == year
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MONTH) == month
+    assert cal3.get(icu.UCalendarDateFields.UCAL_DATE) == date
+    assert cal3.get(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY) == 0
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MINUTE) == 0
+    assert cal3.get(icu.UCalendarDateFields.UCAL_SECOND) == 0
 
     # [3]
     # void icu::Calendar::set(
@@ -164,13 +152,13 @@ def test_api():
     #       int32_t minute
     # )
     cal3.set(year, month, date, hour, minute)
-    assert cal3.get(UCalendarDateFields.UCAL_ERA) == GregorianCalendar.AD
-    assert cal3.get(UCalendarDateFields.UCAL_YEAR) == year
-    assert cal3.get(UCalendarDateFields.UCAL_MONTH) == month
-    assert cal3.get(UCalendarDateFields.UCAL_DATE) == date
-    assert cal3.get(UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour
-    assert cal3.get(UCalendarDateFields.UCAL_MINUTE) == minute
-    assert cal3.get(UCalendarDateFields.UCAL_SECOND) == 0
+    assert cal3.get(icu.UCalendarDateFields.UCAL_ERA) == icu.GregorianCalendar.AD
+    assert cal3.get(icu.UCalendarDateFields.UCAL_YEAR) == year
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MONTH) == month
+    assert cal3.get(icu.UCalendarDateFields.UCAL_DATE) == date
+    assert cal3.get(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MINUTE) == minute
+    assert cal3.get(icu.UCalendarDateFields.UCAL_SECOND) == 0
 
     # [4]
     # void icu::Calendar::set(
@@ -182,75 +170,75 @@ def test_api():
     #       int32_t second
     # )
     cal3.set(year, month, date, hour - 1, minute, second)
-    assert cal3.get(UCalendarDateFields.UCAL_ERA) == GregorianCalendar.AD
-    assert cal3.get(UCalendarDateFields.UCAL_YEAR) == year
-    assert cal3.get(UCalendarDateFields.UCAL_MONTH) == month
-    assert cal3.get(UCalendarDateFields.UCAL_DATE) == date
-    assert cal3.get(UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour - 1
-    assert cal3.get(UCalendarDateFields.UCAL_MINUTE) == minute
-    assert cal3.get(UCalendarDateFields.UCAL_SECOND) == second
+    assert cal3.get(icu.UCalendarDateFields.UCAL_ERA) == icu.GregorianCalendar.AD
+    assert cal3.get(icu.UCalendarDateFields.UCAL_YEAR) == year
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MONTH) == month
+    assert cal3.get(icu.UCalendarDateFields.UCAL_DATE) == date
+    assert cal3.get(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour - 1
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MINUTE) == minute
+    assert cal3.get(icu.UCalendarDateFields.UCAL_SECOND) == second
 
     # [5]
     # void icu::Calendar::set(
     #       UCalendarDateFields field,
     #       int32_t value
     # )
-    cal3.set(UCalendarDateFields.UCAL_HOUR_OF_DAY, hour)
-    assert cal3.get(UCalendarDateFields.UCAL_ERA) == GregorianCalendar.AD
-    assert cal3.get(UCalendarDateFields.UCAL_YEAR) == year
-    assert cal3.get(UCalendarDateFields.UCAL_MONTH) == month
-    assert cal3.get(UCalendarDateFields.UCAL_DATE) == date
-    assert cal3.get(UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour
-    assert cal3.get(UCalendarDateFields.UCAL_MINUTE) == minute
-    assert cal3.get(UCalendarDateFields.UCAL_SECOND) == second
+    cal3.set(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY, hour)
+    assert cal3.get(icu.UCalendarDateFields.UCAL_ERA) == icu.GregorianCalendar.AD
+    assert cal3.get(icu.UCalendarDateFields.UCAL_YEAR) == year
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MONTH) == month
+    assert cal3.get(icu.UCalendarDateFields.UCAL_DATE) == date
+    assert cal3.get(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY) == hour
+    assert cal3.get(icu.UCalendarDateFields.UCAL_MINUTE) == minute
+    assert cal3.get(icu.UCalendarDateFields.UCAL_SECOND) == second
 
     # int32_t icu::Calendar::getActualMaximum(
     #       UCalendarDateFields field,
     #       UErrorCode &status
     # )
-    assert cal.get_actual_maximum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 31
+    assert cal.get_actual_maximum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 31
 
     # int32_t icu::Calendar::getLeastMaximum(UCalendarDateFields field)
-    assert cal.get_least_maximum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 28
+    assert cal.get_least_maximum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 28
 
     # int32_t icu::Calendar::getMaximum(UCalendarDateFields field)
-    assert cal.get_maximum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 31
+    assert cal.get_maximum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 31
 
     # int32_t icu::Calendar::getActualMinimum(
     #       UCalendarDateFields field,
     #       UErrorCode &status
     # )
-    assert cal.get_actual_minimum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
+    assert cal.get_actual_minimum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
 
     # int32_t icu::Calendar::getGreatestMinimum(UCalendarDateFields field)
-    assert cal.get_greatest_minimum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
+    assert cal.get_greatest_minimum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
 
     # int32_t icu::Calendar::getMinimum(UCalendarDateFields field)
-    assert cal.get_minimum(UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
+    assert cal.get_minimum(icu.UCalendarDateFields.UCAL_DAY_OF_MONTH) == 1
 
     # UCalendarWeekdayType icu::Calendar::getDayOfWeekType(
     #       UCalendarDaysOfWeek dayOfWeek,
     #       UErrorCode &status
     # )
     assert (
-        cal.get_day_of_week_type(UCalendarDaysOfWeek.UCAL_SUNDAY)
-        == UCalendarWeekdayType.UCAL_WEEKEND
+        cal.get_day_of_week_type(icu.UCalendarDaysOfWeek.UCAL_SUNDAY)
+        == icu.UCalendarWeekdayType.UCAL_WEEKEND
     )
 
     # UCalendarDaysOfWeek icu::Calendar::getFirstDayOfWeek(UErrorCode &status)
-    assert cal2.get_first_day_of_week() == UCalendarDaysOfWeek.UCAL_SUNDAY
+    assert cal2.get_first_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_SUNDAY
 
     # void icu::Calendar::setFirstDayOfWeek(UCalendarDaysOfWeek value)
-    cal2.set_first_day_of_week(UCalendarDaysOfWeek.UCAL_MONDAY)
-    assert cal2.get_first_day_of_week() == UCalendarDaysOfWeek.UCAL_MONDAY
+    cal2.set_first_day_of_week(icu.UCalendarDaysOfWeek.UCAL_MONDAY)
+    assert cal2.get_first_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_MONDAY
 
     # Locale icu::Calendar::getLocale(
     #       ULocDataLocaleType type,
     #       UErrorCode &status
     # )
-    result = cal.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-    assert isinstance(result, Locale)
-    assert result == Locale("en")
+    result = cal.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
+    assert isinstance(result, icu.Locale)
+    assert result == icu.Locale("en")
 
     # uint8_t icu::Calendar::getMinimalDaysInFirstWeek(void)
     assert cal2.get_minimal_days_in_first_week() == 1
@@ -263,10 +251,7 @@ def test_api():
     #       UCalendarDaysOfWeek dayOfWeek,
     #       UErrorCode &status
     # )
-    assert (
-        cal.get_weekend_transition(UCalendarDaysOfWeek.UCAL_SUNDAY)
-        == 24 * HOUR
-    )
+    assert cal.get_weekend_transition(icu.UCalendarDaysOfWeek.UCAL_SUNDAY) == 24 * HOUR
 
     # UBool icu::Calendar::inDaylightTime(UErrorCode &status)
     assert cal.in_daylight_time() is False
@@ -285,9 +270,9 @@ def test_api():
     assert cal2.is_lenient() is False
 
     # UBool icu::Calendar::isSet(UCalendarDateFields field)
-    assert cal2.is_set(UCalendarDateFields.UCAL_YEAR) is True
-    assert cal2.is_set(UCalendarDateFields.UCAL_MONTH) is True
-    assert cal2.is_set(UCalendarDateFields.UCAL_DATE) is True
+    assert cal2.is_set(icu.UCalendarDateFields.UCAL_YEAR) is True
+    assert cal2.is_set(icu.UCalendarDateFields.UCAL_MONTH) is True
+    assert cal2.is_set(icu.UCalendarDateFields.UCAL_DATE) is True
 
     # [1]
     # UBool icu::Calendar::isWeekend(
@@ -313,7 +298,7 @@ def test_api():
 
     # TimeZone *icu::Calendar::orphanTimeZone(void)
     zone4 = cal2.orphan_time_zone()
-    assert isinstance(zone4, TimeZone)
+    assert isinstance(zone4, icu.TimeZone)
     assert zone4 != zone2
     assert cal2.get_time_zone() == zone2
 
@@ -323,14 +308,12 @@ def test_api():
     #       int32_t amount,
     #       UErrorCode &status
     # )
-    cal3.roll(UCalendarDateFields.UCAL_HOUR_OF_DAY, 1)
+    cal3.roll(icu.UCalendarDateFields.UCAL_HOUR_OF_DAY, 1)
     # 2008-07-05T23:30:15Z -> 2008-07-05T00:30:15Z
     assert cal3.get_time() == 1215217815000.0  # 2008-07-05T00:30:15Z
 
     # UDate icu::GregorianCalendar::getGregorianChange(void)
-    assert (
-        cal4.get_gregorian_change() == -12219292800000.0
-    )  # 1582-10-15T00:00:00Z
+    assert cal4.get_gregorian_change() == -12219292800000.0  # 1582-10-15T00:00:00Z
 
     # void icu::GregorianCalendar::setGregorianChange(
     #       UDate date,
@@ -344,26 +327,24 @@ def test_api():
     assert cal4.is_leap_year(2009) is False
 
 
-def test_calendar_create_instance():
-    locale1 = Locale.get_english()
-    locale2 = Locale.get_default()
-    zone1 = SimpleTimeZone(8 * HOUR, "s2")
-    zone2 = TimeZone.create_default()
+def test_calendar_create_instance() -> None:
+    locale1 = icu.Locale.get_english()
+    locale2 = icu.Locale.get_default()
+    zone1 = icu.SimpleTimeZone(8 * HOUR, "s2")
+    zone2 = icu.TimeZone.create_default()
 
     # [1]
     # static Calendar *icu::Calendar::createInstance(
     #       const Locale &aLocale,
     #       UErrorCode &success
     # )
-    cal1 = Calendar.create_instance(locale1)
-    assert isinstance(cal1, GregorianCalendar)
-    assert cal1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    cal1 = icu.Calendar.create_instance(locale1)
+    assert isinstance(cal1, icu.GregorianCalendar)
+    assert cal1.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal1.get_time_zone() == zone2
 
     assert (
-        Calendar.create_instance("en").get_locale(
-            ULocDataLocaleType.ULOC_ACTUAL_LOCALE
-        )
+        icu.Calendar.create_instance("en").get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
         == locale1
     )
 
@@ -373,14 +354,14 @@ def test_calendar_create_instance():
     #       const Locale &aLocale,
     #       UErrorCode &success
     # )
-    cal2 = Calendar.create_instance(zone1, locale1)
-    assert isinstance(cal2, GregorianCalendar)
-    assert cal2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    cal2 = icu.Calendar.create_instance(zone1, locale1)
+    assert isinstance(cal2, icu.GregorianCalendar)
+    assert cal2.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal2.get_time_zone() == zone1
 
     assert (
-        Calendar.create_instance(zone1, "en").get_locale(
-            ULocDataLocaleType.ULOC_ACTUAL_LOCALE
+        icu.Calendar.create_instance(zone1, "en").get_locale(
+            icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE
         )
         == locale1
     )
@@ -390,26 +371,26 @@ def test_calendar_create_instance():
     #       const TimeZone &zone,
     #       UErrorCode &success
     # )
-    cal3 = Calendar.create_instance(zone1)
-    assert isinstance(cal3, GregorianCalendar)
-    assert cal3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal3 = icu.Calendar.create_instance(zone1)
+    assert isinstance(cal3, icu.GregorianCalendar)
+    assert cal3.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal3.get_time_zone() == zone1
 
     # [6]
     # static Calendar *icu::Calendar::createInstance(UErrorCode &success)
-    cal6 = Calendar.create_instance()
-    assert isinstance(cal6, GregorianCalendar)
-    assert cal6.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal6 = icu.Calendar.create_instance()
+    assert isinstance(cal6, icu.GregorianCalendar)
+    assert cal6.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal6.get_time_zone() == zone2
 
 
-def test_clone():
-    cal1 = GregorianCalendar(TimeZone.get_gmt())
+def test_clone() -> None:
+    cal1 = icu.GregorianCalendar(icu.TimeZone.get_gmt())
     cal1.set_time(1215298800000.0)  # 2008-07-05T23:00:00Z
 
     # Calendar *icu::Calendar::clone()
     cal2 = cal1.clone()
-    assert isinstance(cal2, GregorianCalendar)
+    assert isinstance(cal2, icu.GregorianCalendar)
 
     cal3 = copy.copy(cal1)
 
@@ -417,102 +398,86 @@ def test_clone():
     assert cal1 == cal2 == cal3 == cal4
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_repeated_wall_time_option():
-    zone = SimpleTimeZone(8 * HOUR, "s2")
-    cal = Calendar.create_instance(zone)
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+def test_get_repeated_wall_time_option() -> None:
+    zone = icu.SimpleTimeZone(8 * HOUR, "s2")
+    cal = icu.Calendar.create_instance(zone)
 
     # UCalendarWallTimeOption icu::Calendar::getRepeatedWallTimeOption(void)
-    assert (
-        cal.get_repeated_wall_time_option()
-        == UCalendarWallTimeOption.UCAL_WALLTIME_LAST
-    )
+    assert cal.get_repeated_wall_time_option() == icu.UCalendarWallTimeOption.UCAL_WALLTIME_LAST
 
     # void icu::Calendar::setRepeatedWallTimeOption(
     #       UCalendarWallTimeOption option
     # )
-    cal.set_repeated_wall_time_option(
-        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
-    )
+    cal.set_repeated_wall_time_option(icu.UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
     assert (
-        cal.get_repeated_wall_time_option()
-        == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
+        cal.get_repeated_wall_time_option() == icu.UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_skipped_wall_time_option():
-    zone = SimpleTimeZone(8 * HOUR, "s2")
-    cal = Calendar.create_instance(zone)
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+def test_get_skipped_wall_time_option() -> None:
+    zone = icu.SimpleTimeZone(8 * HOUR, "s2")
+    cal = icu.Calendar.create_instance(zone)
 
     # UCalendarWallTimeOption icu::Calendar::getSkippedWallTimeOption(void)
-    assert (
-        cal.get_skipped_wall_time_option()
-        == UCalendarWallTimeOption.UCAL_WALLTIME_LAST
-    )
+    assert cal.get_skipped_wall_time_option() == icu.UCalendarWallTimeOption.UCAL_WALLTIME_LAST
 
     # void icu::Calendar::setSkippedWallTimeOption(
     #       UCalendarWallTimeOption option
     # )
-    cal.set_skipped_wall_time_option(
-        UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
-    )
-    assert (
-        cal.get_skipped_wall_time_option()
-        == UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
-    )
+    cal.set_skipped_wall_time_option(icu.UCalendarWallTimeOption.UCAL_WALLTIME_FIRST)
+    assert cal.get_skipped_wall_time_option() == icu.UCalendarWallTimeOption.UCAL_WALLTIME_FIRST
 
 
-def test_get_time_zone_upcasting():
-    from icupy.icu import BasicTimeZone
+def test_get_time_zone_upcasting() -> None:
+    cal = icu.Calendar.create_instance()
 
-    cal = Calendar.create_instance()
-
-    cal.set_time_zone(TimeZone.get_gmt())
+    cal.set_time_zone(icu.TimeZone.get_gmt())
     zone = cal.get_time_zone()
-    assert isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, icu.SimpleTimeZone)
 
     zone = cal.orphan_time_zone()
-    assert isinstance(zone, SimpleTimeZone)
+    assert isinstance(zone, icu.SimpleTimeZone)
 
     # TimeZone -> BasicTimeZone
-    cal.set_time_zone(TimeZone.create_time_zone("JST"))
+    cal.set_time_zone(icu.TimeZone.create_time_zone("JST"))
     zone = cal.get_time_zone()
-    assert not isinstance(zone, SimpleTimeZone)
-    assert isinstance(zone, BasicTimeZone)
+    assert not isinstance(zone, icu.SimpleTimeZone)
+    assert isinstance(zone, icu.BasicTimeZone)
 
     zone = cal.orphan_time_zone()
-    assert not isinstance(zone, SimpleTimeZone)
-    assert isinstance(zone, BasicTimeZone)
+    assert not isinstance(zone, icu.SimpleTimeZone)
+    assert isinstance(zone, icu.BasicTimeZone)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_get_type():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+def test_get_type() -> None:
     # const char *icu::Calendar::getType()
-    cal1 = Calendar.create_instance("ja")
+    cal1 = icu.Calendar.create_instance("ja")
     result = cal1.get_type()
     assert isinstance(result, str)
     assert result == "gregorian"
 
-    cal2 = Calendar.create_instance("ja@calendar=japanese")
+    cal2 = icu.Calendar.create_instance("ja@calendar=japanese")
     result = cal2.get_type()
     assert isinstance(result, str)
     assert result == "japanese"
 
 
-def test_gregorian_calendar():
-    assert issubclass(GregorianCalendar, Calendar)
-    locale1 = Locale.get_english()
-    locale2 = Locale.get_default()
-    zone1 = SimpleTimeZone(8 * HOUR, "s2")
-    zone2 = TimeZone.create_default()
-    zone3 = TimeZone.create_time_zone("Asia/Tokyo")
+def test_gregorian_calendar() -> None:
+    assert issubclass(icu.GregorianCalendar, icu.Calendar)
+    locale1 = icu.Locale.get_english()
+    locale2 = icu.Locale.get_default()
+    zone1 = icu.SimpleTimeZone(8 * HOUR, "s2")
+    zone2 = icu.TimeZone.create_default()
+    zone3 = icu.TimeZone.create_time_zone("Asia/Tokyo")
     offset = zone3.get_raw_offset() - zone2.get_raw_offset()
 
     # [1]
     # icu::GregorianCalendar::GregorianCalendar(UErrorCode &success)
-    cal1 = GregorianCalendar()
-    assert cal1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal1 = icu.GregorianCalendar()
+    assert cal1.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal1.get_time_zone() == zone2
 
     # [3]
@@ -520,8 +485,8 @@ def test_gregorian_calendar():
     #       const TimeZone &zone,
     #       UErrorCode &success
     # )
-    cal3 = GregorianCalendar(zone1)
-    assert cal3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal3 = icu.GregorianCalendar(zone1)
+    assert cal3.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal3.get_time_zone() == zone1
 
     # [4]
@@ -529,8 +494,8 @@ def test_gregorian_calendar():
     #       const Locale &aLocale,
     #       UErrorCode &success
     # )
-    cal4 = GregorianCalendar(locale1)
-    assert cal4.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    cal4 = icu.GregorianCalendar(locale1)
+    assert cal4.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal4.get_time_zone() == zone2
 
     # [6]
@@ -539,8 +504,8 @@ def test_gregorian_calendar():
     #       const Locale &aLocale,
     #       UErrorCode &success
     # )
-    cal6 = GregorianCalendar(zone1, locale1)
-    assert cal6.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
+    cal6 = icu.GregorianCalendar(zone1, locale1)
+    assert cal6.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == locale1
     assert cal6.get_time_zone() == zone1
 
     # [7]
@@ -550,8 +515,8 @@ def test_gregorian_calendar():
     #       int32_t date,
     #       UErrorCode &success
     # )
-    cal7 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5)
-    assert cal7.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal7 = icu.GregorianCalendar(2008, icu.UCalendarMonths.UCAL_JULY, 5)
+    assert cal7.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal7.get_time_zone() == zone2
     assert cal7.get_time() - offset == 1215183600000.0  # 2008-07-05T00:00:00Z
 
@@ -564,8 +529,8 @@ def test_gregorian_calendar():
     #       int32_t minute,
     #       UErrorCode &success
     # )
-    cal8 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5, 23, 30)
-    assert cal8.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal8 = icu.GregorianCalendar(2008, icu.UCalendarMonths.UCAL_JULY, 5, 23, 30)
+    assert cal8.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal8.get_time_zone() == zone2
     assert cal8.get_time() - offset == 1215268200000.0  # 2008-07-05T23:30:00Z
 
@@ -579,8 +544,8 @@ def test_gregorian_calendar():
     #       int32_t second,
     #       UErrorCode &success
     # )
-    cal9 = GregorianCalendar(2008, UCalendarMonths.UCAL_JULY, 5, 23, 30, 15)
-    assert cal9.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal9 = icu.GregorianCalendar(2008, icu.UCalendarMonths.UCAL_JULY, 5, 23, 30, 15)
+    assert cal9.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal9.get_time_zone() == zone2
     assert cal9.get_time() - offset == 1215268215000.0  # 2008-07-05T23:30:15Z
 
@@ -588,46 +553,46 @@ def test_gregorian_calendar():
     # icu::GregorianCalendar::GregorianCalendar(
     #       const GregorianCalendar &source
     # )
-    cal10 = GregorianCalendar(cal9)
-    assert cal10.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
+    cal10 = icu.GregorianCalendar(cal9)
+    assert cal10.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == locale2
     assert cal10.get_time_zone() == zone2
     assert cal10.get_time() - offset == 1215268215000.0  # 2008-07-05T23:30:15Z
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
-def test_in_temporal_leap_year():
-    gc = GregorianCalendar()
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
+def test_in_temporal_leap_year() -> None:
+    gc = icu.GregorianCalendar()
     gc.clear()
-    gc.set(2024, UCalendarMonths.UCAL_JANUARY, 1)
+    gc.set(2024, icu.UCalendarMonths.UCAL_JANUARY, 1)
 
     # virtual bool icu::Calendar::inTemporalLeapYear(UErrorCode &status) const
-    loc = Locale(Locale.get_root())
+    loc = icu.Locale(icu.Locale.get_root())
     loc.set_keyword_value("calendar", "japanese")
-    cal = Calendar.create_instance(loc)
+    cal = icu.Calendar.create_instance(loc)
     cal.set_time(gc.get_time())
     assert cal.in_temporal_leap_year()
 
-    gc.set(2023, UCalendarMonths.UCAL_JANUARY, 1)
+    gc.set(2023, icu.UCalendarMonths.UCAL_JANUARY, 1)
     cal.set_time(gc.get_time())
     assert not cal.in_temporal_leap_year()
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
-def test_set_temporal_month_code():
-    gc = GregorianCalendar()
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 73, reason="ICU4C<73")
+def test_set_temporal_month_code() -> None:
+    gc = icu.GregorianCalendar()
     gc.clear()
-    gc.set(2022, UCalendarMonths.UCAL_JANUARY, 11)
+    gc.set(2022, icu.UCalendarMonths.UCAL_JANUARY, 11)
 
     # virtual const char * icu::Calendar::getTemporalMonthCode(UErrorCode &status) const
-    loc = Locale(Locale.get_root())
+    loc = icu.Locale(icu.Locale.get_root())
     loc.set_keyword_value("calendar", "hebrew")
-    cal = Calendar.create_instance(loc)
+    cal = icu.Calendar.create_instance(loc)
     cal.set_time(gc.get_time())
     code = cal.get_temporal_month_code()
     assert isinstance(code, str)
     assert code == "M05"
 
-    gc.set(2022, UCalendarMonths.UCAL_FEBRUARY, 12)
+    gc.set(2022, icu.UCalendarMonths.UCAL_FEBRUARY, 12)
     cal.set_time(gc.get_time())
     code = cal.get_temporal_month_code()
     assert isinstance(code, str)

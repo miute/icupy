@@ -1,29 +1,27 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 64:
+if icu.U_ICU_VERSION_MAJOR_NUM < 64:
     pytest.skip("ICU4C<64", allow_module_level=True)
 
-from icupy.icu import ErrorCode, ICUError, Locale, LocaleBuilder, UErrorCode
 
-
-def test_api():
+def test_api() -> None:
     # icu::LocaleBuilder::LocaleBuilder()
-    bld = LocaleBuilder()
+    bld = icu.LocaleBuilder()
 
     # LocaleBuilder &icu::LocaleBuilder::addUnicodeLocaleAttribute(
     #       StringPiece attribute
     # )
     result = bld.add_unicode_locale_attribute("abc")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::removeUnicodeLocaleAttribute(
     #       StringPiece attribute
     # )
     result = bld.remove_unicode_locale_attribute("abc")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setExtension(
@@ -31,22 +29,22 @@ def test_api():
     #       StringPiece value
     # )
     result = bld.set_extension("U", "co-pinyin")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setLanguage(StringPiece language)
     result = bld.set_language("zh")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setRegion(StringPiece region)
     result = bld.set_region("HK")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setScript(StringPiece script)
     result = bld.set_script("Hans")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setUnicodeLocaleKeyword(
@@ -54,12 +52,12 @@ def test_api():
     #       StringPiece type
     # )
     result = bld.set_unicode_locale_keyword("nu", "latn")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # LocaleBuilder &icu::LocaleBuilder::setVariant(StringPiece variant)
     result = bld.set_variant("revised")
-    assert isinstance(result, LocaleBuilder)
+    assert isinstance(result, icu.LocaleBuilder)
     assert id(result) == id(bld)
 
     # Locale icu::LocaleBuilder::build(UErrorCode &status)
@@ -75,7 +73,7 @@ def test_api():
         .set_unicode_locale_keyword("nu", "latn")
         .build()
     )
-    assert isinstance(loc, Locale)
+    assert isinstance(loc, icu.Locale)
     assert loc.to_language_tag() == "zh-Hans-HK-revised-u-co-pinyin-nu-latn"
 
     loc = (
@@ -88,7 +86,7 @@ def test_api():
     )
     assert loc.to_language_tag() == "zh"
 
-    bld = LocaleBuilder()
+    bld = icu.LocaleBuilder()
     loc = (
         bld.set_language("fr")
         .add_unicode_locale_attribute("abc")
@@ -111,10 +109,10 @@ def test_api():
     assert loc.to_language_tag() == "de-DE-u-co-phonebk"
 
     # LocaleBuilder &icu::LocaleBuilder::setLocale(const Locale &locale)
-    loc2 = LocaleBuilder().set_locale(loc).build()
+    loc2 = icu.LocaleBuilder().set_locale(loc).build()
     assert loc2 == loc
 
-    loc2 = LocaleBuilder().set_locale("de_DE@collation=phonebook").build()
+    loc2 = icu.LocaleBuilder().set_locale("de_DE@collation=phonebook").build()
     assert loc2 == loc
 
     # LocaleBuilder &icu::LocaleBuilder::clearExtensions()
@@ -123,22 +121,22 @@ def test_api():
 
     # LocaleBuilder &icu::LocaleBuilder::clear()
     loc = bld.clear().build()
-    assert loc == Locale("")
+    assert loc == icu.Locale("")
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
-def test_copy_error_to():
-    bld = LocaleBuilder()
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 65, reason="ICU4C<65")
+def test_copy_error_to() -> None:
+    bld = icu.LocaleBuilder()
     bld.set_language("en").build()
 
     # UBool icu::LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode)
-    out_error_code = ErrorCode()
+    out_error_code = icu.ErrorCode()
     assert bld.copy_error_to(out_error_code) is False
-    assert out_error_code.get() == UErrorCode.U_ZERO_ERROR
+    assert out_error_code.get() == icu.UErrorCode.U_ZERO_ERROR
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         bld.set_unicode_locale_keyword("123", "abc").build()
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
-    out_error_code = ErrorCode()
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    out_error_code = icu.ErrorCode()
     assert bld.copy_error_to(out_error_code) is True
-    assert out_error_code.get() == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert out_error_code.get() == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR

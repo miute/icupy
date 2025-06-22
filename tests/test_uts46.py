@@ -1,38 +1,30 @@
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    IDNA, U_ICU_VERSION_MAJOR_NUM, US_INV, ICUError, IDNAInfo, UErrorCode,
-    UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 # From icu/source/test/intltest/uts46test.cpp
 _severe_errors = (
-    IDNA.ERROR_LEADING_COMBINING_MARK
-    | IDNA.ERROR_DISALLOWED
-    | IDNA.ERROR_PUNYCODE
-    | IDNA.ERROR_LABEL_HAS_DOT
-    | IDNA.ERROR_INVALID_ACE_LABEL
+    icu.IDNA.ERROR_LEADING_COMBINING_MARK
+    | icu.IDNA.ERROR_DISALLOWED
+    | icu.IDNA.ERROR_PUNYCODE
+    | icu.IDNA.ERROR_LABEL_HAS_DOT
+    | icu.IDNA.ERROR_INVALID_ACE_LABEL
 )
 
 _common_options = (
-    IDNA.USE_STD3_RULES
-    | IDNA.CHECK_BIDI
-    | IDNA.CHECK_CONTEXTJ
-    | IDNA.CHECK_CONTEXTO
+    icu.IDNA.USE_STD3_RULES
+    | icu.IDNA.CHECK_BIDI
+    | icu.IDNA.CHECK_CONTEXTJ
+    | icu.IDNA.CHECK_CONTEXTO
 )
 
 # static IDNA *icu::IDNA::createUTS46Instance(
 #       uint32_t options,
 #       UErrorCode &errorCode
 # )
-_trans = IDNA.create_uts46_instance(_common_options)
-_nontrans = IDNA.create_uts46_instance(
-    _common_options
-    | IDNA.NONTRANSITIONAL_TO_ASCII
-    | IDNA.NONTRANSITIONAL_TO_UNICODE
+_trans = icu.IDNA.create_uts46_instance(_common_options)
+_nontrans = icu.IDNA.create_uts46_instance(
+    _common_options | icu.IDNA.NONTRANSITIONAL_TO_ASCII | icu.IDNA.NONTRANSITIONAL_TO_UNICODE
 )
 
 _test_cases = [
@@ -104,37 +96,37 @@ _test_cases = [
         "xn--u-ccb",
         "B",  # u+umlaut in Punycode
         "xn--u-ccb\\uFFFD",
-        IDNA.ERROR_INVALID_ACE_LABEL,
+        icu.IDNA.ERROR_INVALID_ACE_LABEL,
     ],
     [
         "a\\u2488com",
         "B",  # contains 1-dot
         "a\\uFFFDcom",
-        IDNA.ERROR_DISALLOWED,
+        icu.IDNA.ERROR_DISALLOWED,
     ],
     [
         "xn--a-ecp.ru",
         "B",  # contains 1-dot in Punycode
         "xn--a-ecp\\uFFFD.ru",
-        IDNA.ERROR_INVALID_ACE_LABEL,
+        icu.IDNA.ERROR_INVALID_ACE_LABEL,
     ],
     [
         "xn--0.pt",
         "B",  # invalid Punycode
         "xn--0\\uFFFD.pt",
-        IDNA.ERROR_PUNYCODE,
+        icu.IDNA.ERROR_PUNYCODE,
     ],
     [
         "xn--a.pt",
         "B",  # U+0080
         "xn--a\\uFFFD.pt",
-        IDNA.ERROR_INVALID_ACE_LABEL,
+        icu.IDNA.ERROR_INVALID_ACE_LABEL,
     ],
     [
         "xn--a-\\u00C4.pt",
         "B",  # invalid Punycode
         "xn--a-\\u00E4.pt",
-        IDNA.ERROR_PUNYCODE,
+        icu.IDNA.ERROR_PUNYCODE,
     ],
     [
         "\\u65E5\\u672C\\u8A9E\\u3002\\uFF2A\\uFF30",
@@ -151,10 +143,10 @@ _test_cases = [
         "B",
         (
             "a\\uFFFDb\\uFFFDc\\uFFFDd"
-            if U_ICU_VERSION_MAJOR_NUM < 74
+            if icu.U_ICU_VERSION_MAJOR_NUM < 74
             else "a\\u2260b\\u226Ec\\u226Fd"
         ),
-        IDNA.ERROR_DISALLOWED if U_ICU_VERSION_MAJOR_NUM < 74 else 0,
+        icu.IDNA.ERROR_DISALLOWED if icu.U_ICU_VERSION_MAJOR_NUM < 74 else 0,
     ],
     # many deviation characters, test the special mapping code
     [
@@ -169,7 +161,7 @@ _test_cases = [
         "\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DFx"
         "\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DFy"
         "\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u00DF\\u0302\\u00DFz",
-        IDNA.ERROR_LABEL_TOO_LONG | IDNA.ERROR_CONTEXTJ,
+        icu.IDNA.ERROR_LABEL_TOO_LONG | icu.IDNA.ERROR_CONTEXTJ,
     ],
     [
         "1.a\\u00DF\\u200C\\u200Db\\u200C\\u200Dc\\u00DF\\u00DF\\u00DF\\u00DFd"
@@ -183,14 +175,14 @@ _test_cases = [
         "ssssssssssssssssssssx"
         "ssssssssssssssssssssy"
         "sssssssssssssss\\u015Dssz",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     # "xn--bss" with deviation characters
     [
         "\\u200Cx\\u200Dn\\u200C-\\u200D-b\\u00DF",
         "N",
         "\\u200Cx\\u200Dn\\u200C-\\u200D-b\\u00DF",
-        IDNA.ERROR_CONTEXTJ,
+        icu.IDNA.ERROR_CONTEXTJ,
     ],
     ["\\u200Cx\\u200Dn\\u200C-\\u200D-b\\u00DF", "T", "\\u5919", 0],
     # "xn--bssffl" written as:
@@ -253,7 +245,7 @@ _test_cases = [
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890123."
         "12345678901234567890123456789012345678901234567890123456789012",
-        IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
+        icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -267,7 +259,7 @@ _test_cases = [
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890123."
         "1234567890123456789012345678901234567890123456789\\u05D0",
-        IDNA.ERROR_DOMAIN_NAME_TOO_LONG | IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG | icu.IDNA.ERROR_BIDI,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -279,7 +271,7 @@ _test_cases = [
         "1234567890123456789012345678901234567890123456789012345678901234."
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -291,7 +283,7 @@ _test_cases = [
         "1234567890123456789012345678901234567890123456789012345678901234."
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890.",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -303,7 +295,7 @@ _test_cases = [
         "1234567890123456789012345678901234567890123456789012345678901234."
         "123456789012345678901234567890123456789012345678901234567890123."
         "1234567890123456789012345678901234567890123456789012345678901",
-        IDNA.ERROR_LABEL_TOO_LONG | IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG | icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
     ],
     # label length 63: xn--1234567890123456789012345678901234567890123456789012345-9te
     [
@@ -316,7 +308,7 @@ _test_cases = [
         "1234567890\\u00E41234567890123456789012345678901234567890123456",
         "B",
         "1234567890\\u00E41234567890123456789012345678901234567890123456",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -352,7 +344,7 @@ _test_cases = [
         "1234567890\\u00E4123456789012345678901234567890123456789012345."
         "123456789012345678901234567890123456789012345678901234567890123."
         "12345678901234567890123456789012345678901234567890123456789012",
-        IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
+        icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -364,7 +356,7 @@ _test_cases = [
         "1234567890\\u00E41234567890123456789012345678901234567890123456."
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -376,7 +368,7 @@ _test_cases = [
         "1234567890\\u00E41234567890123456789012345678901234567890123456."
         "123456789012345678901234567890123456789012345678901234567890123."
         "123456789012345678901234567890123456789012345678901234567890.",
-        IDNA.ERROR_LABEL_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG,
     ],
     [
         "123456789012345678901234567890123456789012345678901234567890123."
@@ -388,73 +380,73 @@ _test_cases = [
         "1234567890\\u00E41234567890123456789012345678901234567890123456."
         "123456789012345678901234567890123456789012345678901234567890123."
         "1234567890123456789012345678901234567890123456789012345678901",
-        IDNA.ERROR_LABEL_TOO_LONG | IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
+        icu.IDNA.ERROR_LABEL_TOO_LONG | icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG,
     ],
     # hyphen errors and empty-label errors
     # Ticket #10883: ToUnicode also checks for empty labels.
-    [".", "B", ".", IDNA.ERROR_EMPTY_LABEL],
-    ["\\uFF0E", "B", ".", IDNA.ERROR_EMPTY_LABEL],
+    [".", "B", ".", icu.IDNA.ERROR_EMPTY_LABEL],
+    ["\\uFF0E", "B", ".", icu.IDNA.ERROR_EMPTY_LABEL],
     # "xn---q----jra"=="-q--a-umlaut-"
     [
         "a.b..-q--a-.e",
         "B",
         "a.b..-q--a-.e",
-        IDNA.ERROR_EMPTY_LABEL
-        | IDNA.ERROR_LEADING_HYPHEN
-        | IDNA.ERROR_TRAILING_HYPHEN
-        | IDNA.ERROR_HYPHEN_3_4,
+        icu.IDNA.ERROR_EMPTY_LABEL
+        | icu.IDNA.ERROR_LEADING_HYPHEN
+        | icu.IDNA.ERROR_TRAILING_HYPHEN
+        | icu.IDNA.ERROR_HYPHEN_3_4,
     ],
     [
         "a.b..-q--\\u00E4-.e",
         "B",
         "a.b..-q--\\u00E4-.e",
-        IDNA.ERROR_EMPTY_LABEL
-        | IDNA.ERROR_LEADING_HYPHEN
-        | IDNA.ERROR_TRAILING_HYPHEN
-        | IDNA.ERROR_HYPHEN_3_4,
+        icu.IDNA.ERROR_EMPTY_LABEL
+        | icu.IDNA.ERROR_LEADING_HYPHEN
+        | icu.IDNA.ERROR_TRAILING_HYPHEN
+        | icu.IDNA.ERROR_HYPHEN_3_4,
     ],
     [
         "a.b..xn---q----jra.e",
         "B",
         "a.b..-q--\\u00E4-.e",
-        IDNA.ERROR_EMPTY_LABEL
-        | IDNA.ERROR_LEADING_HYPHEN
-        | IDNA.ERROR_TRAILING_HYPHEN
-        | IDNA.ERROR_HYPHEN_3_4,
+        icu.IDNA.ERROR_EMPTY_LABEL
+        | icu.IDNA.ERROR_LEADING_HYPHEN
+        | icu.IDNA.ERROR_TRAILING_HYPHEN
+        | icu.IDNA.ERROR_HYPHEN_3_4,
     ],
-    ["a..c", "B", "a..c", IDNA.ERROR_EMPTY_LABEL],
-    ["a.xn--.c", "B", "a..c", IDNA.ERROR_EMPTY_LABEL],
-    ["a.-b.", "B", "a.-b.", IDNA.ERROR_LEADING_HYPHEN],
-    ["a.b-.c", "B", "a.b-.c", IDNA.ERROR_TRAILING_HYPHEN],
+    ["a..c", "B", "a..c", icu.IDNA.ERROR_EMPTY_LABEL],
+    ["a.xn--.c", "B", "a..c", icu.IDNA.ERROR_EMPTY_LABEL],
+    ["a.-b.", "B", "a.-b.", icu.IDNA.ERROR_LEADING_HYPHEN],
+    ["a.b-.c", "B", "a.b-.c", icu.IDNA.ERROR_TRAILING_HYPHEN],
     [
         "a.-.c",
         "B",
         "a.-.c",
-        IDNA.ERROR_LEADING_HYPHEN | IDNA.ERROR_TRAILING_HYPHEN,
+        icu.IDNA.ERROR_LEADING_HYPHEN | icu.IDNA.ERROR_TRAILING_HYPHEN,
     ],
-    ["a.bc--de.f", "B", "a.bc--de.f", IDNA.ERROR_HYPHEN_3_4],
-    ["\\u00E4.\\u00AD.c", "B", "\\u00E4..c", IDNA.ERROR_EMPTY_LABEL],
-    ["\\u00E4.xn--.c", "B", "\\u00E4..c", IDNA.ERROR_EMPTY_LABEL],
-    ["\\u00E4.-b.", "B", "\\u00E4.-b.", IDNA.ERROR_LEADING_HYPHEN],
-    ["\\u00E4.b-.c", "B", "\\u00E4.b-.c", IDNA.ERROR_TRAILING_HYPHEN],
+    ["a.bc--de.f", "B", "a.bc--de.f", icu.IDNA.ERROR_HYPHEN_3_4],
+    ["\\u00E4.\\u00AD.c", "B", "\\u00E4..c", icu.IDNA.ERROR_EMPTY_LABEL],
+    ["\\u00E4.xn--.c", "B", "\\u00E4..c", icu.IDNA.ERROR_EMPTY_LABEL],
+    ["\\u00E4.-b.", "B", "\\u00E4.-b.", icu.IDNA.ERROR_LEADING_HYPHEN],
+    ["\\u00E4.b-.c", "B", "\\u00E4.b-.c", icu.IDNA.ERROR_TRAILING_HYPHEN],
     [
         "\\u00E4.-.c",
         "B",
         "\\u00E4.-.c",
-        IDNA.ERROR_LEADING_HYPHEN | IDNA.ERROR_TRAILING_HYPHEN,
+        icu.IDNA.ERROR_LEADING_HYPHEN | icu.IDNA.ERROR_TRAILING_HYPHEN,
     ],
-    ["\\u00E4.bc--de.f", "B", "\\u00E4.bc--de.f", IDNA.ERROR_HYPHEN_3_4],
+    ["\\u00E4.bc--de.f", "B", "\\u00E4.bc--de.f", icu.IDNA.ERROR_HYPHEN_3_4],
     [
         "a.b.\\u0308c.d",
         "B",
         "a.b.\\uFFFDc.d",
-        IDNA.ERROR_LEADING_COMBINING_MARK,
+        icu.IDNA.ERROR_LEADING_COMBINING_MARK,
     ],
     [
         "a.b.xn--c-bcb.d",
         "B",
         "a.b.xn--c-bcb\\uFFFD.d",
-        IDNA.ERROR_LEADING_COMBINING_MARK | IDNA.ERROR_INVALID_ACE_LABEL,
+        icu.IDNA.ERROR_LEADING_COMBINING_MARK | icu.IDNA.ERROR_INVALID_ACE_LABEL,
     ],
     # BiDi
     ["A0", "B", "a0", 0],
@@ -463,64 +455,64 @@ _test_cases = [
         "0A.\\u05D0",
         "B",  # ASCII label does not start with L/R/AL
         "0a.\\u05D0",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
     [
         "c.xn--0-eha.xn--4db",
         "B",  # 2nd label does not start with L/R/AL
         "c.0\\u00FC.\\u05D0",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
     [
         "b-.\\u05D0",
         "B",  # label does not end with L/EN
         "b-.\\u05D0",
-        IDNA.ERROR_TRAILING_HYPHEN | IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_TRAILING_HYPHEN | icu.IDNA.ERROR_BIDI,
     ],
     [
         "d.xn----dha.xn--4db",
         "B",  # 2nd label does not end with L/EN
         "d.\\u00FC-.\\u05D0",
-        IDNA.ERROR_TRAILING_HYPHEN | IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_TRAILING_HYPHEN | icu.IDNA.ERROR_BIDI,
     ],
-    ["a\\u05D0", "B", "a\\u05D0", IDNA.ERROR_BIDI],
+    ["a\\u05D0", "B", "a\\u05D0", icu.IDNA.ERROR_BIDI],
     # first dir != last dir
     ["\\u05D0\\u05C7", "B", "\\u05D0\\u05C7", 0],
     ["\\u05D09\\u05C7", "B", "\\u05D09\\u05C7", 0],
-    ["\\u05D0a\\u05C7", "B", "\\u05D0a\\u05C7", IDNA.ERROR_BIDI],
+    ["\\u05D0a\\u05C7", "B", "\\u05D0a\\u05C7", icu.IDNA.ERROR_BIDI],
     # first dir != last dir
     ["\\u05D0\\u05EA", "B", "\\u05D0\\u05EA", 0],
     ["\\u05D0\\u05F3\\u05EA", "B", "\\u05D0\\u05F3\\u05EA", 0],
-    ["a\\u05D0Tz", "B", "a\\u05D0tz", IDNA.ERROR_BIDI],  # mixed dir
-    ["\\u05D0T\\u05EA", "B", "\\u05D0t\\u05EA", IDNA.ERROR_BIDI],
+    ["a\\u05D0Tz", "B", "a\\u05D0tz", icu.IDNA.ERROR_BIDI],  # mixed dir
+    ["\\u05D0T\\u05EA", "B", "\\u05D0t\\u05EA", icu.IDNA.ERROR_BIDI],
     # mixed dir
     ["\\u05D07\\u05EA", "B", "\\u05D07\\u05EA", 0],
     ["\\u05D0\\u0667\\u05EA", "B", "\\u05D0\\u0667\\u05EA", 0],
     # Arabic 7 in the middle
-    ["a7\\u0667z", "B", "a7\\u0667z", IDNA.ERROR_BIDI],  # AN digit in LTR
-    ["a7\\u0667", "B", "a7\\u0667", IDNA.ERROR_BIDI],  # AN digit in LTR
+    ["a7\\u0667z", "B", "a7\\u0667z", icu.IDNA.ERROR_BIDI],  # AN digit in LTR
+    ["a7\\u0667", "B", "a7\\u0667", icu.IDNA.ERROR_BIDI],  # AN digit in LTR
     [
         "\\u05D07\\u0667\\u05EA",
         "B",  # mixed EN/AN digits in RTL
         "\\u05D07\\u0667\\u05EA",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
     [
         "\\u05D07\\u0667",
         "B",  # mixed EN/AN digits in RTL
         "\\u05D07\\u0667",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
     # ZWJ
     ["\\u0BB9\\u0BCD\\u200D", "N", "\\u0BB9\\u0BCD\\u200D", 0],  # Virama+ZWJ
-    ["\\u0BB9\\u200D", "N", "\\u0BB9\\u200D", IDNA.ERROR_CONTEXTJ],
+    ["\\u0BB9\\u200D", "N", "\\u0BB9\\u200D", icu.IDNA.ERROR_CONTEXTJ],
     # no Virama
-    ["\\u200D", "N", "\\u200D", IDNA.ERROR_CONTEXTJ],  # no Virama
+    ["\\u200D", "N", "\\u200D", icu.IDNA.ERROR_CONTEXTJ],  # no Virama
     # ZWNJ
     ["\\u0BB9\\u0BCD\\u200C", "N", "\\u0BB9\\u0BCD\\u200C", 0],  # Virama+ZWNJ
-    ["\\u0BB9\\u200C", "N", "\\u0BB9\\u200C", IDNA.ERROR_CONTEXTJ],
+    ["\\u0BB9\\u200C", "N", "\\u0BB9\\u200C", icu.IDNA.ERROR_CONTEXTJ],
     # no Virama
-    ["\\u200C", "N", "\\u200C", IDNA.ERROR_CONTEXTJ],  # no Virama
+    ["\\u200C", "N", "\\u200C", icu.IDNA.ERROR_CONTEXTJ],  # no Virama
     [
         "\\u0644\\u0670\\u200C\\u06ED\\u06EF",
         "N",  # Joining types D T ZWNJ T R
@@ -544,25 +536,25 @@ _test_cases = [
         "\\u0644\\u0670\\u200C\\u06ED",
         "N",  # D T ZWNJ T
         "\\u0644\\u0670\\u200C\\u06ED",
-        IDNA.ERROR_BIDI | IDNA.ERROR_CONTEXTJ,
+        icu.IDNA.ERROR_BIDI | icu.IDNA.ERROR_CONTEXTJ,
     ],
     [
         "\\u06EF\\u200C\\u06EF",
         "N",  # R ZWNJ R
         "\\u06EF\\u200C\\u06EF",
-        IDNA.ERROR_CONTEXTJ,
+        icu.IDNA.ERROR_CONTEXTJ,
     ],
     [
         "\\u0644\\u200C",
         "N",  # D ZWNJ
         "\\u0644\\u200C",
-        IDNA.ERROR_BIDI | IDNA.ERROR_CONTEXTJ,
+        icu.IDNA.ERROR_BIDI | icu.IDNA.ERROR_CONTEXTJ,
     ],
     [
         "\\u0660\\u0661",
         "B",  # Arabic-Indic Digits alone
         "\\u0660\\u0661",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
     [
         "\\u06F0\\u06F1",
@@ -574,7 +566,7 @@ _test_cases = [
         "\\u0660\\u06F1",
         "B",  # Mixed Arabic-Indic Digits
         "\\u0660\\u06F1",
-        IDNA.ERROR_CONTEXTO_DIGITS | IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_CONTEXTO_DIGITS | icu.IDNA.ERROR_BIDI,
     ],
     # All of the CONTEXTO "Would otherwise have been DISALLOWED" characters
     # in their correct contexts,
@@ -583,19 +575,19 @@ _test_cases = [
         "l\\u00B7l\\u4E00\\u0375\\u03B1\\u05D0\\u05F3\\u05F4\\u30FB",
         "B",
         "l\\u00B7l\\u4E00\\u0375\\u03B1\\u05D0\\u05F3\\u05F4\\u30FB",
-        IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_BIDI,
     ],
-    ["l\\u00B7", "B", "l\\u00B7", IDNA.ERROR_CONTEXTO_PUNCTUATION],
-    ["\\u00B7l", "B", "\\u00B7l", IDNA.ERROR_CONTEXTO_PUNCTUATION],
-    ["\\u0375", "B", "\\u0375", IDNA.ERROR_CONTEXTO_PUNCTUATION],
+    ["l\\u00B7", "B", "l\\u00B7", icu.IDNA.ERROR_CONTEXTO_PUNCTUATION],
+    ["\\u00B7l", "B", "\\u00B7l", icu.IDNA.ERROR_CONTEXTO_PUNCTUATION],
+    ["\\u0375", "B", "\\u0375", icu.IDNA.ERROR_CONTEXTO_PUNCTUATION],
     [
         "\\u03B1\\u05F3",
         "B",
         "\\u03B1\\u05F3",
-        IDNA.ERROR_CONTEXTO_PUNCTUATION | IDNA.ERROR_BIDI,
+        icu.IDNA.ERROR_CONTEXTO_PUNCTUATION | icu.IDNA.ERROR_BIDI,
     ],
-    ["\\u05F4", "B", "\\u05F4", IDNA.ERROR_CONTEXTO_PUNCTUATION],
-    ["l\\u30FB", "B", "l\\u30FB", IDNA.ERROR_CONTEXTO_PUNCTUATION],
+    ["\\u05F4", "B", "\\u05F4", icu.IDNA.ERROR_CONTEXTO_PUNCTUATION],
+    ["l\\u30FB", "B", "l\\u30FB", icu.IDNA.ERROR_CONTEXTO_PUNCTUATION],
     # Ticket #8137: UTS #46 toUnicode() fails with non-ASCII labels that turn
     # into 15 characters (UChars).
     # The bug was in u_strFromPunycode() which did not write the last character
@@ -619,53 +611,50 @@ _test_cases = [
     # [ "", "B",
     #   "", 0 ],
 ]
-if U_ICU_VERSION_MAJOR_NUM >= 68:
+if icu.U_ICU_VERSION_MAJOR_NUM >= 68:
     _row = [x[0] for x in _test_cases].index("a.xn--.c")
     _test_cases[_row][2] = "a.xn--\\uFFFD.c"
-    _test_cases[_row][3] = IDNA.ERROR_INVALID_ACE_LABEL
+    _test_cases[_row][3] = icu.IDNA.ERROR_INVALID_ACE_LABEL
 
     _row = [x[0] for x in _test_cases].index("\\u00E4.xn--.c")
     _test_cases[_row][2] = "\\u00E4.xn--\\uFFFD.c"
-    _test_cases[_row][3] = IDNA.ERROR_INVALID_ACE_LABEL
+    _test_cases[_row][3] = icu.IDNA.ERROR_INVALID_ACE_LABEL
 else:  # U_ICU_VERSION_MAJOR_NUM <= 67
     _row = [x[0] for x in _test_cases].index("a.xn--.c")
     _test_cases[_row][2] = "a..c"
-    _test_cases[_row][3] = IDNA.ERROR_EMPTY_LABEL
+    _test_cases[_row][3] = icu.IDNA.ERROR_EMPTY_LABEL
 
     _row = [x[0] for x in _test_cases].index("\\u00E4.xn--.c")
     _test_cases[_row][2] = "\\u00E4..c"
-    _test_cases[_row][3] = IDNA.ERROR_EMPTY_LABEL
+    _test_cases[_row][3] = icu.IDNA.ERROR_EMPTY_LABEL
 
 
-def _is_ascii(s: UnicodeString) -> bool:
+def _is_ascii(s: icu.UnicodeString) -> bool:
     p = s.get_buffer()
-    for i in range(s.length()):
-        if p[i] >= 0x80:
-            return False
-    return True
+    return all(p[i] < 0x80 for i in range(s.length()))
 
 
-def test_api():
+def test_api() -> None:
     # UnicodeString &icu::IDNA::nameToASCII(
     #       const UnicodeString &name,
     #       UnicodeString &dest,
     #       IDNAInfo &info,
     #       UErrorCode &errorCode
     # ) const
-    dest = UnicodeString()
-    info = IDNAInfo()
-    src = UnicodeString("www.eXample.cOm")
-    expected = UnicodeString("www.example.com")
+    dest = icu.UnicodeString()
+    info = icu.IDNAInfo()
+    src = icu.UnicodeString("www.eXample.cOm")
+    expected = icu.UnicodeString("www.example.com")
     result = _trans.name_to_ascii(src, dest, info)
     assert info.has_errors() is False
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
 
     dest.remove()
     result = _trans.name_to_ascii("www.eXample.cOm", dest, info)
     assert info.has_errors() is False
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
 
@@ -687,29 +676,29 @@ def test_api():
     #       UErrorCode &errorCode
     # ) const
     src.set_to_bogus()
-    dest = UnicodeString("quatsch")
-    with pytest.raises(ICUError) as exc_info:
+    dest = icu.UnicodeString("quatsch")
+    with pytest.raises(icu.ICUError) as exc_info:
         _nontrans.label_to_ascii(src, dest, info)
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
     assert dest.is_bogus()
 
     dest.remove()
-    src = UnicodeString("xn--bcher.de-65a")
-    expected = UnicodeString("xn--bcher\\uFFFDde-65a").unescape()
+    src = icu.UnicodeString("xn--bcher.de-65a")
+    expected = icu.UnicodeString("xn--bcher\\uFFFDde-65a").unescape()
     result = _nontrans.label_to_ascii(src, dest, info)
     assert info.get_errors() == (
-        IDNA.ERROR_LABEL_HAS_DOT | IDNA.ERROR_INVALID_ACE_LABEL
+        icu.IDNA.ERROR_LABEL_HAS_DOT | icu.IDNA.ERROR_INVALID_ACE_LABEL
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
 
     dest.remove()
     result = _nontrans.label_to_ascii("xn--bcher.de-65a", dest, info)
     assert info.get_errors() == (
-        IDNA.ERROR_LABEL_HAS_DOT | IDNA.ERROR_INVALID_ACE_LABEL
+        icu.IDNA.ERROR_LABEL_HAS_DOT | icu.IDNA.ERROR_INVALID_ACE_LABEL
     )
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert dest == expected
 
@@ -721,7 +710,7 @@ def test_api():
     # ) const
     result = _nontrans.label_to_ascii_utf8(b"xn--bcher.de-65a", info)
     assert info.get_errors() == (
-        IDNA.ERROR_LABEL_HAS_DOT | IDNA.ERROR_INVALID_ACE_LABEL
+        icu.IDNA.ERROR_LABEL_HAS_DOT | icu.IDNA.ERROR_INVALID_ACE_LABEL
     )
     assert isinstance(result, bytes)
     assert result.decode() == expected
@@ -735,7 +724,7 @@ def test_api():
     dest.remove()
     result = _trans.label_to_unicode("\x61\u00df", dest, info)
     assert info.get_errors() == 0
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert dest == "\x61\x73\x73"
 
@@ -751,14 +740,14 @@ def test_api():
     assert result == b"\x61\x73\x73"
 
 
-def test_not_std3():
-    not3 = IDNA.create_uts46_instance(IDNA.CHECK_BIDI)
+def test_not_std3() -> None:
+    not3 = icu.IDNA.create_uts46_instance(icu.IDNA.CHECK_BIDI)
 
     # '\x00A_2+2=4\n.eßen.net'
-    src = UnicodeString("\\u0000A_2+2=4\\u000A.e\\u00DFen.net").unescape()
-    expected = UnicodeString("\\u0000a_2+2=4\\u000A.essen.net").unescape()
-    dest = UnicodeString()
-    info = IDNAInfo()
+    src = icu.UnicodeString("\\u0000A_2+2=4\\u000A.e\\u00DFen.net").unescape()
+    expected = icu.UnicodeString("\\u0000a_2+2=4\\u000A.essen.net").unescape()
+    dest = icu.UnicodeString()
+    info = icu.IDNAInfo()
 
     # UnicodeString &icu::IDNA::nameToUnicode(
     #       const UnicodeString &name,
@@ -769,7 +758,7 @@ def test_not_std3():
     # '\x00a_2+2=4\n.essen.net'
     result = not3.name_to_unicode(src, dest, info)
     assert info.has_errors() is False
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert result != src
     assert result == expected
@@ -792,51 +781,49 @@ def test_not_std3():
     #       UErrorCode &errorCode
     # ) const
     dest.remove()
-    src = UnicodeString("a z.xn--4db.edu")
+    src = icu.UnicodeString("a z.xn--4db.edu")
     result = not3.name_to_ascii(src, dest, info)
-    assert info.get_errors() == IDNA.ERROR_BIDI
-    assert isinstance(result, UnicodeString)
+    assert info.get_errors() == icu.IDNA.ERROR_BIDI
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert result == src
 
     dest.remove()
-    src = UnicodeString("a\\u2260b\\u226Ec\\u226Fd").unescape()
+    src = icu.UnicodeString("a\\u2260b\\u226Ec\\u226Fd").unescape()
     result = not3.name_to_unicode(src, dest, info)
     assert info.has_errors() is False
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert result == src
 
     dest.remove()
     result = not3.name_to_unicode("a\u2260b\u226ec\u226fd", dest, info)
     assert info.has_errors() is False
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(dest)
     assert result == src
 
 
 @pytest.mark.parametrize(("s", "mode", "u", "errors"), _test_cases)
-def test_some_cases(s, mode, u, errors):
+def test_some_cases(s: str, mode: str, u: str, errors: int) -> None:
     # ctou(chars) -> UnicodeString(chars, -1, US_INV).unescape()
-    src = UnicodeString(s, -1, US_INV).unescape()
-    expected = UnicodeString(u, -1, US_INV).unescape()
-    at = UnicodeString()
-    ut = UnicodeString()
-    an = UnicodeString()
-    un = UnicodeString()
-    at_info = IDNAInfo()
-    ut_info = IDNAInfo()
-    an_info = IDNAInfo()
-    un_info = IDNAInfo()
+    src = icu.UnicodeString(s, -1, icu.US_INV).unescape()
+    expected = icu.UnicodeString(u, -1, icu.US_INV).unescape()
+    at = icu.UnicodeString()
+    ut = icu.UnicodeString()
+    an = icu.UnicodeString()
+    un = icu.UnicodeString()
+    at_info = icu.IDNAInfo()
+    ut_info = icu.IDNAInfo()
+    an_info = icu.IDNAInfo()
+    un_info = icu.IDNAInfo()
     _trans.name_to_ascii(src, at, at_info)
     _trans.name_to_unicode(src, ut, ut_info)
     _nontrans.name_to_ascii(src, an, an_info)
     _nontrans.name_to_unicode(src, un, un_info)
 
     # ToUnicode does not set length-overflow errors
-    uni_errors = errors & ~(
-        IDNA.ERROR_LABEL_TOO_LONG | IDNA.ERROR_DOMAIN_NAME_TOO_LONG
-    )
+    uni_errors = errors & ~(icu.IDNA.ERROR_LABEL_TOO_LONG | icu.IDNA.ERROR_DOMAIN_NAME_TOO_LONG)
     if mode in ("B", "N"):
         assert un_info.get_errors() == uni_errors
         assert un == expected
@@ -847,22 +834,18 @@ def test_some_cases(s, mode, u, errors):
         assert at_info.get_errors() == errors
 
     # ToASCII is all-ASCII if no severe errors
-    assert not (
-        (an_info.get_errors() & _severe_errors) == 0 and not _is_ascii(an)
-    )
-    assert not (
-        (at_info.get_errors() & _severe_errors) == 0 and not _is_ascii(at)
-    )
+    assert not ((an_info.get_errors() & _severe_errors) == 0 and not _is_ascii(an))
+    assert not ((at_info.get_errors() & _severe_errors) == 0 and not _is_ascii(at))
 
     # second-level processing
-    atun = UnicodeString()
-    utan = UnicodeString()
-    anun = UnicodeString()
-    unan = UnicodeString()
-    atun_info = IDNAInfo()
-    utan_info = IDNAInfo()
-    anun_info = IDNAInfo()
-    unan_info = IDNAInfo()
+    atun = icu.UnicodeString()
+    utan = icu.UnicodeString()
+    anun = icu.UnicodeString()
+    unan = icu.UnicodeString()
+    atun_info = icu.IDNAInfo()
+    utan_info = icu.IDNAInfo()
+    anun_info = icu.IDNAInfo()
+    unan_info = icu.IDNAInfo()
     _nontrans.name_to_unicode(at, atun, atun_info)
     _nontrans.name_to_ascii(ut, utan, utan_info)
     _nontrans.name_to_unicode(an, anun, anun_info)
@@ -873,14 +856,14 @@ def test_some_cases(s, mode, u, errors):
     assert ut == atun
 
     # labelToUnicode
-    atl = UnicodeString()
-    utl = UnicodeString()
-    anl = UnicodeString()
-    unl = UnicodeString()
-    atl_info = IDNAInfo()
-    utl_info = IDNAInfo()
-    anl_info = IDNAInfo()
-    unl_info = IDNAInfo()
+    atl = icu.UnicodeString()
+    utl = icu.UnicodeString()
+    anl = icu.UnicodeString()
+    unl = icu.UnicodeString()
+    atl_info = icu.IDNAInfo()
+    utl_info = icu.IDNAInfo()
+    anl_info = icu.IDNAInfo()
+    unl_info = icu.IDNAInfo()
     _trans.label_to_ascii(src, atl, atl_info)
     _trans.label_to_unicode(src, utl, utl_info)
     _nontrans.label_to_ascii(src, anl, anl_info)
@@ -888,22 +871,22 @@ def test_some_cases(s, mode, u, errors):
     if "\x2e" not in an:
         assert not (an != anl or an_info.get_errors() != anl_info.get_errors())
     else:
-        assert anl_info.get_errors() & IDNA.ERROR_LABEL_HAS_DOT
+        assert anl_info.get_errors() & icu.IDNA.ERROR_LABEL_HAS_DOT
 
     if "\x2e" not in at:
         assert not (at != atl or at_info.get_errors() != atl_info.get_errors())
     else:
-        assert atl_info.get_errors() & IDNA.ERROR_LABEL_HAS_DOT
+        assert atl_info.get_errors() & icu.IDNA.ERROR_LABEL_HAS_DOT
 
     if "\x2e" not in un:
         assert not (un != unl or un_info.get_errors() != unl_info.get_errors())
     else:
-        assert unl_info.get_errors() & IDNA.ERROR_LABEL_HAS_DOT
+        assert unl_info.get_errors() & icu.IDNA.ERROR_LABEL_HAS_DOT
 
     if "\x2e" not in ut:
         assert not (ut != utl or ut_info.get_errors() != utl_info.get_errors())
     else:
-        assert utl_info.get_errors() & IDNA.ERROR_LABEL_HAS_DOT
+        assert utl_info.get_errors() & icu.IDNA.ERROR_LABEL_HAS_DOT
 
     # Differences between transitional and nontransitional processing
     if mode == "B":

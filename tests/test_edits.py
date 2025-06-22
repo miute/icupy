@@ -2,19 +2,17 @@ from functools import partial
 
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 59:
+if icu.U_ICU_VERSION_MAJOR_NUM < 59:
     pytest.skip("ICU4C<59", allow_module_level=True)
-
-from icupy.icu import Edits, ErrorCode, UErrorCode
 
 
 # From icu/source/test/intltest/strcase.cpp
-def test_api_59():
+def test_api_59() -> None:
     # [1]
     # icu::Edits::Edits()
-    edits = Edits()
+    edits = icu.Edits()
 
     # void icu::Edits::add_replace(
     #       int32_t oldLength,
@@ -35,13 +33,13 @@ def test_api_59():
     edits.add_unchanged(0)
 
     # UBool icu::Edits::copyErrorTo(UErrorCode &outErrorCode)
-    out_error_code = ErrorCode()
+    out_error_code = icu.ErrorCode()
     assert edits.copy_error_to(out_error_code) is False
-    assert out_error_code == UErrorCode.U_ZERO_ERROR
+    assert out_error_code == icu.UErrorCode.U_ZERO_ERROR
 
-    out_error_code.set(UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
+    out_error_code.set(icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR)
     assert edits.copy_error_to(out_error_code) is True
-    assert out_error_code == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert out_error_code == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     # UBool icu::Edits::hasChanges()
     assert edits.has_changes() is True
@@ -51,28 +49,28 @@ def test_api_59():
 
     # Iterator icu::Edits::getCoarseChangesIterator()
     ei = edits.get_coarse_changes_iterator()
-    assert isinstance(ei, Edits.Iterator)
+    assert isinstance(ei, icu.Edits.Iterator)
 
     # Iterator icu::Edits::getCoarseIterator()
     ei = edits.get_coarse_iterator()
-    assert isinstance(ei, Edits.Iterator)
+    assert isinstance(ei, icu.Edits.Iterator)
 
     # Iterator icu::Edits::getFineChangesIterator()
     ei = edits.get_fine_changes_iterator()
-    assert isinstance(ei, Edits.Iterator)
+    assert isinstance(ei, icu.Edits.Iterator)
 
     # Iterator icu::Edits::getFineIterator()
     ei = edits.get_fine_iterator()
-    assert isinstance(ei, Edits.Iterator)
+    assert isinstance(ei, icu.Edits.Iterator)
 
     # void icu::Edits::reset()
     edits.reset()
     assert edits.has_changes() is False
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_api_60():
-    other = Edits()
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+def test_api_60() -> None:
+    other = icu.Edits()
     other.add_unchanged(1)
     other.add_unchanged(10000)
     other.add_replace(0, 0)
@@ -87,7 +85,7 @@ def test_api_60():
 
     # [2]
     # icu::Edits::Edits(const Edits &other)
-    edits = Edits(other)
+    edits = icu.Edits(other)
 
     # int32_t icu::Edits::numberOfChanges()
     assert edits.number_of_changes() == 7
@@ -98,9 +96,9 @@ def test_api_60():
     #       UErrorCode &errorCode
     # )
     edits.reset()
-    ab = Edits()
-    bc = Edits()
-    expected = Edits()
+    ab = icu.Edits()
+    bc = icu.Edits()
+    expected = icu.Edits()
 
     ab.add_unchanged(2)
     bc.add_unchanged(2)
@@ -201,7 +199,7 @@ def test_api_60():
     expected.add_unchanged(1)
 
     result = edits.merge_and_append(ab, bc)
-    assert isinstance(result, Edits)
+    assert isinstance(result, icu.Edits)
     assert id(result) == id(edits)
 
     ei1 = edits.get_fine_iterator()
@@ -211,8 +209,8 @@ def test_api_60():
     assert t1 == t2
 
 
-def test_edits_iterator_59():
-    edits = Edits()
+def test_edits_iterator_59() -> None:
+    edits = icu.Edits()
     edits.add_unchanged(1)
     edits.add_unchanged(10000)
     edits.add_replace(0, 0)
@@ -228,7 +226,7 @@ def test_edits_iterator_59():
 
     # Iterator icu::Edits::getCoarseChangesIterator()
     ei = edits.get_coarse_changes_iterator()
-    assert isinstance(ei, Edits.Iterator)
+    assert isinstance(ei, icu.Edits.Iterator)
 
     exp_src_index = exp_dest_index = exp_repl_index = 0
     exp_old_length = 10003
@@ -275,13 +273,11 @@ def test_edits_iterator_59():
     assert ei.next() is False
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
-def test_edits_iterator_60():
-    from icupy.icu import CaseMap
-
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 60, reason="ICU4C<60")
+def test_edits_iterator_60() -> None:
     src = "abcßDeF"
-    edits = Edits()
-    CaseMap.fold(0, src, -1, edits)
+    edits = icu.Edits()
+    icu.CaseMap.fold(0, src, -1, edits)
     ei = edits.get_fine_iterator()
 
     # int32_t icu::Edits::Iterator::destinationIndexFromSourceIndex(

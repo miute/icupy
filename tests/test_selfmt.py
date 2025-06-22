@@ -2,40 +2,32 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    FieldPosition, FieldPositionIterator, Formattable, ICUError, ParsePosition,
-    SelectFormat, UErrorCode, UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/intltest/selfmts.cpp
-    fmt = SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
+    fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # void icu::SelectFormat::applyPattern(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    pattern = UnicodeString(
-        "masculine{masculineVerbValue} other{otherVerbValue}"
-    )
+    pattern = icu.UnicodeString("masculine{masculineVerbValue} other{otherVerbValue}")
     fmt.apply_pattern(pattern)
     fmt.apply_pattern(str(pattern))
 
     # UnicodeString &icu::SelectFormat::toPattern(UnicodeString &appendTo)
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     result = fmt.to_pattern(append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == pattern
 
     # UBool icu::SelectFormat::operator!=(const Format &other)
-    fmt1 = SelectFormat("odd{foo} other{bar}")
-    fmt2 = SelectFormat("odd{foo} other{bar}")
-    fmt3 = SelectFormat("odd{foo} other{bar2}")
+    fmt1 = icu.SelectFormat("odd{foo} other{bar}")
+    fmt2 = icu.SelectFormat("odd{foo} other{bar}")
+    fmt3 = icu.SelectFormat("odd{foo} other{bar2}")
     assert not (fmt1 != fmt2)
     assert fmt1 != fmt3
     assert fmt2 != fmt3
@@ -46,12 +38,12 @@ def test_api():
     assert not (fmt2 == fmt3)
 
 
-def test_clone():
-    fmt1 = SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
+def test_clone() -> None:
+    fmt1 = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # SelectFormat *icu::SelectFormat::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, SelectFormat)
+    assert isinstance(fmt2, icu.SelectFormat)
     assert fmt1 == fmt2
 
     fmt3 = copy.copy(fmt1)
@@ -61,9 +53,9 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
-    fmt = SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
-    append_to = UnicodeString()
+def test_format() -> None:
+    fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
+    append_to = icu.UnicodeString()
 
     # [1], [2]
     # UnicodeString &icu::SelectFormat::format(
@@ -73,9 +65,9 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = fmt.format(Formattable(UnicodeString("feminine")), append_to, pos)
-    assert isinstance(result, UnicodeString)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
+    result = fmt.format(icu.Formattable(icu.UnicodeString("feminine")), append_to, pos)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "feminineVerbValue"
 
@@ -88,17 +80,15 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
-        _ = fmt.format(
-            Formattable(UnicodeString("feminine")), append_to, pos_iter
-        )
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
+        _ = fmt.format(icu.Formattable(icu.UnicodeString("feminine")), append_to, pos_iter)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    with pytest.raises(ICUError) as exc_info:
-        _ = fmt.format(Formattable(UnicodeString("feminine")), append_to, None)
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    with pytest.raises(icu.ICUError) as exc_info:
+        _ = fmt.format(icu.Formattable(icu.UnicodeString("feminine")), append_to, None)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
     # UnicodeString &icu::Format::format(
@@ -107,8 +97,8 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    result = fmt.format(Formattable(UnicodeString("feminine")), append_to)
-    assert isinstance(result, UnicodeString)
+    result = fmt.format(icu.Formattable(icu.UnicodeString("feminine")), append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "feminineVerbValue"
 
@@ -120,36 +110,36 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
-    result = fmt.format(UnicodeString("feminine"), append_to, pos)
-    assert isinstance(result, UnicodeString)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
+    result = fmt.format(icu.UnicodeString("feminine"), append_to, pos)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "feminineVerbValue"
 
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format("feminine", append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "feminineVerbValue"
 
 
-def test_parse_object():
-    fmt = SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
+def test_parse_object() -> None:
+    fmt = icu.SelectFormat("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # void icu::SelectFormat::parseObject(
     #       const UnicodeString &source,
     #       Formattable &result,
     #       ParsePosition &parse_pos
     # )
-    result = Formattable()
-    parse_pos = ParsePosition()
-    fmt.parse_object(UnicodeString("feminineVerbValue"), result, parse_pos)
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition()
+    fmt.parse_object(icu.UnicodeString("feminineVerbValue"), result, parse_pos)
     assert parse_pos.get_index() == 0
     assert parse_pos.get_error_index() != -1
 
-    result = Formattable()
-    parse_pos = ParsePosition()
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition()
     fmt.parse_object("feminineVerbValue", result, parse_pos)
     assert parse_pos.get_index() == 0
     assert parse_pos.get_error_index() != -1
@@ -160,33 +150,31 @@ def test_parse_object():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
-        fmt.parse_object(UnicodeString("feminineVerbValue"), result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
+        fmt.parse_object(icu.UnicodeString("feminineVerbValue"), result)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
-    result = Formattable()
-    with pytest.raises(ICUError) as exc_info:
+    result = icu.Formattable()
+    with pytest.raises(icu.ICUError) as exc_info:
         fmt.parse_object("feminineVerbValue", result)
-    assert exc_info.value.args[0] == UErrorCode.U_INVALID_FORMAT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INVALID_FORMAT_ERROR
 
 
-def test_select_format():
-    pattern = UnicodeString(
-        "feminine {feminineVerbValue} other{otherVerbValue}"
-    )
+def test_select_format() -> None:
+    pattern = icu.UnicodeString("feminine {feminineVerbValue} other{otherVerbValue}")
 
     # [1]
     # icu::SelectFormat::SelectFormat(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt1 = SelectFormat(pattern)
+    fmt1 = icu.SelectFormat(pattern)
 
-    fmt1a = SelectFormat(str(pattern))
+    fmt1a = icu.SelectFormat(str(pattern))
     assert fmt1 == fmt1a
 
     # [2]
     # icu::SelectFormat::SelectFormat(const SelectFormat &other)
-    fmt2 = SelectFormat(fmt1)
+    fmt2 = icu.SelectFormat(fmt1)
     assert fmt1 == fmt2

@@ -2,26 +2,13 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, DateFormat, DateFormatSymbols, FieldPosition,
-    FieldPositionIterator, Format, Formattable, GregorianCalendar, ICUError,
-    Locale, ParsePosition, SimpleDateFormat, TimeZone, TimeZoneFormat,
-    UCalendarMonths, UDateFormatField, UErrorCode, ULocDataLocaleType,
-    UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 
-def test_api():
-    fmt1 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
-    )
+def test_api() -> None:
+    fmt1 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
     fmt2 = fmt1.clone()
-    fmt3 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_french()
-    )
+    fmt3 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_french())
 
     # UBool icu::Format::operator!=(const Format &other)
     assert not (fmt1 != fmt2)
@@ -37,16 +24,16 @@ def test_api():
     #       ULocDataLocaleType type,
     #       UErrorCode &status
     # )
-    loc = fmt1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-    assert isinstance(loc, Locale)
+    loc = fmt1.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, icu.Locale)
 
     # UnicodeString &icu::SimpleDateFormat::toLocalizedPattern(
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     string = fmt2.to_localized_pattern(result)
-    assert isinstance(string, UnicodeString)
+    assert isinstance(string, icu.UnicodeString)
     assert id(result) == id(string)
     assert result == "yyyy.MM.dd G 'at' HH:mm:ss z"
 
@@ -54,7 +41,7 @@ def test_api():
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt2.apply_localized_pattern(UnicodeString("MMMMdHmm"))
+    fmt2.apply_localized_pattern(icu.UnicodeString("MMMMdHmm"))
     assert fmt2.to_localized_pattern(result) == "MMMMdHmm"
 
     fmt2.apply_localized_pattern("yyyy.MM.dd G 'at' HH:mm:ss z")
@@ -62,12 +49,12 @@ def test_api():
 
     # UnicodeString &icu::SimpleDateFormat::toPattern(UnicodeString &result)
     string = fmt2.to_pattern(result)
-    assert isinstance(string, UnicodeString)
+    assert isinstance(string, icu.UnicodeString)
     assert id(result) == id(string)
     assert result == "yyyy.MM.dd G 'at' HH:mm:ss z"
 
     # void icu::SimpleDateFormat::applyPattern(const UnicodeString &pattern)
-    fmt2.apply_pattern(UnicodeString("MMMMdHmm"))
+    fmt2.apply_pattern(icu.UnicodeString("MMMMdHmm"))
     assert fmt2.to_pattern(result) == "MMMMdHmm"
 
     fmt2.apply_pattern("yyyy.MM.dd G 'at' HH:mm:ss z")
@@ -86,25 +73,23 @@ def test_api():
     # const DateFormatSymbols *
     # icu::SimpleDateFormat::getDateFormatSymbols(void)
     sym = fmt2.get_date_format_symbols()
-    assert isinstance(sym, DateFormatSymbols)
+    assert isinstance(sym, icu.DateFormatSymbols)
 
     # void icu::SimpleDateFormat::setDateFormatSymbols(
     #       const DateFormatSymbols &newFormatSymbols
     # )
-    new_format_symbols = DateFormatSymbols(Locale.get_french())
+    new_format_symbols = icu.DateFormatSymbols(icu.Locale.get_french())
     assert new_format_symbols != sym
     fmt2.set_date_format_symbols(new_format_symbols)
     assert fmt2.get_date_format_symbols() == new_format_symbols
 
 
-def test_clone():
-    fmt1 = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
-    )
+def test_clone() -> None:
+    fmt1 = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # SimpleDateFormat *icu::SimpleDateFormat::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, SimpleDateFormat)
+    assert isinstance(fmt2, icu.SimpleDateFormat)
     assert fmt2 == fmt1
 
     fmt3 = copy.copy(fmt1)
@@ -114,14 +99,14 @@ def test_clone():
     assert fmt4 == fmt1
 
 
-def test_format():
-    locale = Locale.get_english()
-    tz = TimeZone.create_time_zone("PST")
-    cal = GregorianCalendar(tz, locale)
-    cal.set(1996, UCalendarMonths.UCAL_JULY, 10, 15, 8, 56)
+def test_format() -> None:
+    locale = icu.Locale.get_english()
+    tz = icu.TimeZone.create_time_zone("PST")
+    cal = icu.GregorianCalendar(tz, locale)
+    cal.set(1996, icu.UCalendarMonths.UCAL_JULY, 10, 15, 8, 56)
     date = cal.get_time()
-    obj = Formattable(date, Formattable.IS_DATE)
-    fmt = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
+    obj = icu.Formattable(date, icu.Formattable.IS_DATE)
+    fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
     fmt.set_time_zone(tz)
 
     # [2]
@@ -130,10 +115,10 @@ def test_format():
     #       UnicodeString &appendTo,
     #       FieldPosition &pos
     # )
-    append_to = UnicodeString()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    append_to = icu.UnicodeString()
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(cal, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -145,44 +130,44 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(cal, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
-    fp = FieldPosition()
+    fp = icu.FieldPosition()
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_YEAR_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_YEAR_FIELD
     assert fp.get_begin_index() == 0
     assert fp.get_end_index() == 4
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_MONTH_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_MONTH_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_DATE_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_DATE_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_ERA_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_ERA_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_HOUR_OF_DAY0_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_HOUR_OF_DAY0_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_MINUTE_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_MINUTE_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_SECOND_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_SECOND_FIELD
 
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_TIMEZONE_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_TIMEZONE_FIELD
 
     assert not pos_iter.next(fp)
 
     append_to.remove()
     result = fmt.format(cal, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -194,9 +179,9 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(obj, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -208,21 +193,21 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(obj, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
-    fp = FieldPosition()
+    fp = icu.FieldPosition()
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_YEAR_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_YEAR_FIELD
     assert fp.get_begin_index() == 0
     assert fp.get_end_index() == 4
 
     append_to.remove()
     result = fmt.format(obj, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -234,7 +219,7 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(obj, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -245,7 +230,7 @@ def test_format():
     # )
     append_to.remove()
     result = fmt.format(date, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -256,9 +241,9 @@ def test_format():
     #       FieldPosition &fieldPosition
     # )
     append_to.remove()
-    field_position = FieldPosition(FieldPosition.DONT_CARE)
+    field_position = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(date, append_to, field_position)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
@@ -270,67 +255,59 @@ def test_format():
     #       UErrorCode &status
     # )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
+    pos_iter = icu.FieldPositionIterator()
     result = fmt.format(date, append_to, pos_iter)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
-    fp = FieldPosition()
+    fp = icu.FieldPosition()
     assert pos_iter.next(fp)
-    assert fp.get_field() == UDateFormatField.UDAT_YEAR_FIELD
+    assert fp.get_field() == icu.UDateFormatField.UDAT_YEAR_FIELD
     assert fp.get_begin_index() == 0
     assert fp.get_end_index() == 4
 
     append_to.remove()
     result = fmt.format(date, append_to, None)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == "1996.07.10 AD at 15:08:56 PDT"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
-def test_get_context():
-    from icupy.icu import UDisplayContext, UDisplayContextType
-
-    fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
-    )
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 53, reason="ICU4C<53")
+def test_get_context() -> None:
+    fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # UDisplayContext icu::DateFormat::getContext(
     #       UDisplayContextType type,
     #       UErrorCode &status
     # )
     assert (
-        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-        == UDisplayContext.UDISPCTX_CAPITALIZATION_NONE
+        fmt.get_context(icu.UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == icu.UDisplayContext.UDISPCTX_CAPITALIZATION_NONE
     )
 
     # void icu::SimpleDateFormat::setContext(
     #       UDisplayContext value,
     #       UErrorCode &status
     # )
-    fmt.set_context(
-        UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
-    )
+    fmt.set_context(icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE)
     assert (
-        fmt.get_context(UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
-        == UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
+        fmt.get_context(icu.UDisplayContextType.UDISPCTX_TYPE_CAPITALIZATION)
+        == icu.UDisplayContext.UDISPCTX_CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
-def test_get_time_zone_format():
-    fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
-    )
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")
+def test_get_time_zone_format() -> None:
+    fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
 
     # *ICU 49 technology preview*
     # const TimeZoneFormat *icu::SimpleDateFormat::getTimeZoneFormat(void)
     tzf = fmt.get_time_zone_format()
-    assert isinstance(tzf, TimeZoneFormat)
+    assert isinstance(tzf, icu.TimeZoneFormat)
 
-    tzf2 = TimeZoneFormat.create_instance(Locale.get_french())
+    tzf2 = icu.TimeZoneFormat.create_instance(icu.Locale.get_french())
     assert tzf2 != tzf
 
     # *ICU 49 technology preview*
@@ -341,10 +318,10 @@ def test_get_time_zone_format():
     assert fmt.get_time_zone_format() == tzf2
 
 
-def test_parse():
-    locale = Locale.get_english()
-    tz = TimeZone.create_time_zone("PST")
-    fmt = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
+def test_parse() -> None:
+    locale = icu.Locale.get_english()
+    tz = icu.TimeZone.create_time_zone("PST")
+    fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
     date = 837036536000.0  # 1996-07-10T15:08:56-07:00
 
     # [1]
@@ -353,15 +330,15 @@ def test_parse():
     #       Calendar &cal,
     #       ParsePosition &pos
     # )
-    cal = GregorianCalendar(tz, locale)
+    cal = icu.GregorianCalendar(tz, locale)
     cal.clear()
-    pos = ParsePosition(0)
-    fmt.parse(UnicodeString("1996.07.10 AD at 15:08:56 PDT"), cal, pos)
+    pos = icu.ParsePosition(0)
+    fmt.parse(icu.UnicodeString("1996.07.10 AD at 15:08:56 PDT"), cal, pos)
     assert pos.get_error_index() == -1
     assert cal.get_time() == date
 
     cal.clear()
-    pos = ParsePosition(0)
+    pos = icu.ParsePosition(0)
     fmt.parse("1996.07.10 AD at 15:08:56 PDT", cal, pos)
     assert pos.get_error_index() == -1
     assert cal.get_time() == date
@@ -371,13 +348,13 @@ def test_parse():
     #       const UnicodeString &text,
     #       ParsePosition &pos
     # )
-    pos = ParsePosition(0)
-    result = fmt.parse(UnicodeString("1996.07.10 AD at 15:08:56 PDT"), pos)
+    pos = icu.ParsePosition(0)
+    result = fmt.parse(icu.UnicodeString("1996.07.10 AD at 15:08:56 PDT"), pos)
     assert pos.get_error_index() == -1
     assert isinstance(result, float)
     assert result == date
 
-    pos = ParsePosition(0)
+    pos = icu.ParsePosition(0)
     result = fmt.parse("1996.07.10 AD at 15:08:56 PDT", pos)
     assert pos.get_error_index() == -1
     assert isinstance(result, float)
@@ -388,7 +365,7 @@ def test_parse():
     #       const UnicodeString &text,
     #       UErrorCode &status
     # )
-    result = fmt.parse(UnicodeString("1996.07.10 AD at 15:08:56 PDT"))
+    result = fmt.parse(icu.UnicodeString("1996.07.10 AD at 15:08:56 PDT"))
     assert isinstance(result, float)
     assert result == date
 
@@ -396,15 +373,13 @@ def test_parse():
     assert isinstance(result, float)
     assert result == date
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt.parse("1996.07.10 AD at 15:08:56, PDT")
-    assert exc_info.value.args[0] == UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
 
-def test_parse_object():
-    fmt = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", Locale.get_english()
-    )
+def test_parse_object() -> None:
+    fmt = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", icu.Locale.get_english())
     date = 837036536000.0  # 1996-07-10T15:08:56-07:00
 
     # void icu::DateFormat::parseObject(
@@ -412,20 +387,18 @@ def test_parse_object():
     #       Formattable &result,
     #       ParsePosition &parse_pos
     # )
-    result = Formattable()
-    parse_pos = ParsePosition(0)
-    fmt.parse_object(
-        UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result, parse_pos
-    )
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition(0)
+    fmt.parse_object(icu.UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result, parse_pos)
     assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DATE
+    assert result.get_type() == icu.Formattable.DATE
     assert result.get_date() == date
 
-    result = Formattable()
-    parse_pos = ParsePosition(0)
+    result = icu.Formattable()
+    parse_pos = icu.ParsePosition(0)
     fmt.parse_object("1996.07.10 AD at 15:08:56 PDT", result, parse_pos)
     assert parse_pos.get_error_index() == -1
-    assert result.get_type() == Formattable.DATE
+    assert result.get_type() == icu.Formattable.DATE
     assert result.get_date() == date
 
     # [2]
@@ -434,33 +407,33 @@ def test_parse_object():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    fmt.parse_object(UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result)
-    assert result.get_type() == Formattable.DATE
+    result = icu.Formattable()
+    fmt.parse_object(icu.UnicodeString("1996.07.10 AD at 15:08:56 PDT"), result)
+    assert result.get_type() == icu.Formattable.DATE
     assert result.get_date() == date
 
-    result = Formattable()
+    result = icu.Formattable()
     fmt.parse_object("1996.07.10 AD at 15:08:56 PDT", result)
-    assert result.get_type() == Formattable.DATE
+    assert result.get_type() == icu.Formattable.DATE
     assert result.get_date() == date
 
 
-def test_simple_date_format():
-    assert issubclass(DateFormat, Format)
-    assert issubclass(SimpleDateFormat, DateFormat)
-    locale = Locale.get_english()
+def test_simple_date_format() -> None:
+    assert issubclass(icu.DateFormat, icu.Format)
+    assert issubclass(icu.SimpleDateFormat, icu.DateFormat)
+    locale = icu.Locale.get_english()
 
     # [1]
     # icu::SimpleDateFormat::SimpleDateFormat(UErrorCode &status)
-    fmt1 = SimpleDateFormat()
+    fmt1 = icu.SimpleDateFormat()
 
     # [2]
     # icu::SimpleDateFormat::SimpleDateFormat(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt2 = SimpleDateFormat(UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"))
-    fmt2a = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
+    fmt2 = icu.SimpleDateFormat(icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"))
+    fmt2a = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
     assert fmt2 == fmt2a
     assert fmt2 != fmt1
 
@@ -470,19 +443,19 @@ def test_simple_date_format():
     #       const UnicodeString &override,
     #       UErrorCode &status
     # )
-    fmt3 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        UnicodeString("y=hebr;d=thai;s=arab"),
+    fmt3 = icu.SimpleDateFormat(
+        icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
+        icu.UnicodeString("y=hebr;d=thai;s=arab"),
     )
-    fmt3a = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", UnicodeString("y=hebr;d=thai;s=arab")
+    fmt3a = icu.SimpleDateFormat(
+        "yyyy.MM.dd G 'at' HH:mm:ss z",
+        icu.UnicodeString("y=hebr;d=thai;s=arab"),
     )
-    fmt3b = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), "y=hebr;d=thai;s=arab"
+    fmt3b = icu.SimpleDateFormat(
+        icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
+        "y=hebr;d=thai;s=arab",
     )
-    fmt3c = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab"
-    )
+    fmt3c = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab")
     assert fmt3 == fmt3a == fmt3b == fmt3c
     assert fmt3 != fmt1
 
@@ -492,10 +465,8 @@ def test_simple_date_format():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    fmt4 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), locale
-    )
-    fmt4a = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
+    fmt4 = icu.SimpleDateFormat(icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), locale)
+    fmt4a = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", locale)
     assert fmt4 == fmt4a
     assert fmt4 != fmt1
 
@@ -506,24 +477,22 @@ def test_simple_date_format():
     #       const Locale &locale,
     #       UErrorCode &status
     # )
-    fmt5 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
-        UnicodeString("y=hebr;d=thai;s=arab"),
+    fmt5 = icu.SimpleDateFormat(
+        icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
+        icu.UnicodeString("y=hebr;d=thai;s=arab"),
         locale,
     )
-    fmt5a = SimpleDateFormat(
+    fmt5a = icu.SimpleDateFormat(
         "yyyy.MM.dd G 'at' HH:mm:ss z",
-        UnicodeString("y=hebr;d=thai;s=arab"),
+        icu.UnicodeString("y=hebr;d=thai;s=arab"),
         locale,
     )
-    fmt5b = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
+    fmt5b = icu.SimpleDateFormat(
+        icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"),
         "y=hebr;d=thai;s=arab",
         locale,
     )
-    fmt5c = SimpleDateFormat(
-        "yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab", locale
-    )
+    fmt5c = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", "y=hebr;d=thai;s=arab", locale)
     assert fmt5 == fmt5a == fmt5b == fmt5c
     assert fmt5 != fmt1
 
@@ -533,16 +502,14 @@ def test_simple_date_format():
     #       const DateFormatSymbols &formatData,
     #       UErrorCode &status
     # )
-    format_data = DateFormatSymbols(locale)
-    fmt7 = SimpleDateFormat(
-        UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), format_data
-    )
-    fmt7a = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", format_data)
+    format_data = icu.DateFormatSymbols(locale)
+    fmt7 = icu.SimpleDateFormat(icu.UnicodeString("yyyy.MM.dd G 'at' HH:mm:ss z"), format_data)
+    fmt7a = icu.SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z", format_data)
     assert fmt7 == fmt7a
     assert fmt7 != fmt1
 
     # [8]
     # icu::SimpleDateFormat::SimpleDateFormat(const SimpleDateFormat &)
-    fmt8 = SimpleDateFormat(fmt2)
+    fmt8 = icu.SimpleDateFormat(fmt2)
     assert fmt8 == fmt2
     assert fmt8 != fmt1

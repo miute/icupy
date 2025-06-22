@@ -1,30 +1,27 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 62:
+if icu.U_ICU_VERSION_MAJOR_NUM < 62:
     pytest.skip("ICU4C<62", allow_module_level=True)
 
 import copy
 
-from icupy.icu import CurrencyUnit, Locale, MeasureUnit
-from icupy.icu.number import NumberFormatter
 
-
-def test_api():
-    assert issubclass(CurrencyUnit, MeasureUnit)
+def test_api() -> None:
+    assert issubclass(icu.CurrencyUnit, icu.MeasureUnit)
 
     # [2]
     # icu::CurrencyUnit::CurrencyUnit(
     #       ConstChar16Ptr isoCode,
     #       UErrorCode &ec
     # )
-    unit1 = CurrencyUnit("USD")
-    unit2 = CurrencyUnit("JPY")
+    unit1 = icu.CurrencyUnit("USD")
+    unit2 = icu.CurrencyUnit("JPY")
 
     # [4]
     # icu::CurrencyUnit::CurrencyUnit(const CurrencyUnit &other)
-    unit3 = CurrencyUnit(unit1)
+    unit3 = icu.CurrencyUnit(unit1)
 
     # UBool icu::MeasureUnit::operator!=(const UObject &other)
     assert unit1 != unit2
@@ -49,17 +46,17 @@ def test_api():
     # Derived icu::number::NumberFormatterSettings<Derived>::unit(
     #       const MeasureUnit &unit
     # )
-    fmt = NumberFormatter.with_locale(Locale.get_us())
+    fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
     assert fmt.unit(unit1).format_double(100).to_string() == "$100.00"
     assert fmt.unit(unit2).format_double(100).to_string() == "\xa5100"  # ¥100
 
 
-def test_clone():
-    unit1 = CurrencyUnit("USD")
+def test_clone() -> None:
+    unit1 = icu.CurrencyUnit("USD")
 
     # CurrencyUnit *icu::CurrencyUnit::clone()
     unit2 = unit1.clone()
-    assert isinstance(unit2, CurrencyUnit)
+    assert isinstance(unit2, icu.CurrencyUnit)
     assert unit2 == unit1
 
     unit3 = copy.copy(unit1)

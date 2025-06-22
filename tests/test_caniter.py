@@ -1,31 +1,31 @@
-from icupy.icu import CanonicalIterator, UnicodeString
+from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # From icu/source/test/intltest/canittst.cpp
 
     # icu::CanonicalIterator::CanonicalIterator(
     #       const UnicodeString &source,
     #       UErrorCode &status
     # )
-    source = UnicodeString("ljubav")
-    it = CanonicalIterator(source)
+    source = icu.UnicodeString("ljubav")
+    it = icu.CanonicalIterator(source)
 
     # UnicodeString icu::CanonicalIterator::getSource()
     result = it.get_source()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == source
 
     # str -> UnicodeString
     source = "ljubav"
-    it = CanonicalIterator(source)
+    it = icu.CanonicalIterator(source)
     assert it.get_source() == source
 
     # void icu::CanonicalIterator::setSource(
     #       const UnicodeString &newSource,
     #       UErrorCode &status
     # )
-    new_source = UnicodeString("\\u010d\\u017E").unescape()
+    new_source = icu.UnicodeString("\\u010d\\u017E").unescape()
     expected = [
         "c\u030cz\u030c",
         "c\u030c\u017e",
@@ -36,7 +36,7 @@ def test_api():
 
     # __iter__() and __next__()
     assert len(list(it)) == len(expected)
-    assert all(isinstance(x, UnicodeString) for x in it)
+    assert all(isinstance(x, icu.UnicodeString) for x in it)
     assert all(x in it for x in expected)
 
     # void icu::CanonicalIterator::reset()
@@ -44,31 +44,31 @@ def test_api():
 
     # UnicodeString icu::CanonicalIterator::next()
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result.is_bogus()
     assert len(expected) == 0
 
@@ -77,29 +77,29 @@ def test_api():
     expected = ["x\u0307\u0327", "x\u0327\u0307", "\u1e8b\u0327"]
     it.set_source(new_source)
     assert len(list(it)) == len(expected)
-    assert all(isinstance(x, UnicodeString) for x in it)
+    assert all(isinstance(x, icu.UnicodeString) for x in it)
     assert all(x in it for x in expected)
 
     it.reset()
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert not result.is_bogus()
     assert result in expected
     expected.remove(result)
 
     result = it.next()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result.is_bogus()
     assert len(expected) == 0

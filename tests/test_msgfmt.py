@@ -2,103 +2,93 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, DecimalFormat, FieldPosition,
-    FieldPositionIterator, Formattable, ICUError, Locale, MessageFormat,
-    ParsePosition, SimpleDateFormat, StringEnumeration, TimeZone, UErrorCode,
-    ULocDataLocaleType, UMessagePatternApostropheMode, UnicodeString,
-    UParseError,
-)
-
-# fmt: on
+from icupy import icu
 
 
-def test_api():
+def test_api() -> None:
     # static UnicodeString icu::MessageFormat::autoQuoteApostrophe(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    result = MessageFormat.auto_quote_apostrophe(UnicodeString("'"))
-    assert isinstance(result, UnicodeString)
+    result = icu.MessageFormat.auto_quote_apostrophe(icu.UnicodeString("'"))
+    assert isinstance(result, icu.UnicodeString)
     assert result == "''"
 
-    result = MessageFormat.auto_quote_apostrophe("'")
-    assert isinstance(result, UnicodeString)
+    result = icu.MessageFormat.auto_quote_apostrophe("'")
+    assert isinstance(result, icu.UnicodeString)
     assert result == "''"
 
-    pattern = UnicodeString(
-        "At {1,time,::jmm} on {1,date,::dMMMM}, "
-        "there was {2} on planet {0,number}.",
+    pattern = icu.UnicodeString(
+        "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
     )
-    fmt = MessageFormat(pattern, Locale.get_us())
+    fmt = icu.MessageFormat(pattern, icu.Locale.get_us())
 
     # UMessagePatternApostropheMode icu::MessageFormat::getApostropheMode()
     assert (
         fmt.get_apostrophe_mode()
-        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+        == icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
     )
 
     # Format *icu::MessageFormat::getFormat(
     #       const UnicodeString &formatName,
     #       UErrorCode &status
     # )
-    result = fmt.get_format(UnicodeString("0"))
-    assert isinstance(result, DecimalFormat)
+    result = fmt.get_format(icu.UnicodeString("0"))
+    assert isinstance(result, icu.DecimalFormat)
 
-    result = fmt.get_format(UnicodeString("1"))
-    assert isinstance(result, SimpleDateFormat)
+    result = fmt.get_format(icu.UnicodeString("1"))
+    assert isinstance(result, icu.SimpleDateFormat)
 
-    result = fmt.get_format(UnicodeString("2"))
+    result = fmt.get_format(icu.UnicodeString("2"))
     assert result is None
 
     result = fmt.get_format("0")
-    assert isinstance(result, DecimalFormat)
+    assert isinstance(result, icu.DecimalFormat)
 
     result = fmt.get_format("1")
-    assert isinstance(result, SimpleDateFormat)
+    assert isinstance(result, icu.SimpleDateFormat)
 
     result = fmt.get_format("2")
     assert result is None
 
     # StringEnumeration *icu::MessageFormat::getFormatNames(UErrorCode &status)
     it = fmt.get_format_names()
-    assert isinstance(it, StringEnumeration)
+    assert isinstance(it, icu.StringEnumeration)
     assert list(it) == ["1", "1", "2", "0"]
 
     # const Format **icu::MessageFormat::getFormats(int32_t &count)
     formats = fmt.get_formats()
     assert isinstance(formats, list)
     assert len(formats) == 4
-    assert isinstance(formats[0], SimpleDateFormat)
-    assert isinstance(formats[1], SimpleDateFormat)
+    assert isinstance(formats[0], icu.SimpleDateFormat)
+    assert isinstance(formats[1], icu.SimpleDateFormat)
     assert formats[2] is None
-    assert isinstance(formats[3], DecimalFormat)
+    assert isinstance(formats[3], icu.DecimalFormat)
 
     # const Locale &icu::MessageFormat::getLocale(void)
     result = fmt.get_locale()
-    assert isinstance(result, Locale)
-    assert result == Locale("en", "US")
+    assert isinstance(result, icu.Locale)
+    assert result == icu.Locale("en", "US")
 
     # Locale icu::Format::getLocale(
     #       ULocDataLocaleType type,
     #       UErrorCode &status
     # )
-    loc = fmt.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-    assert isinstance(loc, Locale)
-    assert loc == Locale("en-US")
+    loc = fmt.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE)
+    assert isinstance(loc, icu.Locale)
+    assert loc == icu.Locale("en-US")
 
     # void icu::MessageFormat::setLocale(const Locale &theLocale)
-    fmt.set_locale(Locale.get_france())
-    assert fmt.get_locale() == Locale("fr", "FR")
+    fmt.set_locale(icu.Locale.get_france())
+    assert fmt.get_locale() == icu.Locale("fr", "FR")
 
     fmt.set_locale("en-US")
-    assert fmt.get_locale() == Locale("en", "US")
+    assert fmt.get_locale() == icu.Locale("en", "US")
 
     # UnicodeString &icu::MessageFormat::toPattern(UnicodeString &appendTo)
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     result = fmt.to_pattern(append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result == pattern
 
@@ -106,16 +96,16 @@ def test_api():
     assert fmt.uses_named_arguments() is False
 
     # UBool icu::MessageFormat::operator==(const Format &other)
-    fmt1 = MessageFormat("{0} {1}", Locale.get_us())
-    fmt2 = MessageFormat("{0} {1}", Locale.get_us())
-    fmt3 = MessageFormat("{0} {1}", Locale.get_france())
+    fmt1 = icu.MessageFormat("{0} {1}", icu.Locale.get_us())
+    fmt2 = icu.MessageFormat("{0} {1}", icu.Locale.get_us())
+    fmt3 = icu.MessageFormat("{0} {1}", icu.Locale.get_france())
     assert fmt1 == fmt2
     assert not (fmt1 == fmt3)
     assert not (fmt2 == fmt3)
 
 
-def test_apply_pattern():
-    fmt1 = MessageFormat("{0} {1}")
+def test_apply_pattern() -> None:
+    fmt1 = icu.MessageFormat("{0} {1}")
     fmt2 = fmt1.clone()
     assert fmt1 == fmt2
 
@@ -124,7 +114,7 @@ def test_apply_pattern():
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt1.apply_pattern(UnicodeString("{1} {0}"))
+    fmt1.apply_pattern(icu.UnicodeString("{1} {0}"))
     assert fmt1 != fmt2
 
     fmt2.apply_pattern("{1} {0}")
@@ -137,50 +127,50 @@ def test_apply_pattern():
     #       UParseError *parseError,
     #       UErrorCode &status
     # )
-    pattern = UnicodeString("ab{0,choice,0#1'2''3'''4''''.}yz")
-    parse_error = UParseError()
+    pattern = icu.UnicodeString("ab{0,choice,0#1'2''3'''4''''.}yz")
+    parse_error = icu.UParseError()
     fmt1.apply_pattern(
         pattern,
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
+        icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
         parse_error,
     )
     assert (
         fmt1.get_apostrophe_mode()
-        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+        == icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
     )
     assert fmt1 != fmt2
 
-    parse_error = UParseError()
+    parse_error = icu.UParseError()
     fmt2.apply_pattern(
         str(pattern),
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
+        icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED,
         parse_error,
     )
     assert (
         fmt2.get_apostrophe_mode()
-        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
+        == icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_REQUIRED
     )
     assert fmt1 == fmt2
 
     fmt1.apply_pattern(
         pattern,
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
+        icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
         None,
     )
     assert (
         fmt1.get_apostrophe_mode()
-        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+        == icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
     )
     assert fmt1 != fmt2
 
     fmt2.apply_pattern(
         str(pattern),
-        UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
+        icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL,
         None,
     )
     assert (
         fmt2.get_apostrophe_mode()
-        == UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
+        == icu.UMessagePatternApostropheMode.UMSGPAT_APOS_DOUBLE_OPTIONAL
     )
     assert fmt1 == fmt2
 
@@ -190,21 +180,21 @@ def test_apply_pattern():
     #       UParseError &parseError,
     #       UErrorCode &status
     # )
-    parse_error = UParseError()
-    fmt1.apply_pattern(UnicodeString("{1} {0}"), parse_error)
+    parse_error = icu.UParseError()
+    fmt1.apply_pattern(icu.UnicodeString("{1} {0}"), parse_error)
     assert fmt1 != fmt2
 
-    parse_error = UParseError()
+    parse_error = icu.UParseError()
     fmt2.apply_pattern("{1} {0}", parse_error)
     assert fmt1 == fmt2
 
 
-def test_clone():
-    fmt1 = MessageFormat("{0} {1}")
+def test_clone() -> None:
+    fmt1 = icu.MessageFormat("{0} {1}")
 
     # MessageFormat *icu::MessageFormat::clone()
     fmt2 = fmt1.clone()
-    assert isinstance(fmt2, MessageFormat)
+    assert isinstance(fmt2, icu.MessageFormat)
     assert fmt1 == fmt2
 
     fmt3 = copy.copy(fmt1)
@@ -214,18 +204,17 @@ def test_clone():
     assert fmt1 == fmt4
 
 
-def test_format():
-    fmt = MessageFormat(
-        "At {1,time,::jmm} on {1,date,::dMMMM}, "
-        "there was {2} on planet {0,number}.",
-        Locale.get_us(),
+def test_format() -> None:
+    fmt = icu.MessageFormat(
+        "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
+        icu.Locale.get_us(),
     )
     formats = fmt.get_formats()
-    tz = TimeZone.get_gmt()
+    tz = icu.TimeZone.get_gmt()
     formats[0].set_time_zone(tz)
     formats[1].set_time_zone(tz)
     date = 1637685775000.0  # 2021-11-23T16:42:55Z
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
 
     # [1], [2]
     # UnicodeString &icu::MessageFormat::format(
@@ -234,21 +223,20 @@ def test_format():
     #       FieldPosition &pos,
     #       UErrorCode &status
     # )
-    obj = Formattable(
+    obj = icu.Formattable(
         [
-            Formattable(7),
-            Formattable(date, Formattable.IS_DATE),
-            Formattable(UnicodeString("a disturbance in the Force")),
+            icu.Formattable(7),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
+            icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
         ]
     )
     append_to.remove()
-    pos = FieldPosition(FieldPosition.DONT_CARE)
+    pos = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(obj, append_to, pos)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
@@ -261,23 +249,23 @@ def test_format():
     #       FieldPositionIterator *posIter,
     #       UErrorCode &status
     # )
-    obj = Formattable(
+    obj = icu.Formattable(
         [
-            Formattable(7),
-            Formattable(date, Formattable.IS_DATE),
-            Formattable(UnicodeString("a disturbance in the Force")),
+            icu.Formattable(7),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
+            icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
         ]
     )
     append_to.remove()
-    pos_iter = FieldPositionIterator()
-    with pytest.raises(ICUError) as exc_info:
+    pos_iter = icu.FieldPositionIterator()
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt.format(obj, append_to, pos_iter)
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     append_to.remove()
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = fmt.format(obj, append_to, None)
-    assert exc_info.value.args[0] == UErrorCode.U_UNSUPPORTED_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_UNSUPPORTED_ERROR
 
     # [4]
     # UnicodeString &icu::Format::format(
@@ -285,20 +273,19 @@ def test_format():
     #       UnicodeString &appendTo,
     #       UErrorCode &status
     # )
-    obj = Formattable(
+    obj = icu.Formattable(
         [
-            Formattable(7),
-            Formattable(date, Formattable.IS_DATE),
-            Formattable(UnicodeString("a disturbance in the Force")),
+            icu.Formattable(7),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
+            icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
         ]
     )
     append_to.remove()
     result = fmt.format(obj, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
@@ -312,30 +299,28 @@ def test_format():
     #       UErrorCode &status
     # )
     source = [
-        Formattable(7),
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
+        icu.Formattable(7),
+        icu.Formattable(date, icu.Formattable.IS_DATE),
+        icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
     ]
     append_to.remove()
-    ignore = FieldPosition(FieldPosition.DONT_CARE)
+    ignore = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(source, len(source), append_to, ignore)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     append_to.remove()
-    ignore = FieldPosition(FieldPosition.DONT_CARE)
+    ignore = icu.FieldPosition(icu.FieldPosition.DONT_CARE)
     result = fmt.format(source, -1, append_to, ignore)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
@@ -359,52 +344,48 @@ def test_format():
     #       UErrorCode &status
     # )
     argument_names = [
-        UnicodeString("1"),
-        UnicodeString("2"),
-        UnicodeString("0"),
+        icu.UnicodeString("1"),
+        icu.UnicodeString("2"),
+        icu.UnicodeString("0"),
     ]
     arguments = [
-        Formattable(date, Formattable.IS_DATE),
-        Formattable(UnicodeString("a disturbance in the Force")),
-        Formattable(7),
+        icu.Formattable(date, icu.Formattable.IS_DATE),
+        icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
+        icu.Formattable(7),
     ]
     append_to.remove()
-    result = fmt.format(
-        argument_names, arguments, len(argument_names), append_to
-    )
-    assert isinstance(result, UnicodeString)
+    result = fmt.format(argument_names, arguments, len(argument_names), append_to)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
     append_to.remove()
     result = fmt.format(argument_names, arguments, -1, append_to)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(append_to)
     assert result in (
-        "At 4:42 PM on November 23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
         "At 4:42\u202fPM on November 23, "
         "there was a disturbance in the Force on planet 7.",  # ICU>=72
     )
 
 
-def test_message_format():
-    pattern = UnicodeString("{0} {1}")
-    new_locale = Locale.get_us()
+def test_message_format() -> None:
+    pattern = icu.UnicodeString("{0} {1}")
+    new_locale = icu.Locale.get_us()
 
     # [1]
     # icu::MessageFormat::MessageFormat(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
-    fmt1 = MessageFormat(pattern)
+    fmt1 = icu.MessageFormat(pattern)
 
-    fmt1a = MessageFormat(str(pattern))
+    fmt1a = icu.MessageFormat(str(pattern))
     assert fmt1 == fmt1a
 
     # [2]
@@ -413,15 +394,15 @@ def test_message_format():
     #       const Locale &newLocale,
     #       UErrorCode &status
     # )
-    fmt2 = MessageFormat(pattern, new_locale)
+    fmt2 = icu.MessageFormat(pattern, new_locale)
 
-    fmt2a = MessageFormat(str(pattern), new_locale)
+    fmt2a = icu.MessageFormat(str(pattern), new_locale)
     assert fmt2 == fmt2a
 
-    fmt2b = MessageFormat(pattern, "en-US")
+    fmt2b = icu.MessageFormat(pattern, "en-US")
     assert fmt2 == fmt2b
 
-    fmt2c = MessageFormat(str(pattern), "en-US")
+    fmt2c = icu.MessageFormat(str(pattern), "en-US")
     assert fmt2 == fmt2c
 
     # [3]
@@ -431,30 +412,30 @@ def test_message_format():
     #       UParseError &parseError,
     #       UErrorCode &status
     # )
-    parse_error = UParseError()
-    fmt3 = MessageFormat(pattern, new_locale, parse_error)
+    parse_error = icu.UParseError()
+    fmt3 = icu.MessageFormat(pattern, new_locale, parse_error)
 
-    parse_error = UParseError()
-    fmt3a = MessageFormat(str(pattern), new_locale, parse_error)
+    parse_error = icu.UParseError()
+    fmt3a = icu.MessageFormat(str(pattern), new_locale, parse_error)
     assert fmt3 == fmt3a
 
-    parse_error = UParseError()
-    fmt3b = MessageFormat(pattern, "en-US", parse_error)
+    parse_error = icu.UParseError()
+    fmt3b = icu.MessageFormat(pattern, "en-US", parse_error)
     assert fmt3 == fmt3b
 
-    parse_error = UParseError()
-    fmt3c = MessageFormat(str(pattern), "en-US", parse_error)
+    parse_error = icu.UParseError()
+    fmt3c = icu.MessageFormat(str(pattern), "en-US", parse_error)
     assert fmt3 == fmt3c
 
     # [4]
     # icu::MessageFormat::MessageFormat(const MessageFormat &)
-    fmt4 = MessageFormat(fmt1)
+    fmt4 = icu.MessageFormat(fmt1)
     assert fmt1 == fmt4
 
 
-def test_parse():
+def test_parse() -> None:
     # From icu/source/test/intltest/tmsgfmt.cpp
-    fmt = MessageFormat("{0} =sep= {1}", Locale.get_us())
+    fmt = icu.MessageFormat("{0} =sep= {1}", icu.Locale.get_us())
     s = "abc =sep= def"
 
     # [1]
@@ -463,22 +444,22 @@ def test_parse():
     #       int32_t &count,
     #       UErrorCode &status
     # )
-    objs = fmt.parse(UnicodeString(s))
+    objs = fmt.parse(icu.UnicodeString(s))
     assert isinstance(objs, list)
     assert len(objs) == 2
-    assert all(isinstance(x, Formattable) for x in objs)
-    assert objs[0].get_type() == Formattable.STRING
+    assert all(isinstance(x, icu.Formattable) for x in objs)
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
     objs = fmt.parse(s)
     assert isinstance(objs, list)
     assert len(objs) == 2
-    assert all(isinstance(x, Formattable) for x in objs)
-    assert objs[0].get_type() == Formattable.STRING
+    assert all(isinstance(x, icu.Formattable) for x in objs)
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
     # [2]
@@ -487,28 +468,28 @@ def test_parse():
     #       ParsePosition &pos,
     #       int32_t &count
     # )
-    pos = ParsePosition()
-    objs = fmt.parse(UnicodeString(s), pos)
+    pos = icu.ParsePosition()
+    objs = fmt.parse(icu.UnicodeString(s), pos)
     assert pos.get_index() > 0
     assert pos.get_error_index() == -1
     assert isinstance(objs, list)
     assert len(objs) == 2
-    assert all(isinstance(x, Formattable) for x in objs)
-    assert objs[0].get_type() == Formattable.STRING
+    assert all(isinstance(x, icu.Formattable) for x in objs)
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
-    pos = ParsePosition()
+    pos = icu.ParsePosition()
     objs = fmt.parse(s, pos)
     assert pos.get_index() > 0
     assert pos.get_error_index() == -1
     assert isinstance(objs, list)
     assert len(objs) == 2
-    assert all(isinstance(x, Formattable) for x in objs)
-    assert objs[0].get_type() == Formattable.STRING
+    assert all(isinstance(x, icu.Formattable) for x in objs)
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
     # void icu::MessageFormat::parseObject(
@@ -516,30 +497,30 @@ def test_parse():
     #       Formattable &result,
     #       ParsePosition &pos
     # )
-    result = Formattable()
-    pos = ParsePosition()
-    fmt.parse_object(UnicodeString(s), result, pos)
+    result = icu.Formattable()
+    pos = icu.ParsePosition()
+    fmt.parse_object(icu.UnicodeString(s), result, pos)
     assert pos.get_index() > 0
     assert pos.get_error_index() == -1
-    assert result.get_type() == Formattable.ARRAY
+    assert result.get_type() == icu.Formattable.ARRAY
     objs = result.get_array()
     assert len(objs) == 2
-    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
-    result = Formattable()
-    pos = ParsePosition()
+    result = icu.Formattable()
+    pos = icu.ParsePosition()
     fmt.parse_object(s, result, pos)
     assert pos.get_index() > 0
     assert pos.get_error_index() == -1
-    assert result.get_type() == Formattable.ARRAY
+    assert result.get_type() == icu.Formattable.ARRAY
     objs = result.get_array()
     assert len(objs) == 2
-    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
     # void icu::Format::parseObject(
@@ -547,39 +528,39 @@ def test_parse():
     #       Formattable &result,
     #       UErrorCode &status
     # )
-    result = Formattable()
-    fmt.parse_object(UnicodeString(s), result)
-    assert result.get_type() == Formattable.ARRAY
+    result = icu.Formattable()
+    fmt.parse_object(icu.UnicodeString(s), result)
+    assert result.get_type() == icu.Formattable.ARRAY
     objs = result.get_array()
     assert len(objs) == 2
-    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
-    result = Formattable()
+    result = icu.Formattable()
     fmt.parse_object(s, result)
-    assert result.get_type() == Formattable.ARRAY
+    assert result.get_type() == icu.Formattable.ARRAY
     objs = result.get_array()
     assert len(objs) == 2
-    assert objs[0].get_type() == Formattable.STRING
+    assert objs[0].get_type() == icu.Formattable.STRING
     assert objs[0].get_string() == "abc"
-    assert objs[1].get_type() == Formattable.STRING
+    assert objs[1].get_type() == icu.Formattable.STRING
     assert objs[1].get_string() == "def"
 
 
-def test_set_format():
-    fmt = MessageFormat("{0,date} {1,time}", Locale.get_us())
-    dtfmt0 = SimpleDateFormat("yyyy.MM.dd")
-    dtfmt1 = SimpleDateFormat("HH:mm:ss z")
+def test_set_format() -> None:
+    fmt = icu.MessageFormat("{0,date} {1,time}", icu.Locale.get_us())
+    dtfmt0 = icu.SimpleDateFormat("yyyy.MM.dd")
+    dtfmt1 = icu.SimpleDateFormat("HH:mm:ss z")
     date = 1637685775000.0  # 2021-11-23T16:42:55Z
-    obj = Formattable(
+    obj = icu.Formattable(
         [
-            Formattable(date, Formattable.IS_DATE),
-            Formattable(date, Formattable.IS_DATE),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
         ]
     )
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
 
     # [1]
     # void icu::MessageFormat::setFormat(
@@ -587,11 +568,11 @@ def test_set_format():
     #       const Format &format,
     #       UErrorCode &status
     # )
-    tz = TimeZone.get_gmt()
+    tz = icu.TimeZone.get_gmt()
     dtfmt0.set_time_zone(tz)
     dtfmt1.set_time_zone(tz)
 
-    fmt.set_format(UnicodeString("0"), dtfmt0)
+    fmt.set_format(icu.UnicodeString("0"), dtfmt0)
     fmt.set_format("1", dtfmt1)
 
     append_to.remove()
@@ -602,7 +583,7 @@ def test_set_format():
     #       int32_t formatNumber,
     #       const Format &format
     # )
-    tz = TimeZone.create_time_zone("PST")
+    tz = icu.TimeZone.create_time_zone("PST")
     dtfmt0.set_time_zone(tz)
     dtfmt1.set_time_zone(tz)
 
@@ -616,18 +597,16 @@ def test_set_format():
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
-def test_set_format_62():
-    from icupy.icu.number import NumberFormatter
-
-    fmt = MessageFormat("{0,number,currency}", Locale.get_us())
-    obj = Formattable([Formattable(444444.55)])
-    append_to = UnicodeString()
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 62, reason="ICU4C<62")
+def test_set_format_62() -> None:
+    fmt = icu.MessageFormat("{0,number,currency}", icu.Locale.get_us())
+    obj = icu.Formattable([icu.Formattable(444444.55)])
+    append_to = icu.UnicodeString()
     assert fmt.format(obj, append_to) == "$444,444.55"
 
     numfmt = (
-        NumberFormatter.for_skeleton("currency/USD unit-width-iso-code")
-        .locale(Locale.get_us())
+        icu.number.NumberFormatter.for_skeleton("currency/USD unit-width-iso-code")
+        .locale(icu.Locale.get_us())
         .to_format()
     )
     fmt.set_format(0, numfmt)
@@ -635,11 +614,10 @@ def test_set_format_62():
     assert fmt.format(obj, append_to) == "USD\xa0444,444.55"
 
 
-def test_set_formats():
-    fmt = MessageFormat(
-        "At {1,time,::jmm} on {1,date,::dMMMM}, "
-        "there was {2} on planet {0,number}.",
-        Locale.get_us(),
+def test_set_formats() -> None:
+    fmt = icu.MessageFormat(
+        "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
+        icu.Locale.get_us(),
     )
     formats = fmt.get_formats()
 
@@ -648,39 +626,36 @@ def test_set_formats():
     #       int32_t cnt
     # )
     new_formats = [
-        SimpleDateFormat("HH:mm:ss z"),
-        SimpleDateFormat("yyyy.MM.dd"),
+        icu.SimpleDateFormat("HH:mm:ss z"),
+        icu.SimpleDateFormat("yyyy.MM.dd"),
         None,
         formats[3].clone(),
     ]
-    tz = TimeZone.get_gmt()
+    tz = icu.TimeZone.get_gmt()
     new_formats[0].set_time_zone(tz)
     new_formats[1].set_time_zone(tz)
     fmt.set_formats(new_formats, len(new_formats))
 
     date = 1637685775000.0  # 2021-11-23T16:42:55Z
-    obj = Formattable(
+    obj = icu.Formattable(
         [
-            Formattable(7),
-            Formattable(date, Formattable.IS_DATE),
-            Formattable(UnicodeString("a disturbance in the Force")),
+            icu.Formattable(7),
+            icu.Formattable(date, icu.Formattable.IS_DATE),
+            icu.Formattable(icu.UnicodeString("a disturbance in the Force")),
         ]
     )
-    append_to = UnicodeString()
+    append_to = icu.UnicodeString()
     assert fmt.format(obj, append_to) == (
-        "At 16:42:55 GMT on 2021.11.23, "
-        "there was a disturbance in the Force on planet 7."
+        "At 16:42:55 GMT on 2021.11.23, there was a disturbance in the Force on planet 7."
     )
 
-    tz = TimeZone.create_time_zone("PST")
+    tz = icu.TimeZone.create_time_zone("PST")
     new_formats[0].set_time_zone(tz)
     new_formats[1].set_time_zone(tz)
     fmt.set_formats(new_formats)  # cnt is optional
 
     append_to.remove()
     assert fmt.format(obj, append_to) in (
-        "At 08:42:55 GMT-8 on 2021.11.23, "
-        "there was a disturbance in the Force on planet 7.",
-        "At 08:42:55 PST on 2021.11.23, "
-        "there was a disturbance in the Force on planet 7.",
+        "At 08:42:55 GMT-8 on 2021.11.23, there was a disturbance in the Force on planet 7.",
+        "At 08:42:55 PST on 2021.11.23, there was a disturbance in the Force on planet 7.",
     )

@@ -1,18 +1,13 @@
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    U_ICU_VERSION_MAJOR_NUM, UnicodeSet, UnicodeSetIterator, UnicodeString,
-)
-
-# fmt: on
+from icupy import icu
 
 
-def test_next():
+def test_next() -> None:
     # [1]
     # icu::UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet &set)
-    uniset = UnicodeSet("[a\\U0001abcd{ab}]")
-    it = UnicodeSetIterator(uniset)
+    uniset = icu.UnicodeSet("[a\\U0001abcd{ab}]")
+    it = icu.UnicodeSetIterator(uniset)
 
     # UBool icu::UnicodeSetIterator::next()
     assert it.next() is True
@@ -25,7 +20,7 @@ def test_next():
 
     # const UnicodeString &icu::UnicodeSetIterator::getString()
     result = it.get_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "a"
 
     assert it.next() is True
@@ -48,17 +43,17 @@ def test_next():
     assert it.get_string() == "a"
 
 
-def test_next_range():
+def test_next_range() -> None:
     # [2]
     # icu::UnicodeSetIterator::UnicodeSetIterator()
-    it = UnicodeSetIterator()
+    it = icu.UnicodeSetIterator()
 
     # UBool icu::UnicodeSetIterator::nextRange()
     assert it.next_range() is False
 
     # [2]
     # void icu::UnicodeSetIterator::reset(const UnicodeSet &set)
-    uniset = UnicodeSet("[a0-9{ab}]")
+    uniset = icu.UnicodeSet("[a0-9{ab}]")
     it.reset(uniset)
 
     assert it.next_range() is True
@@ -80,14 +75,14 @@ def test_next_range():
     assert it.next_range() is False
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_skip_to_strings():
-    uniset = UnicodeSet("[a0-9{ab}]")
-    it = UnicodeSetIterator(uniset)
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_skip_to_strings() -> None:
+    uniset = icu.UnicodeSet("[a0-9{ab}]")
+    it = icu.UnicodeSetIterator(uniset)
 
     # UnicodeSetIterator &icu::UnicodeSetIterator::skipToStrings()
     result = it.skip_to_strings()
-    assert isinstance(result, UnicodeSetIterator)
+    assert isinstance(result, icu.UnicodeSetIterator)
     assert id(result) == id(it)
 
     assert it.next()

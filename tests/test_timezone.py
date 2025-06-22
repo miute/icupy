@@ -2,31 +2,22 @@ import copy
 
 import pytest
 
-# fmt: off
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 from icupy.icu import U_MILLIS_PER_HOUR as HOUR
-from icupy.icu import (
-    AnnualTimeZoneRule, BasicTimeZone, DateTimeRule, GregorianCalendar,
-    InitialTimeZoneRule, Locale, RuleBasedTimeZone, SimpleTimeZone,
-    StringEnumeration, TimeZone, TimeZoneTransition, UCalendarDaysOfWeek,
-    UCalendarMonths, UnicodeString, USystemTimeZoneType, VTimeZone,
-)
-
-# fmt: on
 
 
-def test_basic_time_zone():
-    assert issubclass(BasicTimeZone, TimeZone)
+def test_basic_time_zone() -> None:
+    assert issubclass(icu.BasicTimeZone, icu.TimeZone)
 
-    zone1 = TimeZone.create_time_zone("America/Los_Angeles")
-    assert isinstance(zone1, BasicTimeZone)  # OlsonTimeZone
-    assert not isinstance(zone1, RuleBasedTimeZone)
-    assert not isinstance(zone1, SimpleTimeZone)
-    assert not isinstance(zone1, VTimeZone)
+    zone1 = icu.TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone1, icu.BasicTimeZone)  # OlsonTimeZone
+    assert not isinstance(zone1, icu.RuleBasedTimeZone)
+    assert not isinstance(zone1, icu.SimpleTimeZone)
+    assert not isinstance(zone1, icu.VTimeZone)
 
     # BasicTimeZone *icu::BasicTimeZone::clone()
     zone1a = zone1.clone()
-    assert isinstance(zone1a, BasicTimeZone)
+    assert isinstance(zone1a, icu.BasicTimeZone)
     assert zone1a == zone1
 
     zone1b = copy.copy(zone1)
@@ -44,7 +35,7 @@ def test_basic_time_zone():
     #       TimeZoneTransition &result
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
-    result = TimeZoneTransition()
+    result = icu.TimeZoneTransition()
     assert zone1.get_next_transition(base, False, result) is True
     assert result.get_time() == 1236506400000.0  # 2009-03-08T10:00:00Z
 
@@ -64,20 +55,20 @@ def test_basic_time_zone():
     #       UErrorCode &status
     # )
     initial, std, dst = zone1.get_simple_rules_near(0)
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == -8 * HOUR
     assert initial.get_dst_savings() == 1 * HOUR
-    assert isinstance(std, AnnualTimeZoneRule)
+    assert isinstance(std, icu.AnnualTimeZoneRule)
     assert std.get_raw_offset() == -8 * HOUR
     assert std.get_dst_savings() == 0
     dr = std.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_OCTOBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_OCTOBER
     assert dr.get_rule_day_of_month() == 0
-    assert isinstance(dst, AnnualTimeZoneRule)
+    assert isinstance(dst, icu.AnnualTimeZoneRule)
     assert dst.get_raw_offset() == -8 * HOUR
     assert dst.get_dst_savings() == 1 * HOUR
     dr = dst.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_APRIL
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_APRIL
     assert dr.get_rule_day_of_month() == 0
 
     # void icu::BasicTimeZone::getTimeZoneRules(
@@ -87,10 +78,10 @@ def test_basic_time_zone():
     #       UErrorCode &status
     # )
     initial, trsrules = zone1.get_time_zone_rules()
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert isinstance(trsrules, list)
     assert len(trsrules) == 4
-    assert any(isinstance(x, AnnualTimeZoneRule) for x in trsrules)
+    assert any(isinstance(x, icu.AnnualTimeZoneRule) for x in trsrules)
 
     # UBool icu::BasicTimeZone::hasEquivalentTransitions(
     #       const BasicTimeZone &tz,
@@ -101,8 +92,8 @@ def test_basic_time_zone():
     # )
     # From icu/source/test/intltest/tzrulets.cpp:
     # TimeZoneRuleTest::TestHasEquivalentTransitions()
-    zone5 = TimeZone.create_time_zone("America/New_York")
-    zone6 = TimeZone.create_time_zone("America/Indiana/Indianapolis")
+    zone5 = icu.TimeZone.create_time_zone("America/New_York")
+    zone6 = icu.TimeZone.create_time_zone("America/Indiana/Indianapolis")
     start = 1104537600000.0  # 2005-01-01T00:00:00Z
     end = 1262304000000.0  # 2010-01-01T00:00:00Z
     assert zone5.has_equivalent_transitions(zone6, start, end, True) is False
@@ -110,9 +101,9 @@ def test_basic_time_zone():
     assert zone5.has_equivalent_transitions(zone6, start, end, True) is True
 
 
-def test_basic_time_zone_get_offset():
-    zone = TimeZone.create_time_zone("America/Los_Angeles")
-    assert isinstance(zone, BasicTimeZone)
+def test_basic_time_zone_get_offset() -> None:
+    zone = icu.TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone, icu.BasicTimeZone)
 
     # [1]
     # void icu::TimeZone::getOffset(
@@ -127,14 +118,12 @@ def test_basic_time_zone_get_offset():
     assert dst_offset == 0
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_basic_time_zone_get_offset_from_local():
-    from icupy.icu import UTimeZoneLocalOption
-
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_basic_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
-    zone = TimeZone.create_time_zone("America/Los_Angeles")
-    assert isinstance(zone, BasicTimeZone)
+    zone = icu.TimeZone.create_time_zone("America/Los_Angeles")
+    assert isinstance(zone, icu.BasicTimeZone)
 
     # void icu::BasicTimeZone::getOffsetFromLocal(
     #       UDate date,
@@ -147,80 +136,74 @@ def test_basic_time_zone_get_offset_from_local():
     date = 1143941400000  # 2006-04-02T01:30:00Z
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
     )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
 
-def test_rule_based_time_zone():
-    assert issubclass(RuleBasedTimeZone, BasicTimeZone)
-    assert issubclass(RuleBasedTimeZone, TimeZone)
-    initial_rule1 = InitialTimeZoneRule("STD", 0, 0)
-    initial_rule2 = InitialTimeZoneRule("STD", 5 * HOUR, 0)
+def test_rule_based_time_zone() -> None:
+    assert issubclass(icu.RuleBasedTimeZone, icu.BasicTimeZone)
+    assert issubclass(icu.RuleBasedTimeZone, icu.TimeZone)
+    initial_rule1 = icu.InitialTimeZoneRule("STD", 0, 0)
+    initial_rule2 = icu.InitialTimeZoneRule("STD", 5 * HOUR, 0)
 
     # [1]
     # icu::RuleBasedTimeZone::RuleBasedTimeZone(
     #       const UnicodeString &id,
     #       InitialTimeZoneRule *initialRule
     # )
-    zone1 = RuleBasedTimeZone(UnicodeString("r1"), initial_rule1)
-    dr11 = DateTimeRule(
-        UCalendarMonths.UCAL_JULY,
+    zone1 = icu.RuleBasedTimeZone(icu.UnicodeString("r1"), initial_rule1)
+    dr11 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_JULY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr11 = AnnualTimeZoneRule(
-        "r1(STD)", 0, 0, dr11, 0, AnnualTimeZoneRule.MAX_YEAR
-    )
+    tzr11 = icu.AnnualTimeZoneRule("r1(STD)", 0, 0, dr11, 0, icu.AnnualTimeZoneRule.MAX_YEAR)
     zone1.add_transition_rule(tzr11)
-    dr12 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY,
+    dr12 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_JANUARY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr12 = AnnualTimeZoneRule(
-        "r1(DST)", 0, 1 * HOUR, dr12, 0, AnnualTimeZoneRule.MAX_YEAR
+    tzr12 = icu.AnnualTimeZoneRule(
+        "r1(DST)", 0, 1 * HOUR, dr12, 0, icu.AnnualTimeZoneRule.MAX_YEAR
     )
     zone1.add_transition_rule(tzr12)
     zone1.complete()
 
-    zone2 = RuleBasedTimeZone(UnicodeString("r2"), initial_rule2)
-    dr21 = DateTimeRule(
-        UCalendarMonths.UCAL_OCTOBER,
+    zone2 = icu.RuleBasedTimeZone(icu.UnicodeString("r2"), initial_rule2)
+    dr21 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         5 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr21 = AnnualTimeZoneRule("r2(STD)", 5 * HOUR, 0, dr21, 2000, 2010)
+    tzr21 = icu.AnnualTimeZoneRule("r2(STD)", 5 * HOUR, 0, dr21, 2000, 2010)
     zone2.add_transition_rule(tzr21)
-    dr22 = DateTimeRule(
-        UCalendarMonths.UCAL_MARCH,
+    dr22 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_MARCH,
         -1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr22 = AnnualTimeZoneRule("r2(DST)", 5 * HOUR, 1 * HOUR, dr22, 2000, 2010)
+    tzr22 = icu.AnnualTimeZoneRule("r2(DST)", 5 * HOUR, 1 * HOUR, dr22, 2000, 2010)
     zone2.add_transition_rule(tzr22)
-    dr23 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY, 1, 0, DateTimeRule.WALL_TIME
-    )
-    tzr23 = AnnualTimeZoneRule(
-        "r2(STD)", 6 * HOUR, 0, dr23, 2011, AnnualTimeZoneRule.MAX_YEAR
+    dr23 = icu.DateTimeRule(icu.UCalendarMonths.UCAL_JANUARY, 1, 0, icu.DateTimeRule.WALL_TIME)
+    tzr23 = icu.AnnualTimeZoneRule(
+        "r2(STD)", 6 * HOUR, 0, dr23, 2011, icu.AnnualTimeZoneRule.MAX_YEAR
     )
     zone2.add_transition_rule(tzr23)
-    dr24 = DateTimeRule(
-        UCalendarMonths.UCAL_JANUARY, 1, 1, DateTimeRule.WALL_TIME
-    )
-    tzr24 = AnnualTimeZoneRule(
-        "r2(DST)", 6 * HOUR, 0, dr24, 2011, AnnualTimeZoneRule.MAX_YEAR
+    dr24 = icu.DateTimeRule(icu.UCalendarMonths.UCAL_JANUARY, 1, 1, icu.DateTimeRule.WALL_TIME)
+    tzr24 = icu.AnnualTimeZoneRule(
+        "r2(DST)", 6 * HOUR, 0, dr24, 2011, icu.AnnualTimeZoneRule.MAX_YEAR
     )
     zone2.add_transition_rule(tzr24)
     zone2.complete()
@@ -229,11 +212,11 @@ def test_rule_based_time_zone():
     # icu::RuleBasedTimeZone::RuleBasedTimeZone(
     #       const RuleBasedTimeZone &source
     # )
-    zone3 = RuleBasedTimeZone(zone2)
+    zone3 = icu.RuleBasedTimeZone(zone2)
 
     # RuleBasedTimeZone *icu::RuleBasedTimeZone::clone()
     zone2a = zone2.clone()
-    assert isinstance(zone2a, RuleBasedTimeZone)
+    assert isinstance(zone2a, icu.RuleBasedTimeZone)
     assert zone2a == zone2
 
     zone2b = copy.copy(zone2)
@@ -261,9 +244,9 @@ def test_rule_based_time_zone():
     assert zone2.get_dst_savings() == 0
 
     # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
-    id_ = UnicodeString()
+    id_ = icu.UnicodeString()
     result = zone1.get_id(id_)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id_)
     assert result == "r1"
 
@@ -273,7 +256,7 @@ def test_rule_based_time_zone():
     #       TimeZoneTransition &result
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
-    tzt = TimeZoneTransition()
+    tzt = icu.TimeZoneTransition()
     assert zone1.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
@@ -297,20 +280,20 @@ def test_rule_based_time_zone():
     #       UErrorCode &status
     # )
     initial, std, dst = zone1.get_simple_rules_near(0)
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == 0
     assert initial.get_dst_savings() == 1 * HOUR
-    assert isinstance(std, AnnualTimeZoneRule)
+    assert isinstance(std, icu.AnnualTimeZoneRule)
     assert std.get_raw_offset() == 0
     assert std.get_dst_savings() == 0
     dr = std.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JULY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JULY
     assert dr.get_rule_day_of_month() == 0
-    assert isinstance(dst, AnnualTimeZoneRule)
+    assert isinstance(dst, icu.AnnualTimeZoneRule)
     assert dst.get_raw_offset() == 0
     assert dst.get_dst_savings() == 1 * HOUR
     dr = dst.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JANUARY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JANUARY
     assert dr.get_rule_day_of_month() == 0
 
     # void icu::BasicTimeZone::getTimeZoneRules(
@@ -320,12 +303,12 @@ def test_rule_based_time_zone():
     #       UErrorCode &status
     # )
     initial, trsrules = zone2.get_time_zone_rules()
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == 5 * HOUR
     assert initial.get_dst_savings() == 0
     assert isinstance(trsrules, list)
     assert len(trsrules) == 4
-    assert all(isinstance(x, AnnualTimeZoneRule) for x in trsrules)
+    assert all(isinstance(x, icu.AnnualTimeZoneRule) for x in trsrules)
     assert trsrules[0] == tzr21
     assert trsrules[1] == tzr22
     assert trsrules[2] == tzr23
@@ -348,7 +331,7 @@ def test_rule_based_time_zone():
     assert zone2.has_same_rules(zone3) is True
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
-    zone1.set_id(UnicodeString("abc"))
+    zone1.set_id(icu.UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
@@ -362,35 +345,35 @@ def test_rule_based_time_zone():
     assert zone2.use_daylight_time() is False
 
 
-def test_rule_based_time_zone_get_offset():
-    initial_rule = InitialTimeZoneRule("r1(STD)", 8 * HOUR, 0)
-    zone = RuleBasedTimeZone("r1", initial_rule)
-    dr1 = DateTimeRule(
-        UCalendarMonths.UCAL_OCTOBER,
+def test_rule_based_time_zone_get_offset() -> None:
+    initial_rule = icu.InitialTimeZoneRule("r1(STD)", 8 * HOUR, 0)
+    zone = icu.RuleBasedTimeZone("r1", initial_rule)
+    dr1 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr1 = AnnualTimeZoneRule(
-        "r1(STD)", 8 * HOUR, 0, dr1, 0, AnnualTimeZoneRule.MAX_YEAR
+    tzr1 = icu.AnnualTimeZoneRule(
+        "r1(STD)", 8 * HOUR, 0, dr1, 0, icu.AnnualTimeZoneRule.MAX_YEAR
     )
     zone.add_transition_rule(tzr1)
-    dr2 = DateTimeRule(
-        UCalendarMonths.UCAL_APRIL,
+    dr2 = icu.DateTimeRule(
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         True,
         2 * HOUR,
-        DateTimeRule.WALL_TIME,
+        icu.DateTimeRule.WALL_TIME,
     )
-    tzr2 = AnnualTimeZoneRule(
+    tzr2 = icu.AnnualTimeZoneRule(
         "r1(DST)",
         8 * HOUR,
         int(0.5 * HOUR),
         dr2,
         0,
-        AnnualTimeZoneRule.MAX_YEAR,
+        icu.AnnualTimeZoneRule.MAX_YEAR,
     )
     zone.add_transition_rule(tzr2)
     zone.complete()
@@ -420,11 +403,11 @@ def test_rule_based_time_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
             28,
         )
@@ -443,57 +426,55 @@ def test_rule_based_time_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
         )
         == 8.5 * HOUR
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_rule_based_time_zone_get_offset_from_local():
-    from icupy.icu import UTimeZoneLocalOption
-
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_rule_based_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
-    zone = RuleBasedTimeZone(
+    zone = icu.RuleBasedTimeZone(
         "Rule based Pacific Time",
-        InitialTimeZoneRule("Pacific Standard Time", -8 * HOUR, 0),
+        icu.InitialTimeZoneRule("Pacific Standard Time", -8 * HOUR, 0),
     )
     zone.add_transition_rule(
-        AnnualTimeZoneRule(
+        icu.AnnualTimeZoneRule(
             "Pacific Daylight Time",
             -8 * HOUR,
             1 * HOUR,
-            DateTimeRule(
-                UCalendarMonths.UCAL_APRIL,
+            icu.DateTimeRule(
+                icu.UCalendarMonths.UCAL_APRIL,
                 1,
-                UCalendarDaysOfWeek.UCAL_SUNDAY,
+                icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
                 2 * HOUR,
-                DateTimeRule.WALL_TIME,
+                icu.DateTimeRule.WALL_TIME,
             ),
             2000,
-            AnnualTimeZoneRule.MAX_YEAR,
+            icu.AnnualTimeZoneRule.MAX_YEAR,
         )
     )
     zone.add_transition_rule(
-        AnnualTimeZoneRule(
+        icu.AnnualTimeZoneRule(
             "Pacific Standard Time",
             -8 * HOUR,
             0,
-            DateTimeRule(
-                UCalendarMonths.UCAL_OCTOBER,
+            icu.DateTimeRule(
+                icu.UCalendarMonths.UCAL_OCTOBER,
                 -1,
-                UCalendarDaysOfWeek.UCAL_SUNDAY,
+                icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
                 2 * HOUR,
-                DateTimeRule.WALL_TIME,
+                icu.DateTimeRule.WALL_TIME,
             ),
             2000,
-            AnnualTimeZoneRule.MAX_YEAR,
+            icu.AnnualTimeZoneRule.MAX_YEAR,
         )
     )
     zone.complete()
@@ -509,23 +490,23 @@ def test_rule_based_time_zone_get_offset_from_local():
     date = 1143941400000  # 2006-04-02T01:30:00Z
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
     )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
 
-def test_simple_time_zone():
-    assert issubclass(SimpleTimeZone, BasicTimeZone)
-    assert issubclass(SimpleTimeZone, TimeZone)
+def test_simple_time_zone() -> None:
+    assert issubclass(icu.SimpleTimeZone, icu.BasicTimeZone)
+    assert issubclass(icu.SimpleTimeZone, icu.TimeZone)
 
     # [2]
     # icu::SimpleTimeZone::SimpleTimeZone(
     #       int32_t rawOffsetGMT,
     #       const UnicodeString &ID
     # )
-    zone2 = SimpleTimeZone(8 * HOUR, UnicodeString("s2"))
+    zone2 = icu.SimpleTimeZone(8 * HOUR, icu.UnicodeString("s2"))
 
     # [3]
     # icu::SimpleTimeZone::SimpleTimeZone(
@@ -541,16 +522,16 @@ def test_simple_time_zone():
     #       int32_t savingsEndTime,
     #       UErrorCode &status
     # )
-    zone3 = SimpleTimeZone(
+    zone3 = icu.SimpleTimeZone(
         0,
-        UnicodeString("s3"),
-        UCalendarMonths.UCAL_JANUARY,
+        icu.UnicodeString("s3"),
+        icu.UCalendarMonths.UCAL_JANUARY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        UCalendarMonths.UCAL_JULY,
+        icu.UCalendarMonths.UCAL_JULY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
     )
 
@@ -569,16 +550,16 @@ def test_simple_time_zone():
     #       int32_t savingsDST,
     #       UErrorCode &status
     # )
-    zone4 = SimpleTimeZone(
+    zone4 = icu.SimpleTimeZone(
         -5 * HOUR,
-        UnicodeString("s4"),
-        UCalendarMonths.UCAL_MARCH,
+        icu.UnicodeString("s4"),
+        icu.UCalendarMonths.UCAL_MARCH,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        UCalendarMonths.UCAL_SEPTEMBER,
+        icu.UCalendarMonths.UCAL_SEPTEMBER,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
         int(0.5 * HOUR),
     )
@@ -600,29 +581,29 @@ def test_simple_time_zone():
     #       int32_t savingsDST,
     #       UErrorCode &status
     # )
-    zone5 = SimpleTimeZone(
+    zone5 = icu.SimpleTimeZone(
         8 * HOUR,
-        UnicodeString("s5"),
-        UCalendarMonths.UCAL_APRIL,
+        icu.UnicodeString("s5"),
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
         -1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.SimpleTimeZone.WALL_TIME,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
         1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
+        icu.SimpleTimeZone.WALL_TIME,
         int(0.5 * HOUR),
     )
 
     # [1]
     # icu::SimpleTimeZone::SimpleTimeZone(const SimpleTimeZone &source)
-    zone1 = SimpleTimeZone(zone5)
+    zone1 = icu.SimpleTimeZone(zone5)
 
     # SimpleTimeZone *icu::SimpleTimeZone::clone()
     zone1a = zone1.clone()
-    assert isinstance(zone1a, SimpleTimeZone)
+    assert isinstance(zone1a, icu.SimpleTimeZone)
     assert zone1a == zone1
 
     zone1b = copy.copy(zone1)
@@ -670,9 +651,9 @@ def test_simple_time_zone():
     assert zone5.get_dst_savings() == 0.5 * HOUR
 
     # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
-    id_ = UnicodeString()
+    id_ = icu.UnicodeString()
     result = zone1.get_id(id_)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id_)
     assert result == "s5"
 
@@ -682,7 +663,7 @@ def test_simple_time_zone():
     #       TimeZoneTransition &result
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
-    tzt = TimeZoneTransition()
+    tzt = icu.TimeZoneTransition()
     assert zone3.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
@@ -709,27 +690,27 @@ def test_simple_time_zone():
     #       UErrorCode &status
     # )
     initial, std, dst = zone2.get_simple_rules_near(0)
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == 8 * HOUR
     assert initial.get_dst_savings() == 0
     assert std is None
     assert dst is None
 
     initial, std, dst = zone4.get_simple_rules_near(0)
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == -5 * HOUR
     assert initial.get_dst_savings() == 0.5 * HOUR
-    assert isinstance(std, AnnualTimeZoneRule)
+    assert isinstance(std, icu.AnnualTimeZoneRule)
     assert std.get_raw_offset() == -5 * HOUR
     assert std.get_dst_savings() == 0
     dr = std.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_SEPTEMBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_SEPTEMBER
     assert dr.get_rule_day_of_month() == 0
-    assert isinstance(dst, AnnualTimeZoneRule)
+    assert isinstance(dst, icu.AnnualTimeZoneRule)
     assert dst.get_raw_offset() == -5 * HOUR
     assert dst.get_dst_savings() == 0.5 * HOUR
     dr = dst.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_MARCH
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_MARCH
     assert dr.get_rule_day_of_month() == 0
 
     # void icu::BasicTimeZone::getTimeZoneRules(
@@ -739,28 +720,28 @@ def test_simple_time_zone():
     #       UErrorCode &status
     # )
     initial, trsrules = zone2.get_time_zone_rules()
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == 8 * HOUR
     assert initial.get_dst_savings() == 0
     assert isinstance(trsrules, list)
     assert len(trsrules) == 0
 
     initial, trsrules = zone4.get_time_zone_rules()
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == -5 * HOUR
     assert initial.get_dst_savings() == 0
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
-    assert all(isinstance(x, AnnualTimeZoneRule) for x in trsrules)
+    assert all(isinstance(x, icu.AnnualTimeZoneRule) for x in trsrules)
     assert trsrules[0].get_raw_offset() == -5 * HOUR
     assert trsrules[0].get_dst_savings() == 0
     dr = trsrules[0].get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_SEPTEMBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_SEPTEMBER
     assert dr.get_rule_day_of_month() == 0
     assert trsrules[1].get_raw_offset() == -5 * HOUR
     assert trsrules[1].get_dst_savings() == 0.5 * HOUR
     dr = trsrules[1].get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_MARCH
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_MARCH
     assert dr.get_rule_day_of_month() == 0
 
     # UBool icu::BasicTimeZone::hasEquivalentTransitions(
@@ -789,7 +770,7 @@ def test_simple_time_zone():
     assert zone2.get_dst_savings() == 0.5 * HOUR
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
-    zone1.set_id(UnicodeString("abc"))
+    zone1.set_id(icu.UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
@@ -820,20 +801,20 @@ def test_simple_time_zone():
     assert zone5.use_daylight_time() is True
 
 
-def test_simple_time_zone_get_offset():
-    zone = SimpleTimeZone(
+def test_simple_time_zone_get_offset() -> None:
+    zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
-        UCalendarMonths.UCAL_APRIL,
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
         -1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.SimpleTimeZone.WALL_TIME,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
         1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
+        icu.SimpleTimeZone.WALL_TIME,
         int(0.5 * HOUR),
     )
 
@@ -861,11 +842,11 @@ def test_simple_time_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
         )
         == 8.5 * HOUR
@@ -885,11 +866,11 @@ def test_simple_time_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
             28,
             28,
@@ -910,11 +891,11 @@ def test_simple_time_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
             28,
         )
@@ -922,22 +903,20 @@ def test_simple_time_zone_get_offset():
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_simple_time_zone_get_offset_from_local():
-    from icupy.icu import UTimeZoneLocalOption
-
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_simple_time_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
-    zone = SimpleTimeZone(
+    zone = icu.SimpleTimeZone(
         -8 * HOUR,
         "Simple Pacific Time",
-        UCalendarMonths.UCAL_APRIL,
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         2 * HOUR,
     )
 
@@ -952,27 +931,27 @@ def test_simple_time_zone_get_offset_from_local():
     date = 1143941400000  # 2006-04-02T01:30:00Z
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
     )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0
 
 
-def test_simple_time_zone_set_end_rule():
-    zone = SimpleTimeZone(
+def test_simple_time_zone_set_end_rule() -> None:
+    zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
-        UCalendarMonths.UCAL_APRIL,
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
         -1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.SimpleTimeZone.WALL_TIME,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
         1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
+        icu.SimpleTimeZone.WALL_TIME,
         int(0.5 * HOUR),
     )
 
@@ -987,24 +966,24 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_DECEMBER,
+        icu.UCalendarMonths.UCAL_DECEMBER,
         31,
-        UCalendarDaysOfWeek.UCAL_SATURDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SATURDAY,
         6 * HOUR,
-        SimpleTimeZone.UTC_TIME,
+        icu.SimpleTimeZone.UTC_TIME,
         True,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SATURDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_SATURDAY
     assert dr.get_rule_millis_in_day() == 6 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_DECEMBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_DECEMBER
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [2]
     # void icu::SimpleTimeZone::setEndRule(
@@ -1016,9 +995,9 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         31,
-        UCalendarDaysOfWeek.UCAL_FRIDAY,
+        icu.UCalendarDaysOfWeek.UCAL_FRIDAY,
         5 * HOUR,
         True,
     )
@@ -1026,13 +1005,13 @@ def test_simple_time_zone_set_end_rule():
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_FRIDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_FRIDAY
     assert dr.get_rule_millis_in_day() == 5 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_OCTOBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_OCTOBER
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [3]
     # void icu::SimpleTimeZone::setEndRule(
@@ -1043,19 +1022,22 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_SEPTEMBER, 30, 4 * HOUR, SimpleTimeZone.UTC_TIME
+        icu.UCalendarMonths.UCAL_SEPTEMBER,
+        30,
+        4 * HOUR,
+        icu.SimpleTimeZone.UTC_TIME,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 30
     assert dr.get_rule_day_of_week() == 0
     assert dr.get_rule_millis_in_day() == 4 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_SEPTEMBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_SEPTEMBER
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [4]
     # void icu::SimpleTimeZone::setEndRule(
@@ -1064,18 +1046,18 @@ def test_simple_time_zone_set_end_rule():
     #       int32_t time,
     #       UErrorCode &status
     # )
-    zone.set_end_rule(UCalendarMonths.UCAL_AUGUST, 31, 3 * HOUR)
+    zone.set_end_rule(icu.UCalendarMonths.UCAL_AUGUST, 31, 3 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 31
     assert dr.get_rule_day_of_week() == 0
     assert dr.get_rule_millis_in_day() == 3 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_AUGUST
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_AUGUST
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [5]
     # void icu::SimpleTimeZone::setEndRule(
@@ -1087,23 +1069,23 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_JULY,
+        icu.UCalendarMonths.UCAL_JULY,
         -1,
-        UCalendarDaysOfWeek.UCAL_THURSDAY,
+        icu.UCalendarDaysOfWeek.UCAL_THURSDAY,
         2 * HOUR,
-        SimpleTimeZone.UTC_TIME,
+        icu.SimpleTimeZone.UTC_TIME,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_THURSDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_THURSDAY
     assert dr.get_rule_millis_in_day() == 2 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JULY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JULY
     assert dr.get_rule_week_in_month() == -1
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [6]
     # void icu::SimpleTimeZone::setEndRule(
@@ -1114,38 +1096,38 @@ def test_simple_time_zone_set_end_rule():
     #       UErrorCode &status
     # )
     zone.set_end_rule(
-        UCalendarMonths.UCAL_JUNE,
+        icu.UCalendarMonths.UCAL_JUNE,
         2,
-        UCalendarDaysOfWeek.UCAL_WEDNESDAY,
+        icu.UCalendarDaysOfWeek.UCAL_WEDNESDAY,
         1 * HOUR,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[0].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_WEDNESDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_WEDNESDAY
     assert dr.get_rule_millis_in_day() == 1 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JUNE
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JUNE
     assert dr.get_rule_week_in_month() == 2
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
 
-def test_simple_time_zone_set_start_rule():
-    zone = SimpleTimeZone(
+def test_simple_time_zone_set_start_rule() -> None:
+    zone = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
-        UCalendarMonths.UCAL_APRIL,
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
         -1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.SimpleTimeZone.WALL_TIME,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
         1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
+        icu.SimpleTimeZone.WALL_TIME,
         int(0.5 * HOUR),
     )
 
@@ -1160,24 +1142,24 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_JANUARY,
+        icu.UCalendarMonths.UCAL_JANUARY,
         31,
-        UCalendarDaysOfWeek.UCAL_SATURDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SATURDAY,
         1 * HOUR,
-        SimpleTimeZone.UTC_TIME,
+        icu.SimpleTimeZone.UTC_TIME,
         True,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 31
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_SATURDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_SATURDAY
     assert dr.get_rule_millis_in_day() == 1 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JANUARY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JANUARY
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [2]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1189,9 +1171,9 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_FEBRUARY,
+        icu.UCalendarMonths.UCAL_FEBRUARY,
         28,
-        UCalendarDaysOfWeek.UCAL_FRIDAY,
+        icu.UCalendarDaysOfWeek.UCAL_FRIDAY,
         2 * HOUR,
         True,
     )
@@ -1199,13 +1181,13 @@ def test_simple_time_zone_set_start_rule():
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW_GEQ_DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW_GEQ_DOM
     assert dr.get_rule_day_of_month() == 28
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_FRIDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_FRIDAY
     assert dr.get_rule_millis_in_day() == 2 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_FEBRUARY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_FEBRUARY
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [3]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1216,19 +1198,22 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_MARCH, 31, 3 * HOUR, SimpleTimeZone.UTC_TIME
+        icu.UCalendarMonths.UCAL_MARCH,
+        31,
+        3 * HOUR,
+        icu.SimpleTimeZone.UTC_TIME,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 31
     assert dr.get_rule_day_of_week() == 0
     assert dr.get_rule_millis_in_day() == 3 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_MARCH
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_MARCH
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [4]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1237,18 +1222,18 @@ def test_simple_time_zone_set_start_rule():
     #       int32_t time,
     #       UErrorCode &status
     # )
-    zone.set_start_rule(UCalendarMonths.UCAL_APRIL, 30, 4 * HOUR)
+    zone.set_start_rule(icu.UCalendarMonths.UCAL_APRIL, 30, 4 * HOUR)
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOM
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOM
     assert dr.get_rule_day_of_month() == 30
     assert dr.get_rule_day_of_week() == 0
     assert dr.get_rule_millis_in_day() == 4 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_APRIL
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_APRIL
     assert dr.get_rule_week_in_month() == 0
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
     # [5]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1260,23 +1245,23 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_MAY,
+        icu.UCalendarMonths.UCAL_MAY,
         -1,
-        UCalendarDaysOfWeek.UCAL_THURSDAY,
+        icu.UCalendarDaysOfWeek.UCAL_THURSDAY,
         5 * HOUR,
-        SimpleTimeZone.UTC_TIME,
+        icu.SimpleTimeZone.UTC_TIME,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_THURSDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_THURSDAY
     assert dr.get_rule_millis_in_day() == 5 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_MAY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_MAY
     assert dr.get_rule_week_in_month() == -1
-    assert dr.get_time_rule_type() == DateTimeRule.UTC_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.UTC_TIME
 
     # [6]
     # void icu::SimpleTimeZone::setStartRule(
@@ -1287,56 +1272,56 @@ def test_simple_time_zone_set_start_rule():
     #       UErrorCode &status
     # )
     zone.set_start_rule(
-        UCalendarMonths.UCAL_JUNE,
+        icu.UCalendarMonths.UCAL_JUNE,
         2,
-        UCalendarDaysOfWeek.UCAL_WEDNESDAY,
+        icu.UCalendarDaysOfWeek.UCAL_WEDNESDAY,
         6 * HOUR,
     )
     _, trsrules = zone.get_time_zone_rules()
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
     dr = trsrules[1].get_rule()
-    assert dr.get_date_rule_type() == DateTimeRule.DOW
+    assert dr.get_date_rule_type() == icu.DateTimeRule.DOW
     assert dr.get_rule_day_of_month() == 0
-    assert dr.get_rule_day_of_week() == UCalendarDaysOfWeek.UCAL_WEDNESDAY
+    assert dr.get_rule_day_of_week() == icu.UCalendarDaysOfWeek.UCAL_WEDNESDAY
     assert dr.get_rule_millis_in_day() == 6 * HOUR
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JUNE
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JUNE
     assert dr.get_rule_week_in_month() == 2
-    assert dr.get_time_rule_type() == DateTimeRule.WALL_TIME
+    assert dr.get_time_rule_type() == icu.DateTimeRule.WALL_TIME
 
 
-def test_time_zone():
-    id_ = UnicodeString("PST")
+def test_time_zone() -> None:
+    id_ = icu.UnicodeString("PST")
 
     # static TimeZone *icu::TimeZone::createDefault(void)
-    zone1 = TimeZone.create_default()
-    assert isinstance(zone1, BasicTimeZone)
+    zone1 = icu.TimeZone.create_default()
+    assert isinstance(zone1, icu.BasicTimeZone)
 
     # static TimeZone *icu::TimeZone::createTimeZone(const UnicodeString &ID)
-    zone2 = TimeZone.create_time_zone(id_)
-    assert isinstance(zone2, BasicTimeZone)
+    zone2 = icu.TimeZone.create_time_zone(id_)
+    assert isinstance(zone2, icu.BasicTimeZone)
 
-    zone3 = TimeZone.create_time_zone("PST")
-    assert isinstance(zone3, BasicTimeZone)
+    zone3 = icu.TimeZone.create_time_zone("PST")
+    assert isinstance(zone3, icu.BasicTimeZone)
     assert not (zone2 != zone3)
     assert zone2 == zone3
 
     # static const TimeZone *icu::TimeZone::getGMT(void)
-    zone4 = TimeZone.get_gmt()
-    assert isinstance(zone4, BasicTimeZone)
+    zone4 = icu.TimeZone.get_gmt()
+    assert isinstance(zone4, icu.BasicTimeZone)
 
     # static void icu::TimeZone::setDefault(const TimeZone &zone)
-    TimeZone.set_default(zone1)
+    icu.TimeZone.set_default(zone1)
 
     # static int32_t icu::TimeZone::countEquivalentIDs(const UnicodeString &id)
-    n = TimeZone.count_equivalent_ids(id_)
+    n = icu.TimeZone.count_equivalent_ids(id_)
     assert n > 0
-    ids = [TimeZone.get_equivalent_id(id_, i) for i in range(n)]
-    assert all(isinstance(x, UnicodeString) for x in ids)
+    ids = [icu.TimeZone.get_equivalent_id(id_, i) for i in range(n)]
+    assert all(isinstance(x, icu.UnicodeString) for x in ids)
     assert "America/Los_Angeles" in ids
 
-    assert TimeZone.count_equivalent_ids("PST") == n
-    id2 = TimeZone.get_equivalent_id("PST", 0)
+    assert icu.TimeZone.count_equivalent_ids("PST") == n
+    id2 = icu.TimeZone.get_equivalent_id("PST", 0)
     assert ids[0] == id2
 
     # static StringEnumeration *icu::TimeZone::createTimeZoneIDEnumeration(
@@ -1345,29 +1330,29 @@ def test_time_zone():
     #       const int32_t *rawOffset,
     #       UErrorCode &ec
     # )
-    it5 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, None
+    it5 = icu.TimeZone.create_time_zone_id_enumeration(
+        icu.USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, None
     )
-    assert isinstance(it5, StringEnumeration)
+    assert isinstance(it5, icu.StringEnumeration)
     assert len(it5) > 0
 
-    it6 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", None
+    it6 = icu.TimeZone.create_time_zone_id_enumeration(
+        icu.USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", None
     )
-    assert isinstance(it6, StringEnumeration)
+    assert isinstance(it6, icu.StringEnumeration)
     assert len(it6) > 0
 
     raw_offset = -8 * HOUR
-    it7 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, raw_offset
+    it7 = icu.TimeZone.create_time_zone_id_enumeration(
+        icu.USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, None, raw_offset
     )
-    assert isinstance(it7, StringEnumeration)
+    assert isinstance(it7, icu.StringEnumeration)
     assert len(it7) > 0
 
-    it8 = TimeZone.create_time_zone_id_enumeration(
-        USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", raw_offset
+    it8 = icu.TimeZone.create_time_zone_id_enumeration(
+        icu.USystemTimeZoneType.UCAL_ZONE_TYPE_ANY, "US", raw_offset
     )
-    assert isinstance(it8, StringEnumeration)
+    assert isinstance(it8, icu.StringEnumeration)
     assert len(it8) > 0
 
     assert len(it5) > len(it6) > len(it7) > len(it8)
@@ -1380,29 +1365,29 @@ def test_time_zone():
     #       UBool &isSystemID,
     #       UErrorCode &status
     # )
-    canonical_id = UnicodeString()
-    result, is_system_id = TimeZone.get_canonical_id(id_, canonical_id)
-    assert isinstance(result, UnicodeString)
+    canonical_id = icu.UnicodeString()
+    result, is_system_id = icu.TimeZone.get_canonical_id(id_, canonical_id)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
     assert is_system_id is True
 
     canonical_id.remove()
-    result, is_system_id = TimeZone.get_canonical_id("PST", canonical_id)
+    result, is_system_id = icu.TimeZone.get_canonical_id("PST", canonical_id)
     assert id(result) == id(canonical_id)
     assert canonical_id == "America/Los_Angeles"
     assert is_system_id is True
 
-    locale = Locale.get_english()
+    locale = icu.Locale.get_english()
 
     # [1]
     # UnicodeString &icu::TimeZone::getDisplayName(
     #       const Locale &locale,
     #       UnicodeString &result
     # )
-    result = UnicodeString()
+    result = icu.UnicodeString()
     output = zone2.get_display_name(locale, result)
-    assert isinstance(output, UnicodeString)
+    assert isinstance(output, icu.UnicodeString)
     assert id(output) == id(result)
     assert result == "Pacific Standard Time"
     assert zone2.get_display_name("en", result) == "Pacific Standard Time"
@@ -1414,13 +1399,12 @@ def test_time_zone():
     #       const Locale &locale,
     #       UnicodeString &result
     # )
-    output = zone2.get_display_name(True, TimeZone.LONG, locale, result)
-    assert isinstance(output, UnicodeString)
+    output = zone2.get_display_name(True, icu.TimeZone.LONG, locale, result)
+    assert isinstance(output, icu.UnicodeString)
     assert id(output) == id(result)
     assert result == "Pacific Daylight Time"
     assert (
-        zone2.get_display_name(True, TimeZone.LONG, "en", result)
-        == "Pacific Daylight Time"
+        zone2.get_display_name(True, icu.TimeZone.LONG, "en", result) == "Pacific Daylight Time"
     )
 
     # [3]
@@ -1429,27 +1413,27 @@ def test_time_zone():
     #       EDisplayType style,
     #       UnicodeString &result
     # )
-    output = zone2.get_display_name(True, TimeZone.LONG_GMT, result)
-    assert isinstance(output, UnicodeString)
+    output = zone2.get_display_name(True, icu.TimeZone.LONG_GMT, result)
+    assert isinstance(output, icu.UnicodeString)
     assert id(output) == id(result)
     assert result == "GMT-07:00"
 
     # [4]
     # UnicodeString &icu::TimeZone::getDisplayName(UnicodeString &result)
     output = zone2.get_display_name(result)
-    assert isinstance(output, UnicodeString)
+    assert isinstance(output, icu.UnicodeString)
     assert id(output) == id(result)
     assert len(result) > 0
 
     # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
-    id2 = UnicodeString()
+    id2 = icu.UnicodeString()
     result = zone2.get_id(id2)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id2)
     assert id2 == "PST"
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
-    zone2.set_id(UnicodeString("America/Los_Angeles"))
+    zone2.set_id(icu.UnicodeString("America/Los_Angeles"))
     zone2.get_id(id2)
     assert id2 == "America/Los_Angeles"
 
@@ -1464,24 +1448,24 @@ def test_time_zone():
     #       int32_t capacity,
     #       UErrorCode &status
     # )
-    region = TimeZone.get_region(id_)
+    region = icu.TimeZone.get_region(id_)
     assert isinstance(region, str)
     assert region == "US"
-    assert TimeZone.get_region("PST") == "US"
+    assert icu.TimeZone.get_region("PST") == "US"
 
     # static const char *icu::TimeZone::getTZDataVersion(UErrorCode &status)
-    result = TimeZone.get_tz_data_version()
+    result = icu.TimeZone.get_tz_data_version()
     assert isinstance(result, str)
     assert len(result) > 0  # e.g., "2020d"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM > 69, reason="ICU4C>69")
-def test_time_zone_create_enumeration_69():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM > 69, reason="ICU4C>69")
+def test_time_zone_create_enumeration_69() -> None:
     # **Deprecated in ICU 70**
     # [1]
     # static StringEnumeration *icu::TimeZone::createEnumeration()
-    it1 = TimeZone.create_enumeration()
-    assert isinstance(it1, StringEnumeration)
+    it1 = icu.TimeZone.create_enumeration()
+    assert isinstance(it1, icu.StringEnumeration)
     assert len(it1) > 0
 
     # **Deprecated in ICU 70**
@@ -1489,12 +1473,12 @@ def test_time_zone_create_enumeration_69():
     # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       const char *country
     # )
-    it2 = TimeZone.create_enumeration(None)
-    assert isinstance(it2, StringEnumeration)
+    it2 = icu.TimeZone.create_enumeration(None)
+    assert isinstance(it2, icu.StringEnumeration)
     assert len(it2) > 0
 
-    it3 = TimeZone.create_enumeration("US")
-    assert isinstance(it3, StringEnumeration)
+    it3 = icu.TimeZone.create_enumeration("US")
+    assert isinstance(it3, icu.StringEnumeration)
     assert len(it3) > 0
 
     # **Deprecated in ICU 70**
@@ -1502,8 +1486,8 @@ def test_time_zone_create_enumeration_69():
     # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       int32_t rawOffset
     # )
-    it4 = TimeZone.create_enumeration(-8 * HOUR)
-    assert isinstance(it4, StringEnumeration)
+    it4 = icu.TimeZone.create_enumeration(-8 * HOUR)
+    assert isinstance(it4, icu.StringEnumeration)
     assert len(it4) > 0
 
     assert len(it1) == len(it2)
@@ -1512,34 +1496,34 @@ def test_time_zone_create_enumeration_69():
     assert "America/Los_Angeles" in it4
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
-def test_time_zone_create_enumeration_70():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 70, reason="ICU4C<70")
+def test_time_zone_create_enumeration_70() -> None:
     # [4]
     # static StringEnumeration *icu::TimeZone::createEnumeration(
     #       UErrorCode &status
     # )
-    it1 = TimeZone.create_enumeration()
-    assert isinstance(it1, StringEnumeration)
+    it1 = icu.TimeZone.create_enumeration()
+    assert isinstance(it1, icu.StringEnumeration)
     assert len(it1) > 0
 
     # static StringEnumeration *icu::TimeZone::createEnumerationForRawOffset(
     #       int32_t rawOffset,
     #       UErrorCode &status
     # )
-    it4 = TimeZone.create_enumeration_for_raw_offset(-8 * HOUR)
-    assert isinstance(it4, StringEnumeration)
+    it4 = icu.TimeZone.create_enumeration_for_raw_offset(-8 * HOUR)
+    assert isinstance(it4, icu.StringEnumeration)
     assert len(it4) > 0
 
     # static StringEnumeration *icu::TimeZone::createEnumerationForRegion(
     #       const char *region,
     #       UErrorCode &status
     # )
-    it2 = TimeZone.create_enumeration_for_region(None)
-    assert isinstance(it2, StringEnumeration)
+    it2 = icu.TimeZone.create_enumeration_for_region(None)
+    assert isinstance(it2, icu.StringEnumeration)
     assert len(it2) > 0
 
-    it3 = TimeZone.create_enumeration_for_region("US")
-    assert isinstance(it3, StringEnumeration)
+    it3 = icu.TimeZone.create_enumeration_for_region("US")
+    assert isinstance(it3, icu.StringEnumeration)
     assert len(it3) > 0
 
     assert len(it1) == len(it2)
@@ -1548,57 +1532,54 @@ def test_time_zone_create_enumeration_70():
     assert "America/Los_Angeles" in it4
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
-def test_time_zone_detect_host_time_zone():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")
+def test_time_zone_detect_host_time_zone() -> None:
     # static TimeZone *icu::TimeZone::detectHostTimeZone()
-    zone = TimeZone.detect_host_time_zone()
-    assert isinstance(zone, BasicTimeZone)
+    zone = icu.TimeZone.detect_host_time_zone()
+    assert isinstance(zone, icu.BasicTimeZone)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
-def test_time_zone_get_iana_id():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 74, reason="ICU4C<74")
+def test_time_zone_get_iana_id() -> None:
     # static UnicodeString &
     # icu::TimeZone::getIanaID(
     #       const UnicodeString &id,
     #       UnicodeString &ianaID,
     #       UErrorCode &status
     # )
-    iana_id = UnicodeString()
-    result = TimeZone.get_iana_id(UnicodeString("Asia/Calcutta"), iana_id)
-    assert isinstance(result, UnicodeString)
+    iana_id = icu.UnicodeString()
+    result = icu.TimeZone.get_iana_id(icu.UnicodeString("Asia/Calcutta"), iana_id)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(iana_id)
     assert iana_id == "Asia/Kolkata"
 
-    result = TimeZone.get_iana_id("Asia/Calcutta", iana_id)
-    assert isinstance(result, UnicodeString)
+    result = icu.TimeZone.get_iana_id("Asia/Calcutta", iana_id)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(iana_id)
     assert iana_id == "Asia/Kolkata"
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
-def test_time_zone_get_unknown():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 49, reason="ICU4C<49")
+def test_time_zone_get_unknown() -> None:
     # static const TimeZone &icu::TimeZone::getUnknown()
-    zone = TimeZone.get_unknown()
-    assert isinstance(zone, BasicTimeZone)
+    zone = icu.TimeZone.get_unknown()
+    assert isinstance(zone, icu.BasicTimeZone)
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
-def test_time_zone_get_windows_id():
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
+def test_time_zone_get_windows_id() -> None:
     # static UnicodeString &icu::TimeZone::getWindowsID(
     #       const UnicodeString &id,
     #       UnicodeString &winid,
     #       UErrorCode &status
     # )
-    id_ = UnicodeString("America/New_York")
-    winid = UnicodeString()
-    result = TimeZone.get_windows_id(id_, winid)
-    assert isinstance(result, UnicodeString)
+    id_ = icu.UnicodeString("America/New_York")
+    winid = icu.UnicodeString()
+    result = icu.TimeZone.get_windows_id(id_, winid)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(winid)
     assert winid == "Eastern Standard Time"
-    assert (
-        TimeZone.get_windows_id("America/New_York", winid)
-        == "Eastern Standard Time"
-    )
+    assert icu.TimeZone.get_windows_id("America/New_York", winid) == "Eastern Standard Time"
 
     # static UnicodeString &icu::TimeZone::getIDForWindowsID(
     #       const UnicodeString &winid,
@@ -1606,91 +1587,91 @@ def test_time_zone_get_windows_id():
     #       UnicodeString &id,
     #       UErrorCode &status
     # )
-    id_ = UnicodeString()
-    result = TimeZone.get_id_for_windows_id(winid, None, id_)
-    assert isinstance(result, UnicodeString)
+    id_ = icu.UnicodeString()
+    result = icu.TimeZone.get_id_for_windows_id(winid, None, id_)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id_)
     assert id_ == "America/New_York"
     assert (
-        TimeZone.get_id_for_windows_id("Eastern Standard Time", None, id_)
+        icu.TimeZone.get_id_for_windows_id("Eastern Standard Time", None, id_)
         == "America/New_York"
     )
 
-    id_ = UnicodeString()
-    result = TimeZone.get_id_for_windows_id(winid, "CA", id_)
-    assert isinstance(result, UnicodeString)
+    id_ = icu.UnicodeString()
+    result = icu.TimeZone.get_id_for_windows_id(winid, "CA", id_)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id_)
     assert id_ == "America/Toronto"
     assert (
-        TimeZone.get_id_for_windows_id("Eastern Standard Time", "CA", id_)
+        icu.TimeZone.get_id_for_windows_id("Eastern Standard Time", "CA", id_)
         == "America/Toronto"
     )
 
 
-def test_time_zone_has_same_rules():
+def test_time_zone_has_same_rules() -> None:
     # UBool icu::TimeZone::hasSameRules(const TimeZone &other)
     id_ = "Europe/Moscow"
-    otz = TimeZone.create_time_zone(id_)
-    vtz1 = VTimeZone.create_vtime_zone_by_id(id_)
+    otz = icu.TimeZone.create_time_zone(id_)
+    vtz1 = icu.VTimeZone.create_vtime_zone_by_id(id_)
     assert otz.has_same_rules(vtz1) is False
     assert vtz1.has_same_rules(otz) is True
 
-    stz1 = SimpleTimeZone(28800000, "Asia/Singapore")
+    stz1 = icu.SimpleTimeZone(28800000, "Asia/Singapore")
     stz1.set_start_year(1970)
     stz1.set_start_rule(0, 1, 0)
     stz1.set_end_rule(1, 1, 0)
-    vtz2 = VTimeZone.create_vtime_zone_from_basic_time_zone(stz1)
+    vtz2 = icu.VTimeZone.create_vtime_zone_from_basic_time_zone(stz1)
     stz2 = stz1.clone()
     assert vtz2.has_same_rules(stz2) is True
 
 
-def test_vtime_zone():
-    assert issubclass(VTimeZone, BasicTimeZone)
-    assert issubclass(VTimeZone, TimeZone)
+def test_vtime_zone() -> None:
+    assert issubclass(icu.VTimeZone, icu.BasicTimeZone)
+    assert issubclass(icu.VTimeZone, icu.TimeZone)
 
     # static VTimeZone *icu::VTimeZone::createVTimeZoneByID(
     #       const UnicodeString &ID
     # )
-    id1 = UnicodeString("America/New_York")
-    zone1 = VTimeZone.create_vtime_zone_by_id(id1)
-    assert isinstance(zone1, VTimeZone)
-    zone1.set_tzurl(UnicodeString("http://source.icu-project.org/timezone"))
+    id1 = icu.UnicodeString("America/New_York")
+    zone1 = icu.VTimeZone.create_vtime_zone_by_id(id1)
+    assert isinstance(zone1, icu.VTimeZone)
+    zone1.set_tzurl(icu.UnicodeString("http://source.icu-project.org/timezone"))
     zone1.set_last_modified(1215298800000.0)  # 2008-07-05T23:00:00Z
-    vtzdata = UnicodeString()
+    vtzdata = icu.UnicodeString()
     zone1.write(vtzdata)
 
     # static VTimeZone *icu::VTimeZone::createVTimeZone(
     #       const UnicodeString &vtzdata,
     #       UErrorCode &status
     # )
-    zone2 = VTimeZone.create_vtime_zone(vtzdata)
-    assert isinstance(zone2, VTimeZone)
+    zone2 = icu.VTimeZone.create_vtime_zone(vtzdata)
+    assert isinstance(zone2, icu.VTimeZone)
 
     # static VTimeZone *icu::VTimeZone::createVTimeZoneFromBasicTimeZone(
     #       const BasicTimeZone &basicTZ,
     #       UErrorCode &status
     # )
-    basic_tz = SimpleTimeZone(
+    basic_tz = icu.SimpleTimeZone(
         0,
         "s3",
-        UCalendarMonths.UCAL_JANUARY,
+        icu.UCalendarMonths.UCAL_JANUARY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
-        UCalendarMonths.UCAL_JULY,
+        icu.UCalendarMonths.UCAL_JULY,
         1,
-        UCalendarDaysOfWeek.UCAL_SUNDAY,
+        icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
         0,
     )
-    zone3 = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
-    assert isinstance(zone3, VTimeZone)
+    zone3 = icu.VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
+    assert isinstance(zone3, icu.VTimeZone)
 
     # icu::VTimeZone::VTimeZone(const VTimeZone &source)
-    zone4 = VTimeZone(zone3)
+    zone4 = icu.VTimeZone(zone3)
 
     # VTimeZone *icu::VTimeZone::clone()
     zone1a = zone1.clone()
-    assert isinstance(zone1a, VTimeZone)
+    assert isinstance(zone1a, icu.VTimeZone)
     assert zone1a == zone1
 
     zone1b = copy.copy(zone1)
@@ -1727,9 +1708,9 @@ def test_vtime_zone():
     assert zone3.get_dst_savings() == 1 * HOUR
 
     # UnicodeString &icu::TimeZone::getID(UnicodeString &ID)
-    id_ = UnicodeString()
+    id_ = icu.UnicodeString()
     result = zone1.get_id(id_)
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(id_)
     assert len(result) == 0
 
@@ -1745,7 +1726,7 @@ def test_vtime_zone():
     #       TimeZoneTransition &result
     # )
     base = 1230681600000.0  # 2008-12-31T00:00:00Z
-    tzt = TimeZoneTransition()
+    tzt = icu.TimeZoneTransition()
     assert zone3.get_next_transition(base, False, tzt) is True
     assert tzt.get_time() == 1231027200000.0  # 2009-01-04T00:00:00Z
 
@@ -1770,20 +1751,20 @@ def test_vtime_zone():
     #       UErrorCode &status
     # )
     initial, std, dst = zone1.get_simple_rules_near(0)
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == -5 * HOUR
     assert initial.get_dst_savings() == 1 * HOUR
-    assert isinstance(std, AnnualTimeZoneRule)
+    assert isinstance(std, icu.AnnualTimeZoneRule)
     assert std.get_raw_offset() == -5 * HOUR
     assert std.get_dst_savings() == 0
     dr = std.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_OCTOBER
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_OCTOBER
     assert dr.get_rule_day_of_month() == 0
-    assert isinstance(dst, AnnualTimeZoneRule)
+    assert isinstance(dst, icu.AnnualTimeZoneRule)
     assert dst.get_raw_offset() == -5 * HOUR
     assert dst.get_dst_savings() == 1 * HOUR
     dr = dst.get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_APRIL
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_APRIL
     assert dr.get_rule_day_of_month() == 0
 
     # void icu::BasicTimeZone::getTimeZoneRules(
@@ -1793,25 +1774,25 @@ def test_vtime_zone():
     #       UErrorCode &status
     # )
     initial, trsrules = zone3.get_time_zone_rules()
-    assert isinstance(initial, InitialTimeZoneRule)
+    assert isinstance(initial, icu.InitialTimeZoneRule)
     assert initial.get_raw_offset() == 0
     assert initial.get_dst_savings() == 0
     assert isinstance(trsrules, list)
     assert len(trsrules) == 2
-    assert all(isinstance(x, AnnualTimeZoneRule) for x in trsrules)
+    assert all(isinstance(x, icu.AnnualTimeZoneRule) for x in trsrules)
     assert trsrules[0].get_raw_offset() == 0
     assert trsrules[0].get_dst_savings() == 0
     dr = trsrules[0].get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JULY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JULY
     assert dr.get_rule_day_of_month() == 0
     assert trsrules[1].get_raw_offset() == 0
     assert trsrules[1].get_dst_savings() == 1 * HOUR
     dr = trsrules[1].get_rule()
-    assert dr.get_rule_month() == UCalendarMonths.UCAL_JANUARY
+    assert dr.get_rule_month() == icu.UCalendarMonths.UCAL_JANUARY
     assert dr.get_rule_day_of_month() == 0
 
     # UBool icu::VTimeZone::getTZURL(UnicodeString &url)
-    url = UnicodeString()
+    url = icu.UnicodeString()
     assert zone1.get_tzurl(url) is True
     assert url == "http://source.icu-project.org/timezone"
     assert zone3.get_tzurl(url) is False
@@ -1833,7 +1814,7 @@ def test_vtime_zone():
     assert zone2.has_same_rules(zone3) is False
 
     # void icu::TimeZone::setID(const UnicodeString &ID)
-    zone1.set_id(UnicodeString("abc"))
+    zone1.set_id(icu.UnicodeString("abc"))
     assert zone1.get_id(id_) == "abc"
     zone1.set_id("ABC")
     assert zone1.get_id(id_) == "ABC"
@@ -1858,7 +1839,7 @@ def test_vtime_zone():
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    result1 = UnicodeString()
+    result1 = icu.UnicodeString()
     zone1.write(1231027200000.0, result1)
     assert len(result1) > 0
 
@@ -1867,7 +1848,7 @@ def test_vtime_zone():
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    result2 = UnicodeString()
+    result2 = icu.UnicodeString()
     zone1.write(result2)
     assert len(result2) > 0
 
@@ -1876,28 +1857,28 @@ def test_vtime_zone():
     #       UnicodeString &result,
     #       UErrorCode &status
     # )
-    result3 = UnicodeString()
+    result3 = icu.UnicodeString()
     zone1.write_simple(1231027200000.0, result3)
     assert len(result3) > 0
 
 
-def test_vtime_zone_get_offset():
-    basic_tz = SimpleTimeZone(
+def test_vtime_zone_get_offset() -> None:
+    basic_tz = icu.SimpleTimeZone(
         8 * HOUR,
         "s5",
-        UCalendarMonths.UCAL_APRIL,
+        icu.UCalendarMonths.UCAL_APRIL,
         1,
         -1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
-        UCalendarMonths.UCAL_OCTOBER,
+        icu.SimpleTimeZone.WALL_TIME,
+        icu.UCalendarMonths.UCAL_OCTOBER,
         -1,
         1,
         2 * HOUR,
-        SimpleTimeZone.WALL_TIME,
+        icu.SimpleTimeZone.WALL_TIME,
         int(0.5 * HOUR),
     )
-    zone = VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
+    zone = icu.VTimeZone.create_vtime_zone_from_basic_time_zone(basic_tz)
 
     # [1]
     # void icu::VTimeZone::getOffset(
@@ -1924,11 +1905,11 @@ def test_vtime_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
             28,
         )
@@ -1947,24 +1928,22 @@ def test_vtime_zone_get_offset():
     # )
     assert (
         zone.get_offset(
-            GregorianCalendar.AD,
+            icu.GregorianCalendar.AD,
             2008,
-            UCalendarMonths.UCAL_JULY,
+            icu.UCalendarMonths.UCAL_JULY,
             6,
-            UCalendarDaysOfWeek.UCAL_SUNDAY,
+            icu.UCalendarDaysOfWeek.UCAL_SUNDAY,
             0,
         )
         == 8.5 * HOUR
     )
 
 
-@pytest.mark.skipif(U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
-def test_vtime_zone_get_offset_from_local():
-    from icupy.icu import UTimeZoneLocalOption
-
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
+def test_vtime_zone_get_offset_from_local() -> None:
     # From icu/source/test/intltest/tzoffloc.cpp:
     # TimeZoneOffsetLocalTest::TestGetOffsetAroundTransition()
-    zone = VTimeZone.create_vtime_zone_by_id("America/Los_Angeles")
+    zone = icu.VTimeZone.create_vtime_zone_by_id("America/Los_Angeles")
 
     # void icu::VTimeZone::getOffsetFromLocal(
     #       UDate date,
@@ -1977,8 +1956,8 @@ def test_vtime_zone_get_offset_from_local():
     date = 1143941400000  # 2006-04-02T01:30:00Z
     raw_offset, dst_offset = zone.get_offset_from_local(
         date,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
-        UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_FORMER,
+        icu.UTimeZoneLocalOption.UCAL_TZ_LOCAL_STANDARD_LATTER,
     )
     assert raw_offset == -8 * HOUR
     assert dst_offset == 0

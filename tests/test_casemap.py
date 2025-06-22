@@ -1,22 +1,13 @@
 import pytest
 
-from icupy.icu import U_ICU_VERSION_MAJOR_NUM
+from icupy import icu
 
-if U_ICU_VERSION_MAJOR_NUM < 59:
+if icu.U_ICU_VERSION_MAJOR_NUM < 59:
     pytest.skip("ICU4C<59", allow_module_level=True)
-
-# fmt: off
-from icupy.icu import (
-    U_EDITS_NO_RESET, U_FOLD_CASE_EXCLUDE_SPECIAL_I, U_OMIT_UNCHANGED_TEXT,
-    U_TITLECASE_NO_BREAK_ADJUSTMENT, U_TITLECASE_NO_LOWERCASE, BreakIterator,
-    CaseMap, Edits, UnicodeString,
-)
-
-# fmt: on
 
 
 # From icu/source/test/intltest/strcase.cpp
-def test_api():
+def test_api() -> None:
     # static int32_t icu::CaseMap::fold(
     #       uint32_t options,
     #       const char16_t *src,
@@ -27,25 +18,23 @@ def test_api():
     #       UErrorCode &errorCode
     # )
     options = (
-        U_OMIT_UNCHANGED_TEXT
-        | U_EDITS_NO_RESET
-        | U_FOLD_CASE_EXCLUDE_SPECIAL_I
+        icu.U_OMIT_UNCHANGED_TEXT | icu.U_EDITS_NO_RESET | icu.U_FOLD_CASE_EXCLUDE_SPECIAL_I
     )
     src = "IßtanBul"
-    edits = Edits()
-    dest = CaseMap.fold(options, src, -1, edits)
+    edits = icu.Edits()
+    dest = icu.CaseMap.fold(options, src, -1, edits)
     assert isinstance(dest, str)
     assert dest == "ıssb"
 
-    dest = CaseMap.fold(options, src, -1, None)  # edits can be None
+    dest = icu.CaseMap.fold(options, src, -1, None)  # edits can be None
     assert isinstance(dest, str)
     assert dest == "ıssb"
 
-    dest = CaseMap.fold(options, src, -1)  # edits is optional
+    dest = icu.CaseMap.fold(options, src, -1)  # edits is optional
     assert isinstance(dest, str)
     assert dest == "ıssb"
 
-    dest = CaseMap.fold(options, src)  # src_length is optional
+    dest = icu.CaseMap.fold(options, src)  # src_length is optional
     assert isinstance(dest, str)
     assert dest == "ıssb"
 
@@ -60,24 +49,22 @@ def test_api():
     #       UErrorCode &errorCode
     # )
     locale = "tr"
-    options = U_OMIT_UNCHANGED_TEXT
+    options = icu.U_OMIT_UNCHANGED_TEXT
     src = "IstanBul"
-    edits = Edits()
-    dest = CaseMap.to_lower(locale, options, src, -1, edits)
+    edits = icu.Edits()
+    dest = icu.CaseMap.to_lower(locale, options, src, -1, edits)
     assert isinstance(dest, str)
     assert dest == "ıb"
 
-    dest = CaseMap.to_lower(
-        locale, options, src, -1, None
-    )  # edits can be None
+    dest = icu.CaseMap.to_lower(locale, options, src, -1, None)  # edits can be None
     assert isinstance(dest, str)
     assert dest == "ıb"
 
-    dest = CaseMap.to_lower(locale, options, src, -1)  # edits is optional
+    dest = icu.CaseMap.to_lower(locale, options, src, -1)  # edits is optional
     assert isinstance(dest, str)
     assert dest == "ıb"
 
-    dest = CaseMap.to_lower(locale, options, src)  # src_length is optional
+    dest = icu.CaseMap.to_lower(locale, options, src)  # src_length is optional
     assert isinstance(dest, str)
     assert dest == "ıb"
 
@@ -94,34 +81,28 @@ def test_api():
     # )
     locale = "nl"
     options = (
-        U_OMIT_UNCHANGED_TEXT
-        | U_TITLECASE_NO_BREAK_ADJUSTMENT
-        | U_TITLECASE_NO_LOWERCASE
+        icu.U_OMIT_UNCHANGED_TEXT
+        | icu.U_TITLECASE_NO_BREAK_ADJUSTMENT
+        | icu.U_TITLECASE_NO_LOWERCASE
     )
-    it = BreakIterator.create_word_instance(locale)
+    it = icu.BreakIterator.create_word_instance(locale)
     src = "IjssEL IglOo"
-    it.set_text(UnicodeString(src))
+    it.set_text(icu.UnicodeString(src))
     it.first()
-    edits = Edits()
-    dest = CaseMap.to_title(locale, options, it, src, -1, edits)
+    edits = icu.Edits()
+    dest = icu.CaseMap.to_title(locale, options, it, src, -1, edits)
     assert isinstance(dest, str)
     assert dest == "J"
 
-    dest = CaseMap.to_title(
-        locale, options, None, src, -1, None
-    )  # edits can be None
+    dest = icu.CaseMap.to_title(locale, options, None, src, -1, None)  # edits can be None
     assert isinstance(dest, str)
     assert dest == "J"
 
-    dest = CaseMap.to_title(
-        locale, options, None, src, -1
-    )  # edits is optional
+    dest = icu.CaseMap.to_title(locale, options, None, src, -1)  # edits is optional
     assert isinstance(dest, str)
     assert dest == "J"
 
-    dest = CaseMap.to_title(
-        locale, options, None, src
-    )  # src_length is optional
+    dest = icu.CaseMap.to_title(locale, options, None, src)  # src_length is optional
     assert isinstance(dest, str)
     assert dest == "J"
 
@@ -136,23 +117,21 @@ def test_api():
     #       UErrorCode &errorCode
     # )
     locale = "el"
-    options = U_OMIT_UNCHANGED_TEXT
+    options = icu.U_OMIT_UNCHANGED_TEXT
     src = "Πατάτα"
-    edits = Edits()
-    dest = CaseMap.to_upper(locale, options, src, -1, edits)
+    edits = icu.Edits()
+    dest = icu.CaseMap.to_upper(locale, options, src, -1, edits)
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"
 
-    dest = CaseMap.to_upper(
-        locale, options, src, -1, None
-    )  # edits can be None
+    dest = icu.CaseMap.to_upper(locale, options, src, -1, None)  # edits can be None
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"
 
-    dest = CaseMap.to_upper(locale, options, src, -1)  # edits is optional
+    dest = icu.CaseMap.to_upper(locale, options, src, -1)  # edits is optional
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"
 
-    dest = CaseMap.to_upper(locale, options, src)  # src_length is optional
+    dest = icu.CaseMap.to_upper(locale, options, src)  # src_length is optional
     assert isinstance(dest, str)
     assert dest == "ΑΤΑΤΑ"

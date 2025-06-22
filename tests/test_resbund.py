@@ -3,31 +3,25 @@ from pathlib import Path
 
 import pytest
 
-# fmt: off
-from icupy.icu import (
-    ICUError, Locale, ResourceBundle, UErrorCode, ULocDataLocaleType,
-    UnicodeString, UResType, ures_close, ures_open, ures_open_direct,
-)
-
-# fmt: on
+from icupy import icu
 
 
 def _int28_to_uint28(n: int) -> int:
     return n if n >= 0 else 2**28 + n
 
 
-def test_api():
+def test_api() -> None:
     # UResourceBundle *ures_openDirect(
     #       const char *packageName,
     #       const char *locale,
     #       UErrorCode *status
     # )
-    rb = ures_open_direct(None, "metadata")
-    test1 = ResourceBundle(rb)
-    ures_close(rb)
+    rb = icu.ures_open_direct(None, "metadata")
+    test1 = icu.ResourceBundle(rb)
+    icu.ures_close(rb)
 
     # UResType icu::ResourceBundle::getType(void)
-    assert test1.get_type() == UResType.URES_TABLE
+    assert test1.get_type() == icu.UResType.URES_TABLE
 
     # int32_t icu::ResourceBundle::getSize(void)
     assert test1.get_size() > 0
@@ -45,24 +39,24 @@ def test_api():
     #       UErrorCode &status
     # )
     test2 = test1.get("alias")
-    assert isinstance(test2, ResourceBundle)
-    assert test2.get_type() == UResType.URES_TABLE
+    assert isinstance(test2, icu.ResourceBundle)
+    assert test2.get_type() == icu.UResType.URES_TABLE
     assert test2.get_size() > 0
     assert len(test2) == test2.get_size()
     assert test2.get_key() == "alias"
     assert test2.get_name() == "metadata"
 
     test3 = test2.get("language")
-    assert isinstance(test3, ResourceBundle)
-    assert test3.get_type() == UResType.URES_TABLE
+    assert isinstance(test3, icu.ResourceBundle)
+    assert test3.get_type() == icu.UResType.URES_TABLE
     assert test3.get_size() > 0
     assert len(test3) == test3.get_size()
     assert test3.get_key() == "language"
     assert test3.get_name() == "metadata"
 
     test4 = test3.get("sh")
-    assert isinstance(test4, ResourceBundle)
-    assert test4.get_type() == UResType.URES_TABLE
+    assert isinstance(test4, icu.ResourceBundle)
+    assert test4.get_type() == icu.UResType.URES_TABLE
     assert test4.get_size() >= 2
     assert len(test4) == test4.get_size()
     assert test4.get_key() == "sh"
@@ -74,11 +68,11 @@ def test_api():
     #       UErrorCode &status
     # )
     result = test4.get_string_ex("replacement")
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "sr_Latn"
 
     result = test4.get_string_ex("reason")
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert result == "legacy"
 
     # [2]
@@ -87,21 +81,21 @@ def test_api():
     #       UErrorCode &status
     # )
     result1 = test4.get_string_ex(0)
-    assert isinstance(result1, UnicodeString)
+    assert isinstance(result1, icu.UnicodeString)
     result2 = test4.get_string_ex(1)
-    assert isinstance(result2, UnicodeString)
+    assert isinstance(result2, icu.UnicodeString)
     assert result1 != result2
     assert str(result1) in ["sr_Latn", "legacy"]
     assert str(result2) in ["sr_Latn", "legacy"]
 
 
-def test_api2():
+def test_api2() -> None:
     path = Path(__file__).resolve().parent / "testdata"
     rb = None
     try:
-        rb = ures_open_direct(str(path), "testtypes")
-    except ICUError as ex:
-        if ex.args[0] != UErrorCode.U_MISSING_RESOURCE_ERROR:
+        rb = icu.ures_open_direct(str(path), "testtypes")
+    except icu.ICUError as ex:
+        if ex.args[0] != icu.UErrorCode.U_MISSING_RESOURCE_ERROR:
             raise
         pytest.skip(
             "testdata.dat is not found (not an error). "
@@ -109,28 +103,28 @@ def test_api2():
             "See also <icu4c>/icu/source/test/testdata/"
         )
 
-    test1 = ResourceBundle(rb)
-    ures_close(rb)
+    test1 = icu.ResourceBundle(rb)
+    icu.ures_close(rb)
 
     # "testtypes"
-    assert test1.get_type() == UResType.URES_TABLE
+    assert test1.get_type() == icu.UResType.URES_TABLE
     assert test1.get_size() > 0
     assert test1.get_key() is None
     assert test1.get_name() == "testtypes"
 
-    resources = list()
+    resources = []
 
     # UBool icu::ResourceBundle::hasNext(void)
     while test1.has_next():
         # ResourceBundle icu::ResourceBundle::getNext(UErrorCode &status)
         result = test1.get_next()
-        assert isinstance(result, ResourceBundle)
+        assert isinstance(result, icu.ResourceBundle)
         resources.append(result)
 
     assert test1.has_next() is False
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = test1.get_next()
-    assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
     # void icu::ResourceBundle::resetIterator(void)
     test1.reset_iterator()
@@ -143,11 +137,11 @@ def test_api2():
         #       UErrorCode &status
         # )
         result = test1.get(index)
-        assert isinstance(result, ResourceBundle)
+        assert isinstance(result, icu.ResourceBundle)
         assert result.get_key() is not None
         assert result.get_key() == expected.get_key()
 
-    resources2 = [x for x in test1]
+    resources2 = list(test1)
     assert len(resources2) == len(resources)
     for res1, res2 in zip(resources, resources2):
         assert res1.get_key() is not None
@@ -155,8 +149,8 @@ def test_api2():
 
     # "testtypes" > "binarytest"
     test2 = test1.get("binarytest")
-    assert isinstance(test2, ResourceBundle)
-    assert test2.get_type() == UResType.URES_BINARY
+    assert isinstance(test2, icu.ResourceBundle)
+    assert test2.get_type() == icu.UResType.URES_BINARY
 
     # const uint8_t *icu::ResourceBundle::getBinary(
     #       int32_t &len,
@@ -165,23 +159,20 @@ def test_api2():
     result = test2.get_binary()
     assert isinstance(result, bytes)
     assert len(result) == 15
-    assert (
-        result
-        == b"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e"
-    )
+    assert result == b"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e"
 
     # "testtypes" > "emptybin"
     test3 = test1.get("emptybin")
-    assert isinstance(test3, ResourceBundle)
-    assert test3.get_type() == UResType.URES_BINARY
+    assert isinstance(test3, icu.ResourceBundle)
+    assert test3.get_type() == icu.UResType.URES_BINARY
     result = test3.get_binary()
     assert isinstance(result, bytes)
     assert len(result) == 0
 
     # "testtypes" > "minusone"
     test4 = test1.get("minusone")
-    assert isinstance(test4, ResourceBundle)
-    assert test4.get_type() == UResType.URES_INT
+    assert isinstance(test4, icu.ResourceBundle)
+    assert test4.get_type() == icu.UResType.URES_INT
 
     # int32_t icu::ResourceBundle::getInt(UErrorCode &status)
     result = test4.get_int()
@@ -195,8 +186,8 @@ def test_api2():
 
     # "testtypes" > "emptyint"
     test5 = test1.get("emptyint")
-    assert isinstance(test5, ResourceBundle)
-    assert test5.get_type() == UResType.URES_INT
+    assert isinstance(test5, icu.ResourceBundle)
+    assert test5.get_type() == icu.UResType.URES_INT
     result = test5.get_int()
     assert isinstance(result, int)
     assert result == 0
@@ -207,8 +198,8 @@ def test_api2():
 
     # "testtypes" > "integerarray"
     test6 = test1.get("integerarray")
-    assert isinstance(test6, ResourceBundle)
-    assert test6.get_type() == UResType.URES_INT_VECTOR
+    assert isinstance(test6, icu.ResourceBundle)
+    assert test6.get_type() == icu.UResType.URES_INT_VECTOR
 
     # const int32_t *icu::ResourceBundle::getIntVector(
     #       int32_t &len,
@@ -220,17 +211,17 @@ def test_api2():
 
     # "testtypes" > "emptyintv"
     test7 = test1.get("emptyintv")
-    assert isinstance(test7, ResourceBundle)
-    assert test7.get_type() == UResType.URES_INT_VECTOR
+    assert isinstance(test7, icu.ResourceBundle)
+    assert test7.get_type() == icu.UResType.URES_INT_VECTOR
     result = test7.get_int_vector()
     assert isinstance(result, list)
     assert len(result) == 0
 
     # "testtypes" > "menu" > "file"
     test8 = test1.get("menu")
-    assert isinstance(test8, ResourceBundle)
+    assert isinstance(test8, icu.ResourceBundle)
     test9 = test8.get("file")
-    assert isinstance(test9, ResourceBundle)
+    assert isinstance(test9, icu.ResourceBundle)
 
     # [2]
     # UnicodeString icu::ResourceBundle::getNextString(
@@ -238,42 +229,42 @@ def test_api2():
     #       UErrorCode &status
     # )
     result = test9.get_next_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert str(result) in ["Open", "Save", "Exit"]
 
     result = test9.get_next_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert str(result) in ["Open", "Save", "Exit"]
 
     result = test9.get_next_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert str(result) in ["Open", "Save", "Exit"]
 
-    with pytest.raises(ICUError) as exc_info:
+    with pytest.raises(icu.ICUError) as exc_info:
         _ = test9.get_next_string()
-    assert exc_info.value.args[0] == UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
+    assert exc_info.value.args[0] == icu.UErrorCode.U_INDEX_OUTOFBOUNDS_ERROR
 
     # "testtypes" > "zerotest"
     test10 = test1.get("zerotest")
-    assert isinstance(test10, ResourceBundle)
-    assert test10.get_type() == UResType.URES_STRING
+    assert isinstance(test10, icu.ResourceBundle)
+    assert test10.get_type() == icu.UResType.URES_STRING
 
     # UnicodeString icu::ResourceBundle::getString(UErrorCode &status)
     result = test10.get_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert len(result) == 7
     assert str(result) == "abc\u0000def"
 
     # "testtypes" > "emptystring"
     test11 = test1.get("emptystring")
-    assert isinstance(test11, ResourceBundle)
-    assert test11.get_type() == UResType.URES_STRING
+    assert isinstance(test11, icu.ResourceBundle)
+    assert test11.get_type() == icu.UResType.URES_STRING
     result = test11.get_string()
-    assert isinstance(result, UnicodeString)
+    assert isinstance(result, icu.UnicodeString)
     assert len(result) == 0
 
     # "default"
-    test12 = ResourceBundle(str(path), Locale.get_us())
+    test12 = icu.ResourceBundle(str(path), icu.Locale.get_us())
 
     # void icu::ResourceBundle::getVersion(UVersionInfo versionInfo)
     version_info = test12.get_version()
@@ -281,19 +272,19 @@ def test_api2():
     assert len(version_info) == 4
     assert version_info == (44, 0, 0, 0)
 
-    test13 = ResourceBundle(str(path), Locale("te_IN"))
+    test13 = icu.ResourceBundle(str(path), icu.Locale("te_IN"))
     version_info = test13.get_version()
     assert isinstance(version_info, tuple)
     assert len(version_info) == 4
     assert version_info == (55, 0, 0, 0)
 
 
-def test_clone():
-    test1 = ResourceBundle(None, Locale.get_us())
+def test_clone() -> None:
+    test1 = icu.ResourceBundle(None, icu.Locale.get_us())
 
     # ResourceBundle *icu::ResourceBundle::clone()
     test2 = test1.clone()
-    assert isinstance(test2, ResourceBundle)
+    assert isinstance(test2, icu.ResourceBundle)
     assert test1.get_name() == test2.get_name()
     assert test1.get_key() == test2.get_key()
 
@@ -306,12 +297,12 @@ def test_clone():
     assert test4.get_key() == test1.get_key()
 
 
-def test_resource_bundle():
-    default_locale = Locale.get_default()
+def test_resource_bundle() -> None:
+    default_locale = icu.Locale.get_default()
     if str(default_locale) == "ja_JP":
-        res_locale = Locale.get_us()
+        res_locale = icu.Locale.get_us()
     else:
-        res_locale = Locale.get_japan()
+        res_locale = icu.Locale.get_japan()
     assert default_locale != res_locale
 
     # [1]
@@ -320,26 +311,20 @@ def test_resource_bundle():
     #       const Locale &locale,
     #       UErrorCode &err
     # )
-    test1 = ResourceBundle(UnicodeString(), res_locale)
-    assert test1.get_type() == UResType.URES_TABLE
+    test1 = icu.ResourceBundle(icu.UnicodeString(), res_locale)
+    assert test1.get_type() == icu.UResType.URES_TABLE
     assert test1.get_size() >= 0
     assert test1.get_key() is None
-    assert (
-        test1.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert test1.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    assert test1.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test1.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test1.get_name() == res_locale.get_name()
 
-    test1b = ResourceBundle(UnicodeString(), str(res_locale))
-    assert test1b.get_type() == UResType.URES_TABLE
+    test1b = icu.ResourceBundle(icu.UnicodeString(), str(res_locale))
+    assert test1b.get_type() == icu.UResType.URES_TABLE
     assert test1b.get_size() >= 0
     assert test1b.get_key() is None
-    assert (
-        test1b.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert (
-        test1b.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
-    )
+    assert test1b.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test1b.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test1b.get_name() == res_locale.get_name()
 
     # [2]
@@ -347,48 +332,30 @@ def test_resource_bundle():
     #       const UnicodeString &packageName,
     #       UErrorCode &err
     # )
-    test2 = ResourceBundle(UnicodeString())
-    assert test2.get_type() == UResType.URES_TABLE
+    test2 = icu.ResourceBundle(icu.UnicodeString())
+    assert test2.get_type() == icu.UResType.URES_TABLE
     assert test2.get_size() >= 0
     assert test2.get_key() is None
-    assert (
-        test2.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-        == default_locale
-    )
-    assert (
-        test2.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-        == default_locale
-    )
+    assert test2.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == default_locale
+    assert test2.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == default_locale
     assert test2.get_name() == default_locale.get_name()
 
-    test2a = ResourceBundle("")
-    assert test2a.get_type() == UResType.URES_TABLE
+    test2a = icu.ResourceBundle("")
+    assert test2a.get_type() == icu.UResType.URES_TABLE
     assert test2a.get_size() >= 0
     assert test2a.get_key() is None
-    assert (
-        test2a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-        == default_locale
-    )
-    assert (
-        test2a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-        == default_locale
-    )
+    assert test2a.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == default_locale
+    assert test2a.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == default_locale
     assert test2a.get_name() == default_locale.get_name()
 
     # [3]
     # icu::ResourceBundle::ResourceBundle(UErrorCode &err)
-    test3 = ResourceBundle()
-    assert test3.get_type() == UResType.URES_TABLE
+    test3 = icu.ResourceBundle()
+    assert test3.get_type() == icu.UResType.URES_TABLE
     assert test3.get_size() >= 0
     assert test3.get_key() is None
-    assert (
-        test3.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE)
-        == default_locale
-    )
-    assert (
-        test3.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE)
-        == default_locale
-    )
+    assert test3.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == default_locale
+    assert test3.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == default_locale
     assert test3.get_name() == default_locale.get_name()
 
     # [4]
@@ -397,38 +364,30 @@ def test_resource_bundle():
     #       const Locale &locale,
     #       UErrorCode &err
     # )
-    test4 = ResourceBundle(None, res_locale)
-    assert test4.get_type() == UResType.URES_TABLE
+    test4 = icu.ResourceBundle(None, res_locale)
+    assert test4.get_type() == icu.UResType.URES_TABLE
     assert test4.get_size() >= 0
     assert test4.get_key() is None
-    assert (
-        test4.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert test4.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    assert test4.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test4.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test4.get_name() == res_locale.get_name()
 
-    test4a = ResourceBundle(None, str(res_locale))
-    assert test4a.get_type() == UResType.URES_TABLE
+    test4a = icu.ResourceBundle(None, str(res_locale))
+    assert test4a.get_type() == icu.UResType.URES_TABLE
     assert test4a.get_size() >= 0
     assert test4a.get_key() is None
-    assert (
-        test4a.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert (
-        test4a.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
-    )
+    assert test4a.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test4a.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test4a.get_name() == res_locale.get_name()
 
     # [5]
     # icu::ResourceBundle::ResourceBundle(const ResourceBundle &original)
-    test5 = ResourceBundle(test1)
-    assert test5.get_type() == UResType.URES_TABLE
+    test5 = icu.ResourceBundle(test1)
+    assert test5.get_type() == icu.UResType.URES_TABLE
     assert test5.get_size() >= 0
     assert test5.get_key() is None
-    assert (
-        test5.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert test5.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    assert test5.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test5.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test5.get_name() == res_locale.get_name()
 
     # [6]
@@ -436,14 +395,12 @@ def test_resource_bundle():
     #       UResourceBundle *res,
     #       UErrorCode &status
     # )
-    rb = ures_open(None, str(res_locale))
-    test6 = ResourceBundle(rb)
-    ures_close(rb)
-    assert test6.get_type() == UResType.URES_TABLE
+    rb = icu.ures_open(None, str(res_locale))
+    test6 = icu.ResourceBundle(rb)
+    icu.ures_close(rb)
+    assert test6.get_type() == icu.UResType.URES_TABLE
     assert test6.get_size() >= 0
     assert test6.get_key() is None
-    assert (
-        test6.get_locale(ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
-    )
-    assert test6.get_locale(ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
+    assert test6.get_locale(icu.ULocDataLocaleType.ULOC_ACTUAL_LOCALE) == res_locale
+    assert test6.get_locale(icu.ULocDataLocaleType.ULOC_VALID_LOCALE) == res_locale
     assert test6.get_name() == res_locale.get_name()
