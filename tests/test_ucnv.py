@@ -119,9 +119,9 @@ def test_api() -> None:
         dest = test2.extract(cnv)  # utf-8 to ibm-943
         assert dest.decode("cp932") == "a\uff71b?c"
 
-        sub = "<??>"
-        icu.ucnv_set_subst_string(cnv, sub, len(sub))
-        assert icu.ucnv_get_subst_chars(cnv) == sub.encode()
+        sub2 = "<??>"
+        icu.ucnv_set_subst_string(cnv, sub2, len(sub2))
+        assert icu.ucnv_get_subst_chars(cnv) == sub2.encode()
 
         dest = test2.extract(cnv)  # utf-8 to ibm-943
         assert dest.decode("cp932") == "a\uff71b<??>c"
@@ -132,14 +132,14 @@ def test_api() -> None:
 
     en = icu.ucnv_open_all_names()
     assert icu.uenum_count(en) > 0
-    names = iter(partial(icu.uenum_next, en), None)
-    assert encoding in names
+    names2 = iter(partial(icu.uenum_next, en), None)
+    assert encoding in names2
     icu.uenum_close(en)
 
     en = icu.ucnv_open_standard_names("ibm-943_P15A-2003", "IANA")
     assert icu.uenum_count(en) > 0
-    standards = iter(partial(icu.uenum_next, en), None)
-    assert "Shift_JIS" in standards
+    standards2 = iter(partial(icu.uenum_next, en), None)
+    assert "Shift_JIS" in standards2
     icu.uenum_close(en)
 
     with gc(
