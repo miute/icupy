@@ -80,7 +80,8 @@ jobs:
 
       - name: Run unit tests
         run: |
-          uv pip install --no-deps --no-index --find-links=./dist/ --reinstall icupy
+          uv sync
+          uv pip install --no-deps --no-index --find-links=./dist/ --prerelease=allow --reinstall icupy
           uv run pytest
 
   merge:
