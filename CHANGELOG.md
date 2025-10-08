@@ -3,7 +3,7 @@
 ## WIP
 
 - **CHANGED**
-  - Update pybind11 from 2.13.6 to 3.0.0rc1
+  - Update pybind11 from 2.13.6 to 3.0.1
 - **Removed**
   - Drop support for Python 3.9
   - Drop support for CMake old than 3.15
