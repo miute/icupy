@@ -2,6 +2,8 @@
 
 ## WIP
 
+- **NEW**
+  - Add support for Python 3.14
 - **CHANGED**
   - Update pybind11 from 2.13.6 to 3.0.1
 - **Removed**
