@@ -576,7 +576,10 @@ def test_set_format() -> None:
     fmt.set_format("1", dtfmt1)
 
     append_to.remove()
-    assert fmt.format(obj, append_to) == "2021.11.23 16:42:55 GMT"
+    assert fmt.format(obj, append_to) in [
+        "2021.11.23 16:42:55 GMT",  # ICU<78
+        "2021.11.23 16:42:55 GMT+0",  # ICU>=78
+    ]
 
     # [2]
     # void icu::MessageFormat::setFormat(
@@ -645,9 +648,12 @@ def test_set_formats() -> None:
         ]
     )
     append_to = icu.UnicodeString()
-    assert fmt.format(obj, append_to) == (
-        "At 16:42:55 GMT on 2021.11.23, there was a disturbance in the Force on planet 7."
-    )
+    assert fmt.format(obj, append_to) in [
+        # ICU<78
+        "At 16:42:55 GMT on 2021.11.23, there was a disturbance in the Force on planet 7.",
+        # ICU>=78
+        "At 16:42:55 GMT+0 on 2021.11.23, there was a disturbance in the Force on planet 7.",
+    ]
 
     tz = icu.TimeZone.create_time_zone("PST")
     new_formats[0].set_time_zone(tz)

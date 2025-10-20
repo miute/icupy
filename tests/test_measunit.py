@@ -1201,21 +1201,11 @@ def test_measure_unit_69() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
     assert (
-        fmt.unit(icu.MeasureUnit.create_milligram_of_glucose_per_deciliter())
-        .format_int(1)
-        .to_string()
-    ) == "1 mg/dL"
-    assert (
         fmt.unit(icu.MeasureUnit.create_milligram_ofglucose_per_deciliter())
         .format_int(1)
         .to_string()
     ) == "1 mg/dL"
 
-    assert (
-        fmt.unit(icu.MeasureUnit.get_milligram_of_glucose_per_deciliter())
-        .format_int(1)
-        .to_string()
-    ) == "1 mg/dL"
     assert (
         fmt.unit(icu.MeasureUnit.get_milligram_ofglucose_per_deciliter())
         .format_int(1)
@@ -1328,11 +1318,332 @@ def test_measure_unit_77() -> None:
 
     assert unit.get_complexity() == icu.UMeasureUnitComplexity.UMEASURE_UNIT_COMPOUND
 
+
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM != 77, reason="ICU4C!=77")
+def test_measure_unit_77_removed() -> None:
     # static MeasureUnit* icu::MeasureUnit::createPortionPer1E9(UErrorCode &status)
     unit1 = icu.MeasureUnit.create_portion_per_1e9()
 
     # static MeasureUnit icu::MeasureUnit::getPortionPer1E9()
     unit2 = icu.MeasureUnit.get_portion_per_1e9()
+    assert unit1 == unit2
+
+
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 78, reason="ICU4C<78")
+def test_measure_unit_78() -> None:
+    # static MeasureUnit* icu::MeasureUnit::createBecquerel(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_becquerel()
+
+    # static MeasureUnit icu::MeasureUnit::getBecquerel()
+    unit2 = icu.MeasureUnit.get_becquerel()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createBritishThermalUnitIt(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_british_thermal_unit_it()
+
+    # static MeasureUnit icu::MeasureUnit::getBritishThermalUnitIt()
+    unit2 = icu.MeasureUnit.get_british_thermal_unit_it()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createBuJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_bu_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getBuJp()
+    unit2 = icu.MeasureUnit.get_bu_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createCalorieIt(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_calorie_it()
+
+    # static MeasureUnit icu::MeasureUnit::getCalorieIt()
+    unit2 = icu.MeasureUnit.get_calorie_it()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createChain(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_chain()
+
+    # static MeasureUnit icu::MeasureUnit::getChain()
+    unit2 = icu.MeasureUnit.get_chain()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createCho(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_cho()
+
+    # static MeasureUnit icu::MeasureUnit::getCho()
+    unit2 = icu.MeasureUnit.get_cho()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createCoulomb(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_coulomb()
+
+    # static MeasureUnit icu::MeasureUnit::getCoulomb()
+    unit2 = icu.MeasureUnit.get_coulomb()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createCupImperial(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_cup_imperial()
+
+    # static MeasureUnit icu::MeasureUnit::getCupImperial()
+    unit2 = icu.MeasureUnit.get_cup_imperial()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createCupJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_cup_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getCupJp()
+    unit2 = icu.MeasureUnit.get_cup_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createFarad(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_farad()
+
+    # static MeasureUnit icu::MeasureUnit::getFarad()
+    unit2 = icu.MeasureUnit.get_farad()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createFluidOunceMetric(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_fluid_ounce_metric()
+
+    # static MeasureUnit icu::MeasureUnit::getFluidOunceMetric()
+    unit2 = icu.MeasureUnit.get_fluid_ounce_metric()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createFortnight(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_fortnight()
+
+    # static MeasureUnit icu::MeasureUnit::getFortnight()
+    unit2 = icu.MeasureUnit.get_fortnight()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createFun(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_fun()
+
+    # static MeasureUnit icu::MeasureUnit::getFun()
+    unit2 = icu.MeasureUnit.get_fun()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createGray(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_gray()
+
+    # static MeasureUnit icu::MeasureUnit::getGray()
+    unit2 = icu.MeasureUnit.get_gray()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createHenry(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_henry()
+
+    # static MeasureUnit icu::MeasureUnit::getHenry()
+    unit2 = icu.MeasureUnit.get_henry()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createJoJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_jo_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getJoJp()
+    unit2 = icu.MeasureUnit.get_jo_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createKatal(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_katal()
+
+    # static MeasureUnit icu::MeasureUnit::getKatal()
+    unit2 = icu.MeasureUnit.get_katal()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createKen(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_ken()
+
+    # static MeasureUnit icu::MeasureUnit::getKen()
+    unit2 = icu.MeasureUnit.get_ken()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createKilogramForce(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_kilogram_force()
+
+    # static MeasureUnit icu::MeasureUnit::getKilogramForce()
+    unit2 = icu.MeasureUnit.get_kilogram_force()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createKoku(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_koku()
+
+    # static MeasureUnit icu::MeasureUnit::getKoku()
+    unit2 = icu.MeasureUnit.get_koku()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createKosaji(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_kosaji()
+
+    # static MeasureUnit icu::MeasureUnit::getKosaji()
+    unit2 = icu.MeasureUnit.get_kosaji()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createOfglucose(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_ofglucose()
+
+    # static MeasureUnit icu::MeasureUnit::getOfglucose()
+    unit2 = icu.MeasureUnit.get_ofglucose()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createOfhg(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_ofhg()
+
+    # static MeasureUnit icu::MeasureUnit::getOfhg()
+    unit2 = icu.MeasureUnit.get_ofhg()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createOsaji(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_osaji()
+
+    # static MeasureUnit icu::MeasureUnit::getOsaji()
+    unit2 = icu.MeasureUnit.get_osaji()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createPart(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_part()
+
+    # static MeasureUnit icu::MeasureUnit::getPart()
+    unit2 = icu.MeasureUnit.get_part()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createPartPer1E6(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_part_per_1e6()
+
+    # static MeasureUnit icu::MeasureUnit::getPartPer1E6()
+    unit2 = icu.MeasureUnit.get_part_per_1e6()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createPartPer1E9(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_part_per_1e9()
+
+    # static MeasureUnit icu::MeasureUnit::getPartPer1E9()
+    unit2 = icu.MeasureUnit.get_part_per_1e9()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createPintImperial(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_pint_imperial()
+
+    # static MeasureUnit icu::MeasureUnit::getPintImperial()
+    unit2 = icu.MeasureUnit.get_pint_imperial()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createRankine(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_rankine()
+
+    # static MeasureUnit icu::MeasureUnit::getRankine()
+    unit2 = icu.MeasureUnit.get_rankine()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createRiJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_ri_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getRiJp()
+    unit2 = icu.MeasureUnit.get_ri_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createRin(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_rin()
+
+    # static MeasureUnit icu::MeasureUnit::getRin()
+    unit2 = icu.MeasureUnit.get_rin()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createRod(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_rod()
+
+    # static MeasureUnit icu::MeasureUnit::getRod()
+    unit2 = icu.MeasureUnit.get_rod()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSai(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_sai()
+
+    # static MeasureUnit icu::MeasureUnit::getSai()
+    unit2 = icu.MeasureUnit.get_sai()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSeJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_se_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getSeJp()
+    unit2 = icu.MeasureUnit.get_se_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createShaku(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_shaku()
+
+    # static MeasureUnit icu::MeasureUnit::getShaku()
+    unit2 = icu.MeasureUnit.get_shaku()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createShakuCloth(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_shaku_cloth()
+
+    # static MeasureUnit icu::MeasureUnit::getShakuCloth()
+    unit2 = icu.MeasureUnit.get_shaku_cloth()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createShakuLength(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_shaku_length()
+
+    # static MeasureUnit icu::MeasureUnit::getShakuLength()
+    unit2 = icu.MeasureUnit.get_shaku_length()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSiemens(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_siemens()
+
+    # static MeasureUnit icu::MeasureUnit::getSiemens()
+    unit2 = icu.MeasureUnit.get_siemens()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSievert(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_sievert()
+
+    # static MeasureUnit icu::MeasureUnit::getSievert()
+    unit2 = icu.MeasureUnit.get_sievert()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSlug(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_slug()
+
+    # static MeasureUnit icu::MeasureUnit::getSlug()
+    unit2 = icu.MeasureUnit.get_slug()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSteradian(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_steradian()
+
+    # static MeasureUnit icu::MeasureUnit::getSteradian()
+    unit2 = icu.MeasureUnit.get_steradian()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createSun(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_sun()
+
+    # static MeasureUnit icu::MeasureUnit::getSun()
+    unit2 = icu.MeasureUnit.get_sun()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createTesla(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_tesla()
+
+    # static MeasureUnit icu::MeasureUnit::getTesla()
+    unit2 = icu.MeasureUnit.get_tesla()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createToJp(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_to_jp()
+
+    # static MeasureUnit icu::MeasureUnit::getToJp()
+    unit2 = icu.MeasureUnit.get_to_jp()
+    assert unit1 == unit2
+
+    # static MeasureUnit* icu::MeasureUnit::createWeber(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_weber()
+
+    # static MeasureUnit icu::MeasureUnit::getWeber()
+    unit2 = icu.MeasureUnit.get_weber()
     assert unit1 == unit2
 
 

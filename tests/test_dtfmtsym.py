@@ -81,6 +81,7 @@ def test_get_am_pm_strings() -> None:
     sym2 = icu.DateFormatSymbols(icu.Locale("und"))
     sym3 = icu.DateFormatSymbols(icu.Locale("und"))
 
+    # [1]
     # const UnicodeString *icu::DateFormatSymbols::getAmPmStrings(
     #       int32_t &count
     # )
@@ -102,6 +103,51 @@ def test_get_am_pm_strings() -> None:
     assert sym3.get_am_pm_strings() != ampms
     sym3.set_am_pm_strings(ampms)  # count is optional
     assert sym3.get_am_pm_strings() == ampms
+
+
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 78, reason="ICU4C<78")
+def test_get_am_pm_strings_78() -> None:
+    sym = icu.DateFormatSymbols(icu.Locale.get_japan())
+
+    # [2]
+    # const UnicodeString *icu::DateFormatSymbols::getAmPmStrings(
+    #       int32_t &count,
+    #       DtContextType context,
+    #       DtWidthType width
+    # ) const
+    ampms = sym.get_am_pm_strings(
+        icu.DateFormatSymbols.DtContextType.FORMAT,
+        icu.DateFormatSymbols.DtWidthType.WIDE,
+    )
+    assert isinstance(ampms, list)
+    assert len(ampms) == 2
+    assert all(isinstance(x, icu.UnicodeString) for x in ampms)
+    assert ampms[0] == "\u5348\u524d"  # 午前
+    assert ampms[1] == "\u5348\u5f8c"  # 午後
+
+    # void icu::DateFormatSymbols::setAmPmStrings(
+    #       const UnicodeString *ampms,
+    #       int32_t count,
+    #       DtContextType context,
+    #       DtWidthType width
+    # )
+    ampms2 = [icu.UnicodeString("am!"), icu.UnicodeString("pm!")]
+    sym.set_am_pm_strings(
+        ampms2,
+        -1,
+        icu.DateFormatSymbols.DtContextType.FORMAT,
+        icu.DateFormatSymbols.DtWidthType.WIDE,
+    )
+
+    ampms = sym.get_am_pm_strings(
+        icu.DateFormatSymbols.DtContextType.FORMAT,
+        icu.DateFormatSymbols.DtWidthType.WIDE,
+    )
+    assert isinstance(ampms, list)
+    assert len(ampms) == 2
+    assert all(isinstance(x, icu.UnicodeString) for x in ampms)
+    assert ampms[0] == "am!"
+    assert ampms[1] == "pm!"
 
 
 def test_get_era_names() -> None:

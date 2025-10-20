@@ -4,11 +4,135 @@
 
 - **NEW**
   - Add support for Python 3.14
+  - Add support for [ICU 78 RC](https://github.com/unicode-org/icu/releases/tag/release-78.1rc)
+    - Add `icupy.icu.DateFormatSymbols.get_am_pm_strings(context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)`
+    - Add `icupy.icu.DateFormatSymbols.set_am_pm_strings(ampms: list[UnicodeString], count: int, context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)`
+    - Add `icupy.icu.header.AllCodePoints()`
+    - Add `icupy.icu.header.AllScalarValues()`
+    - Add `icupy.icu.MeasureUnit.create_becquerel()`
+    - Add `icupy.icu.MeasureUnit.create_bu_jp()`
+    - Add `icupy.icu.MeasureUnit.create_chain()`
+    - Add `icupy.icu.MeasureUnit.create_coulomb()`
+    - Add `icupy.icu.MeasureUnit.create_cup_imperial()`
+    - Add `icupy.icu.MeasureUnit.create_cup_jp()`
+    - Add `icupy.icu.MeasureUnit.create_farad()`
+    - Add `icupy.icu.MeasureUnit.create_fluid_ounce_metric()`
+    - Add `icupy.icu.MeasureUnit.create_fortnight()`
+    - Add `icupy.icu.MeasureUnit.create_fun()`
+    - Add `icupy.icu.MeasureUnit.create_gray()`
+    - Add `icupy.icu.MeasureUnit.create_henry()`
+    - Add `icupy.icu.MeasureUnit.create_jo_jp()`
+    - Add `icupy.icu.MeasureUnit.create_katal()`
+    - Add `icupy.icu.MeasureUnit.create_ken()`
+    - Add `icupy.icu.MeasureUnit.create_kilogram_force()`
+    - Add `icupy.icu.MeasureUnit.create_koku()`
+    - Add `icupy.icu.MeasureUnit.create_kosaji()`
+    - Add `icupy.icu.MeasureUnit.create_ofglucose()`
+    - Add `icupy.icu.MeasureUnit.create_ofhg()`
+    - Add `icupy.icu.MeasureUnit.create_osaji()`
+    - Add `icupy.icu.MeasureUnit.create_part_per_1e6()`
+    - Add `icupy.icu.MeasureUnit.create_part_per_1e9()`
+    - Add `icupy.icu.MeasureUnit.create_part()`
+    - Add `icupy.icu.MeasureUnit.create_pint_imperial()`
+    - Add `icupy.icu.MeasureUnit.create_rankine()`
+    - Add `icupy.icu.MeasureUnit.create_ri_jp()`
+    - Add `icupy.icu.MeasureUnit.create_rin()`
+    - Add `icupy.icu.MeasureUnit.create_rod()`
+    - Add `icupy.icu.MeasureUnit.create_sai()`
+    - Add `icupy.icu.MeasureUnit.create_se_jp()`
+    - Add `icupy.icu.MeasureUnit.create_shaku_cloth()`
+    - Add `icupy.icu.MeasureUnit.create_shaku_length()`
+    - Add `icupy.icu.MeasureUnit.create_shaku()`
+    - Add `icupy.icu.MeasureUnit.create_siemens()`
+    - Add `icupy.icu.MeasureUnit.create_sievert()`
+    - Add `icupy.icu.MeasureUnit.create_slug()`
+    - Add `icupy.icu.MeasureUnit.create_steradian()`
+    - Add `icupy.icu.MeasureUnit.create_sun()`
+    - Add `icupy.icu.MeasureUnit.create_tesla()`
+    - Add `icupy.icu.MeasureUnit.create_to_jp()`
+    - Add `icupy.icu.MeasureUnit.create_weber()`
+    - Add `icupy.icu.MeasureUnit.get_becquerel()`
+    - Add `icupy.icu.MeasureUnit.get_british_thermal_unit_it()`
+    - Add `icupy.icu.MeasureUnit.get_bu_jp()`
+    - Add `icupy.icu.MeasureUnit.get_calorie_it()`
+    - Add `icupy.icu.MeasureUnit.get_chain()`
+    - Add `icupy.icu.MeasureUnit.get_cho()`
+    - Add `icupy.icu.MeasureUnit.get_coulomb()`
+    - Add `icupy.icu.MeasureUnit.get_cup_imperial()`
+    - Add `icupy.icu.MeasureUnit.get_cup_jp()`
+    - Add `icupy.icu.MeasureUnit.get_farad()`
+    - Add `icupy.icu.MeasureUnit.get_fluid_ounce_metric()`
+    - Add `icupy.icu.MeasureUnit.get_fortnight()`
+    - Add `icupy.icu.MeasureUnit.get_fun()`
+    - Add `icupy.icu.MeasureUnit.get_gray()`
+    - Add `icupy.icu.MeasureUnit.get_henry()`
+    - Add `icupy.icu.MeasureUnit.get_jo_jp()`
+    - Add `icupy.icu.MeasureUnit.get_ken()`
+    - Add `icupy.icu.MeasureUnit.get_kilogram_force()`
+    - Add `icupy.icu.MeasureUnit.get_koku()`
+    - Add `icupy.icu.MeasureUnit.get_kosaji()`
+    - Add `icupy.icu.MeasureUnit.get_ofglucose()`
+    - Add `icupy.icu.MeasureUnit.get_ofhg()`
+    - Add `icupy.icu.MeasureUnit.get_osaji()`
+    - Add `icupy.icu.MeasureUnit.get_part_per_1e6()`
+    - Add `icupy.icu.MeasureUnit.get_part_per_1e9()`
+    - Add `icupy.icu.MeasureUnit.get_part()`
+    - Add `icupy.icu.MeasureUnit.get_pint_imperial()`
+    - Add `icupy.icu.MeasureUnit.get_rankine()`
+    - Add `icupy.icu.MeasureUnit.get_ri_jp()`
+    - Add `icupy.icu.MeasureUnit.get_rin()`
+    - Add `icupy.icu.MeasureUnit.get_rod()`
+    - Add `icupy.icu.MeasureUnit.get_sai()`
+    - Add `icupy.icu.MeasureUnit.get_se_jp()`
+    - Add `icupy.icu.MeasureUnit.get_shaku_cloth()`
+    - Add `icupy.icu.MeasureUnit.get_shaku_length()`
+    - Add `icupy.icu.MeasureUnit.get_shaku()`
+    - Add `icupy.icu.MeasureUnit.get_siemens()`
+    - Add `icupy.icu.MeasureUnit.get_sievert()`
+    - Add `icupy.icu.MeasureUnit.get_slug()`
+    - Add `icupy.icu.MeasureUnit.get_steradian()`
+    - Add `icupy.icu.MeasureUnit.get_sun()`
+    - Add `icupy.icu.MeasureUnit.get_tesla()`
+    - Add `icupy.icu.MeasureUnit.get_to_jp()`
+    - Add `icupy.icu.MeasureUnit.get_weber()`
+    - Add `icupy.icu.u_is_code_point(c: int)`
+    - Add `icupy.icu.u_is_scalar_value(c: int)`
+    - Add `icupy.icu.UBlockCode.UBLOCK_BERIA_ERFE`
+    - Add `icupy.icu.UBlockCode.UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J`
+    - Add `icupy.icu.UBlockCode.UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT`
+    - Add `icupy.icu.UBlockCode.UBLOCK_SHARADA_SUPPLEMENT`
+    - Add `icupy.icu.UBlockCode.UBLOCK_SIDETIC`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TAI_YO`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT`
+    - Add `icupy.icu.UBlockCode.UBLOCK_TOLONG_SIKI`
+    - Add `icupy.icu.UDateFormatSymbolType.UDAT_AM_PMS_NARROW`
+    - Add `icupy.icu.UDateFormatSymbolType.UDAT_AM_PMS_WIDE`
+    - Add `icupy.icu.UJoiningGroup.U_JG_THIN_NOON`
+    - Add `icupy.icu.ULineBreak.U_LB_UNAMBIGUOUS_HYPHEN`
+    - Add `icupy.icu.UnicodeString.push_back(c: str)`
+    - Add `icupy.icu.UScriptCode.USCRIPT_BERIA_ERFE`
+    - Add `icupy.icu.UScriptCode.USCRIPT_SIDETIC`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TAI_YO`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TOLONG_SIKI`
+    - Add `icupy.icu.UScriptCode.USCRIPT_TRADITIONAL_HAN_WITH_LATIN`
+    - Remove `icupy.icu.MeasureUnit.create_portion_per_1e9()`
+    - Remove `icupy.icu.MeasureUnit.get_portion_per_1e9()`
+  - Add `icupy.icu.u_is_bmp(c: int)`
+  - Add `icupy.icu.u_is_lead(c: int)`
+  - Add `icupy.icu.u_is_supplementary(c: int)`
+  - Add `icupy.icu.u_is_surrogate(c: int)`
+  - Add `icupy.icu.u_is_surrogate_lead(c: int)`
+  - Add `icupy.icu.u_is_surrogate_trail(c: int)`
+  - Add `icupy.icu.u_is_trail(c: int)`
+  - Add `icupy.icu.u_is_unicode_char(c: int)`
+  - Add `icupy.icu.u_is_unicode_nonchar(c: int)`
 - **CHANGED**
   - Update pybind11 from 2.13.6 to 3.0.1
 - **Removed**
   - Drop support for Python 3.9
   - Drop support for CMake old than 3.15
+  - Remove `icupy.icu.MeasureUnit.create_milligram_of_glucose_per_deciliter()`. Use `icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()` instead
+  - Remove `icupy.icu.MeasureUnit.get_milligram_of_glucose_per_deciliter()`. Use `icupy.icu.MeasureUnit.get_milligram_ofglucose_per_deciliter()` instead
 
 ## v0.21.0 (2025-03-15)
 

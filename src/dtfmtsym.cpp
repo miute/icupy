@@ -72,17 +72,33 @@ void init_dtfmtsym(py::module &m) {
       py::is_operator(), py::arg("other"));
 
   dfs.def(
-      "get_am_pm_strings",
-      [](const DateFormatSymbols &self) {
-        int32_t count;
-        auto p = self.getAmPmStrings(count);
-        std::vector<const UnicodeString *> result(count, nullptr);
-        for (int32_t i = 0; i < count; ++i) {
-          result[i] = p + i;
-        }
-        return result;
-      },
-      py::return_value_policy::reference);
+         "get_am_pm_strings",
+         [](const DateFormatSymbols &self) {
+           int32_t count;
+           auto p = self.getAmPmStrings(count);
+           std::vector<const UnicodeString *> result(count, nullptr);
+           for (int32_t i = 0; i < count; ++i) {
+             result[i] = p + i;
+           }
+           return result;
+         },
+         py::return_value_policy::reference)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .def(
+          "get_am_pm_strings",
+          [](const DateFormatSymbols &self, DateFormatSymbols::DtContextType context,
+             DateFormatSymbols::DtWidthType width) {
+            int32_t count;
+            auto p = self.getAmPmStrings(count, context, width);
+            std::vector<const UnicodeString *> result(count, nullptr);
+            for (int32_t i = 0; i < count; ++i) {
+              result[i] = p + i;
+            }
+            return result;
+          },
+          py::return_value_policy::reference, py::arg("context"), py::arg("width"))
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+      ;
 
   dfs.def(
       "get_era_names",
@@ -262,15 +278,29 @@ void init_dtfmtsym(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
   dfs.def(
-      "set_am_pm_strings",
-      [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count) {
-        if (count == -1) {
-          count = static_cast<int32_t>(ampms.size());
-        }
-        std::vector<UnicodeString> _ampms(ampms.begin(), ampms.end());
-        self.setAmPmStrings(_ampms.data(), count);
-      },
-      py::arg("ampms"), py::arg("count") = -1);
+         "set_am_pm_strings",
+         [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count) {
+           if (count == -1) {
+             count = static_cast<int32_t>(ampms.size());
+           }
+           std::vector<UnicodeString> _ampms(ampms.begin(), ampms.end());
+           self.setAmPmStrings(_ampms.data(), count);
+         },
+         py::arg("ampms"), py::arg("count") = -1)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .def(
+          "set_am_pm_strings",
+          [](DateFormatSymbols &self, const std::list<UnicodeString> &ampms, int32_t count,
+             DateFormatSymbols::DtContextType context, DateFormatSymbols::DtWidthType width) {
+            if (count == -1) {
+              count = static_cast<int32_t>(ampms.size());
+            }
+            std::vector<UnicodeString> _ampms(ampms.begin(), ampms.end());
+            self.setAmPmStrings(_ampms.data(), count, context, width);
+          },
+          py::arg("ampms"), py::arg("count"), py::arg("context"), py::arg("width"))
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+      ;
 
   dfs.def(
       "set_era_names",

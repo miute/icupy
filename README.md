@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/icupy)](https://pypi.org/project/icupy/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/icupy)](https://pypi.org/project/icupy/)
-[![icu](https://img.shields.io/badge/icu-70%20%7C%2071%20%7C%2072%20%7C%2073%20%7C%2074%20%7C%2075%20%7C%2076%20%7C%2077-red)](https://icu.unicode.org/)
+[![icu](https://img.shields.io/badge/icu-70%20%7C%2071%20%7C%2072%20%7C%2073%20%7C%2074%20%7C%2075%20%7C%2076%20%7C%2077%20%7C%2078RC-red)](https://icu.unicode.org/)
 [![PyPI - License](https://img.shields.io/pypi/l/icupy)](https://pypi.org/project/icupy/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/miute/icupy/main.svg)](https://results.pre-commit.ci/latest/github/miute/icupy/main)
 [![tests](https://github.com/miute/icupy/actions/workflows/tests.yml/badge.svg)](https://github.com/miute/icupy/actions/workflows/tests.yml)

@@ -271,6 +271,13 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_TODHRI", USCRIPT_TODHRI, "Todr")
       .value("USCRIPT_TULU_TIGALARI", USCRIPT_TULU_TIGALARI, "Tutg")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .value("USCRIPT_BERIA_ERFE", USCRIPT_BERIA_ERFE, "Berf")
+      .value("USCRIPT_SIDETIC", USCRIPT_SIDETIC, "Sidt")
+      .value("USCRIPT_TAI_YO", USCRIPT_TAI_YO, "Tayo")
+      .value("USCRIPT_TOLONG_SIKI", USCRIPT_TOLONG_SIKI, "Tols")
+      .value("USCRIPT_TRADITIONAL_HAN_WITH_LATIN", USCRIPT_TRADITIONAL_HAN_WITH_LATIN, "Hntl")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 #ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")

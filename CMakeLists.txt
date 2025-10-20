@@ -149,6 +149,8 @@ python_add_library(
     src/usprep.cpp
     src/ustring.cpp
     src/utext.cpp
+    src/utf.cpp
+    src/utfiterator.cpp
     src/utmscale.cpp
     src/utrans.cpp
     src/utypes.cpp
