@@ -200,6 +200,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_becquerel", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createBecquerel(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_bit", []() {
     ErrorCode error_code;
@@ -221,6 +232,26 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_british_thermal_unit_it", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createBritishThermalUnitIt(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_bu_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createBuJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_bushel", []() {
@@ -250,6 +281,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_calorie_it", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createCalorieIt(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   mu.def_static("create_candela", []() {
@@ -316,6 +358,35 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_chain", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createChain(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_cho", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createCho(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_coulomb", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createCoulomb(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_cubic_centimeter", []() {
@@ -398,6 +469,26 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_cup_imperial", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createCupImperial(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_cup_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createCupJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   mu.def_static("create_cup_metric", []() {
@@ -618,6 +709,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_farad", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createFarad(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_fathom", []() {
     ErrorCode error_code;
@@ -649,6 +751,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_fluid_ounce_metric", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createFluidOunceMetric(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_foodcalorie", []() {
     ErrorCode error_code;
@@ -670,6 +783,26 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_fortnight", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createFortnight(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_fun", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createFun(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_furlong", []() {
@@ -794,6 +927,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_gray", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createGray(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("create_hectare", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createHectare(error_code);
@@ -825,6 +969,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_henry", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createHenry(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_hertz", []() {
@@ -897,6 +1052,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_jo_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createJoJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_joule", []() {
     ErrorCode error_code;
@@ -916,6 +1082,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_katal", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKatal(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("create_kelvin", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createKelvin(error_code);
@@ -924,6 +1101,17 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_ken", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKen(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("create_kilobit", []() {
     ErrorCode error_code;
@@ -963,6 +1151,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_kilogram_force", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKilogramForce(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_kilohertz", []() {
@@ -1058,6 +1257,26 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_koku", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKoku(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_kosaji", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createKosaji(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   mu.def_static("create_light_speed", []() {
@@ -1359,23 +1578,14 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def_static("create_milligram_of_glucose_per_deciliter", // Not a typo
-                []() {
-                  ErrorCode error_code;
-                  auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
-                  if (error_code.isFailure()) {
-                    throw icupy::ICUError(error_code);
-                  }
-                  return result;
-                })
-      .def_static("create_milligram_ofglucose_per_deciliter", []() {
-        ErrorCode error_code;
-        auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      });
+  mu.def_static("create_milligram_ofglucose_per_deciliter", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createMilligramOfglucosePerDeciliter(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
@@ -1559,6 +1769,26 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_ofglucose", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createOfglucose(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_ofhg", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createOfhg(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_ohm", []() {
     ErrorCode error_code;
@@ -1569,6 +1799,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_osaji", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createOsaji(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static("create_ounce", []() {
@@ -1600,6 +1841,35 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_part", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createPart(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_part_per_1e6", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createPartPer1E6(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_part_per_1e9", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createPartPer1E9(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   mu.def_static("create_part_per_million", []() {
@@ -1698,6 +1968,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_pint_imperial", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createPintImperial(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   mu.def_static("create_pint_metric", []() {
     ErrorCode error_code;
@@ -1749,7 +2030,7 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 59)
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+#if (U_ICU_VERSION_MAJOR_NUM == 77)
   mu.def_static("create_portion_per_1e9", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createPortionPer1E9(error_code);
@@ -1758,7 +2039,7 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
+#endif // (U_ICU_VERSION_MAJOR_NUM == 77)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static("create_pound", []() {
@@ -1844,6 +2125,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_rankine", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createRankine(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   mu.def_static("create_revolution_angle", []() {
     ErrorCode error_code;
@@ -1855,6 +2147,44 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_ri_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createRiJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_rin", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createRin(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_rod", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createRod(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_sai", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSai(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static("create_second", []() {
     ErrorCode error_code;
@@ -1865,6 +2195,71 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_se_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSeJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_shaku", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createShaku(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_shaku_cloth", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createShakuCloth(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_shaku_length", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createShakuLength(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_siemens", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSiemens(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_sievert", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSievert(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+
+  mu.def_static("create_slug", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSlug(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("create_solar_luminosity", []() {
@@ -1967,6 +2362,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_steradian", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSteradian(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("create_stone", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createStone(error_code);
@@ -1975,6 +2381,17 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_sun", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createSun(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("create_tablespoon", []() {
     ErrorCode error_code;
@@ -2013,6 +2430,17 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_tesla", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createTesla(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   mu.def_static("create_therm_us", []() {
     ErrorCode error_code;
@@ -2023,6 +2451,17 @@ void init_measunit(py::module &m) {
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_to_jp", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createToJp(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_ton", []() {
@@ -2066,6 +2505,17 @@ void init_measunit(py::module &m) {
     }
     return result;
   });
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("create_weber", []() {
+    ErrorCode error_code;
+    auto result = MeasureUnit::createWeber(error_code);
+    if (error_code.isFailure()) {
+      throw icupy::ICUError(error_code);
+    }
+    return result;
+  });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("create_week", []() {
     ErrorCode error_code;
@@ -2198,10 +2648,20 @@ void init_measunit(py::module &m) {
   mu.def_static("get_beaufort", &MeasureUnit::getBeaufort);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_becquerel", &MeasureUnit::getBecquerel);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_bit", &MeasureUnit::getBit);
 
   mu.def_static("get_british_thermal_unit", &MeasureUnit::getBritishThermalUnit);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_british_thermal_unit_it", &MeasureUnit::getBritishThermalUnitIt);
+
+  mu.def_static("get_bu_jp", &MeasureUnit::getBuJp);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_bushel", &MeasureUnit::getBushel);
 
@@ -2209,6 +2669,10 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_calorie", &MeasureUnit::getCalorie);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_calorie_it", &MeasureUnit::getCalorieIt);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   mu.def_static("get_candela", &MeasureUnit::getCandela);
@@ -2225,6 +2689,12 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_century", &MeasureUnit::getCentury);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_chain", &MeasureUnit::getChain);
+
+  mu.def_static("get_cho", &MeasureUnit::getCho);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   mu.def("get_complexity", [](const MeasureUnit &self) {
@@ -2248,6 +2718,10 @@ void init_measunit(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_coulomb", &MeasureUnit::getCoulomb);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_cubic_centimeter", &MeasureUnit::getCubicCentimeter);
 
@@ -2264,6 +2738,12 @@ void init_measunit(py::module &m) {
   mu.def_static("get_cubic_yard", &MeasureUnit::getCubicYard);
 
   mu.def_static("get_cup", &MeasureUnit::getCup);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_cup_imperial", &MeasureUnit::getCupImperial);
+
+  mu.def_static("get_cup_jp", &MeasureUnit::getCupJp);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_cup_metric", &MeasureUnit::getCupMetric);
 
@@ -2340,15 +2820,29 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_fahrenheit", &MeasureUnit::getFahrenheit);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_farad", &MeasureUnit::getFarad);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_fathom", &MeasureUnit::getFathom);
 
   mu.def_static("get_fluid_ounce", &MeasureUnit::getFluidOunce);
 
   mu.def_static("get_fluid_ounce_imperial", &MeasureUnit::getFluidOunceImperial);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_fluid_ounce_metric", &MeasureUnit::getFluidOunceMetric);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_foodcalorie", &MeasureUnit::getFoodcalorie);
 
   mu.def_static("get_foot", &MeasureUnit::getFoot);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_fortnight", &MeasureUnit::getFortnight);
+
+  mu.def_static("get_fun", &MeasureUnit::getFun);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_furlong", &MeasureUnit::getFurlong);
 
@@ -2382,11 +2876,19 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_gram", &MeasureUnit::getGram);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_gray", &MeasureUnit::getGray);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_hectare", &MeasureUnit::getHectare);
 
   mu.def_static("get_hectoliter", &MeasureUnit::getHectoliter);
 
   mu.def_static("get_hectopascal", &MeasureUnit::getHectopascal);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_henry", &MeasureUnit::getHenry);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_hertz", &MeasureUnit::getHertz);
 
@@ -2413,12 +2915,24 @@ void init_measunit(py::module &m) {
   mu.def_static("get_jigger", &MeasureUnit::getJigger);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_jo_jp", &MeasureUnit::getJoJp);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_joule", &MeasureUnit::getJoule);
 
   mu.def_static("get_karat", &MeasureUnit::getKarat);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_katal", &MeasureUnit::getKatal);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_kelvin", &MeasureUnit::getKelvin);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_ken", &MeasureUnit::getKen);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_kilobit", &MeasureUnit::getKilobit);
 
@@ -2427,6 +2941,10 @@ void init_measunit(py::module &m) {
   mu.def_static("get_kilocalorie", &MeasureUnit::getKilocalorie);
 
   mu.def_static("get_kilogram", &MeasureUnit::getKilogram);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_kilogram_force", &MeasureUnit::getKilogramForce);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_kilohertz", &MeasureUnit::getKilohertz);
 
@@ -2450,6 +2968,12 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_knot", &MeasureUnit::getKnot);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_koku", &MeasureUnit::getKoku);
+
+  mu.def_static("get_kosaji", &MeasureUnit::getKosaji);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   mu.def_static("get_light_speed", &MeasureUnit::getLightSpeed);
@@ -2522,8 +3046,7 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def_static("get_milligram_of_glucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter)
-      .def_static("get_milligram_ofglucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
+  mu.def_static("get_milligram_ofglucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -2564,14 +3087,32 @@ void init_measunit(py::module &m) {
   mu.def_static("get_night", &MeasureUnit::getNight);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_ofglucose", &MeasureUnit::getOfglucose);
+
+  mu.def_static("get_ofhg", &MeasureUnit::getOfhg);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_ohm", &MeasureUnit::getOhm);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_osaji", &MeasureUnit::getOsaji);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_ounce", &MeasureUnit::getOunce);
 
   mu.def_static("get_ounce_troy", &MeasureUnit::getOunceTroy);
 
   mu.def_static("get_parsec", &MeasureUnit::getParsec);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_part", &MeasureUnit::getPart);
+
+  mu.def_static("get_part_per_1e6", &MeasureUnit::getPartPer1E6);
+
+  mu.def_static("get_part_per_1e9", &MeasureUnit::getPartPer1E9);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_part_per_million", &MeasureUnit::getPartPerMillion);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -2599,6 +3140,10 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_pint", &MeasureUnit::getPint);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_pint_imperial", &MeasureUnit::getPintImperial);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_pint_metric", &MeasureUnit::getPintMetric);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -2614,9 +3159,9 @@ void init_measunit(py::module &m) {
   mu.def_static("get_point", &MeasureUnit::getPoint);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 77)
+#if (U_ICU_VERSION_MAJOR_NUM == 77)
   mu.def_static("get_portion_per_1e9", &MeasureUnit::getPortionPer1E9);
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 77)
+#endif // (U_ICU_VERSION_MAJOR_NUM == 77)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_pound", &MeasureUnit::getPound);
@@ -2654,9 +3199,39 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_radian", &MeasureUnit::getRadian);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_rankine", &MeasureUnit::getRankine);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_revolution_angle", &MeasureUnit::getRevolutionAngle);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_ri_jp", &MeasureUnit::getRiJp);
+
+  mu.def_static("get_rin", &MeasureUnit::getRin);
+
+  mu.def_static("get_rod", &MeasureUnit::getRod);
+
+  mu.def_static("get_sai", &MeasureUnit::getSai);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_second", &MeasureUnit::getSecond);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_se_jp", &MeasureUnit::getSeJp);
+
+  mu.def_static("get_shaku", &MeasureUnit::getShaku);
+
+  mu.def_static("get_shaku_cloth", &MeasureUnit::getShakuCloth);
+
+  mu.def_static("get_shaku_length", &MeasureUnit::getShakuLength);
+
+  mu.def_static("get_siemens", &MeasureUnit::getSiemens);
+
+  mu.def_static("get_sievert", &MeasureUnit::getSievert);
+
+  mu.def_static("get_slug", &MeasureUnit::getSlug);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_solar_luminosity", &MeasureUnit::getSolarLuminosity);
 
@@ -2678,12 +3253,20 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_square_yard", &MeasureUnit::getSquareYard);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_steradian", &MeasureUnit::getSteradian);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   mu.def_static("get_stone", &MeasureUnit::getStone);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def("get_subtype", &MeasureUnit::getSubtype);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def("get_sun", &MeasureUnit::getSun);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_tablespoon", &MeasureUnit::getTablespoon);
@@ -2695,9 +3278,17 @@ void init_measunit(py::module &m) {
   mu.def_static("get_terabyte", &MeasureUnit::getTerabyte);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_tesla", &MeasureUnit::getTesla);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   mu.def_static("get_therm_us", &MeasureUnit::getThermUs);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_to_jp", &MeasureUnit::getToJp);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_ton", &MeasureUnit::getTon);
@@ -2715,6 +3306,10 @@ void init_measunit(py::module &m) {
   mu.def_static("get_volt", &MeasureUnit::getVolt);
 
   mu.def_static("get_watt", &MeasureUnit::getWatt);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  mu.def_static("get_weber", &MeasureUnit::getWeber);
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   mu.def_static("get_week", &MeasureUnit::getWeek);
 

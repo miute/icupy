@@ -52,13 +52,19 @@ def test_for_locale() -> None:
     assert isinstance(fmt1, icu.number.SimpleNumberFormatter)
     fv = fmt1.format_int64(-1000007)
     assert isinstance(fv, icu.number.FormattedNumber)
-    assert fv.to_temp_string() == "-1’000’007"
+    assert fv.to_temp_string() in [
+        "-1’000’007",
+        "-1'000'007",  # ICU 78+
+    ]
 
     fmt2 = icu.number.SimpleNumberFormatter.for_locale("de-CH")
     assert isinstance(fmt2, icu.number.SimpleNumberFormatter)
     fv = fmt2.format_int64(-1000007)
     assert isinstance(fv, icu.number.FormattedNumber)
-    assert fv.to_temp_string() == "-1’000’007"
+    assert fv.to_temp_string() in [
+        "-1’000’007",
+        "-1'000'007",  # ICU 78+
+    ]
 
 
 def test_for_locale_and_grouping_strategy() -> None:
@@ -74,7 +80,10 @@ def test_for_locale_and_grouping_strategy() -> None:
     assert isinstance(fmt1, icu.number.SimpleNumberFormatter)
     fv = fmt1.format_int64(-1000007)
     assert isinstance(fv, icu.number.FormattedNumber)
-    assert fv.to_temp_string() == "-1’000’007"
+    assert fv.to_temp_string() in [
+        "-1’000’007",
+        "-1'000'007",  # ICU 78+
+    ]
 
     fmt2 = icu.number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
         "de-CH", icu.UNumberGroupingStrategy.UNUM_GROUPING_AUTO
@@ -82,7 +91,10 @@ def test_for_locale_and_grouping_strategy() -> None:
     assert isinstance(fmt2, icu.number.SimpleNumberFormatter)
     fv = fmt2.format_int64(-1000007)
     assert isinstance(fv, icu.number.FormattedNumber)
-    assert fv.to_temp_string() == "-1’000’007"
+    assert fv.to_temp_string() in [
+        "-1’000’007",
+        "-1'000'007",  # ICU 78+
+    ]
 
 
 def test_for_locale_and_symbols_and_grouping_strategy() -> None:

@@ -74,6 +74,59 @@ source = ["icupy"]
 [tool.coverage.paths]
 source = ["src/icupy", "*/icupy"]
 
+[tool.ruff]
+target-version = "py310"
+src = ["src", "tests"]
+extend-exclude = ["src/third_party"]
+line-length = 96
+
+[tool.ruff.lint]
+extend-select = [
+  "A",    # flake8-builtins (A)
+  "ANN",  # flake8-annotations (ANN)
+  "B",    # flake8-bugbear (B)
+  "C4",   # flake8-comprehensions (C4)
+  "EM",   # flake8-errmsg (EM)
+  "FA",   # flake8-future-annotations (FA)
+  "FURB", # refurb (FURB)
+  "I",    # isort (I)
+  "ICN",  # flake8-import-conventions (ICN)
+  "ISC",  # flake8-implicit-str-concat (ISC)
+  "N",    # pep8-naming (N)
+  "PIE",  # flake8-pie (PIE)
+  "PL",   # Pylint (PL)
+  "PT",   # flake8-pytest-style (PT)
+  "Q",    # flake8-quotes (Q)
+  "RET",  # flake8-return (RET)
+  "RSE",  # flake8-raise (RSE)
+  "RUF",  # Ruff-specific rules (RUF)
+  "S",    # flake8-bandit (S)
+  "SIM",  # flake8-simplify (SIM)
+  "SLF",  # flake8-self (SLF)
+  "T20",  # flake8-print (T20)
+  "TRY",  # tryceratops (TRY)
+  "UP",   # pyupgrade (UP)
+  "YTT",  # flake8-2020 (YTT)
+]
+extend-ignore = [
+  "PLR0915", # Too many statements ({statements} > {max_statements})
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+  "PLR2004", # magic-value-comparison
+  "PT011",   # pytest-raises-too-broad
+  "PT018",   # pytest-composite-assertion
+  "RUF001",  # ambiguous-unicode-character-string
+  "RUF003",  # ambiguous-unicode-character-comment
+  "S101",    # Use of assert detected
+  "SIM201",  # negate-equal-op
+  "SIM202",  # negate-not-equal-op
+]
+
+[tool.ruff.format]
+line-ending = "lf"
+
 [tool.black]
 line-length = 96
 target-version = ["py310", "py311", "py312", "py313"]

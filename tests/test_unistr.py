@@ -1571,6 +1571,19 @@ def test_pad_trailing() -> None:
     assert test1 == "foo......."
 
 
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 78, reason="ICU4C<78")
+def test_push_back() -> None:
+    s = icu.UnicodeString("a")
+
+    # void icu::UnicodeString::push_back(char16_t c)
+    result = s.push_back("b")
+    assert s == "ab"
+    assert result is None
+
+    with pytest.raises(ValueError):
+        s.push_back("cd")  # Expected a character, but multi-character string found
+
+
 def test_remove() -> None:
     test1 = icu.UnicodeString("foo bar baz")
 

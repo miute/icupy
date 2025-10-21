@@ -779,6 +779,10 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       },
       py::arg("target_length"), py::arg("pad_char") = 0x20);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+  us.def("push_back", &UnicodeString::push_back, py::arg("c"));
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+
   us.def("remove", py::overload_cast<>(&UnicodeString::remove))
       .def("remove", py::overload_cast<int32_t, int32_t>(&UnicodeString::remove), py::arg("start"),
            py::arg("length") = INT32_MAX);

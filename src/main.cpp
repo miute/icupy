@@ -109,7 +109,7 @@ void init_uldnames(py::module &m);
 void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
-void init_uniset(py::module &m, py::module &ho_ns);
+void init_uniset(py::module &m, py::module &h);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
 void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
@@ -132,6 +132,8 @@ void init_uspoof(py::module &m);
 void init_usprep(py::module &m);
 void init_ustring(py::module &m);
 void init_utext(py::module &m);
+void init_utf(py::module &m);
+void init_utfiterator(py::module &m, py::module &h);
 void init_utmscale(py::module &m);
 void init_utrans(py::module &m);
 void init_utypes(py::module &m);
@@ -176,7 +178,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   auto number = m.def_submodule("number");
 
   // icu::U_HEADER_ONLY_NAMESPACE namespace
-  auto ho_ns = m.def_submodule("U_HEADER_ONLY_NAMESPACE");
+  auto header = m.def_submodule("header");
 
   // icu::UMemory
   py::class_<UMemory>(m, "UMemory");
@@ -290,12 +292,12 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_edits(m);   // icu::Edits
   init_casemap(m); // icu::CaseMap
 
-  init_uniset(m, ho_ns); // icu::UnicodeSet
-  init_usetiter(m);      // icu::UnicodeSetIterator
-  init_normalizer2(m);   // icu::Normalizer2, icu::FilteredNormalizer2
-  init_tblcoll(m);       // icu::RuleBasedCollator
-  init_stsearch(m);      // icu::StringSearch
-  init_translit(m);      // icu::Transliterator
+  init_uniset(m, header); // icu::UnicodeSet
+  init_usetiter(m);       // icu::UnicodeSetIterator
+  init_normalizer2(m);    // icu::Normalizer2, icu::FilteredNormalizer2
+  init_tblcoll(m);        // icu::RuleBasedCollator
+  init_stsearch(m);       // icu::StringSearch
+  init_translit(m);       // icu::Transliterator
 
   init_alphaindex(m); // icu::AlphabeticIndex
 
@@ -347,6 +349,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_usprep(m);
   init_ustring(m);
   init_utext(m);
+  init_utf(m);
+  init_utfiterator(m, header);
   init_utmscale(m);
   init_utrans(m);
   init_utypes(m);

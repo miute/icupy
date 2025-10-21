@@ -12,7 +12,7 @@
 
 using namespace icu;
 
-void init_uniset(py::module &m, py::module &ho_ns) {
+void init_uniset(py::module &m, py::module &h) {
   //
   // icu::UMatchDegree
   //
@@ -57,7 +57,7 @@ void init_uniset(py::module &m, py::module &ho_ns) {
   //
   // U_HEADER_ONLY_NAMESPACE::CodePointRange
   //
-  py::class_<U_HEADER_ONLY_NAMESPACE::CodePointRange> cpr(ho_ns, "CodePointRange");
+  py::class_<U_HEADER_ONLY_NAMESPACE::CodePointRange> cpr(h, "CodePointRange");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   //

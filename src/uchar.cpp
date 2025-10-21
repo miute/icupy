@@ -412,6 +412,16 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_TODHRI", UBLOCK_TODHRI, "[105C0]")
       .value("UBLOCK_TULU_TIGALARI", UBLOCK_TULU_TIGALARI, "[11380]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .value("UBLOCK_BERIA_ERFE", UBLOCK_BERIA_ERFE, "[16EA0]")
+      .value("UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J", UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J, "[323B0]")
+      .value("UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT", UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT, "[1CEC0]")
+      .value("UBLOCK_SHARADA_SUPPLEMENT", UBLOCK_SHARADA_SUPPLEMENT, "[11B60]")
+      .value("UBLOCK_SIDETIC", UBLOCK_SIDETIC, "[10940]")
+      .value("UBLOCK_TAI_YO", UBLOCK_TAI_YO, "[1E6C0]")
+      .value("UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT", UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT, "[18D80]")
+      .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI, "[11DB0]")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 #ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -849,6 +859,9 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
       .value("U_JG_KASHMIRI_YEH", U_JG_KASHMIRI_YEH)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .value("U_JG_THIN_NOON", U_JG_THIN_NOON)
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
@@ -933,6 +946,9 @@ void init_uchar(py::module &m) {
       .value("U_LB_VIRAMA_FINAL", U_LB_VIRAMA_FINAL, "[VF]")
       .value("U_LB_VIRAMA", U_LB_VIRAMA, "[VI]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .value("U_LB_UNAMBIGUOUS_HYPHEN", U_LB_UNAMBIGUOUS_HYPHEN, "[HH]")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 #ifndef U_HIDE_DEPRECATED_API
       .value("U_LB_COUNT", U_LB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")

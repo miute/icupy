@@ -258,6 +258,11 @@ void init_udat(py::module &m) {
       .value("UDAT_STANDALONE_NARROW_QUARTERS", UDAT_STANDALONE_NARROW_QUARTERS,
              "The narrow standalone quarter names, for example 1.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
+#if (U_ICU_VERSION_MAJOR_NUM >= 78)
+      .value("UDAT_AM_PMS_NARROW", UDAT_AM_PMS_NARROW, "Narrow AM/PM names. For example: \"A\" and \"P\".")
+      .value("UDAT_AM_PMS_WIDE", UDAT_AM_PMS_WIDE,
+             "Wide AM/PM names. For example: \"Ante Meridiem\" and \"Post Meridiem\".")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .export_values();
 
   // Skeletons for dates
