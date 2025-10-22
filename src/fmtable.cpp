@@ -113,13 +113,14 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        if (index < 0) {
-          index += count;
+        auto n = index;
+        if (n < 0) {
+          n += count;
         }
-        if (index < 0 || index >= count) {
+        if (n < 0 || n >= count) {
           throw py::index_error("array index out of range: " + std::to_string(index));
         }
-        return self[index];
+        return self[n];
       },
       py::arg("index"));
 

@@ -129,14 +129,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         "__getitem__",
         [](const UnicodeString &self, int32_t index) {
+          auto n = index;
           const auto length = self.length();
-          if (index < 0) {
-            index += length;
+          if (n < 0) {
+            n += length;
           }
-          if (index < 0 || index >= length) {
+          if (n < 0 || n >= length) {
             throw py::index_error("string index out of range: " + std::to_string(index));
           }
-          return py::str(PyUnicode_FromOrdinal(self[index]));
+          return py::str(PyUnicode_FromOrdinal(self[n]));
         },
         py::arg("index"))
       .def(
@@ -236,14 +237,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
       "__setitem__",
       [](UnicodeString &self, int32_t index, const icupy::Char16Variant &value) {
+        auto n = index;
         const auto length = self.length();
-        if (index < 0) {
-          index += length;
+        if (n < 0) {
+          n += length;
         }
-        if (index < 0 || index >= length) {
+        if (n < 0 || n >= length) {
           throw py::index_error("string index out of range: " + std::to_string(index));
         }
-        self.setCharAt(index, icupy::to_char16(value));
+        self.setCharAt(n, icupy::to_char16(value));
       },
       py::arg("index"), py::arg("value"));
 

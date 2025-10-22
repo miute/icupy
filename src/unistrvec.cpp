@@ -40,14 +40,15 @@ void init_unistrvec(py::module & /*m*/, py::class_<UnicodeStringVector> &usv) {
   usv.def(
          "__delitem__",
          [](UnicodeStringVector &self, int32_t index) {
+           auto n = index;
            const auto size = static_cast<int32_t>(self.size());
-           if (index < 0) {
-             index += size;
+           if (n < 0) {
+             n += size;
            }
-           if (index < 0 || index >= size) {
+           if (n < 0 || n >= size) {
              throw py::index_error("list index out of range: " + std::to_string(index));
            }
-           self.erase(self.begin() + index);
+           self.erase(self.begin() + n);
          },
          py::arg("index"))
       .def(
@@ -70,14 +71,15 @@ void init_unistrvec(py::module & /*m*/, py::class_<UnicodeStringVector> &usv) {
   usv.def(
          "__getitem__",
          [](UnicodeStringVector &self, int32_t index) -> UnicodeString & {
+           auto n = index;
            const auto size = static_cast<int32_t>(self.size());
-           if (index < 0) {
-             index += size;
+           if (n < 0) {
+             n += size;
            }
-           if (index < 0 || index >= size) {
+           if (n < 0 || n >= size) {
              throw py::index_error("list index out of range: " + std::to_string(index));
            }
-           return self[index];
+           return self[n];
          },
          py::return_value_policy::reference_internal, py::arg("index"))
       .def(
@@ -153,14 +155,15 @@ void init_unistrvec(py::module & /*m*/, py::class_<UnicodeStringVector> &usv) {
   usv.def(
          "__setitem__",
          [](UnicodeStringVector &self, int32_t index, const icupy::UnicodeStringVariant &item) {
+           auto n = index;
            const auto size = static_cast<int32_t>(self.size());
-           if (index < 0) {
-             index += size;
+           if (n < 0) {
+             n += size;
            }
-           if (index < 0 || index >= size) {
+           if (n < 0 || n >= size) {
              throw py::index_error("list index out of range: " + std::to_string(index));
            }
-           self[index] = icupy::to_unistr(item);
+           self[n] = icupy::to_unistr(item);
          },
          py::arg("index"), py::arg("item"))
       .def(
@@ -233,29 +236,31 @@ void init_unistrvec(py::module & /*m*/, py::class_<UnicodeStringVector> &usv) {
   usv.def(
       "insert",
       [](UnicodeStringVector &self, int32_t index, const icupy::UnicodeStringVariant &item) {
+        auto n = index;
         const auto size = static_cast<int32_t>(self.size());
-        if (index < 0) {
-          index += size;
+        if (n < 0) {
+          n += size;
         }
-        if (index < 0 || index >= size) {
+        if (n < 0 || n >= size) {
           throw py::index_error("list index out of range: " + std::to_string(index));
         }
-        self.insert(self.begin() + index, icupy::to_unistr(item));
+        self.insert(self.begin() + n, icupy::to_unistr(item));
       },
       py::arg("index"), py::arg("item"));
 
   usv.def(
       "pop",
       [](UnicodeStringVector &self, int32_t index) {
+        auto n = index;
         const auto size = static_cast<int32_t>(self.size());
-        if (index < 0) {
-          index += size;
+        if (n < 0) {
+          n += size;
         }
-        if (index < 0 || index >= size) {
+        if (n < 0 || n >= size) {
           throw py::index_error("list index out of range: " + std::to_string(index));
         }
-        auto result = std::move(self[index]);
-        self.erase(self.begin() + index);
+        auto result = std::move(self[n]);
+        self.erase(self.begin() + n);
         return result;
       },
       py::arg("index") = -1);

@@ -66,14 +66,15 @@ void init_utfiterator(py::module &m, py::module &h) {
       .def(
           "__getitem__",
           [](const UnsafeCodeUnits &self, int32_t index) -> int32_t {
+            auto n = index;
             const auto length = self.length();
-            if (index < 0) {
-              index += length;
+            if (n < 0) {
+              n += length;
             }
-            if (index < 0 || index >= length) {
+            if (n < 0 || n >= length) {
               throw py::index_error("index out of range: " + std::to_string(index));
             }
-            return *(self.begin() + index);
+            return *(self.begin() + n);
           },
           py::arg("index"))
       .def("__len__", [](const UnsafeCodeUnits &self) { return self.length(); })

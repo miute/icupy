@@ -69,11 +69,12 @@ void _UTextVector::extend(const std::list<std::reference_wrapper<UnicodeString>>
 }
 
 void _UTextVector::insert(int32_t index, UnicodeString &src) {
+  auto n = index;
   const auto size = static_cast<int32_t>(values_.size());
-  if (index < 0) {
-    index += size;
+  if (n < 0) {
+    n += size;
   }
-  if (index < 0 || index >= size) {
+  if (n < 0 || n >= size) {
     throw py::index_error("list index out of range: " + std::to_string(index));
   }
   ErrorCode error_code;
@@ -81,21 +82,22 @@ void _UTextVector::insert(int32_t index, UnicodeString &src) {
   if (error_code.isFailure()) {
     throw icupy::ICUError(error_code);
   }
-  values_.insert(values_.cbegin() + index, ut);
-  sources_.insert(sources_.cbegin() + index, src);
+  values_.insert(values_.cbegin() + n, ut);
+  sources_.insert(sources_.cbegin() + n, src);
 }
 
 void _UTextVector::remove(int32_t index) {
+  auto n = index;
   const auto size = static_cast<int32_t>(values_.size());
-  if (index < 0) {
-    index += size;
+  if (n < 0) {
+    n += size;
   }
-  if (index < 0 || index >= size) {
+  if (n < 0 || n >= size) {
     throw py::index_error("list index out of range: " + std::to_string(index));
   }
-  utext_close(values_[index]);
-  values_.erase(values_.cbegin() + index);
-  sources_.erase(sources_.cbegin() + index);
+  utext_close(values_[n]);
+  values_.erase(values_.cbegin() + n);
+  sources_.erase(sources_.cbegin() + n);
 }
 
 void init_utext(py::module &m) {
@@ -159,14 +161,15 @@ void init_utext(py::module &m) {
   utv.def(
       "__getitem__",
       [](_UTextVector &self, int32_t index) -> _UTextPtr & {
+        auto n = index;
         const auto size = static_cast<int32_t>(self.size());
-        if (index < 0) {
-          index += size;
+        if (n < 0) {
+          n += size;
         }
-        if (index < 0 || index >= size) {
+        if (n < 0 || n >= size) {
           throw py::index_error("list index out of range: " + std::to_string(index));
         }
-        return self[index];
+        return self[n];
       },
       py::return_value_policy::reference_internal, py::arg("index"));
 
