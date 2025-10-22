@@ -1454,6 +1454,11 @@ def test_operator() -> None:
     assert test1[-2] == "a"  # != U+ffff
     assert test1[-1] == "z"  # != U+ffff
 
+    assert test1a[0] == "a"
+    assert test1a[1] == "\ud83d"
+    assert test1a[2] == "\ude01"
+    assert test1a[3] == "b"
+
     with pytest.raises(IndexError):  # IndexError: string index out of range
         _ = test1[test1.length()]  # != U+ffff
     _ = test1[test1.length() - 1]

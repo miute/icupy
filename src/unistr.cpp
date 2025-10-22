@@ -136,7 +136,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           if (index < 0 || index >= length) {
             throw py::index_error("string index out of range: " + std::to_string(index));
           }
-          return self[index];
+          return py::str(PyUnicode_FromOrdinal(self[index]));
         },
         py::arg("index"))
       .def(
