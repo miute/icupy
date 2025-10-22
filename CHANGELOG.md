@@ -2,6 +2,8 @@
 
 ## WIP
 
+- **BREAKING CHANGES**
+  - Change the return type of `icu.UnicodeString.__getitem__(slice: slice)` from `UnicodeString` to `str`
 - **NEW**
   - Add support for Python 3.14
   - Add support for [ICU 78 RC](https://github.com/unicode-org/icu/releases/tag/release-78.1rc)
@@ -128,6 +130,8 @@
   - Add `icupy.icu.u_is_unicode_nonchar(c: int)`
 - **CHANGED**
   - Update pybind11 from 2.13.6 to 3.0.1
+- **FIXED**
+  - Fix UnicodeDecodeError in `icu.UnicodeString.__getitem__(index: int)`
 - **Removed**
   - Drop support for Python 3.9
   - Drop support for CMake old than 3.15

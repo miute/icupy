@@ -136,24 +136,29 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           if (index < 0 || index >= length) {
             throw py::index_error("string index out of range: " + std::to_string(index));
           }
-          return self[index];
+          return py::str(PyUnicode_FromOrdinal(self[index]));
         },
         py::arg("index"))
       .def(
           "__getitem__",
-          [](const UnicodeString &self, const py::slice &index) {
+          [](const UnicodeString &self, const py::slice &slice) {
             size_t start, stop, step, slice_length;
-            if (!index.compute(self.length(), &start, &stop, &step, &slice_length)) {
+            if (!slice.compute(self.length(), &start, &stop, &step, &slice_length)) {
               throw py::error_already_set();
             }
-            UnicodeString result;
+            PyObject *result = nullptr;
             for (size_t n = 0; n < slice_length; ++n) {
-              result.append(self[static_cast<int32_t>(start)]);
+              auto s = PyUnicode_FromOrdinal(self[static_cast<int32_t>(start)]);
+              if (result) {
+                PyUnicode_Append(&result, s);
+              } else {
+                result = s;
+              }
               start += step;
             }
-            return result;
+            return result ? py::str(result) : "";
           },
-          py::arg("index"));
+          py::arg("slice"));
 
   us.def(
       "__gt__",
