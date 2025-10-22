@@ -2,6 +2,8 @@
 
 ## WIP
 
+- **BREAKING CHANGES**
+  - Change the return type of `icu.UnicodeString.__getitem__(slice: slice)` from `UnicodeString` to `str`
 - **NEW**
   - Add support for Python 3.14
   - Add support for [ICU 78 RC](https://github.com/unicode-org/icu/releases/tag/release-78.1rc)

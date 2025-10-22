@@ -1386,6 +1386,7 @@ def test_operator() -> None:
     test1 = icu.UnicodeString("foo bar baz", -1, icu.US_INV)
     test2 = icu.UnicodeString("foo bar baz")
     test3 = icu.UnicodeString("foo bar")
+    test1a = icu.UnicodeString("a😁b")  # a U+1F601 b
 
     # UBool icu::UnicodeString::operator!=(const UnicodeString &text)
     # UnicodeString.__ne__(other: UnicodeString|str) -> bool
@@ -1457,12 +1458,22 @@ def test_operator() -> None:
         _ = test1[test1.length()]  # != U+ffff
     _ = test1[test1.length() - 1]
 
-    # UnicodeString.__getitem__(index: slice) -> UnicodeString
-    assert isinstance(test1[:], icu.UnicodeString)
+    # UnicodeString.__getitem__(index: slice) -> str
+    assert isinstance(test1[:], str)
     assert test1[4:7] == "bar"
     assert test1[0:9:4] == "fbb"
     with pytest.raises(ValueError):  # ValueError: slice step cannot be zero
         _ = test1[::0]
+
+    assert test1a[:] == "a\ud83d\ude01b"
+    assert test1a[0:0] == ""
+    assert test1a[0:1] == "a"
+    assert test1a[0:2] == "a\ud83d"
+    assert test1a[1:2] == "\ud83d"
+    assert test1a[1:3] == "\ud83d\ude01"
+    assert test1a[2:3] == "\ude01"
+    assert test1a[2:4] == "\ude01b"
+    assert test1a[3:4] == "b"
 
     # UnicodeString &icu::UnicodeString::operator+=(
     #       const UnicodeString &srcText
