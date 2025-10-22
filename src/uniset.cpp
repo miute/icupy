@@ -155,11 +155,12 @@ void init_uniset(py::module &m, py::module &h) {
   us.def(
       "__getitem__",
       [](const UnicodeSet &self, int32_t index) {
+        auto n = index;
         const auto size = self.size();
-        if (index < 0) {
-          index += size;
+        if (n < 0) {
+          n += size;
         }
-        if (index < 0 || index >= size) {
+        if (n < 0 || n >= size) {
           throw py::index_error("elements index out of range: " + std::to_string(index));
         }
 
@@ -170,8 +171,8 @@ void init_uniset(py::module &m, py::module &h) {
           const auto end_char = self.getRangeEnd(i);
           const auto base = characters;
           characters += end_char - start_char + 1;
-          if (index < characters) {
-            return UnicodeString(start_char + index - base);
+          if (n < characters) {
+            return UnicodeString(start_char + n - base);
           }
         }
 #if (U_ICU_VERSION_MAJOR_NUM < 76)
@@ -179,7 +180,7 @@ void init_uniset(py::module &m, py::module &h) {
 #else  // (U_ICU_VERSION_MAJOR_NUM >= 76)
         const auto uset = self.toUSet();
         int32_t length;
-        const auto uchars = uset_getString(uset, index - characters, &length);
+        const auto uchars = uset_getString(uset, n - characters, &length);
         return UnicodeString(uchars, length);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
       },

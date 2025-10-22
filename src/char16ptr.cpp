@@ -25,14 +25,15 @@ void init_char16ptr(py::module &m) {
   pccp.def(
       "__getitem__",
       [](const _ConstChar16Ptr &self, int32_t index) -> uint16_t {
+        auto n = index;
         const auto capacity = self.capacity();
-        if (index < 0) {
-          index += capacity;
+        if (n < 0) {
+          n += capacity;
         }
-        if (index < 0 || index >= capacity) {
+        if (n < 0 || n >= capacity) {
           throw py::index_error("string index out of range: " + std::to_string(index));
         }
-        return self[index];
+        return self[n];
       },
       py::arg("index"));
 

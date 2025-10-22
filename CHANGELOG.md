@@ -132,6 +132,7 @@
   - Update pybind11 from 2.13.6 to 3.0.1
 - **FIXED**
   - Fix UnicodeDecodeError in `icu.UnicodeString.__getitem__(index: int)`
+  - Fix IndexError message when index is negative
 - **Removed**
   - Drop support for Python 3.9
   - Drop support for CMake old than 3.15
