@@ -161,13 +161,13 @@ def test_icu_error() -> None:
     assert repr(error_code) == "<ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)>"
 
 
-@pytest.mark.skipif(not sys.platform.startswith("win"), reason="On Windows only")
+@pytest.mark.skipif(not sys.platform.startswith("win"), reason="Windows Only")
 def test_import() -> None:
-    import importlib
-    import os
-    import tempfile
+    import importlib  # noqa: PLC0415
+    import os  # noqa: PLC0415
+    import tempfile  # noqa: PLC0415
 
-    import icupy
+    import icupy  # noqa: PLC0415
 
     old_value = os.environ.get("ICU_ROOT")
     try:
@@ -322,7 +322,5 @@ def test_uparse_error() -> None:
         _ = icu.MessagePattern(pattern, parse_error)
     assert parse_error.offset == 7
     assert repr(parse_error) == (
-        "<UParseError("
-        "line=0, offset=7, pre_context='I see {', post_context='\\'many\\'}'"
-        ")>"
+        "<UParseError(line=0, offset=7, pre_context='I see {', post_context='\\'many\\'}')>"
     )

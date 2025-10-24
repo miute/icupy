@@ -1,7 +1,8 @@
 import copy
 
 from icupy import icu
-from icupy.icu import U_MILLIS_PER_HOUR as HOUR
+
+HOUR = icu.U_MILLIS_PER_HOUR
 
 
 def test_annual_time_zone_rule() -> None:

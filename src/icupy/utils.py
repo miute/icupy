@@ -8,7 +8,7 @@ __all__ = ["gc"]
 
 
 @contextmanager
-def gc(obj: Any, closer: Callable[[Any], Any]) -> Iterator[Any]:
+def gc(obj: Any, closer: Callable[[Any], Any]) -> Iterator[Any]:  # noqa: ANN401
     """Context to automatically close something at the end of a block.
 
     Code like this:
@@ -28,7 +28,9 @@ def gc(obj: Any, closer: Callable[[Any], Any]) -> Iterator[Any]:
         finally:
             <module>.close(f)
     """
-    assert callable(closer)
+    if not callable(closer):
+        msg = f"{type(closer).__name__!r} object is not callable"
+        raise TypeError(msg)
     try:
         yield obj
     finally:
