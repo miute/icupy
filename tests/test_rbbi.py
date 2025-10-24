@@ -344,7 +344,7 @@ def test_get_rule_status_vec() -> None:
         "!.*;\n",
         -1,
         icu.UnicodeString.INVARIANT,
-    )
+    )  # fmt: skip
     parse_error = icu.UParseError()
     bi = icu.RuleBasedBreakIterator(rules, parse_error)
     src = icu.UnicodeString("Aapz5?")

@@ -143,7 +143,7 @@ def test_api2() -> None:
 
     resources2 = list(test1)
     assert len(resources2) == len(resources)
-    for res1, res2 in zip(resources, resources2):
+    for res1, res2 in zip(resources, resources2, strict=False):
         assert res1.get_key() is not None
         assert res1.get_key() == res2.get_key()
 
