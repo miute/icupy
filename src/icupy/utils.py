@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from typing import Any
 
@@ -8,25 +8,27 @@ __all__ = ["gc"]
 
 
 @contextmanager
-def gc(obj: Any, closer: Callable[[Any], Any]) -> Iterator[Any]:  # noqa: ANN401
-    """Context to automatically close something at the end of a block.
+def gc(obj: Any, closer: Callable[[Any], Any]) -> Generator[Any]:  # noqa: ANN401
+    """Context to automatically release something at the end of a block.
 
-    Code like this:
+    Args:
+        obj (Any): The object that needs to be released.
+        closer (Callable[[Any], Any]): A function to release `obj`.
 
-    .. code-block:: python
+    Yields:
+        Any: The object that needs to be released.
 
-        with gc(<module>.open(<arguments>), <module>.close) as f:
-            <block>
+    Example:
+        >>> with icupy.utils.gc(icupy.icu.ubidi_open(), icupy.icu.ubidi_close) as bidi:
+        ...     pass
 
-    is equivalent to this:
+        is equivalent to this:
 
-    .. code-block:: python
-
-        f = <module>.open(<arguments>)
-        try:
-            <block>
-        finally:
-            <module>.close(f)
+        >>> bidi = icupy.icu.ubidi_open()
+        >>> try:
+        ...     pass
+        ... finally:
+        ...     icupy.icu.ubidi_close(bidi)
     """
     if not callable(closer):
         msg = f"{type(closer).__name__!r} object is not callable"
