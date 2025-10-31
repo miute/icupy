@@ -848,7 +848,9 @@ def test_sort() -> None:
         return (
             -1
             if _result == icu.UCollationResult.UCOL_LESS
-            else 0 if _result == icu.UCollationResult.UCOL_EQUAL else 1
+            else 0
+            if _result == icu.UCollationResult.UCOL_EQUAL
+            else 1
         )
 
     result1 = sorted(src)

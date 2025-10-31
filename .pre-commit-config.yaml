@@ -37,22 +37,14 @@ repos:
         types_or: [c++, c]
         exclude: ^src/third_party
 
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.9.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.3
     hooks:
-      - id: black
-
-  - repo: https://github.com/PyCQA/isort
-    rev: 6.1.0
-    hooks:
-      - id: isort
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
-        additional_dependencies: [flake8-pyproject, flake8-2020, flake8-bugbear]
-        exclude: ^src/third_party
+      # Run the linter.
+      - id: ruff-check
+        args: [--fix, --show-fixes]
+      # Run the formatter.
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.18.2
