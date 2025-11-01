@@ -6,7 +6,7 @@
   - Change the return type of `icu.UnicodeString.__getitem__(slice: slice)` from `UnicodeString` to `str`
 - **New**
   - Add support for Python 3.14
-  - Add support for [ICU 78 RC](https://github.com/unicode-org/icu/releases/tag/release-78.1rc)
+  - Add support for [ICU 78.1](https://github.com/unicode-org/icu/releases/tag/release-78.1)
     - Add `icupy.icu.DateFormatSymbols.get_am_pm_strings(context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)`
     - Add `icupy.icu.DateFormatSymbols.set_am_pm_strings(ampms: list[UnicodeString], count: int, context: DateFormatSymbols.DtContextType, width: DateFormatSymbols.DtWidthType)`
     - Add `icupy.icu.header.AllCodePoints()`

@@ -1,6 +1,13 @@
 {
-  "latest": "77.1",
+  "latest": "78.1",
   "versions": [
+    {
+      "version": "78.1",
+      "url": "https://github.com/unicode-org/icu/releases/download/release-78.1",
+      "icu4c_ubuntu_x64_tgz": "icu4c-78.1-Ubuntu22.04-x64.tgz",
+      "strip-components": 1,
+      "icu4c_win64_zip": "icu4c-78.1-Win64-MSVC2022.zip"
+    },
     {
       "version": "78.1rc",
       "url": "https://github.com/unicode-org/icu/releases/download/release-78.1rc",
