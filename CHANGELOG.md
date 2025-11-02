@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## v0.22.0 (2025-11-02)
 
 - **Breaking Changes**
   - Change the return type of `icu.UnicodeString.__getitem__(slice: slice)` from `UnicodeString` to `str`
