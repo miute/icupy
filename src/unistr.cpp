@@ -62,10 +62,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(py::init<>())
       .def(py::init<int32_t, UChar32, int32_t>(), py::arg("capacity"), py::arg("c"), py::arg("count"))
       .def(py::init<UChar32>(), py::arg("ch"))
-#if (U_ICU_VERSION_MAJOR_NUM >= 59)
-      .def(py::init<const char16_t *>(), py::arg("text"))
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 59)
-      .def(py::init<const char16_t *, int32_t>(), py::arg("text"), py::arg("text_length"))
+      .def(py::init<const char16_t *>(), py::arg("text").none(false))
+      .def(py::init<const char16_t *, int32_t>(), py::arg("text").none(false), py::arg("text_length"))
       /*
       .def(py::init<UBool, ConstChar16Ptr, int32_t>(), py::arg("is_terminated"), py::arg("text"),
            py::arg("text_length"), py::keep_alive<1, 3>())
@@ -77,20 +75,46 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
           py::arg("is_terminated"), py::arg("text"), py::arg("text_length"),
           py::keep_alive<1, 3>())
       */
-      .def(py::init<const char *, const char *>(), py::arg("codepage_data"), py::arg("codepage"))
-      .def(py::init<const char *, int32_t, const char *>(), py::arg("codepage_data"), py::arg("data_length"),
-           py::arg("codepage"))
-      .def(py::init([](const char *src, int32_t src_length, _UConverterPtr &cnv) {
+      .def(
+          // UnicodeString(const char *codepageData)
+          py::init([](const py::bytes &codepage_data) {
+            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            return std::make_unique<UnicodeString>(p);
+          }),
+          py::arg("codepage_data"))
+      .def(
+          // UnicodeString(const char *codepageData, const char *codepage)
+          py::init([](const py::bytes &codepage_data, const std::optional<std::string> &codepage) {
+            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            return std::make_unique<UnicodeString>(p, codepage ? codepage->data() : nullptr);
+          }),
+          py::arg("codepage_data"), py::arg("codepage"))
+      .def(
+          // UnicodeString(const char *codepageData, int32_t dataLength)
+          py::init([](const py::bytes &codepage_data, int32_t data_length) {
+            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            return std::make_unique<UnicodeString>(p, data_length);
+          }),
+          py::arg("codepage_data"), py::arg("data_length"))
+      .def(
+          // UnicodeString(const char *codepageData, int32_t data_length, const char *codepage)
+          py::init([](const py::bytes &codepage_data, int32_t data_length, const std::optional<std::string> &codepage) {
+            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            return std::make_unique<UnicodeString>(p, data_length, codepage ? codepage->data() : nullptr);
+          }),
+          py::arg("codepage_data"), py::arg("data_length"), py::arg("codepage"))
+      .def(py::init([](const py::bytes &src, int32_t src_length, _UConverterPtr &cnv) {
+             auto p = PyBytes_AS_STRING(src.ptr());
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeString>(src, src_length, cnv, error_code);
+             auto result = std::make_unique<UnicodeString>(p, src_length, cnv, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("src"), py::arg("src_length"), py::arg("cnv"))
-      .def(py::init<const char *, int32_t, UnicodeString::EInvariant>(), py::arg("src"), py::arg("text_length"),
-           py::arg("inv"))
+           py::arg("src").none(false), py::arg("src_length"), py::arg("cnv"))
+      .def(py::init<const char *, int32_t, UnicodeString::EInvariant>(), py::arg("src").none(false),
+           py::arg("text_length"), py::arg("inv"))
       .def(py::init<const UnicodeString &>(), py::arg("other"))
       .def(py::init<const UnicodeString &, int32_t>(), py::arg("src"), py::arg("src_start"))
       .def(py::init<const UnicodeString &, int32_t, int32_t>(), py::arg("src"), py::arg("src_start"),

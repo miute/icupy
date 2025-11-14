@@ -490,7 +490,7 @@ def test_extract() -> None:
     with gc(icu.ucnv_open("ibm-943c"), icu.ucnv_close) as cnv:
         utf8 = "a[\x5c\uff71\u2160"
         sjis = b"\x61\x5b\x5c\xb1\x87\x54"  # utf8.encode("cp932")
-        test1 = icu.UnicodeString(utf8, "utf-8")
+        test1 = icu.UnicodeString(utf8.encode(), "utf-8")
         dest = test1.extract(cnv)
         assert isinstance(dest, bytes)
         assert dest == sjis
@@ -2288,10 +2288,10 @@ def test_unicode_string() -> None:
 
     # [8]
     # icu::UnicodeString::UnicodeString(const std::nullptr_t text)
-    test8 = icu.UnicodeString(None)
-    assert test8.is_bogus() is False
-    assert test8.is_empty() is True
-    assert len(test8) == 0
+    # test8 = icu.UnicodeString(None)
+    # assert test8.is_bogus() is False
+    # assert test8.is_empty() is True
+    # assert len(test8) == 0
 
     # [9]
     # icu::UnicodeString::UnicodeString(
@@ -2308,10 +2308,10 @@ def test_unicode_string() -> None:
     #       const std::nullptr_t text,
     #       int32_t textLength
     # )
-    test12 = icu.UnicodeString(None, 10)
-    assert test12.is_bogus() is False
-    assert test12.is_empty() is True
-    assert len(test12) == 0
+    # test12 = icu.UnicodeString(None, 10)
+    # assert test12.is_bogus() is False
+    # assert test12.is_empty() is True
+    # assert len(test12) == 0
 
     # [20]
     # icu::UnicodeString::UnicodeString(
