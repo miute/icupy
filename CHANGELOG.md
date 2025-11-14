@@ -1,5 +1,18 @@
 # Changelog
 
+## WIP
+
+- **Breaking Changes**
+  - The input string for `icupy.icu.UnicodeString.__init__(text)`, `icupy.icu.UnicodeString.__init__(text, text_length)`, and `icupy.icu.UnicodeString.__init__(src, text_length, inv)` can no longer be set to `None`. Use empty string `""` instead
+  - Change the argument type for codepage data from `str` to `bytes`:
+    - `icupy.icu.UnicodeString.__init__(codepage_data: str, codepage: str)` → `icupy.icu.UnicodeString.__init__(codepage_data: bytes, codepage: str | None)`
+    - `icupy.icu.UnicodeString.__init__(codepage_data: str, data_length: typing.SupportsInt, codepage: str)` → `icupy.icu.UnicodeString.__init__(codepage_data: bytes, data_length: typing.SupportsInt, codepage: str | None)`
+    - `icupy.icu.UnicodeString.__init__(src: str, src_length: typing.SupportsInt, cnv: icupy.icu._UConverterPtr)` → `icupy.icu.UnicodeString.__init__(src: bytes, src_length: typing.SupportsInt, cnv: icupy.icu._UConverterPtr)`
+- **Fixed**
+  - Add missing overloaded functions:
+    - `icupy.icu.UnicodeString.__init__(codepage_data: bytes)`
+    - `icupy.icu.UnicodeString.__init__(codepage_data: bytes, data_length: typing.SupportsInt)`
+
 ## v0.22.0 (2025-11-02)
 
 - **Breaking Changes**
