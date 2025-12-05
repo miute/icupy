@@ -4,6 +4,8 @@ cmake_policy(SET CMP0074 NEW)
 
 project(icu LANGUAGES CXX)
 
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 set(PYBIND11_FINDPYTHON ON)
 set(DESTDIR icupy CACHE STRING "The directory where the binaries will be written. (e.g., path/to/icupy/src/icupy)")
 message(STATUS "DESTDIR: ${DESTDIR}")

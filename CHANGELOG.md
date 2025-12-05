@@ -12,6 +12,7 @@
   - Add missing overloaded functions:
     - `icupy.icu.UnicodeString.__init__(codepage_data: bytes)`
     - `icupy.icu.UnicodeString.__init__(codepage_data: bytes, data_length: typing.SupportsInt)`
+  - Fix GCC visibility warning in CMake build
 
 ## v0.22.0 (2025-11-02)
 
