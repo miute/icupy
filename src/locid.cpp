@@ -15,8 +15,15 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   // icu::Locale
   //
   loc.def(py::init<>())
-      .def(py::init<const char *, const char *, const char *, const char *>(), py::arg("language"),
-           py::arg("country") = nullptr, py::arg("variant") = nullptr, py::arg("keywords_and_values") = nullptr)
+      .def(py::init([](std::optional<const std::string> &language, std::optional<const std::string> &country,
+                       std::optional<const std::string> &variant,
+                       std::optional<const std::string> &keywords_and_values) {
+             return std::make_unique<Locale>(language ? language->data() : nullptr, country ? country->data() : nullptr,
+                                             variant ? variant->data() : nullptr,
+                                             keywords_and_values ? keywords_and_values->data() : nullptr);
+           }),
+           py::arg("language"), py::arg("country") = std::nullopt, py::arg("variant") = std::nullopt,
+           py::arg("keywords_and_values") = std::nullopt)
       .def(py::init<const Locale &>(), py::arg("other"));
 
   loc.def("__copy__", &Locale::clone);
@@ -63,9 +70,14 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def("clone", &Locale::clone);
 
-  loc.def_static("create_canonical", &Locale::createCanonical, py::arg("name"));
+  loc.def_static(
+      "create_canonical", [](const std::string &name) { return Locale::createCanonical(name.data()); },
+      py::arg("name"));
 
-  loc.def_static("create_from_name", [](const char *name) { return Locale::createFromName(name); }, py::arg("name"));
+  loc.def_static(
+      "create_from_name",
+      [](std::optional<const std::string> &name) { return Locale::createFromName(name ? name->data() : nullptr); },
+      py::arg("name"));
 
   loc.def("create_keywords", [](const Locale &self) {
     ErrorCode error_code;
@@ -88,11 +100,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def_static(
       "for_language_tag",
-      [](const char *tag) {
+      [](const std::string &tag) {
         ErrorCode error_code;
         auto result = Locale::forLanguageTag(tag, error_code);
         if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code, tag);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -248,9 +260,9 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #else
   loc.def(
       "get_keyword_value",
-      [](const Locale &self, const char *keyword_name) {
+      [](const Locale &self, const std::string &keyword_name) {
         ErrorCode error_code;
-        std::string result = self.getKeywordValue<std::string>(keyword_name, error_code);
+        auto result = self.getKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -298,11 +310,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def(
       "get_unicode_keyword_value",
-      [](const Locale &self, const char *keyword_name) {
+      [](const Locale &self, const std::string &keyword_name) {
         ErrorCode error_code;
         auto result = self.getUnicodeKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code, keyword_name);
+          throw icupy::ICUError(error_code);
         }
         return result;
       },
@@ -345,9 +357,9 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   loc.def(
       "set_keyword_value",
-      [](Locale &self, const char *keyword_name, const char *keyword_value) {
+      [](Locale &self, const std::string &keyword_name, std::optional<const std::string> &keyword_value) {
         ErrorCode error_code;
-        self.setKeywordValue(keyword_name, keyword_value, error_code);
+        self.setKeywordValue(keyword_name, keyword_value.value_or(""), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -360,9 +372,9 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   loc.def(
       "set_unicode_keyword_value",
-      [](Locale &self, const char *keyword_name, const char *keyword_value) {
+      [](Locale &self, const std::string &keyword_name, std::optional<const std::string> &keyword_value) {
         ErrorCode error_code;
-        self.setUnicodeKeywordValue(keyword_name, keyword_value, error_code);
+        self.setUnicodeKeywordValue(keyword_name, keyword_value.value_or(""), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

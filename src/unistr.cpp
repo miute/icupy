@@ -62,8 +62,23 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(py::init<>())
       .def(py::init<int32_t, UChar32, int32_t>(), py::arg("capacity"), py::arg("c"), py::arg("count"))
       .def(py::init<UChar32>(), py::arg("ch"))
-      .def(py::init<const char16_t *>(), py::arg("text").none(false))
-      .def(py::init<const char16_t *, int32_t>(), py::arg("text").none(false), py::arg("text_length"))
+      .def(
+          // UnicodeString(const S &text)
+          // UnicodeString(const char16_t *text)
+          py::init([](const std::u16string &text) {
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+            return std::make_unique<UnicodeString>(text);
+#else
+            return std::make_unique<UnicodeString>(text.data());
+#endif
+          }),
+          py::arg("text"))
+      .def(
+          // UnicodeString(const char16_t *text, int32_t textLength)
+          py::init([](const std::u16string &text, int32_t text_length) {
+            return std::make_unique<UnicodeString>(text.data(), text_length);
+          }),
+          py::arg("text"), py::arg("text_length"))
       /*
       .def(py::init<UBool, ConstChar16Ptr, int32_t>(), py::arg("is_terminated"), py::arg("text"),
            py::arg("text_length"), py::keep_alive<1, 3>())
@@ -78,43 +93,56 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // UnicodeString(const char *codepageData)
           py::init([](const py::bytes &codepage_data) {
-            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            const auto p = PyBytes_AS_STRING(codepage_data.ptr());
             return std::make_unique<UnicodeString>(p);
           }),
           py::arg("codepage_data"))
       .def(
           // UnicodeString(const char *codepageData, const char *codepage)
           py::init([](const py::bytes &codepage_data, const std::optional<std::string> &codepage) {
-            auto p = PyBytes_AS_STRING(codepage_data.ptr());
+            const auto p = PyBytes_AS_STRING(codepage_data.ptr());
             return std::make_unique<UnicodeString>(p, codepage ? codepage->data() : nullptr);
           }),
           py::arg("codepage_data"), py::arg("codepage"))
       .def(
           // UnicodeString(const char *codepageData, int32_t dataLength)
           py::init([](const py::bytes &codepage_data, int32_t data_length) {
-            auto p = PyBytes_AS_STRING(codepage_data.ptr());
-            return std::make_unique<UnicodeString>(p, data_length);
+            const auto s = codepage_data.cast<std::string>();
+            if (data_length == -1) {
+              data_length = static_cast<int32_t>(s.size());
+            }
+            return std::make_unique<UnicodeString>(s.data(), data_length);
           }),
           py::arg("codepage_data"), py::arg("data_length"))
       .def(
           // UnicodeString(const char *codepageData, int32_t data_length, const char *codepage)
           py::init([](const py::bytes &codepage_data, int32_t data_length, const std::optional<std::string> &codepage) {
-            auto p = PyBytes_AS_STRING(codepage_data.ptr());
-            return std::make_unique<UnicodeString>(p, data_length, codepage ? codepage->data() : nullptr);
+            const auto s = codepage_data.cast<std::string>();
+            if (data_length == -1) {
+              data_length = static_cast<int32_t>(s.size());
+            }
+            return std::make_unique<UnicodeString>(s.data(), data_length, codepage ? codepage->data() : nullptr);
           }),
           py::arg("codepage_data"), py::arg("data_length"), py::arg("codepage"))
       .def(py::init([](const py::bytes &src, int32_t src_length, _UConverterPtr &cnv) {
-             auto p = PyBytes_AS_STRING(src.ptr());
+             const auto s = src.cast<std::string>();
+             if (src_length == -1) {
+               src_length = static_cast<int32_t>(s.size());
+             }
              ErrorCode error_code;
-             auto result = std::make_unique<UnicodeString>(p, src_length, cnv, error_code);
+             auto result = std::make_unique<UnicodeString>(s.data(), src_length, cnv, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("src").none(false), py::arg("src_length"), py::arg("cnv"))
-      .def(py::init<const char *, int32_t, UnicodeString::EInvariant>(), py::arg("src").none(false),
-           py::arg("text_length"), py::arg("inv"))
+           py::arg("src"), py::arg("src_length"), py::arg("cnv"))
+      .def(
+          // UnicodeString(const char *src, int32_t textLength, enum EInvariant inv)
+          py::init([](const std::string &src, int32_t text_length, UnicodeString::EInvariant inv) {
+            return std::make_unique<UnicodeString>(src.data(), text_length, inv);
+          }),
+          py::arg("src"), py::arg("text_length"), py::arg("inv"))
       .def(py::init<const UnicodeString &>(), py::arg("other"))
       .def(py::init<const UnicodeString &, int32_t>(), py::arg("src"), py::arg("src_start"))
       .def(py::init<const UnicodeString &, int32_t, int32_t>(), py::arg("src"), py::arg("src_start"),
@@ -285,9 +313,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [2] append(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
         "append",
-        [](UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> UnicodeString & {
-          return self.append(src_chars, src_start, src_length);
-        },
+        [](UnicodeString &self, const std::u16string &src_chars, int32_t src_start,
+           int32_t src_length) -> UnicodeString & { return self.append(src_chars.data(), src_start, src_length); },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [4] append(const UnicodeString &srcText)
@@ -305,8 +332,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [6] append(ConstChar16Ptr srcChars, int32_t srcLength)
           "append",
-          [](UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> UnicodeString & {
-            return self.append(src_chars, src_length);
+          [](UnicodeString &self, const std::u16string &src_chars, int32_t src_length) -> UnicodeString & {
+            return self.append(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"))
       .def(
@@ -324,22 +351,25 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [2] caseCompare(ConstChar16Ptr srcChars, int32_t srcLength, uint32_t options)
           "case_compare",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length, uint32_t options) {
-            return self.caseCompare(src_chars, src_length, options);
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length, uint32_t options) {
+            return self.caseCompare(src_chars.data(), src_length, options);
           },
           py::arg("src_chars"), py::arg("src_length"), py::arg("options"))
       .def(
           // [3] caseCompare(int32_t start, int32_t length, const char16_t *srcChars, int32_t srcStart,
           //                 int32_t srcLength, uint32_t options)
           "case_compare",
-          py::overload_cast<int32_t, int32_t, const char16_t *, int32_t, int32_t, uint32_t>(&UnicodeString::caseCompare,
-                                                                                            py::const_),
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars,
+             int32_t src_start, int32_t src_length, uint32_t options) {
+            return self.caseCompare(start, length, src_chars.data(), src_start, src_length, options);
+          },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
           py::arg("options"))
       .def(
           // [4] caseCompare(int32_t start, int32_t length, const char16_t *srcChars, uint32_t options)
           "case_compare",
-          py::overload_cast<int32_t, int32_t, const char16_t *, uint32_t>(&UnicodeString::caseCompare, py::const_),
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars,
+             uint32_t options) { return self.caseCompare(start, length, src_chars.data(), options); },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("options"))
       .def(
           // [5] caseCompare(int32_t start, int32_t length, const UnicodeString &srcText,
@@ -376,18 +406,23 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [2] compare(ConstChar16Ptr srcChars, int32_t srcLength)
           "compare",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) {
-            return self.compare(src_chars, src_length);
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length) {
+            return self.compare(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [3] compare(int32_t start, int32_t length, const char16_t *srcChars)
-          "compare", py::overload_cast<int32_t, int32_t, const char16_t *>(&UnicodeString::compare, py::const_),
+          "compare",
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars) {
+            return self.compare(start, length, src_chars.data());
+          },
           py::arg("start"), py::arg("length"), py::arg("src_chars"))
       .def(
           // [4] compare(int32_t start, int32_t length, const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
           "compare",
-          py::overload_cast<int32_t, int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::compare, py::const_),
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars,
+             int32_t src_start,
+             int32_t src_length) { return self.compare(start, length, src_chars.data(), src_start, src_length); },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [5] compare(int32_t start, int32_t length, const UnicodeString &srcText, int32_t srcStart,
@@ -419,21 +454,25 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [2] compareCodePointOrder(ConstChar16Ptr srcChars, int32_t srcLength)
           "compare_code_point_order",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) {
-            return self.compareCodePointOrder(src_chars, src_length);
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length) {
+            return self.compareCodePointOrder(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [3] compareCodePointOrder(int32_t start, int32_t length, const char16_t *srcChars)
           "compare_code_point_order",
-          py::overload_cast<int32_t, int32_t, const char16_t *>(&UnicodeString::compareCodePointOrder, py::const_),
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars) {
+            return self.compareCodePointOrder(start, length, src_chars.data());
+          },
           py::arg("start"), py::arg("length"), py::arg("src_chars"))
       .def(
           // [4] compareCodePointOrder(int32_t start, int32_t length, const char16_t *srcChars, int32_t srcStart,
           //                           int32_t srcLength)
           "compare_code_point_order",
-          py::overload_cast<int32_t, int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::compareCodePointOrder,
-                                                                                  py::const_),
+          [](const UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars,
+             int32_t src_start, int32_t src_length) {
+            return self.compareCodePointOrder(start, length, src_chars.data(), src_start, src_length);
+          },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [5] compareCodePointOrder(int32_t start, int32_t length, const UnicodeString &srcText)
@@ -461,9 +500,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] endsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
         "ends_with",
-        [](const UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> py::bool_ {
-          return self.endsWith(src_chars, src_start, src_length);
-        },
+        [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_start,
+           int32_t src_length) -> py::bool_ { return self.endsWith(src_chars.data(), src_start, src_length); },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [2] endsWith(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
@@ -481,8 +519,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [4] endsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "ends_with",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> py::bool_ {
-            return self.endsWith(src_chars, src_length);
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length) -> py::bool_ {
+            return self.endsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"));
 
@@ -520,13 +558,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [5] extract(int32_t start, int32_t startLength, char *target, const char *codepage = 0)
           "extract",
-          [](const UnicodeString &self, int32_t start, int32_t start_length, const char *codepage) {
-            const auto length = self.extract(start, start_length, nullptr, codepage);
+          [](const UnicodeString &self, int32_t start, int32_t start_length,
+             const std::optional<std::string> &codepage) {
+            auto p = codepage ? codepage->data() : nullptr;
+            const auto length = self.extract(start, start_length, nullptr, p);
             if (length <= 0) {
               return py::bytes();
             }
             std::string target(length, '\0');
-            self.extract(start, start_length, target.data(), codepage);
+            self.extract(start, start_length, target.data(), p);
             return py::bytes(target.data(), length);
           },
           py::arg("start"), py::arg("start_length"), py::arg("codepage"))
@@ -657,12 +697,17 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [4] indexOf(const char16_t *srcChars, int32_t srcLength, int32_t start)
-        "index_of", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::indexOf, py::const_),
+        "index_of",
+        [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length, int32_t start) {
+          return self.indexOf(src_chars.data(), src_length, start);
+        },
         py::arg("src_chars"), py::arg("src_length"), py::arg("start"))
       .def(
           // [5] indexOf(const char16_t *srcChars, int32_t srcStart, int32_t srcLength, int32_t start, int32_t length)
           "index_of",
-          py::overload_cast<const char16_t *, int32_t, int32_t, int32_t, int32_t>(&UnicodeString::indexOf, py::const_),
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_start, int32_t src_length,
+             int32_t start,
+             int32_t length) { return self.indexOf(src_chars.data(), src_start, src_length, start, length); },
           py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def(
           // [6] indexOf(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength, int32_t start,
@@ -692,9 +737,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [10] indexOf(ConstChar16Ptr srcChars, int32_t srcLength, int32_t start, int32_t length)
           "index_of",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length, int32_t start, int32_t length) {
-            return self.indexOf(src_chars, src_length, start, length);
-          },
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length, int32_t start,
+             int32_t length) { return self.indexOf(src_chars.data(), src_length, start, length); },
           py::arg("src_chars"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def(
           // [11] indexOf(UChar32 c)
@@ -710,7 +754,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [2] insert(int32_t start, const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
-        "insert", py::overload_cast<int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::insert),
+        "insert",
+        [](UnicodeString &self, int32_t start, const std::u16string &src_chars, int32_t src_start, int32_t src_length)
+            -> UnicodeString & { return self.insert(start, src_chars.data(), src_start, src_length); },
         py::arg("start"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [3] insert(int32_t start, const UnicodeString &srcText)
@@ -726,9 +772,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [5] insert(int32_t start, ConstChar16Ptr srcChars, int32_t srcLength)
           "insert",
-          [](UnicodeString &self, int32_t start, const char16_t *src_chars, int32_t src_length) -> UnicodeString & {
-            return self.insert(start, src_chars, src_length);
-          },
+          [](UnicodeString &self, int32_t start, const std::u16string &src_chars,
+             int32_t src_length) -> UnicodeString & { return self.insert(start, src_chars.data(), src_length); },
           py::arg("start"), py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [6] insert(int32_t start, UChar32 srcChar)
@@ -740,14 +785,18 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [4] lastIndexOf(const char16_t *srcChars, int32_t srcLength, int32_t start)
-        "last_index_of", py::overload_cast<const char16_t *, int32_t, int32_t>(&UnicodeString::lastIndexOf, py::const_),
+        "last_index_of",
+        [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length, int32_t start) {
+          return self.lastIndexOf(src_chars.data(), src_length, start);
+        },
         py::arg("src_chars"), py::arg("src_length"), py::arg("start"))
       .def(
           // [5] lastIndexOf(const char16_t *srcChars, int32_t srcStart, int32_t srcLength, int32_t start,
           //                 int32_t length)
           "last_index_of",
-          py::overload_cast<const char16_t *, int32_t, int32_t, int32_t, int32_t>(&UnicodeString::lastIndexOf,
-                                                                                  py::const_),
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_start, int32_t src_length,
+             int32_t start,
+             int32_t length) { return self.lastIndexOf(src_chars.data(), src_start, src_length, start, length); },
           py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def(
           // [6] lastIndexOf(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength, int32_t start,
@@ -778,9 +827,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [10] lastIndexOf(ConstChar16Ptr srcChars, int32_t srcLength, int32_t start, int32_t length)
           "last_index_of",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length, int32_t start, int32_t length) {
-            return self.lastIndexOf(src_chars, src_length, start, length);
-          },
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length, int32_t start,
+             int32_t length) { return self.lastIndexOf(src_chars.data(), src_length, start, length); },
           py::arg("src_chars"), py::arg("src_length"), py::arg("start"), py::arg("length"))
       .def(
           // [11] lastIndexOf(UChar32 c)
@@ -822,7 +870,11 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [2] replace(int32_t start, int32_t length, const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
-        "replace", py::overload_cast<int32_t, int32_t, const char16_t *, int32_t, int32_t>(&UnicodeString::replace),
+        "replace",
+        [](UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars, int32_t src_start,
+           int32_t src_length) -> UnicodeString & {
+          return self.replace(start, length, src_chars.data(), src_start, src_length);
+        },
         py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [3] replace(int32_t start, int32_t length, const UnicodeString &srcText)
@@ -839,8 +891,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [5] replace(int32_t start, int32_t length, ConstChar16Ptr srcChars, int32_t srcLength)
           "replace",
-          [](UnicodeString &self, int32_t start, int32_t length, const char16_t *src_chars,
-             int32_t src_length) -> UnicodeString & { return self.replace(start, length, src_chars, src_length); },
+          [](UnicodeString &self, int32_t start, int32_t length, const std::u16string &src_chars, int32_t src_length)
+              -> UnicodeString & { return self.replace(start, length, src_chars.data(), src_length); },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [6] replace(int32_t start, int32_t length, UChar32 srcChar)
@@ -875,8 +927,11 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
 
   us.def(
         // [3] setTo(const char16_t *srcChars, int32_t srcLength)
-        "set_to", py::overload_cast<const char16_t *, int32_t>(&UnicodeString::setTo), py::arg("src_chars"),
-        py::arg("src_length"))
+        "set_to",
+        [](UnicodeString &self, const std::u16string &src_chars, int32_t src_length) -> UnicodeString & {
+          return self.setTo(src_chars.data(), src_length);
+        },
+        py::arg("src_chars"), py::arg("src_length"))
       .def(
           // [4] setTo(const UnicodeString &srcText)
           "set_to",
@@ -909,9 +964,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
   us.def(
         // [1] startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength)
         "starts_with",
-        [](const UnicodeString &self, const char16_t *src_chars, int32_t src_start, int32_t src_length) -> py::bool_ {
-          return self.startsWith(src_chars, src_start, src_length);
-        },
+        [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_start,
+           int32_t src_length) -> py::bool_ { return self.startsWith(src_chars.data(), src_start, src_length); },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"))
       .def(
           // [2] startsWith(const UnicodeString &srcText, int32_t srcStart, int32_t srcLength)
@@ -929,8 +983,8 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
       .def(
           // [4] startsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "starts_with",
-          [](const UnicodeString &self, const char16_t *src_chars, int32_t src_length) -> py::bool_ {
-            return self.startsWith(src_chars, src_length);
+          [](const UnicodeString &self, const std::u16string &src_chars, int32_t src_length) -> py::bool_ {
+            return self.startsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"));
 
@@ -951,17 +1005,23 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class
         py::arg("locale"))
       .def("to_lower", py::overload_cast<>(&UnicodeString::toLower));
 
-  us.def("to_title", py::overload_cast<BreakIterator *>(&UnicodeString::toTitle), py::arg("title_iter"))
+  us.def(
+        "to_title",
+        [](UnicodeString &self, std::optional<BreakIterator *> &title_iter) -> UnicodeString & {
+          return self.toTitle(title_iter.value_or(nullptr));
+        },
+        py::arg("title_iter") = std::nullopt)
       .def(
           "to_title",
-          [](UnicodeString &self, BreakIterator *title_iter, const icupy::LocaleVariant &locale) -> UnicodeString & {
-            return self.toTitle(title_iter, icupy::to_locale(locale));
-          },
+          [](UnicodeString &self, std::optional<BreakIterator *> &title_iter, const icupy::LocaleVariant &locale)
+              -> UnicodeString & { return self.toTitle(title_iter.value_or(nullptr), icupy::to_locale(locale)); },
           py::arg("title_iter"), py::arg("locale"))
       .def(
           "to_title",
-          [](UnicodeString &self, BreakIterator *title_iter, const icupy::LocaleVariant &locale, uint32_t options)
-              -> UnicodeString & { return self.toTitle(title_iter, icupy::to_locale(locale), options); },
+          [](UnicodeString &self, std::optional<BreakIterator *> &title_iter, const icupy::LocaleVariant &locale,
+             uint32_t options) -> UnicodeString & {
+            return self.toTitle(title_iter.value_or(nullptr), icupy::to_locale(locale), options);
+          },
           py::arg("title_iter"), py::arg("locale"), py::arg("options"));
 
   us.def(

@@ -125,7 +125,7 @@ void init_uniset(py::module &m, py::module &h) {
              }
              return result;
            }),
-           py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
+           py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols") = std::nullopt)
       .def(py::init<const UnicodeSet &>(), py::arg("other"));
 
   us.def(
@@ -259,7 +259,7 @@ void init_uniset(py::module &m, py::module &h) {
           }
           return result;
         },
-        py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols"))
+        py::arg("pattern"), py::arg("pos"), py::arg("options"), py::arg("symbols") = std::nullopt)
       .def(
           "apply_pattern",
           [](UnicodeSet &self, const icupy::UnicodeStringVariant &pattern) -> UnicodeSet & {
@@ -488,22 +488,32 @@ void init_uniset(py::module &m, py::module &h) {
 
   us.def("size", &UnicodeSet::size);
 
-  us.def("span", py::overload_cast<const char16_t *, int32_t, USetSpanCondition>(&UnicodeSet::span, py::const_),
-         py::arg("s"), py::arg("length"), py::arg("span_condition"))
+  us.def(
+        "span",
+        [](const UnicodeSet &self, const std::u16string &s, int32_t length, USetSpanCondition span_condition) {
+          return self.span(s.data(), length, span_condition);
+        },
+        py::arg("s"), py::arg("length"), py::arg("span_condition"))
       .def("span", py::overload_cast<const UnicodeString &, int32_t, USetSpanCondition>(&UnicodeSet::span, py::const_),
            py::arg("s"), py::arg("start"), py::arg("span_condition"));
 
   us.def(
       "span_utf8",
       [](const UnicodeSet &self, const py::bytes &b, int32_t length, USetSpanCondition span_condition) {
-        auto s = static_cast<std::string>(b);
+        const auto s = b.cast<std::string>();
+        if (length == -1) {
+          length = static_cast<int32_t>(s.size());
+        }
         return self.spanUTF8(s.data(), length, span_condition);
       },
       py::arg("b"), py::arg("length"), py::arg("span_condition"));
 
-  us.def("span_back",
-         py::overload_cast<const char16_t *, int32_t, USetSpanCondition>(&UnicodeSet::spanBack, py::const_),
-         py::arg("s"), py::arg("length"), py::arg("span_condition"))
+  us.def(
+        "span_back",
+        [](const UnicodeSet &self, const std::u16string &s, int32_t length, USetSpanCondition span_condition) {
+          return self.spanBack(s.data(), length, span_condition);
+        },
+        py::arg("s"), py::arg("length"), py::arg("span_condition"))
       .def("span_back",
            py::overload_cast<const UnicodeString &, int32_t, USetSpanCondition>(&UnicodeSet::spanBack, py::const_),
            py::arg("s"), py::arg("limit"), py::arg("span_condition"));

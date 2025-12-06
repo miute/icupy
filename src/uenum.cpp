@@ -72,13 +72,13 @@ void init_uenum(py::module &m) {
       "uenum_open_from_string_enumeration",
       [](StringEnumeration *adopted) {
         ErrorCode error_code;
-        auto p = uenum_openFromStringEnumeration(adopted ? adopted->clone() : nullptr, error_code);
+        auto p = uenum_openFromStringEnumeration(adopted->clone(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UEnumerationPtr>(p);
       },
-      py::arg("adopted"));
+      py::arg("adopted").none(false));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   m.def(

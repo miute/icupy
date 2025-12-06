@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/normalizer2.h>
 
@@ -36,9 +37,10 @@ void init_normalizer2(py::module &m) {
 
   n2.def_static(
       "get_instance",
-      [](const char *package_name, const char *name, UNormalization2Mode mode) {
+      [](std::optional<const std::string> &package_name, const std::string &name, UNormalization2Mode mode) {
         ErrorCode error_code;
-        auto result = Normalizer2::getInstance(package_name, name, mode, error_code);
+        auto result =
+            Normalizer2::getInstance(package_name ? package_name->data() : nullptr, name.data(), mode, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -194,7 +196,7 @@ void init_normalizer2(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   n2.def(
       "normalize_utf8",
-      [](const Normalizer2 &self, uint32_t options, const py::bytes &src, std::optional<Edits *> edits) {
+      [](const Normalizer2 &self, uint32_t options, const py::bytes &src, std::optional<Edits *> &edits) {
         std::string dest;
         auto sink = StringByteSink<std::string>(&dest);
         ErrorCode error_code;
@@ -204,7 +206,7 @@ void init_normalizer2(py::module &m) {
         }
         return py::bytes(dest);
       },
-      py::arg("options"), py::arg("src"), py::arg("edits") = nullptr);
+      py::arg("options"), py::arg("src"), py::arg("edits") = std::nullopt);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
   n2.def(

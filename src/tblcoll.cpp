@@ -75,10 +75,10 @@ void init_tblcoll(py::module &m) {
   coll.def(
           // [2] icu::Collator::compare
           "compare",
-          [](const Collator &self, const char16_t *source, int32_t source_length, const char16_t *target,
+          [](const Collator &self, const std::u16string &source, int32_t source_length, const std::u16string &target,
              int32_t target_length) {
             ErrorCode error_code;
-            auto result = self.compare(source, source_length, target, target_length, error_code);
+            auto result = self.compare(source.data(), source_length, target.data(), target_length, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -223,9 +223,10 @@ void init_tblcoll(py::module &m) {
 
   coll.def(
           "get_collation_key",
-          [](const Collator &self, const char16_t *source, int32_t source_length, CollationKey &key) -> CollationKey & {
+          [](const Collator &self, const std::u16string &source, int32_t source_length,
+             CollationKey &key) -> CollationKey & {
             ErrorCode error_code;
-            auto &result = self.getCollationKey(source, source_length, key, error_code);
+            auto &result = self.getCollationKey(source.data(), source_length, key, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -275,10 +276,11 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
       "get_functional_equivalent",
-      [](const char *keyword, const icupy::LocaleVariant &locale) {
+      [](const std::string &keyword, const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
         UBool is_available = true;
-        auto result = Collator::getFunctionalEquivalent(keyword, icupy::to_locale(locale), is_available, error_code);
+        auto result =
+            Collator::getFunctionalEquivalent(keyword.data(), icupy::to_locale(locale), is_available, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -297,9 +299,9 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
       "get_keyword_values",
-      [](const char *keyword) {
+      [](const std::string &keyword) {
         ErrorCode error_code;
-        auto result = Collator::getKeywordValues(keyword, error_code);
+        auto result = Collator::getKeywordValues(keyword.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -309,9 +311,10 @@ void init_tblcoll(py::module &m) {
 
   coll.def_static(
       "get_keyword_values_for_locale",
-      [](const char *keyword, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
+      [](const std::string &keyword, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
         ErrorCode error_code;
-        auto result = Collator::getKeywordValuesForLocale(keyword, icupy::to_locale(locale), commonly_used, error_code);
+        auto result =
+            Collator::getKeywordValuesForLocale(keyword.data(), icupy::to_locale(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -337,19 +340,21 @@ void init_tblcoll(py::module &m) {
 
   coll.def(
           "get_sort_key",
-          [](const Collator &self, const char16_t *source, int32_t source_length) {
-            const auto result_length = self.getSortKey(source, source_length, nullptr, 0);
+          [](const Collator &self, const std::u16string &source, int32_t source_length) {
+            auto p = source.data();
+            const auto result_length = self.getSortKey(p, source_length, nullptr, 0);
             std::vector<uint8_t> result(result_length);
-            self.getSortKey(source, source_length, result.data(), result_length);
+            self.getSortKey(p, source_length, result.data(), result_length);
             return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
           },
           py::arg("source"), py::arg("source_length"))
       .def(
           "get_sort_key",
           [](const Collator &self, const icupy::UnicodeStringVariant &source) {
-            const auto result_length = self.getSortKey(icupy::to_unistr(source), nullptr, 0);
+            const auto s = icupy::to_unistr(source);
+            const auto result_length = self.getSortKey(s, nullptr, 0);
             std::vector<uint8_t> result(result_length);
-            self.getSortKey(icupy::to_unistr(source), result.data(), result_length);
+            self.getSortKey(s, result.data(), result_length);
             return py::bytes(reinterpret_cast<char *>(result.data()), result_length);
           },
           py::arg("source"));
@@ -524,7 +529,8 @@ void init_tblcoll(py::module &m) {
              }
              return result;
            }),
-           py::keep_alive<1, 2>(), py::keep_alive<1, 4>(), py::arg("bin"), py::arg("length"), py::arg("base"));
+           py::keep_alive<1, 2>(), py::keep_alive<1, 4>(), py::arg("bin"), py::arg("length"),
+           py::arg("base").none(false));
 
   rbc.def("__copy__", &RuleBasedCollator::clone);
 

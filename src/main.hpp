@@ -22,6 +22,8 @@ namespace icupy {
 
 using Char16Variant = std::variant<char16_t, uint16_t>;
 
+using CharPtrVariant = std::variant<std::string, py::bytes>;
+
 using LocaleVariant = std::variant<icu::Locale, std::string>;
 
 using UnicodeStringList = std::list<icu::UnicodeString>;
@@ -29,6 +31,26 @@ using UnicodeStringVariant = std::variant<icu::UnicodeString, std::u16string>;
 using UnicodeStringVector = std::vector<icu::UnicodeString>;
 
 using UChar32Variant = std::variant<char32_t, UChar32>;
+
+struct CharPtr {
+  CharPtrVariant value;
+
+  CharPtr(CharPtrVariant v) : value(std::move(v)) {}
+
+  struct CharPtrVisitor {
+    const char *operator()(const std::string &x) { return x.data(); }
+    const char *operator()(const py::bytes &x) { return PyBytes_AS_STRING(x.ptr()); }
+  };
+
+  struct SizeVisitor {
+    std::size_t operator()(const std::string &x) { return x.size(); }
+    std::size_t operator()(const py::bytes &x) { return PyBytes_GET_SIZE(x.ptr()); }
+  };
+
+  inline operator const char *() const { return std::visit(CharPtrVisitor{}, value); }
+
+  std::size_t size() const { return std::visit(SizeVisitor{}, value); }
+};
 
 inline auto to_char16(const Char16Variant &x) {
   return std::visit([](auto &y) -> char16_t { return y; }, x);

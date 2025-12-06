@@ -201,7 +201,7 @@ void init_regex(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::arg("dest"));
+      py::arg("dest") = std::nullopt);
 
   rm.def("get_match_callback", [](RegexMatcher &self) {
     URegexMatchCallback *callback;
@@ -661,9 +661,9 @@ void init_regex(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   rp.def(
         "group_number_from_name",
-        [](const RegexPattern &self, const char *group_name, int32_t name_length) {
+        [](const RegexPattern &self, const std::string &group_name, int32_t name_length) {
           ErrorCode error_code;
-          auto result = self.groupNumberFromName(group_name, name_length, error_code);
+          auto result = self.groupNumberFromName(group_name.data(), name_length, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }

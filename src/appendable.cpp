@@ -27,8 +27,10 @@ void init_appendable(py::module &m) {
 
   app.def(
       "append_string",
-      [](Appendable &self, const char16_t *s, int32_t length) -> py::bool_ { return self.appendString(s, length); },
-      py::arg("s").none(false), py::arg("length") = -1);
+      [](Appendable &self, const std::u16string &s, int32_t length) -> py::bool_ {
+        return self.appendString(s.data(), length);
+      },
+      py::arg("s"), py::arg("length") = -1);
 
   // FIXME: Implement "char16_t *icu::Appendable::getAppendBuffer(int32_t minCapacity,
   //  int32_t desiredCapacityHint, char16_t *scratch, int32_t scratchCapacity, int32_t *resultCapacity)".

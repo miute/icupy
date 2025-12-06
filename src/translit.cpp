@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/locid.h>
 #include <unicode/translit.h>
@@ -50,9 +51,9 @@ void init_translit(py::module &m) {
   //
   // icu::Transliterator
   //
-  tl.def(py::init([](const icupy::UnicodeStringVariant &id, UnicodeFilter *adopted_filter) {
+  tl.def(py::init([](const icupy::UnicodeStringVariant &id, std::optional<UnicodeFilter *> &adopted_filter) {
            return std::make_unique<PyTransliterator>(icupy::to_unistr(id),
-                                                     adopted_filter ? adopted_filter->clone() : nullptr);
+                                                     adopted_filter ? (*adopted_filter)->clone() : nullptr);
          }),
          py::arg("id_"), py::arg("adopted_filter"))
       .def(py::init([](const PyTransliterator &other) { return std::make_unique<PyTransliterator>(other); }),
@@ -64,8 +65,8 @@ void init_translit(py::module &m) {
 
   tl.def(
       "adopt_filter",
-      [](Transliterator &self, UnicodeFilter *adopted_filter) {
-        self.adoptFilter(reinterpret_cast<UnicodeFilter *>(adopted_filter ? adopted_filter->clone() : nullptr));
+      [](Transliterator &self, std::optional<UnicodeFilter *> &adopted_filter) {
+        self.adoptFilter(adopted_filter ? (*adopted_filter)->clone() : nullptr);
       },
       py::arg("adopted_filter"));
 
@@ -91,8 +92,8 @@ void init_translit(py::module &m) {
 
   tl.def_static(
       "_create_basic_instance",
-      [](const icupy::UnicodeStringVariant &id, const UnicodeString *canon) {
-        return PyTransliterator::createBasicInstance(icupy::to_unistr(id), canon);
+      [](const icupy::UnicodeStringVariant &id, std::optional<const UnicodeString *> &canon) {
+        return PyTransliterator::createBasicInstance(icupy::to_unistr(id), canon.value_or(nullptr));
       },
       py::arg("id_"), py::arg("canon"));
 
@@ -227,10 +228,7 @@ void init_translit(py::module &m) {
   // FIXME: Implement "static void registerFactory(const UnicodeString &id, Factory factory, Token context)".
 
   tl.def_static(
-      "register_instance",
-      [](Transliterator *adopted_obj) {
-        Transliterator::registerInstance(adopted_obj ? adopted_obj->clone() : nullptr);
-      },
+      "register_instance", [](Transliterator *adopted_obj) { Transliterator::registerInstance(adopted_obj->clone()); },
       py::arg("adopted_obj").none(false));
 
   tl.def(

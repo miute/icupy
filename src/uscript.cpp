@@ -313,12 +313,13 @@ void init_uscript(py::module &m) {
 
   m.def(
       "uscript_get_code",
-      [](const char *name_or_abbr_or_locale) {
+      [](const std::string &name_or_abbr_or_locale) {
+        auto p = name_or_abbr_or_locale.data();
         ErrorCode error_code;
-        const auto length = uscript_getCode(name_or_abbr_or_locale, nullptr, 0, error_code);
-        std::vector<UScriptCode> result(length);
+        const auto capacity = uscript_getCode(p, nullptr, 0, error_code);
+        std::vector<UScriptCode> result(capacity);
         error_code.reset();
-        uscript_getCode(name_or_abbr_or_locale, result.data(), static_cast<int32_t>(result.size()), error_code);
+        uscript_getCode(p, result.data(), capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -333,10 +334,10 @@ void init_uscript(py::module &m) {
       "uscript_get_sample_string",
       [](UScriptCode script) {
         ErrorCode error_code;
-        const auto length = uscript_getSampleString(script, nullptr, 0, error_code);
-        std::u16string result(length, u'\0');
+        const auto capacity = uscript_getSampleString(script, nullptr, 0, error_code);
+        std::u16string result(capacity, u'\0');
         error_code.reset();
-        uscript_getSampleString(script, result.data(), static_cast<int32_t>(result.size()), error_code);
+        uscript_getSampleString(script, result.data(), capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -364,10 +365,10 @@ void init_uscript(py::module &m) {
       "uscript_get_script_extensions",
       [](UChar32 c) {
         ErrorCode error_code;
-        const auto length = uscript_getScriptExtensions(c, nullptr, 0, error_code);
-        std::vector<UScriptCode> result(length);
+        const auto capacity = uscript_getScriptExtensions(c, nullptr, 0, error_code);
+        std::vector<UScriptCode> result(capacity);
         error_code.reset();
-        uscript_getScriptExtensions(c, result.data(), static_cast<int32_t>(result.size()), error_code);
+        uscript_getScriptExtensions(c, result.data(), capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

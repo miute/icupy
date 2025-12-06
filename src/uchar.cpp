@@ -1551,9 +1551,9 @@ void init_uchar(py::module &m) {
 
   m.def(
       "u_char_from_name",
-      [](UCharNameChoice name_choice, const char *name) {
+      [](UCharNameChoice name_choice, const std::string &name) {
         ErrorCode error_code;
-        auto result = u_charFromName(name_choice, name, error_code);
+        auto result = u_charFromName(name_choice, name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -1752,7 +1752,9 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   m.def(
       "u_string_has_binary_property",
-      [](const char16_t *s, UProperty which) -> py::bool_ { return u_stringHasBinaryProperty(s, -1, which); },
+      [](const std::u16string &s, UProperty which) -> py::bool_ {
+        return u_stringHasBinaryProperty(s.data(), s.size(), which);
+      },
       py::arg("s"), py::arg("which"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 

@@ -51,9 +51,9 @@ void init_numsys(py::module &m) {
 
   ns.def_static(
       "create_instance_by_name",
-      [](const char *name) {
+      [](const std::string &name) {
         ErrorCode error_code;
-        auto result = NumberingSystem::createInstanceByName(name, error_code);
+        auto result = NumberingSystem::createInstanceByName(name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

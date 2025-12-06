@@ -1,6 +1,8 @@
 #include "main.hpp"
 #include "uresptr.hpp"
 #include <memory>
+#include <optional>
+#include <pybind11/stl.h>
 
 using namespace icu;
 
@@ -55,25 +57,27 @@ void init_ures(py::module &m) {
 
   m.def(
       "ures_open",
-      [](const char *package_name, const char *locale) {
+      [](const std::optional<std::string> &package_name, const std::optional<std::string> &locale) {
         ErrorCode error_code;
-        auto resource_bundle = ures_open(package_name, locale, error_code);
+        auto resource_bundle =
+            ures_open(package_name ? package_name->data() : nullptr, locale ? locale->data() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
-      py::arg("package_name"), py::arg("locale"));
+      py::arg("package_name") = std::nullopt, py::arg("locale") = std::nullopt);
 
   m.def(
       "ures_open_direct",
-      [](const char *package_name, const char *locale) {
+      [](const std::optional<std::string> &package_name, const std::optional<std::string> &locale) {
         ErrorCode error_code;
-        auto resource_bundle = ures_openDirect(package_name, locale, error_code);
+        auto resource_bundle = ures_openDirect(package_name ? package_name->data() : nullptr,
+                                               locale ? locale->data() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return std::make_unique<_UResourceBundlePtr>(resource_bundle);
       },
-      py::arg("package_name"), py::arg("locale"));
+      py::arg("package_name") = std::nullopt, py::arg("locale") = std::nullopt);
 }

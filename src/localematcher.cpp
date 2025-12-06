@@ -112,7 +112,7 @@ void init_localematcher(py::module &m) {
 
   lm.def(
       "get_best_match_for_list_string",
-      [](const LocaleMatcher &self, const char *desired_locale_list) {
+      [](const LocaleMatcher &self, const std::string &desired_locale_list) {
         ErrorCode error_code;
         auto result = self.getBestMatchForListString(desired_locale_list, error_code);
         if (error_code.isFailure()) {
@@ -220,7 +220,9 @@ void init_localematcher(py::module &m) {
 
   lmb.def(
       "set_supported_locales_from_list_string",
-      [](Builder &self, const char *locales) -> Builder & { return self.setSupportedLocalesFromListString(locales); },
+      [](Builder &self, const std::string &locales) -> Builder & {
+        return self.setSupportedLocalesFromListString(locales);
+      },
       py::arg("locales"));
 
   //

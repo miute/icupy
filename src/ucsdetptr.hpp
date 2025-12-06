@@ -25,12 +25,12 @@ public:
   UCharsetDetector *get() const;
   operator UCharsetDetector *() const { return get(); }
 
-  void set_source(const std::shared_ptr<void> &source);
+  void set_source(std::unique_ptr<std::string> &source);
 
 private:
   _UCharsetDetectorPtr() = delete;
   UCharsetDetector *p_;
-  std::shared_ptr<void> source_;
+  std::unique_ptr<std::string> source_;
 };
 
 #endif // ICUPY_UCSDETPTR_HPP

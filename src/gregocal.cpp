@@ -211,9 +211,10 @@ void init_gregocal(py::module &m) {
 
   cal.def_static(
       "get_keyword_values_for_locale",
-      [](const char *key, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
+      [](const std::string &key, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
         ErrorCode error_code;
-        auto result = Calendar::getKeywordValuesForLocale(key, icupy::to_locale(locale), commonly_used, error_code);
+        auto result =
+            Calendar::getKeywordValuesForLocale(key.data(), icupy::to_locale(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -386,14 +387,14 @@ void init_gregocal(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
   cal.def(
       "set_temporal_month_code",
-      [](Calendar &self, const char *temporal_month) {
+      [](Calendar &self, const std::string &temporal_month) {
         ErrorCode error_code;
-        self.setTemporalMonthCode(temporal_month, error_code);
+        self.setTemporalMonthCode(temporal_month.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("temporal_month").none(false));
+      py::arg("temporal_month"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
   cal.def(

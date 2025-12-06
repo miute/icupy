@@ -63,7 +63,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .def(py::init<int64_t>(), py::arg("ll"))
       .def(
           // [7] Formattable::Formattable(StringPiece number, UErrorCode &status)
-          py::init([](const char *number) {
+          py::init([](const std::string &number) {
             ErrorCode error_code;
             auto result = std::make_unique<Formattable>(number, error_code);
             if (error_code.isFailure()) {
@@ -267,7 +267,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def(
       "set_decimal_number",
-      [](Formattable &self, const char *number_string) {
+      [](Formattable &self, const std::string &number_string) {
         ErrorCode error_code;
         self.setDecimalNumber(number_string, error_code);
         if (error_code.isFailure()) {

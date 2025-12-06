@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/messagepattern.h>
@@ -181,15 +182,16 @@ void init_messagepattern(py::module &m) {
           py::arg("mode"))
       .def(
           // [3] MessagePattern::MessagePattern
-          py::init([](const icupy::UnicodeStringVariant &pattern, UParseError *parse_error) {
+          py::init([](const icupy::UnicodeStringVariant &pattern, std::optional<UParseError *> &parse_error) {
             ErrorCode error_code;
-            auto result = std::make_unique<MessagePattern>(icupy::to_unistr(pattern), parse_error, error_code);
+            auto result =
+                std::make_unique<MessagePattern>(icupy::to_unistr(pattern), parse_error.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           }),
-          py::arg("pattern"), py::arg("parse_error"))
+          py::arg("pattern"), py::arg("parse_error") = std::nullopt)
       .def(
           // [4] MessagePattern::MessagePattern
           py::init<const MessagePattern &>(), py::arg("other"));
@@ -239,54 +241,54 @@ void init_messagepattern(py::module &m) {
   mp.def(
       "parse",
       [](MessagePattern &self, const icupy::UnicodeStringVariant &pattern,
-         UParseError *parse_error) -> MessagePattern & {
+         std::optional<UParseError *> &parse_error) -> MessagePattern & {
         ErrorCode error_code;
-        auto &result = self.parse(icupy::to_unistr(pattern), parse_error, error_code);
+        auto &result = self.parse(icupy::to_unistr(pattern), parse_error.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("pattern"), py::arg("parse_error"));
+      py::arg("pattern"), py::arg("parse_error") = std::nullopt);
 
   mp.def(
       "parse_choice_style",
       [](MessagePattern &self, const icupy::UnicodeStringVariant &pattern,
-         UParseError *parse_error) -> MessagePattern & {
+         std::optional<UParseError *> &parse_error) -> MessagePattern & {
         ErrorCode error_code;
-        auto &result = self.parseChoiceStyle(icupy::to_unistr(pattern), parse_error, error_code);
+        auto &result = self.parseChoiceStyle(icupy::to_unistr(pattern), parse_error.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("pattern"), py::arg("parse_error"));
+      py::arg("pattern"), py::arg("parse_error") = std::nullopt);
 
   mp.def(
       "parse_plural_style",
       [](MessagePattern &self, const icupy::UnicodeStringVariant &pattern,
-         UParseError *parse_error) -> MessagePattern & {
+         std::optional<UParseError *> &parse_error) -> MessagePattern & {
         ErrorCode error_code;
-        auto &result = self.parsePluralStyle(icupy::to_unistr(pattern), parse_error, error_code);
+        auto &result = self.parsePluralStyle(icupy::to_unistr(pattern), parse_error.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("pattern"), py::arg("parse_error"));
+      py::arg("pattern"), py::arg("parse_error") = std::nullopt);
 
   mp.def(
       "parse_select_style",
       [](MessagePattern &self, const icupy::UnicodeStringVariant &pattern,
-         UParseError *parse_error) -> MessagePattern & {
+         std::optional<UParseError *> &parse_error) -> MessagePattern & {
         ErrorCode error_code;
-        auto &result = self.parseSelectStyle(icupy::to_unistr(pattern), parse_error, error_code);
+        auto &result = self.parseSelectStyle(icupy::to_unistr(pattern), parse_error.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("pattern"), py::arg("parse_error"));
+      py::arg("pattern"), py::arg("parse_error") = std::nullopt);
 
   mp.def(
       "part_substring_matches",

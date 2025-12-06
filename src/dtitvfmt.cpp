@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
@@ -108,7 +109,7 @@ void init_dtitvfmt(py::module &m) {
             }
             return result;
           },
-          py::arg("dt_interval"), py::arg("append_to"), py::arg("field_position"))
+          py::arg("dt_interval").none(false), py::arg("append_to"), py::arg("field_position"))
       .def(
           // [3] DateIntervalFormat::format
           // [4] Format::format
@@ -127,9 +128,9 @@ void init_dtitvfmt(py::module &m) {
           // [5] Format::format
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }

@@ -6,12 +6,13 @@ using namespace icu;
 void init_ushape(py::module &m) {
   m.def(
       "u_shape_arabic",
-      [](const char16_t *source, int32_t source_length, uint32_t options) {
+      [](const std::u16string &source, int32_t source_length, uint32_t options) {
+        auto p = source.data();
         ErrorCode error_code;
-        auto dest_size = u_shapeArabic(source, source_length, nullptr, 0, options, error_code);
+        const auto dest_size = u_shapeArabic(p, source_length, nullptr, 0, options, error_code);
         std::u16string result(dest_size, u'\0');
         error_code.reset();
-        u_shapeArabic(source, source_length, result.data(), dest_size, options, error_code);
+        u_shapeArabic(p, source_length, result.data(), dest_size, options, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

@@ -207,7 +207,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
   lnf.def(
       "format_decimal",
-      [](const LocalizedNumberFormatter &self, const char *value) {
+      [](const LocalizedNumberFormatter &self, const std::string &value) {
         ErrorCode error_code;
         auto result = self.formatDecimal(value, error_code);
         if (error_code.isFailure()) {
@@ -416,7 +416,8 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   nfs_lnf.def(
-      "usage", [](const _LocalizedNumberFormatterSettings &self, const char *usage) { return self.usage(usage); },
+      "usage",
+      [](const _LocalizedNumberFormatterSettings &self, const std::string &usage) { return self.usage(usage); },
       py::arg("usage"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
@@ -547,7 +548,8 @@ void init_numberformatter(py::module &, py::module &m2) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   nfs_unf.def(
-      "usage", [](const _UnlocalizedNumberFormatterSettings &self, const char *usage) { return self.usage(usage); },
+      "usage",
+      [](const _UnlocalizedNumberFormatterSettings &self, const std::string &usage) { return self.usage(usage); },
       py::arg("usage"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
@@ -610,7 +612,8 @@ void init_numberformatter(py::module &, py::module &m2) {
   sc.def(py::init<const Scale &>(), py::arg("other"));
 
   sc.def_static(
-      "by_decimal", [](const char *multiplicand) { return Scale::byDecimal(multiplicand); }, py::arg("multiplicand"));
+      "by_decimal", [](const std::string &multiplicand) { return Scale::byDecimal(multiplicand); },
+      py::arg("multiplicand"));
 
   sc.def_static("by_double", &Scale::byDouble, py::arg("multiplicand"));
 

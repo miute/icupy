@@ -15,9 +15,9 @@ void init_uversion(py::module &m) {
 
   m.def(
       "u_version_from_string",
-      [](const char *version_string) {
+      [](const std::string &version_string) {
         UVersionInfo info;
-        u_versionFromString(info, version_string);
+        u_versionFromString(info, version_string.data());
         py::tuple result(U_MAX_VERSION_LENGTH);
         int n = 0;
         std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });

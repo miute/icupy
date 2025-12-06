@@ -99,9 +99,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_count_aliases",
-      [](const char *alias) {
+      [](const std::string &alias) {
         ErrorCode error_code;
-        auto result = ucnv_countAliases(alias, error_code);
+        auto result = ucnv_countAliases(alias.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -115,32 +115,40 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_detect_unicode_signature",
-      [](const char *source, int32_t source_length) -> std::optional<const char *> {
+      [](const icupy::CharPtrVariant &source, int32_t source_length) -> std::optional<const std::string> {
+        const auto v = icupy::CharPtr(source);
+        if (source_length == -1) {
+          source_length = static_cast<int32_t>(v.size());
+        }
         ErrorCode error_code;
-        auto result = ucnv_detectUnicodeSignature(source, source_length, nullptr, error_code);
+        auto result = ucnv_detectUnicodeSignature(v, source_length, nullptr, error_code);
         if (result == nullptr) {
           return std::nullopt;
         }
         return result;
       },
-      py::arg("source"), py::arg("source_length"));
+      py::arg("source"), py::arg("source_length") = -1);
 
   m.def(
       "ucnv_fix_file_separator",
-      [](const _UConverterPtr &cnv, const UChar *source, int32_t source_len) {
-        std::u16string result(source, source_len);
-        ucnv_fixFileSeparator(cnv, result.data(), static_cast<int32_t>(result.size()));
+      [](const _UConverterPtr &cnv, const std::u16string &source, int32_t source_len) {
+        auto count = source_len;
+        if (count == -1) {
+          count = static_cast<int32_t>(source.size());
+        }
+        std::u16string result(source, 0, std::max(count, 0));
+        ucnv_fixFileSeparator(cnv, result.data(), result.size());
         return result;
       },
-      py::arg("cnv"), py::arg("source"), py::arg("source_len"));
+      py::arg("cnv"), py::arg("source"), py::arg("source_len") = -1);
 
   m.def("ucnv_flush_cache", &ucnv_flushCache);
 
   m.def(
       "ucnv_get_alias",
-      [](const char *alias, int16_t n) {
+      [](const std::string &alias, int16_t n) {
         ErrorCode error_code;
-        auto result = ucnv_getAlias(alias, n, error_code);
+        auto result = ucnv_getAlias(alias.data(), n, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -150,15 +158,16 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_aliases",
-      [](const char *alias) {
+      [](const std::string &alias) {
+        auto p = alias.data();
         ErrorCode error_code;
-        const auto count = ucnv_countAliases(alias, error_code);
+        const auto count = ucnv_countAliases(p, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         std::vector<const char *> result(count, nullptr);
         error_code.reset();
-        ucnv_getAliases(alias, result.data(), error_code);
+        ucnv_getAliases(p, result.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -170,9 +179,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_canonical_name",
-      [](const char *alias, const char *standard) {
+      [](const std::string &alias, const std::string &standard) -> std::optional<std::string> {
         ErrorCode error_code;
-        auto result = ucnv_getCanonicalName(alias, standard, error_code);
+        auto result = ucnv_getCanonicalName(alias.data(), standard.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -196,12 +205,13 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_display_name",
-      [](_UConverterPtr &converter, const char *display_locale) {
+      [](_UConverterPtr &converter, const std::string &display_locale) {
+        auto p = display_locale.data();
         ErrorCode error_code;
-        const auto length = ucnv_getDisplayName(converter, display_locale, nullptr, 0, error_code);
-        std::u16string result(length, u'\0');
+        const auto display_name_capacity = ucnv_getDisplayName(converter, p, nullptr, 0, error_code);
+        std::u16string result(display_name_capacity, u'\0');
         error_code.reset();
-        ucnv_getDisplayName(converter, display_locale, result.data(), static_cast<int32_t>(result.size()), error_code);
+        ucnv_getDisplayName(converter, p, result.data(), display_name_capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -286,9 +296,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_standard_name",
-      [](const char *name, const char *standard) {
+      [](const std::string &name, const std::string &standard) -> std::optional<std::string> {
         ErrorCode error_code;
-        auto result = ucnv_getStandardName(name, standard, error_code);
+        auto result = ucnv_getStandardName(name.data(), standard.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -380,9 +390,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_open",
-      [](const char *converter_name) {
+      [](const std::string &converter_name) {
         ErrorCode error_code;
-        auto p = ucnv_open(converter_name, error_code);
+        auto p = ucnv_open(converter_name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -413,9 +423,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_open_package",
-      [](const char *package_name, const char *converter_name) {
+      [](const std::string &package_name, const std::string &converter_name) {
         ErrorCode error_code;
-        auto p = ucnv_openPackage(package_name, converter_name, error_code);
+        auto p = ucnv_openPackage(package_name.data(), converter_name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -425,9 +435,9 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_open_standard_names",
-      [](const char *conv_name, const char *standard) {
+      [](const std::string &conv_name, const std::string &standard) {
         ErrorCode error_code;
-        auto p = ucnv_openStandardNames(conv_name, standard, error_code);
+        auto p = ucnv_openStandardNames(conv_name.data(), standard.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -444,7 +454,10 @@ void init_ucnv(py::module &m) {
   m.def(
       "ucnv_reset_to_unicode", [](_UConverterPtr &converter) { ucnv_resetToUnicode(converter); }, py::arg("converter"));
 
-  m.def("ucnv_set_default_name", &ucnv_setDefaultName, py::arg("name"));
+  m.def(
+      "ucnv_set_default_name",
+      [](std::optional<const std::string> &name) { ucnv_setDefaultName(name ? name->data() : nullptr); },
+      py::arg("name"));
 
   m.def(
       "ucnv_set_fallback", [](_UConverterPtr &cnv, py::bool_ uses_fallback) { ucnv_setFallback(cnv, uses_fallback); },
@@ -525,25 +538,29 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_set_subst_chars",
-      [](_UConverterPtr &converter, const char *sub_chars, int8_t len) {
+      [](_UConverterPtr &converter, const icupy::CharPtrVariant &sub_chars, int8_t len) {
+        const auto v = icupy::CharPtr(sub_chars);
+        if (len == -1) {
+          len = static_cast<int8_t>(v.size());
+        }
         ErrorCode error_code;
-        ucnv_setSubstChars(converter, sub_chars, len, error_code);
+        ucnv_setSubstChars(converter, v, len, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("converter"), py::arg("sub_chars"), py::arg("len_"));
+      py::arg("converter"), py::arg("sub_chars"), py::arg("len_") = -1);
 
   m.def(
       "ucnv_set_subst_string",
-      [](_UConverterPtr &converter, const UChar *s, int32_t length) {
+      [](_UConverterPtr &converter, const std::u16string &s, int32_t length) {
         ErrorCode error_code;
-        ucnv_setSubstString(converter, s, length, error_code);
+        ucnv_setSubstString(converter, s.data(), length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("converter"), py::arg("s"), py::arg("length"));
+      py::arg("converter"), py::arg("s"), py::arg("length") = -1);
 
   // TODO: Remove ucnv_set_to_u_call_back() in a future release.
   m.def(

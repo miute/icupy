@@ -53,8 +53,8 @@ void init_rbbi(py::module &m) {
   });
 
   bi.def(
-      "adopt_text", [](BreakIterator &self, CharacterIterator *it) { self.adoptText(it ? it->clone() : nullptr); },
-      py::arg("it"));
+      "adopt_text", [](BreakIterator &self, CharacterIterator *it) { self.adoptText(it->clone()); },
+      py::arg("it").none(false));
 
   bi.def("clone", &BreakIterator::clone);
 
@@ -192,7 +192,7 @@ void init_rbbi(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::keep_alive<0, 1>(), py::arg("fill_in"));
+      py::keep_alive<0, 1>(), py::arg("fill_in") = std::nullopt);
 
   bi.def(
       "is_boundary", [](BreakIterator &self, int32_t offset) -> py::bool_ { return self.isBoundary(offset); },

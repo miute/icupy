@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/msgfmt.h>
 #include <unicode/strenum.h>
@@ -75,14 +76,14 @@ void init_msgfmt(py::module &m) {
           // [2] MessageFormat::applyPattern
           "apply_pattern",
           [](MessageFormat &self, const icupy::UnicodeStringVariant &pattern, UMessagePatternApostropheMode apos_mode,
-             UParseError *parse_error) {
+             std::optional<UParseError *> &parse_error) {
             ErrorCode error_code;
-            self.applyPattern(icupy::to_unistr(pattern), apos_mode, parse_error, error_code);
+            self.applyPattern(icupy::to_unistr(pattern), apos_mode, parse_error.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
           },
-          py::arg("pattern"), py::arg("apos_mode"), py::arg("parse_error"))
+          py::arg("pattern"), py::arg("apos_mode"), py::arg("parse_error") = std::nullopt)
       .def(
           // [3] MessageFormat::applyPattern
           "apply_pattern",
@@ -127,9 +128,9 @@ void init_msgfmt(py::module &m) {
           // [3] Format::format
           "format",
           [](const MessageFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }

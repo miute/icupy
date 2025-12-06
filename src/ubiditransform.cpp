@@ -81,18 +81,21 @@ void init_ubiditransform(py::module &m) {
 
   m.def(
       "ubiditransform_transform",
-      [](_UBiDiTransformPtr &bidi_transform, const char16_t *src, int32_t src_length, UBiDiLevel in_para_level,
+      [](_UBiDiTransformPtr &bidi_transform, const std::u16string &src, int32_t src_length, UBiDiLevel in_para_level,
          UBiDiOrder in_order, UBiDiLevel out_para_level, UBiDiOrder out_order, UBiDiMirroring do_mirroring,
          uint32_t shaping_options) {
-        int32_t dest_size = src_length == -1 ? u_strlen(src) : src_length;
+        auto dest_size = src_length;
+        if (dest_size < 0) {
+          dest_size = static_cast<int32_t>(src.size());
+        }
         if (shaping_options & U_SHAPE_LETTERS_UNSHAPE) {
           dest_size *= 2;
         }
         std::u16string result(dest_size, u'\0');
         ErrorCode error_code;
         dest_size =
-            ubiditransform_transform(bidi_transform, src, src_length, result.data(), dest_size, in_para_level, in_order,
-                                     out_para_level, out_order, do_mirroring, shaping_options, error_code);
+            ubiditransform_transform(bidi_transform, src.data(), src_length, result.data(), dest_size, in_para_level,
+                                     in_order, out_para_level, out_order, do_mirroring, shaping_options, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

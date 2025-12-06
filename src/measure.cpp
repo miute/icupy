@@ -15,14 +15,13 @@ void init_measure(py::module &m) {
 
   meas.def(py::init([](const Formattable &number, const MeasureUnit *adopted_unit) {
              ErrorCode error_code;
-             auto result = std::make_unique<Measure>(
-                 number, reinterpret_cast<MeasureUnit *>(adopted_unit ? adopted_unit->clone() : nullptr), error_code);
+             auto result = std::make_unique<Measure>(number, adopted_unit->clone(), error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("number"), py::arg("adopted_unit"))
+           py::arg("number"), py::arg("adopted_unit").none(false))
       .def(py::init<const Measure &>(), py::arg("other"));
 
   meas.def("__copy__", &Measure::clone);
@@ -50,24 +49,24 @@ void init_measure(py::module &m) {
   //
   py::class_<CurrencyAmount, Measure> ca(m, "CurrencyAmount");
 
-  ca.def(py::init([](const Formattable &amount, const char16_t *iso_code) {
+  ca.def(py::init([](const Formattable &amount, const std::u16string &iso_code) {
            ErrorCode error_code;
-           auto result = std::make_unique<CurrencyAmount>(amount, iso_code, error_code);
+           auto result = std::make_unique<CurrencyAmount>(amount, iso_code.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
            return result;
          }),
-         py::arg("amount"), py::arg("iso_code").none(false))
-      .def(py::init([](double amount, const char16_t *iso_code) {
+         py::arg("amount"), py::arg("iso_code"))
+      .def(py::init([](double amount, const std::u16string &iso_code) {
              ErrorCode error_code;
-             auto result = std::make_unique<CurrencyAmount>(amount, iso_code, error_code);
+             auto result = std::make_unique<CurrencyAmount>(amount, iso_code.data(), error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("amount"), py::arg("iso_code").none(false))
+           py::arg("amount"), py::arg("iso_code"))
       .def(py::init<const CurrencyAmount &>(), py::arg("other"));
 
   ca.def("__copy__", &CurrencyAmount::clone);

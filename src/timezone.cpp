@@ -101,7 +101,9 @@ void init_timezone(py::module &m) {
     return result;
   });
 #ifndef U_HIDE_DEPRECATED_API
-  tz.def_static("create_enumeration", py::overload_cast<const char *>(&TimeZone::createEnumeration), py::arg("country"))
+  tz.def_static(
+        "create_enumeration", [](const std::string &country) { return TimeZone::createEnumeration(country.data()); },
+        py::arg("country"))
       .def_static("create_enumeration", py::overload_cast<int32_t>(&TimeZone::createEnumeration),
                   py::arg("raw_offset"));
 #endif // U_HIDE_DEPRECATED_API
@@ -128,9 +130,9 @@ void init_timezone(py::module &m) {
 
   tz.def_static(
       "create_enumeration_for_region",
-      [](const char *region) {
+      [](std::optional<const std::string> &region) {
         ErrorCode error_code;
-        auto result = TimeZone::createEnumerationForRegion(region, error_code);
+        auto result = TimeZone::createEnumerationForRegion(region ? region->data() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -153,10 +155,10 @@ void init_timezone(py::module &m) {
 
   tz.def_static(
       "create_time_zone_id_enumeration",
-      [](USystemTimeZoneType zone_type, const char *region, const std::optional<int32_t> &raw_offset) {
+      [](USystemTimeZoneType zone_type, std::optional<const std::string> &region, std::optional<int32_t> &raw_offset) {
         ErrorCode error_code;
-        auto result = TimeZone::createTimeZoneIDEnumeration(
-            zone_type, region, raw_offset.has_value() ? &raw_offset.value() : nullptr, error_code);
+        auto result = TimeZone::createTimeZoneIDEnumeration(zone_type, region ? region->data() : nullptr,
+                                                            raw_offset ? &raw_offset.value() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -239,9 +241,11 @@ void init_timezone(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
       "get_id_for_windows_id",
-      [](const icupy::UnicodeStringVariant &winid, const char *region, UnicodeString &id) -> UnicodeString & {
+      [](const icupy::UnicodeStringVariant &winid, std::optional<const std::string> &region,
+         UnicodeString &id) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = TimeZone::getIDForWindowsID(icupy::to_unistr(winid), region, id, error_code);
+        auto &result =
+            TimeZone::getIDForWindowsID(icupy::to_unistr(winid), region ? region->data() : nullptr, id, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -441,10 +445,9 @@ void init_timezone(py::module &m) {
   // icu::RuleBasedTimeZone
   //
   rbtz.def(py::init([](const icupy::UnicodeStringVariant &id, InitialTimeZoneRule *initial_rule) {
-             return std::make_unique<RuleBasedTimeZone>(icupy::to_unistr(id),
-                                                        initial_rule ? initial_rule->clone() : nullptr);
+             return std::make_unique<RuleBasedTimeZone>(icupy::to_unistr(id), initial_rule->clone());
            }),
-           py::arg("id_"), py::arg("initial_rule"))
+           py::arg("id_"), py::arg("initial_rule").none(false))
       .def(py::init<const RuleBasedTimeZone &>(), py::arg("other"));
 
   rbtz.def("__copy__", &RuleBasedTimeZone::clone);
@@ -455,12 +458,12 @@ void init_timezone(py::module &m) {
       "add_transition_rule",
       [](RuleBasedTimeZone &self, TimeZoneRule *rule) {
         ErrorCode error_code;
-        self.addTransitionRule(rule ? rule->clone() : nullptr, error_code);
+        self.addTransitionRule(rule->clone(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("rule"));
+      py::arg("rule").none(false));
 
   rbtz.def("clone", &RuleBasedTimeZone::clone);
 

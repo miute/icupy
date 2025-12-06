@@ -137,9 +137,9 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_measurement_system",
-      [](const char *locale_id) {
+      [](const std::string &locale_id) {
         ErrorCode error_code;
-        auto result = ulocdata_getMeasurementSystem(locale_id, error_code);
+        auto result = ulocdata_getMeasurementSystem(locale_id.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -153,10 +153,10 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_paper_size",
-      [](const char *locale_id) {
+      [](const std::string &locale_id) {
         int32_t height, width;
         ErrorCode error_code;
-        ulocdata_getPaperSize(locale_id, &height, &width, error_code);
+        ulocdata_getPaperSize(locale_id.data(), &height, &width, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -166,9 +166,9 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_open",
-      [](const char *locale_id) {
+      [](const std::string &locale_id) {
         ErrorCode error_code;
-        auto p = ulocdata_open(locale_id, error_code);
+        auto p = ulocdata_open(locale_id.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

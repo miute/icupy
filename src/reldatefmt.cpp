@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/decimfmt.h>
 #include <unicode/reldatefmt.h>
@@ -116,11 +117,10 @@ void init_reldatefmt(py::module &m) {
           py::arg("locale"))
       .def(
           // [3] RelativeDateTimeFormatter::RelativeDateTimeFormatter
-          py::init([](const icupy::LocaleVariant &locale, NumberFormat *nf_to_adopt) {
+          py::init([](const icupy::LocaleVariant &locale, std::optional<NumberFormat *> &nf_to_adopt) {
             ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                icupy::to_locale(locale),
-                reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), error_code);
+                icupy::to_locale(locale), nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -130,13 +130,12 @@ void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .def(
           // [4] RelativeDateTimeFormatter::RelativeDateTimeFormatter
-          py::init([](const icupy::LocaleVariant &locale, NumberFormat *nf_to_adopt,
+          py::init([](const icupy::LocaleVariant &locale, std::optional<NumberFormat *> &nf_to_adopt,
                       UDateRelativeDateTimeFormatterStyle style, UDisplayContext capitalization_context) {
             ErrorCode error_code;
-            auto result = std::make_unique<RelativeDateTimeFormatter>(
-                icupy::to_locale(locale),
-                reinterpret_cast<NumberFormat *>(nf_to_adopt ? nf_to_adopt->clone() : nullptr), style,
-                capitalization_context, error_code);
+            auto result = std::make_unique<RelativeDateTimeFormatter>(icupy::to_locale(locale),
+                                                                      nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr,
+                                                                      style, capitalization_context, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }

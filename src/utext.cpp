@@ -299,7 +299,7 @@ void init_utext(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::arg("ut"), py::arg("ci"));
+      py::arg("ut"), py::arg("ci").none(false));
 
   m.def(
       "utext_open_const_unicode_string",
@@ -311,7 +311,7 @@ void init_utext(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::arg("ut"), py::arg("s"));
+      py::arg("ut"), py::arg("s").none(false));
 
   m.def(
       "utext_open_replaceable",
@@ -323,20 +323,24 @@ void init_utext(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::arg("ut"), py::arg("rep"));
+      py::arg("ut"), py::arg("rep").none(false));
 
   m.def(
       "utext_open_uchars",
-      [](std::optional<_UTextPtr> &ut, const UChar *s, int64_t length) {
+      [](std::optional<_UTextPtr> &ut, const std::u16string &s, int64_t length) {
+        auto count = length;
+        if (count == -1) {
+          count = static_cast<int64_t>(s.size());
+        }
+        auto text_ptr = std::make_shared<std::u16string>(s, 0, std::max(count, int64_t{0}));
         ErrorCode error_code;
-        auto text = std::make_shared<std::u16string>(s, s && length == -1 ? u_strlen(s) : std::max(int64_t{0}, length));
-        auto p = utext_openUChars(ut.value_or(nullptr), text->data(), length, error_code);
+        auto p = utext_openUChars(ut.value_or(nullptr), text_ptr->data(), length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UTextPtr>(p, text);
+        return std::make_unique<_UTextPtr>(p, text_ptr);
       },
-      py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length"));
+      py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length") = -1);
 
   m.def(
       "utext_open_unicode_string",
@@ -348,19 +352,22 @@ void init_utext(py::module &m) {
         }
         return std::make_unique<_UTextPtr>(p);
       },
-      py::arg("ut"), py::arg("s"));
+      py::arg("ut"), py::arg("s").none(false));
 
   m.def(
       "utext_open_utf8",
       [](std::optional<_UTextPtr> &ut, const py::bytes &s, int64_t length) {
-        auto text = std::make_shared<std::string>(
-            s, 0, length < 0 ? py::len(s) : std::min(static_cast<size_t>(length), py::len(s)));
+        const auto s2 = s.cast<std::string>();
+        if (length == -1) {
+          length = static_cast<int64_t>(s2.size());
+        }
+        auto text_ptr = std::make_shared<std::string>(s2, 0, std::max(length, int64_t{0}));
         ErrorCode error_code;
-        auto p = utext_openUTF8(ut.value_or(nullptr), text->data(), length, error_code);
+        auto p = utext_openUTF8(ut.value_or(nullptr), text_ptr->data(), length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UTextPtr>(p, text);
+        return std::make_unique<_UTextPtr>(p, text_ptr);
       },
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"), py::arg("length") = -1);
 
@@ -373,10 +380,11 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_replace",
-      [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, const UChar *replacement_text,
+      [](_UTextPtr &ut, int64_t native_start, int64_t native_limit, const std::u16string &replacement_text,
          int32_t replacement_length) {
         ErrorCode error_code;
-        auto result = utext_replace(ut, native_start, native_limit, replacement_text, replacement_length, error_code);
+        auto result =
+            utext_replace(ut, native_start, native_limit, replacement_text.data(), replacement_length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

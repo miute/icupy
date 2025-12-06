@@ -9,9 +9,9 @@ void init_currunit(py::module &m) {
   //
   py::class_<CurrencyUnit, MeasureUnit> cu(m, "CurrencyUnit");
 
-  cu.def(py::init([](const char16_t *iso_code) {
+  cu.def(py::init([](const std::u16string &iso_code) {
            ErrorCode error_code;
-           auto result = std::make_unique<CurrencyUnit>(iso_code, error_code);
+           auto result = std::make_unique<CurrencyUnit>(iso_code.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
