@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include "uresptr.hpp"
 #include <algorithm>
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/resbund.h>
 
@@ -46,9 +47,10 @@ void init_resbund(py::module &m) {
           }))
       .def(
           // [4] ResourceBundle::ResourceBundle
-          py::init([](const char *package_name, const icupy::LocaleVariant &locale) {
+          py::init([](std::optional<const std::string> &package_name, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name, icupy::to_locale(locale), error_code);
+            auto result = std::make_unique<ResourceBundle>(package_name ? package_name->data() : nullptr,
+                                                           icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -97,9 +99,9 @@ void init_resbund(py::module &m) {
 
   res.def(
          "get",
-         [](const ResourceBundle &self, const char *key) {
+         [](const ResourceBundle &self, const std::string &key) {
            ErrorCode error_code;
-           auto result = self.get(key, error_code);
+           auto result = self.get(key.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -195,9 +197,9 @@ void init_resbund(py::module &m) {
 
   res.def(
          "get_string_ex",
-         [](const ResourceBundle &self, const char *key) {
+         [](const ResourceBundle &self, const std::string &key) {
            ErrorCode error_code;
-           auto result = self.getStringEx(key, error_code);
+           auto result = self.getStringEx(key.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }

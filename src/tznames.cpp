@@ -127,8 +127,10 @@ void init_tznames(py::module &m) {
 
   tzn.def(
       "get_reference_zone_id",
-      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &mz_id, const char *region, UnicodeString &tz_id)
-          -> UnicodeString & { return self.getReferenceZoneID(icupy::to_unistr(mz_id), region, tz_id); },
+      [](const TimeZoneNames &self, const icupy::UnicodeStringVariant &mz_id, const std::string &region,
+         UnicodeString &tz_id) -> UnicodeString & {
+        return self.getReferenceZoneID(icupy::to_unistr(mz_id), region.data(), tz_id);
+      },
       py::arg("mz_id"), py::arg("region"), py::arg("tz_id"));
 
   tzn.def(

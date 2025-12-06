@@ -44,28 +44,57 @@ void init_locdspnm(py::module &m) {
 
   ldn.def("get_locale", &LocaleDisplayNames::getLocale);
 
-  ldn.def("key_display_name", &LocaleDisplayNames::keyDisplayName, py::arg("key"), py::arg("result"));
+  ldn.def(
+      "key_display_name",
+      [](const LocaleDisplayNames &self, const std::string &key, UnicodeString &result) -> UnicodeString & {
+        return self.keyDisplayName(key.data(), result);
+      },
+      py::arg("key"), py::arg("result"));
 
-  ldn.def("key_value_display_name", &LocaleDisplayNames::keyValueDisplayName, py::arg("key"), py::arg("value"),
-          py::arg("result"));
+  ldn.def(
+      "key_value_display_name",
+      [](const LocaleDisplayNames &self, const std::string &key, const std::string &value, UnicodeString &result)
+          -> UnicodeString & { return self.keyValueDisplayName(key.data(), value.data(), result); },
+      py::arg("key"), py::arg("value"), py::arg("result"));
 
-  ldn.def("language_display_name", &LocaleDisplayNames::languageDisplayName, py::arg("lang"), py::arg("result"));
+  ldn.def(
+      "language_display_name",
+      [](const LocaleDisplayNames &self, const std::string &lang, UnicodeString &result) -> UnicodeString & {
+        return self.languageDisplayName(lang.data(), result);
+      },
+      py::arg("lang"), py::arg("result"));
 
-  ldn.def("locale_display_name",
-          py::overload_cast<const char *, UnicodeString &>(&LocaleDisplayNames::localeDisplayName, py::const_),
-          py::arg("locale_id"), py::arg("result"))
+  ldn.def(
+         "locale_display_name",
+         [](const LocaleDisplayNames &self, const std::string &locale_id, UnicodeString &result) -> UnicodeString & {
+           return self.localeDisplayName(locale_id.data(), result);
+         },
+         py::arg("locale_id"), py::arg("result"))
       .def("locale_display_name",
            py::overload_cast<const Locale &, UnicodeString &>(&LocaleDisplayNames::localeDisplayName, py::const_),
            py::arg("locale"), py::arg("result"));
 
-  ldn.def("region_display_name", &LocaleDisplayNames::regionDisplayName, py::arg("region"), py::arg("result"));
+  ldn.def(
+      "region_display_name",
+      [](const LocaleDisplayNames &self, const std::string &region, UnicodeString &result) -> UnicodeString & {
+        return self.regionDisplayName(region.data(), result);
+      },
+      py::arg("region"), py::arg("result"));
 
-  ldn.def("script_display_name",
-          py::overload_cast<const char *, UnicodeString &>(&LocaleDisplayNames::scriptDisplayName, py::const_),
-          py::arg("script"), py::arg("result"))
+  ldn.def(
+         "script_display_name",
+         [](const LocaleDisplayNames &self, const std::string &script, UnicodeString &result) -> UnicodeString & {
+           return self.scriptDisplayName(script.data(), result);
+         },
+         py::arg("script"), py::arg("result"))
       .def("script_display_name",
            py::overload_cast<UScriptCode, UnicodeString &>(&LocaleDisplayNames::scriptDisplayName, py::const_),
            py::arg("script_code"), py::arg("result"));
 
-  ldn.def("variant_display_name", &LocaleDisplayNames::variantDisplayName, py::arg("variant"), py::arg("result"));
+  ldn.def(
+      "variant_display_name",
+      [](const LocaleDisplayNames &self, const std::string &variant, UnicodeString &result) -> UnicodeString & {
+        return self.variantDisplayName(variant.data(), result);
+      },
+      py::arg("variant"), py::arg("result"));
 }

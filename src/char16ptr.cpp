@@ -1,6 +1,6 @@
 #include "char16ptr.hpp"
 #include "main.hpp"
-
+#include <memory>
 #include <pybind11/stl.h>
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 59)
@@ -44,7 +44,7 @@ void init_char16ptr(py::module &m) {
   // icu::Char16Ptr
   //
   py::class_<Char16Ptr>(m, "Char16Ptr")
-      .def(py::init<char16_t *>(), py::arg("p"))
+      .def(py::init([](std::u16string &p) { return std::make_unique<Char16Ptr>(p.data()); }), py::arg("p"))
       .def(
           "__getitem__", [](const Char16Ptr &self, int32_t index) -> uint16_t { return *(self + index); },
           py::arg("index"))
@@ -54,7 +54,7 @@ void init_char16ptr(py::module &m) {
   // icu::ConstChar16Ptr
   //
   py::class_<ConstChar16Ptr>(m, "ConstChar16Ptr")
-      .def(py::init<const char16_t *>(), py::arg("p"))
+      .def(py::init([](const std::u16string &p) { return std::make_unique<ConstChar16Ptr>(p.data()); }), py::arg("p"))
       .def(
           "__getitem__", [](const ConstChar16Ptr &self, int32_t index) -> uint16_t { return *(self + index); },
           py::arg("index"))

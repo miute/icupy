@@ -1,5 +1,7 @@
 #include "main.hpp"
 #include "usprepptr.hpp"
+#include <optional>
+#include <pybind11/stl.h>
 
 using namespace icu;
 
@@ -46,9 +48,9 @@ void init_usprep(py::module &m) {
 
   m.def(
       "usprep_open",
-      [](const char *path, const char *file_name) {
+      [](const std::optional<std::string> &path, const std::string &file_name) {
         ErrorCode error_code;
-        auto profile = usprep_open(path, file_name, error_code);
+        auto profile = usprep_open(path ? path->data() : nullptr, file_name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -70,19 +72,22 @@ void init_usprep(py::module &m) {
 
   m.def(
       "usprep_prepare",
-      [](_UStringPrepProfilePtr &prep, const char16_t *src, int32_t src_length, int32_t options,
-         UParseError *parse_error) {
+      [](_UStringPrepProfilePtr &prep, const std::u16string &src, int32_t src_length, int32_t options,
+         std::optional<UParseError *> &parse_error) {
+        auto p = src.data();
         ErrorCode error_code;
-        auto dest_size = usprep_prepare(prep, src, src_length, nullptr, 0, options, parse_error, error_code);
-        std::u16string result(dest_size, '\0');
+        const auto dest_capacity = usprep_prepare(prep, p, src_length, nullptr, 0, options, nullptr, error_code);
+        std::u16string result(dest_capacity, '\0');
         error_code.reset();
-        usprep_prepare(prep, src, src_length, result.data(), dest_size, options, parse_error, error_code);
+        usprep_prepare(prep, p, src_length, result.data(), dest_capacity, options, parse_error.value_or(nullptr),
+                       error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("prep"), py::arg("src"), py::arg("src_length"), py::arg("options"), py::arg("parse_error"));
+      py::arg("prep"), py::arg("src"), py::arg("src_length"), py::arg("options"),
+      py::arg("parse_error") = std::nullopt);
 
   m.attr("USPREP_ALLOW_UNASSIGNED") = USPREP_ALLOW_UNASSIGNED;
   m.attr("USPREP_DEFAULT") = USPREP_DEFAULT;

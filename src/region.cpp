@@ -72,9 +72,9 @@ void init_region(py::module &m) {
 
   reg.def_static(
          "get_instance",
-         [](const char *region_code) {
+         [](const std::string &region_code) {
            ErrorCode error_code;
-           auto result = Region::getInstance(region_code, error_code);
+           auto result = Region::getInstance(region_code.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }

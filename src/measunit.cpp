@@ -2572,7 +2572,7 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   mu.def_static(
       "for_identifier",
-      [](const char *identifier) {
+      [](const std::string &identifier) {
         ErrorCode error_code;
         auto result = MeasureUnit::forIdentifier(identifier, error_code);
         if (error_code.isFailure()) {
@@ -2602,12 +2602,13 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def_static(
         "get_available",
-        [](const char *type) {
+        [](const std::string &type) {
+          auto p = type.data();
           ErrorCode error_code;
-          int32_t capacity = MeasureUnit::getAvailable(type, nullptr, 0, error_code);
-          auto result = std::vector<MeasureUnit>(capacity);
+          const auto dest_capacity = MeasureUnit::getAvailable(p, nullptr, 0, error_code);
+          auto result = std::vector<MeasureUnit>(dest_capacity);
           error_code.reset();
-          MeasureUnit::getAvailable(type, result.data(), capacity, error_code);
+          MeasureUnit::getAvailable(p, result.data(), dest_capacity, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -2616,10 +2617,10 @@ void init_measunit(py::module &m) {
         py::arg("type_"))
       .def_static("get_available", []() {
         ErrorCode error_code;
-        int32_t capacity = MeasureUnit::getAvailable(nullptr, 0, error_code);
-        auto result = std::vector<MeasureUnit>(capacity);
+        const auto dest_capacity = MeasureUnit::getAvailable(nullptr, 0, error_code);
+        auto result = std::vector<MeasureUnit>(dest_capacity);
         error_code.reset();
-        MeasureUnit::getAvailable(result.data(), capacity, error_code);
+        MeasureUnit::getAvailable(result.data(), dest_capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

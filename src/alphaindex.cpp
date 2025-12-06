@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "voidptr.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/alphaindex.h>
 #include <unicode/tblcoll.h>
@@ -89,14 +90,13 @@ void init_alphaindex(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .def(py::init([](RuleBasedCollator *collator) {
              ErrorCode error_code;
-             auto result = std::make_unique<AlphabeticIndex>(
-                 reinterpret_cast<RuleBasedCollator *>(collator ? collator->clone() : nullptr), error_code);
+             auto result = std::make_unique<AlphabeticIndex>(collator->clone(), error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("collator"))
+           py::arg("collator").none(false))
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       ;
 
@@ -127,15 +127,16 @@ void init_alphaindex(py::module &m) {
 
   ai.def(
       "add_record",
-      [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &name, _ConstVoidPtr *data) -> AlphabeticIndex & {
+      [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &name,
+         std::optional<_ConstVoidPtr *> &data) -> AlphabeticIndex & {
         ErrorCode error_code;
-        auto &result = self.addRecord(icupy::to_unistr(name), data, error_code);
+        auto &result = self.addRecord(icupy::to_unistr(name), data.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("name"), py::arg("data"));
+      py::arg("name"), py::arg("data") = std::nullopt);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   ai.def("build_immutable_index", [](AlphabeticIndex &self) {

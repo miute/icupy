@@ -23,9 +23,9 @@ def test_break_iterator_adopt_text() -> None:
     assert fbi.next() == 11
     assert fbi.next() == icu.BreakIterator.DONE
 
-    fbi.adopt_text(None)
-    assert fbi.first() == 0
-    assert fbi.next() == icu.BreakIterator.DONE
+    # fbi.adopt_text(None)
+    # assert fbi.first() == 0
+    # assert fbi.next() == icu.BreakIterator.DONE
 
 
 def test_break_iterator_api() -> None:

@@ -44,14 +44,13 @@ void init_scientificnumberformatter(py::module &m) {
              const icupy::UnicodeStringVariant &end_markup) {
             ErrorCode error_code;
             auto result = ScientificNumberFormatter::createMarkupInstance(
-                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr),
-                icupy::to_unistr(begin_markup), icupy::to_unistr(end_markup), error_code);
+                fmt_to_adopt->clone(), icupy::to_unistr(begin_markup), icupy::to_unistr(end_markup), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           },
-          py::arg("fmt_to_adopt"), py::arg("begin_markup"), py::arg("end_markup"));
+          py::arg("fmt_to_adopt").none(false), py::arg("begin_markup"), py::arg("end_markup"));
 
   snf.def_static(
          // [1] ScientificNumberFormatter::createSuperscriptInstance
@@ -70,14 +69,13 @@ void init_scientificnumberformatter(py::module &m) {
           "create_superscript_instance",
           [](DecimalFormat *fmt_to_adopt) {
             ErrorCode error_code;
-            auto result = ScientificNumberFormatter::createSuperscriptInstance(
-                reinterpret_cast<DecimalFormat *>(fmt_to_adopt ? fmt_to_adopt->clone() : nullptr), error_code);
+            auto result = ScientificNumberFormatter::createSuperscriptInstance(fmt_to_adopt->clone(), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           },
-          py::arg("fmt_to_adopt"));
+          py::arg("fmt_to_adopt").none(false));
 
   snf.def(
       "format",

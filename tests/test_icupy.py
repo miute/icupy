@@ -135,6 +135,9 @@ def test_icu_error() -> None:
     # UBool icu::ErrorCode::isSuccess() const
     assert error_code.is_success() is False
 
+    # ErrorCode.__repr__() -> str
+    assert repr(error_code) == "<ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)>"
+
     # UErrorCode icu::ErrorCode::reset()
     error_code.reset()
     assert error_code == icu.UErrorCode.U_ZERO_ERROR
@@ -152,13 +155,9 @@ def test_icu_error() -> None:
             _ = icu.Locale.for_language_tag("x")
         ex = exc_info.value
         assert isinstance(ex, icu.ICUError)
-        assert len(ex.args) == 2
+        assert len(ex.args) == 1
         assert isinstance(ex.args[0], icu.ErrorCode)  # icu::ErrorCode
-        assert isinstance(ex.args[1], str)  # An error message
-
-    # ErrorCode.__repr__() -> str
-    error_code = ex.args[0]
-    assert repr(error_code) == "<ErrorCode(<U_ILLEGAL_ARGUMENT_ERROR: 1>)>"
+        # assert isinstance(ex.args[1], str)  # An error message
 
 
 @pytest.mark.skipif(not sys.platform.startswith("win"), reason="Windows Only")

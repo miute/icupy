@@ -15,7 +15,7 @@ _UCharsetDetectorPtr::_UCharsetDetectorPtr(UCharsetDetector *p) : p_(p) {}
 _UCharsetDetectorPtr::~_UCharsetDetectorPtr() {}
 UCharsetDetector *_UCharsetDetectorPtr::get() const { return p_; }
 
-void _UCharsetDetectorPtr::set_source(const std::shared_ptr<void> &source) { source_ = source; }
+void _UCharsetDetectorPtr::set_source(std::unique_ptr<std::string> &source) { source_ = std::move(source); }
 
 void init_ucsdet(py::module &m) {
   //
@@ -148,9 +148,9 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_set_declared_encoding",
-      [](_UCharsetDetectorPtr &ucsd, const char *encoding, int32_t length) {
+      [](_UCharsetDetectorPtr &ucsd, const std::string &encoding, int32_t length) {
         ErrorCode error_code;
-        ucsdet_setDeclaredEncoding(ucsd, encoding, length, error_code);
+        ucsdet_setDeclaredEncoding(ucsd, encoding.data(), length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -159,18 +159,19 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_set_text",
-      [](_UCharsetDetectorPtr &ucsd, const char *text_in, int32_t len) {
+      [](_UCharsetDetectorPtr &ucsd, const icupy::CharPtrVariant &text_in, int32_t len) {
+        const auto v = icupy::CharPtr(text_in);
+        auto count = len;
+        if (count == -1) {
+          count = static_cast<int32_t>(v.size());
+        }
+        auto text_ptr = std::make_unique<std::string>(v, std::max(count, 0));
         ErrorCode error_code;
-        size_t size = text_in && len == -1 ? std::strlen(text_in) : std::max(0, len);
-        auto source = std::shared_ptr<char[]>(new char[size + 1]);
-        auto s = source.get();
-        std::memset(s, 0, size + 1);
-        std::memcpy(s, text_in, size);
-        ucsdet_setText(ucsd, s, len, error_code);
+        ucsdet_setText(ucsd, text_ptr->data(), len, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        ucsd.set_source(source);
+        ucsd.set_source(text_ptr);
       },
       py::arg("ucsd"), py::arg("text_in"), py::arg("len_") = -1);
 }

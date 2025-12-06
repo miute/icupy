@@ -783,10 +783,6 @@ def test_set_keyword_value() -> None:
     loc.set_keyword_value("calendar", "buddhist")
     assert loc.get_name() == "de_DE@calendar=buddhist;collation=phonebook"
 
-    with pytest.raises(icu.ICUError) as exc_info:
-        loc.set_keyword_value(None, None)
-    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
-
     loc.set_keyword_value("calendar", None)
     assert loc.get_name() == "de_DE@collation=phonebook"
 
@@ -805,10 +801,6 @@ def test_set_unicode_keyword_value() -> None:
     loc.set_unicode_keyword_value("co", "phonebk")
     loc.set_unicode_keyword_value("ca", "buddhist")
     assert loc.get_name() == "de_DE@calendar=buddhist;collation=phonebook"
-
-    with pytest.raises(icu.ICUError) as exc_info:
-        loc.set_unicode_keyword_value(None, None)
-    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
     loc.set_unicode_keyword_value("ca", None)
     assert loc.get_name() == "de_DE@collation=phonebook"

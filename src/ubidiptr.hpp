@@ -16,18 +16,18 @@ public:
 
   void set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedding_levels);
 
-  void set_epilogue(const std::shared_ptr<UChar[]> &epilogue);
+  void set_epilogue(const std::shared_ptr<std::u16string> &epilogue);
 
-  void set_prologue(const std::shared_ptr<UChar[]> &prologue);
+  void set_prologue(const std::shared_ptr<std::u16string> &prologue);
 
-  void set_text(const std::shared_ptr<UChar[]> &text);
+  void set_text(const std::shared_ptr<std::u16string> &text);
 
 private:
   _UBiDiPtr() = delete;
   UBiDi *p_;
-  std::shared_ptr<UChar[]> text_;
-  std::shared_ptr<UChar[]> prologue_;
-  std::shared_ptr<UChar[]> epilogue_;
+  std::shared_ptr<std::u16string> text_;
+  std::shared_ptr<std::u16string> prologue_;
+  std::shared_ptr<std::u16string> epilogue_;
   std::shared_ptr<UBiDiLevel[]> embedding_levels_;
 };
 

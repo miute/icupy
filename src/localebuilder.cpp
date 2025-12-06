@@ -18,7 +18,7 @@ void init_localebuilder(py::module &m) {
 
   lb.def(
       "add_unicode_locale_attribute",
-      [](LocaleBuilder &self, const char *attribute) -> LocaleBuilder & {
+      [](LocaleBuilder &self, const std::string &attribute) -> LocaleBuilder & {
         return self.addUnicodeLocaleAttribute(attribute);
       },
       py::arg("attribute"));
@@ -47,24 +47,27 @@ void init_localebuilder(py::module &m) {
 
   lb.def(
       "remove_unicode_locale_attribute",
-      [](LocaleBuilder &self, const char *attribute) -> LocaleBuilder & {
+      [](LocaleBuilder &self, const std::string &attribute) -> LocaleBuilder & {
         return self.removeUnicodeLocaleAttribute(attribute);
       },
       py::arg("attribute"));
 
   lb.def(
       "set_extension",
-      [](LocaleBuilder &self, char key, const char *value) -> LocaleBuilder & { return self.setExtension(key, value); },
+      [](LocaleBuilder &self, char key, const std::string &value) -> LocaleBuilder & {
+        return self.setExtension(key, value);
+      },
       py::arg("key"), py::arg("value"));
 
   lb.def(
       "set_language",
-      [](LocaleBuilder &self, const char *language) -> LocaleBuilder & { return self.setLanguage(language); },
+      [](LocaleBuilder &self, const std::string &language) -> LocaleBuilder & { return self.setLanguage(language); },
       py::arg("language"));
 
   lb.def(
       "set_language_tag",
-      [](LocaleBuilder &self, const char *tag) -> LocaleBuilder & { return self.setLanguageTag(tag); }, py::arg("tag"));
+      [](LocaleBuilder &self, const std::string &tag) -> LocaleBuilder & { return self.setLanguageTag(tag); },
+      py::arg("tag"));
 
   lb.def(
       "set_locale",
@@ -74,23 +77,25 @@ void init_localebuilder(py::module &m) {
       py::arg("locale"));
 
   lb.def(
-      "set_region", [](LocaleBuilder &self, const char *region) -> LocaleBuilder & { return self.setRegion(region); },
+      "set_region",
+      [](LocaleBuilder &self, const std::string &region) -> LocaleBuilder & { return self.setRegion(region); },
       py::arg("region"));
 
   lb.def(
-      "set_script", [](LocaleBuilder &self, const char *script) -> LocaleBuilder & { return self.setScript(script); },
+      "set_script",
+      [](LocaleBuilder &self, const std::string &script) -> LocaleBuilder & { return self.setScript(script); },
       py::arg("script"));
 
   lb.def(
       "set_unicode_locale_keyword",
-      [](LocaleBuilder &self, const char *key, const char *type) -> LocaleBuilder & {
-        return self.setUnicodeLocaleKeyword(key, type);
+      [](LocaleBuilder &self, const std::string &key, const std::optional<std::string> &type) -> LocaleBuilder & {
+        return self.setUnicodeLocaleKeyword(key, type ? type->data() : nullptr);
       },
       py::arg("key"), py::arg("type_"));
 
   lb.def(
       "set_variant",
-      [](LocaleBuilder &self, const char *variant) -> LocaleBuilder & { return self.setVariant(variant); },
+      [](LocaleBuilder &self, const std::string &variant) -> LocaleBuilder & { return self.setVariant(variant); },
       py::arg("variant"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 }

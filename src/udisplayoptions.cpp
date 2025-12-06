@@ -139,13 +139,20 @@ void init_udisplayoptions(py::module &m) {
   //
   // C APIs
   //
-  m.def("udispopt_from_grammatical_case_identifier", &udispopt_fromGrammaticalCaseIdentifier,
-        py::arg("identifier").none(false));
+  m.def(
+      "udispopt_from_grammatical_case_identifier",
+      [](const std::string &identifier) { return udispopt_fromGrammaticalCaseIdentifier(identifier.data()); },
+      py::arg("identifier"));
 
-  m.def("udispopt_from_noun_class_identifier", &udispopt_fromNounClassIdentifier, py::arg("identifier").none(false));
+  m.def(
+      "udispopt_from_noun_class_identifier",
+      [](const std::string &identifier) { return udispopt_fromNounClassIdentifier(identifier.data()); },
+      py::arg("identifier"));
 
-  m.def("udispopt_from_plural_category_identifier", &udispopt_fromPluralCategoryIdentifier,
-        py::arg("identifier").none(false));
+  m.def(
+      "udispopt_from_plural_category_identifier",
+      [](const std::string &identifier) { return udispopt_fromPluralCategoryIdentifier(identifier.data()); },
+      py::arg("identifier"));
 
   m.def("udispopt_get_grammatical_case_identifier", &udispopt_getGrammaticalCaseIdentifier,
         py::arg("grammatical_case"));

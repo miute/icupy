@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/format.h>
 
@@ -39,9 +40,9 @@ void init_format(py::module &m) {
       .def(
           "format",
           [](const Format &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }

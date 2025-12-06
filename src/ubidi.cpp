@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include "ubidiptr.hpp"
 #include "voidptr.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/ustring.h>
 
@@ -14,11 +15,11 @@ void _UBiDiPtr::set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedd
   embedding_levels_ = embedding_levels;
 }
 
-void _UBiDiPtr::set_epilogue(const std::shared_ptr<UChar[]> &epilogue) { epilogue_ = epilogue; }
+void _UBiDiPtr::set_epilogue(const std::shared_ptr<std::u16string> &epilogue) { epilogue_ = epilogue; }
 
-void _UBiDiPtr::set_prologue(const std::shared_ptr<UChar[]> &prologue) { prologue_ = prologue; }
+void _UBiDiPtr::set_prologue(const std::shared_ptr<std::u16string> &prologue) { prologue_ = prologue; }
 
-void _UBiDiPtr::set_text(const std::shared_ptr<UChar[]> &text) { text_ = text; }
+void _UBiDiPtr::set_text(const std::shared_ptr<std::u16string> &text) { text_ = text; }
 
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(std::nullptr_t action) : action_(action) {}
 _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(UBiDiClassCallback *action) : action_(action) {}
@@ -442,25 +443,21 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_context",
-      [](_UBiDiPtr &bidi, const UChar *prologue, int32_t pro_length, const UChar *epilogue, int32_t epi_length) {
+      [](_UBiDiPtr &bidi, std::optional<const std::u16string> &prologue, int32_t pro_length,
+         std::optional<const std::u16string> &epilogue, int32_t epi_length) {
+        auto count1 = pro_length;
+        auto count2 = epi_length;
+        if (prologue && count1 == -1) {
+          count1 = static_cast<int32_t>(prologue->size());
+        }
+        if (epilogue && count2 == -1) {
+          count2 = static_cast<int32_t>(epilogue->size());
+        }
+        auto prologue_ptr = std::make_shared<std::u16string>(prologue.value_or(u""), 0, std::max(count1, 0));
+        auto epilogue_ptr = std::make_shared<std::u16string>(epilogue.value_or(u""), 0, std::max(count2, 0));
         ErrorCode error_code;
-        std::shared_ptr<UChar[]> prologue_ptr;
-        if (prologue) {
-          int32_t n = pro_length == -1 ? u_strlen(prologue) : std::max(0, pro_length);
-          prologue_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
-          auto dest = prologue_ptr.get();
-          u_memset(dest, 0, n + 1);
-          u_strncpy(dest, prologue, n);
-        }
-        std::shared_ptr<UChar[]> epilogue_ptr;
-        if (epilogue) {
-          int32_t n = epi_length == -1 ? u_strlen(epilogue) : std::max(0, epi_length);
-          epilogue_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
-          auto dest = epilogue_ptr.get();
-          u_memset(dest, 0, n + 1);
-          u_strncpy(dest, epilogue, n);
-        }
-        ubidi_setContext(bidi, prologue_ptr.get(), pro_length, epilogue_ptr.get(), epi_length, error_code);
+        ubidi_setContext(bidi, prologue ? prologue_ptr->data() : nullptr, pro_length,
+                         epilogue ? epilogue_ptr->data() : nullptr, epi_length, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -486,30 +483,28 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_para",
-      [](_UBiDiPtr &bidi, const UChar *text, int32_t length, UBiDiLevel para_level,
+      [](_UBiDiPtr &bidi, const std::u16string &text, int32_t length, UBiDiLevel para_level,
          std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
-        ErrorCode error_code;
-        std::shared_ptr<UChar[]> text_ptr;
-        if (text) {
-          int32_t n = length == -1 ? u_strlen(text) : std::max(0, length);
-          text_ptr = std::shared_ptr<UChar[]>(new UChar[n + 1]);
-          auto dest = text_ptr.get();
-          u_memset(dest, 0, n + 1);
-          u_strncpy(dest, text, n);
+        auto count = length;
+        if (count == -1) {
+          count = static_cast<int32_t>(text.size());
         }
-        std::shared_ptr<UBiDiLevel[]> embedding_levels_ptr;
-        if (embedding_levels.has_value()) {
-          embedding_levels_ptr = std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels->size()]);
+        auto text_ptr = std::make_shared<std::u16string>(text, 0, std::max(count, 0));
+        auto embedding_levels_ptr =
+            std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels ? embedding_levels->size() : 0]);
+        if (embedding_levels) {
           std::copy(embedding_levels->begin(), embedding_levels->end(), embedding_levels_ptr.get());
         }
-        ubidi_setPara(bidi, text_ptr.get(), length, para_level, embedding_levels_ptr.get(), error_code);
+        ErrorCode error_code;
+        ubidi_setPara(bidi, text_ptr->data(), count, para_level,
+                      embedding_levels ? embedding_levels_ptr.get() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         bidi.set_text(text_ptr);
         bidi.set_embedding_levels(embedding_levels_ptr);
       },
-      py::arg("bidi"), py::arg("text").none(false), py::arg("length"), py::arg("para_level"),
+      py::arg("bidi"), py::arg("text"), py::arg("length"), py::arg("para_level"),
       py::arg("embedding_levels") = std::nullopt);
 
   m.def(
@@ -526,36 +521,42 @@ void init_ubidi(py::module &m) {
       "ubidi_write_reordered",
       [](_UBiDiPtr &bidi, uint16_t options) {
         ErrorCode error_code;
-        int32_t length = 0;
+        int32_t dest_size = 0;
         if (options & UBIDI_INSERT_LRM_FOR_NUMERIC) {
-          length = ubidi_getLength(bidi) + 2 * ubidi_countRuns(bidi, error_code);
+          dest_size = ubidi_getLength(bidi) + 2 * ubidi_countRuns(bidi, error_code);
+          if (error_code.isFailure()) {
+            throw icupy::ICUError(error_code);
+          }
         } else if (options & UBIDI_REMOVE_BIDI_CONTROLS) {
-          length = ubidi_getLength(bidi);
+          dest_size = ubidi_getLength(bidi);
         } else {
-          length = ubidi_getProcessedLength(bidi);
+          dest_size = ubidi_getProcessedLength(bidi);
         }
+        std::u16string result(dest_size, u'\0');
         error_code.reset();
-        std::u16string result(length, u'\0');
-        length = ubidi_writeReordered(bidi, result.data(), static_cast<int32_t>(result.size()), options, error_code);
+        dest_size = ubidi_writeReordered(bidi, result.data(), dest_size, options, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        result.resize(length);
+        result.resize(dest_size);
         return result;
       },
       py::arg("bidi"), py::arg("options"));
 
   m.def(
       "ubidi_write_reverse",
-      [](const UChar *src, int32_t src_length, uint16_t options) {
+      [](const std::u16string &src, int32_t src_length, uint16_t options) {
+        auto dest_size = src_length;
+        if (dest_size < 0) {
+          dest_size = static_cast<int32_t>(src.size());
+        }
+        std::u16string result(dest_size, u'\0');
         ErrorCode error_code;
-        std::u16string result(src_length, u'\0');
-        const auto length = ubidi_writeReverse(src, src_length, result.data(), static_cast<int32_t>(result.size()),
-                                               options, error_code);
+        dest_size = ubidi_writeReverse(src.data(), src_length, result.data(), dest_size, options, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        result.resize(length);
+        result.resize(dest_size);
         return result;
       },
       py::arg("src"), py::arg("src_length"), py::arg("options"));

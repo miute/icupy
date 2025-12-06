@@ -19,13 +19,13 @@ void init_filteredbrk(py::module &m) {
       "build",
       [](FilteredBreakIteratorBuilder &self, BreakIterator *adopt_break_iterator) {
         ErrorCode error_code;
-        auto result = self.build(adopt_break_iterator ? adopt_break_iterator->clone() : nullptr, error_code);
+        auto result = self.build(adopt_break_iterator->clone(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("adopt_break_iterator"));
+      py::arg("adopt_break_iterator").none(false));
 #endif // U_FORCE_HIDE_DEPRECATED_API
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
@@ -91,14 +91,13 @@ void init_filteredbrk(py::module &m) {
       "wrap_iterator_with_filter",
       [](FilteredBreakIteratorBuilder &self, BreakIterator *adopt_break_iterator) {
         ErrorCode error_code;
-        auto result =
-            self.wrapIteratorWithFilter(adopt_break_iterator ? adopt_break_iterator->clone() : nullptr, error_code);
+        auto result = self.wrapIteratorWithFilter(adopt_break_iterator->clone(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("adopt_break_iterator"));
+      py::arg("adopt_break_iterator").none(false));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)

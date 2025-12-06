@@ -1,4 +1,5 @@
 #include "voidptr.hpp"
+#include <memory>
 
 _ConstVoidPtr::_ConstVoidPtr(std::nullptr_t) {}
 _ConstVoidPtr::_ConstVoidPtr(const char *value) { context_ = std::shared_ptr<char[]>(strdup(value)); }
@@ -35,7 +36,8 @@ void init_voidptr(py::module &m) {
   py::class_<_ConstVoidPtr> cvp(m, "ConstVoidPtr");
 
   cvp.def(py::init<std::nullptr_t>(), py::arg("value") = nullptr)
-      .def(py::init<const char *>(), py::arg("value").none(false))
+      .def(py::init([](const std::string &value) { return std::make_unique<_ConstVoidPtr>(value.data()); }),
+           py::arg("value"))
       .def(py::init<const py::object &>(), py::arg("value"));
 
   cvp.def("to_object", &_ConstVoidPtr::to_object);

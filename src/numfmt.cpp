@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 #include <unicode/numfmt.h>
 
@@ -181,9 +182,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // [4] icu::NumberFormat::format
           "format",
           [](const NumberFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -230,9 +231,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // [11] icu::NumberFormat::format
           "format",
           [](const NumberFormat &self, double number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
+            auto &result = self.format(number, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -271,9 +272,9 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
           // [19] icu::NumberFormat::format
           "format",
           [](const NumberFormat &self, int64_t number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(number, append_to, pos_iter, error_code);
+            auto &result = self.format(number, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -283,16 +284,16 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
       .def(
           // [20] icu::NumberFormat::format
           "format",
-          [](const NumberFormat &self, const char *number, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+          [](const NumberFormat &self, const std::string &number, UnicodeString &append_to,
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(StringPiece(number), append_to, pos_iter, error_code);
+            auto &result = self.format(number, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           },
-          py::arg("number").none(false), py::arg("append_to"), py::arg("pos_iter"));
+          py::arg("number"), py::arg("append_to"), py::arg("pos_iter"));
 
   nf.def_static(
       "get_available_locales",
@@ -379,14 +380,14 @@ void init_numfmt(py::module & /*m*/, py::class_<NumberFormat, Format> &nf) {
 
   nf.def(
       "set_currency",
-      [](NumberFormat &self, const char16_t *the_currency) {
+      [](NumberFormat &self, const std::optional<const std::u16string> &the_currency) {
         ErrorCode error_code;
-        self.setCurrency(the_currency, error_code);
+        self.setCurrency(the_currency ? the_currency->data() : nullptr, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("the_currency"));
+      py::arg("the_currency") = std::nullopt);
 
   nf.def(
       "set_grouping_used", [](NumberFormat &self, py::bool_ new_value) { self.setGroupingUsed(new_value); },

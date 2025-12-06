@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+#include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
@@ -169,9 +170,9 @@ void init_tzfmt(py::module &m) {
           // [3] TimeZoneFormat::format
           "format",
           [](const TimeZoneFormat &self, const Formattable &obj, UnicodeString &append_to,
-             FieldPositionIterator *pos_iter) -> UnicodeString & {
+             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter, error_code);
+            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -193,9 +194,11 @@ void init_tzfmt(py::module &m) {
       .def(
           // [5] TimeZoneFormat::format
           "format",
-          py::overload_cast<UTimeZoneFormatStyle, const TimeZone &, UDate, UnicodeString &, UTimeZoneFormatTimeType *>(
-              &TimeZoneFormat::format, py::const_),
-          py::arg("style"), py::arg("tz"), py::arg("date"), py::arg("name"), py::arg("time_type") = nullptr);
+          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const TimeZone &tz, UDate date,
+             UnicodeString &name, std::optional<UTimeZoneFormatTimeType *> &time_type) -> UnicodeString & {
+            return self.format(style, tz, date, name, time_type.value_or(nullptr));
+          },
+          py::arg("style"), py::arg("tz"), py::arg("date"), py::arg("name"), py::arg("time_type") = std::nullopt);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def(
@@ -270,28 +273,31 @@ void init_tzfmt(py::module &m) {
   tzf.def(
          "parse",
          [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const icupy::UnicodeStringVariant &text,
-            ParsePosition &pos, int32_t parse_options,
-            UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-           auto tz = self.parse(style, icupy::to_unistr(text), pos, parse_options, time_type);
+            ParsePosition &pos,
+            std::optional<UTimeZoneFormatTimeType *> &time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+           auto tz = self.parse(style, icupy::to_unistr(text), pos, time_type.value_or(nullptr));
            auto btz = dynamic_cast<BasicTimeZone *>(tz);
            if (btz) {
              return btz;
            }
            return tz;
          },
-         py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"), py::arg("time_type") = nullptr)
+         py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = std::nullopt)
       .def(
           "parse",
           [](const TimeZoneFormat &self, UTimeZoneFormatStyle style, const icupy::UnicodeStringVariant &text,
-             ParsePosition &pos, UTimeZoneFormatTimeType *time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
-            auto tz = self.parse(style, icupy::to_unistr(text), pos, time_type);
+             ParsePosition &pos, int32_t parse_options,
+             std::optional<UTimeZoneFormatTimeType *> &time_type) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.parse(style, icupy::to_unistr(text), pos, parse_options, time_type.value_or(nullptr));
+
             auto btz = dynamic_cast<BasicTimeZone *>(tz);
             if (btz) {
               return btz;
             }
             return tz;
           },
-          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("time_type") = nullptr);
+          py::arg("style"), py::arg("text"), py::arg("pos"), py::arg("parse_options"),
+          py::arg("time_type") = std::nullopt);
 
   tzf.def(
       "parse_offset_iso8601",
