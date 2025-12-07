@@ -135,10 +135,8 @@ void init_ucal(py::module &m) {
           "there is an extra \"Leap Month 5\" which associated with *UCAL_ORDINAL_MONTH* value 5 before \"Month 6\" of "
           "year 4664.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
-#ifndef U_FORCE_HIDE_DEPRECATED_API
       .value("UCAL_FIELD_COUNT", UCAL_FIELD_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_FORCE_HIDE_DEPRECATED_API
       .value("UCAL_DAY_OF_MONTH", UCAL_DAY_OF_MONTH,
              "Field number indicating the day of the month.\n\n  "
              "This is a synonym for *UCAL_DATE*. The first day of the month has value 1.")

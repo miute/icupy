@@ -27,10 +27,8 @@ void init_utypes(py::module &m) {
              "constructed from rules. No impact to further function.")
       .value("U_PLUGIN_CHANGED_LEVEL_WARNING", U_PLUGIN_CHANGED_LEVEL_WARNING,
              "A plugin caused a level change. May not be an error, but later plugins may not load.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_ERROR_WARNING_LIMIT", U_ERROR_WARNING_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_ZERO_ERROR", U_ZERO_ERROR, "No error, no warning.")
       .value("U_ILLEGAL_ARGUMENT_ERROR", U_ILLEGAL_ARGUMENT_ERROR, "Start of codes indicating failure.")
       .value("U_MISSING_RESOURCE_ERROR", U_MISSING_RESOURCE_ERROR, "The requested resource cannot be found.")
@@ -81,10 +79,8 @@ void init_utypes(py::module &m) {
              "The input is impractically long for an operation. It is rejected because it may lead to problems such as "
              "excessive processing time, stack depth, or heap memory requirements.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_STANDARD_ERROR_LIMIT", U_STANDARD_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_BAD_VARIABLE_DEFINITION", U_BAD_VARIABLE_DEFINITION, "Missing '$' or duplicate variable name.")
       .value("U_PARSE_ERROR_START", U_PARSE_ERROR_START, "Start of Transliterator errors.")
       .value("U_MALFORMED_RULE", U_MALFORMED_RULE, "Elements of a rule are misplaced.")
@@ -127,10 +123,8 @@ void init_utypes(py::module &m) {
              "Internal transliterator system error.")
       .value("U_INVALID_ID", U_INVALID_ID, "A \"::id\" rule specifies an unknown transliterator.")
       .value("U_INVALID_FUNCTION", U_INVALID_FUNCTION, "A \"&fn()\" rule specifies an unknown transliterator.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_PARSE_ERROR_LIMIT", U_PARSE_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_UNEXPECTED_TOKEN", U_UNEXPECTED_TOKEN, "Syntax error in format pattern.")
       .value("U_FMT_PARSE_ERROR_START", U_FMT_PARSE_ERROR_START, "Start of format library errors.")
       .value("U_MULTIPLE_DECIMAL_SEPARATORS", U_MULTIPLE_DECIMAL_SEPARATORS,
@@ -167,10 +161,8 @@ void init_utypes(py::module &m) {
              "The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a "
              "syntax error.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_FMT_PARSE_ERROR_LIMIT", U_FMT_PARSE_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_BRK_INTERNAL_ERROR", U_BRK_INTERNAL_ERROR, "An internal error (bug) was detected.")
       .value("U_BRK_ERROR_START", U_BRK_ERROR_START, "Start of codes indicating Break Iterator failures.")
       .value("U_BRK_HEX_DIGITS_EXPECTED", U_BRK_HEX_DIGITS_EXPECTED,
@@ -188,10 +180,8 @@ void init_utypes(py::module &m) {
       .value("U_BRK_RULE_EMPTY_SET", U_BRK_RULE_EMPTY_SET, "Rule contains an empty Unicode Set.")
       .value("U_BRK_UNRECOGNIZED_OPTION", U_BRK_UNRECOGNIZED_OPTION, "!!option in RBBI rules not recognized.")
       .value("U_BRK_MALFORMED_RULE_TAG", U_BRK_MALFORMED_RULE_TAG, "The {nnn} tag on a rule is malformed.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_BRK_ERROR_LIMIT", U_BRK_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_REGEX_INTERNAL_ERROR", U_REGEX_INTERNAL_ERROR, "An internal error (bug) was detected.")
       .value("U_REGEX_ERROR_START", U_REGEX_ERROR_START, "Start of codes indicating Regexp failures.")
       .value("U_REGEX_RULE_SYNTAX", U_REGEX_RULE_SYNTAX, "Syntax error in regexp pattern.")
@@ -210,9 +200,7 @@ void init_utypes(py::module &m) {
              "Look-Behind pattern matches must have a bounded maximum length.")
       .value("U_REGEX_SET_CONTAINS_STRING", U_REGEX_SET_CONTAINS_STRING,
              "Regexps cannot have UnicodeSets containing strings.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_REGEX_OCTAL_TOO_BIG", U_REGEX_OCTAL_TOO_BIG, "**Deprecated:** ICU 54. This error cannot occur.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_REGEX_MISSING_CLOSE_BRACKET", U_REGEX_MISSING_CLOSE_BRACKET,
              "Missing closing bracket on a bracket expression.")
       .value("U_REGEX_INVALID_RANGE", U_REGEX_INVALID_RANGE, "In a character range [x-y], x is greater than y.")
@@ -223,10 +211,8 @@ void init_utypes(py::module &m) {
       .value("U_REGEX_PATTERN_TOO_BIG", U_REGEX_PATTERN_TOO_BIG, "Pattern exceeds limits on size or complexity.")
       .value("U_REGEX_INVALID_CAPTURE_GROUP_NAME", U_REGEX_INVALID_CAPTURE_GROUP_NAME, "Invalid capture group name.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_REGEX_ERROR_LIMIT", U_REGEX_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_IDNA_PROHIBITED_ERROR", U_IDNA_PROHIBITED_ERROR)
       .value("U_IDNA_ERROR_START", U_IDNA_ERROR_START)
       .value("U_IDNA_UNASSIGNED_ERROR", U_IDNA_UNASSIGNED_ERROR)
@@ -237,10 +223,8 @@ void init_utypes(py::module &m) {
       .value("U_IDNA_LABEL_TOO_LONG_ERROR", U_IDNA_LABEL_TOO_LONG_ERROR)
       .value("U_IDNA_ZERO_LENGTH_LABEL_ERROR", U_IDNA_ZERO_LENGTH_LABEL_ERROR)
       .value("U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR", U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_IDNA_ERROR_LIMIT", U_IDNA_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_STRINGPREP_PROHIBITED_ERROR", U_STRINGPREP_PROHIBITED_ERROR)
       .value("U_STRINGPREP_UNASSIGNED_ERROR", U_STRINGPREP_UNASSIGNED_ERROR)
       .value("U_STRINGPREP_CHECK_BIDI_ERROR", U_STRINGPREP_CHECK_BIDI_ERROR)
@@ -248,14 +232,10 @@ void init_utypes(py::module &m) {
       .value("U_PLUGIN_TOO_HIGH", U_PLUGIN_TOO_HIGH, "The plugin's level is too high to be loaded right now.")
       .value("U_PLUGIN_DIDNT_SET_LEVEL", U_PLUGIN_DIDNT_SET_LEVEL,
              "The plugin didn't call uplug_setPlugLevel in response to a QUERY.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_PLUGIN_ERROR_LIMIT", U_PLUGIN_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_ERROR_LIMIT", U_ERROR_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

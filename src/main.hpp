@@ -26,11 +26,8 @@ using CharPtrVariant = std::variant<std::string, py::bytes>;
 
 using LocaleVariant = std::variant<icu::Locale, std::string>;
 
-using UnicodeStringList = std::list<icu::UnicodeString>;
 using UnicodeStringVariant = std::variant<icu::UnicodeString, std::u16string>;
 using UnicodeStringVector = std::vector<icu::UnicodeString>;
-
-using UChar32Variant = std::variant<char32_t, UChar32>;
 
 struct CharPtr {
   CharPtrVariant value;
@@ -57,10 +54,6 @@ inline auto to_char16(const Char16Variant &x) {
 }
 
 inline auto to_locale(const LocaleVariant &x) { return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str(); }
-
-inline auto to_uchar32(const UChar32Variant &x) {
-  return std::visit([](auto &y) -> UChar32 { return y; }, x);
-}
 
 inline auto to_unistr(const UnicodeStringVariant &x) {
   return x.index() == 0 ? std::get<0>(x) : std::get<1>(x).c_str();

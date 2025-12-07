@@ -10,10 +10,8 @@ void init_udatpg(py::module &m) {
       .value("UDATPG_NO_CONFLICT", UDATPG_NO_CONFLICT)
       .value("UDATPG_BASE_CONFLICT", UDATPG_BASE_CONFLICT)
       .value("UDATPG_CONFLICT", UDATPG_CONFLICT)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDATPG_CONFLICT_COUNT", UDATPG_CONFLICT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -40,10 +38,8 @@ void init_udatpg(py::module &m) {
       .value("UDATPG_SECOND_FIELD", UDATPG_SECOND_FIELD)
       .value("UDATPG_FRACTIONAL_SECOND_FIELD", UDATPG_FRACTIONAL_SECOND_FIELD)
       .value("UDATPG_ZONE_FIELD", UDATPG_ZONE_FIELD)
-#ifndef U_FORCE_HIDE_DEPRECATED_API
       .value("UDATPG_FIELD_COUNT", UDATPG_FIELD_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_FORCE_HIDE_DEPRECATED_API
       .export_values();
 
   //

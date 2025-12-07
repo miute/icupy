@@ -28,7 +28,6 @@ void init_ures(py::module &m) {
              "*ures_get_int()* or *ures_get_uint()* function.")
       .value("URES_ARRAY", URES_ARRAY, "Resource type constant for arrays of resources.")
       .value("URES_INT_VECTOR", URES_INT_VECTOR, "Resource type constant for vectors of 32-bit integers.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("RES_NONE", RES_NONE, "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
       .value("RES_STRING", RES_STRING, "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
       .value("RES_BINARY", RES_BINARY, "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
@@ -40,7 +39,6 @@ void init_ures(py::module &m) {
       .value("RES_RESERVED", RES_RESERVED, "**Deprecated:** ICU 2.6 Not used.")
       .value("URES_LIMIT", URES_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

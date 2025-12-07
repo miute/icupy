@@ -34,10 +34,8 @@ void init_utmscale(py::module &m) {
       .value("UDTS_UNIX_MICROSECONDS_TIME", UDTS_UNIX_MICROSECONDS_TIME,
              "Data is a *long*. Value is microseconds since January 1, 1970. Similar to Unix time (linear value from "
              "1970) and struct timeval (microseconds resolution).")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDTS_MAX_SCALE", UDTS_MAX_SCALE,
              "**Deprecated:** ICU 59 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -57,15 +55,13 @@ void init_utmscale(py::module &m) {
              "The constant used to select the minimum to value for a time scale.")
       .value("UTSV_TO_MAX_VALUE", UTSV_TO_MAX_VALUE,
              "The constant used to select the maximum to value for a time scale.")
-  // .value("UTSV_EPOCH_OFFSET_PLUS_1_VALUE", UTSV_EPOCH_OFFSET_PLUS_1_VALUE)
-  // .value("UTSV_EPOCH_OFFSET_MINUS_1_VALUE", UTSV_EPOCH_OFFSET_MINUS_1_VALUE)
-  // .value("UTSV_UNITS_ROUND_VALUE", UTSV_UNITS_ROUND_VALUE)
-  // .value("UTSV_MIN_ROUND_VALUE", UTSV_MIN_ROUND_VALUE)
-  // .value("UTSV_MAX_ROUND_VALUE", UTSV_MAX_ROUND_VALUE)
-#ifndef U_HIDE_DEPRECATED_API
+      // .value("UTSV_EPOCH_OFFSET_PLUS_1_VALUE", UTSV_EPOCH_OFFSET_PLUS_1_VALUE)
+      // .value("UTSV_EPOCH_OFFSET_MINUS_1_VALUE", UTSV_EPOCH_OFFSET_MINUS_1_VALUE)
+      // .value("UTSV_UNITS_ROUND_VALUE", UTSV_UNITS_ROUND_VALUE)
+      // .value("UTSV_MIN_ROUND_VALUE", UTSV_MIN_ROUND_VALUE)
+      // .value("UTSV_MAX_ROUND_VALUE", UTSV_MAX_ROUND_VALUE)
       .value("UTSV_MAX_SCALE_VALUE", UTSV_MAX_SCALE_VALUE,
              "**Deprecated:** ICU 59 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

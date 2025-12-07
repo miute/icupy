@@ -41,7 +41,6 @@ void init_tblcoll(py::module &m) {
       .value("IDENTICAL", Collator::IDENTICAL)
       .export_values();
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
   //
   // icu::Collator::EComparisonResult
   //
@@ -51,7 +50,6 @@ void init_tblcoll(py::module &m) {
       .value("EQUAL", Collator::EQUAL)
       .value("GREATER", Collator::GREATER)
       .export_values();
-#endif // U_FORCE_HIDE_DEPRECATED_API
 
   //
   // icu::Collator

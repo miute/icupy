@@ -20,10 +20,8 @@ void init_ulocdata(py::module &m) {
       .value("ULOCDATA_QUOTATION_END", ULOCDATA_QUOTATION_END, "Quotation end.")
       .value("ULOCDATA_ALT_QUOTATION_START", ULOCDATA_ALT_QUOTATION_START, "Alternate quotation start.")
       .value("ULOCDATA_ALT_QUOTATION_END", ULOCDATA_ALT_QUOTATION_END, "Alternate quotation end.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("ULOCDATA_DELIMITER_COUNT", ULOCDATA_DELIMITER_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -35,10 +33,8 @@ void init_ulocdata(py::module &m) {
       .value("ULOCDATA_ES_AUXILIARY", ULOCDATA_ES_AUXILIARY, "Auxiliary set.")
       .value("ULOCDATA_ES_INDEX", ULOCDATA_ES_INDEX, "Index Character set.")
       .value("ULOCDATA_ES_PUNCTUATION", ULOCDATA_ES_PUNCTUATION, "Punctuation set.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("ULOCDATA_ES_COUNT", ULOCDATA_ES_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -49,10 +45,8 @@ void init_ulocdata(py::module &m) {
       .value("UMS_SI", UMS_SI, "Measurement system specified by SI otherwise known as Metric system.")
       .value("UMS_US", UMS_US, "Measurement system followed in the United States of America.")
       .value("UMS_UK", UMS_UK, "Mix of metric and imperial units used in Great Britain.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UMS_LIMIT", UMS_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

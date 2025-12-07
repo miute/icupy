@@ -28,10 +28,8 @@ void init_idna(py::module &m) {
       .value("DEFAULT", UIDNA_DEFAULT,
              "Default options value: None of the other options are set.\n\n  "
              "For use in static worker and factory methods.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("ALLOW_UNASSIGNED", UIDNA_ALLOW_UNASSIGNED,
              "**Deprecated:** ICU 55 Use UTS #46 instead via *uidna_open_uts46()* or class *IDNA*.")
-#endif // U_HIDE_DEPRECATED_API
       .value("USE_STD3_RULES", UIDNA_USE_STD3_RULES,
              "Option to check whether the input conforms to the STD3 ASCII rules, for example the restriction of "
              "labels to LDH characters (ASCII Letters, Digits and Hyphen-Minus).\n\n  "

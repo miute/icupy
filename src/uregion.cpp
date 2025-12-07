@@ -24,10 +24,8 @@ void init_uregion(py::module &m) {
       .value("URGN_DEPRECATED", URGN_DEPRECATED,
              "Type representing a region whose code has been deprecated, usually due to a country splitting into "
              "multiple territories or changing its name.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("URGN_LIMIT", URGN_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

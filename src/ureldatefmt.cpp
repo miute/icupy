@@ -14,10 +14,8 @@ void init_ureldatefmt(py::module &m) {
       .value("UDAT_STYLE_LONG", UDAT_STYLE_LONG, "Everything spelled out.")
       .value("UDAT_STYLE_SHORT", UDAT_STYLE_SHORT, "Abbreviations used when possible.")
       .value("UDAT_STYLE_NARROW", UDAT_STYLE_NARROW, "Use the shortest possible form.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_STYLE_COUNT", UDAT_STYLE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
@@ -79,10 +77,8 @@ void init_ureldatefmt(py::module &m) {
       .value("UDAT_REL_UNIT_SATURDAY", UDAT_REL_UNIT_SATURDAY,
              "Specifies that relative unit is Saturday, e.g. \"last Saturday\", \"this Saturday\", \"next Saturday\", "
              "\"in 5 Saturdays\".")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_REL_UNIT_COUNT", UDAT_REL_UNIT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
 }

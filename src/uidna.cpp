@@ -3,9 +3,7 @@
 
 void init_uidna(py::module &m) {
   m.attr("UIDNA_DEFAULT") = int32_t{UIDNA_DEFAULT};
-#ifndef U_HIDE_DEPRECATED_API
   m.attr("UIDNA_ALLOW_UNASSIGNED") = int32_t{UIDNA_ALLOW_UNASSIGNED};
-#endif // U_HIDE_DEPRECATED_API
   m.attr("UIDNA_USE_STD3_RULES") = int32_t{UIDNA_USE_STD3_RULES};
   m.attr("UIDNA_CHECK_BIDI") = int32_t{UIDNA_CHECK_BIDI};
   m.attr("UIDNA_CHECK_CONTEXTJ") = int32_t{UIDNA_CHECK_CONTEXTJ};

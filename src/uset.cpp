@@ -73,10 +73,8 @@ void init_uset(py::module &m) {
              "with the longest single set element (character or string).\n\n  "
              "Use this span condition together with other longest-match algorithms, such as ICU converters "
              "(*ucnv_get_unicode_set()*).")
-#ifndef U_HIDE_DEPRECATED_API
       .value("USET_SPAN_CONDITION_COUNT", USET_SPAN_CONDITION_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

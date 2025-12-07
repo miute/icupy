@@ -14,7 +14,6 @@ void init_filteredbrk(py::module &m) {
   //
   py::class_<FilteredBreakIteratorBuilder, UObject> fbib(m, "FilteredBreakIteratorBuilder");
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
   fbib.def(
       "build",
       [](FilteredBreakIteratorBuilder &self, BreakIterator *adopt_break_iterator) {
@@ -26,7 +25,6 @@ void init_filteredbrk(py::module &m) {
         return result;
       },
       py::arg("adopt_break_iterator").none(false));
-#endif // U_FORCE_HIDE_DEPRECATED_API
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   fbib.def_static("create_empty_instance", []() {
@@ -51,7 +49,6 @@ void init_filteredbrk(py::module &m) {
       },
       py::arg("where"));
 
-#ifndef U_HIDE_DEPRECATED_API
   fbib.def_static("create_instance", []() {
     ErrorCode error_code;
     auto result = FilteredBreakIteratorBuilder::createInstance(error_code);
@@ -60,7 +57,6 @@ void init_filteredbrk(py::module &m) {
     }
     return result;
   });
-#endif // U_HIDE_DEPRECATED_API
 
   fbib.def(
       "suppress_break_after",

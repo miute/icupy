@@ -168,10 +168,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_OLD_SOUTH_ARABIAN", USCRIPT_OLD_SOUTH_ARABIAN)
       .value("USCRIPT_BASSA_VAH", USCRIPT_BASSA_VAH)
       .value("USCRIPT_DUPLOYAN", USCRIPT_DUPLOYAN)
-#ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_DUPLOYAN_SHORTAND", USCRIPT_DUPLOYAN_SHORTAND,
              "**Deprecated:** ICU 54 Typo, use *USCRIPT_DUPLOYAN*.")
-#endif // U_HIDE_DEPRECATED_API
       .value("USCRIPT_ELBASAN", USCRIPT_ELBASAN)
       .value("USCRIPT_GRANTHA", USCRIPT_GRANTHA)
       .value("USCRIPT_KPELLE", USCRIPT_KPELLE)
@@ -278,10 +276,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_TOLONG_SIKI", USCRIPT_TOLONG_SIKI, "Tols")
       .value("USCRIPT_TRADITIONAL_HAN_WITH_LATIN", USCRIPT_TRADITIONAL_HAN_WITH_LATIN, "Hntl")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-#ifndef U_HIDE_DEPRECATED_API
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
