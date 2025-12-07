@@ -46,10 +46,8 @@ void init_ucol(py::module &m) {
              "for JIS X 4061 collation, when it is used to distinguish between Katakana and Hiragana. Otherwise, "
              "quaternary level is affected only by the number of non-ignorable code points in the string.\n\n  "
              "Identical strength is rarely useful, as it amounts to codepoints of the NFD form of the string.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_HIRAGANA_QUATERNARY_MODE", UCOL_HIRAGANA_QUATERNARY_MODE,
              "**Deprecated:** ICU 50 Implementation detail, cannot be set via API, was removed from implementation.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCOL_NUMERIC_COLLATION", UCOL_NUMERIC_COLLATION,
              "When turned on, this attribute makes substrings of digits sort according to their numeric values.\n\n  "
              "This is a way to get '100' to sort AFTER '2'. Note that the longest digit substring that can be treated "
@@ -58,10 +56,8 @@ void init_ucol(py::module &m) {
              "A \"digit\" in this sense is a code point with General_Category=Nd, which does not include circled "
              "numbers, roman numerals, etc. Only a contiguous digit substring is considered, that is, non-negative "
              "integers without separators. There is no support for plus/minus signs, decimals, exponents, etc.")
-#ifndef U_FORCE_HIDE_DEPRECATED_API
       .value("UCOL_ATTRIBUTE_COUNT", UCOL_ATTRIBUTE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_FORCE_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -95,10 +91,8 @@ void init_ucol(py::module &m) {
              "Alternate handling will be non ignorable.")
       .value("UCOL_LOWER_FIRST", UCOL_LOWER_FIRST, "Valid for *UCOL_CASE_FIRST* - lower case sorts before upper case.")
       .value("UCOL_UPPER_FIRST", UCOL_UPPER_FIRST, "Upper case sorts before lower case.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_ATTRIBUTE_VALUE_COUNT", UCOL_ATTRIBUTE_VALUE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -109,10 +103,8 @@ void init_ucol(py::module &m) {
       .value("UCOL_BOUND_UPPER", UCOL_BOUND_UPPER, "Upper bound that will match strings of exact size.")
       .value("UCOL_BOUND_UPPER_LONG", UCOL_BOUND_UPPER_LONG,
              "Upper bound that will match all the strings that have the same initial substring as the given string.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_BOUND_VALUE_COUNT", UCOL_BOUND_VALUE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -161,10 +153,8 @@ void init_ucol(py::module &m) {
       .value("UCOL_REORDER_CODE_DIGIT", UCOL_REORDER_CODE_DIGIT,
              "Characters with the digit property.\n\n  "
              "This is equivalent to the rule value \"digit\".")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCOL_REORDER_CODE_LIMIT", UCOL_REORDER_CODE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

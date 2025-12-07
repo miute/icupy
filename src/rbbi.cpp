@@ -94,7 +94,6 @@ void init_rbbi(py::module &m) {
       },
       py::arg("where"));
 
-#ifndef U_HIDE_DEPRECATED_API
   bi.def_static(
       "create_title_instance",
       [](const icupy::LocaleVariant &where) {
@@ -106,7 +105,6 @@ void init_rbbi(py::module &m) {
         return it;
       },
       py::arg("where"));
-#endif // U_HIDE_DEPRECATED_API
 
   bi.def_static(
       "create_word_instance",

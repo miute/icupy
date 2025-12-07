@@ -100,13 +100,11 @@ void init_timezone(py::module &m) {
     }
     return result;
   });
-#ifndef U_HIDE_DEPRECATED_API
   tz.def_static(
         "create_enumeration", [](const std::string &country) { return TimeZone::createEnumeration(country.data()); },
         py::arg("country"))
       .def_static("create_enumeration", py::overload_cast<int32_t>(&TimeZone::createEnumeration),
                   py::arg("raw_offset"));
-#endif // U_HIDE_DEPRECATED_API
 #else  // !(U_ICU_VERSION_MAJOR_NUM >= 70)
   tz.def_static("create_enumeration", py::overload_cast<>(&TimeZone::createEnumeration))
       .def_static("create_enumeration", py::overload_cast<const char *>(&TimeZone::createEnumeration),

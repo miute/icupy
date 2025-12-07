@@ -7,16 +7,12 @@ void init_usearch(py::module &m) {
   //
   py::enum_<USearchAttribute>(m, "USearchAttribute", py::arithmetic())
       .value("USEARCH_OVERLAP", USEARCH_OVERLAP, "Option for overlapping matches.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("USEARCH_CANONICAL_MATCH", USEARCH_CANONICAL_MATCH, "**Deprecated:** ICU 53")
-#endif // U_HIDE_DEPRECATED_API
       .value("USEARCH_ELEMENT_COMPARISON", USEARCH_ELEMENT_COMPARISON,
              "Option to control how collation elements are compared.\n\n  "
              "The default value will be *USEARCH_STANDARD_ELEMENT_COMPARISON*.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("USEARCH_ATTRIBUTE_COUNT", USEARCH_ATTRIBUTE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -50,10 +46,8 @@ void init_usearch(py::module &m) {
              "This option is similar to \"asymmetric search\" as described in UTS #10 Unicode Collation Algorithm, but "
              "also allows unmarked characters in the searched text to match marked or unmarked versions of that "
              "character in the pattern.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("USEARCH_ATTRIBUTE_VALUE_COUNT", USEARCH_ATTRIBUTE_VALUE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   m.attr("USEARCH_DONE") = USEARCH_DONE;

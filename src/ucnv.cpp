@@ -70,10 +70,8 @@ void init_ucnv(py::module &m) {
       .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET, "Select the set of roundtrippable Unicode code points.")
       .value("UCNV_ROUNDTRIP_AND_FALLBACK_SET", UCNV_ROUNDTRIP_AND_FALLBACK_SET,
              "Select the set of Unicode code points with roundtrip or fallback mappings.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCNV_SET_COUNT", UCNV_SET_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

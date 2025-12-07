@@ -62,11 +62,9 @@ void init_uloc(py::module &m) {
       "supported by ICU if there is a core ICU bundle for that locale (although it may be empty).")
       .value("ULOC_ACTUAL_LOCALE", ULOC_ACTUAL_LOCALE, "This is locale the data actually comes from.")
       .value("ULOC_VALID_LOCALE", ULOC_VALID_LOCALE, "This is the most specific locale supported by ICU.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("ULOC_REQUESTED_LOCALE", ULOC_REQUESTED_LOCALE, "**Deprecated:** ICU 2.8")
       .value("ULOC_DATA_LOCALE_TYPE_LIMIT", ULOC_DATA_LOCALE_TYPE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   m.attr("ULOC_CANADA") = ULOC_CANADA;

@@ -34,10 +34,8 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_ABSOLUTE_HOUR", UDAT_ABSOLUTE_HOUR, "Hour.")
       .value("UDAT_ABSOLUTE_MINUTE", UDAT_ABSOLUTE_MINUTE, "Minute.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_ABSOLUTE_UNIT_COUNT", UDAT_ABSOLUTE_UNIT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -55,10 +53,8 @@ void init_reldatefmt(py::module &m) {
              "Two after.\n\n  "
              "Not fully supported in every locale.")
       .value("UDAT_DIRECTION_PLAIN", UDAT_DIRECTION_PLAIN, "Plain, which means the absence of a qualifier.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_DIRECTION_COUNT", UDAT_DIRECTION_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -74,10 +70,8 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_RELATIVE_WEEKS", UDAT_RELATIVE_WEEKS, "Weeks.")
       .value("UDAT_RELATIVE_MONTHS", UDAT_RELATIVE_MONTHS, "Months.")
       .value("UDAT_RELATIVE_YEARS", UDAT_RELATIVE_YEARS, "Years.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UDAT_RELATIVE_UNIT_COUNT", UDAT_RELATIVE_UNIT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)

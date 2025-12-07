@@ -18,10 +18,8 @@ void init_dtfmtsym(py::module &m) {
                                               "Selector for date formatting context.")
       .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT)
       .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE)
-#ifndef U_HIDE_DEPRECATED_API
       .value("DT_CONTEXT_COUNT", DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -35,10 +33,8 @@ void init_dtfmtsym(py::module &m) {
       .value("SHORT", DateFormatSymbols::DtWidthType::SHORT,
              "Short width is currently only supported for weekday names.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-#ifndef U_HIDE_DEPRECATED_API
       .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

@@ -22,10 +22,8 @@ void init_uchar(py::module &m) {
       .value("U_BPT_NONE", U_BPT_NONE, "Not a paired bracket.")
       .value("U_BPT_OPEN", U_BPT_OPEN, "Open paired bracket.")
       .value("U_BPT_CLOSE", U_BPT_CLOSE, "Close paired bracket.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_BPT_COUNT", U_BPT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
@@ -422,10 +420,8 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT", UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT, "[18D80]")
       .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI, "[11DB0]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UBLOCK_COUNT", UBLOCK_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UBLOCK_INVALID_CODE", UBLOCK_INVALID_CODE)
       .export_values();
 
@@ -502,10 +498,8 @@ void init_uchar(py::module &m) {
       .value("U_LEFT_TO_RIGHT_ISOLATE", U_LEFT_TO_RIGHT_ISOLATE, "LRI.")
       .value("U_RIGHT_TO_LEFT_ISOLATE", U_RIGHT_TO_LEFT_ISOLATE, "RLI.")
       .value("U_POP_DIRECTIONAL_ISOLATE", U_POP_DIRECTIONAL_ISOLATE, "PDI.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -517,15 +511,11 @@ void init_uchar(py::module &m) {
                              "defined in Unicode version 1.0, before the Unicode standard merged with ISO-10646; or an "
                              "\"extended\" name that gives each Unicode code point a unique name.")
       .value("U_UNICODE_CHAR_NAME", U_UNICODE_CHAR_NAME, "Unicode character name (Name property).")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_UNICODE_10_CHAR_NAME", U_UNICODE_10_CHAR_NAME, "**Deprecated:** ICU 49")
-#endif // U_HIDE_DEPRECATED_API
       .value("U_EXTENDED_CHAR_NAME", U_EXTENDED_CHAR_NAME, "Standard or synthetic character name.")
       .value("U_CHAR_NAME_ALIAS", U_CHAR_NAME_ALIAS, "Corrected name from NameAliases.txt.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -550,10 +540,8 @@ void init_uchar(py::module &m) {
       .value("U_DT_SUPER", U_DT_SUPER)
       .value("U_DT_VERTICAL", U_DT_VERTICAL)
       .value("U_DT_WIDE", U_DT_WIDE)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_DT_COUNT", U_DT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -566,10 +554,8 @@ void init_uchar(py::module &m) {
       .value("U_EA_FULLWIDTH", U_EA_FULLWIDTH)
       .value("U_EA_NARROW", U_EA_NARROW)
       .value("U_EA_WIDE", U_EA_WIDE)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_EA_COUNT", U_EA_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -598,10 +584,8 @@ void init_uchar(py::module &m) {
       .value("U_GCB_GLUE_AFTER_ZWJ", U_GCB_GLUE_AFTER_ZWJ)
       .value("U_GCB_ZWJ", U_GCB_ZWJ)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_GCB_COUNT", U_GCB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -614,10 +598,8 @@ void init_uchar(py::module &m) {
       .value("U_HST_TRAILING_JAMO", U_HST_TRAILING_JAMO)
       .value("U_HST_LV_SYLLABLE", U_HST_LV_SYLLABLE)
       .value("U_HST_LVT_SYLLABLE", U_HST_LVT_SYLLABLE)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_HST_COUNT", U_HST_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
@@ -862,10 +844,8 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_JG_THIN_NOON", U_JG_THIN_NOON)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_JG_COUNT", U_JG_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -878,10 +858,8 @@ void init_uchar(py::module &m) {
       .value("U_JT_LEFT_JOINING", U_JT_LEFT_JOINING)
       .value("U_JT_RIGHT_JOINING", U_JT_RIGHT_JOINING)
       .value("U_JT_TRANSPARENT", U_JT_TRANSPARENT)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_JT_COUNT", U_JT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -949,10 +927,8 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_LB_UNAMBIGUOUS_HYPHEN", U_LB_UNAMBIGUOUS_HYPHEN, "[HH]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_LB_COUNT", U_LB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -963,10 +939,8 @@ void init_uchar(py::module &m) {
       .value("U_NT_DECIMAL", U_NT_DECIMAL)
       .value("U_NT_DIGIT", U_NT_DIGIT)
       .value("U_NT_NUMERIC", U_NT_NUMERIC)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_NT_COUNT", U_NT_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -1228,10 +1202,8 @@ void init_uchar(py::module &m) {
              "Binary property Modifier_Combining_Mark.\n\n"
              "Used by the AMTRA algorithm in UAX #53.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_BIDI_CLASS", UCHAR_BIDI_CLASS,
              "Enumerated property Bidi_Class.\n\n  "
              "Same as *u_char_direction*, returns *UCharDirection* values.")
@@ -1335,10 +1307,8 @@ void init_uchar(py::module &m) {
              "Enumerated property Indic_Conjunct_Break.\n\n"
              "Used in the grapheme cluster break algorithm in UAX #29.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_GENERAL_CATEGORY_MASK", UCHAR_GENERAL_CATEGORY_MASK,
              "Bitmask property General_Category_Mask.\n\n  "
              "This is the General_Category property returned as a bit mask. When used in "
@@ -1347,18 +1317,14 @@ void init_uchar(py::module &m) {
              "*u_get_property_value_enum()*, a multi-bit mask is used for sets of categories like \"Letters\". Mask "
              "values should be cast to uint32_t.")
       .value("UCHAR_MASK_START", UCHAR_MASK_START, "First constant for bit-mask Unicode properties.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_MASK_LIMIT", UCHAR_MASK_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_NUMERIC_VALUE", UCHAR_NUMERIC_VALUE,
              "Double property Numeric_Value.\n\n  "
              "Corresponds to *u_get_numeric_value*.")
       .value("UCHAR_DOUBLE_START", UCHAR_DOUBLE_START, "First constant for double Unicode properties.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_DOUBLE_LIMIT", UCHAR_DOUBLE_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_AGE", UCHAR_AGE,
              "String property Age.\n\n  "
              "Corresponds to *u_char_age*.")
@@ -1369,9 +1335,7 @@ void init_uchar(py::module &m) {
       .value("UCHAR_CASE_FOLDING", UCHAR_CASE_FOLDING,
              "String property Case_Folding.\n\n  "
              "Corresponds to *u_str_fold_case* in ustring.h.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_ISO_COMMENT", UCHAR_ISO_COMMENT, "**Deprecated:** ICU 49")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_LOWERCASE_MAPPING", UCHAR_LOWERCASE_MAPPING,
              "String property Lowercase_Mapping.\n\n  "
              "Corresponds to *u_str_to_lower* in ustring.h.")
@@ -1393,19 +1357,15 @@ void init_uchar(py::module &m) {
       .value("UCHAR_TITLECASE_MAPPING", UCHAR_TITLECASE_MAPPING,
              "String property Titlecase_Mapping.\n\n  "
              "Corresponds to *u_str_to_title* in ustring.h.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_UNICODE_1_NAME", UCHAR_UNICODE_1_NAME, "**Deprecated:** ICU 49")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_UPPERCASE_MAPPING", UCHAR_UPPERCASE_MAPPING,
              "String property Uppercase_Mapping.\n\n  "
              "Corresponds to *u_str_to_upper* in ustring.h.")
       .value("UCHAR_BIDI_PAIRED_BRACKET", UCHAR_BIDI_PAIRED_BRACKET,
              "String property Bidi_Paired_Bracket (new in Unicode 6.3).\n\n  "
              "Corresponds to *u_get_bidi_paired_bracket*.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_STRING_LIMIT", UCHAR_STRING_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_SCRIPT_EXTENSIONS", UCHAR_SCRIPT_EXTENSIONS,
              "Miscellaneous property Script_Extensions (new in Unicode 6.0).\n\n  "
              "Some characters are commonly used in multiple scripts. For more information, see UAX #24: "
@@ -1421,10 +1381,8 @@ void init_uchar(py::module &m) {
              "Corresponds to *u_has_id_type()* and *u_get_id_types()*.\n\n"
              "Each code point maps to a <i>set</i> of *UIdentifierType* values.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
-#ifndef U_HIDE_DEPRECATED_API
       .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE,
              "Represents a nonexistent or invalid property or property value.")
       .export_values();
@@ -1440,10 +1398,8 @@ void init_uchar(py::module &m) {
       "the long and short name, which would be indicated by *U_LONG_PROPERTY_NAME* + i, where i=1, 2,...")
       .value("U_SHORT_PROPERTY_NAME", U_SHORT_PROPERTY_NAME)
       .value("U_LONG_PROPERTY_NAME", U_LONG_PROPERTY_NAME)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_PROPERTY_NAME_CHOICE_COUNT", U_PROPERTY_NAME_CHOICE_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //
@@ -1465,10 +1421,8 @@ void init_uchar(py::module &m) {
       .value("U_SB_EXTEND", U_SB_EXTEND)
       .value("U_SB_LF", U_SB_LF)
       .value("U_SB_SCONTINUE", U_SB_SCONTINUE)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_SB_COUNT", U_SB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -1520,10 +1474,8 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("U_WB_WSEGSPACE", U_WB_WSEGSPACE)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-#ifndef U_HIDE_DEPRECATED_API
       .value("U_WB_COUNT", U_WB_COUNT,
              "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
-#endif // U_HIDE_DEPRECATED_API
       .export_values();
 
   //

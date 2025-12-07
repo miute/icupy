@@ -80,19 +80,15 @@ void init_uspoof(py::module &m) {
              "You may set the checks to some subset of SINGLE_SCRIPT_CONFUSABLE, MIXED_SCRIPT_CONFUSABLE, or "
              "WHOLE_SCRIPT_CONFUSABLE to make *uspoof_are_confusable* return only those types of confusables.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-#ifndef U_HIDE_DEPRECATED_API
       .value("USPOOF_ANY_CASE", USPOOF_ANY_CASE,
              "**Deprecated:** ICU 58 Any case confusable mappings were removed from UTS 39; the corresponding ICU API "
              "was deprecated.")
-#endif // U_HIDE_DEPRECATED_API
       .value("USPOOF_RESTRICTION_LEVEL", USPOOF_RESTRICTION_LEVEL,
              "Check that an identifier is no looser than the specified RestrictionLevel.\n\n  "
              "The default if *uspoof_set_restriction_level* is not called is HIGHLY_RESTRICTIVE.\n\n  "
              "If *USPOOF_AUX_INFO* is enabled the actual restriction level of the identifier being tested will also be "
              "returned by *uspoof_check()*.")
-#ifndef U_HIDE_DEPRECATED_API
       .value("USPOOF_SINGLE_SCRIPT", USPOOF_SINGLE_SCRIPT, "**Deprecated:** ICU 51 Use RESTRICTION_LEVEL instead.")
-#endif // U_HIDE_DEPRECATED_API
       .value("USPOOF_INVISIBLE", USPOOF_INVISIBLE,
              "Check an identifier for the presence of invisible characters, such as zero-width spaces, or character "
              "sequences that are likely not to display, such as multiple occurrences of the same non-spacing mark. "
