@@ -41,7 +41,7 @@ jobs:
       - run: mkdir -p build
 
       - name: Download and set up ICU4C
-        uses: ./.github/actions/download-icu4c
+        uses: ./.github/actions/setup-icu4c
         with:
           icu-versions-json: ${{needs.parse-icu-versions.outputs.json}}
 

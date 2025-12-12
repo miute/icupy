@@ -1,4 +1,4 @@
-name: Download ICU4C
+name: Setup ICU4C
 description: Download and set up ICU4C libraries
 
 inputs:

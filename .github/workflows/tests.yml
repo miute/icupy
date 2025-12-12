@@ -40,7 +40,7 @@ jobs:
           icu-version: ${{matrix.icu-version}}
 
       - name: Download and set up ICU4C
-        uses: ./.github/actions/download-icu4c
+        uses: ./.github/actions/setup-icu4c
         with:
           icu-versions-json: ${{steps.parse-icu-versions.outputs.json}}
 
