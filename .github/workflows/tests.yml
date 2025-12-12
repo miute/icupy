@@ -39,29 +39,10 @@ jobs:
         with:
           icu-version: ${{matrix.icu-version}}
 
-      - name: Set up requirements (Ubuntu)
-        if: startsWith(matrix.os, 'ubuntu')
-        working-directory: build
-        run: |
-          curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}}
-          sudo tar zxf ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_ubuntu_x64_tgz}} -C / --strip-components=${{fromJson(steps.parse-icu-versions.outputs.json).strip-components || 2}}
-          echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
-          echo "CMAKE_GENERATOR=Ninja" >> $GITHUB_ENV
-
-      - name: Set up requirements (Windows)
-        if: startsWith(matrix.os, 'windows')
-        working-directory: build
-        env:
-          INSTALL_PREFIX: ${{github.workspace}}/build
-          ICU4C_DIR: icu4c
-        run: |
-          curl -LO ${{fromJson(steps.parse-icu-versions.outputs.json).url}}/${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}}
-          7z x ${{fromJson(steps.parse-icu-versions.outputs.json).icu4c_win64_zip}} -o${{env.ICU4C_DIR}}
-          if ("x${{fromJson(steps.parse-icu-versions.outputs.json).double_zipped_filename}}" -ne "x") {
-            7z x ${{env.ICU4C_DIR}}/${{fromJson(steps.parse-icu-versions.outputs.json).double_zipped_filename}} -o${{env.ICU4C_DIR}}
-          }
-          echo "ICU_ROOT=${{env.INSTALL_PREFIX}}/${{env.ICU4C_DIR}}" >> $env:GITHUB_ENV
+      - name: Download and set up ICU4C
+        uses: ./.github/actions/download-icu4c
+        with:
+          icu-versions-json: ${{steps.parse-icu-versions.outputs.json}}
 
       - name: Run unit tests
         env:
