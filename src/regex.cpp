@@ -184,7 +184,7 @@ void init_regex(py::module &m) {
     if (callback == _URegexFindProgressCallbackPtr::callback) {
       // Python callback function and callback data
       auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-      auto result1 = _URegexFindProgressCallbackPtr(result2->get_action());
+      auto result1 = _URegexFindProgressCallbackPtr(result2->action());
       return py::make_tuple(result1, result2);
     }
     // C callback function and callback data
@@ -214,7 +214,7 @@ void init_regex(py::module &m) {
     if (callback == _URegexMatchCallbackPtr::callback) {
       // Python callback function and callback data
       auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-      auto result1 = _URegexMatchCallbackPtr(result2->get_action());
+      auto result1 = _URegexMatchCallbackPtr(result2->action());
       return py::make_tuple(result1, result2);
     }
     // C callback function and callback data
@@ -429,18 +429,18 @@ void init_regex(py::module &m) {
       "set_find_progress_callback",
       [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback, _ConstVoidPtr &context) {
         URegexFindProgressCallback *fp = callback.get_if<URegexFindProgressCallback *>();
-        const void *cp = nullptr;
+        const void *cvp = nullptr;
         if (fp == nullptr && callback.has_value()) {
           // New Python callback function and callback data
           fp = callback.callback;
           context.set_action(callback.get<py::function>());
-          cp = &context;
+          cvp = &context;
         } else if (context.has_value()) {
           // New C callback data
-          cp = context.to_c_str();
+          cvp = context.c_str();
         }
         ErrorCode error_code;
-        self.setFindProgressCallback(fp, cp, error_code);
+        self.setFindProgressCallback(fp, cvp, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -451,18 +451,18 @@ void init_regex(py::module &m) {
       "set_match_callback",
       [](RegexMatcher &self, _URegexMatchCallbackPtr &callback, _ConstVoidPtr &context) {
         URegexMatchCallback *fp = callback.get_if<URegexMatchCallback *>();
-        const void *cp = nullptr;
+        const void *cvp = nullptr;
         if (fp == nullptr && callback.has_value()) {
           // New Python callback function and callback data
           fp = callback.callback;
           context.set_action(callback.get<py::function>());
-          cp = &context;
+          cvp = &context;
         } else if (context.has_value()) {
           // New C callback data
-          cp = context.to_c_str();
+          cvp = context.c_str();
         }
         ErrorCode error_code;
-        self.setMatchCallback(fp, cp, error_code);
+        self.setMatchCallback(fp, cvp, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

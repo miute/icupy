@@ -6,6 +6,56 @@ import pytest
 from icupy import icu
 
 
+def test_const_void_ptr() -> None:
+    # default
+    cvp = icu.ConstVoidPtr()
+    assert cvp.value() is None
+
+    # None
+    cvp = icu.ConstVoidPtr(None)
+    assert cvp.value() is None
+
+    # bool
+    cvp = icu.ConstVoidPtr(True)
+    assert cvp.value() is True
+    assert isinstance(cvp.value(), bool)
+
+    # int
+    cvp = icu.ConstVoidPtr(100)
+    assert cvp.value() == 100
+    assert isinstance(cvp.value(), int)
+
+    # float
+    cvp = icu.ConstVoidPtr(100.0)
+    assert cvp.value() == 100
+    assert isinstance(cvp.value(), float)
+
+    # str
+    cvp = icu.ConstVoidPtr("Unicode")
+    assert cvp.value() == "Unicode"
+    assert isinstance(cvp.value(), str)
+
+    # bytes
+    b = "☺️".encode("utf-32")
+    cvp = icu.ConstVoidPtr(b)
+    assert cvp.value() == b
+    assert isinstance(cvp.value(), bytes)
+
+    # dict
+    d = {"Unicode": "17.0"}
+    cvp = icu.ConstVoidPtr(d)
+    assert cvp.value() == d
+    assert isinstance(cvp.value(), dict)
+
+    # callable
+    def f(a: float) -> float:
+        return a * a
+
+    cvp = icu.ConstVoidPtr(f)
+    assert cvp.value() == f
+    assert cvp.value()(1.2) == 1.44
+
+
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_constrained_field_position() -> None:
     # icu::ConstrainedFieldPosition

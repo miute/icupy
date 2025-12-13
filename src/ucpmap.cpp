@@ -15,9 +15,9 @@ _UCPMapValueFilterPtr::_UCPMapValueFilterPtr(const py::function &filter) : actio
 _UCPMapValueFilterPtr::~_UCPMapValueFilterPtr() {}
 
 uint32_t _UCPMapValueFilterPtr::filter(const void *context, uint32_t value) {
-  auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-  auto python_context = cp->to_object();
-  auto &action = cp->get_action();
+  auto cvp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+  auto python_context = cvp->value();
+  auto &action = cvp->action();
   return action(python_context, value).cast<uint32_t>();
 }
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -77,15 +77,15 @@ void init_ucpmap(py::module &m) {
       [](_ConstUCPMapPtr &map, UChar32 start, UCPMapRangeOption option, uint32_t surrogate_value,
          _UCPMapValueFilterPtr &filter, _ConstVoidPtr &context) {
         UCPMapValueFilter *fp = nullptr;
-        void *cp = nullptr;
+        void *vp = nullptr;
         if (filter.has_value()) {
           fp = filter.filter;
           context.set_action(filter.get<py::function>());
-          cp = &context;
+          vp = &context;
         }
 
         uint32_t value;
-        auto result = ucpmap_getRange(map, start, option, surrogate_value, fp, cp, &value);
+        auto result = ucpmap_getRange(map, start, option, surrogate_value, fp, vp, &value);
         return py::make_tuple(result, value);
       },
       py::arg("map_"), py::arg("start"), py::arg("option"), py::arg("surrogate_value"), py::arg("filter_"),
