@@ -9,6 +9,17 @@
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 
+### Removed
+
+- Remove `icupy.icu.ucnv_cb_from_u_write_bytes()`; use `icupy.icu.ucnv_cb_from_uwrite_bytes()` instead
+- Remove `icupy.icu.ucnv_cb_from_u_write_sub()`; use `icupy.icu.ucnv_cb_from_uwrite_sub()` instead
+- Remove `icupy.icu.ucnv_cb_to_u_write_sub()`; use `icupy.icu.ucnv_cb_to_uwrite_sub()` instead
+- Remove `icupy.icu.ucnv_cb_to_u_write_uchars()`; use `icupy.icu.ucnv_cb_to_uwrite_uchars()` instead
+- Remove `icupy.icu.ucnv_get_from_u_call_back()`; use `icupy.icu.ucnv_get_from_ucall_back()` instead
+- Remove `icupy.icu.ucnv_get_to_u_call_back()`; use `icupy.icu.ucnv_get_to_ucall_back()` instead
+- Remove `icupy.icu.ucnv_set_from_u_call_back()`; use `icupy.icu.ucnv_set_from_ucall_back()` instead
+- Remove `icupy.icu.ucnv_set_to_u_call_back()`; use `icupy.icu.ucnv_set_to_ucall_back()` instead
+
 ### Fixed
 
 - Add missing functions (#148)
