@@ -83,7 +83,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   cnv = icu.ucnv_open('utf-8')
   action = icu.UConverterToUCallbackPtr(_to_callback)
-  context = icu.ConstVoidPtr(None)
+  context = icu.ConstVoidPtr()
   icu.ucnv_set_to_ucall_back(cnv, action, context)
   utf8 = b'\x61\xfe\x62'  # Impossible bytes
   s = icu.UnicodeString(utf8, -1, cnv)

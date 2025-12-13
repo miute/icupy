@@ -15,9 +15,9 @@ void _UConverterFromUCallbackPtr::callback(const void *context, UConverterFromUn
   if (context == nullptr) {
     return;
   }
-  auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-  auto python_context = cp->to_object();
-  auto &action = cp->get_action();
+  auto cvp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+  auto python_context = cvp->value();
+  auto &action = cvp->action();
   *error_code = action(python_context, args, code_units, length, code_point, reason, *error_code).cast<UErrorCode>();
 }
 
@@ -30,9 +30,9 @@ void _UConverterToUCallbackPtr::callback(const void *context, UConverterToUnicod
   if (context == nullptr) {
     return;
   }
-  auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-  auto python_context = cp->to_object();
-  auto &action = cp->get_action();
+  auto cvp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+  auto python_context = cvp->value();
+  auto &action = cvp->action();
   *error_code =
       action(python_context, args, py::bytes(code_units, length), length, reason, *error_code).cast<UErrorCode>();
 }

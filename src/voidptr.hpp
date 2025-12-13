@@ -7,22 +7,21 @@
 
 class _ConstVoidPtr {
 public:
-  _ConstVoidPtr(std::nullptr_t value);
-  _ConstVoidPtr(const char *value);
   _ConstVoidPtr(const py::object &value);
-  _ConstVoidPtr(const void *value);
-  // template <typename T> _ConstVoidPtr(T value);
-  ~_ConstVoidPtr();
+  _ConstVoidPtr(const void *value) : context_(value) {};
+  ~_ConstVoidPtr() {};
 
-  py::function &get_action() { return action_; }
+  py::function &action() { return action_; }
+
+  const char *c_str() const;
 
   bool has_value() const { return context_.has_value(); }
 
   void set_action(const py::function &action) { action_ = action; }
 
-  const char *to_c_str() const;
-
   py::object to_object() const;
+
+  py::object value() const;
 
 private:
   _ConstVoidPtr() = delete;

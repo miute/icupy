@@ -6,6 +6,7 @@
 ### Changed
 
 - **Breaking:** change the `codepage_data` argument type from `str` to `bytes` in `icupy.icu.UnicodeString` (#148)
+- Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 
 ### Fixed

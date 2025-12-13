@@ -27,10 +27,10 @@ _UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(const py::function &action) : act
 _UBiDiClassCallbackPtr::~_UBiDiClassCallbackPtr() {}
 
 UCharDirection _UBiDiClassCallbackPtr::callback(const void *context, UChar32 c) {
-  auto cp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-  auto python_context = cp->to_object();
-  auto &action = cp->get_action();
-  return (UCharDirection)action(python_context, c).cast<int32_t>();
+  auto cvp = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+  auto python_context = cvp->value();
+  auto &action = cvp->action();
+  return static_cast<UCharDirection>(action(python_context, c).cast<int32_t>());
 }
 
 void init_ubidi(py::module &m) {
@@ -196,7 +196,7 @@ void init_ubidi(py::module &m) {
         if (fn == _UBiDiClassCallbackPtr::callback) {
           // Python callback function and callback data
           auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-          auto result1 = _UBiDiClassCallbackPtr(result2->get_action());
+          auto result1 = _UBiDiClassCallbackPtr(result2->action());
           return py::make_tuple(result1, result2);
         }
         // C callback function and callback data
@@ -411,28 +411,28 @@ void init_ubidi(py::module &m) {
       "ubidi_set_class_callback",
       [](_UBiDiPtr &bidi, _UBiDiClassCallbackPtr &new_fn, _ConstVoidPtr &new_context) {
         UBiDiClassCallback *fp = new_fn.get_if<UBiDiClassCallback *>();
-        const void *cp = nullptr;
+        const void *cvp = nullptr;
         if (fp == nullptr && new_fn.has_value()) {
           // New Python callback function and new callback data
           fp = new_fn.callback;
           new_context.set_action(new_fn.get<py::function>());
-          cp = &new_context;
+          cvp = &new_context;
         } else if (new_context.has_value()) {
           // New C callback data (not tested)
-          cp = new_context.to_c_str();
+          cvp = new_context.c_str();
         }
 
         UBiDiClassCallback *old_fn;
         const void *old_context;
         ErrorCode error_code;
-        ubidi_setClassCallback(bidi, fp, cp, &old_fn, &old_context, error_code);
+        ubidi_setClassCallback(bidi, fp, cvp, &old_fn, &old_context, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         if (old_fn == new_fn.callback) {
           // Old Python callback function and old callback data
           auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(old_context));
-          auto result1 = _UBiDiClassCallbackPtr(result2->get_action());
+          auto result1 = _UBiDiClassCallbackPtr(result2->action());
           return py::make_tuple(result1, result2);
         }
         // Old C callback function and old callback data

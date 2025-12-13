@@ -112,7 +112,7 @@ def test_add_record() -> None:
     assert index.next_record() is True
     result = index.get_record_data()
     assert isinstance(result, icu.ConstVoidPtr)
-    assert result.to_object() == obj4
+    assert result.value() == obj4
     result = index.get_record_name()
     assert isinstance(result, icu.UnicodeString)
     assert result == "Chad"
@@ -120,7 +120,7 @@ def test_add_record() -> None:
     assert index.next_record() is True
     result = index.get_record_data()
     assert isinstance(result, icu.ConstVoidPtr)
-    assert result.to_object() == obj3
+    assert result.value() == obj3
     result = index.get_record_name()
     assert isinstance(result, icu.UnicodeString)
     assert result == "Charlie"

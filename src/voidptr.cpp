@@ -1,44 +1,55 @@
 #include "voidptr.hpp"
 #include <memory>
 
-_ConstVoidPtr::_ConstVoidPtr(std::nullptr_t) {}
-_ConstVoidPtr::_ConstVoidPtr(const char *value) { context_ = std::shared_ptr<char[]>(strdup(value)); }
-_ConstVoidPtr::_ConstVoidPtr(const py::object &value) : context_(value) {}
-_ConstVoidPtr::_ConstVoidPtr(const void *value) : context_(value) {}
-// template <typename T> _ConstVoidPtr::_ConstVoidPtr(T value) : context_(value) {}
-_ConstVoidPtr::~_ConstVoidPtr() {}
-
-const char *_ConstVoidPtr::to_c_str() const {
-  if (context_.type() != typeid(std::shared_ptr<char[]>)) {
-    return nullptr;
+_ConstVoidPtr::_ConstVoidPtr(const py::object &value) {
+  if (py::isinstance<py::str>(value)) {
+    context_ = std::make_shared<std::string>(value.cast<std::string>());
+  } else {
+    context_ = value;
   }
-  auto p = std::any_cast<std::shared_ptr<char[]>>(context_);
-  return &p[0];
 }
 
-py::object _ConstVoidPtr::to_object() const {
-  auto python_context = py::cast(nullptr);
-  if (context_.has_value()) {
-    auto p = this->to_c_str();
-    if (p) {
-      python_context = py::str(p);
-    } else if (context_.type() == typeid(py::object)) {
-      python_context = std::any_cast<py::object>(context_);
-    }
+const char *_ConstVoidPtr::c_str() const {
+  if (context_.type() == typeid(std::shared_ptr<std::string>)) {
+    auto p = std::any_cast<std::shared_ptr<std::string>>(context_);
+    return p->data();
   }
-  return python_context;
+  return nullptr;
+}
+
+// TODO: Remove deprecated method in future releases.
+py::object _ConstVoidPtr::to_object() const {
+  PyErr_WarnEx(PyExc_DeprecationWarning, "ConstVoidPtr.to_object() is deprecated. Use ConstVoidPtr.value() instead.",
+               1);
+  return this->value();
+}
+
+py::object _ConstVoidPtr::value() const {
+  if (context_.type() == typeid(py::object)) {
+    return std::any_cast<py::object>(context_);
+  }
+  return py::str(this->c_str());
 }
 
 void init_voidptr(py::module &m) {
   //
   // _ConstVoidPtr
   //
-  py::class_<_ConstVoidPtr> cvp(m, "ConstVoidPtr");
+  py::class_<_ConstVoidPtr> cvp(m, "ConstVoidPtr", R"doc(
+    A wrapper class for the C/C++ ``const void *`` type.
+    )doc");
 
-  cvp.def(py::init<std::nullptr_t>(), py::arg("value") = nullptr)
-      .def(py::init([](const std::string &value) { return std::make_unique<_ConstVoidPtr>(value.data()); }),
-           py::arg("value"))
-      .def(py::init<const py::object &>(), py::arg("value"));
+  cvp.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
+    Initialize a ``ConstVoidPtr`` instance with `value`.
+    )doc");
 
-  cvp.def("to_object", &_ConstVoidPtr::to_object);
+  // TODO: Remove deprecated method in future releases.
+  cvp.def("to_object", &_ConstVoidPtr::to_object, R"doc(
+    .. deprecated:: 0.23
+       Use :meth:`.value` instead.
+    )doc");
+
+  cvp.def("value", &_ConstVoidPtr::value, R"doc(
+    Get the value of the ``ConstVoidPtr`` instance.
+    )doc");
 }
