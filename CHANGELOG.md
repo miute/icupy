@@ -9,6 +9,10 @@
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 
+### Added
+
+- Add `error_code` attribute to `icupy.icu.ICUError` exception to store ICU4C error codes
+
 ### Removed
 
 - Remove `icupy.icu.ucnv_cb_from_u_write_bytes()`; use `icupy.icu.ucnv_cb_from_uwrite_bytes()` instead

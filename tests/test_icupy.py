@@ -207,7 +207,10 @@ def test_icu_error() -> None:
         assert isinstance(ex, icu.ICUError)
         assert len(ex.args) == 1
         assert isinstance(ex.args[0], icu.ErrorCode)  # icu::ErrorCode
-        # assert isinstance(ex.args[1], str)  # An error message
+        assert isinstance(ex.error_code, icu.ErrorCode)  # icu::ErrorCode
+        assert isinstance(ex.reason, str)  # An error message
+        assert ex.args[0] == icu.U_ILLEGAL_ARGUMENT_ERROR
+        assert ex.error_code == icu.U_ILLEGAL_ARGUMENT_ERROR
 
 
 @pytest.mark.skipif(not sys.platform.startswith("win"), reason="Windows Only")

@@ -63,8 +63,8 @@ class ICUError : public std::exception {
 public:
   explicit ICUError(const icu::ErrorCode &error_code, const char *message = "");
   explicit ICUError(UErrorCode error_code);
-  const icu::ErrorCode &get_error_code() const { return error_code_; };
-  const char *get_message() const { return message_.c_str(); };
+  const icu::ErrorCode &error_code() const { return error_code_; };
+  const char *what() const noexcept override { return message_.data(); };
 
 private:
   icu::ErrorCode error_code_;

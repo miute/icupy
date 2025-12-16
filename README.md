@@ -26,9 +26,8 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
     - `with()` → `with_()`
 
 - **Error Handling**
-  - Unlike the C/C++ APIs, `icupy` raises the `icupy.icu.ICUError` exception if an error code indicates a failure instead of receiving an error code `UErrorCode`.
+  - If the ICU C/C++ API fails, you can obtain the error code `UErrorCode` from the `error_code` attribute of the `ICUError` exception.
 
-    You can access the [icu::ErrorCode](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1ErrorCode.html) object from `ICUError.args[0]`.
     For example:
 
     ```python
@@ -36,8 +35,8 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
     try:
         ...
     except icu.ICUError as e:
-        print(e.args[0])  # → icupy.icu.ErrorCode
-        print(e.args[0].get())  # → icupy.icu.UErrorCode
+        print(e.error_code)  # → icu.ErrorCode
+        print(e.error_code.get())  # → icu.UErrorCode
     ```
 
 ## Examples
