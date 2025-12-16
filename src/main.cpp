@@ -144,7 +144,7 @@ namespace icupy {
 
 ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_code_(error_code) {
   if (message != nullptr && *message != 0) {
-    message_.append(message);
+    message_ = message;
   }
 }
 
@@ -154,23 +154,20 @@ ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 
 PYBIND11_MODULE(MODULE_NAME, m) {
   // icupy::ICUError exception
-  static py::exception<icupy::ICUError> ex(m, "ICUError");
+  PYBIND11_CONSTINIT static py::gil_safe_call_once_and_store<py::object> exc_storage;
+  exc_storage.call_once_and_store_result([&]() { return py::exception<icupy::ICUError>(m, "ICUError"); });
+
   py::register_exception_translator([](std::exception_ptr p) {
     try {
       if (p) {
         std::rethrow_exception(p);
       }
     } catch (const icupy::ICUError &e) {
-      const ErrorCode error_code(e.get_error_code());
-      auto message = e.get_message();
-      if (message == nullptr || strlen(message) == 0) {
-        PyErr_SetObject(ex.ptr(), py::cast(error_code).ptr());
-      } else {
-        py::tuple args(2);
-        args[0] = error_code;
-        args[1] = message;
-        PyErr_SetObject(ex.ptr(), args.ptr());
-      }
+      auto &ex = exc_storage.get_stored();
+      const auto error_code = py::cast(e.error_code());
+      ex.attr("error_code") = error_code;
+      ex.attr("reason") = py::cast(e.what());
+      py::set_error(ex, error_code);
     }
   });
 
