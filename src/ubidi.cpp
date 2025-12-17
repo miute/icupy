@@ -490,14 +490,15 @@ void init_ubidi(py::module &m) {
           count = static_cast<int32_t>(text.size());
         }
         auto text_ptr = std::make_shared<std::u16string>(text, 0, std::max(count, 0));
-        auto embedding_levels_ptr =
-            std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels ? embedding_levels->size() : 0]);
-        if (embedding_levels) {
+        auto embedding_levels_ptr = std::shared_ptr<UBiDiLevel[]>();
+        if (embedding_levels && embedding_levels->size() > 0) {
+          embedding_levels_ptr = std::shared_ptr<UBiDiLevel[]>(new UBiDiLevel[embedding_levels->size()]);
           std::copy(embedding_levels->begin(), embedding_levels->end(), embedding_levels_ptr.get());
         }
         ErrorCode error_code;
         ubidi_setPara(bidi, text_ptr->data(), count, para_level,
-                      embedding_levels ? embedding_levels_ptr.get() : nullptr, error_code);
+                      embedding_levels && embedding_levels->size() > 0 ? embedding_levels_ptr.get() : nullptr,
+                      error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
