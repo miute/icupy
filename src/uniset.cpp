@@ -167,21 +167,24 @@ void init_uniset(py::module &m, py::module &h) {
         const auto range_count = self.getRangeCount();
         int32_t characters = 0;
         for (int32_t i = 0; i < range_count; ++i) {
-          const auto start_char = self.getRangeStart(i);
-          const auto end_char = self.getRangeEnd(i);
+          const auto start = self.getRangeStart(i);
+          const auto end = self.getRangeEnd(i);
           const auto base = characters;
-          characters += end_char - start_char + 1;
+          characters += end - start + 1;
           if (n < characters) {
-            return UnicodeString(start_char + n - base);
+            return py::str(PyUnicode_FromOrdinal(start + n - base));
           }
         }
 #if (U_ICU_VERSION_MAJOR_NUM < 76)
-        return UnicodeString();
+        return py::str();
 #else  // (U_ICU_VERSION_MAJOR_NUM >= 76)
         const auto uset = self.toUSet();
-        int32_t length;
-        const auto uchars = uset_getString(uset, n - characters, &length);
-        return UnicodeString(uchars, length);
+        int32_t length = 0;
+        const auto p = uset_getString(uset, n - characters, &length);
+        auto str = UnicodeString(p, length);
+        std::string result;
+        str.toUTF8String(result);
+        return py::str(result);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
       },
       py::arg("index"));
