@@ -146,10 +146,12 @@ void init_uniset(py::module &m, py::module &h) {
         "__eq__", [](const UnicodeSet &self, const UnicodeSet &other) { return self == other; }, py::is_operator(),
         py::arg("other"))
       .def(
-          "__eq__", [](const UnicodeSet &self, _ConstUSetPtr &other) { return uset_equals(self.toUSet(), other); },
+          "__eq__",
+          [](const UnicodeSet &self, _ConstUSetPtr &other) -> py::bool_ { return uset_equals(self.toUSet(), other); },
           py::is_operator(), py::arg("other"))
       .def(
-          "__eq__", [](const UnicodeSet &self, _USetPtr &other) { return uset_equals(self.toUSet(), other); },
+          "__eq__",
+          [](const UnicodeSet &self, _USetPtr &other) -> py::bool_ { return uset_equals(self.toUSet(), other); },
           py::is_operator(), py::arg("other"));
 
   us.def(
