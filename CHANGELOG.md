@@ -28,6 +28,7 @@
 ### Fixed
 
 - Add missing functions (#148)
+- Change the return type of the comparison operator for `icupy.icu.UnicodeSet` from `int` to `bool`
 
 <!-- 2025-04-06/2025-11-02 -->
 ## [0.22.0] - 2025-11-02
