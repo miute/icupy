@@ -621,7 +621,7 @@ def test_iter() -> None:
         assert result == ' "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de"'
 
     us = icu.UnicodeSet("[a-cA-D{}{abc}{de}]")
-    assert all(isinstance(x, icu.UnicodeString) for x in us)
+    assert all(isinstance(x, str) for x in us)
     assert us[0] == "A"
     assert us[1] == "B"
     assert us[2] == "C"
@@ -645,6 +645,23 @@ def test_iter() -> None:
         assert len(us[-1]) == 0
     else:
         assert us[-1] == "de"
+
+    us = icu.UnicodeSet(
+        "[[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]{\U0001f600\U0001f601}{\U0001f602\U0001f603}]"
+    )
+    assert us[0] == "\ud800"
+    assert us[1023] == "\udbff"
+    assert us[1024] == "\udc00"
+    assert us[2047] == "\udfff"
+    if icu.U_ICU_VERSION_MAJOR_NUM < 76:
+        assert len(us[2048]) == 0
+        assert len(us[2049]) == 0
+    else:
+        assert us[2048] == "\U0001f600\U0001f601"
+        assert us[2049] == "\U0001f602\U0001f603"
+
+    with pytest.raises(IndexError):
+        _ = us[2050]  # IndexError: elements index out of range
 
 
 def test_matches() -> None:
