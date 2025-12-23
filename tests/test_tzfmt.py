@@ -266,36 +266,13 @@ def test_format() -> None:
     #       UTimeZoneFormatTimeType *timeType = NULL
     # )
     name = icu.UnicodeString()
-    time_type = icu.UTimeZoneFormatTimeType(0)
-    result = fmt.format(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG,
-        tz,
-        date,
-        name,
-        time_type,
+    result, time_type = fmt.format(
+        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG, tz, date, name
     )
     assert isinstance(result, icu.UnicodeString)
     assert id(result) == id(name)
     assert result == "Pacific Standard Time"
     assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_STANDARD
-
-    name.remove()
-    result = fmt.format(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG,
-        tz,
-        date,
-        name,
-        None,
-    )
-    assert isinstance(result, icu.UnicodeString)
-    assert id(result) == id(name)
-    assert result == "Pacific Standard Time"
-
-    name.remove()
-    result = fmt.format(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_LONG, tz, date, name)
-    assert isinstance(result, icu.UnicodeString)
-    assert id(result) == id(name)
-    assert result == "Pacific Standard Time"
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 51, reason="ICU4C<51")
@@ -368,13 +345,11 @@ def test_parse() -> None:
     #       UTimeZoneFormatTimeType *timeType = NULL
     # )
     pos = icu.ParsePosition(0)
-    time_type = icu.UTimeZoneFormatTimeType(0)
-    tz = fmt.parse(
+    tz, time_type = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         icu.UnicodeString("EST"),
         pos,
         icu.UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
-        time_type,
     )
     assert pos.get_error_index() == -1
     assert isinstance(tz, icu.TimeZone)
@@ -384,34 +359,7 @@ def test_parse() -> None:
     assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_STANDARD
 
     pos = icu.ParsePosition(0)
-    tz = fmt.parse(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        icu.UnicodeString("EST"),
-        pos,
-        icu.UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
-        None,
-    )
-    assert pos.get_error_index() == -1
-    assert isinstance(tz, icu.TimeZone)
-    assert tz.get_id(tzid) == "America/New_York"
-    assert tz.get_raw_offset() == -5 * HOUR
-    assert tz.get_dst_savings() == 1 * HOUR
-
-    pos = icu.ParsePosition(0)
-    tz = fmt.parse(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        icu.UnicodeString("EST"),
-        pos,
-        icu.UTimeZoneFormatParseOption.UTZFMT_PARSE_OPTION_ALL_STYLES,
-    )
-    assert pos.get_error_index() == -1
-    assert isinstance(tz, icu.TimeZone)
-    assert tz.get_id(tzid) == "America/New_York"
-    assert tz.get_raw_offset() == -5 * HOUR
-    assert tz.get_dst_savings() == 1 * HOUR
-
-    pos = icu.ParsePosition(0)
-    tz = fmt.parse(
+    tz, time_type = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         "EST",
         pos,
@@ -422,9 +370,10 @@ def test_parse() -> None:
     assert tz.get_id(tzid) == "America/New_York"
     assert tz.get_raw_offset() == -5 * HOUR
     assert tz.get_dst_savings() == 1 * HOUR
+    assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_STANDARD
 
     pos = icu.ParsePosition(0)
-    tz = fmt.parse(
+    tz, time_type = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         "AQTST",
         pos,
@@ -432,6 +381,7 @@ def test_parse() -> None:
     )
     assert pos.get_error_index() != -1
     assert tz is None
+    assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_UNKNOWN
 
     # [2]
     # TimeZone *icu::TimeZoneFormat::parse(
@@ -441,12 +391,10 @@ def test_parse() -> None:
     #       UTimeZoneFormatTimeType *timeType = NULL
     # )
     pos = icu.ParsePosition(0)
-    time_type = icu.UTimeZoneFormatTimeType(0)
-    tz = fmt.parse(
+    tz, time_type = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
         icu.UnicodeString("CST"),
         pos,
-        time_type,
     )
     assert pos.get_error_index() == -1
     assert isinstance(tz, icu.TimeZone)
@@ -456,49 +404,28 @@ def test_parse() -> None:
     assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_STANDARD
 
     pos = icu.ParsePosition(0)
-    tz = fmt.parse(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        icu.UnicodeString("CST"),
-        pos,
-        None,
+    tz, time_type = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "CST", pos)
+    assert pos.get_error_index() == -1
+    assert isinstance(tz, icu.TimeZone)
+    assert tz.get_id(tzid) == "America/Chicago"
+    assert tz.get_raw_offset() == -6 * HOUR
+    assert tz.get_dst_savings() == 1 * HOUR
+    assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_STANDARD
+
+    pos = icu.ParsePosition(0)
+    tz, time_type = fmt.parse(
+        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "AQTST", pos
     )
-    assert pos.get_error_index() == -1
-    assert isinstance(tz, icu.TimeZone)
-    assert tz.get_id(tzid) == "America/Chicago"
-    assert tz.get_raw_offset() == -6 * HOUR
-    assert tz.get_dst_savings() == 1 * HOUR
-
-    pos = icu.ParsePosition(0)
-    tz = fmt.parse(
-        icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT,
-        icu.UnicodeString("CST"),
-        pos,
-    )
-    assert pos.get_error_index() == -1
-    assert isinstance(tz, icu.TimeZone)
-    assert tz.get_id(tzid) == "America/Chicago"
-    assert tz.get_raw_offset() == -6 * HOUR
-    assert tz.get_dst_savings() == 1 * HOUR
-
-    pos = icu.ParsePosition(0)
-    tz = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "CST", pos)
-    assert pos.get_error_index() == -1
-    assert isinstance(tz, icu.TimeZone)
-    assert tz.get_id(tzid) == "America/Chicago"
-    assert tz.get_raw_offset() == -6 * HOUR
-    assert tz.get_dst_savings() == 1 * HOUR
-
-    pos = icu.ParsePosition(0)
-    tz = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_SPECIFIC_SHORT, "AQTST", pos)
     assert pos.get_error_index() != -1
     assert tz is None
+    assert time_type == icu.UTimeZoneFormatTimeType.UTZFMT_TIME_TYPE_UNKNOWN
 
 
 def test_parse_upcasting() -> None:
     fmt = icu.TimeZoneFormat.create_instance("en")
 
     pos = icu.ParsePosition(0)
-    zone = fmt.parse(
+    zone, _ = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
         "GMT+900",
         pos,
@@ -508,13 +435,13 @@ def test_parse_upcasting() -> None:
     assert isinstance(zone, icu.SimpleTimeZone)
 
     pos = icu.ParsePosition(0)
-    zone = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT+900", pos)
+    zone, _ = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT+900", pos)
     assert pos.get_index() != 0
     assert isinstance(zone, icu.SimpleTimeZone)
 
     # TimeZone -> BasicTimeZone
     pos = icu.ParsePosition(0)
-    zone = fmt.parse(
+    zone, _ = fmt.parse(
         icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT,
         "GMT",
         pos,
@@ -525,14 +452,14 @@ def test_parse_upcasting() -> None:
     assert isinstance(zone, icu.BasicTimeZone)
 
     pos = icu.ParsePosition(0)
-    zone = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT", pos)
+    zone, _ = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "GMT", pos)
     assert pos.get_index() != 0
     assert not isinstance(zone, icu.SimpleTimeZone)
     assert isinstance(zone, icu.BasicTimeZone)
 
     # NULL
     pos = icu.ParsePosition(0)
-    zone = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "EST", pos)
+    zone, _ = fmt.parse(icu.UTimeZoneFormatStyle.UTZFMT_STYLE_LOCALIZED_GMT, "EST", pos)
     assert pos.get_index() == 0
     assert zone is None
 
