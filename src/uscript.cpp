@@ -7,23 +7,34 @@ using namespace icu;
 
 void init_uscript(py::module &m) {
   //
-  // UScriptCode
+  // enum UScriptCode
   //
   py::enum_<UScriptCode>(
       m, "UScriptCode", py::arithmetic(),
       "Constants for ISO 15924 script codes.\n\n"
-      "The current set of script code constants supports at least all scripts that are encoded in the version of "
-      "Unicode which ICU currently supports. The names of the constants are usually derived from the Unicode script "
-      "property value aliases. See UAX #24 Unicode Script Property (http://www.unicode.org/reports/tr24/) and "
-      "http://www.unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt .\n\n"
-      "In addition, constants for many ISO 15924 script codes are included, for use with language tags, CLDR data, and "
-      "similar. Some of those codes are not used in the Unicode Character Database (UCD). For example, there are no "
-      "characters that have a UCD script property value of Hans or Hant. All Han ideographs have the Hani script "
+      "The current set of script code constants supports at least all scripts "
+      "that are encoded in the version of "
+      "Unicode which ICU currently supports. The names of the constants are "
+      "usually derived from the Unicode script "
+      "property value aliases. See UAX #24 Unicode Script Property "
+      "(http://www.unicode.org/reports/tr24/) and "
+      "http://www.unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt "
+      ".\n\n"
+      "In addition, constants for many ISO 15924 script codes are included, "
+      "for use with language tags, CLDR data, and "
+      "similar. Some of those codes are not used in the Unicode Character "
+      "Database (UCD). For example, there are no "
+      "characters that have a UCD script property value of Hans or Hant. All "
+      "Han ideographs have the Hani script "
       "property value in Unicode.\n\n"
-      "Private-use codes Qaaa..Qabx are not included, except as used in the UCD or in CLDR.\n\n"
-      "Starting with ICU 55, script codes are only added when their scripts have been or will certainly be encoded in "
-      "Unicode, and have been assigned Unicode script property value aliases, to ensure that their script names are "
-      "stable and match the names of the constants. Script codes like Latf and Aran that are not subject to separate "
+      "Private-use codes Qaaa..Qabx are not included, except as used in the "
+      "UCD or in CLDR.\n\n"
+      "Starting with ICU 55, script codes are only added when their scripts "
+      "have been or will certainly be encoded in "
+      "Unicode, and have been assigned Unicode script property value aliases, "
+      "to ensure that their script names are "
+      "stable and match the names of the constants. Script codes like Latf and "
+      "Aran that are not subject to separate "
       "encoding may be added at any time.")
       .value("USCRIPT_INVALID_CODE", USCRIPT_INVALID_CODE)
       .value("USCRIPT_COMMON", USCRIPT_COMMON)
@@ -66,8 +77,10 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_THAANA", USCRIPT_THAANA)
       .value("USCRIPT_THAI", USCRIPT_THAI)
       .value("USCRIPT_TIBETAN", USCRIPT_TIBETAN)
-      .value("USCRIPT_CANADIAN_ABORIGINAL", USCRIPT_CANADIAN_ABORIGINAL, "Canadian_Aboriginal script.")
-      .value("USCRIPT_UCAS", USCRIPT_UCAS, "Canadian_Aboriginal script (alias).")
+      .value("USCRIPT_CANADIAN_ABORIGINAL", USCRIPT_CANADIAN_ABORIGINAL,
+             "Canadian_Aboriginal script.")
+      .value("USCRIPT_UCAS", USCRIPT_UCAS,
+             "Canadian_Aboriginal script (alias).")
       .value("USCRIPT_YI", USCRIPT_YI)
       .value("USCRIPT_TAGALOG", USCRIPT_TAGALOG)
       .value("USCRIPT_HANUNOO", USCRIPT_HANUNOO)
@@ -81,7 +94,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_SHAVIAN", USCRIPT_SHAVIAN)
       .value("USCRIPT_TAI_LE", USCRIPT_TAI_LE)
       .value("USCRIPT_UGARITIC", USCRIPT_UGARITIC)
-      .value("USCRIPT_KATAKANA_OR_HIRAGANA", USCRIPT_KATAKANA_OR_HIRAGANA, "New script code in Unicode 4.0.1.")
+      .value("USCRIPT_KATAKANA_OR_HIRAGANA", USCRIPT_KATAKANA_OR_HIRAGANA,
+             "New script code in Unicode 4.0.1.")
       .value("USCRIPT_BUGINESE", USCRIPT_BUGINESE)
       .value("USCRIPT_GLAGOLITIC", USCRIPT_GLAGOLITIC)
       .value("USCRIPT_KHAROSHTHI", USCRIPT_KHAROSHTHI)
@@ -95,7 +109,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_BRAHMI", USCRIPT_BRAHMI)
       .value("USCRIPT_CHAM", USCRIPT_CHAM)
       .value("USCRIPT_CIRTH", USCRIPT_CIRTH)
-      .value("USCRIPT_OLD_CHURCH_SLAVONIC_CYRILLIC", USCRIPT_OLD_CHURCH_SLAVONIC_CYRILLIC)
+      .value("USCRIPT_OLD_CHURCH_SLAVONIC_CYRILLIC",
+             USCRIPT_OLD_CHURCH_SLAVONIC_CYRILLIC)
       .value("USCRIPT_DEMOTIC_EGYPTIAN", USCRIPT_DEMOTIC_EGYPTIAN)
       .value("USCRIPT_HIERATIC_EGYPTIAN", USCRIPT_HIERATIC_EGYPTIAN)
       .value("USCRIPT_EGYPTIAN_HIEROGLYPHS", USCRIPT_EGYPTIAN_HIEROGLYPHS)
@@ -144,7 +159,8 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_OL_CHIKI", USCRIPT_OL_CHIKI)
       .value("USCRIPT_REJANG", USCRIPT_REJANG)
       .value("USCRIPT_SAURASHTRA", USCRIPT_SAURASHTRA)
-      .value("USCRIPT_SIGN_WRITING", USCRIPT_SIGN_WRITING, "Sutton SignWriting.")
+      .value("USCRIPT_SIGN_WRITING", USCRIPT_SIGN_WRITING,
+             "Sutton SignWriting.")
       .value("USCRIPT_SUNDANESE", USCRIPT_SUNDANESE)
       .value("USCRIPT_MOON", USCRIPT_MOON)
       .value("USCRIPT_MEITEI_MAYEK", USCRIPT_MEITEI_MAYEK)
@@ -274,27 +290,36 @@ void init_uscript(py::module &m) {
       .value("USCRIPT_SIDETIC", USCRIPT_SIDETIC, "Sidt")
       .value("USCRIPT_TAI_YO", USCRIPT_TAI_YO, "Tayo")
       .value("USCRIPT_TOLONG_SIKI", USCRIPT_TOLONG_SIKI, "Tols")
-      .value("USCRIPT_TRADITIONAL_HAN_WITH_LATIN", USCRIPT_TRADITIONAL_HAN_WITH_LATIN, "Hntl")
+      .value("USCRIPT_TRADITIONAL_HAN_WITH_LATIN",
+             USCRIPT_TRADITIONAL_HAN_WITH_LATIN, "Hntl")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, "
+             "see ICU ticket #12420.")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
-  // UScriptUsage
+  // enum UScriptUsage
   //
   py::enum_<UScriptUsage>(
       m, "UScriptUsage", py::arithmetic(),
       "Script usage constants.\n\n"
       "See UAX #31 Unicode Identifier and Pattern Syntax. "
-      "http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_from_Identifiers")
-      .value("USCRIPT_USAGE_NOT_ENCODED", USCRIPT_USAGE_NOT_ENCODED, "Not encoded in Unicode.")
-      .value("USCRIPT_USAGE_UNKNOWN", USCRIPT_USAGE_UNKNOWN, "Unknown script usage.")
-      .value("USCRIPT_USAGE_EXCLUDED", USCRIPT_USAGE_EXCLUDED, "Candidate for Exclusion from Identifiers.")
-      .value("USCRIPT_USAGE_LIMITED_USE", USCRIPT_USAGE_LIMITED_USE, "Limited Use script.")
-      .value("USCRIPT_USAGE_ASPIRATIONAL", USCRIPT_USAGE_ASPIRATIONAL, "Aspirational Use script.")
-      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED, "Recommended script.")
+      "http://www.unicode.org/reports/tr31/"
+      "#Table_Candidate_Characters_for_Exclusion_from_Identifiers")
+      .value("USCRIPT_USAGE_NOT_ENCODED", USCRIPT_USAGE_NOT_ENCODED,
+             "Not encoded in Unicode.")
+      .value("USCRIPT_USAGE_UNKNOWN", USCRIPT_USAGE_UNKNOWN,
+             "Unknown script usage.")
+      .value("USCRIPT_USAGE_EXCLUDED", USCRIPT_USAGE_EXCLUDED,
+             "Candidate for Exclusion from Identifiers.")
+      .value("USCRIPT_USAGE_LIMITED_USE", USCRIPT_USAGE_LIMITED_USE,
+             "Limited Use script.")
+      .value("USCRIPT_USAGE_ASPIRATIONAL", USCRIPT_USAGE_ASPIRATIONAL,
+             "Aspirational Use script.")
+      .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED,
+             "Recommended script.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
@@ -304,18 +329,23 @@ void init_uscript(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def(
       "uscript_breaks_between_letters",
-      [](UScriptCode script) -> py::bool_ { return uscript_breaksBetweenLetters(script); }, py::arg("script"));
+      [](UScriptCode script) -> py::bool_ {
+        return uscript_breaksBetweenLetters(script);
+      },
+      py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   m.def(
       "uscript_get_code",
       [](const std::string &name_or_abbr_or_locale) {
-        auto p = name_or_abbr_or_locale.data();
+        auto name_or_abbr_or_locale_data = name_or_abbr_or_locale.data();
         ErrorCode error_code;
-        const auto capacity = uscript_getCode(p, nullptr, 0, error_code);
+        const auto capacity = uscript_getCode(name_or_abbr_or_locale_data,
+                                              nullptr, 0, error_code);
         std::vector<UScriptCode> result(capacity);
         error_code.reset();
-        uscript_getCode(p, result.data(), capacity, error_code);
+        uscript_getCode(name_or_abbr_or_locale_data, result.data(), capacity,
+                        error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -330,7 +360,8 @@ void init_uscript(py::module &m) {
       "uscript_get_sample_string",
       [](UScriptCode script) {
         ErrorCode error_code;
-        const auto capacity = uscript_getSampleString(script, nullptr, 0, error_code);
+        const auto capacity =
+            uscript_getSampleString(script, nullptr, 0, error_code);
         std::u16string result(capacity, u'\0');
         error_code.reset();
         uscript_getSampleString(script, result.data(), capacity, error_code);
@@ -341,7 +372,8 @@ void init_uscript(py::module &m) {
       },
       py::arg("script"));
 
-  m.def("uscript_get_sample_unicode_string", &uscript_getSampleUnicodeString, py::arg("script"));
+  m.def("uscript_get_sample_unicode_string", &uscript_getSampleUnicodeString,
+        py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   m.def(
@@ -361,7 +393,8 @@ void init_uscript(py::module &m) {
       "uscript_get_script_extensions",
       [](UChar32 c) {
         ErrorCode error_code;
-        const auto capacity = uscript_getScriptExtensions(c, nullptr, 0, error_code);
+        const auto capacity =
+            uscript_getScriptExtensions(c, nullptr, 0, error_code);
         std::vector<UScriptCode> result(capacity);
         error_code.reset();
         uscript_getScriptExtensions(c, result.data(), capacity, error_code);
@@ -373,7 +406,8 @@ void init_uscript(py::module &m) {
       py::arg("c"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
-  m.def("uscript_get_short_name", &uscript_getShortName, py::arg("script_code"));
+  m.def("uscript_get_short_name", &uscript_getShortName,
+        py::arg("script_code"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def("uscript_get_usage", &uscript_getUsage, py::arg("script"));
@@ -381,15 +415,24 @@ void init_uscript(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   m.def(
-      "uscript_has_script", [](UChar32 c, UScriptCode sc) -> py::bool_ { return uscript_hasScript(c, sc); },
+      "uscript_has_script",
+      [](UChar32 c, UScriptCode sc) -> py::bool_ {
+        return uscript_hasScript(c, sc);
+      },
       py::arg("c"), py::arg("sc"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-  m.def("uscript_is_cased", [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); }, py::arg("script"));
+  m.def(
+      "uscript_is_cased",
+      [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); },
+      py::arg("script"));
 
   m.def(
-      "uscript_is_right_to_left", [](UScriptCode script) -> py::bool_ { return uscript_isRightToLeft(script); },
+      "uscript_is_right_to_left",
+      [](UScriptCode script) -> py::bool_ {
+        return uscript_isRightToLeft(script);
+      },
       py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

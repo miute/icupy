@@ -5,15 +5,16 @@ using namespace icu;
 
 void init_tmunit(py::module &m) {
   //
-  // icu::TimeUnit
+  // class icu::TimeUnit
   //
   py::class_<TimeUnit, MeasureUnit> tu(m, "TimeUnit");
 
   //
-  // icu::TimeUnit::UTimeUnitFields
+  // enum icu::TimeUnit::UTimeUnitFields
   //
-  py::enum_<TimeUnit::UTimeUnitFields>(tu, "UTimeUnitFields", py::arithmetic(),
-                                       "Constants for all the time units we supported.")
+  py::enum_<TimeUnit::UTimeUnitFields>(
+      tu, "UTimeUnitFields", py::arithmetic(),
+      "Constants for all the time units we supported.")
       .value("UTIMEUNIT_YEAR", TimeUnit::UTIMEUNIT_YEAR)
       .value("UTIMEUNIT_MONTH", TimeUnit::UTIMEUNIT_MONTH)
       .value("UTIMEUNIT_DAY", TimeUnit::UTIMEUNIT_DAY)
@@ -24,13 +25,16 @@ void init_tmunit(py::module &m) {
       .export_values();
 
   //
-  // icu::TimeUnit
+  // class icu::TimeUnit
   //
   tu.def(py::init<const TimeUnit &>(), py::arg("other"));
 
   tu.def("__copy__", &TimeUnit::clone);
 
-  tu.def("__deepcopy__", [](const TimeUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tu.def(
+      "__deepcopy__",
+      [](const TimeUnit &self, py::dict & /* memo */) { return self.clone(); },
+      py::arg("memo"));
 
   tu.def("clone", &TimeUnit::clone);
 

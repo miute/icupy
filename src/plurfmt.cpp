@@ -7,7 +7,7 @@ using namespace icu;
 
 void init_plurfmt(py::module &m) {
   //
-  // icu::PluralFormat
+  // class icu::PluralFormat
   //
   py::class_<PluralFormat, Format> pf(m, "PluralFormat");
 
@@ -45,20 +45,23 @@ void init_plurfmt(py::module &m) {
           py::arg("rules"))
       .def(
           // [4] icu::PluralFormat
-          py::init([](const icupy::LocaleVariant &locale, const PluralRules &rules) {
-            ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(icupy::to_locale(locale), rules, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          }),
+          py::init(
+              [](const icupy::LocaleVariant &locale, const PluralRules &rules) {
+                ErrorCode error_code;
+                auto result = std::make_unique<PluralFormat>(
+                    icupy::to_locale(locale), rules, error_code);
+                if (error_code.isFailure()) {
+                  throw icupy::ICUError(error_code);
+                }
+                return result;
+              }),
           py::arg("locale"), py::arg("rules"))
       .def(
           // [5] icu::PluralFormat
           py::init([](const icupy::LocaleVariant &locale, UPluralType type) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(icupy::to_locale(locale), type, error_code);
+            auto result = std::make_unique<PluralFormat>(
+                icupy::to_locale(locale), type, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -69,7 +72,8 @@ void init_plurfmt(py::module &m) {
           // [6] icu::PluralFormat
           py::init([](const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<PluralFormat>(
+                icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -78,10 +82,12 @@ void init_plurfmt(py::module &m) {
           py::arg("pattern"))
       .def(
           // [7] icu::PluralFormat
-          py::init([](const icupy::LocaleVariant &locale, const icupy::UnicodeStringVariant &pattern) {
+          py::init([](const icupy::LocaleVariant &locale,
+                      const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result =
-                std::make_unique<PluralFormat>(icupy::to_locale(locale), icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<PluralFormat>(
+                icupy::to_locale(locale), icupy::to_unistr(pattern),
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -90,9 +96,11 @@ void init_plurfmt(py::module &m) {
           py::arg("locale"), py::arg("pattern"))
       .def(
           // [8] icu::PluralFormat
-          py::init([](const PluralRules &rules, const icupy::UnicodeStringVariant &pattern) {
+          py::init([](const PluralRules &rules,
+                      const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<PluralFormat>(rules, icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<PluralFormat>(
+                rules, icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -101,11 +109,13 @@ void init_plurfmt(py::module &m) {
           py::arg("rules"), py::arg("pattern"))
       .def(
           // [9] icu::PluralFormat
-          py::init([](const icupy::LocaleVariant &locale, const PluralRules &rules,
+          py::init([](const icupy::LocaleVariant &locale,
+                      const PluralRules &rules,
                       const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result =
-                std::make_unique<PluralFormat>(icupy::to_locale(locale), rules, icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<PluralFormat>(
+                icupy::to_locale(locale), rules, icupy::to_unistr(pattern),
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -117,8 +127,9 @@ void init_plurfmt(py::module &m) {
           py::init([](const icupy::LocaleVariant &locale, UPluralType type,
                       const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result =
-                std::make_unique<PluralFormat>(icupy::to_locale(locale), type, icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<PluralFormat>(
+                icupy::to_locale(locale), type, icupy::to_unistr(pattern),
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -131,7 +142,12 @@ void init_plurfmt(py::module &m) {
 
   pf.def("__copy__", &PluralFormat::clone);
 
-  pf.def("___deepcopy__", [](const PluralFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  pf.def(
+      "___deepcopy__",
+      [](const PluralFormat &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   pf.def(
       "apply_pattern",
@@ -150,8 +166,8 @@ void init_plurfmt(py::module &m) {
         // [1] icu::PluralFormat::format
         // [2] icu::Format::format
         "format",
-        [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
-           FieldPosition &pos) -> UnicodeString & {
+        [](const PluralFormat &self, const Formattable &obj,
+           UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
           ErrorCode error_code;
           auto &result = self.format(obj, append_to, pos, error_code);
           if (error_code.isFailure()) {
@@ -163,10 +179,13 @@ void init_plurfmt(py::module &m) {
       .def(
           // [3] icu::Format::format
           "format",
-          [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to,
-             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
+          [](const PluralFormat &self, const Formattable &obj,
+             UnicodeString &append_to,
+             std::optional<FieldPositionIterator *> &pos_iter)
+              -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
+            auto &result = self.format(obj, append_to,
+                                       pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -176,7 +195,8 @@ void init_plurfmt(py::module &m) {
       .def(
           // [4] icu::Format::format
           "format",
-          [](const PluralFormat &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+          [](const PluralFormat &self, const Formattable &obj,
+             UnicodeString &append_to) -> UnicodeString & {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
@@ -200,7 +220,8 @@ void init_plurfmt(py::module &m) {
       .def(
           // [6] icu::PluralFormat::format
           "format",
-          [](const PluralFormat &self, double number, UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
+          [](const PluralFormat &self, double number, UnicodeString &append_to,
+             FieldPosition &pos) -> UnicodeString & {
             ErrorCode error_code;
             auto &result = self.format(number, append_to, pos, error_code);
             if (error_code.isFailure()) {

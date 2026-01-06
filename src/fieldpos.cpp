@@ -7,30 +7,49 @@ using namespace icu;
 
 void init_fieldpos(py::module &m) {
   //
-  // icu::FieldPosition
+  // class icu::FieldPosition
   //
   py::class_<FieldPosition, UObject> fp(m, "FieldPosition");
 
-  py::enum_<decltype(FieldPosition::DONT_CARE)>(fp, "FieldPosition", py::arithmetic())
+  //
+  // enum icu::FieldPosition::DONT_CARE
+  //
+  py::enum_<decltype(FieldPosition::DONT_CARE)>(fp, "FieldPosition",
+                                                py::arithmetic())
       .value("DONT_CARE", FieldPosition::DONT_CARE,
-             "*DONT_CARE* may be specified as the field to indicate that the caller doesn't need to specify a field.")
+             "*DONT_CARE* may be specified as the field to indicate that the "
+             "caller doesn't need to specify a field.")
       .export_values();
 
+  //
+  // class icu::FieldPosition
+  //
   fp.def(py::init<>())
       .def(py::init<int32_t>(), py::arg("field"))
       .def(py::init<const FieldPosition &>(), py::arg("other"));
 
   fp.def("__copy__", &FieldPosition::clone);
 
-  fp.def("__deepcopy__", [](const FieldPosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fp.def(
+      "__deepcopy__",
+      [](const FieldPosition &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   fp.def(
-      "__eq__", [](const FieldPosition &self, const FieldPosition &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const FieldPosition &self, const FieldPosition &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   fp.def(
-      "__ne__", [](const FieldPosition &self, const FieldPosition &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const FieldPosition &self, const FieldPosition &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   fp.def("__repr__", [](const FieldPosition &self) {
     std::stringstream ss;

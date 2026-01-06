@@ -9,10 +9,11 @@ using namespace icu;
 void init_unounclass(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM == 71)
   //
-  // icu::NounClass
+  // enum icu::NounClass
   //
-  py::enum_<NounClass>(m, "NounClass", py::arithmetic(),
-                       "Represents all the grammatical noun classes that are supported by CLDR.")
+  py::enum_<NounClass>(
+      m, "NounClass", py::arithmetic(),
+      "Represents all the grammatical noun classes that are supported by CLDR.")
       .value("OTHER", OTHER)
       .value("NEUTER", NEUTER)
       .value("FEMININE", FEMININE)

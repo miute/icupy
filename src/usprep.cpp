@@ -6,51 +6,68 @@
 using namespace icu;
 
 _UStringPrepProfilePtr::_UStringPrepProfilePtr(UStringPrepProfile *p) : p_(p) {}
+
 _UStringPrepProfilePtr::~_UStringPrepProfilePtr() {}
+
 UStringPrepProfile *_UStringPrepProfilePtr::get() const { return p_; }
 
 void init_usprep(py::module &m) {
   //
-  // UStringPrepProfileType
+  // enum UStringPrepProfileType
   //
-  py::enum_<UStringPrepProfileType>(
-      m, "UStringPrepProfileType", py::arithmetic(),
-      "enums for the standard stringprep profile types supported by *usprep_open_by_type*.")
-      .value("USPREP_RFC3491_NAMEPREP", USPREP_RFC3491_NAMEPREP, "RFC3491 Nameprep.")
-      .value("USPREP_RFC3530_NFS4_CS_PREP", USPREP_RFC3530_NFS4_CS_PREP, "RFC3530 nfs4_cs_prep.")
+  py::enum_<UStringPrepProfileType>(m, "UStringPrepProfileType",
+                                    py::arithmetic(),
+                                    "enums for the standard stringprep profile "
+                                    "types supported by *usprep_open_by_type*.")
+      .value("USPREP_RFC3491_NAMEPREP", USPREP_RFC3491_NAMEPREP,
+             "RFC3491 Nameprep.")
+      .value("USPREP_RFC3530_NFS4_CS_PREP", USPREP_RFC3530_NFS4_CS_PREP,
+             "RFC3530 nfs4_cs_prep.")
       .value("USPREP_RFC3530_NFS4_CS_PREP_CI", USPREP_RFC3530_NFS4_CS_PREP_CI,
              "RFC3530 nfs4_cs_prep with case insensitive option.")
-      .value("USPREP_RFC3530_NFS4_CIS_PREP", USPREP_RFC3530_NFS4_CIS_PREP, "RFC3530 nfs4_cis_prep.")
-      .value("USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX", USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX,
+      .value("USPREP_RFC3530_NFS4_CIS_PREP", USPREP_RFC3530_NFS4_CIS_PREP,
+             "RFC3530 nfs4_cis_prep.")
+      .value("USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX",
+             USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX,
              "RFC3530 nfs4_mixed_prep for prefix.")
-      .value("USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX", USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX,
+      .value("USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX",
+             USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX,
              "RFC3530 nfs4_mixed_prep for suffix.")
       .value("USPREP_RFC3722_ISCSI", USPREP_RFC3722_ISCSI, "RFC3722 iSCSI.")
-      .value("USPREP_RFC3920_NODEPREP", USPREP_RFC3920_NODEPREP, "RFC3920 XMPP Nodeprep.")
-      .value("USPREP_RFC3920_RESOURCEPREP", USPREP_RFC3920_RESOURCEPREP, "RFC3920 XMPP Resourceprep.")
-      .value("USPREP_RFC4011_MIB", USPREP_RFC4011_MIB, "RFC4011 Policy MIB Stringprep.")
-      .value("USPREP_RFC4013_SASLPREP", USPREP_RFC4013_SASLPREP, "RFC4013 SASLprep.")
+      .value("USPREP_RFC3920_NODEPREP", USPREP_RFC3920_NODEPREP,
+             "RFC3920 XMPP Nodeprep.")
+      .value("USPREP_RFC3920_RESOURCEPREP", USPREP_RFC3920_RESOURCEPREP,
+             "RFC3920 XMPP Resourceprep.")
+      .value("USPREP_RFC4011_MIB", USPREP_RFC4011_MIB,
+             "RFC4011 Policy MIB Stringprep.")
+      .value("USPREP_RFC4013_SASLPREP", USPREP_RFC4013_SASLPREP,
+             "RFC4013 SASLprep.")
       .value("USPREP_RFC4505_TRACE", USPREP_RFC4505_TRACE, "RFC4505 trace.")
       .value("USPREP_RFC4518_LDAP", USPREP_RFC4518_LDAP, "RFC4518 LDAP.")
       .value("USPREP_RFC4518_LDAP_CI", USPREP_RFC4518_LDAP_CI,
-             "RFC4518 LDAP for case ignore, numeric and stored prefix matching rules.")
+             "RFC4518 LDAP for case ignore, numeric and stored prefix matching "
+             "rules.")
       .export_values();
 
   //
-  // _UStringPrepProfilePtr
+  // struct UStringPrepProfile
   //
   py::class_<_UStringPrepProfilePtr>(m, "_UStringPrepProfilePtr");
 
   //
   // Functions
   //
-  m.def("usprep_close", [](_UStringPrepProfilePtr &profile) { usprep_close(profile); }, py::arg("profile"));
+  m.def(
+      "usprep_close",
+      [](_UStringPrepProfilePtr &profile) { usprep_close(profile); },
+      py::arg("profile"));
 
   m.def(
       "usprep_open",
       [](const std::optional<std::string> &path, const std::string &file_name) {
         ErrorCode error_code;
-        auto profile = usprep_open(path ? path->data() : nullptr, file_name.data(), error_code);
+        auto profile = usprep_open(path ? path->data() : nullptr,
+                                   file_name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -72,22 +89,25 @@ void init_usprep(py::module &m) {
 
   m.def(
       "usprep_prepare",
-      [](_UStringPrepProfilePtr &prep, const std::u16string &src, int32_t src_length, int32_t options,
+      [](_UStringPrepProfilePtr &prep, const std::u16string &src,
+         int32_t src_length, int32_t options,
          std::optional<UParseError *> &parse_error) {
-        auto p = src.data();
+        auto src_data = src.data();
         ErrorCode error_code;
-        const auto dest_capacity = usprep_prepare(prep, p, src_length, nullptr, 0, options, nullptr, error_code);
+        const auto dest_capacity =
+            usprep_prepare(prep, src_data, src_length, nullptr, 0, options,
+                           nullptr, error_code);
         std::u16string result(dest_capacity, '\0');
         error_code.reset();
-        usprep_prepare(prep, p, src_length, result.data(), dest_capacity, options, parse_error.value_or(nullptr),
-                       error_code);
+        usprep_prepare(prep, src_data, src_length, result.data(), dest_capacity,
+                       options, parse_error.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("prep"), py::arg("src"), py::arg("src_length"), py::arg("options"),
-      py::arg("parse_error") = std::nullopt);
+      py::arg("prep"), py::arg("src"), py::arg("src_length"),
+      py::arg("options"), py::arg("parse_error") = std::nullopt);
 
   m.attr("USPREP_ALLOW_UNASSIGNED") = USPREP_ALLOW_UNASSIGNED;
   m.attr("USPREP_DEFAULT") = USPREP_DEFAULT;

@@ -10,7 +10,7 @@ using namespace icu;
 void init_gender(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   //
-  // icu::GenderInfo
+  // class icu::GenderInfo
   //
   py::class_<GenderInfo, UObject> gi(m, "GenderInfo");
 
@@ -18,7 +18,8 @@ void init_gender(py::module &m) {
       "get_instance",
       [](const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
-        auto result = GenderInfo::getInstance(icupy::to_locale(locale), error_code);
+        auto result =
+            GenderInfo::getInstance(icupy::to_locale(locale), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -28,7 +29,8 @@ void init_gender(py::module &m) {
 
   gi.def(
       "get_list_gender",
-      [](const GenderInfo &self, const std::vector<UGender> &genders, int32_t length) {
+      [](const GenderInfo &self, const std::vector<UGender> &genders,
+         int32_t length) {
         if (length == -1) {
           length = static_cast<int32_t>(genders.size());
         }

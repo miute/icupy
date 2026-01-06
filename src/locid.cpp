@@ -12,33 +12,42 @@ using namespace icu;
 
 void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   //
-  // icu::Locale
+  // class icu::Locale
   //
   loc.def(py::init<>())
-      .def(py::init([](std::optional<const std::string> &language, std::optional<const std::string> &country,
+      .def(py::init([](std::optional<const std::string> &language,
+                       std::optional<const std::string> &country,
                        std::optional<const std::string> &variant,
                        std::optional<const std::string> &keywords_and_values) {
-             return std::make_unique<Locale>(language ? language->data() : nullptr, country ? country->data() : nullptr,
-                                             variant ? variant->data() : nullptr,
-                                             keywords_and_values ? keywords_and_values->data() : nullptr);
+             return std::make_unique<Locale>(
+                 language ? language->data() : nullptr,
+                 country ? country->data() : nullptr,
+                 variant ? variant->data() : nullptr,
+                 keywords_and_values ? keywords_and_values->data() : nullptr);
            }),
-           py::arg("language"), py::arg("country") = std::nullopt, py::arg("variant") = std::nullopt,
+           py::arg("language"), py::arg("country") = std::nullopt,
+           py::arg("variant") = std::nullopt,
            py::arg("keywords_and_values") = std::nullopt)
       .def(py::init<const Locale &>(), py::arg("other"));
 
   loc.def("__copy__", &Locale::clone);
 
-  loc.def("__deepcopy__", [](const Locale &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  loc.def(
+      "__deepcopy__",
+      [](const Locale &self, py::dict & /* memo */) { return self.clone(); },
+      py::arg("memo"));
 
   loc.def(
-      "__eq__", [](const Locale &self, const Locale &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Locale &self, const Locale &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
   loc.def("__hash__", &Locale::hashCode);
 
   loc.def(
-      "__ne__", [](const Locale &self, const Locale &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Locale &self, const Locale &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   loc.def("__repr__", [](const Locale &self) {
     std::stringstream ss;
@@ -71,12 +80,17 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def("clone", &Locale::clone);
 
   loc.def_static(
-      "create_canonical", [](const std::string &name) { return Locale::createCanonical(name.data()); },
+      "create_canonical",
+      [](const std::string &name) {
+        return Locale::createCanonical(name.data());
+      },
       py::arg("name"));
 
   loc.def_static(
       "create_from_name",
-      [](std::optional<const std::string> &name) { return Locale::createFromName(name ? name->data() : nullptr); },
+      [](std::optional<const std::string> &name) {
+        return Locale::createFromName(name ? name->data() : nullptr);
+      },
       py::arg("name"));
 
   loc.def("create_keywords", [](const Locale &self) {
@@ -114,7 +128,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def_static(
       "get_available_locales",
       []() {
-        int32_t count = 0;
+        int32_t count;
         auto p = Locale::getAvailableLocales(count);
         std::vector<const Locale *> result(count, nullptr);
         for (int32_t i = 0; i < count; ++i) {
@@ -140,43 +154,66 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def(
          "get_display_country",
-         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_country)
-             -> UnicodeString & { return self.getDisplayCountry(icupy::to_locale(display_locale), disp_country); },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale,
+            UnicodeString &disp_country) -> UnicodeString & {
+           return self.getDisplayCountry(icupy::to_locale(display_locale),
+                                         disp_country);
+         },
          py::arg("display_locale"), py::arg("disp_country"))
-      .def("get_display_country", py::overload_cast<UnicodeString &>(&Locale::getDisplayCountry, py::const_),
+      .def("get_display_country",
+           py::overload_cast<UnicodeString &>(&Locale::getDisplayCountry,
+                                              py::const_),
            py::arg("disp_country"));
 
   loc.def(
          "get_display_language",
-         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_lang)
-             -> UnicodeString & { return self.getDisplayLanguage(icupy::to_locale(display_locale), disp_lang); },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale,
+            UnicodeString &disp_lang) -> UnicodeString & {
+           return self.getDisplayLanguage(icupy::to_locale(display_locale),
+                                          disp_lang);
+         },
          py::arg("display_locale"), py::arg("disp_lang"))
-      .def("get_display_language", py::overload_cast<UnicodeString &>(&Locale::getDisplayLanguage, py::const_),
+      .def("get_display_language",
+           py::overload_cast<UnicodeString &>(&Locale::getDisplayLanguage,
+                                              py::const_),
            py::arg("disp_lang"));
 
   loc.def(
          "get_display_name",
-         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &name) -> UnicodeString & {
+         [](const Locale &self, const icupy::LocaleVariant &display_locale,
+            UnicodeString &name) -> UnicodeString & {
            return self.getDisplayName(icupy::to_locale(display_locale), name);
          },
          py::arg("display_locale"), py::arg("name"))
-      .def("get_display_name", py::overload_cast<UnicodeString &>(&Locale::getDisplayName, py::const_),
+      .def("get_display_name",
+           py::overload_cast<UnicodeString &>(&Locale::getDisplayName,
+                                              py::const_),
            py::arg("name"));
 
   loc.def(
          "get_display_script",
-         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_script)
-             -> UnicodeString & { return self.getDisplayScript(icupy::to_locale(display_locale), disp_script); },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale,
+            UnicodeString &disp_script) -> UnicodeString & {
+           return self.getDisplayScript(icupy::to_locale(display_locale),
+                                        disp_script);
+         },
          py::arg("display_locale"), py::arg("disp_script"))
-      .def("get_display_script", py::overload_cast<UnicodeString &>(&Locale::getDisplayScript, py::const_),
+      .def("get_display_script",
+           py::overload_cast<UnicodeString &>(&Locale::getDisplayScript,
+                                              py::const_),
            py::arg("disp_script"));
 
   loc.def(
          "get_display_variant",
-         [](const Locale &self, const icupy::LocaleVariant &display_locale, UnicodeString &disp_var)
-             -> UnicodeString & { return self.getDisplayVariant(icupy::to_locale(display_locale), disp_var); },
+         [](const Locale &self, const icupy::LocaleVariant &display_locale,
+            UnicodeString &disp_var) -> UnicodeString & {
+           return self.getDisplayVariant(icupy::to_locale(display_locale),
+                                         disp_var);
+         },
          py::arg("display_locale"), py::arg("disp_var"))
-      .def("get_display_variant", py::overload_cast<UnicodeString &>(&Locale::getDisplayVariant, py::const_),
+      .def("get_display_variant",
+           py::overload_cast<UnicodeString &>(&Locale::getDisplayVariant,
+                                              py::const_),
            py::arg("disp_var"));
 
   loc.def_static("get_english", &Locale::getEnglish);
@@ -229,9 +266,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def("get_keywords", [](const Locale &self) {
     // https://unicode-org.atlassian.net/browse/ICU-20573
     // Locale::getKeywords() and Locale::getUnicodeKeywords() segfault on empty
-    ErrorCode error_code;
     std::set<std::string> result;
-    self.getKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
+    ErrorCode error_code;
+    self.getKeywords<std::string>(
+        std::insert_iterator<decltype(result)>(result, result.begin()),
+        error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
@@ -247,10 +286,12 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
           throw icupy::ICUError(U_ILLEGAL_ARGUMENT_ERROR);
         }
         ErrorCode error_code;
-        const auto length = self.getKeywordValue(keyword_name, nullptr, 0, error_code);
+        const auto length =
+            self.getKeywordValue(keyword_name, nullptr, 0, error_code);
         std::string result(length, '\0');
         error_code.reset();
-        self.getKeywordValue(keyword_name, result.data(), static_cast<int32_t>(result.size()), error_code);
+        self.getKeywordValue(keyword_name, result.data(),
+                             static_cast<int32_t>(result.size()), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -262,7 +303,8 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "get_keyword_value",
       [](const Locale &self, const std::string &keyword_name) {
         ErrorCode error_code;
-        auto result = self.getKeywordValue<std::string>(keyword_name, error_code);
+        auto result =
+            self.getKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -299,9 +341,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def("get_unicode_keywords", [](const Locale &self) {
     // https://unicode-org.atlassian.net/browse/ICU-20573
     // Locale::getKeywords() and Locale::getUnicodeKeywords() segfault on empty
-    ErrorCode error_code;
     std::set<std::string> result;
-    self.getUnicodeKeywords<std::string>(std::insert_iterator<decltype(result)>(result, result.begin()), error_code);
+    ErrorCode error_code;
+    self.getUnicodeKeywords<std::string>(
+        std::insert_iterator<decltype(result)>(result, result.begin()),
+        error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
@@ -312,7 +356,8 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "get_unicode_keyword_value",
       [](const Locale &self, const std::string &keyword_name) {
         ErrorCode error_code;
-        auto result = self.getUnicodeKeywordValue<std::string>(keyword_name, error_code);
+        auto result =
+            self.getUnicodeKeywordValue<std::string>(keyword_name, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -327,10 +372,12 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 
   loc.def("hash_code", &Locale::hashCode);
 
-  loc.def("is_bogus", [](const Locale &self) -> py::bool_ { return self.isBogus(); });
+  loc.def("is_bogus",
+          [](const Locale &self) -> py::bool_ { return self.isBogus(); });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-  loc.def("is_right_to_left", [](const Locale &self) -> py::bool_ { return self.isRightToLeft(); });
+  loc.def("is_right_to_left",
+          [](const Locale &self) -> py::bool_ { return self.isRightToLeft(); });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -357,9 +404,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   loc.def(
       "set_keyword_value",
-      [](Locale &self, const std::string &keyword_name, std::optional<const std::string> &keyword_value) {
+      [](Locale &self, const std::string &keyword_name,
+         std::optional<const std::string> &keyword_value) {
         ErrorCode error_code;
-        self.setKeywordValue(keyword_name, keyword_value.value_or(""), error_code);
+        self.setKeywordValue(keyword_name, keyword_value.value_or(""),
+                             error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -372,9 +421,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   loc.def(
       "set_unicode_keyword_value",
-      [](Locale &self, const std::string &keyword_name, std::optional<const std::string> &keyword_value) {
+      [](Locale &self, const std::string &keyword_name,
+         std::optional<const std::string> &keyword_value) {
         ErrorCode error_code;
-        self.setUnicodeKeywordValue(keyword_name, keyword_value.value_or(""), error_code);
+        self.setUnicodeKeywordValue(keyword_name, keyword_value.value_or(""),
+                                    error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -392,67 +443,88 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   loc.def_property_readonly_static(
-      "CANADA", [](const py::object &) { return ULOC_CANADA; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "CANADA_FRENCH", [](const py::object &) { return ULOC_CANADA_FRENCH; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "CHINA", [](const py::object &) { return ULOC_CHINA; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "CHINESE", [](const py::object &) { return ULOC_CHINESE; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "ENGLISH", [](const py::object &) { return ULOC_ENGLISH; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "FRANCE", [](const py::object &) { return ULOC_FRANCE; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "FRENCH", [](const py::object &) { return ULOC_FRENCH; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "GERMAN", [](const py::object &) { return ULOC_GERMAN; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "GERMANY", [](const py::object &) { return ULOC_GERMANY; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "ITALIAN", [](const py::object &) { return ULOC_ITALIAN; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "ITALY", [](const py::object &) { return ULOC_ITALY; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "JAPAN", [](const py::object &) { return ULOC_JAPAN; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "JAPANESE", [](const py::object &) { return ULOC_JAPANESE; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "KOREA", [](const py::object &) { return ULOC_KOREA; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "KOREAN", [](const py::object &) { return ULOC_KOREAN; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "PRC", [](const py::object &) { return ULOC_PRC; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "SIMPLIFIED_CHINESE", [](const py::object &) { return ULOC_SIMPLIFIED_CHINESE; },
+      "CANADA", [](const py::object &) { return ULOC_CANADA; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "TAIWAN", [](const py::object &) { return ULOC_TAIWAN; }, py::return_value_policy::reference);
-
-  loc.def_property_readonly_static(
-      "TRADITIONAL_CHINESE", [](const py::object &) { return ULOC_TRADITIONAL_CHINESE; },
+      "CANADA_FRENCH", [](const py::object &) { return ULOC_CANADA_FRENCH; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "UK", [](const py::object &) { return ULOC_UK; }, py::return_value_policy::reference);
+      "CHINA", [](const py::object &) { return ULOC_CHINA; },
+      py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "US", [](const py::object &) { return ULOC_US; }, py::return_value_policy::reference);
+      "CHINESE", [](const py::object &) { return ULOC_CHINESE; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "ENGLISH", [](const py::object &) { return ULOC_ENGLISH; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "FRANCE", [](const py::object &) { return ULOC_FRANCE; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "FRENCH", [](const py::object &) { return ULOC_FRENCH; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "GERMAN", [](const py::object &) { return ULOC_GERMAN; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "GERMANY", [](const py::object &) { return ULOC_GERMANY; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "ITALIAN", [](const py::object &) { return ULOC_ITALIAN; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "ITALY", [](const py::object &) { return ULOC_ITALY; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "JAPAN", [](const py::object &) { return ULOC_JAPAN; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "JAPANESE", [](const py::object &) { return ULOC_JAPANESE; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "KOREA", [](const py::object &) { return ULOC_KOREA; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "KOREAN", [](const py::object &) { return ULOC_KOREAN; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "PRC", [](const py::object &) { return ULOC_PRC; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "SIMPLIFIED_CHINESE",
+      [](const py::object &) { return ULOC_SIMPLIFIED_CHINESE; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "TAIWAN", [](const py::object &) { return ULOC_TAIWAN; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "TRADITIONAL_CHINESE",
+      [](const py::object &) { return ULOC_TRADITIONAL_CHINESE; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "UK", [](const py::object &) { return ULOC_UK; },
+      py::return_value_policy::reference);
+
+  loc.def_property_readonly_static(
+      "US", [](const py::object &) { return ULOC_US; },
+      py::return_value_policy::reference);
 }

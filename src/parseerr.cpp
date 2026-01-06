@@ -8,7 +8,7 @@ using namespace icu;
 
 void init_parseerr(py::module &m) {
   //
-  // UParseError
+  // struct UParseError
   //
   py::class_<UParseError> pe(m, "UParseError");
 
@@ -32,7 +32,9 @@ void init_parseerr(py::module &m) {
 
   pe.def_readonly("offset", &UParseError::offset);
 
-  pe.def_readonly("post_context", &UParseError::postContext, py::return_value_policy::reference);
+  pe.def_readonly("post_context", &UParseError::postContext,
+                  py::return_value_policy::reference);
 
-  pe.def_readonly("pre_context", &UParseError::preContext, py::return_value_policy::reference);
+  pe.def_readonly("pre_context", &UParseError::preContext,
+                  py::return_value_policy::reference);
 }

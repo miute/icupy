@@ -9,12 +9,15 @@
 class _UBiDiPtr {
 public:
   _UBiDiPtr(UBiDi *p);
+
   ~_UBiDiPtr();
 
   UBiDi *get() const;
+
   operator UBiDi *() const { return get(); }
 
-  void set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedding_levels);
+  void
+  set_embedding_levels(const std::shared_ptr<UBiDiLevel[]> &embedding_levels);
 
   void set_epilogue(const std::shared_ptr<std::u16string> &epilogue);
 
@@ -34,8 +37,11 @@ private:
 class _UBiDiClassCallbackPtr {
 public:
   _UBiDiClassCallbackPtr(std::nullptr_t action);
+
   _UBiDiClassCallbackPtr(UBiDiClassCallback *action);
+
   _UBiDiClassCallbackPtr(const py::function &action);
+
   ~_UBiDiClassCallbackPtr();
 
   static UCharDirection callback(const void *context, UChar32 c);
@@ -47,7 +53,8 @@ public:
   };
 
   bool has_value() const {
-    return !action_.valueless_by_exception() && (get_if<UBiDiClassCallback *>() || action_.index() != 0);
+    return !action_.valueless_by_exception() &&
+           (get_if<UBiDiClassCallback *>() || action_.index() != 0);
   };
 
 private:

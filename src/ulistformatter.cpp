@@ -7,23 +7,26 @@
 void init_ulistformatter(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   //
-  // UListFormatterField
+  // enum UListFormatterField
   //
   py::enum_<UListFormatterField>(
       m, "UListFormatterField", py::arithmetic(),
-      "*FieldPosition* and *UFieldPosition* selectors for format fields defined by *ListFormatter*.")
+      "*FieldPosition* and *UFieldPosition* selectors for format fields "
+      "defined by *ListFormatter*.")
       .value("ULISTFMT_LITERAL_FIELD", ULISTFMT_LITERAL_FIELD,
              "The literal text in the result which came from the resources.")
-      .value("ULISTFMT_ELEMENT_FIELD", ULISTFMT_ELEMENT_FIELD,
-             "The element text in the result which came from the input strings.")
+      .value(
+          "ULISTFMT_ELEMENT_FIELD", ULISTFMT_ELEMENT_FIELD,
+          "The element text in the result which came from the input strings.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
-  // UListFormatterType
+  // enum UListFormatterType
   //
-  py::enum_<UListFormatterType>(m, "UListFormatterType", py::arithmetic(), "Type of meaning expressed by the list.")
+  py::enum_<UListFormatterType>(m, "UListFormatterType", py::arithmetic(),
+                                "Type of meaning expressed by the list.")
       .value("ULISTFMT_TYPE_AND", ULISTFMT_TYPE_AND,
              "Conjunction formatting, e.g. "
              "\"Alice, Bob, Charlie, and Delta\".")
@@ -36,13 +39,17 @@ void init_ulistformatter(py::module &m) {
       .export_values();
 
   //
-  // UListFormatterWidth
+  // enum UListFormatterWidth
   //
-  py::enum_<UListFormatterWidth>(m, "UListFormatterWidth", py::arithmetic(), "Verbosity level of the list patterns.")
+  py::enum_<UListFormatterWidth>(m, "UListFormatterWidth", py::arithmetic(),
+                                 "Verbosity level of the list patterns.")
       .value("ULISTFMT_WIDTH_WIDE", ULISTFMT_WIDTH_WIDE,
-             "Use list formatting with full words (no abbreviations) when possible.")
-      .value("ULISTFMT_WIDTH_SHORT", ULISTFMT_WIDTH_SHORT, "Use list formatting of typical length.")
-      .value("ULISTFMT_WIDTH_NARROW", ULISTFMT_WIDTH_NARROW, "Use list formatting of the shortest possible length.")
+             "Use list formatting with full words (no abbreviations) when "
+             "possible.")
+      .value("ULISTFMT_WIDTH_SHORT", ULISTFMT_WIDTH_SHORT,
+             "Use list formatting of typical length.")
+      .value("ULISTFMT_WIDTH_NARROW", ULISTFMT_WIDTH_NARROW,
+             "Use list formatting of the shortest possible length.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 }

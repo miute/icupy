@@ -7,7 +7,7 @@
 void init_ugender(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   //
-  // UGender
+  // enum UGender
   //
   py::enum_<UGender>(m, "UGender", "Genders.")
       .value("UGENDER_MALE", UGENDER_MALE, "Male gender.")

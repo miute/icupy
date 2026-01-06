@@ -6,9 +6,11 @@
 class _ConstUSetPtr {
 public:
   _ConstUSetPtr(const USet *p);
+
   ~_ConstUSetPtr();
 
   const USet *get() const;
+
   operator const USet *() const { return get(); }
 
 private:
@@ -19,9 +21,11 @@ private:
 class _USetPtr {
 public:
   _USetPtr(USet *p);
+
   ~_USetPtr();
 
   USet *get() const;
+
   operator USet *() const { return get(); }
 
 private:

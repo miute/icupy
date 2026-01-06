@@ -6,16 +6,24 @@ using namespace icu;
 
 void init_strenum(py::module &m) {
   //
-  // icu::StringEnumeration
+  // class icu::StringEnumeration
   //
   py::class_<StringEnumeration, UObject> se(m, "StringEnumeration");
 
   se.def("__copy__", &StringEnumeration::clone);
 
-  se.def("__deepcopy__", [](const StringEnumeration &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  se.def(
+      "__deepcopy__",
+      [](const StringEnumeration &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   se.def(
-      "__eq__", [](const StringEnumeration &self, const StringEnumeration &other) { return self == other; },
+      "__eq__",
+      [](const StringEnumeration &self, const StringEnumeration &other) {
+        return self == other;
+      },
       py::is_operator(), py::arg("other"));
 
   se.def("__iter__", [](StringEnumeration &self) -> StringEnumeration & {
@@ -37,7 +45,10 @@ void init_strenum(py::module &m) {
   });
 
   se.def(
-      "__ne__", [](const StringEnumeration &self, const StringEnumeration &other) { return self != other; },
+      "__ne__",
+      [](const StringEnumeration &self, const StringEnumeration &other) {
+        return self != other;
+      },
       py::is_operator(), py::arg("other"));
 
   se.def("__next__", [](StringEnumeration &self) {

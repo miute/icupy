@@ -6,7 +6,7 @@ using namespace icu;
 
 void init_usetiter(py::module &m) {
   //
-  // icu::UnicodeSetIterator
+  // class UnicodeSetIterator
   //
   py::class_<UnicodeSetIterator, UObject> usi(m, "UnicodeSetIterator");
 
@@ -18,14 +18,21 @@ void init_usetiter(py::module &m) {
 
   usi.def("get_string", &UnicodeSetIterator::getString);
 
-  usi.def("is_string", [](const UnicodeSetIterator &self) -> py::bool_ { return self.isString(); });
+  usi.def("is_string", [](const UnicodeSetIterator &self) -> py::bool_ {
+    return self.isString();
+  });
 
-  usi.def("next", [](UnicodeSetIterator &self) -> py::bool_ { return self.next(); });
+  usi.def("next",
+          [](UnicodeSetIterator &self) -> py::bool_ { return self.next(); });
 
-  usi.def("next_range", [](UnicodeSetIterator &self) -> py::bool_ { return self.nextRange(); });
+  usi.def("next_range", [](UnicodeSetIterator &self) -> py::bool_ {
+    return self.nextRange();
+  });
 
   usi.def("reset", py::overload_cast<>(&UnicodeSetIterator::reset))
-      .def("reset", py::overload_cast<const UnicodeSet &>(&UnicodeSetIterator::reset), py::arg("set_"));
+      .def("reset",
+           py::overload_cast<const UnicodeSet &>(&UnicodeSetIterator::reset),
+           py::arg("set_"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   usi.def("skip_to_strings", &UnicodeSetIterator::skipToStrings);

@@ -7,53 +7,63 @@
 using namespace icu;
 using namespace icu::number;
 
-using _LocalizedNumberRangeFormatterSettings = NumberRangeFormatterSettings<LocalizedNumberRangeFormatter>;
-using _UnlocalizedNumberRangeFormatterSettings = NumberRangeFormatterSettings<UnlocalizedNumberRangeFormatter>;
+using _LocalizedNumberRangeFormatterSettings =
+    NumberRangeFormatterSettings<LocalizedNumberRangeFormatter>;
+using _UnlocalizedNumberRangeFormatterSettings =
+    NumberRangeFormatterSettings<UnlocalizedNumberRangeFormatter>;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 void init_numberrangeformatter(py::module &, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   //
-  // icu::number::FormattedNumberRange
+  // class icu::number::FormattedNumberRange
   //
-  py::class_<FormattedNumberRange, UMemory, FormattedValue> fnr(m2, "FormattedNumberRange");
+  py::class_<FormattedNumberRange, UMemory, FormattedValue> fnr(
+      m2, "FormattedNumberRange");
 
   //
+  // class
   // icu::number::NumberRangeFormatterSettings<LocalizedNumberRangeFormatter>
   //
-  py::class_<_LocalizedNumberRangeFormatterSettings> nrfs_lnrf(m2, "_LocalizedNumberRangeFormatterSettings");
+  py::class_<_LocalizedNumberRangeFormatterSettings> nrfs_lnrf(
+      m2, "_LocalizedNumberRangeFormatterSettings");
 
   //
-  // icu::number::LocalizedNumberRangeFormatter
+  // class icu::number::LocalizedNumberRangeFormatter
   //
-  py::class_<LocalizedNumberRangeFormatter, _LocalizedNumberRangeFormatterSettings, UMemory> lnrf(
-      m2, "LocalizedNumberRangeFormatter");
+  py::class_<LocalizedNumberRangeFormatter,
+             _LocalizedNumberRangeFormatterSettings, UMemory>
+      lnrf(m2, "LocalizedNumberRangeFormatter");
 
   //
+  // class
   // icu::number::NumberRangeFormatterSettings<UnlocalizedNumberRangeFormatter>
   //
-  py::class_<_UnlocalizedNumberRangeFormatterSettings> nrfs_unrf(m2, "_UnlocalizedNumberRangeFormatterSettings");
+  py::class_<_UnlocalizedNumberRangeFormatterSettings> nrfs_unrf(
+      m2, "_UnlocalizedNumberRangeFormatterSettings");
 
   //
-  // icu::number::UnlocalizedNumberRangeFormatter
+  // class icu::number::UnlocalizedNumberRangeFormatter
   //
-  py::class_<UnlocalizedNumberRangeFormatter, _UnlocalizedNumberRangeFormatterSettings, UMemory> unrf(
-      m2, "UnlocalizedNumberRangeFormatter");
+  py::class_<UnlocalizedNumberRangeFormatter,
+             _UnlocalizedNumberRangeFormatterSettings, UMemory>
+      unrf(m2, "UnlocalizedNumberRangeFormatter");
 
   //
-  // icu::number::NumberRangeFormatter
+  // class icu::number::NumberRangeFormatter
   //
   py::class_<NumberRangeFormatter> nrf(m2, "NumberRangeFormatter");
 
   //
-  // icu::number::FormattedNumberRange
+  // class icu::number::FormattedNumberRange
   //
   fnr.def(py::init<>());
 
 #if (U_ICU_VERSION_MAJOR_NUM < 64)
   fnr.def(
       "append_to",
-      [](const FormattedNumberRange &self, Appendable &appendable) -> Appendable & {
+      [](const FormattedNumberRange &self,
+         Appendable &appendable) -> Appendable & {
         ErrorCode error_code;
         auto &result = self.appendTo(appendable, error_code);
         if (error_code.isFailure()) {
@@ -96,13 +106,15 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 #endif // (U_ICU_VERSION_MAJOR_NUM < 64)
 
   //
-  // icu::number::LocalizedNumberRangeFormatter
+  // class icu::number::LocalizedNumberRangeFormatter
   //
-  lnrf.def(py::init<>()).def(py::init<const LocalizedNumberRangeFormatter &>(), py::arg("other"));
+  lnrf.def(py::init<>())
+      .def(py::init<const LocalizedNumberRangeFormatter &>(), py::arg("other"));
 
   lnrf.def(
       "format_formattable_range",
-      [](const LocalizedNumberRangeFormatter &self, const Formattable &first, const Formattable &second) {
+      [](const LocalizedNumberRangeFormatter &self, const Formattable &first,
+         const Formattable &second) {
         ErrorCode error_code;
         auto result = self.formatFormattableRange(first, second, error_code);
         if (error_code.isFailure()) {
@@ -113,151 +125,174 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       py::arg("first"), py::arg("second"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
-  lnrf.def("without_locale", [](const LocalizedNumberRangeFormatter &self) { return self.withoutLocale(); });
+  lnrf.def("without_locale", [](const LocalizedNumberRangeFormatter &self) {
+    return self.withoutLocale();
+  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
   //
-  // icu::number::NumberRangeFormatter
+  // class icu::number::NumberRangeFormatter
   //
   nrf.def_static("with_", &NumberRangeFormatter::with);
 
   nrf.def_static(
       "with_locale",
-      [](const icupy::LocaleVariant &locale) { return NumberRangeFormatter::withLocale(icupy::to_locale(locale)); },
+      [](const icupy::LocaleVariant &locale) {
+        return NumberRangeFormatter::withLocale(icupy::to_locale(locale));
+      },
       py::arg("locale"));
 
   //
+  // class
   // icu::number::NumberRangeFormatterSettings<LocalizedNumberRangeFormatter>
   //
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  nrfs_lnrf.def("__copy__", [](const _LocalizedNumberRangeFormatterSettings &self) {
-    return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
-  });
+  nrfs_lnrf.def(
+      "__copy__", [](const _LocalizedNumberRangeFormatterSettings &self) {
+        return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
+      });
 
   nrfs_lnrf.def(
       "__deepcopy__",
-      [](const _LocalizedNumberRangeFormatterSettings &self, py::dict &) {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         py::dict & /* memo */) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       py::arg("memo"));
 
-  nrfs_lnrf.def("clone", [](const _LocalizedNumberRangeFormatterSettings &self) {
-    return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
-  });
+  nrfs_lnrf.def(
+      "clone", [](const _LocalizedNumberRangeFormatterSettings &self) {
+        return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
+      });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   nrfs_lnrf.def(
       "collapse",
-      [](const _LocalizedNumberRangeFormatterSettings &self, UNumberRangeCollapse collapse) {
-        return self.collapse(collapse);
-      },
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         UNumberRangeCollapse collapse) { return self.collapse(collapse); },
       py::arg("collapse"));
 
   nrfs_lnrf.def(
       "copy_error_to",
-      [](const _LocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) -> py::bool_ {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         ErrorCode &out_error_code) -> py::bool_ {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"));
 
   nrfs_lnrf.def(
       "identity_fallback",
-      [](const _LocalizedNumberRangeFormatterSettings &self, UNumberRangeIdentityFallback identity_fallback) {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         UNumberRangeIdentityFallback identity_fallback) {
         return self.identityFallback(identity_fallback);
       },
       py::arg("identity_fallback"));
 
   nrfs_lnrf.def(
       "number_formatter_both",
-      [](const _LocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter) {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter) {
         return self.numberFormatterBoth(formatter);
       },
       py::arg("formatter"));
 
   nrfs_lnrf.def(
       "number_formatter_first",
-      [](const _LocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter_first) {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter_first) {
         return self.numberFormatterFirst(formatter_first);
       },
       py::arg("formatter_first"));
 
   nrfs_lnrf.def(
       "number_formatter_second",
-      [](const _LocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter_second) {
+      [](const _LocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter_second) {
         return self.numberFormatterSecond(formatter_second);
       },
       py::arg("formatter_second"));
 
   //
+  // class
   // icu::number::NumberRangeFormatterSettings<UnlocalizedNumberRangeFormatter>
   //
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  nrfs_unrf.def("__copy__", [](const _UnlocalizedNumberRangeFormatterSettings &self) {
-    return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
-  });
+  nrfs_unrf.def(
+      "__copy__", [](const _UnlocalizedNumberRangeFormatterSettings &self) {
+        return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
+      });
 
   nrfs_unrf.def(
       "__deepcopy__",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, py::dict &) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         py::dict & /* memo */) {
         return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
       },
       py::arg("memo"));
 
-  nrfs_unrf.def("clone", [](const _UnlocalizedNumberRangeFormatterSettings &self) {
-    return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
-  });
+  nrfs_unrf.def(
+      "clone", [](const _UnlocalizedNumberRangeFormatterSettings &self) {
+        return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
+      });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   nrfs_unrf.def(
       "collapse",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, UNumberRangeCollapse collapse) {
-        return self.collapse(collapse);
-      },
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         UNumberRangeCollapse collapse) { return self.collapse(collapse); },
       py::arg("collapse"));
 
   nrfs_unrf.def(
       "copy_error_to",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, ErrorCode &out_error_code) -> py::bool_ {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         ErrorCode &out_error_code) -> py::bool_ {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"));
 
   nrfs_unrf.def(
       "identity_fallback",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, UNumberRangeIdentityFallback identity_fallback) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         UNumberRangeIdentityFallback identity_fallback) {
         return self.identityFallback(identity_fallback);
       },
       py::arg("identity_fallback"));
 
   nrfs_unrf.def(
       "number_formatter_both",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter) {
         return self.numberFormatterBoth(formatter);
       },
       py::arg("formatter"));
 
   nrfs_unrf.def(
       "number_formatter_first",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter_first) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter_first) {
         return self.numberFormatterFirst(formatter_first);
       },
       py::arg("formatter_first"));
 
   nrfs_unrf.def(
       "number_formatter_second",
-      [](const _UnlocalizedNumberRangeFormatterSettings &self, const UnlocalizedNumberFormatter &formatter_second) {
+      [](const _UnlocalizedNumberRangeFormatterSettings &self,
+         const UnlocalizedNumberFormatter &formatter_second) {
         return self.numberFormatterSecond(formatter_second);
       },
       py::arg("formatter_second"));
 
   //
-  // icu::number::UnlocalizedNumberRangeFormatter
+  // class icu::number::UnlocalizedNumberRangeFormatter
   //
-  unrf.def(py::init<>()).def(py::init<const UnlocalizedNumberRangeFormatter &>(), py::arg("other"));
+  unrf.def(py::init<>())
+      .def(py::init<const UnlocalizedNumberRangeFormatter &>(),
+           py::arg("other"));
 
   unrf.def(
       "locale",
-      [](const UnlocalizedNumberRangeFormatter &self, const icupy::LocaleVariant &locale) {
+      [](const UnlocalizedNumberRangeFormatter &self,
+         const icupy::LocaleVariant &locale) {
         return self.locale(icupy::to_locale(locale));
       },
       py::arg("locale"));

@@ -7,9 +7,11 @@
 class _ConstUCharsetMatchPtr {
 public:
   _ConstUCharsetMatchPtr(const UCharsetMatch *p);
+
   ~_ConstUCharsetMatchPtr();
 
   const UCharsetMatch *get() const;
+
   operator const UCharsetMatch *() const { return get(); }
 
 private:
@@ -20,9 +22,11 @@ private:
 class _UCharsetDetectorPtr {
 public:
   _UCharsetDetectorPtr(UCharsetDetector *p);
+
   ~_UCharsetDetectorPtr();
 
   UCharsetDetector *get() const;
+
   operator UCharsetDetector *() const { return get(); }
 
   void set_source(std::unique_ptr<std::string> &source);

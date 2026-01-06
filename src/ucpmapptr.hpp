@@ -9,9 +9,11 @@
 class _ConstUCPMapPtr {
 public:
   _ConstUCPMapPtr(const UCPMap *p);
+
   ~_ConstUCPMapPtr();
 
   const UCPMap *get() const;
+
   operator const UCPMap *() const { return get(); }
 
 private:
@@ -22,14 +24,18 @@ private:
 class _UCPMapValueFilterPtr {
 public:
   _UCPMapValueFilterPtr(std::nullptr_t filter);
+
   _UCPMapValueFilterPtr(const py::function &filter);
+
   ~_UCPMapValueFilterPtr();
 
   static uint32_t filter(const void *context, uint32_t value);
 
   template <typename T> T get() const { return std::get<T>(action_); };
 
-  bool has_value() const { return !action_.valueless_by_exception() && action_.index() != 0; };
+  bool has_value() const {
+    return !action_.valueless_by_exception() && action_.index() != 0;
+  };
 
 private:
   _UCPMapValueFilterPtr() = delete;

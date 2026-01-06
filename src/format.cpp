@@ -7,28 +7,33 @@ using namespace icu;
 
 void init_format(py::module &m) {
   //
-  // icu::Format
+  // class icu::Format
   //
   py::class_<Format, UObject> fmt(m, "Format");
 
   fmt.def("__copy__", &Format::clone);
 
-  fmt.def("__deepcopy__", [](const Format &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fmt.def(
+      "__deepcopy__",
+      [](const Format &self, py::dict & /* memo */) { return self.clone(); },
+      py::arg("memo"));
 
   fmt.def(
-      "__eq__", [](const Format &self, const Format &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Format &self, const Format &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
   fmt.def(
-      "__ne__", [](const Format &self, const Format &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Format &self, const Format &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   fmt.def("clone", &Format::clone);
 
   fmt.def(
          "format",
-         [](const Format &self, const Formattable &obj, UnicodeString &append_to,
-            FieldPosition &pos) -> UnicodeString & {
+         [](const Format &self, const Formattable &obj,
+            UnicodeString &append_to, FieldPosition &pos) -> UnicodeString & {
            ErrorCode error_code;
            auto &result = self.format(obj, append_to, pos, error_code);
            if (error_code.isFailure()) {
@@ -39,10 +44,13 @@ void init_format(py::module &m) {
          py::arg("obj"), py::arg("append_to"), py::arg("pos"))
       .def(
           "format",
-          [](const Format &self, const Formattable &obj, UnicodeString &append_to,
-             std::optional<FieldPositionIterator *> &pos_iter) -> UnicodeString & {
+          [](const Format &self, const Formattable &obj,
+             UnicodeString &append_to,
+             std::optional<FieldPositionIterator *> &pos_iter)
+              -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(obj, append_to, pos_iter.value_or(nullptr), error_code);
+            auto &result = self.format(obj, append_to,
+                                       pos_iter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -51,7 +59,8 @@ void init_format(py::module &m) {
           py::arg("obj"), py::arg("append_to"), py::arg("pos_iter"))
       .def(
           "format",
-          [](const Format &self, const Formattable &obj, UnicodeString &append_to) -> UnicodeString & {
+          [](const Format &self, const Formattable &obj,
+             UnicodeString &append_to) -> UnicodeString & {
             ErrorCode error_code;
             auto &result = self.format(obj, append_to, error_code);
             if (error_code.isFailure()) {
@@ -75,12 +84,15 @@ void init_format(py::module &m) {
 
   fmt.def(
          "parse_object",
-         [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result,
-            ParsePosition &parse_pos) { self.parseObject(icupy::to_unistr(source), result, parse_pos); },
+         [](const Format &self, const icupy::UnicodeStringVariant &source,
+            Formattable &result, ParsePosition &parse_pos) {
+           self.parseObject(icupy::to_unistr(source), result, parse_pos);
+         },
          py::arg("source"), py::arg("result"), py::arg("parse_pos"))
       .def(
           "parse_object",
-          [](const Format &self, const icupy::UnicodeStringVariant &source, Formattable &result) {
+          [](const Format &self, const icupy::UnicodeStringVariant &source,
+             Formattable &result) {
             ErrorCode error_code;
             self.parseObject(icupy::to_unistr(source), result, error_code);
             if (error_code.isFailure()) {

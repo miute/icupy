@@ -5,14 +5,17 @@ using namespace icu;
 
 void init_errorcode(py::module &m) {
   //
-  // icu::ErrorCode
+  // class icu::ErrorCode
   //
   py::class_<ErrorCode, UMemory> ec(m, "ErrorCode");
 
   ec.def(py::init<>());
 
   ec.def(
-      "__eq__", [](const ErrorCode &self, UErrorCode error_code) { return self.get() == error_code; },
+      "__eq__",
+      [](const ErrorCode &self, UErrorCode error_code) {
+        return self.get() == error_code;
+      },
       py::is_operator(), py::arg("other"));
 
   ec.def("__repr__", [](const ErrorCode &self) {
@@ -30,9 +33,11 @@ void init_errorcode(py::module &m) {
 
   ec.def("get", &ErrorCode::get);
 
-  ec.def("is_failure", [](const ErrorCode &self) -> py::bool_ { return self.isFailure(); });
+  ec.def("is_failure",
+         [](const ErrorCode &self) -> py::bool_ { return self.isFailure(); });
 
-  ec.def("is_success", [](const ErrorCode &self) -> py::bool_ { return self.isSuccess(); });
+  ec.def("is_success",
+         [](const ErrorCode &self) -> py::bool_ { return self.isSuccess(); });
 
   ec.def("reset", &ErrorCode::reset);
 

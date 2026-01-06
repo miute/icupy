@@ -8,7 +8,7 @@ using namespace icu;
 
 void init_sortkey(py::module &m) {
   //
-  // icu::CollationKey
+  // class icu::CollationKey
   //
   py::class_<CollationKey, UObject> ck(m, "CollationKey");
 
@@ -18,20 +18,27 @@ void init_sortkey(py::module &m) {
              if (count == -1) {
                count = static_cast<int32_t>(info.size);
              }
-             return std::make_unique<CollationKey>(reinterpret_cast<uint8_t *>(info.ptr), count);
+             return std::make_unique<CollationKey>(
+                 reinterpret_cast<uint8_t *>(info.ptr), count);
            }),
            py::arg("values"), py::arg("count") = -1)
       .def(py::init<CollationKey &>(), py::arg("other"));
 
   ck.def(
-      "__eq__", [](const CollationKey &self, const CollationKey &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const CollationKey &self, const CollationKey &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   ck.def("__hash__", &CollationKey::hashCode);
 
   ck.def(
-      "__ne__", [](const CollationKey &self, const CollationKey &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const CollationKey &self, const CollationKey &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   ck.def(
       "compare_to",
@@ -46,12 +53,13 @@ void init_sortkey(py::module &m) {
       py::arg("target"));
 
   ck.def("get_byte_array", [](const CollationKey &self) {
-    int32_t count = 0;
+    int32_t count;
     auto p = self.getByteArray(count);
     return py::bytes(reinterpret_cast<const char *>(p), count);
   });
 
   ck.def("hash_code", &CollationKey::hashCode);
 
-  ck.def("is_bogus", [](const CollationKey &self) -> py::bool_ { return self.isBogus(); });
+  ck.def("is_bogus",
+         [](const CollationKey &self) -> py::bool_ { return self.isBogus(); });
 }

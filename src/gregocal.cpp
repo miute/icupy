@@ -11,17 +11,19 @@ using namespace icu;
 
 void init_gregocal(py::module &m) {
   //
-  // icu::Calendar
+  // class icu::Calendar
   //
   py::class_<Calendar, UObject> cal(m, "Calendar");
 
   cal.def(
-      "__eq__", [](const Calendar &self, const Calendar &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Calendar &self, const Calendar &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
   cal.def(
-      "__ne__", [](const Calendar &self, const Calendar &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Calendar &self, const Calendar &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   cal.def(
       "add",
@@ -37,9 +39,12 @@ void init_gregocal(py::module &m) {
   // FIXME: Implement "void icu::Calendar::adoptTimeZone(TimeZone *value)".
   /*
   cal.def(
-      "adopt_time_zone", [](Calendar &self, TimeZone *value) { self.adoptTimeZone(value ? value->clone() : nullptr); },
+      "adopt_time_zone",
+      [](Calendar &self, TimeZone *value) {
+        self.adoptTimeZone(value ? value->clone() : nullptr);
+      },
       py::arg("value"));
-  */
+   */
 
   cal.def(
       "after",
@@ -65,7 +70,8 @@ void init_gregocal(py::module &m) {
       },
       py::arg("when"));
 
-  cal.def("clear", py::overload_cast<UCalendarDateFields>(&Calendar::clear), py::arg("field"))
+  cal.def("clear", py::overload_cast<UCalendarDateFields>(&Calendar::clear),
+          py::arg("field"))
       .def("clear", py::overload_cast<>(&Calendar::clear));
 
   cal.def("clone", &Calendar::clone);
@@ -74,7 +80,8 @@ void init_gregocal(py::module &m) {
          "create_instance",
          [](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = Calendar::createInstance(icupy::to_locale(locale), error_code);
+           auto result =
+               Calendar::createInstance(icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -85,7 +92,8 @@ void init_gregocal(py::module &m) {
           "create_instance",
           [](const TimeZone &zone, const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = Calendar::createInstance(zone, icupy::to_locale(locale), error_code);
+            auto result = Calendar::createInstance(
+                zone, icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -206,15 +214,18 @@ void init_gregocal(py::module &m) {
     return result;
   });
 
-  cal.def("get_greatest_minimum", py::overload_cast<UCalendarDateFields>(&Calendar::getGreatestMinimum, py::const_),
+  cal.def("get_greatest_minimum",
+          py::overload_cast<UCalendarDateFields>(&Calendar::getGreatestMinimum,
+                                                 py::const_),
           py::arg("field"));
 
   cal.def_static(
       "get_keyword_values_for_locale",
-      [](const std::string &key, const icupy::LocaleVariant &locale, py::bool_ commonly_used) {
+      [](const std::string &key, const icupy::LocaleVariant &locale,
+         py::bool_ commonly_used) {
         ErrorCode error_code;
-        auto result =
-            Calendar::getKeywordValuesForLocale(key.data(), icupy::to_locale(locale), commonly_used, error_code);
+        auto result = Calendar::getKeywordValuesForLocale(
+            key.data(), icupy::to_locale(locale), commonly_used, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -222,7 +233,9 @@ void init_gregocal(py::module &m) {
       },
       py::arg("key"), py::arg("locale"), py::arg("commonly_used"));
 
-  cal.def("get_least_maximum", py::overload_cast<UCalendarDateFields>(&Calendar::getLeastMaximum, py::const_),
+  cal.def("get_least_maximum",
+          py::overload_cast<UCalendarDateFields>(&Calendar::getLeastMaximum,
+                                                 py::const_),
           py::arg("field"));
 
   cal.def(
@@ -237,16 +250,24 @@ void init_gregocal(py::module &m) {
       },
       py::arg("type_"));
 
-  cal.def("get_maximum", py::overload_cast<UCalendarDateFields>(&Calendar::getMaximum, py::const_), py::arg("field"));
+  cal.def(
+      "get_maximum",
+      py::overload_cast<UCalendarDateFields>(&Calendar::getMaximum, py::const_),
+      py::arg("field"));
 
-  cal.def("get_minimal_days_in_first_week", &Calendar::getMinimalDaysInFirstWeek);
+  cal.def("get_minimal_days_in_first_week",
+          &Calendar::getMinimalDaysInFirstWeek);
 
-  cal.def("get_minimum", py::overload_cast<UCalendarDateFields>(&Calendar::getMinimum, py::const_), py::arg("field"));
+  cal.def(
+      "get_minimum",
+      py::overload_cast<UCalendarDateFields>(&Calendar::getMinimum, py::const_),
+      py::arg("field"));
 
   cal.def_static("get_now", &Calendar::getNow);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  cal.def("get_repeated_wall_time_option", &Calendar::getRepeatedWallTimeOption);
+  cal.def("get_repeated_wall_time_option",
+          &Calendar::getRepeatedWallTimeOption);
 
   cal.def("get_skipped_wall_time_option", &Calendar::getSkippedWallTimeOption);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
@@ -273,7 +294,8 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "get_time_zone",
-      [](const Calendar &self) -> std::variant<const BasicTimeZone *, const TimeZone *> {
+      [](const Calendar &self)
+          -> std::variant<const BasicTimeZone *, const TimeZone *> {
         auto tz = &self.getTimeZone();
         auto btz = dynamic_cast<const BasicTimeZone *>(tz);
         if (btz) {
@@ -321,13 +343,19 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "is_equivalent_to",
-      [](const Calendar &self, const Calendar &other) -> py::bool_ { return self.isEquivalentTo(other); },
+      [](const Calendar &self, const Calendar &other) -> py::bool_ {
+        return self.isEquivalentTo(other);
+      },
       py::arg("other"));
 
-  cal.def("is_lenient", [](const Calendar &self) -> py::bool_ { return self.isLenient(); });
+  cal.def("is_lenient",
+          [](const Calendar &self) -> py::bool_ { return self.isLenient(); });
 
   cal.def(
-      "is_set", [](const Calendar &self, UCalendarDateFields field) -> py::bool_ { return self.isSet(field); },
+      "is_set",
+      [](const Calendar &self, UCalendarDateFields field) -> py::bool_ {
+        return self.isSet(field);
+      },
       py::arg("field"));
 
   cal.def(
@@ -341,16 +369,18 @@ void init_gregocal(py::module &m) {
            return result;
          },
          py::arg("date"))
-      .def("is_weekend", [](const Calendar &self) -> py::bool_ { return self.isWeekend(); });
+      .def("is_weekend",
+           [](const Calendar &self) -> py::bool_ { return self.isWeekend(); });
 
-  cal.def("orphan_time_zone", [](Calendar &self) -> std::variant<BasicTimeZone *, TimeZone *> {
-    auto tz = self.orphanTimeZone();
-    auto btz = dynamic_cast<BasicTimeZone *>(tz);
-    if (btz) {
-      return btz;
-    }
-    return tz;
-  });
+  cal.def("orphan_time_zone",
+          [](Calendar &self) -> std::variant<BasicTimeZone *, TimeZone *> {
+            auto tz = self.orphanTimeZone();
+            auto btz = dynamic_cast<BasicTimeZone *>(tz);
+            if (btz) {
+              return btz;
+            }
+            return tz;
+          });
 
   cal.def(
       "roll",
@@ -363,25 +393,40 @@ void init_gregocal(py::module &m) {
       },
       py::arg("field"), py::arg("amount"));
 
-  cal.def("set", py::overload_cast<int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"), py::arg("month"),
-          py::arg("date"))
-      .def("set", py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t>(&Calendar::set), py::arg("year"),
-           py::arg("month"), py::arg("date"), py::arg("hour"), py::arg("minute"))
-      .def("set", py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t, int32_t>(&Calendar::set),
-           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"), py::arg("minute"), py::arg("second"))
-      .def("set", py::overload_cast<UCalendarDateFields, int32_t>(&Calendar::set), py::arg("field"), py::arg("value"));
+  cal.def("set", py::overload_cast<int32_t, int32_t, int32_t>(&Calendar::set),
+          py::arg("year"), py::arg("month"), py::arg("date"))
+      .def("set",
+           py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t>(
+               &Calendar::set),
+           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"),
+           py::arg("minute"))
+      .def("set",
+           py::overload_cast<int32_t, int32_t, int32_t, int32_t, int32_t,
+                             int32_t>(&Calendar::set),
+           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"),
+           py::arg("minute"), py::arg("second"))
+      .def("set",
+           py::overload_cast<UCalendarDateFields, int32_t>(&Calendar::set),
+           py::arg("field"), py::arg("value"));
 
-  cal.def("set_first_day_of_week", py::overload_cast<UCalendarDaysOfWeek>(&Calendar::setFirstDayOfWeek),
+  cal.def("set_first_day_of_week",
+          py::overload_cast<UCalendarDaysOfWeek>(&Calendar::setFirstDayOfWeek),
           py::arg("value"));
 
-  cal.def("set_lenient", [](Calendar &self, py::bool_ lenient) { self.setLenient(lenient); }, py::arg("lenient"));
+  cal.def(
+      "set_lenient",
+      [](Calendar &self, py::bool_ lenient) { self.setLenient(lenient); },
+      py::arg("lenient"));
 
-  cal.def("set_minimal_days_in_first_week", &Calendar::setMinimalDaysInFirstWeek, py::arg("value"));
+  cal.def("set_minimal_days_in_first_week",
+          &Calendar::setMinimalDaysInFirstWeek, py::arg("value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  cal.def("set_repeated_wall_time_option", &Calendar::setRepeatedWallTimeOption, py::arg("option"));
+  cal.def("set_repeated_wall_time_option", &Calendar::setRepeatedWallTimeOption,
+          py::arg("option"));
 
-  cal.def("set_skipped_wall_time_option", &Calendar::setSkippedWallTimeOption, py::arg("option"));
+  cal.def("set_skipped_wall_time_option", &Calendar::setSkippedWallTimeOption,
+          py::arg("option"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
@@ -411,21 +456,22 @@ void init_gregocal(py::module &m) {
   cal.def("set_time_zone", &Calendar::setTimeZone, py::arg("zone"));
 
   //
-  // icu::GregorianCalendar
+  // class icu::GregorianCalendar
   //
   py::class_<GregorianCalendar, Calendar> gc(m, "GregorianCalendar");
 
   //
-  // icu::GregorianCalendar::EEras
+  // enum icu::GregorianCalendar::EEras
   //
-  py::enum_<GregorianCalendar::EEras>(gc, "EEras", py::arithmetic(),
-                                      "Useful constants for *GregorianCalendar* and *TimeZone*.")
+  py::enum_<GregorianCalendar::EEras>(
+      gc, "EEras", py::arithmetic(),
+      "Useful constants for *GregorianCalendar* and *TimeZone*.")
       .value("BC", GregorianCalendar::EEras::BC)
       .value("AD", GregorianCalendar::EEras::AD)
       .export_values();
 
   //
-  // icu::GregorianCalendar
+  // class icu::GregorianCalendar
   //
   gc.def(py::init([]() {
       ErrorCode error_code;
@@ -437,7 +483,8 @@ void init_gregocal(py::module &m) {
     }))
       .def(py::init([](const TimeZone &zone) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(zone, error_code);
+             auto result =
+                 std::make_unique<GregorianCalendar>(zone, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
@@ -446,54 +493,69 @@ void init_gregocal(py::module &m) {
            py::arg("zone"))
       .def(py::init([](const icupy::LocaleVariant &locale) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(icupy::to_locale(locale), error_code);
+             auto result = std::make_unique<GregorianCalendar>(
+                 icupy::to_locale(locale), error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
            py::arg("locale"))
-      .def(py::init([](const TimeZone &zone, const icupy::LocaleVariant &locale) {
-             ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(zone, icupy::to_locale(locale), error_code);
-             if (error_code.isFailure()) {
-               throw icupy::ICUError(error_code);
-             }
-             return result;
-           }),
+      .def(py::init(
+               [](const TimeZone &zone, const icupy::LocaleVariant &locale) {
+                 ErrorCode error_code;
+                 auto result = std::make_unique<GregorianCalendar>(
+                     zone, icupy::to_locale(locale), error_code);
+                 if (error_code.isFailure()) {
+                   throw icupy::ICUError(error_code);
+                 }
+                 return result;
+               }),
            py::arg("zone"), py::arg("locale"))
       .def(py::init([](int32_t year, int32_t month, int32_t date) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(year, month, date, error_code);
+             auto result = std::make_unique<GregorianCalendar>(
+                 year, month, date, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
            py::arg("year"), py::arg("month"), py::arg("date"))
-      .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour, int32_t minute) {
+      .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour,
+                       int32_t minute) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, error_code);
+             auto result = std::make_unique<GregorianCalendar>(
+                 year, month, date, hour, minute, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"), py::arg("minute"))
-      .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour, int32_t minute, int32_t second) {
+           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"),
+           py::arg("minute"))
+      .def(py::init([](int32_t year, int32_t month, int32_t date, int32_t hour,
+                       int32_t minute, int32_t second) {
              ErrorCode error_code;
-             auto result = std::make_unique<GregorianCalendar>(year, month, date, hour, minute, second, error_code);
+             auto result = std::make_unique<GregorianCalendar>(
+                 year, month, date, hour, minute, second, error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
              return result;
            }),
-           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"), py::arg("minute"), py::arg("second"))
+           py::arg("year"), py::arg("month"), py::arg("date"), py::arg("hour"),
+           py::arg("minute"), py::arg("second"))
       .def(py::init<const GregorianCalendar &>(), py::arg("other"));
 
   gc.def("__copy__", &GregorianCalendar::clone);
 
-  gc.def("__deepcopy__", [](const GregorianCalendar &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  gc.def(
+      "__deepcopy__",
+      [](const GregorianCalendar &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   gc.def("__repr__", [](const Calendar &self) {
     std::stringstream ss;
@@ -513,7 +575,10 @@ void init_gregocal(py::module &m) {
   gc.def("get_gregorian_change", &GregorianCalendar::getGregorianChange);
 
   gc.def(
-      "is_leap_year", [](const GregorianCalendar &self, int32_t year) -> py::bool_ { return self.isLeapYear(year); },
+      "is_leap_year",
+      [](const GregorianCalendar &self, int32_t year) -> py::bool_ {
+        return self.isLeapYear(year);
+      },
       py::arg("year"));
 
   gc.def(

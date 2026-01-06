@@ -14,9 +14,11 @@
 class _UConverterPtr {
 public:
   _UConverterPtr(UConverter *p);
+
   ~_UConverterPtr();
 
   UConverter *get() const;
+
   operator UConverter *() const { return get(); }
 
 private:
@@ -27,11 +29,15 @@ private:
 class _UConverterFromUCallbackPtr {
 public:
   _UConverterFromUCallbackPtr(UConverterFromUCallback action);
+
   _UConverterFromUCallbackPtr(const py::function &action);
+
   ~_UConverterFromUCallbackPtr();
 
-  static void callback(const void *context, UConverterFromUnicodeArgs *args, const UChar *code_units, int32_t length,
-                       UChar32 code_point, UConverterCallbackReason reason, UErrorCode *error_code);
+  static void callback(const void *context, UConverterFromUnicodeArgs *args,
+                       const UChar *code_units, int32_t length,
+                       UChar32 code_point, UConverterCallbackReason reason,
+                       UErrorCode *error_code);
 
   template <typename T> T get() const { return std::get<T>(action_); };
 
@@ -47,10 +53,13 @@ private:
 class _UConverterToUCallbackPtr {
 public:
   _UConverterToUCallbackPtr(UConverterToUCallback action);
+
   _UConverterToUCallbackPtr(const py::function &action);
+
   ~_UConverterToUCallbackPtr();
 
-  static void callback(const void *context, UConverterToUnicodeArgs *args, const char *code_units, int32_t length,
+  static void callback(const void *context, UConverterToUnicodeArgs *args,
+                       const char *code_units, int32_t length,
                        UConverterCallbackReason reason, UErrorCode *error_code);
 
   template <typename T> T get() const { return std::get<T>(action_); };

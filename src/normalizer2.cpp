@@ -11,13 +11,14 @@ using namespace icu;
 
 void init_normalizer2(py::module &m) {
   //
-  // icu::Normalizer2
+  // class icu::Normalizer2
   //
   py::class_<Normalizer2, UObject> n2(m, "Normalizer2");
 
   n2.def(
       "append",
-      [](const Normalizer2 &self, UnicodeString &first, const icupy::UnicodeStringVariant &second) -> UnicodeString & {
+      [](const Normalizer2 &self, UnicodeString &first,
+         const icupy::UnicodeStringVariant &second) -> UnicodeString & {
         ErrorCode error_code;
         auto &result = self.append(first, icupy::to_unistr(second), error_code);
         if (error_code.isFailure()) {
@@ -33,20 +34,24 @@ void init_normalizer2(py::module &m) {
   n2.def("get_combining_class", &Normalizer2::getCombiningClass, py::arg("c"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
-  n2.def("get_decomposition", &Normalizer2::getDecomposition, py::arg("c"), py::arg("decomposition"));
+  n2.def("get_decomposition", &Normalizer2::getDecomposition, py::arg("c"),
+         py::arg("decomposition"));
 
   n2.def_static(
       "get_instance",
-      [](std::optional<const std::string> &package_name, const std::string &name, UNormalization2Mode mode) {
+      [](std::optional<const std::string> &package_name,
+         const std::string &name, UNormalization2Mode mode) {
         ErrorCode error_code;
-        auto result =
-            Normalizer2::getInstance(package_name ? package_name->data() : nullptr, name.data(), mode, error_code);
+        auto result = Normalizer2::getInstance(
+            package_name ? package_name->data() : nullptr, name.data(), mode,
+            error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::return_value_policy::reference, py::arg("package_name"), py::arg("name"), py::arg("mode"));
+      py::return_value_policy::reference, py::arg("package_name"),
+      py::arg("name"), py::arg("mode"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   n2.def_static(
@@ -123,7 +128,8 @@ void init_normalizer2(py::module &m) {
       },
       py::return_value_policy::reference);
 
-  n2.def("get_raw_decomposition", &Normalizer2::getRawDecomposition, py::arg("c"), py::arg("decomposition"));
+  n2.def("get_raw_decomposition", &Normalizer2::getRawDecomposition,
+         py::arg("c"), py::arg("decomposition"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
   n2.def("has_boundary_after", &Normalizer2::hasBoundaryAfter, py::arg("c"));
@@ -171,9 +177,11 @@ void init_normalizer2(py::module &m) {
         py::arg("src"))
       .def(
           "normalize",
-          [](const Normalizer2 &self, const icupy::UnicodeStringVariant &src, UnicodeString &dest) -> UnicodeString & {
+          [](const Normalizer2 &self, const icupy::UnicodeStringVariant &src,
+             UnicodeString &dest) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.normalize(icupy::to_unistr(src), dest, error_code);
+            auto &result =
+                self.normalize(icupy::to_unistr(src), dest, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -183,9 +191,11 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "normalize_second_and_append",
-      [](const Normalizer2 &self, UnicodeString &first, const icupy::UnicodeStringVariant &second) -> UnicodeString & {
+      [](const Normalizer2 &self, UnicodeString &first,
+         const icupy::UnicodeStringVariant &second) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.normalizeSecondAndAppend(first, icupy::to_unistr(second), error_code);
+        auto &result = self.normalizeSecondAndAppend(
+            first, icupy::to_unistr(second), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -196,11 +206,13 @@ void init_normalizer2(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   n2.def(
       "normalize_utf8",
-      [](const Normalizer2 &self, uint32_t options, const py::bytes &src, std::optional<Edits *> &edits) {
+      [](const Normalizer2 &self, uint32_t options, const py::bytes &src,
+         std::optional<Edits *> &edits) {
         std::string dest;
         auto sink = StringByteSink<std::string>(&dest);
         ErrorCode error_code;
-        self.normalizeUTF8(options, StringPiece(src), sink, edits.value_or(nullptr), error_code);
+        self.normalizeUTF8(options, StringPiece(src), sink,
+                           edits.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -234,9 +246,10 @@ void init_normalizer2(py::module &m) {
       py::arg("s"));
 
   //
-  // icu::FilteredNormalizer2
+  // class icu::FilteredNormalizer2
   //
   py::class_<FilteredNormalizer2, Normalizer2> fn2(m, "FilteredNormalizer2");
 
-  fn2.def(py::init<const Normalizer2 &, const UnicodeSet &>(), py::arg("n2"), py::arg("filter_set"));
+  fn2.def(py::init<const Normalizer2 &, const UnicodeSet &>(), py::arg("n2"),
+          py::arg("filter_set"));
 }

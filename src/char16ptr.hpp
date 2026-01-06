@@ -6,6 +6,7 @@
 class _ConstChar16Ptr {
 public:
   _ConstChar16Ptr(const char16_t *p, int32_t length, int32_t capacity);
+
   ~_ConstChar16Ptr();
 
   const char16_t *get() const;

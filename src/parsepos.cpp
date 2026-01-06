@@ -7,7 +7,7 @@ using namespace icu;
 
 void init_parsepos(py::module &m) {
   //
-  // icu::ParsePosition
+  // class icu::ParsePosition
   //
   py::class_<ParsePosition, UObject> pp(m, "ParsePosition");
 
@@ -17,15 +17,26 @@ void init_parsepos(py::module &m) {
 
   pp.def("__copy__", &ParsePosition::clone);
 
-  pp.def("__deepcopy__", [](const ParsePosition &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  pp.def(
+      "__deepcopy__",
+      [](const ParsePosition &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   pp.def(
-      "__eq__", [](const ParsePosition &self, const ParsePosition &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const ParsePosition &self, const ParsePosition &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   pp.def(
-      "__ne__", [](const ParsePosition &self, const ParsePosition &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const ParsePosition &self, const ParsePosition &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   pp.def("__repr__", [](const ParsePosition &self) {
     std::stringstream ss;

@@ -17,7 +17,7 @@ using namespace icu;
 
 void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
   //
-  // icu::PluralRules
+  // class icu::PluralRules
   //
   /*
   pr.def(py::init([]() {
@@ -33,15 +33,26 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def("__copy__", py::overload_cast<>(&PluralRules::clone, py::const_));
 
-  pr.def("__deepcopy__", [](const PluralRules &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  pr.def(
+      "__deepcopy__",
+      [](const PluralRules &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   pr.def(
-      "__eq__", [](const PluralRules &self, const PluralRules &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const PluralRules &self, const PluralRules &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   pr.def(
-      "__ne__", [](const PluralRules &self, const PluralRules &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const PluralRules &self, const PluralRules &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   pr.def("clone", py::overload_cast<>(&PluralRules::clone, py::const_));
 
@@ -58,7 +69,8 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
       "create_rules",
       [](const icupy::UnicodeStringVariant &description) {
         ErrorCode error_code;
-        auto result = PluralRules::createRules(icupy::to_unistr(description), error_code);
+        auto result =
+            PluralRules::createRules(icupy::to_unistr(description), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -70,7 +82,8 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
         "for_locale",
         [](const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = PluralRules::forLocale(icupy::to_locale(locale), error_code);
+          auto result =
+              PluralRules::forLocale(icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -82,7 +95,8 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
           "for_locale",
           [](const icupy::LocaleVariant &locale, UPluralType type) {
             ErrorCode error_code;
-            auto result = PluralRules::forLocale(icupy::to_locale(locale), type, error_code);
+            auto result = PluralRules::forLocale(icupy::to_locale(locale), type,
+                                                 error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -105,10 +119,12 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def(
       "get_samples",
-      [](PluralRules &self, const icupy::UnicodeStringVariant &keyword, int32_t dest_capacity) {
+      [](PluralRules &self, const icupy::UnicodeStringVariant &keyword,
+         int32_t dest_capacity) {
+        std::vector<double> result(dest_capacity, 0.0);
         ErrorCode error_code;
-        std::vector<double> result(dest_capacity);
-        auto count = self.getSamples(icupy::to_unistr(keyword), result.data(), dest_capacity, error_code);
+        auto count = self.getSamples(icupy::to_unistr(keyword), result.data(),
+                                     dest_capacity, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -119,9 +135,8 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
 
   pr.def(
       "is_keyword",
-      [](const PluralRules &self, const icupy::UnicodeStringVariant &keyword) -> py::bool_ {
-        return self.isKeyword(icupy::to_unistr(keyword));
-      },
+      [](const PluralRules &self, const icupy::UnicodeStringVariant &keyword)
+          -> py::bool_ { return self.isKeyword(icupy::to_unistr(keyword)); },
       py::arg("keyword"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -152,6 +167,9 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
       py::arg("number"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
-  pr.def("select", py::overload_cast<double>(&PluralRules::select, py::const_), py::arg("number").noconvert())
-      .def("select", py::overload_cast<int32_t>(&PluralRules::select, py::const_), py::arg("number"));
+  pr.def("select", py::overload_cast<double>(&PluralRules::select, py::const_),
+         py::arg("number").noconvert())
+      .def("select",
+           py::overload_cast<int32_t>(&PluralRules::select, py::const_),
+           py::arg("number"));
 }

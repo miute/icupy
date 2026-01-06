@@ -9,33 +9,40 @@ using namespace icu;
 
 void init_measure(py::module &m) {
   //
-  // icu::Measure
+  // class icu::Measure
   //
   py::class_<Measure, UObject> meas(m, "Measure");
 
-  meas.def(py::init([](const Formattable &number, const MeasureUnit *adopted_unit) {
-             ErrorCode error_code;
-             auto result = std::make_unique<Measure>(number, adopted_unit->clone(), error_code);
-             if (error_code.isFailure()) {
-               throw icupy::ICUError(error_code);
-             }
-             return result;
-           }),
+  meas.def(py::init(
+               [](const Formattable &number, const MeasureUnit *adopted_unit) {
+                 ErrorCode error_code;
+                 auto result = std::make_unique<Measure>(
+                     number, adopted_unit->clone(), error_code);
+                 if (error_code.isFailure()) {
+                   throw icupy::ICUError(error_code);
+                 }
+                 return result;
+               }),
            py::arg("number"), py::arg("adopted_unit").none(false))
       .def(py::init<const Measure &>(), py::arg("other"));
 
   meas.def("__copy__", &Measure::clone);
 
-  meas.def("__deepcopy__", [](const Measure &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  meas.def(
+      "__deepcopy__",
+      [](const Measure &self, py::dict & /* memo */) { return self.clone(); },
+      py::arg("memo"));
 
   meas.def(
-      "__eq__", [](const Measure &self, const UObject &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Measure &self, const UObject &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 74)
   meas.def(
-      "__ne__", [](const Measure &self, const UObject &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Measure &self, const UObject &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 
   meas.def("clone", &Measure::clone);
@@ -45,22 +52,25 @@ void init_measure(py::module &m) {
   meas.def("get_unit", &Measure::getUnit);
 
   //
-  // icu::CurrencyAmount
+  // class icu::CurrencyAmount
   //
   py::class_<CurrencyAmount, Measure> ca(m, "CurrencyAmount");
 
-  ca.def(py::init([](const Formattable &amount, const std::u16string &iso_code) {
-           ErrorCode error_code;
-           auto result = std::make_unique<CurrencyAmount>(amount, iso_code.data(), error_code);
-           if (error_code.isFailure()) {
-             throw icupy::ICUError(error_code);
-           }
-           return result;
-         }),
-         py::arg("amount"), py::arg("iso_code"))
+  ca.def(
+        py::init([](const Formattable &amount, const std::u16string &iso_code) {
+          ErrorCode error_code;
+          auto result = std::make_unique<CurrencyAmount>(
+              amount, iso_code.data(), error_code);
+          if (error_code.isFailure()) {
+            throw icupy::ICUError(error_code);
+          }
+          return result;
+        }),
+        py::arg("amount"), py::arg("iso_code"))
       .def(py::init([](double amount, const std::u16string &iso_code) {
              ErrorCode error_code;
-             auto result = std::make_unique<CurrencyAmount>(amount, iso_code.data(), error_code);
+             auto result = std::make_unique<CurrencyAmount>(
+                 amount, iso_code.data(), error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
@@ -71,7 +81,12 @@ void init_measure(py::module &m) {
 
   ca.def("__copy__", &CurrencyAmount::clone);
 
-  ca.def("__deepcopy__", [](const CurrencyAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  ca.def(
+      "__deepcopy__",
+      [](const CurrencyAmount &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   ca.def("clone", &CurrencyAmount::clone);
 
@@ -80,33 +95,42 @@ void init_measure(py::module &m) {
   ca.def("get_iso_currency", &CurrencyAmount::getISOCurrency);
 
   //
-  // icu::TimeUnitAmount
+  // class icu::TimeUnitAmount
   //
   py::class_<TimeUnitAmount, Measure> tua(m, "TimeUnitAmount");
 
-  tua.def(py::init([](const Formattable &number, TimeUnit::UTimeUnitFields time_unit_field) {
+  tua.def(py::init([](const Formattable &number,
+                      TimeUnit::UTimeUnitFields time_unit_field) {
             ErrorCode error_code;
-            auto result = std::make_unique<TimeUnitAmount>(number, time_unit_field, error_code);
+            auto result = std::make_unique<TimeUnitAmount>(
+                number, time_unit_field, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           }),
           py::arg("number"), py::arg("time_unit_field"))
-      .def(py::init([](double amount, TimeUnit::UTimeUnitFields time_unit_field) {
-             ErrorCode error_code;
-             auto result = std::make_unique<TimeUnitAmount>(amount, time_unit_field, error_code);
-             if (error_code.isFailure()) {
-               throw icupy::ICUError(error_code);
-             }
-             return result;
-           }),
+      .def(py::init(
+               [](double amount, TimeUnit::UTimeUnitFields time_unit_field) {
+                 ErrorCode error_code;
+                 auto result = std::make_unique<TimeUnitAmount>(
+                     amount, time_unit_field, error_code);
+                 if (error_code.isFailure()) {
+                   throw icupy::ICUError(error_code);
+                 }
+                 return result;
+               }),
            py::arg("amount"), py::arg("time_unit_field"))
       .def(py::init<const TimeUnitAmount &>(), py::arg("other"));
 
   tua.def("__copy__", &TimeUnitAmount::clone);
 
-  tua.def("__deepcopy__", [](const TimeUnitAmount &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  tua.def(
+      "__deepcopy__",
+      [](const TimeUnitAmount &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   tua.def("clone", &TimeUnitAmount::clone);
 

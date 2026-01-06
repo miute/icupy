@@ -8,7 +8,9 @@
 class _ConstVoidPtr {
 public:
   _ConstVoidPtr(const py::object &value);
-  _ConstVoidPtr(const void *value) : context_(value) {};
+
+  _ConstVoidPtr(const void *value);
+
   ~_ConstVoidPtr() {};
 
   py::function &action() { return action_; }

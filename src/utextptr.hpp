@@ -7,15 +7,23 @@
 class _UTextPtr {
 public:
   _UTextPtr();
+
   _UTextPtr(UText *p);
+
   _UTextPtr(UText *p, const std::shared_ptr<void> &source);
+
   ~_UTextPtr();
 
   UText *get() const;
+
   operator UText *() const { return get(); }
 
-  bool operator!=(const _UTextPtr &other) { return !utext_equals(get(), other); }
+  bool operator!=(const _UTextPtr &other) {
+    return !utext_equals(get(), other);
+  }
+
   bool operator==(const _UTextPtr &other) { return utext_equals(get(), other); }
+
   const UText *operator->() const { return get(); }
 
   const std::shared_ptr<void> &get_source() const;

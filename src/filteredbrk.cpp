@@ -10,13 +10,15 @@ using namespace icu;
 void init_filteredbrk(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   //
-  // icu::FilteredBreakIteratorBuilder
+  // class icu::FilteredBreakIteratorBuilder
   //
-  py::class_<FilteredBreakIteratorBuilder, UObject> fbib(m, "FilteredBreakIteratorBuilder");
+  py::class_<FilteredBreakIteratorBuilder, UObject> fbib(
+      m, "FilteredBreakIteratorBuilder");
 
   fbib.def(
       "build",
-      [](FilteredBreakIteratorBuilder &self, BreakIterator *adopt_break_iterator) {
+      [](FilteredBreakIteratorBuilder &self,
+         BreakIterator *adopt_break_iterator) {
         ErrorCode error_code;
         auto result = self.build(adopt_break_iterator->clone(), error_code);
         if (error_code.isFailure()) {
@@ -41,7 +43,8 @@ void init_filteredbrk(py::module &m) {
       "create_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto result = FilteredBreakIteratorBuilder::createInstance(icupy::to_locale(where), error_code);
+        auto result = FilteredBreakIteratorBuilder::createInstance(
+            icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -60,9 +63,11 @@ void init_filteredbrk(py::module &m) {
 
   fbib.def(
       "suppress_break_after",
-      [](FilteredBreakIteratorBuilder &self, const icupy::UnicodeStringVariant &string) -> py::bool_ {
+      [](FilteredBreakIteratorBuilder &self,
+         const icupy::UnicodeStringVariant &string) -> py::bool_ {
         ErrorCode error_code;
-        auto result = self.suppressBreakAfter(icupy::to_unistr(string), error_code);
+        auto result =
+            self.suppressBreakAfter(icupy::to_unistr(string), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -72,9 +77,11 @@ void init_filteredbrk(py::module &m) {
 
   fbib.def(
       "unsuppress_break_after",
-      [](FilteredBreakIteratorBuilder &self, const icupy::UnicodeStringVariant &string) -> py::bool_ {
+      [](FilteredBreakIteratorBuilder &self,
+         const icupy::UnicodeStringVariant &string) -> py::bool_ {
         ErrorCode error_code;
-        auto result = self.unsuppressBreakAfter(icupy::to_unistr(string), error_code);
+        auto result =
+            self.unsuppressBreakAfter(icupy::to_unistr(string), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -85,9 +92,11 @@ void init_filteredbrk(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   fbib.def(
       "wrap_iterator_with_filter",
-      [](FilteredBreakIteratorBuilder &self, BreakIterator *adopt_break_iterator) {
+      [](FilteredBreakIteratorBuilder &self,
+         BreakIterator *adopt_break_iterator) {
         ErrorCode error_code;
-        auto result = self.wrapIteratorWithFilter(adopt_break_iterator->clone(), error_code);
+        auto result = self.wrapIteratorWithFilter(adopt_break_iterator->clone(),
+                                                  error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
