@@ -6,13 +6,14 @@ using namespace icu;
 
 void init_caniter(py::module &m) {
   //
-  // icu::CanonicalIterator
+  // class icu::CanonicalIterator
   //
   py::class_<CanonicalIterator, UObject> ci(m, "CanonicalIterator");
 
   ci.def(py::init([](const icupy::UnicodeStringVariant &source) {
            ErrorCode error_code;
-           auto result = std::make_unique<CanonicalIterator>(icupy::to_unistr(source), error_code);
+           auto result = std::make_unique<CanonicalIterator>(
+               icupy::to_unistr(source), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -41,7 +42,8 @@ void init_caniter(py::module &m) {
 
   ci.def(
       "set_source",
-      [](CanonicalIterator &self, const icupy::UnicodeStringVariant &new_source) {
+      [](CanonicalIterator &self,
+         const icupy::UnicodeStringVariant &new_source) {
         ErrorCode error_code;
         self.setSource(icupy::to_unistr(new_source), error_code);
         if (error_code.isFailure()) {

@@ -1,5 +1,8 @@
 #include "voidptr.hpp"
 #include <memory>
+#include <pybind11/warnings.h>
+
+using SharedString = std::shared_ptr<std::string>;
 
 _ConstVoidPtr::_ConstVoidPtr(const py::object &value) {
   if (py::isinstance<py::str>(value)) {
@@ -9,9 +12,16 @@ _ConstVoidPtr::_ConstVoidPtr(const py::object &value) {
   }
 }
 
+_ConstVoidPtr::_ConstVoidPtr(const void *value) {
+  // TODO: Temporary measures. Remove in future releases.
+  if (value) {
+    context_ = std::make_shared<std::string>(static_cast<const char *>(value));
+  }
+}
+
 const char *_ConstVoidPtr::c_str() const {
-  if (context_.type() == typeid(std::shared_ptr<std::string>)) {
-    auto p = std::any_cast<std::shared_ptr<std::string>>(context_);
+  if (context_.has_value() && context_.type() == typeid(SharedString)) {
+    auto p = std::any_cast<SharedString>(context_);
     return p->data();
   }
   return nullptr;
@@ -19,16 +29,22 @@ const char *_ConstVoidPtr::c_str() const {
 
 // TODO: Remove deprecated method in future releases.
 py::object _ConstVoidPtr::to_object() const {
-  PyErr_WarnEx(PyExc_DeprecationWarning, "ConstVoidPtr.to_object() is deprecated. Use ConstVoidPtr.value() instead.",
-               1);
+  py::warnings::warn("ConstVoidPtr.to_object() is deprecated. "
+                     "Use ConstVoidPtr.value() instead.",
+                     PyExc_DeprecationWarning, 1);
   return this->value();
 }
 
 py::object _ConstVoidPtr::value() const {
-  if (context_.type() == typeid(py::object)) {
-    return std::any_cast<py::object>(context_);
+  if (context_.has_value()) {
+    if (context_.type() == typeid(py::object)) {
+      return std::any_cast<py::object>(context_);
+    } else if (context_.type() == typeid(SharedString)) {
+      auto p = std::any_cast<SharedString>(context_);
+      return py::str(*p);
+    }
   }
-  return py::str(this->c_str());
+  return py::none();
 }
 
 void init_voidptr(py::module &m) {

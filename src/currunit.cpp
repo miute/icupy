@@ -5,13 +5,14 @@ using namespace icu;
 
 void init_currunit(py::module &m) {
   //
-  // icu::CurrencyUnit
+  // class icu::CurrencyUnit
   //
   py::class_<CurrencyUnit, MeasureUnit> cu(m, "CurrencyUnit");
 
   cu.def(py::init([](const std::u16string &iso_code) {
            ErrorCode error_code;
-           auto result = std::make_unique<CurrencyUnit>(iso_code.data(), error_code);
+           auto result =
+               std::make_unique<CurrencyUnit>(iso_code.data(), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -22,7 +23,12 @@ void init_currunit(py::module &m) {
 
   cu.def("__copy__", &CurrencyUnit::clone);
 
-  cu.def("__deepcopy__", [](const CurrencyUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  cu.def(
+      "__deepcopy__",
+      [](const CurrencyUnit &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   cu.def("clone", &CurrencyUnit::clone);
 

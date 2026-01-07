@@ -13,23 +13,24 @@ using namespace icu;
 
 void init_regex(py::module &m) {
   //
-  // icu::RegexMatcher
+  // class icu::RegexMatcher
   //
   py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher");
 
   //
-  // icu::RegexPattern
+  // class icu::RegexPattern
   //
   py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
 
   //
-  // icu::RegexMatcher
+  // class icu::RegexMatcher
   //
   rm.def(
         // [1] RegexMatcher::RegexMatcher
         py::init([](const icupy::UnicodeStringVariant &regexp, uint32_t flags) {
           ErrorCode error_code;
-          auto result = std::make_unique<RegexMatcher>(icupy::to_unistr(regexp), flags, error_code);
+          auto result = std::make_unique<RegexMatcher>(icupy::to_unistr(regexp),
+                                                       flags, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -40,7 +41,8 @@ void init_regex(py::module &m) {
           // [2] RegexMatcher::RegexMatcher
           py::init([](_UTextPtr &regexp, uint32_t flags) {
             ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(regexp, flags, error_code);
+            auto result =
+                std::make_unique<RegexMatcher>(regexp, flags, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -49,9 +51,11 @@ void init_regex(py::module &m) {
           py::arg("regexp"), py::arg("flags"))
       .def(
           // [3] RegexMatcher::RegexMatcher
-          py::init([](const icupy::UnicodeStringVariant &regexp, const UnicodeString &input, uint32_t flags) {
+          py::init([](const icupy::UnicodeStringVariant &regexp,
+                      const UnicodeString &input, uint32_t flags) {
             ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(icupy::to_unistr(regexp), input, flags, error_code);
+            auto result = std::make_unique<RegexMatcher>(
+                icupy::to_unistr(regexp), input, flags, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -62,7 +66,8 @@ void init_regex(py::module &m) {
           // [4] RegexMatcher::RegexMatcher
           py::init([](_UTextPtr &regexp, _UTextPtr &input, uint32_t flags) {
             ErrorCode error_code;
-            auto result = std::make_unique<RegexMatcher>(regexp, input, flags, error_code);
+            auto result = std::make_unique<RegexMatcher>(regexp, input, flags,
+                                                         error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -72,9 +77,11 @@ void init_regex(py::module &m) {
 
   rm.def(
         "append_replacement",
-        [](RegexMatcher &self, UnicodeString &dest, const icupy::UnicodeStringVariant &replacement) -> RegexMatcher & {
+        [](RegexMatcher &self, UnicodeString &dest,
+           const icupy::UnicodeStringVariant &replacement) -> RegexMatcher & {
           ErrorCode error_code;
-          auto &result = self.appendReplacement(dest, icupy::to_unistr(replacement), error_code);
+          auto &result = self.appendReplacement(
+              dest, icupy::to_unistr(replacement), error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -83,9 +90,11 @@ void init_regex(py::module &m) {
         py::arg("dest"), py::arg("replacement"))
       .def(
           "append_replacement",
-          [](RegexMatcher &self, _UTextPtr &dest, _UTextPtr &replacement) -> RegexMatcher & {
+          [](RegexMatcher &self, _UTextPtr &dest,
+             _UTextPtr &replacement) -> RegexMatcher & {
             ErrorCode error_code;
-            auto &result = self.appendReplacement(dest, replacement, error_code);
+            auto &result =
+                self.appendReplacement(dest, replacement, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -93,7 +102,9 @@ void init_regex(py::module &m) {
           },
           py::arg("dest"), py::arg("replacement"));
 
-  rm.def("append_tail", py::overload_cast<UnicodeString &>(&RegexMatcher::appendTail), py::arg("dest"))
+  rm.def("append_tail",
+         py::overload_cast<UnicodeString &>(&RegexMatcher::appendTail),
+         py::arg("dest"))
       .def(
           "append_tail",
           [](RegexMatcher &self, _UTextPtr &dest) {
@@ -175,7 +186,7 @@ void init_regex(py::module &m) {
 
   rm.def("get_find_progress_callback", [](RegexMatcher &self) {
     URegexFindProgressCallback *callback;
-    const void *context;
+    const void *context = nullptr;
     ErrorCode error_code;
     self.getFindProgressCallback(callback, context, error_code);
     if (error_code.isFailure()) {
@@ -183,12 +194,14 @@ void init_regex(py::module &m) {
     }
     if (callback == _URegexFindProgressCallbackPtr::callback) {
       // Python callback function and callback data
-      auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-      auto result1 = _URegexFindProgressCallbackPtr(result2->action());
-      return py::make_tuple(result1, result2);
+      auto python_context =
+          reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      auto action = _URegexFindProgressCallbackPtr(python_context->action());
+      return py::make_tuple(action, python_context);
     }
     // C callback function and callback data
-    return py::make_tuple(_URegexFindProgressCallbackPtr(callback), _ConstVoidPtr(context));
+    return py::make_tuple(_URegexFindProgressCallbackPtr(callback),
+                          _ConstVoidPtr(context));
   });
 
   rm.def(
@@ -204,8 +217,8 @@ void init_regex(py::module &m) {
       py::arg("dest") = std::nullopt);
 
   rm.def("get_match_callback", [](RegexMatcher &self) {
-    URegexMatchCallback *callback;
-    const void *context;
+    URegexMatchCallback *callback = nullptr;
+    const void *context = nullptr;
     ErrorCode error_code;
     self.getMatchCallback(callback, context, error_code);
     if (error_code.isFailure()) {
@@ -213,12 +226,14 @@ void init_regex(py::module &m) {
     }
     if (callback == _URegexMatchCallbackPtr::callback) {
       // Python callback function and callback data
-      auto result2 = reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
-      auto result1 = _URegexMatchCallbackPtr(result2->action());
-      return py::make_tuple(result1, result2);
+      auto python_context =
+          reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      auto action = _URegexMatchCallbackPtr(python_context->action());
+      return py::make_tuple(action, python_context);
     }
     // C callback function and callback data
-    return py::make_tuple(_URegexMatchCallbackPtr(callback), _ConstVoidPtr(context));
+    return py::make_tuple(_URegexMatchCallbackPtr(callback),
+                          _ConstVoidPtr(context));
   });
 
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
@@ -238,10 +253,12 @@ void init_regex(py::module &m) {
         py::arg("group_num"))
       .def(
           "group",
-          [](const RegexMatcher &self, int32_t group_num, std::optional<_UTextPtr> &dest) {
-            ErrorCode error_code;
+          [](const RegexMatcher &self, int32_t group_num,
+             std::optional<_UTextPtr> &dest) {
             int64_t group_len;
-            auto p = self.group(group_num, dest.value_or(nullptr), group_len, error_code);
+            ErrorCode error_code;
+            auto p = self.group(group_num, dest.value_or(nullptr), group_len,
+                                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -260,8 +277,8 @@ void init_regex(py::module &m) {
       .def(
           "group",
           [](const RegexMatcher &self, std::optional<_UTextPtr> &dest) {
-            ErrorCode error_code;
             int64_t group_len;
+            ErrorCode error_code;
             auto p = self.group(dest.value_or(nullptr), group_len, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
@@ -272,11 +289,16 @@ void init_regex(py::module &m) {
 
   rm.def("group_count", &RegexMatcher::groupCount);
 
-  rm.def("has_anchoring_bounds", [](const RegexMatcher &self) -> py::bool_ { return self.hasAnchoringBounds(); });
+  rm.def("has_anchoring_bounds", [](const RegexMatcher &self) -> py::bool_ {
+    return self.hasAnchoringBounds();
+  });
 
-  rm.def("has_transparent_bounds", [](const RegexMatcher &self) -> py::bool_ { return self.hasTransparentBounds(); });
+  rm.def("has_transparent_bounds", [](const RegexMatcher &self) -> py::bool_ {
+    return self.hasTransparentBounds();
+  });
 
-  rm.def("hit_end", [](const RegexMatcher &self) -> py::bool_ { return self.hitEnd(); });
+  rm.def("hit_end",
+         [](const RegexMatcher &self) -> py::bool_ { return self.hitEnd(); });
 
   rm.def("input", &RegexMatcher::input);
 
@@ -327,22 +349,27 @@ void init_regex(py::module &m) {
 
   rm.def("pattern", &RegexMatcher::pattern);
 
-  // FIXME: Implement "RegexMatcher& RegexMatcher::refreshInputText(UText *input, UErrorCode &status)".
+  // FIXME: Implement "RegexMatcher& RegexMatcher::refreshInputText(
+  //  UText *input, UErrorCode &status)".
 
   rm.def(
         "region",
-        [](RegexMatcher &self, int64_t region_start, int64_t region_limit, int64_t start_index) -> RegexMatcher & {
+        [](RegexMatcher &self, int64_t region_start, int64_t region_limit,
+           int64_t start_index) -> RegexMatcher & {
           ErrorCode error_code;
-          auto &result = self.region(region_start, region_limit, start_index, error_code);
+          auto &result =
+              self.region(region_start, region_limit, start_index, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
           return result;
         },
-        py::arg("region_start"), py::arg("region_limit"), py::arg("start_index"))
+        py::arg("region_start"), py::arg("region_limit"),
+        py::arg("start_index"))
       .def(
           "region",
-          [](RegexMatcher &self, int64_t start, int64_t limit) -> RegexMatcher & {
+          [](RegexMatcher &self, int64_t start,
+             int64_t limit) -> RegexMatcher & {
             ErrorCode error_code;
             auto &result = self.region(start, limit, error_code);
             if (error_code.isFailure()) {
@@ -364,7 +391,8 @@ void init_regex(py::module &m) {
         "replace_all",
         [](RegexMatcher &self, const icupy::UnicodeStringVariant &replacement) {
           ErrorCode error_code;
-          auto result = self.replaceAll(icupy::to_unistr(replacement), error_code);
+          auto result =
+              self.replaceAll(icupy::to_unistr(replacement), error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -373,9 +401,11 @@ void init_regex(py::module &m) {
         py::arg("replacement"))
       .def(
           "replace_all",
-          [](RegexMatcher &self, _UTextPtr &replacement, std::optional<_UTextPtr> &dest) {
+          [](RegexMatcher &self, _UTextPtr &replacement,
+             std::optional<_UTextPtr> &dest) {
             ErrorCode error_code;
-            auto p = self.replaceAll(replacement, dest.value_or(nullptr), error_code);
+            auto p = self.replaceAll(replacement, dest.value_or(nullptr),
+                                     error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -387,7 +417,8 @@ void init_regex(py::module &m) {
         "replace_first",
         [](RegexMatcher &self, const icupy::UnicodeStringVariant &replacement) {
           ErrorCode error_code;
-          auto result = self.replaceFirst(icupy::to_unistr(replacement), error_code);
+          auto result =
+              self.replaceFirst(icupy::to_unistr(replacement), error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -396,9 +427,11 @@ void init_regex(py::module &m) {
         py::arg("replacement"))
       .def(
           "replace_first",
-          [](RegexMatcher &self, _UTextPtr &replacement, std::optional<_UTextPtr> &dest) {
+          [](RegexMatcher &self, _UTextPtr &replacement,
+             std::optional<_UTextPtr> &dest) {
             ErrorCode error_code;
-            auto p = self.replaceFirst(replacement, dest.value_or(nullptr), error_code);
+            auto p = self.replaceFirst(replacement, dest.value_or(nullptr),
+                                       error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -406,10 +439,14 @@ void init_regex(py::module &m) {
           },
           py::arg("replacement"), py::arg("dest"));
 
-  rm.def("require_end", [](const RegexMatcher &self) -> py::bool_ { return self.requireEnd(); });
+  rm.def("require_end", [](const RegexMatcher &self) -> py::bool_ {
+    return self.requireEnd();
+  });
 
   rm.def("reset", py::overload_cast<>(&RegexMatcher::reset))
-      .def("reset", py::overload_cast<const UnicodeString &>(&RegexMatcher::reset), py::arg("input_"))
+      .def("reset",
+           py::overload_cast<const UnicodeString &>(&RegexMatcher::reset),
+           py::arg("input_"))
       .def(
           "reset",
           [](RegexMatcher &self, int64_t index) -> RegexMatcher & {
@@ -422,25 +459,29 @@ void init_regex(py::module &m) {
           },
           py::arg("index"))
       .def(
-          "reset", [](RegexMatcher &self, _UTextPtr &input) -> RegexMatcher & { return self.reset(input); },
+          "reset",
+          [](RegexMatcher &self, _UTextPtr &input) -> RegexMatcher & {
+            return self.reset(input);
+          },
           py::arg("input_"));
 
   rm.def(
       "set_find_progress_callback",
-      [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback, _ConstVoidPtr &context) {
-        URegexFindProgressCallback *fp = callback.get_if<URegexFindProgressCallback *>();
-        const void *cvp = nullptr;
-        if (fp == nullptr && callback.has_value()) {
+      [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback,
+         _ConstVoidPtr &context) {
+        auto fn = callback.get_if<URegexFindProgressCallback *>();
+        const void *value = nullptr;
+        if (fn == nullptr && callback.has_value()) {
           // New Python callback function and callback data
-          fp = callback.callback;
+          fn = callback.callback;
           context.set_action(callback.get<py::function>());
-          cvp = &context;
+          value = &context;
         } else if (context.has_value()) {
           // New C callback data
-          cvp = context.c_str();
+          value = context.c_str();
         }
         ErrorCode error_code;
-        self.setFindProgressCallback(fp, cvp, error_code);
+        self.setFindProgressCallback(fn, value, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -449,20 +490,21 @@ void init_regex(py::module &m) {
 
   rm.def(
       "set_match_callback",
-      [](RegexMatcher &self, _URegexMatchCallbackPtr &callback, _ConstVoidPtr &context) {
-        URegexMatchCallback *fp = callback.get_if<URegexMatchCallback *>();
-        const void *cvp = nullptr;
-        if (fp == nullptr && callback.has_value()) {
+      [](RegexMatcher &self, _URegexMatchCallbackPtr &callback,
+         _ConstVoidPtr &context) {
+        auto fn = callback.get_if<URegexMatchCallback *>();
+        const void *value = nullptr;
+        if (fn == nullptr && callback.has_value()) {
           // New Python callback function and callback data
-          fp = callback.callback;
+          fn = callback.callback;
           context.set_action(callback.get<py::function>());
-          cvp = &context;
+          value = &context;
         } else if (context.has_value()) {
           // New C callback data
-          cvp = context.c_str();
+          value = context.c_str();
         }
         ErrorCode error_code;
-        self.setMatchCallback(fp, cvp, error_code);
+        self.setMatchCallback(fn, value, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -493,12 +535,14 @@ void init_regex(py::module &m) {
 
   rm.def(
         "split",
-        [](RegexMatcher &self, const UnicodeString &input, icupy::UnicodeStringVector &dest, int32_t dest_capacity) {
+        [](RegexMatcher &self, const UnicodeString &input,
+           icupy::UnicodeStringVector &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
             dest_capacity = static_cast<int32_t>(dest.size());
           }
           ErrorCode error_code;
-          auto result = self.split(input, dest.data(), dest_capacity, error_code);
+          auto result =
+              self.split(input, dest.data(), dest_capacity, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -507,14 +551,17 @@ void init_regex(py::module &m) {
         py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
+          [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest,
+             int32_t dest_capacity) {
             if (dest_capacity == -1) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }
             ErrorCode error_code;
             std::vector<UText *> output(std::max(0, dest_capacity), nullptr);
-            std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
-            auto result = self.split(input, output.data(), dest_capacity, error_code);
+            std::copy(dest.begin(), dest.begin() + output.size(),
+                      output.begin());
+            auto result =
+                self.split(input, output.data(), dest_capacity, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -564,28 +611,45 @@ void init_regex(py::module &m) {
 
   rm.def(
       "use_anchoring_bounds",
-      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & { return self.useAnchoringBounds(b); }, py::arg("b"));
+      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & {
+        return self.useAnchoringBounds(b);
+      },
+      py::arg("b"));
 
   rm.def(
       "use_transparent_bounds",
-      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & { return self.useTransparentBounds(b); }, py::arg("b"));
+      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & {
+        return self.useTransparentBounds(b);
+      },
+      py::arg("b"));
 
   //
-  // icu::RegexPattern
+  // class icu::RegexPattern
   //
   rp.def(py::init<>()).def(py::init<const RegexPattern &>(), py::arg("other"));
 
   rp.def("__copy__", &RegexPattern::clone);
 
-  rp.def("__deepcopy__", [](const RegexPattern &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  rp.def(
+      "__deepcopy__",
+      [](const RegexPattern &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   rp.def(
-      "__eq__", [](const RegexPattern &self, const RegexPattern &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const RegexPattern &self, const RegexPattern &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   rp.def(
-      "__ne__", [](const RegexPattern &self, const RegexPattern &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const RegexPattern &self, const RegexPattern &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   rp.def("clone", &RegexPattern::clone);
 
@@ -593,7 +657,8 @@ void init_regex(py::module &m) {
         "compile",
         [](const icupy::UnicodeStringVariant &regex, uint32_t flags) {
           ErrorCode error_code;
-          auto result = RegexPattern::compile(icupy::to_unistr(regex), flags, error_code);
+          auto result =
+              RegexPattern::compile(icupy::to_unistr(regex), flags, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -602,9 +667,11 @@ void init_regex(py::module &m) {
         py::arg("regex"), py::arg("flags"))
       .def_static(
           "compile",
-          [](const icupy::UnicodeStringVariant &regex, uint32_t flags, UParseError &pe) {
+          [](const icupy::UnicodeStringVariant &regex, uint32_t flags,
+             UParseError &pe) {
             ErrorCode error_code;
-            auto result = RegexPattern::compile(icupy::to_unistr(regex), flags, pe, error_code);
+            auto result = RegexPattern::compile(icupy::to_unistr(regex), flags,
+                                                pe, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -615,7 +682,8 @@ void init_regex(py::module &m) {
           "compile",
           [](const icupy::UnicodeStringVariant &regex, UParseError &pe) {
             ErrorCode error_code;
-            auto result = RegexPattern::compile(icupy::to_unistr(regex), pe, error_code);
+            auto result =
+                RegexPattern::compile(icupy::to_unistr(regex), pe, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -661,9 +729,11 @@ void init_regex(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
   rp.def(
         "group_number_from_name",
-        [](const RegexPattern &self, const std::string &group_name, int32_t name_length) {
+        [](const RegexPattern &self, const std::string &group_name,
+           int32_t name_length) {
           ErrorCode error_code;
-          auto result = self.groupNumberFromName(group_name.data(), name_length, error_code);
+          auto result = self.groupNumberFromName(group_name.data(), name_length,
+                                                 error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -672,9 +742,11 @@ void init_regex(py::module &m) {
         py::arg("group_name"), py::arg("name_length"))
       .def(
           "group_number_from_name",
-          [](const RegexPattern &self, const icupy::UnicodeStringVariant &group_name) {
+          [](const RegexPattern &self,
+             const icupy::UnicodeStringVariant &group_name) {
             ErrorCode error_code;
-            auto result = self.groupNumberFromName(icupy::to_unistr(group_name), error_code);
+            auto result = self.groupNumberFromName(icupy::to_unistr(group_name),
+                                                   error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -705,9 +777,11 @@ void init_regex(py::module &m) {
 
   rp.def_static(
         "matches",
-        [](const icupy::UnicodeStringVariant &regex, const UnicodeString &input, UParseError &pe) -> py::bool_ {
+        [](const icupy::UnicodeStringVariant &regex, const UnicodeString &input,
+           UParseError &pe) -> py::bool_ {
           ErrorCode error_code;
-          auto result = RegexPattern::matches(icupy::to_unistr(regex), input, pe, error_code);
+          auto result = RegexPattern::matches(icupy::to_unistr(regex), input,
+                                              pe, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -739,13 +813,14 @@ void init_regex(py::module &m) {
 
   rp.def(
         "split",
-        [](const RegexPattern &self, const UnicodeString &input, icupy::UnicodeStringVector &dest,
-           int32_t dest_capacity) {
+        [](const RegexPattern &self, const UnicodeString &input,
+           icupy::UnicodeStringVector &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
             dest_capacity = static_cast<int32_t>(dest.size());
           }
           ErrorCode error_code;
-          auto result = self.split(input, dest.data(), dest_capacity, error_code);
+          auto result =
+              self.split(input, dest.data(), dest_capacity, error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -754,14 +829,17 @@ void init_regex(py::module &m) {
         py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest, int32_t dest_capacity) {
+          [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest,
+             int32_t dest_capacity) {
             if (dest_capacity == -1) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }
             ErrorCode error_code;
             std::vector<UText *> output(std::max(0, dest_capacity), nullptr);
-            std::copy(dest.begin(), dest.begin() + output.size(), output.begin());
-            auto result = self.split(input, output.data(), dest_capacity, error_code);
+            std::copy(dest.begin(), dest.begin() + output.size(),
+                      output.begin());
+            auto result =
+                self.split(input, output.data(), dest_capacity, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }

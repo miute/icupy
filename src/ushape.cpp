@@ -6,13 +6,16 @@ using namespace icu;
 void init_ushape(py::module &m) {
   m.def(
       "u_shape_arabic",
-      [](const std::u16string &source, int32_t source_length, uint32_t options) {
-        auto p = source.data();
+      [](const std::u16string &source, int32_t source_length,
+         uint32_t options) {
+        auto source_data = source.data();
         ErrorCode error_code;
-        const auto dest_size = u_shapeArabic(p, source_length, nullptr, 0, options, error_code);
+        const auto dest_size = u_shapeArabic(source_data, source_length,
+                                             nullptr, 0, options, error_code);
         std::u16string result(dest_size, u'\0');
         error_code.reset();
-        u_shapeArabic(p, source_length, result.data(), dest_size, options, error_code);
+        u_shapeArabic(source_data, source_length, result.data(), dest_size,
+                      options, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -47,8 +50,10 @@ void init_ushape(py::module &m) {
   m.attr("U_SHAPE_LAMALEF_MASK") = U_SHAPE_LAMALEF_MASK;
   m.attr("U_SHAPE_LAMALEF_NEAR") = U_SHAPE_LAMALEF_NEAR;
   m.attr("U_SHAPE_LAMALEF_RESIZE") = U_SHAPE_LAMALEF_RESIZE;
-  m.attr("U_SHAPE_LENGTH_FIXED_SPACES_AT_BEGINNING") = U_SHAPE_LENGTH_FIXED_SPACES_AT_BEGINNING;
-  m.attr("U_SHAPE_LENGTH_FIXED_SPACES_AT_END") = U_SHAPE_LENGTH_FIXED_SPACES_AT_END;
+  m.attr("U_SHAPE_LENGTH_FIXED_SPACES_AT_BEGINNING") =
+      U_SHAPE_LENGTH_FIXED_SPACES_AT_BEGINNING;
+  m.attr("U_SHAPE_LENGTH_FIXED_SPACES_AT_END") =
+      U_SHAPE_LENGTH_FIXED_SPACES_AT_END;
   m.attr("U_SHAPE_LENGTH_FIXED_SPACES_NEAR") = U_SHAPE_LENGTH_FIXED_SPACES_NEAR;
   m.attr("U_SHAPE_LENGTH_GROW_SHRINK") = U_SHAPE_LENGTH_GROW_SHRINK;
   m.attr("U_SHAPE_LENGTH_MASK") = U_SHAPE_LENGTH_MASK;
@@ -56,21 +61,26 @@ void init_ushape(py::module &m) {
   // Letter shaping options
   m.attr("U_SHAPE_LETTERS_MASK") = U_SHAPE_LETTERS_MASK;
   m.attr("U_SHAPE_LETTERS_NOOP") = U_SHAPE_LETTERS_NOOP;
-  m.attr("U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED") = U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED;
+  m.attr("U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED") =
+      U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED;
   m.attr("U_SHAPE_LETTERS_SHAPE") = U_SHAPE_LETTERS_SHAPE;
   m.attr("U_SHAPE_LETTERS_UNSHAPE") = U_SHAPE_LETTERS_UNSHAPE;
 
   // Presentation form options
-  m.attr("U_SHAPE_PRESERVE_PRESENTATION_MASK") = U_SHAPE_PRESERVE_PRESENTATION_MASK;
-  m.attr("U_SHAPE_PRESERVE_PRESENTATION_NOOP") = U_SHAPE_PRESERVE_PRESENTATION_NOOP;
+  m.attr("U_SHAPE_PRESERVE_PRESENTATION_MASK") =
+      U_SHAPE_PRESERVE_PRESENTATION_MASK;
+  m.attr("U_SHAPE_PRESERVE_PRESENTATION_NOOP") =
+      U_SHAPE_PRESERVE_PRESENTATION_NOOP;
   m.attr("U_SHAPE_PRESERVE_PRESENTATION") = U_SHAPE_PRESERVE_PRESENTATION;
 
   // Seen memory options
   m.attr("U_SHAPE_SEEN_MASK") = U_SHAPE_SEEN_MASK;
   m.attr("U_SHAPE_SEEN_TWOCELL_NEAR") = U_SHAPE_SEEN_TWOCELL_NEAR;
 
-  m.attr("U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END") = U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END;
-  m.attr("U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK") = U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK;
+  m.attr("U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END") =
+      U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END;
+  m.attr("U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK") =
+      U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK;
   m.attr("U_SHAPE_TAIL_NEW_UNICODE") = U_SHAPE_TAIL_NEW_UNICODE;
   m.attr("U_SHAPE_TAIL_TYPE_MASK") = U_SHAPE_TAIL_TYPE_MASK;
 
@@ -78,14 +88,17 @@ void init_ushape(py::module &m) {
   m.attr("U_SHAPE_TASHKEEL_BEGIN") = U_SHAPE_TASHKEEL_BEGIN;
   m.attr("U_SHAPE_TASHKEEL_END") = U_SHAPE_TASHKEEL_END;
   m.attr("U_SHAPE_TASHKEEL_MASK") = U_SHAPE_TASHKEEL_MASK;
-  m.attr("U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL") = U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL;
+  m.attr("U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL") =
+      U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL;
   m.attr("U_SHAPE_TASHKEEL_RESIZE") = U_SHAPE_TASHKEEL_RESIZE;
 
   // Direction indicators
   m.attr("U_SHAPE_TEXT_DIRECTION_LOGICAL") = U_SHAPE_TEXT_DIRECTION_LOGICAL;
   m.attr("U_SHAPE_TEXT_DIRECTION_MASK") = U_SHAPE_TEXT_DIRECTION_MASK;
-  m.attr("U_SHAPE_TEXT_DIRECTION_VISUAL_LTR") = U_SHAPE_TEXT_DIRECTION_VISUAL_LTR;
-  m.attr("U_SHAPE_TEXT_DIRECTION_VISUAL_RTL") = U_SHAPE_TEXT_DIRECTION_VISUAL_RTL;
+  m.attr("U_SHAPE_TEXT_DIRECTION_VISUAL_LTR") =
+      U_SHAPE_TEXT_DIRECTION_VISUAL_LTR;
+  m.attr("U_SHAPE_TEXT_DIRECTION_VISUAL_RTL") =
+      U_SHAPE_TEXT_DIRECTION_VISUAL_RTL;
 
   // YehHamza memory options
   m.attr("U_SHAPE_YEHHAMZA_MASK") = U_SHAPE_YEHHAMZA_MASK;

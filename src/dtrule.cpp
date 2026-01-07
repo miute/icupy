@@ -7,57 +7,80 @@ using namespace icu;
 
 void init_dtrule(py::module &m) {
   //
-  // icu::DateTimeRule
+  // class icu::DateTimeRule
   //
   py::class_<DateTimeRule, UObject> dtr(m, "DateTimeRule");
 
   //
-  // icu::DateTimeRule::DateRuleType
+  // enum icu::DateTimeRule::DateRuleType
   //
-  py::enum_<DateTimeRule::DateRuleType>(dtr, "DateRuleType", py::arithmetic(), "Date rule type constants.")
-      .value("DOM", DateTimeRule::DateRuleType::DOM, "The exact day of month, for example, March 11.")
+  py::enum_<DateTimeRule::DateRuleType>(dtr, "DateRuleType", py::arithmetic(),
+                                        "Date rule type constants.")
+      .value("DOM", DateTimeRule::DateRuleType::DOM,
+             "The exact day of month, for example, March 11.")
       .value("DOW", DateTimeRule::DateRuleType::DOW,
-             "The Nth occurrence of the day of week, for example, 2nd Sunday in March.")
+             "The Nth occurrence of the day of week, for example, 2nd Sunday "
+             "in March.")
       .value("DOW_GEQ_DOM", DateTimeRule::DateRuleType::DOW_GEQ_DOM,
-             "The first occurrence of the day of week on or after the day of monnth, for example, first Sunday on or "
+             "The first occurrence of the day of week on or after the day of "
+             "monnth, for example, first Sunday on or "
              "after March 8.")
       .value("DOW_LEQ_DOM", DateTimeRule::DateRuleType::DOW_LEQ_DOM,
-             "The last occurrence of the day of week on or before the day of month, for example, first Sunday on or "
+             "The last occurrence of the day of week on or before the day of "
+             "month, for example, first Sunday on or "
              "before March 14.")
       .export_values();
 
   //
-  // icu::DateTimeRule::TimeRuleType
+  // enum icu::DateTimeRule::TimeRuleType
   //
-  py::enum_<DateTimeRule::TimeRuleType>(dtr, "TimeRuleType", py::arithmetic(), "Time rule type constants.")
-      .value("WALL_TIME", DateTimeRule::TimeRuleType::WALL_TIME, "The local wall clock time.")
-      .value("STANDARD_TIME", DateTimeRule::TimeRuleType::STANDARD_TIME, "The local standard time.")
+  py::enum_<DateTimeRule::TimeRuleType>(dtr, "TimeRuleType", py::arithmetic(),
+                                        "Time rule type constants.")
+      .value("WALL_TIME", DateTimeRule::TimeRuleType::WALL_TIME,
+             "The local wall clock time.")
+      .value("STANDARD_TIME", DateTimeRule::TimeRuleType::STANDARD_TIME,
+             "The local standard time.")
       .value("UTC_TIME", DateTimeRule::TimeRuleType::UTC_TIME, "The UTC time.")
       .export_values();
 
   //
-  // icu::DateTimeRule
+  // class icu::DateTimeRule
   //
-  dtr.def(py::init<int32_t, int32_t, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"), py::arg("day_of_month"),
-          py::arg("millis_in_day"), py::arg("time_type"))
-      .def(py::init<int32_t, int32_t, int32_t, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"),
-           py::arg("week_in_month"), py::arg("day_of_week"), py::arg("millis_in_day"), py::arg("time_type"))
-      .def(py::init<int32_t, int32_t, int32_t, py::bool_, int32_t, DateTimeRule::TimeRuleType>(), py::arg("month"),
-           py::arg("day_of_month"), py::arg("day_of_week"), py::arg("after"), py::arg("millis_in_day"),
-           py::arg("time_type"))
+  dtr.def(py::init<int32_t, int32_t, int32_t, DateTimeRule::TimeRuleType>(),
+          py::arg("month"), py::arg("day_of_month"), py::arg("millis_in_day"),
+          py::arg("time_type"))
+      .def(py::init<int32_t, int32_t, int32_t, int32_t,
+                    DateTimeRule::TimeRuleType>(),
+           py::arg("month"), py::arg("week_in_month"), py::arg("day_of_week"),
+           py::arg("millis_in_day"), py::arg("time_type"))
+      .def(py::init<int32_t, int32_t, int32_t, py::bool_, int32_t,
+                    DateTimeRule::TimeRuleType>(),
+           py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"),
+           py::arg("after"), py::arg("millis_in_day"), py::arg("time_type"))
       .def(py::init<const DateTimeRule &>(), py::arg("other"));
 
   dtr.def("__copy__", &DateTimeRule::clone);
 
-  dtr.def("__deepcopy__", [](const DateTimeRule &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  dtr.def(
+      "__deepcopy__",
+      [](const DateTimeRule &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   dtr.def(
-      "__eq__", [](const DateTimeRule &self, const DateTimeRule &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const DateTimeRule &self, const DateTimeRule &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   dtr.def(
-      "__ne__", [](const DateTimeRule &self, const DateTimeRule &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const DateTimeRule &self, const DateTimeRule &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   dtr.def("__repr__", [](const DateTimeRule &self) {
     std::stringstream ss;

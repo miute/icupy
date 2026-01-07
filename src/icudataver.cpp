@@ -19,7 +19,8 @@ void init_icudataver(py::module &m) {
     }
     py::tuple result(U_MAX_VERSION_LENGTH);
     int n = 0;
-    std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });
+    std::for_each(std::begin(info), std::end(info),
+                  [&](auto v) { result[n++] = v; });
     return result;
   });
 

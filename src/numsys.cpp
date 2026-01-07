@@ -7,7 +7,7 @@ using namespace icu;
 
 void init_numsys(py::module &m) {
   //
-  // icu::NumberingSystem
+  // class icu::NumberingSystem
   //
   py::class_<NumberingSystem, UObject> ns(m, "NumberingSystem");
 
@@ -18,7 +18,8 @@ void init_numsys(py::module &m) {
         "create_instance",
         [](const icupy::LocaleVariant &locale) {
           ErrorCode error_code;
-          auto result = NumberingSystem::createInstance(icupy::to_locale(locale), error_code);
+          auto result = NumberingSystem::createInstance(
+              icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -28,10 +29,12 @@ void init_numsys(py::module &m) {
       .def_static(
           // [2] NumberingSystem::createInstance
           "create_instance",
-          [](int32_t radix, py::bool_ is_algorithmic, const icupy::UnicodeStringVariant &description) {
+          [](int32_t radix, py::bool_ is_algorithmic,
+             const icupy::UnicodeStringVariant &description) {
             ErrorCode error_code;
-            auto result =
-                NumberingSystem::createInstance(radix, is_algorithmic, icupy::to_unistr(description), error_code);
+            auto result = NumberingSystem::createInstance(
+                radix, is_algorithmic, icupy::to_unistr(description),
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -53,7 +56,8 @@ void init_numsys(py::module &m) {
       "create_instance_by_name",
       [](const std::string &name) {
         ErrorCode error_code;
-        auto result = NumberingSystem::createInstanceByName(name.data(), error_code);
+        auto result =
+            NumberingSystem::createInstanceByName(name.data(), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -76,5 +80,7 @@ void init_numsys(py::module &m) {
 
   ns.def("get_radix", &NumberingSystem::getRadix);
 
-  ns.def("is_algorithmic", [](const NumberingSystem &self) -> py::bool_ { return self.isAlgorithmic(); });
+  ns.def("is_algorithmic", [](const NumberingSystem &self) -> py::bool_ {
+    return self.isAlgorithmic();
+  });
 }

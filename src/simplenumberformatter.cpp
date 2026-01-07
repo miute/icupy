@@ -9,20 +9,20 @@ using namespace icu;
 using namespace icu::number;
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
-void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
+void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
   //
-  // icu::number::SimpleNumber
+  // class icu::number::SimpleNumber
   //
   py::class_<SimpleNumber, UMemory> sn(m2, "SimpleNumber");
 
   //
-  // icu::number::SimpleNumberFormatter
+  // class icu::number::SimpleNumberFormatter
   //
   py::class_<SimpleNumberFormatter, UMemory> fmt(m2, "SimpleNumberFormatter");
 
   //
-  // icu::number::SimpleNumber
+  // class icu::number::SimpleNumber
   //
   sn.def(py::init<>());
 
@@ -51,7 +51,8 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
 
   sn.def(
       "round_to",
-      [](SimpleNumber &self, int32_t power, UNumberFormatRoundingMode rounding_mode) {
+      [](SimpleNumber &self, int32_t power,
+         UNumberFormatRoundingMode rounding_mode) {
         ErrorCode error_code;
         self.roundTo(power, rounding_mode, error_code);
         if (error_code.isFailure()) {
@@ -120,7 +121,7 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
 #endif // (U_ICU_VERSION_MAJOR_NUM < 76)
 
   //
-  // icu::number::SimpleNumberFormatter
+  // class icu::number::SimpleNumberFormatter
   //
   fmt.def(py::init<>());
 
@@ -128,7 +129,8 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
       "for_locale",
       [](const icupy::LocaleVariant &locale) {
         ErrorCode error_code;
-        auto result = SimpleNumberFormatter::forLocale(icupy::to_locale(locale), error_code);
+        auto result = SimpleNumberFormatter::forLocale(icupy::to_locale(locale),
+                                                       error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -138,10 +140,11 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
 
   fmt.def_static(
       "for_locale_and_grouping_strategy",
-      [](const icupy::LocaleVariant &locale, UNumberGroupingStrategy grouping_strategy) {
+      [](const icupy::LocaleVariant &locale,
+         UNumberGroupingStrategy grouping_strategy) {
         ErrorCode error_code;
-        auto result = SimpleNumberFormatter::forLocaleAndGroupingStrategy(icupy::to_locale(locale), grouping_strategy,
-                                                                          error_code);
+        auto result = SimpleNumberFormatter::forLocaleAndGroupingStrategy(
+            icupy::to_locale(locale), grouping_strategy, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -151,11 +154,14 @@ void init_simplenumberformatter(py::module & /*m*/, py::module &m2) {
 
   fmt.def_static(
       "for_locale_and_symbols_and_grouping_strategy",
-      [](const icupy::LocaleVariant &locale, const DecimalFormatSymbols &symbols,
+      [](const icupy::LocaleVariant &locale,
+         const DecimalFormatSymbols &symbols,
          UNumberGroupingStrategy grouping_strategy) {
         ErrorCode error_code;
-        auto result = SimpleNumberFormatter::forLocaleAndSymbolsAndGroupingStrategy(icupy::to_locale(locale), symbols,
-                                                                                    grouping_strategy, error_code);
+        auto result =
+            SimpleNumberFormatter::forLocaleAndSymbolsAndGroupingStrategy(
+                icupy::to_locale(locale), symbols, grouping_strategy,
+                error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

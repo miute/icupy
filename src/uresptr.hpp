@@ -6,9 +6,11 @@
 class _UResourceBundlePtr {
 public:
   _UResourceBundlePtr(UResourceBundle *p);
+
   ~_UResourceBundlePtr();
 
   UResourceBundle *get() const;
+
   operator UResourceBundle *() const { return get(); }
 
 private:

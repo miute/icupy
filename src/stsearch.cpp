@@ -9,28 +9,39 @@ using namespace icu;
 class PySearchIterator : public SearchIterator {
 public:
   PySearchIterator(const PySearchIterator &other) : SearchIterator(other) {}
+
   PySearchIterator() : SearchIterator() {}
-  PySearchIterator(const UnicodeString &text, BreakIterator *breakiter = nullptr) : SearchIterator(text, breakiter) {}
-  PySearchIterator(CharacterIterator &text, BreakIterator *breakiter = nullptr) : SearchIterator(text, breakiter) {}
+
+  PySearchIterator(const UnicodeString &text,
+                   BreakIterator *breakiter = nullptr)
+      : SearchIterator(text, breakiter) {}
+
+  PySearchIterator(CharacterIterator &text, BreakIterator *breakiter = nullptr)
+      : SearchIterator(text, breakiter) {}
 
   int32_t getOffset(void) const override {
-    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "get_offset", getOffset);
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "get_offset",
+                                getOffset);
   }
 
-  int32_t handleNext(int32_t position, UErrorCode & /*status*/) override {
-    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_next", handleNext, position);
+  int32_t handleNext(int32_t position, UErrorCode & /* status */) override {
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_next",
+                                handleNext, position);
   }
 
-  int32_t handlePrev(int32_t position, UErrorCode & /*status*/) override {
-    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_prev", handlePrev, position);
+  int32_t handlePrev(int32_t position, UErrorCode & /* status */) override {
+    PYBIND11_OVERRIDE_PURE_NAME(int32_t, SearchIterator, "_handle_prev",
+                                handlePrev, position);
   }
 
   SearchIterator *safeClone(void) const override {
-    PYBIND11_OVERRIDE_PURE_NAME(SearchIterator *, SearchIterator, "safe_clone", safeClone);
+    PYBIND11_OVERRIDE_PURE_NAME(SearchIterator *, SearchIterator, "safe_clone",
+                                safeClone);
   }
 
-  void setOffset(int32_t position, UErrorCode & /*status*/) override {
-    PYBIND11_OVERRIDE_PURE_NAME(void, SearchIterator, "set_offset", setOffset, position);
+  void setOffset(int32_t position, UErrorCode & /* status */) override {
+    PYBIND11_OVERRIDE_PURE_NAME(void, SearchIterator, "set_offset", setOffset,
+                                position);
   }
 
   using SearchIterator::setMatchLength;
@@ -40,23 +51,30 @@ public:
 
 void init_stsearch(py::module &m) {
   //
-  // icu::SearchIterator
+  // class icu::SearchIterator
   //
   py::class_<SearchIterator, UObject, PySearchIterator> si(m, "SearchIterator");
 
   si.def(py::init<const PySearchIterator &>(), py::arg("other"))
       .def(py::init<>())
-      .def(py::init([](const icupy::UnicodeStringVariant &text, std::optional<BreakIterator *> &breakiter) {
-             return std::make_unique<PySearchIterator>(icupy::to_unistr(text), breakiter.value_or(nullptr));
+      .def(py::init([](const icupy::UnicodeStringVariant &text,
+                       std::optional<BreakIterator *> &breakiter) {
+             return std::make_unique<PySearchIterator>(
+                 icupy::to_unistr(text), breakiter.value_or(nullptr));
            }),
            py::arg("text"), py::arg("breakiter") = std::nullopt)
-      .def(py::init([](CharacterIterator &text, std::optional<BreakIterator *> &breakiter) {
-             return std::make_unique<PySearchIterator>(text, breakiter.value_or(nullptr));
+      .def(py::init([](CharacterIterator &text,
+                       std::optional<BreakIterator *> &breakiter) {
+             return std::make_unique<PySearchIterator>(
+                 text, breakiter.value_or(nullptr));
            }),
            py::arg("text"), py::arg("breakiter") = std::nullopt);
 
   si.def(
-      "__eq__", [](const SearchIterator &self, const SearchIterator &other) { return self == other; },
+      "__eq__",
+      [](const SearchIterator &self, const SearchIterator &other) {
+        return self == other;
+      },
       py::is_operator(), py::arg("other"));
 
   si.def("__iter__", [](SearchIterator &self) -> SearchIterator & {
@@ -65,7 +83,10 @@ void init_stsearch(py::module &m) {
   });
 
   si.def(
-      "__ne__", [](const SearchIterator &self, const SearchIterator &other) { return self != other; },
+      "__ne__",
+      [](const SearchIterator &self, const SearchIterator &other) {
+        return self != other;
+      },
       py::is_operator(), py::arg("other"));
 
   si.def("__next__", [](SearchIterator &self) {
@@ -82,7 +103,8 @@ void init_stsearch(py::module &m) {
   si.def("__reversed__", [](SearchIterator &self) {
     std::vector<int32_t> result;
     ErrorCode error_code;
-    for (auto n = self.last(error_code); n != USEARCH_DONE; n = self.previous(error_code)) {
+    for (auto n = self.last(error_code); n != USEARCH_DONE;
+         n = self.previous(error_code)) {
       if (error_code.isFailure()) {
         throw icupy::ICUError(error_code);
       }
@@ -120,7 +142,8 @@ void init_stsearch(py::module &m) {
 
   si.def("get_matched_start", &SearchIterator::getMatchedStart);
 
-  si.def("get_matched_text", &SearchIterator::getMatchedText, py::arg("result"));
+  si.def("get_matched_text", &SearchIterator::getMatchedText,
+         py::arg("result"));
 
   si.def("get_text", &SearchIterator::getText);
 
@@ -167,7 +190,8 @@ void init_stsearch(py::module &m) {
 
   si.def(
       "set_attribute",
-      [](SearchIterator &self, USearchAttribute attribute, USearchAttributeValue value) {
+      [](SearchIterator &self, USearchAttribute attribute,
+         USearchAttributeValue value) {
         ErrorCode error_code;
         self.setAttribute(attribute, value, error_code);
         if (error_code.isFailure()) {
@@ -187,11 +211,13 @@ void init_stsearch(py::module &m) {
       },
       py::arg("breakiter"));
 
-  si.def("_set_match_length", &PySearchIterator::setMatchLength, py::arg("length"));
+  si.def("_set_match_length", &PySearchIterator::setMatchLength,
+         py::arg("length"));
 
   si.def("_set_match_not_found", &PySearchIterator::setMatchNotFound);
 
-  si.def("_set_match_start", &PySearchIterator::setMatchStart, py::arg("position"));
+  si.def("_set_match_start", &PySearchIterator::setMatchStart,
+         py::arg("position"));
 
   si.def(
         "set_text",
@@ -215,74 +241,95 @@ void init_stsearch(py::module &m) {
           py::arg("text"));
 
   //
-  // icu::StringSearch
+  // class icu::StringSearch
   //
   py::class_<StringSearch, SearchIterator> ss(m, "StringSearch");
 
   ss.def(
         // [1] StringSearch::StringSearch
-        py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &text,
-                    const icupy::LocaleVariant &locale, std::optional<BreakIterator *> &breakiter) {
+        py::init([](const icupy::UnicodeStringVariant &pattern,
+                    const icupy::UnicodeStringVariant &text,
+                    const icupy::LocaleVariant &locale,
+                    std::optional<BreakIterator *> &breakiter) {
           ErrorCode error_code;
-          auto result =
-              std::make_unique<StringSearch>(icupy::to_unistr(pattern), icupy::to_unistr(text),
-                                             icupy::to_locale(locale), breakiter.value_or(nullptr), error_code);
+          auto result = std::make_unique<StringSearch>(
+              icupy::to_unistr(pattern), icupy::to_unistr(text),
+              icupy::to_locale(locale), breakiter.value_or(nullptr),
+              error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
           return result;
         }),
-        py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter") = std::nullopt)
+        py::arg("pattern"), py::arg("text"), py::arg("locale"),
+        py::arg("breakiter") = std::nullopt)
       .def(
           // [2] StringSearch::StringSearch
-          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &text,
-                      RuleBasedCollator *coll, std::optional<BreakIterator *> &breakiter) {
-            ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), icupy::to_unistr(text), coll,
-                                                         breakiter.value_or(nullptr), error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("text"), py::arg("coll").none(false), py::arg("breakiter") = std::nullopt)
-      .def(
-          // [3] StringSearch::StringSearch
-          py::init([](const icupy::UnicodeStringVariant &pattern, CharacterIterator &text,
-                      const icupy::LocaleVariant &locale, std::optional<BreakIterator *> &breakiter) {
-            ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), text, icupy::to_locale(locale),
-                                                         breakiter.value_or(nullptr), error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          }),
-          py::arg("pattern"), py::arg("text"), py::arg("locale"), py::arg("breakiter") = std::nullopt)
-      .def(
-          // [4] StringSearch::StringSearch
-          py::init([](const icupy::UnicodeStringVariant &pattern, CharacterIterator &text, RuleBasedCollator *coll,
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      const icupy::UnicodeStringVariant &text,
+                      RuleBasedCollator *coll,
                       std::optional<BreakIterator *> &breakiter) {
             ErrorCode error_code;
-            auto result = std::make_unique<StringSearch>(icupy::to_unistr(pattern), text, coll,
-                                                         breakiter.value_or(nullptr), error_code);
+            auto result = std::make_unique<StringSearch>(
+                icupy::to_unistr(pattern), icupy::to_unistr(text), coll,
+                breakiter.value_or(nullptr), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           }),
-          py::arg("pattern"), py::arg("text"), py::arg("coll").none(false), py::arg("breakiter") = std::nullopt)
+          py::arg("pattern"), py::arg("text"), py::arg("coll").none(false),
+          py::arg("breakiter") = std::nullopt)
+      .def(
+          // [3] StringSearch::StringSearch
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      CharacterIterator &text,
+                      const icupy::LocaleVariant &locale,
+                      std::optional<BreakIterator *> &breakiter) {
+            ErrorCode error_code;
+            auto result = std::make_unique<StringSearch>(
+                icupy::to_unistr(pattern), text, icupy::to_locale(locale),
+                breakiter.value_or(nullptr), error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"), py::arg("text"), py::arg("locale"),
+          py::arg("breakiter") = std::nullopt)
+      .def(
+          // [4] StringSearch::StringSearch
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      CharacterIterator &text, RuleBasedCollator *coll,
+                      std::optional<BreakIterator *> &breakiter) {
+            ErrorCode error_code;
+            auto result = std::make_unique<StringSearch>(
+                icupy::to_unistr(pattern), text, coll,
+                breakiter.value_or(nullptr), error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          }),
+          py::arg("pattern"), py::arg("text"), py::arg("coll").none(false),
+          py::arg("breakiter") = std::nullopt)
       .def(
           // [5] StringSearch::StringSearch
           py::init<const StringSearch &>(), py::arg("other"));
 
   ss.def("__copy__", &StringSearch::clone);
 
-  ss.def("__deepcopy__", [](const StringSearch &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  ss.def(
+      "__deepcopy__",
+      [](const StringSearch &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   ss.def("clone", &StringSearch::clone);
 
-  ss.def("get_collator", &StringSearch::getCollator, py::return_value_policy::reference);
+  ss.def("get_collator", &StringSearch::getCollator,
+         py::return_value_policy::reference);
 
   ss.def("get_offset", &StringSearch::getOffset);
 
@@ -323,5 +370,6 @@ void init_stsearch(py::module &m) {
       },
       py::arg("pattern"));
 
-  si.def_property_readonly_static("DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
+  si.def_property_readonly_static(
+      "DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
 }

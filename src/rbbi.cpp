@@ -10,22 +10,32 @@ using namespace icu;
 
 void init_rbbi(py::module &m) {
   //
-  // icu::BreakIterator
+  // class icu::BreakIterator
   //
   py::class_<BreakIterator, UObject> bi(m, "BreakIterator");
 
-  py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator", py::arithmetic())
+  py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator",
+                                           py::arithmetic())
       .value("DONE", BreakIterator::DONE,
-             "*DONE* is returned by *previous()* and *next()* after all valid boundaries have been returned.")
+             "*DONE* is returned by *previous()* and *next()* after all valid "
+             "boundaries have been returned.")
       .export_values();
 
   bi.def("__copy__", &BreakIterator::clone);
 
-  bi.def("__deepcopy__", [](const BreakIterator &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  bi.def(
+      "__deepcopy__",
+      [](const BreakIterator &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   bi.def(
-      "__eq__", [](const BreakIterator &self, const BreakIterator &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const BreakIterator &self, const BreakIterator &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   bi.def("__iter__", [](BreakIterator &self) -> BreakIterator & {
     self.first();
@@ -33,8 +43,11 @@ void init_rbbi(py::module &m) {
   });
 
   bi.def(
-      "__ne__", [](const BreakIterator &self, const BreakIterator &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const BreakIterator &self, const BreakIterator &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
   bi.def("__next__", [](BreakIterator &self) {
     auto n = self.next();
@@ -46,14 +59,18 @@ void init_rbbi(py::module &m) {
 
   bi.def("__reversed__", [](BreakIterator &self) {
     std::vector<int32_t> result;
-    for (auto n = self.last(); n != 0 && n != BreakIterator::DONE; n = self.previous()) {
+    for (auto n = self.last(); n != 0 && n != BreakIterator::DONE;
+         n = self.previous()) {
       result.push_back(n);
     }
     return result;
   });
 
   bi.def(
-      "adopt_text", [](BreakIterator &self, CharacterIterator *it) { self.adoptText(it->clone()); },
+      "adopt_text",
+      [](BreakIterator &self, CharacterIterator *it) {
+        self.adoptText(it->clone());
+      },
       py::arg("it").none(false));
 
   bi.def("clone", &BreakIterator::clone);
@@ -62,11 +79,12 @@ void init_rbbi(py::module &m) {
       "create_character_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createCharacterInstance(icupy::to_locale(where), error_code);
+        auto result = BreakIterator::createCharacterInstance(
+            icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return it;
+        return result;
       },
       py::arg("where"));
 
@@ -74,11 +92,12 @@ void init_rbbi(py::module &m) {
       "create_line_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createLineInstance(icupy::to_locale(where), error_code);
+        auto result = BreakIterator::createLineInstance(icupy::to_locale(where),
+                                                        error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return it;
+        return result;
       },
       py::arg("where"));
 
@@ -86,11 +105,12 @@ void init_rbbi(py::module &m) {
       "create_sentence_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createSentenceInstance(icupy::to_locale(where), error_code);
+        auto result = BreakIterator::createSentenceInstance(
+            icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return it;
+        return result;
       },
       py::arg("where"));
 
@@ -98,11 +118,12 @@ void init_rbbi(py::module &m) {
       "create_title_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createTitleInstance(icupy::to_locale(where), error_code);
+        auto result = BreakIterator::createTitleInstance(
+            icupy::to_locale(where), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return it;
+        return result;
       },
       py::arg("where"));
 
@@ -110,11 +131,12 @@ void init_rbbi(py::module &m) {
       "create_word_instance",
       [](const icupy::LocaleVariant &where) {
         ErrorCode error_code;
-        auto it = BreakIterator::createWordInstance(icupy::to_locale(where), error_code);
+        auto result = BreakIterator::createWordInstance(icupy::to_locale(where),
+                                                        error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return it;
+        return result;
       },
       py::arg("where"));
 
@@ -139,15 +161,20 @@ void init_rbbi(py::module &m) {
 
   bi.def_static(
         "get_display_name",
-        [](const icupy::LocaleVariant &object_locale, const icupy::LocaleVariant &display_locale,
+        [](const icupy::LocaleVariant &object_locale,
+           const icupy::LocaleVariant &display_locale,
            UnicodeString &name) -> UnicodeString & {
-          return BreakIterator::getDisplayName(icupy::to_locale(object_locale), icupy::to_locale(display_locale), name);
+          return BreakIterator::getDisplayName(icupy::to_locale(object_locale),
+                                               icupy::to_locale(display_locale),
+                                               name);
         },
         py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))
       .def_static(
           "get_display_name",
-          [](const icupy::LocaleVariant &object_locale, UnicodeString &name) -> UnicodeString & {
-            return BreakIterator::getDisplayName(icupy::to_locale(object_locale), name);
+          [](const icupy::LocaleVariant &object_locale,
+             UnicodeString &name) -> UnicodeString & {
+            return BreakIterator::getDisplayName(
+                icupy::to_locale(object_locale), name);
           },
           py::arg("object_locale"), py::arg("name"));
 
@@ -168,9 +195,10 @@ void init_rbbi(py::module &m) {
 
   bi.def("get_rule_status_vec", [](BreakIterator &self) {
     ErrorCode error_code;
-    std::vector<int32_t> result(self.getRuleStatusVec(nullptr, 0, error_code));
+    const auto capacity = self.getRuleStatusVec(nullptr, 0, error_code);
+    std::vector<int32_t> result(capacity, 0);
     error_code.reset();
-    self.getRuleStatusVec(result.data(), static_cast<int32_t>(result.size()), error_code);
+    self.getRuleStatusVec(result.data(), capacity, error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
@@ -178,7 +206,8 @@ void init_rbbi(py::module &m) {
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
-  bi.def("get_text", &BreakIterator::getText, py::return_value_policy::reference);
+  bi.def("get_text", &BreakIterator::getText,
+         py::return_value_policy::reference);
 
   bi.def(
       "get_utext",
@@ -193,7 +222,10 @@ void init_rbbi(py::module &m) {
       py::keep_alive<0, 1>(), py::arg("fill_in") = std::nullopt);
 
   bi.def(
-      "is_boundary", [](BreakIterator &self, int32_t offset) -> py::bool_ { return self.isBoundary(offset); },
+      "is_boundary",
+      [](BreakIterator &self, int32_t offset) -> py::bool_ {
+        return self.isBoundary(offset);
+      },
       py::arg("offset"));
 
   bi.def("last", &BreakIterator::last);
@@ -205,11 +237,16 @@ void init_rbbi(py::module &m) {
 
   bi.def("previous", &BreakIterator::previous);
 
-  // FIXME: Implement "BreakIterator& BreakIterator::refreshInputText(UText *input, UErrorCode &status)".
-  // TODO: Implement "static URegistryKey BreakIterator::registerInstance(BreakIterator *toAdopt, const Locale &locale,
-  //  UBreakIteratorType kind,	UErrorCode &status)".
+  // FIXME: Implement "BreakIterator& BreakIterator::refreshInputText(
+  //  UText *input, UErrorCode &status)".
 
-  bi.def("set_text", py::overload_cast<const UnicodeString &>(&BreakIterator::setText), py::arg("text"))
+  // TODO: Implement "static URegistryKey BreakIterator::registerInstance(
+  //  BreakIterator *toAdopt, const Locale &locale, UBreakIteratorType kind,
+  //  UErrorCode &status)".
+
+  bi.def("set_text",
+         py::overload_cast<const UnicodeString &>(&BreakIterator::setText),
+         py::arg("text"))
       .def(
           "set_text",
           [](BreakIterator &self, _UTextPtr &text) {
@@ -221,21 +258,25 @@ void init_rbbi(py::module &m) {
           },
           py::arg("text"));
 
-  // TODO: Implement "static UBool BreakIterator::unregister(URegistryKey key, UErrorCode &status)".
+  // TODO: Implement "static UBool BreakIterator::unregister(URegistryKey key,
+  //  UErrorCode &status)".
 
   //
-  // icu::RuleBasedBreakIterator
+  // class icu::RuleBasedBreakIterator
   //
-  py::class_<RuleBasedBreakIterator, BreakIterator> rbbi(m, "RuleBasedBreakIterator");
+  py::class_<RuleBasedBreakIterator, BreakIterator> rbbi(
+      m, "RuleBasedBreakIterator");
 
   rbbi.def(
           // [2] RuleBasedBreakIterator::RuleBasedBreakIterator
           py::init<const RuleBasedBreakIterator &>(), py::arg("other"))
       .def(
           // [3] RuleBasedBreakIterator::RuleBasedBreakIterator
-          py::init([](const icupy::UnicodeStringVariant &rules, UParseError &parse_error) {
+          py::init([](const icupy::UnicodeStringVariant &rules,
+                      UParseError &parse_error) {
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedBreakIterator>(icupy::to_unistr(rules), parse_error, error_code);
+            auto result = std::make_unique<RuleBasedBreakIterator>(
+                icupy::to_unistr(rules), parse_error, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -247,28 +288,31 @@ void init_rbbi(py::module &m) {
           py::init([](const py::buffer &compiled_rules, uint32_t rule_length) {
             auto info = compiled_rules.request();
             ErrorCode error_code;
-            auto result = std::make_unique<RuleBasedBreakIterator>(reinterpret_cast<uint8_t *>(info.ptr), rule_length,
-                                                                   error_code);
+            auto result = std::make_unique<RuleBasedBreakIterator>(
+                reinterpret_cast<uint8_t *>(info.ptr), rule_length, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           }),
-          py::keep_alive<1, 2>(), py::arg("compiled_rules"), py::arg("rule_length"));
+          py::keep_alive<1, 2>(), py::arg("compiled_rules"),
+          py::arg("rule_length"));
 
   rbbi.def("__hash__", &RuleBasedBreakIterator::hashCode);
 
   rbbi.def("clone", &RuleBasedBreakIterator::clone);
 
   rbbi.def("get_binary_rules", [](RuleBasedBreakIterator &self) {
-    uint32_t length = 0;
+    uint32_t length;
     auto p = self.getBinaryRules(length);
-    return py::bytes(reinterpret_cast<char *>(const_cast<uint8_t *>(p)), length);
+    return py::bytes(reinterpret_cast<char *>(const_cast<uint8_t *>(p)),
+                     length);
   });
 
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules);
 
   rbbi.def("hash_code", &RuleBasedBreakIterator::hashCode);
 
-  // FIXME: Implement "BreakIterator& refreshInputText(UText *input, UErrorCode &status)".
+  // FIXME: Implement "BreakIterator& refreshInputText(UText *input,
+  //  UErrorCode &status)".
 }

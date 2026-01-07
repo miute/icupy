@@ -9,15 +9,17 @@ using namespace icu;
 
 void init_resbund(py::module &m) {
   //
-  // icu::ResourceBundle
+  // class icu::ResourceBundle
   //
   py::class_<ResourceBundle, UObject> res(m, "ResourceBundle");
 
   res.def(
          // [1] ResourceBundle::ResourceBundle
-         py::init([](const UnicodeString &package_name, const icupy::LocaleVariant &locale) {
+         py::init([](const UnicodeString &package_name,
+                     const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<ResourceBundle>(package_name, icupy::to_locale(locale), error_code);
+           auto result = std::make_unique<ResourceBundle>(
+               package_name, icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -28,7 +30,8 @@ void init_resbund(py::module &m) {
           // [2] ResourceBundle::ResourceBundle
           py::init([](const icupy::UnicodeStringVariant &package_name) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(icupy::to_unistr(package_name), error_code);
+            auto result = std::make_unique<ResourceBundle>(
+                icupy::to_unistr(package_name), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -47,10 +50,12 @@ void init_resbund(py::module &m) {
           }))
       .def(
           // [4] ResourceBundle::ResourceBundle
-          py::init([](std::optional<const std::string> &package_name, const icupy::LocaleVariant &locale) {
+          py::init([](std::optional<const std::string> &package_name,
+                      const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<ResourceBundle>(package_name ? package_name->data() : nullptr,
-                                                           icupy::to_locale(locale), error_code);
+            auto result = std::make_unique<ResourceBundle>(
+                package_name ? package_name->data() : nullptr,
+                icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -74,7 +79,12 @@ void init_resbund(py::module &m) {
 
   res.def("__copy__", &ResourceBundle::clone);
 
-  res.def("__deepcopy__", [](const ResourceBundle &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  res.def(
+      "__deepcopy__",
+      [](const ResourceBundle &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   res.def("__iter__", [](ResourceBundle &self) -> ResourceBundle & {
     self.resetIterator();
@@ -121,8 +131,8 @@ void init_resbund(py::module &m) {
           py::arg("index"));
 
   res.def("get_binary", [](const ResourceBundle &self) {
+    int32_t length;
     ErrorCode error_code;
-    int32_t length = 0;
     auto p = self.getBinary(length, error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
@@ -140,8 +150,8 @@ void init_resbund(py::module &m) {
   });
 
   res.def("get_int_vector", [](const ResourceBundle &self) {
-    ErrorCode error_code;
     int32_t length;
+    ErrorCode error_code;
     auto p = self.getIntVector(length, error_code);
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
@@ -150,7 +160,8 @@ void init_resbund(py::module &m) {
     return result;
   });
 
-  res.def("get_key", &ResourceBundle::getKey, py::return_value_policy::reference);
+  res.def("get_key", &ResourceBundle::getKey,
+          py::return_value_policy::reference);
 
   res.def(
       "get_locale",
@@ -164,7 +175,8 @@ void init_resbund(py::module &m) {
       },
       py::arg("type_"));
 
-  res.def("get_name", &ResourceBundle::getName, py::return_value_policy::reference);
+  res.def("get_name", &ResourceBundle::getName,
+          py::return_value_policy::reference);
 
   res.def("get_next", [](ResourceBundle &self) {
     ErrorCode error_code;
@@ -234,11 +246,14 @@ void init_resbund(py::module &m) {
     self.getVersion(info);
     py::tuple result(U_MAX_VERSION_LENGTH);
     int n = 0;
-    std::for_each(std::begin(info), std::end(info), [&](auto v) { result[n++] = v; });
+    std::for_each(std::begin(info), std::end(info),
+                  [&](auto v) { result[n++] = v; });
     return result;
   });
 
-  res.def("has_next", [](const ResourceBundle &self) -> py::bool_ { return self.hasNext(); });
+  res.def("has_next", [](const ResourceBundle &self) -> py::bool_ {
+    return self.hasNext();
+  });
 
   res.def("reset_iterator", &ResourceBundle::resetIterator);
 }

@@ -7,10 +7,13 @@
 class _UEnumerationPtr {
 public:
   _UEnumerationPtr(UEnumeration *p);
+
   _UEnumerationPtr(UEnumeration *p, const std::shared_ptr<void> &source);
+
   ~_UEnumerationPtr();
 
   UEnumeration *get() const;
+
   operator UEnumeration *() const { return get(); }
 
 private:

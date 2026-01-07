@@ -12,24 +12,29 @@ using namespace icu;
 
 void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   //
-  // icu::Formattable::ISDATE
+  // enum icu::Formattable::ISDATE
   //
   py::enum_<Formattable::ISDATE>(
       fmt, "ISDATE", py::arithmetic(),
-      "This enum is only used to let callers distinguish between the *Formattable(UDate)* constructor and the "
-      "*Formattable(double)* constructor; the compiler cannot distinguish the signatures, since UDate is currently "
+      "This enum is only used to let callers distinguish between the "
+      "*Formattable(UDate)* constructor and the "
+      "*Formattable(double)* constructor; the compiler cannot distinguish the "
+      "signatures, since UDate is currently "
       "typedefed to be either double or long.\n\n"
-      "If UDate is changed later to be a bonafide class or struct, then we no longer need this enum.")
+      "If UDate is changed later to be a bonafide class or struct, then we no "
+      "longer need this enum.")
       .value("IS_DATE", Formattable::ISDATE::kIsDate)
       .export_values();
 
   //
-  // icu::Formattable::Type
+  // enum icu::Formattable::Type
   //
   py::enum_<Formattable::Type>(
       fmt, "Type", py::arithmetic(),
-      "Selector for flavor of data type contained within a *Formattable* object.\n\n"
-      "*Formattable* is a union of several different types, and at any time contains exactly one type.")
+      "Selector for flavor of data type contained within a *Formattable* "
+      "object.\n\n"
+      "*Formattable* is a union of several different types, and at any time "
+      "contains exactly one type.")
       .value("DATE", Formattable::Type::kDate,
              "Selector indicating a UDate value.\n\n  "
              "Use *get_date* to retrieve the value.")
@@ -54,15 +59,17 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       .export_values();
 
   //
-  // icu::Formattable
+  // class icu::Formattable
   //
   fmt.def(py::init<>())
-      .def(py::init<UDate, Formattable::ISDATE>(), py::arg("d"), py::arg("flag"))
+      .def(py::init<UDate, Formattable::ISDATE>(), py::arg("d"),
+           py::arg("flag"))
       .def(py::init<double>(), py::arg("d").noconvert())
       .def(py::init<int32_t>(), py::arg("l"))
       .def(py::init<int64_t>(), py::arg("ll"))
       .def(
-          // [7] Formattable::Formattable(StringPiece number, UErrorCode &status)
+          // [7] Formattable::Formattable(StringPiece number,
+          //                              UErrorCode &status)
           py::init([](const std::string &number) {
             ErrorCode error_code;
             auto result = std::make_unique<Formattable>(number, error_code);
@@ -74,83 +81,110 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           py::arg("number"))
       .def(py::init<const UnicodeString &>(), py::arg("str_to_copy"))
       .def(py::init<const Formattable &>(), py::arg("other"))
-      .def(py::init([](const std::vector<Formattable> &array_to_copy, int32_t count) {
+      .def(py::init([](const std::vector<Formattable> &array_to_copy,
+                       int32_t count) {
              if (count == -1) {
                count = static_cast<int32_t>(array_to_copy.size());
              }
              return std::make_unique<Formattable>(array_to_copy.data(), count);
            }),
            py::arg("array_to_copy"), py::arg("count") = -1)
-      // FIXME: Implement "icu::Formattable::Formattable(UObject *objectToAdopt)".
-      .def(py::init(
-               [](const Calendar *object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt->clone()); }),
+      // FIXME: Implement "icu::Formattable::Formattable(
+      //  UObject *objectToAdopt)".
+      .def(py::init([](const Calendar *object_to_adopt) {
+             return std::make_unique<Formattable>(object_to_adopt->clone());
+           }),
            py::arg("object_to_adopt").none(false))
       .def(py::init([](const DateInterval *object_to_adopt) {
              return std::make_unique<Formattable>(object_to_adopt->clone());
            }),
            py::arg("object_to_adopt").none(false))
-      .def(py::init(
-               [](const Measure *object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt->clone()); }),
+      .def(py::init([](const Measure *object_to_adopt) {
+             return std::make_unique<Formattable>(object_to_adopt->clone());
+           }),
            py::arg("object_to_adopt").none(false))
-      .def(py::init(
-               [](const TimeZone *object_to_adopt) { return std::make_unique<Formattable>(object_to_adopt->clone()); }),
+      .def(py::init([](const TimeZone *object_to_adopt) {
+             return std::make_unique<Formattable>(object_to_adopt->clone());
+           }),
            py::arg("object_to_adopt").none(false));
 
   fmt.def("__copy__", &Formattable::clone);
 
-  fmt.def("__deepcopy__", [](const Formattable &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  fmt.def(
+      "__deepcopy__",
+      [](const Formattable &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   fmt.def(
-      "__eq__", [](const Formattable &self, const Formattable &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Formattable &self, const Formattable &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
   fmt.def(
       "__getitem__",
       [](Formattable &self, int32_t index) -> Formattable & {
+        int32_t count;
         ErrorCode error_code;
-        int32_t count = 0;
         self.getArray(count, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        auto n = index;
-        if (n < 0) {
-          n += count;
+        auto actual_index = index;
+        if (actual_index < 0) {
+          actual_index += count;
         }
-        if (n < 0 || n >= count) {
-          throw py::index_error("array index out of range: " + std::to_string(index));
+        if (actual_index < 0 || actual_index >= count) {
+          throw py::index_error("array index out of range: " +
+                                std::to_string(index));
         }
-        return self[n];
+        return self[actual_index];
       },
       py::arg("index"));
 
   fmt.def(
-      "__ne__", [](const Formattable &self, const Formattable &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Formattable &self, const Formattable &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 
-  // FIXME: Implement "void icu::Formattable::adoptArray(Formattable *array, int32_t count)".
-  // FIXME: Implement "void icu::Formattable::adoptObject(UObject *objectToAdopt)".
-  // FIXME: Implement "void icu::Formattable::adoptString(UnicodeString *stringToAdopt)".
+  // FIXME: Implement "void icu::Formattable::adoptArray(Formattable *array,
+  //  int32_t count)".
+
+  // FIXME: Implement "void icu::Formattable::adoptObject(UObject
+  //  *objectToAdopt)".
+
+  // FIXME: Implement "void icu::Formattable::adoptString(UnicodeString
+  //  *stringToAdopt)".
 
   fmt.def("clone", &Formattable::clone);
 
-  // TODO: Implement "const Formattable *icu::Formattable::fromUFormattable(const UFormattable *fmt)".
-  // TODO: Implement "Formattable *icu::Formattable::fromUFormattable(UFormattable *fmt)".
+  // TODO: Implement "const Formattable
+  //  *icu::Formattable::fromUFormattable(const UFormattable *fmt)".
 
-  fmt.def("get_array", [](const Formattable &self) {
-    ErrorCode error_code;
-    int32_t count;
-    auto array = self.getArray(count, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    std::vector<Formattable> result;
-    result.reserve(count);
-    for (int32_t i = 0; i < count; ++i) {
-      result.push_back(array[i]);
-    }
-    return result;
-  });
+  // TODO: Implement "Formattable
+  //  *icu::Formattable::fromUFormattable(UFormattable *fmt)".
+
+  fmt.def(
+      "get_array",
+      [](const Formattable &self) {
+        int32_t count;
+        ErrorCode error_code;
+        auto p = self.getArray(count, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        std::vector<const Formattable *> result(count, nullptr);
+        for (int32_t i = 0; i < count; ++i) {
+          result[i] = p + i;
+        }
+        return result;
+      },
+      py::return_value_policy::reference);
 
   fmt.def("get_date", [](const Formattable &self) {
     ErrorCode error_code;
@@ -199,8 +233,10 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def(
       "get_object",
-      [](const Formattable &self) -> std::variant<const BasicTimeZone *, const Calendar *, const CurrencyAmount *,
-                                                  const DateInterval *, const TimeUnitAmount *, const UObject *> {
+      [](const Formattable &self)
+          -> std::variant<const BasicTimeZone *, const Calendar *,
+                          const CurrencyAmount *, const DateInterval *,
+                          const TimeUnitAmount *, const UObject *> {
         auto obj = self.getObject();
         if (obj) {
           auto cal = dynamic_cast<const Calendar *>(obj);
@@ -239,7 +275,8 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
           })
       .def(
           "get_string",
-          [](const Formattable &self, UnicodeString &result) -> UnicodeString & {
+          [](const Formattable &self,
+             UnicodeString &result) -> UnicodeString & {
             ErrorCode error_code;
             auto &value = self.getString(result, error_code);
             if (error_code.isFailure()) {
@@ -251,11 +288,14 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
 
   fmt.def("get_type", &Formattable::getType);
 
-  fmt.def("is_numeric", [](const Formattable &self) -> py::bool_ { return self.isNumeric(); });
+  fmt.def("is_numeric", [](const Formattable &self) -> py::bool_ {
+    return self.isNumeric();
+  });
 
   fmt.def(
       "set_array",
-      [](Formattable &self, const std::vector<Formattable> &array, int32_t count) {
+      [](Formattable &self, const std::vector<Formattable> &array,
+         int32_t count) {
         if (count == -1) {
           count = static_cast<int32_t>(array.size());
         }
@@ -290,5 +330,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
       py::arg("string_to_copy"));
 
   // TODO: Implement "UFormattable *icu::Formattable::toUFormattable()".
-  // TODO: Implement "const UFormattable *icu::Formattable::toUFormattable() const".
+
+  // TODO: Implement "const UFormattable *icu::Formattable::toUFormattable()
+  //  const".
 }

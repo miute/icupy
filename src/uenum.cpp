@@ -7,20 +7,27 @@
 using namespace icu;
 
 _UEnumerationPtr::_UEnumerationPtr(UEnumeration *p) : p_(p) {}
-_UEnumerationPtr::_UEnumerationPtr(UEnumeration *p, const std::shared_ptr<void> &source) : p_(p), source_(source) {}
+
+_UEnumerationPtr::_UEnumerationPtr(UEnumeration *p,
+                                   const std::shared_ptr<void> &source)
+    : p_(p), source_(source) {}
+
 _UEnumerationPtr::~_UEnumerationPtr() {}
+
 UEnumeration *_UEnumerationPtr::get() const { return p_; }
 
 void init_uenum(py::module &m) {
   //
-  // _UEnumerationPtr
+  // struct UEnumeration
   //
   py::class_<_UEnumerationPtr>(m, "_UEnumerationPtr");
 
   //
   // Functions
   //
-  m.def("uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); }, py::arg("en"));
+  m.def(
+      "uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); },
+      py::arg("en"));
 
   m.def(
       "uenum_count",
@@ -53,17 +60,22 @@ void init_uenum(py::module &m) {
         if (count == -1) {
           count = static_cast<int32_t>(strings.size());
         }
-        ErrorCode error_code;
-        auto source = std::shared_ptr<char *[]>(new char *[strings.size()], std::default_delete<char *[]>());
-        auto s = source.get();
-        for (size_t n = 0; n < strings.size(); ++n, ++s) {
-          *s = strdup(strings[n].c_str());
+        auto strings_ptr = std::shared_ptr<char *[]>();
+        if (count > 0) {
+          strings_ptr = std::shared_ptr<char *[]>(
+              new char *[count], std::default_delete<char *[]>());
+          auto pp = strings_ptr.get();
+          for (size_t n = 0; n < count; ++n, ++pp) {
+            *pp = strdup(strings[n].c_str());
+          }
         }
-        auto p = uenum_openCharStringsEnumeration(source.get(), count, error_code);
+        ErrorCode error_code;
+        auto p = uenum_openCharStringsEnumeration(strings_ptr.get(), count,
+                                                  error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p, source);
+        return std::make_unique<_UEnumerationPtr>(p, strings_ptr);
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
@@ -87,18 +99,23 @@ void init_uenum(py::module &m) {
         if (count == -1) {
           count = static_cast<int32_t>(strings.size());
         }
-        ErrorCode error_code;
-        auto source = std::shared_ptr<UChar *[]>(new UChar *[strings.size()], std::default_delete<UChar *[]>());
-        auto s = source.get();
-        for (size_t n = 0; n < strings.size(); ++n, ++s) {
-          *s = new UChar[strings[n].size() + 1];
-          u_strcpy(*s, strings[n].c_str());
+        auto strings_ptr = std::shared_ptr<UChar *[]>();
+        if (count > 0) {
+          strings_ptr = std::shared_ptr<UChar *[]>(
+              new UChar *[count], std::default_delete<UChar *[]>());
+          auto pp = strings_ptr.get();
+          for (size_t n = 0; n < count; ++n, ++pp) {
+            *pp = new UChar[strings[n].size() + 1];
+            u_strcpy(*pp, strings[n].c_str());
+          }
         }
-        auto p = uenum_openUCharStringsEnumeration(source.get(), count, error_code);
+        ErrorCode error_code;
+        auto p = uenum_openUCharStringsEnumeration(strings_ptr.get(), count,
+                                                   error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p, source);
+        return std::make_unique<_UEnumerationPtr>(p, strings_ptr);
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)

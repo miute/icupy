@@ -6,9 +6,11 @@
 class _USpoofCheckerPtr {
 public:
   _USpoofCheckerPtr(USpoofChecker *p);
+
   ~_USpoofCheckerPtr();
 
   USpoofChecker *get() const;
+
   operator USpoofChecker *() const { return get(); }
 
 private:
@@ -20,9 +22,11 @@ private:
 class _USpoofCheckResultPtr {
 public:
   _USpoofCheckResultPtr(USpoofCheckResult *p);
+
   ~_USpoofCheckResultPtr();
 
   USpoofCheckResult *get() const;
+
   operator USpoofCheckResult *() const { return get(); }
 
 private:

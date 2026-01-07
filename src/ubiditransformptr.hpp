@@ -7,9 +7,11 @@
 class _UBiDiTransformPtr {
 public:
   _UBiDiTransformPtr(UBiDiTransform *p);
+
   ~_UBiDiTransformPtr();
 
   UBiDiTransform *get() const;
+
   operator UBiDiTransform *() const { return get(); }
 
 private:

@@ -8,71 +8,110 @@ using namespace icu;
 void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   //
-  // UMeasurePrefix
+  // enum UMeasurePrefix
   //
-  py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(),
-                            "Enumeration for SI and binary prefixes, e.g. "
-                            "\"kilo-\", \"nano-\", \"mebi-\".\n\n"
-                            "Enum values should be treated as opaque: use *umeas_get_prefix_power()* and "
-                            "*umeas_get_prefix_base()* to find their corresponding values.")
+  py::enum_<UMeasurePrefix>(
+      m, "UMeasurePrefix", py::arithmetic(),
+      "Enumeration for SI and binary prefixes, e.g. "
+      "\"kilo-\", \"nano-\", \"mebi-\".\n\n"
+      "Enum values should be treated as opaque: use *umeas_get_prefix_power()* "
+      "and "
+      "*umeas_get_prefix_base()* to find their corresponding values.")
       .value("UMEASURE_PREFIX_ONE", UMEASURE_PREFIX_ONE,
              "The absence of an SI or binary prefix.\n\n  "
-             "The integer representation of this enum value is an arbitrary implementation detail and should not be "
-             "relied upon: use *umeas_get_prefix_power()* to obtain meaningful values.")
-      .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA, "SI prefix: yotta, 10^24.")
-      .value("UMEASURE_PREFIX_ZETTA", UMEASURE_PREFIX_ZETTA, "SI prefix: zetta, 10^21.")
-      .value("UMEASURE_PREFIX_EXA", UMEASURE_PREFIX_EXA, "SI prefix: exa, 10^18.")
-      .value("UMEASURE_PREFIX_PETA", UMEASURE_PREFIX_PETA, "SI prefix: peta, 10^15.")
-      .value("UMEASURE_PREFIX_TERA", UMEASURE_PREFIX_TERA, "SI prefix: tera, 10^12.")
-      .value("UMEASURE_PREFIX_GIGA", UMEASURE_PREFIX_GIGA, "SI prefix: giga, 10^9.")
-      .value("UMEASURE_PREFIX_MEGA", UMEASURE_PREFIX_MEGA, "SI prefix: mega, 10^6.")
-      .value("UMEASURE_PREFIX_KILO", UMEASURE_PREFIX_KILO, "SI prefix: kilo, 10^3.")
-      .value("UMEASURE_PREFIX_HECTO", UMEASURE_PREFIX_HECTO, "SI prefix: hecto, 10^2.")
-      .value("UMEASURE_PREFIX_DEKA", UMEASURE_PREFIX_DEKA, "SI prefix: deka, 10^1.")
-      .value("UMEASURE_PREFIX_DECI", UMEASURE_PREFIX_DECI, "SI prefix: deci, 10^-1.")
-      .value("UMEASURE_PREFIX_CENTI", UMEASURE_PREFIX_CENTI, "SI prefix: centi, 10^-2.")
-      .value("UMEASURE_PREFIX_MILLI", UMEASURE_PREFIX_MILLI, "SI prefix: milli, 10^-3.")
-      .value("UMEASURE_PREFIX_MICRO", UMEASURE_PREFIX_MICRO, "SI prefix: micro, 10^-6.")
-      .value("UMEASURE_PREFIX_NANO", UMEASURE_PREFIX_NANO, "SI prefix: nano, 10^-9.")
-      .value("UMEASURE_PREFIX_PICO", UMEASURE_PREFIX_PICO, "SI prefix: pico, 10^-12.")
-      .value("UMEASURE_PREFIX_FEMTO", UMEASURE_PREFIX_FEMTO, "SI prefix: femto, 10^-15.")
-      .value("UMEASURE_PREFIX_ATTO", UMEASURE_PREFIX_ATTO, "SI prefix: atto, 10^-18.")
-      .value("UMEASURE_PREFIX_ZEPTO", UMEASURE_PREFIX_ZEPTO, "SI prefix: zepto, 10^-21.")
-      .value("UMEASURE_PREFIX_YOCTO", UMEASURE_PREFIX_YOCTO, "SI prefix: yocto, 10^-24.")
-      .value("UMEASURE_PREFIX_KIBI", UMEASURE_PREFIX_KIBI, "Binary prefix: kibi, 1024^1.")
-      .value("UMEASURE_PREFIX_MEBI", UMEASURE_PREFIX_MEBI, "Binary prefix: mebi, 1024^2.")
-      .value("UMEASURE_PREFIX_GIBI", UMEASURE_PREFIX_GIBI, "Binary prefix: gibi, 1024^3.")
-      .value("UMEASURE_PREFIX_TEBI", UMEASURE_PREFIX_TEBI, "Binary prefix: tebi, 1024^4.")
-      .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI, "Binary prefix: pebi, 1024^5.")
-      .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI, "Binary prefix: exbi, 1024^6.")
-      .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI, "Binary prefix: zebi, 1024^7.")
-      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI, "Binary prefix: yobi, 1024^8.")
+             "The integer representation of this enum value is an arbitrary "
+             "implementation detail and should not be "
+             "relied upon: use *umeas_get_prefix_power()* to obtain meaningful "
+             "values.")
+      .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA,
+             "SI prefix: yotta, 10^24.")
+      .value("UMEASURE_PREFIX_ZETTA", UMEASURE_PREFIX_ZETTA,
+             "SI prefix: zetta, 10^21.")
+      .value("UMEASURE_PREFIX_EXA", UMEASURE_PREFIX_EXA,
+             "SI prefix: exa, 10^18.")
+      .value("UMEASURE_PREFIX_PETA", UMEASURE_PREFIX_PETA,
+             "SI prefix: peta, 10^15.")
+      .value("UMEASURE_PREFIX_TERA", UMEASURE_PREFIX_TERA,
+             "SI prefix: tera, 10^12.")
+      .value("UMEASURE_PREFIX_GIGA", UMEASURE_PREFIX_GIGA,
+             "SI prefix: giga, 10^9.")
+      .value("UMEASURE_PREFIX_MEGA", UMEASURE_PREFIX_MEGA,
+             "SI prefix: mega, 10^6.")
+      .value("UMEASURE_PREFIX_KILO", UMEASURE_PREFIX_KILO,
+             "SI prefix: kilo, 10^3.")
+      .value("UMEASURE_PREFIX_HECTO", UMEASURE_PREFIX_HECTO,
+             "SI prefix: hecto, 10^2.")
+      .value("UMEASURE_PREFIX_DEKA", UMEASURE_PREFIX_DEKA,
+             "SI prefix: deka, 10^1.")
+      .value("UMEASURE_PREFIX_DECI", UMEASURE_PREFIX_DECI,
+             "SI prefix: deci, 10^-1.")
+      .value("UMEASURE_PREFIX_CENTI", UMEASURE_PREFIX_CENTI,
+             "SI prefix: centi, 10^-2.")
+      .value("UMEASURE_PREFIX_MILLI", UMEASURE_PREFIX_MILLI,
+             "SI prefix: milli, 10^-3.")
+      .value("UMEASURE_PREFIX_MICRO", UMEASURE_PREFIX_MICRO,
+             "SI prefix: micro, 10^-6.")
+      .value("UMEASURE_PREFIX_NANO", UMEASURE_PREFIX_NANO,
+             "SI prefix: nano, 10^-9.")
+      .value("UMEASURE_PREFIX_PICO", UMEASURE_PREFIX_PICO,
+             "SI prefix: pico, 10^-12.")
+      .value("UMEASURE_PREFIX_FEMTO", UMEASURE_PREFIX_FEMTO,
+             "SI prefix: femto, 10^-15.")
+      .value("UMEASURE_PREFIX_ATTO", UMEASURE_PREFIX_ATTO,
+             "SI prefix: atto, 10^-18.")
+      .value("UMEASURE_PREFIX_ZEPTO", UMEASURE_PREFIX_ZEPTO,
+             "SI prefix: zepto, 10^-21.")
+      .value("UMEASURE_PREFIX_YOCTO", UMEASURE_PREFIX_YOCTO,
+             "SI prefix: yocto, 10^-24.")
+      .value("UMEASURE_PREFIX_KIBI", UMEASURE_PREFIX_KIBI,
+             "Binary prefix: kibi, 1024^1.")
+      .value("UMEASURE_PREFIX_MEBI", UMEASURE_PREFIX_MEBI,
+             "Binary prefix: mebi, 1024^2.")
+      .value("UMEASURE_PREFIX_GIBI", UMEASURE_PREFIX_GIBI,
+             "Binary prefix: gibi, 1024^3.")
+      .value("UMEASURE_PREFIX_TEBI", UMEASURE_PREFIX_TEBI,
+             "Binary prefix: tebi, 1024^4.")
+      .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI,
+             "Binary prefix: pebi, 1024^5.")
+      .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI,
+             "Binary prefix: exbi, 1024^6.")
+      .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI,
+             "Binary prefix: zebi, 1024^7.")
+      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI,
+             "Binary prefix: yobi, 1024^8.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
-  // UMeasureUnitComplexity
+  // enum UMeasureUnitComplexity
   //
-  py::enum_<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity", py::arithmetic(),
-                                    "Enumeration for unit complexity.\n\n"
-                                    "There are three levels:\n\n"
-                                    "* SINGLE: A single unit, optionally with a power and/or SI or binary prefix. "
-                                    "Examples: hectare, square-kilometer, kilojoule, per-second, mebibyte.\n"
-                                    "* COMPOUND: A unit composed of the product of multiple single units. Examples: "
-                                    "meter-per-second, kilowatt-hour, kilogram-meter-per-square-second.\n"
-                                    "* MIXED: A unit composed of the sum of multiple single units. Examples: "
-                                    "foot+inch, hour+minute+second, degree+arcminute+arcsecond.\n\n"
-                                    "The complexity determines which operations are available. For example, you cannot "
-                                    "set the power or prefix of a compound unit.")
-      .value("UMEASURE_UNIT_SINGLE", UMEASURE_UNIT_SINGLE, "A single unit, like kilojoule.")
-      .value("UMEASURE_UNIT_COMPOUND", UMEASURE_UNIT_COMPOUND, "A compound unit, like meter-per-second.")
-      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED, "A mixed unit, like hour+minute.")
+  py::enum_<UMeasureUnitComplexity>(
+      m, "UMeasureUnitComplexity", py::arithmetic(),
+      "Enumeration for unit complexity.\n\n"
+      "There are three levels:\n\n"
+      "* SINGLE: A single unit, optionally with a power and/or SI or binary "
+      "prefix. "
+      "Examples: hectare, square-kilometer, kilojoule, per-second, mebibyte.\n"
+      "* COMPOUND: A unit composed of the product of multiple single units. "
+      "Examples: "
+      "meter-per-second, kilowatt-hour, kilogram-meter-per-square-second.\n"
+      "* MIXED: A unit composed of the sum of multiple single units. Examples: "
+      "foot+inch, hour+minute+second, degree+arcminute+arcsecond.\n\n"
+      "The complexity determines which operations are available. For example, "
+      "you cannot "
+      "set the power or prefix of a compound unit.")
+      .value("UMEASURE_UNIT_SINGLE", UMEASURE_UNIT_SINGLE,
+             "A single unit, like kilojoule.")
+      .value("UMEASURE_UNIT_COMPOUND", UMEASURE_UNIT_COMPOUND,
+             "A compound unit, like meter-per-second.")
+      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED,
+             "A mixed unit, like hour+minute.")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //
-  // icu::MeasureUnit
+  // class icu::MeasureUnit
   //
   py::class_<MeasureUnit, UObject> mu(m, "MeasureUnit");
 
@@ -80,16 +119,27 @@ void init_measunit(py::module &m) {
 
   mu.def("__copy__", &MeasureUnit::clone);
 
-  mu.def("__deepcopy__", [](const MeasureUnit &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  mu.def(
+      "__deepcopy__",
+      [](const MeasureUnit &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
   mu.def(
-      "__eq__", [](const MeasureUnit &self, const UObject &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const MeasureUnit &self, const UObject &other) {
+        return self == other;
+      },
+      py::is_operator(), py::arg("other"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   mu.def(
-      "__ne__", [](const MeasureUnit &self, const UObject &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const MeasureUnit &self, const UObject &other) {
+        return self != other;
+      },
+      py::is_operator(), py::arg("other"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   mu.def("clone", &MeasureUnit::clone);
@@ -2603,12 +2653,14 @@ void init_measunit(py::module &m) {
   mu.def_static(
         "get_available",
         [](const std::string &type) {
-          auto p = type.data();
+          auto type_data = type.data();
           ErrorCode error_code;
-          const auto dest_capacity = MeasureUnit::getAvailable(p, nullptr, 0, error_code);
+          const auto dest_capacity =
+              MeasureUnit::getAvailable(type_data, nullptr, 0, error_code);
           auto result = std::vector<MeasureUnit>(dest_capacity);
           error_code.reset();
-          MeasureUnit::getAvailable(p, result.data(), dest_capacity, error_code);
+          MeasureUnit::getAvailable(type_data, result.data(), dest_capacity,
+                                    error_code);
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
@@ -2617,7 +2669,8 @@ void init_measunit(py::module &m) {
         py::arg("type_"))
       .def_static("get_available", []() {
         ErrorCode error_code;
-        const auto dest_capacity = MeasureUnit::getAvailable(nullptr, 0, error_code);
+        const auto dest_capacity =
+            MeasureUnit::getAvailable(nullptr, 0, error_code);
         auto result = std::vector<MeasureUnit>(dest_capacity);
         error_code.reset();
         MeasureUnit::getAvailable(result.data(), dest_capacity, error_code);
@@ -2656,10 +2709,12 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_bit", &MeasureUnit::getBit);
 
-  mu.def_static("get_british_thermal_unit", &MeasureUnit::getBritishThermalUnit);
+  mu.def_static("get_british_thermal_unit",
+                &MeasureUnit::getBritishThermalUnit);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
-  mu.def_static("get_british_thermal_unit_it", &MeasureUnit::getBritishThermalUnitIt);
+  mu.def_static("get_british_thermal_unit_it",
+                &MeasureUnit::getBritishThermalUnitIt);
 
   mu.def_static("get_bu_jp", &MeasureUnit::getBuJp);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
@@ -2770,7 +2825,8 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   mu.def_static("get_dessert_spoon", &MeasureUnit::getDessertSpoon);
 
-  mu.def_static("get_dessert_spoon_imperial", &MeasureUnit::getDessertSpoonImperial);
+  mu.def_static("get_dessert_spoon_imperial",
+                &MeasureUnit::getDessertSpoonImperial);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
@@ -2829,7 +2885,8 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_fluid_ounce", &MeasureUnit::getFluidOunce);
 
-  mu.def_static("get_fluid_ounce_imperial", &MeasureUnit::getFluidOunceImperial);
+  mu.def_static("get_fluid_ounce_imperial",
+                &MeasureUnit::getFluidOunceImperial);
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
   mu.def_static("get_fluid_ounce_metric", &MeasureUnit::getFluidOunceMetric);
@@ -2853,7 +2910,8 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 74)
-  mu.def_static("get_gasoline_energy_density", &MeasureUnit::getGasolineEnergyDensity);
+  mu.def_static("get_gasoline_energy_density",
+                &MeasureUnit::getGasolineEnergyDensity);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -2963,7 +3021,8 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
-  mu.def_static("get_kilowatt_hour_per_100_kilometer", &MeasureUnit::getKilowattHourPer100Kilometer);
+  mu.def_static("get_kilowatt_hour_per_100_kilometer",
+                &MeasureUnit::getKilowattHourPer100Kilometer);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -2985,7 +3044,8 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_liter", &MeasureUnit::getLiter);
 
-  mu.def_static("get_liter_per_100_kilometers", &MeasureUnit::getLiterPer100Kilometers);
+  mu.def_static("get_liter_per_100_kilometers",
+                &MeasureUnit::getLiterPer100Kilometers);
 
   mu.def_static("get_liter_per_kilometer", &MeasureUnit::getLiterPerKilometer);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -3019,7 +3079,8 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_meter_per_second", &MeasureUnit::getMeterPerSecond);
 
-  mu.def_static("get_meter_per_second_squared", &MeasureUnit::getMeterPerSecondSquared);
+  mu.def_static("get_meter_per_second_squared",
+                &MeasureUnit::getMeterPerSecondSquared);
 
   mu.def_static("get_metric_ton", &MeasureUnit::getMetricTon);
 
@@ -3033,7 +3094,8 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_mile_per_gallon", &MeasureUnit::getMilePerGallon);
 
-  mu.def_static("get_mile_per_gallon_imperial", &MeasureUnit::getMilePerGallonImperial);
+  mu.def_static("get_mile_per_gallon_imperial",
+                &MeasureUnit::getMilePerGallonImperial);
 
   mu.def_static("get_mile_per_hour", &MeasureUnit::getMilePerHour);
 
@@ -3047,17 +3109,20 @@ void init_measunit(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def_static("get_milligram_ofglucose_per_deciliter", &MeasureUnit::getMilligramOfglucosePerDeciliter);
+  mu.def_static("get_milligram_ofglucose_per_deciliter",
+                &MeasureUnit::getMilligramOfglucosePerDeciliter);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  mu.def_static("get_milligram_per_deciliter", &MeasureUnit::getMilligramPerDeciliter);
+  mu.def_static("get_milligram_per_deciliter",
+                &MeasureUnit::getMilligramPerDeciliter);
 
   mu.def_static("get_milliliter", &MeasureUnit::getMilliliter);
 
   mu.def_static("get_millimeter", &MeasureUnit::getMillimeter);
 
-  mu.def_static("get_millimeter_of_mercury", &MeasureUnit::getMillimeterOfMercury);
+  mu.def_static("get_millimeter_of_mercury",
+                &MeasureUnit::getMillimeterOfMercury);
 
   mu.def_static("get_millimole_per_liter", &MeasureUnit::getMillimolePerLiter);
 
@@ -3151,7 +3216,8 @@ void init_measunit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   mu.def_static("get_pixel", &MeasureUnit::getPixel);
 
-  mu.def_static("get_pixel_per_centimeter", &MeasureUnit::getPixelPerCentimeter);
+  mu.def_static("get_pixel_per_centimeter",
+                &MeasureUnit::getPixelPerCentimeter);
 
   mu.def_static("get_pixel_per_inch", &MeasureUnit::getPixelPerInch);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
@@ -3171,7 +3237,8 @@ void init_measunit(py::module &m) {
 
   mu.def_static("get_pound_force", &MeasureUnit::getPoundForce);
 
-  mu.def_static("get_pound_per_square_inch", &MeasureUnit::getPoundPerSquareInch);
+  mu.def_static("get_pound_per_square_inch",
+                &MeasureUnit::getPoundPerSquareInch);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)

@@ -15,37 +15,43 @@ using ImmutableIndex = AlphabeticIndex::ImmutableIndex;
 
 void init_alphaindex(py::module &m) {
   //
-  // UAlphabeticIndexLabelType
+  // enum UAlphabeticIndexLabelType
   //
-  py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType", py::arithmetic(),
-                                       "Constants for Alphabetic Index Label Types.\n\n"
-                                       "The form of these enum constants anticipates having a plain C API for "
-                                       "Alphabetic Indexes that will also use them.")
+  py::enum_<UAlphabeticIndexLabelType>(
+      m, "UAlphabeticIndexLabelType", py::arithmetic(),
+      "Constants for Alphabetic Index Label Types.\n\n"
+      "The form of these enum constants anticipates having a plain C API for "
+      "Alphabetic Indexes that will also use them.")
       .value("U_ALPHAINDEX_NORMAL", U_ALPHAINDEX_NORMAL,
-             "Normal Label, typically the starting letter of the names in the bucket with this label.")
+             "Normal Label, typically the starting letter of the names in the "
+             "bucket with this label.")
       .value("U_ALPHAINDEX_UNDERFLOW", U_ALPHAINDEX_UNDERFLOW,
              "Undeflow Label.\n\n  "
-             "The bucket with this label contains names in scripts that sort before any of the bucket labels in this "
+             "The bucket with this label contains names in scripts that sort "
+             "before any of the bucket labels in this "
              "index.")
       .value("U_ALPHAINDEX_INFLOW", U_ALPHAINDEX_INFLOW,
              "Inflow Label.\n\n  "
-             "The bucket with this label contains names in scripts that sort between two of the bucket labels in this "
-             "index. Inflow labels are created when an index contains normal labels for multiple scripts, and skips "
+             "The bucket with this label contains names in scripts that sort "
+             "between two of the bucket labels in this "
+             "index. Inflow labels are created when an index contains normal "
+             "labels for multiple scripts, and skips "
              "other scripts that sort between some of the included scripts.")
       .value("U_ALPHAINDEX_OVERFLOW", U_ALPHAINDEX_OVERFLOW,
              "Overflow Label.\n\n  "
-             "Te bucket with this label contains names in scripts that sort after all of the bucket labels in this "
+             "Te bucket with this label contains names in scripts that sort "
+             "after all of the bucket labels in this "
              "index.")
       .export_values();
 
   //
-  // icu::AlphabeticIndex
+  // class icu::AlphabeticIndex
   //
   py::class_<AlphabeticIndex, UObject> ai(m, "AlphabeticIndex");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
-  // icu::AlphabeticIndex::Bucket
+  // class icu::AlphabeticIndex::Bucket
   //
   py::class_<AlphabeticIndex::Bucket, UObject> bkt(ai, "Bucket");
 
@@ -54,11 +60,12 @@ void init_alphaindex(py::module &m) {
   bkt.def("get_label_type", &Bucket::getLabelType);
 
   //
-  // icu::AlphabeticIndex::ImmutableIndex
+  // class icu::AlphabeticIndex::ImmutableIndex
   //
   py::class_<AlphabeticIndex::ImmutableIndex, UObject> ii(ai, "ImmutableIndex");
 
-  ii.def("get_bucket", &ImmutableIndex::getBucket, py::return_value_policy::reference, py::arg("index"));
+  ii.def("get_bucket", &ImmutableIndex::getBucket,
+         py::return_value_policy::reference, py::arg("index"));
 
   ii.def("get_bucket_count", &ImmutableIndex::getBucketCount);
 
@@ -76,11 +83,12 @@ void init_alphaindex(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   //
-  // icu::AlphabeticIndex
+  // class icu::AlphabeticIndex
   //
   ai.def(py::init([](const icupy::LocaleVariant &locale) {
            ErrorCode error_code;
-           auto result = std::make_unique<AlphabeticIndex>(icupy::to_locale(locale), error_code);
+           auto result = std::make_unique<AlphabeticIndex>(
+               icupy::to_locale(locale), error_code);
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
@@ -90,7 +98,8 @@ void init_alphaindex(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .def(py::init([](RuleBasedCollator *collator) {
              ErrorCode error_code;
-             auto result = std::make_unique<AlphabeticIndex>(collator->clone(), error_code);
+             auto result = std::make_unique<AlphabeticIndex>(collator->clone(),
+                                                             error_code);
              if (error_code.isFailure()) {
                throw icupy::ICUError(error_code);
              }
@@ -103,7 +112,8 @@ void init_alphaindex(py::module &m) {
   ai.def(
         // [1] AlphabeticIndex::addLabels
         "add_labels",
-        [](AlphabeticIndex &self, const icupy::LocaleVariant &locale) -> AlphabeticIndex & {
+        [](AlphabeticIndex &self,
+           const icupy::LocaleVariant &locale) -> AlphabeticIndex & {
           ErrorCode error_code;
           auto &result = self.addLabels(icupy::to_locale(locale), error_code);
           if (error_code.isFailure()) {
@@ -115,7 +125,8 @@ void init_alphaindex(py::module &m) {
       .def(
           // [2] AlphabeticIndex::addLabels
           "add_labels",
-          [](AlphabeticIndex &self, const UnicodeSet &additions) -> AlphabeticIndex & {
+          [](AlphabeticIndex &self,
+             const UnicodeSet &additions) -> AlphabeticIndex & {
             ErrorCode error_code;
             auto &result = self.addLabels(additions, error_code);
             if (error_code.isFailure()) {
@@ -130,7 +141,8 @@ void init_alphaindex(py::module &m) {
       [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &name,
          std::optional<_ConstVoidPtr *> &data) -> AlphabeticIndex & {
         ErrorCode error_code;
-        auto &result = self.addRecord(icupy::to_unistr(name), data.value_or(nullptr), error_code);
+        auto &result = self.addRecord(icupy::to_unistr(name),
+                                      data.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -167,12 +179,15 @@ void init_alphaindex(py::module &m) {
     return result;
   });
 
-  ai.def("get_bucket_index", py::overload_cast<>(&AlphabeticIndex::getBucketIndex, py::const_))
+  ai.def("get_bucket_index",
+         py::overload_cast<>(&AlphabeticIndex::getBucketIndex, py::const_))
       .def(
           "get_bucket_index",
-          [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &item_name) {
+          [](AlphabeticIndex &self,
+             const icupy::UnicodeStringVariant &item_name) {
             ErrorCode error_code;
-            auto result = self.getBucketIndex(icupy::to_unistr(item_name), error_code);
+            auto result =
+                self.getBucketIndex(icupy::to_unistr(item_name), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -186,7 +201,8 @@ void init_alphaindex(py::module &m) {
 
   ai.def("get_bucket_record_count", &AlphabeticIndex::getBucketRecordCount);
 
-  ai.def("get_collator", &AlphabeticIndex::getCollator, py::return_value_policy::reference);
+  ai.def("get_collator", &AlphabeticIndex::getCollator,
+         py::return_value_policy::reference);
 
   ai.def("get_inflow_label", &AlphabeticIndex::getInflowLabel);
 
@@ -204,7 +220,8 @@ void init_alphaindex(py::module &m) {
   });
 
   ai.def("get_record_data", [](const AlphabeticIndex &self) {
-    return reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(self.getRecordData()));
+    return reinterpret_cast<_ConstVoidPtr *>(
+        const_cast<void *>(self.getRecordData()));
   });
 
   ai.def("get_record_name", &AlphabeticIndex::getRecordName);
@@ -229,22 +246,25 @@ void init_alphaindex(py::module &m) {
     return result;
   });
 
-  ai.def("reset_bucket_iterator", [](AlphabeticIndex &self) -> AlphabeticIndex & {
-    ErrorCode error_code;
-    auto &result = self.resetBucketIterator(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  ai.def("reset_bucket_iterator",
+         [](AlphabeticIndex &self) -> AlphabeticIndex & {
+           ErrorCode error_code;
+           auto &result = self.resetBucketIterator(error_code);
+           if (error_code.isFailure()) {
+             throw icupy::ICUError(error_code);
+           }
+           return result;
+         });
 
   ai.def("reset_record_iterator", &AlphabeticIndex::resetRecordIterator);
 
   ai.def(
       "set_inflow_label",
-      [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &inflow_label) -> AlphabeticIndex & {
+      [](AlphabeticIndex &self,
+         const icupy::UnicodeStringVariant &inflow_label) -> AlphabeticIndex & {
         ErrorCode error_code;
-        auto &result = self.setInflowLabel(icupy::to_unistr(inflow_label), error_code);
+        auto &result =
+            self.setInflowLabel(icupy::to_unistr(inflow_label), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -266,9 +286,12 @@ void init_alphaindex(py::module &m) {
 
   ai.def(
       "set_overflow_label",
-      [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &overflow_label) -> AlphabeticIndex & {
+      [](AlphabeticIndex &self,
+         const icupy::UnicodeStringVariant &overflow_label)
+          -> AlphabeticIndex & {
         ErrorCode error_code;
-        auto &result = self.setOverflowLabel(icupy::to_unistr(overflow_label), error_code);
+        auto &result =
+            self.setOverflowLabel(icupy::to_unistr(overflow_label), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
@@ -278,9 +301,12 @@ void init_alphaindex(py::module &m) {
 
   ai.def(
       "set_underflow_label",
-      [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &underflow_label) -> AlphabeticIndex & {
+      [](AlphabeticIndex &self,
+         const icupy::UnicodeStringVariant &underflow_label)
+          -> AlphabeticIndex & {
         ErrorCode error_code;
-        auto &result = self.setUnderflowLabel(icupy::to_unistr(underflow_label), error_code);
+        auto &result = self.setUnderflowLabel(icupy::to_unistr(underflow_label),
+                                              error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }

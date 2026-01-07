@@ -9,7 +9,7 @@ using namespace icu;
 void init_nounit(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   //
-  // icu::NoUnit
+  // namespace icu::NoUnit
   //
   auto m2 = m.def_submodule("NoUnit");
 

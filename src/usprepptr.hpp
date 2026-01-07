@@ -6,9 +6,11 @@
 class _UStringPrepProfilePtr {
 public:
   _UStringPrepProfilePtr(UStringPrepProfile *p);
+
   ~_UStringPrepProfilePtr();
 
   UStringPrepProfile *get() const;
+
   operator UStringPrepProfile *() const { return get(); }
 
 private:

@@ -110,7 +110,8 @@ void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
 void init_uniset(py::module &m, py::module &h);
-void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep, py::class_<UnicodeString, Replaceable> &us);
+void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
+                 py::class_<UnicodeString, Replaceable> &us);
 void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
 void init_unounclass(py::module &m);
@@ -142,7 +143,8 @@ void init_voidptr(py::module &m);
 
 namespace icupy {
 
-ICUError::ICUError(const ErrorCode &error_code, const char *message) : error_code_(error_code) {
+ICUError::ICUError(const ErrorCode &error_code, const char *message)
+    : error_code_(error_code) {
   if (message != nullptr && *message != 0) {
     message_ = message;
   }
@@ -153,9 +155,13 @@ ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 } // namespace icupy
 
 PYBIND11_MODULE(MODULE_NAME, m) {
-  // icupy::ICUError exception
-  PYBIND11_CONSTINIT static py::gil_safe_call_once_and_store<py::object> exc_storage;
-  exc_storage.call_once_and_store_result([&]() { return py::exception<icupy::ICUError>(m, "ICUError"); });
+  //
+  // exception icupy::ICUError
+  //
+  PYBIND11_CONSTINIT static py::gil_safe_call_once_and_store<py::object>
+      exc_storage;
+  exc_storage.call_once_and_store_result(
+      [&]() { return py::exception<icupy::ICUError>(m, "ICUError"); });
 
   py::register_exception_translator([](std::exception_ptr p) {
     try {
@@ -171,34 +177,54 @@ PYBIND11_MODULE(MODULE_NAME, m) {
     }
   });
 
-  // icu::number namespace
+  //
+  // namespace icu::number
+  //
   auto number = m.def_submodule("number");
 
-  // icu::U_HEADER_ONLY_NAMESPACE namespace
+  //
+  // namespace U_HEADER_ONLY_NAMESPACE
+  //
   auto header = m.def_submodule("header");
 
-  // icu::UMemory
+  //
+  // class icu::UMemory
+  //
   py::class_<UMemory>(m, "UMemory");
 
-  // icu::UObject
+  //
+  // class icu::UObject
+  //
   py::class_<UObject, UMemory>(m, "UObject");
 
-  // icu::Locale
+  //
+  // class icu::Locale
+  //
   py::class_<Locale, UObject> loc(m, "Locale");
 
-  // icu::Replaceable
+  //
+  // class icu::Replaceable
+  //
   py::class_<Replaceable, UObject> rep(m, "Replaceable");
 
-  // icu::UnicodeString
+  //
+  // class icu::UnicodeString
+  //
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
 
-  // icu::Formattable
+  //
+  // class icu::Formattable
+  //
   py::class_<Formattable, UObject> fmt(m, "Formattable");
 
-  // icu::PluralRules
+  //
+  // class icu::PluralRules
+  //
   py::class_<PluralRules, UObject> pr(m, "PluralRules");
 
-  // icupy::UnicodeStringVector
+  //
+  // class icupy::UnicodeStringVector
+  //
   py::class_<icupy::UnicodeStringVector> usv(m, "UnicodeStringVector");
 
   init_appendable(m);     // icu::Appendable
@@ -234,8 +260,14 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_format(m); // icu::Format
 
+  //
+  // class icu::NumberFormat
+  //
   py::class_<NumberFormat, Format> numfmt(m, "NumberFormat");
 
+  //
+  // class icu::DecimalFormat
+  //
   py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat");
 
   init_numfmt(m, numfmt); // icu::NumberFormat
@@ -255,15 +287,17 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_selfmt(m); // icu::SelectFormat
 
-  init_displayoptions(m);                // icu::DisplayOptions
-  init_numberformatter(m, number);       // icu::number::NumberFormatter
-  init_numberrangeformatter(m, number);  // icu::number::NumberRangeFormatter
-  init_plurrule(m, pr);                  // icu::PluralRules
-  init_decimfmt(m, decfmt);              // icu::DecimalFormat
-  init_compactdecimalformat(m);          // icu::CompactDecimalFormat
-  init_plurfmt(m);                       // icu::PluralFormat
-  init_scientificnumberformatter(m);     // icu::ScientificNumberFormatter
-  init_simplenumberformatter(m, number); // icu::number::SimpleNumber, icu::number::SimpleNumberFormatter
+  init_displayoptions(m);               // icu::DisplayOptions
+  init_numberformatter(m, number);      // icu::number::NumberFormatter
+  init_numberrangeformatter(m, number); // icu::number::NumberRangeFormatter
+  init_plurrule(m, pr);                 // icu::PluralRules
+  init_decimfmt(m, decfmt);             // icu::DecimalFormat
+  init_compactdecimalformat(m);         // icu::CompactDecimalFormat
+  init_plurfmt(m);                      // icu::PluralFormat
+  init_scientificnumberformatter(m);    // icu::ScientificNumberFormatter
+  init_simplenumberformatter(
+      m,
+      number); // icu::number::SimpleNumber, icu::number::SimpleNumberFormatter
 
   init_schriter(m); // icu::StringCharacterIterator
   init_coleitr(m);  // icu::CollationElementIterator

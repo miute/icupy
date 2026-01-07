@@ -10,24 +10,32 @@ using namespace icu;
 void init_region(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
-  // icu::Region
+  // class icu::Region
   //
   py::class_<Region, UObject> reg(m, "Region");
 
   reg.def(
-      "__contains__", [](const Region &self, const Region &item) -> py::bool_ { return self.contains(item); },
+      "__contains__",
+      [](const Region &self, const Region &item) -> py::bool_ {
+        return self.contains(item);
+      },
       py::arg("item"));
 
   reg.def(
-      "__eq__", [](const Region &self, const Region &other) { return self == other; }, py::is_operator(),
-      py::arg("other"));
+      "__eq__",
+      [](const Region &self, const Region &other) { return self == other; },
+      py::is_operator(), py::arg("other"));
 
   reg.def(
-      "__ne__", [](const Region &self, const Region &other) { return self != other; }, py::is_operator(),
-      py::arg("other"));
+      "__ne__",
+      [](const Region &self, const Region &other) { return self != other; },
+      py::is_operator(), py::arg("other"));
 
   reg.def(
-      "contains", [](const Region &self, const Region &other) -> py::bool_ { return self.contains(other); },
+      "contains",
+      [](const Region &self, const Region &other) -> py::bool_ {
+        return self.contains(other);
+      },
       py::arg("other"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
@@ -65,9 +73,12 @@ void init_region(py::module &m) {
           py::arg("type_"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
 
-  reg.def("get_containing_region", py::overload_cast<>(&Region::getContainingRegion, py::const_),
+  reg.def("get_containing_region",
+          py::overload_cast<>(&Region::getContainingRegion, py::const_),
           py::return_value_policy::reference)
-      .def("get_containing_region", py::overload_cast<URegionType>(&Region::getContainingRegion, py::const_),
+      .def("get_containing_region",
+           py::overload_cast<URegionType>(&Region::getContainingRegion,
+                                          py::const_),
            py::return_value_policy::reference, py::arg("type_"));
 
   reg.def_static(

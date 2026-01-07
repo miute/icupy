@@ -12,9 +12,10 @@ using namespace icu;
 void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   //
-  // UDateAbsoluteUnit
+  // enum UDateAbsoluteUnit
   //
-  py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic(), "Represents an absolute unit.")
+  py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic(),
+                               "Represents an absolute unit.")
       .value("UDAT_ABSOLUTE_SUNDAY", UDAT_ABSOLUTE_SUNDAY, "Sunday.")
       .value("UDAT_ABSOLUTE_MONDAY", UDAT_ABSOLUTE_MONDAY, "Monday.")
       .value("UDAT_ABSOLUTE_TUESDAY", UDAT_ABSOLUTE_TUESDAY, "Tuesday.")
@@ -35,14 +36,16 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_ABSOLUTE_MINUTE", UDAT_ABSOLUTE_MINUTE, "Minute.")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
       .value("UDAT_ABSOLUTE_UNIT_COUNT", UDAT_ABSOLUTE_UNIT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, "
+             "see ICU ticket #12420.")
       .export_values();
 
   //
-  // UDateDirection
+  // enum UDateDirection
   //
   py::enum_<UDateDirection>(m, "UDateDirection", py::arithmetic(),
-                            "Represents a direction for an absolute unit e.g., \"Next Tuesday\" or \"Last Tuesday\".")
+                            "Represents a direction for an absolute unit e.g., "
+                            "\"Next Tuesday\" or \"Last Tuesday\".")
       .value("UDAT_DIRECTION_LAST_2", UDAT_DIRECTION_LAST_2,
              "Two before.\n\n  "
              "Not fully supported in every locale.")
@@ -52,17 +55,20 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_DIRECTION_NEXT_2", UDAT_DIRECTION_NEXT_2,
              "Two after.\n\n  "
              "Not fully supported in every locale.")
-      .value("UDAT_DIRECTION_PLAIN", UDAT_DIRECTION_PLAIN, "Plain, which means the absence of a qualifier.")
+      .value("UDAT_DIRECTION_PLAIN", UDAT_DIRECTION_PLAIN,
+             "Plain, which means the absence of a qualifier.")
       .value("UDAT_DIRECTION_COUNT", UDAT_DIRECTION_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, "
+             "see ICU ticket #12420.")
       .export_values();
 
   //
-  // UDateRelativeUnit
+  // enum UDateRelativeUnit
   //
-  py::enum_<UDateRelativeUnit>(m, "UDateRelativeUnit", py::arithmetic(),
-                               "Represents the unit for formatting a relative date.\n\n"
-                               "e.g., \"in 5 days\" or \"in 3 months\"")
+  py::enum_<UDateRelativeUnit>(
+      m, "UDateRelativeUnit", py::arithmetic(),
+      "Represents the unit for formatting a relative date.\n\n"
+      "e.g., \"in 5 days\" or \"in 3 months\"")
       .value("UDAT_RELATIVE_SECONDS", UDAT_RELATIVE_SECONDS, "Seconds.")
       .value("UDAT_RELATIVE_MINUTES", UDAT_RELATIVE_MINUTES, "Minutes.")
       .value("UDAT_RELATIVE_HOURS", UDAT_RELATIVE_HOURS, "Hours.")
@@ -71,28 +77,32 @@ void init_reldatefmt(py::module &m) {
       .value("UDAT_RELATIVE_MONTHS", UDAT_RELATIVE_MONTHS, "Months.")
       .value("UDAT_RELATIVE_YEARS", UDAT_RELATIVE_YEARS, "Years.")
       .value("UDAT_RELATIVE_UNIT_COUNT", UDAT_RELATIVE_UNIT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, see ICU ticket #12420.")
+             "**Deprecated:** ICU 58 The numeric value may change over time, "
+             "see ICU ticket #12420.")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   //
-  // icu::FormattedRelativeDateTime
+  // class icu::FormattedRelativeDateTime
   //
-  py::class_<FormattedRelativeDateTime, UMemory, FormattedValue> frdt(m, "FormattedRelativeDateTime");
+  py::class_<FormattedRelativeDateTime, UMemory, FormattedValue> frdt(
+      m, "FormattedRelativeDateTime");
 
   frdt.def(py::init<>());
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   //
-  // icu::RelativeDateTimeFormatter
+  // class icu::RelativeDateTimeFormatter
   //
-  py::class_<RelativeDateTimeFormatter, UObject> rdtf(m, "RelativeDateTimeFormatter");
+  py::class_<RelativeDateTimeFormatter, UObject> rdtf(
+      m, "RelativeDateTimeFormatter");
 
   rdtf.def(
           // [1] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([]() {
             ErrorCode error_code;
-            auto result = std::make_unique<RelativeDateTimeFormatter>(error_code);
+            auto result =
+                std::make_unique<RelativeDateTimeFormatter>(error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -102,7 +112,8 @@ void init_reldatefmt(py::module &m) {
           // [2] RelativeDateTimeFormatter::RelativeDateTimeFormatter
           py::init([](const icupy::LocaleVariant &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<RelativeDateTimeFormatter>(icupy::to_locale(locale), error_code);
+            auto result = std::make_unique<RelativeDateTimeFormatter>(
+                icupy::to_locale(locale), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -111,10 +122,12 @@ void init_reldatefmt(py::module &m) {
           py::arg("locale"))
       .def(
           // [3] RelativeDateTimeFormatter::RelativeDateTimeFormatter
-          py::init([](const icupy::LocaleVariant &locale, std::optional<NumberFormat *> &nf_to_adopt) {
+          py::init([](const icupy::LocaleVariant &locale,
+                      std::optional<NumberFormat *> &nf_to_adopt) {
             ErrorCode error_code;
             auto result = std::make_unique<RelativeDateTimeFormatter>(
-                icupy::to_locale(locale), nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr, error_code);
+                icupy::to_locale(locale),
+                nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -124,18 +137,22 @@ void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .def(
           // [4] RelativeDateTimeFormatter::RelativeDateTimeFormatter
-          py::init([](const icupy::LocaleVariant &locale, std::optional<NumberFormat *> &nf_to_adopt,
-                      UDateRelativeDateTimeFormatterStyle style, UDisplayContext capitalization_context) {
+          py::init([](const icupy::LocaleVariant &locale,
+                      std::optional<NumberFormat *> &nf_to_adopt,
+                      UDateRelativeDateTimeFormatterStyle style,
+                      UDisplayContext capitalization_context) {
             ErrorCode error_code;
-            auto result = std::make_unique<RelativeDateTimeFormatter>(icupy::to_locale(locale),
-                                                                      nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr,
-                                                                      style, capitalization_context, error_code);
+            auto result = std::make_unique<RelativeDateTimeFormatter>(
+                icupy::to_locale(locale),
+                nf_to_adopt ? (*nf_to_adopt)->clone() : nullptr, style,
+                capitalization_context, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           }),
-          py::arg("locale"), py::arg("nf_to_adopt"), py::arg("style"), py::arg("capitalization_context"))
+          py::arg("locale"), py::arg("nf_to_adopt"), py::arg("style"),
+          py::arg("capitalization_context"))
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .def(
           // [5] RelativeDateTimeFormatter::RelativeDateTimeFormatter
@@ -143,23 +160,28 @@ void init_reldatefmt(py::module &m) {
 
   rdtf.def(
       "combine_date_and_time",
-      [](const RelativeDateTimeFormatter &self, const icupy::UnicodeStringVariant &relative_date_string,
-         const icupy::UnicodeStringVariant &time_string, UnicodeString &append_to) -> UnicodeString & {
+      [](const RelativeDateTimeFormatter &self,
+         const icupy::UnicodeStringVariant &relative_date_string,
+         const icupy::UnicodeStringVariant &time_string,
+         UnicodeString &append_to) -> UnicodeString & {
         ErrorCode error_code;
-        auto &result = self.combineDateAndTime(icupy::to_unistr(relative_date_string), icupy::to_unistr(time_string),
-                                               append_to, error_code);
+        auto &result = self.combineDateAndTime(
+            icupy::to_unistr(relative_date_string),
+            icupy::to_unistr(time_string), append_to, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return result;
       },
-      py::arg("relative_date_string"), py::arg("time_string"), py::arg("append_to"));
+      py::arg("relative_date_string"), py::arg("time_string"),
+      py::arg("append_to"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   rdtf.def(
       // [1] RelativeDateTimeFormatter::format
       "format",
-      [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit,
+      [](const RelativeDateTimeFormatter &self, double offset,
+         URelativeDateTimeUnit unit,
          UnicodeString &append_to) -> UnicodeString & {
         ErrorCode error_code;
         auto &result = self.format(offset, unit, append_to, error_code);
@@ -174,20 +196,24 @@ void init_reldatefmt(py::module &m) {
   rdtf.def(
           // [2] RelativeDateTimeFormatter::format
           "format",
-          [](const RelativeDateTimeFormatter &self, double quantity, UDateDirection direction, UDateRelativeUnit unit,
+          [](const RelativeDateTimeFormatter &self, double quantity,
+             UDateDirection direction, UDateRelativeUnit unit,
              UnicodeString &append_to) -> UnicodeString & {
             ErrorCode error_code;
-            auto &result = self.format(quantity, direction, unit, append_to, error_code);
+            auto &result =
+                self.format(quantity, direction, unit, append_to, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
             return result;
           },
-          py::arg("quantity"), py::arg("direction"), py::arg("unit"), py::arg("append_to"))
+          py::arg("quantity"), py::arg("direction"), py::arg("unit"),
+          py::arg("append_to"))
       .def(
           // [3] RelativeDateTimeFormatter::format
           "format",
-          [](const RelativeDateTimeFormatter &self, UDateDirection direction, UDateAbsoluteUnit unit,
+          [](const RelativeDateTimeFormatter &self, UDateDirection direction,
+             UDateAbsoluteUnit unit,
              UnicodeString &append_to) -> UnicodeString & {
             ErrorCode error_code;
             auto &result = self.format(direction, unit, append_to, error_code);
@@ -201,7 +227,8 @@ void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   rdtf.def(
       "format_numeric",
-      [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit,
+      [](const RelativeDateTimeFormatter &self, double offset,
+         URelativeDateTimeUnit unit,
          UnicodeString &append_to) -> UnicodeString & {
         ErrorCode error_code;
         auto &result = self.formatNumeric(offset, unit, append_to, error_code);
@@ -216,7 +243,8 @@ void init_reldatefmt(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   rdtf.def(
       "format_numeric_to_value",
-      [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit) {
+      [](const RelativeDateTimeFormatter &self, double offset,
+         URelativeDateTimeUnit unit) {
         ErrorCode error_code;
         auto result = self.formatNumericToValue(offset, unit, error_code);
         if (error_code.isFailure()) {
@@ -229,7 +257,8 @@ void init_reldatefmt(py::module &m) {
   rdtf.def(
           // [1] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
-          [](const RelativeDateTimeFormatter &self, double offset, URelativeDateTimeUnit unit) {
+          [](const RelativeDateTimeFormatter &self, double offset,
+             URelativeDateTimeUnit unit) {
             ErrorCode error_code;
             auto result = self.formatToValue(offset, unit, error_code);
             if (error_code.isFailure()) {
@@ -241,9 +270,11 @@ void init_reldatefmt(py::module &m) {
       .def(
           // [2] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
-          [](const RelativeDateTimeFormatter &self, double quantity, UDateDirection direction, UDateRelativeUnit unit) {
+          [](const RelativeDateTimeFormatter &self, double quantity,
+             UDateDirection direction, UDateRelativeUnit unit) {
             ErrorCode error_code;
-            auto result = self.formatToValue(quantity, direction, unit, error_code);
+            auto result =
+                self.formatToValue(quantity, direction, unit, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -253,7 +284,8 @@ void init_reldatefmt(py::module &m) {
       .def(
           // [3] RelativeDateTimeFormatter::formatToValue
           "format_to_value",
-          [](const RelativeDateTimeFormatter &self, UDateDirection direction, UDateAbsoluteUnit unit) {
+          [](const RelativeDateTimeFormatter &self, UDateDirection direction,
+             UDateAbsoluteUnit unit) {
             ErrorCode error_code;
             auto result = self.formatToValue(direction, unit, error_code);
             if (error_code.isFailure()) {
@@ -265,11 +297,13 @@ void init_reldatefmt(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
-  rdtf.def("get_capitalization_context", &RelativeDateTimeFormatter::getCapitalizationContext);
+  rdtf.def("get_capitalization_context",
+           &RelativeDateTimeFormatter::getCapitalizationContext);
 
   rdtf.def("get_format_style", &RelativeDateTimeFormatter::getFormatStyle);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
-  rdtf.def("get_number_format", &RelativeDateTimeFormatter::getNumberFormat, py::return_value_policy::reference);
+  rdtf.def("get_number_format", &RelativeDateTimeFormatter::getNumberFormat,
+           py::return_value_policy::reference);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 }

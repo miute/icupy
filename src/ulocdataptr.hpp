@@ -6,9 +6,11 @@
 class _ULocaleDataPtr {
 public:
   _ULocaleDataPtr(ULocaleData *p);
+
   ~_ULocaleDataPtr();
 
   ULocaleData *get() const;
+
   operator ULocaleData *() const { return get(); }
 
 private:

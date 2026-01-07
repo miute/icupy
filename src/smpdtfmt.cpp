@@ -8,7 +8,7 @@ using namespace icu;
 
 void init_smpdtfmt(py::module &m) {
   //
-  // icu::SimpleDateFormat
+  // class icu::SimpleDateFormat
   //
   py::class_<SimpleDateFormat, DateFormat> sdf(m, "SimpleDateFormat");
 
@@ -26,7 +26,8 @@ void init_smpdtfmt(py::module &m) {
           // [2] SimpleDateFormat::SimpleDateFormat
           py::init([](const icupy::UnicodeStringVariant &pattern) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), error_code);
+            auto result = std::make_unique<SimpleDateFormat>(
+                icupy::to_unistr(pattern), error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -35,10 +36,12 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"))
       .def(
           // [3] SimpleDateFormat::SimpleDateFormat
-          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &override) {
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      const icupy::UnicodeStringVariant &override) {
             ErrorCode error_code;
-            auto result =
-                std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), icupy::to_unistr(override), error_code);
+            auto result = std::make_unique<SimpleDateFormat>(
+                icupy::to_unistr(pattern), icupy::to_unistr(override),
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -47,9 +50,11 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"), py::arg("override"))
       .def(
           // [4] SimpleDateFormat::SimpleDateFormat
-          py::init([](const icupy::UnicodeStringVariant &pattern, const Locale &locale) {
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      const Locale &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), locale, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(
+                icupy::to_unistr(pattern), locale, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -58,11 +63,13 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"), py::arg("locale"))
       .def(
           // [5] SimpleDateFormat::SimpleDateFormat
-          py::init([](const icupy::UnicodeStringVariant &pattern, const icupy::UnicodeStringVariant &override,
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      const icupy::UnicodeStringVariant &override,
                       const Locale &locale) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), icupy::to_unistr(override),
-                                                             locale, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(
+                icupy::to_unistr(pattern), icupy::to_unistr(override), locale,
+                error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -71,9 +78,11 @@ void init_smpdtfmt(py::module &m) {
           py::arg("pattern"), py::arg("override"), py::arg("locale"))
       .def(
           // [7] SimpleDateFormat::SimpleDateFormat
-          py::init([](const icupy::UnicodeStringVariant &pattern, const DateFormatSymbols &format_data) {
+          py::init([](const icupy::UnicodeStringVariant &pattern,
+                      const DateFormatSymbols &format_data) {
             ErrorCode error_code;
-            auto result = std::make_unique<SimpleDateFormat>(icupy::to_unistr(pattern), format_data, error_code);
+            auto result = std::make_unique<SimpleDateFormat>(
+                icupy::to_unistr(pattern), format_data, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
@@ -86,13 +95,25 @@ void init_smpdtfmt(py::module &m) {
 
   sdf.def("__copy__", &SimpleDateFormat::clone);
 
-  sdf.def("__deepcopy__", [](const SimpleDateFormat &self, py::dict &) { return self.clone(); }, py::arg("memo"));
+  sdf.def(
+      "__deepcopy__",
+      [](const SimpleDateFormat &self, py::dict & /* memo */) {
+        return self.clone();
+      },
+      py::arg("memo"));
 
-  // FIXME: Implement "void icu::SimpleDateFormat::adoptCalendar(Calendar *calendarToAdopt)".
-  // FIXME: Implement "void icu::SimpleDateFormat::adoptDateFormatSymbols(DateFormatSymbols *newFormatSymbols)".
-  // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(const UnicodeString &fields,
-  //  NumberFormat *formatToAdopt, UErrorCode &status)".
-  // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(NumberFormat *formatToAdopt)".
+  // FIXME: Implement "void icu::SimpleDateFormat::adoptCalendar(
+  //  Calendar *calendarToAdopt)".
+
+  // FIXME: Implement "void icu::SimpleDateFormat::adoptDateFormatSymbols(
+  //  DateFormatSymbols *newFormatSymbols)".
+
+  // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(
+  //  const UnicodeString &fields, NumberFormat *formatToAdopt,
+  //  UErrorCode &status)".
+
+  // FIXME: Implement "void icu::SimpleDateFormat::adoptNumberFormat(
+  //  NumberFormat *formatToAdopt)".
 
   sdf.def(
       "apply_localized_pattern",
@@ -123,12 +144,15 @@ void init_smpdtfmt(py::module &m) {
     return result;
   });
 
-  sdf.def("get_date_format_symbols", &SimpleDateFormat::getDateFormatSymbols, py::return_value_policy::reference);
+  sdf.def("get_date_format_symbols", &SimpleDateFormat::getDateFormatSymbols,
+          py::return_value_policy::reference);
 
-  // FIXME: Implement "const NumberFormat *icu::SimpleDateFormat::getNumberFormatForField(char16_t field)".
+  // FIXME: Implement "const NumberFormat
+  //  *icu::SimpleDateFormat::getNumberFormatForField(char16_t field)".
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
-  sdf.def("get_time_zone_format", &SimpleDateFormat::getTimeZoneFormat, py::return_value_policy::reference);
+  sdf.def("get_time_zone_format", &SimpleDateFormat::getTimeZoneFormat,
+          py::return_value_policy::reference);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
   sdf.def(
@@ -142,21 +166,24 @@ void init_smpdtfmt(py::module &m) {
       },
       py::arg("d"));
 
-  sdf.def("set_date_format_symbols", &SimpleDateFormat::setDateFormatSymbols, py::arg("new_format_symbols"));
+  sdf.def("set_date_format_symbols", &SimpleDateFormat::setDateFormatSymbols,
+          py::arg("new_format_symbols"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
-  sdf.def("set_time_zone_format", &SimpleDateFormat::setTimeZoneFormat, py::arg("new_time_zone_format"));
+  sdf.def("set_time_zone_format", &SimpleDateFormat::setTimeZoneFormat,
+          py::arg("new_time_zone_format"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
   sdf.def(
       "to_localized_pattern",
-      [](const SimpleDateFormat &self, UnicodeString &result) -> UnicodeString & {
+      [](const SimpleDateFormat &self,
+         UnicodeString &result) -> UnicodeString & {
         ErrorCode error_code;
-        auto &string = self.toLocalizedPattern(result, error_code);
+        auto &value = self.toLocalizedPattern(result, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return string;
+        return value;
       },
       py::arg("result"));
 
