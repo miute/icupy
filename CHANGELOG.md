@@ -13,6 +13,7 @@
 
 ### Added
 
+- Add support for [ICU 78.2]
 - Add `error_code` attribute to `icupy.icu.ICUError` exception to store ICU4C error codes
 
 ### Removed
@@ -260,6 +261,7 @@ Initial release.
 [ICU 76.1]: https://github.com/unicode-org/icu/releases/tag/release-76-1
 [ICU 77.1]: https://github.com/unicode-org/icu/releases/tag/release-77-1
 [ICU 78.1]: https://github.com/unicode-org/icu/releases/tag/release-78.1
+[ICU 78.2]: https://github.com/unicode-org/icu/releases/tag/release-78.2
 
 [0.15.0]: https://github.com/miute/icupy/releases/tag/v0.15.0
 [0.16.0]: https://github.com/miute/icupy/releases/tag/v0.16.0
