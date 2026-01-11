@@ -27,7 +27,7 @@ void _UConverterFromUCallbackPtr::callback(const void *context,
     return;
   }
   auto python_context =
-      reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
   auto &action = python_context->action();
   auto value = python_context->value();
   *error_code =
@@ -53,7 +53,7 @@ void _UConverterToUCallbackPtr::callback(const void *context,
     return;
   }
   auto python_context =
-      reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
   auto &action = python_context->action();
   auto value = python_context->value();
   *error_code = action(value, args, py::bytes(code_units, length), length,

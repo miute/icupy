@@ -22,7 +22,7 @@ _UCPMapValueFilterPtr::~_UCPMapValueFilterPtr() {}
 
 uint32_t _UCPMapValueFilterPtr::filter(const void *context, uint32_t value) {
   auto python_context =
-      reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
   auto &action = python_context->action();
   auto python_value = python_context->value();
   return action(python_value, value).cast<uint32_t>();
@@ -99,7 +99,7 @@ void init_ucpmap(py::module &m) {
       "ucpmap_get_range",
       [](_ConstUCPMapPtr &map, UChar32 start, UCPMapRangeOption option,
          uint32_t surrogate_value, _UCPMapValueFilterPtr &filter,
-         _ConstVoidPtr &context) {
+         icupy::ConstVoidPtr &context) {
         UCPMapValueFilter *callback = nullptr;
         const void *filter_context = nullptr;
         if (filter.has_value()) {

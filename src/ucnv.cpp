@@ -242,14 +242,14 @@ void init_ucnv(py::module &m) {
         ucnv_getFromUCallBack(converter, &callback, &context);
         if (callback == _UConverterFromUCallbackPtr::callback) {
           // Python callback function and callback data
-          auto python_context =
-              reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+              const_cast<void *>(context));
           auto action = _UConverterFromUCallbackPtr(python_context->action());
           return py::make_tuple(action, python_context);
         }
         // C callback function and callback data
         return py::make_tuple(_UConverterFromUCallbackPtr(callback),
-                              _ConstVoidPtr(context));
+                              icupy::ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
 
@@ -325,14 +325,14 @@ void init_ucnv(py::module &m) {
         ucnv_getToUCallBack(converter, &callback, &context);
         if (callback == _UConverterToUCallbackPtr::callback) {
           // Python callback function and callback data
-          auto python_context =
-              reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+              const_cast<void *>(context));
           auto action = _UConverterToUCallbackPtr(python_context->action());
           return py::make_tuple(action, python_context);
         }
         // C callback function and callback data
         return py::make_tuple(_UConverterToUCallbackPtr(callback),
-                              _ConstVoidPtr(context));
+                              icupy::ConstVoidPtr(context));
       },
       py::return_value_policy::reference, py::arg("converter"));
 
@@ -462,7 +462,7 @@ void init_ucnv(py::module &m) {
   m.def(
       "ucnv_set_from_ucall_back",
       [](_UConverterPtr &converter, _UConverterFromUCallbackPtr &new_action,
-         _ConstVoidPtr &new_context) {
+         icupy::ConstVoidPtr &new_context) {
         auto callback = new_action.get_if<UConverterFromUCallback>();
         const void *context = nullptr;
         if (callback == nullptr) {
@@ -472,7 +472,7 @@ void init_ucnv(py::module &m) {
           context = &new_context;
         } else if (new_context.has_value()) {
           // New C callback data
-          context = new_context.c_str();
+          context = new_context.data();
         }
 
         UConverterFromUCallback old_action = nullptr;
@@ -485,14 +485,14 @@ void init_ucnv(py::module &m) {
         }
         if (old_action == new_action.callback) {
           // Old Python callback function and callback data
-          auto python_context = reinterpret_cast<_ConstVoidPtr *>(
+          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
               const_cast<void *>(old_context));
           auto action = _UConverterFromUCallbackPtr(python_context->action());
           return py::make_tuple(action, python_context);
         }
         // Old C callback function and callback data
         return py::make_tuple(_UConverterFromUCallbackPtr(old_action),
-                              _ConstVoidPtr(old_context));
+                              icupy::ConstVoidPtr(old_context));
       },
       py::return_value_policy::reference, py::keep_alive<2, 1>(),
       py::keep_alive<3, 1>(), py::arg("converter"), py::arg("new_action"),
@@ -528,7 +528,7 @@ void init_ucnv(py::module &m) {
   m.def(
       "ucnv_set_to_ucall_back",
       [](_UConverterPtr &converter, _UConverterToUCallbackPtr &new_action,
-         _ConstVoidPtr &new_context) {
+         icupy::ConstVoidPtr &new_context) {
         auto callback = new_action.get_if<UConverterToUCallback>();
         const void *context = nullptr;
         if (callback == nullptr) {
@@ -538,7 +538,7 @@ void init_ucnv(py::module &m) {
           context = &new_context;
         } else if (new_context.has_value()) {
           // New C callback data
-          context = new_context.c_str();
+          context = new_context.data();
         }
 
         UConverterToUCallback old_action = nullptr;
@@ -551,14 +551,14 @@ void init_ucnv(py::module &m) {
         }
         if (old_action == new_action.callback) {
           // Old Python callback function and callback data
-          auto python_context = reinterpret_cast<_ConstVoidPtr *>(
+          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
               const_cast<void *>(old_context));
           auto action = _UConverterToUCallbackPtr(python_context->action());
           return py::make_tuple(action, python_context);
         }
         // Old C callback function and callback data
         return py::make_tuple(_UConverterToUCallbackPtr(old_action),
-                              _ConstVoidPtr(old_context));
+                              icupy::ConstVoidPtr(old_context));
       },
       py::return_value_policy::reference, py::keep_alive<2, 1>(),
       py::keep_alive<3, 1>(), py::arg("converter"), py::arg("new_action"),

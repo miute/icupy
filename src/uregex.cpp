@@ -17,7 +17,7 @@ UBool _URegexFindProgressCallbackPtr::callback(const void *context,
     return false;
   }
   auto python_context =
-      reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
   auto &action = python_context->action();
   auto value = python_context->value();
   return action(value, match_index).cast<UBool>();
@@ -36,7 +36,7 @@ UBool _URegexMatchCallbackPtr::callback(const void *context, int32_t steps) {
     return false;
   }
   auto python_context =
-      reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
   auto &action = python_context->action();
   auto value = python_context->value();
   return action(value, steps).cast<UBool>();
