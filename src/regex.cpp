@@ -195,13 +195,13 @@ void init_regex(py::module &m) {
     if (callback == _URegexFindProgressCallbackPtr::callback) {
       // Python callback function and callback data
       auto python_context =
-          reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+          reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
       auto action = _URegexFindProgressCallbackPtr(python_context->action());
       return py::make_tuple(action, python_context);
     }
     // C callback function and callback data
     return py::make_tuple(_URegexFindProgressCallbackPtr(callback),
-                          _ConstVoidPtr(context));
+                          icupy::ConstVoidPtr(context));
   });
 
   rm.def(
@@ -227,13 +227,13 @@ void init_regex(py::module &m) {
     if (callback == _URegexMatchCallbackPtr::callback) {
       // Python callback function and callback data
       auto python_context =
-          reinterpret_cast<_ConstVoidPtr *>(const_cast<void *>(context));
+          reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
       auto action = _URegexMatchCallbackPtr(python_context->action());
       return py::make_tuple(action, python_context);
     }
     // C callback function and callback data
     return py::make_tuple(_URegexMatchCallbackPtr(callback),
-                          _ConstVoidPtr(context));
+                          icupy::ConstVoidPtr(context));
   });
 
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
@@ -468,7 +468,7 @@ void init_regex(py::module &m) {
   rm.def(
       "set_find_progress_callback",
       [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback,
-         _ConstVoidPtr &context) {
+         icupy::ConstVoidPtr &context) {
         auto fn = callback.get_if<URegexFindProgressCallback *>();
         const void *value = nullptr;
         if (fn == nullptr && callback.has_value()) {
@@ -478,7 +478,7 @@ void init_regex(py::module &m) {
           value = &context;
         } else if (context.has_value()) {
           // New C callback data
-          value = context.c_str();
+          value = context.data();
         }
         ErrorCode error_code;
         self.setFindProgressCallback(fn, value, error_code);
@@ -491,7 +491,7 @@ void init_regex(py::module &m) {
   rm.def(
       "set_match_callback",
       [](RegexMatcher &self, _URegexMatchCallbackPtr &callback,
-         _ConstVoidPtr &context) {
+         icupy::ConstVoidPtr &context) {
         auto fn = callback.get_if<URegexMatchCallback *>();
         const void *value = nullptr;
         if (fn == nullptr && callback.has_value()) {
@@ -501,7 +501,7 @@ void init_regex(py::module &m) {
           value = &context;
         } else if (context.has_value()) {
           // New C callback data
-          value = context.c_str();
+          value = context.data();
         }
         ErrorCode error_code;
         self.setMatchCallback(fn, value, error_code);

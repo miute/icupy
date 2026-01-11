@@ -139,7 +139,7 @@ void init_alphaindex(py::module &m) {
   ai.def(
       "add_record",
       [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &name,
-         std::optional<_ConstVoidPtr *> &data) -> AlphabeticIndex & {
+         std::optional<icupy::ConstVoidPtr *> &data) -> AlphabeticIndex & {
         ErrorCode error_code;
         auto &result = self.addRecord(icupy::to_unistr(name),
                                       data.value_or(nullptr), error_code);
@@ -220,7 +220,7 @@ void init_alphaindex(py::module &m) {
   });
 
   ai.def("get_record_data", [](const AlphabeticIndex &self) {
-    return reinterpret_cast<_ConstVoidPtr *>(
+    return reinterpret_cast<icupy::ConstVoidPtr *>(
         const_cast<void *>(self.getRecordData()));
   });
 
