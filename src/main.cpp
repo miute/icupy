@@ -227,14 +227,82 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   py::class_<icupy::UnicodeStringVector> usv(m, "UnicodeStringVector");
 
-  init_appendable(m);     // icu::Appendable
-  init_char16ptr(m);      // icu::Char16Ptr, icu::ConstChar16Ptr
-  init_errorcode(m);      // icu::ErrorCode
-  init_formattedvalue(m); // icu::FormattedValue
-  init_parseerr(m);       // UParseError
+  init_utypes(m);    // UErrorCode
+  init_errorcode(m); // icu::ErrorCode
+
+  init_char16ptr(m); // ConstChar16Ptr
+  init_voidptr(m);   // ConstVoidPtr
+
+  //
+  // C APIs
+  //
+  init_parseerr(m); // UParseError
+
   init_parsepos(m);       // icu::ParsePosition
-  init_strenum(m);        // icu::StringEnumeration
-  init_voidptr(m);        // _ConstVoidPtr
+  init_uset(m);           // Uset
+  init_ucpmap(m);         // UCPMap
+  init_uchar(m);          // u_getBinaryPropertySet(), u_getIntPropertyMap()
+  init_uniset(m, header); // icu::UnicodeSet
+
+  init_strenum(m);  // icu::StringEnumeration
+  init_uenum(m);    // UEnumeration
+  init_ucnv_err(m); // UConverter,
+                    // UConverterFromUCallback, UConverterToUCallback
+                    // UConverterFromUnicodeArgs, UConverterToUnicodeArgs
+  init_ucnv_cb(m);  // ucnv_cb.h
+  init_ucnv(m);     // ucnv.h
+
+  init_schriter(m); // icu::StringCharacterIterator
+  init_coleitr(m);  // icu::CollationElementIterator
+  init_utext(m);    // UText
+
+  init_icudataver(m);
+  init_stringoptions(m);
+  init_ubiditransform(m);
+  init_ubidi(m);
+  init_ubrk(m);
+  init_ucal(m);
+  init_ucol(m);
+  init_ucsdet(m);
+  init_ucurr(m);
+  init_udat(m);
+  init_udatpg(m);
+  init_udisplaycontext(m);
+  init_udisplayoptions(m);
+  init_uformattedvalue(m);
+  init_ugender(m);
+  init_uidna(m);
+  init_uldnames(m);
+  init_ulistformatter(m);
+  init_uloc(m);
+  init_ulocdata(m);
+  init_unorm2(m);
+  init_unounclass(m);
+  init_unum(m);
+  init_unumberformatter(m);
+  init_unumberrangeformatter(m);
+  init_upluralrules(m);
+  init_uregex(m); // URegexFindProgressCallback, URegexMatchCallback
+  init_uregion(m);
+  init_ureldatefmt(m);
+  init_ures(m);
+  init_uscript(m);
+  init_usearch(m);
+  init_ushape(m);
+  init_usimplenumberformatter(m);
+  init_uspoof(m);
+  init_usprep(m);
+  init_ustring(m);
+  init_utf(m);
+  init_utmscale(m);
+  init_utrans(m);
+  init_uversion(m);
+
+  //
+  // C++ APIs
+  //
+  init_appendable(m);     // icu::Appendable
+  init_formattedvalue(m); // icu::FormattedValue
 
   init_dtrule(m);   // icu::DateTimeRule
   init_tzrule(m);   // icu::TimeZoneRule
@@ -299,9 +367,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
       m,
       number); // icu::number::SimpleNumber, icu::number::SimpleNumberFormatter
 
-  init_schriter(m); // icu::StringCharacterIterator
-  init_coleitr(m);  // icu::CollationElementIterator
-
   init_caniter(m);       // icu::CanonicalIterator
   init_dtptngen(m);      // icu::DateTimePatternGenerator
   init_gender(m);        // icu::GenderInfo
@@ -323,69 +388,18 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_edits(m);   // icu::Edits
   init_casemap(m); // icu::CaseMap
 
-  init_uniset(m, header); // icu::UnicodeSet
-  init_usetiter(m);       // icu::UnicodeSetIterator
-  init_normalizer2(m);    // icu::Normalizer2, icu::FilteredNormalizer2
-  init_tblcoll(m);        // icu::RuleBasedCollator
-  init_stsearch(m);       // icu::StringSearch
-  init_translit(m);       // icu::Transliterator
+  init_usetiter(m);    // icu::UnicodeSetIterator
+  init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
+  init_tblcoll(m);     // icu::RuleBasedCollator
+  init_stsearch(m);    // icu::StringSearch
+  init_translit(m);    // icu::Transliterator
 
   init_alphaindex(m); // icu::AlphabeticIndex
 
   init_unistr(m, rep, us); // icu::UnicodeString
   init_unistrvec(m, usv);  // icupy::UnicodeStringVector
 
-  init_icudataver(m);
-  init_stringoptions(m);
-  init_ubidi(m);
-  init_ubiditransform(m);
-  init_ubrk(m);
-  init_ucal(m);
-  init_uchar(m);
-  init_ucnv(m);
-  init_ucnv_cb(m);
-  init_ucnv_err(m);
-  init_ucol(m);
-  init_ucpmap(m);
-  init_ucsdet(m);
-  init_ucurr(m);
-  init_udat(m);
-  init_udatpg(m);
-  init_udisplaycontext(m);
-  init_udisplayoptions(m);
-  init_uenum(m);
-  init_uformattedvalue(m);
-  init_ugender(m);
-  init_uidna(m);
-  init_uldnames(m);
-  init_ulistformatter(m);
-  init_uloc(m);
-  init_ulocdata(m);
-  init_unorm2(m);
-  init_unounclass(m);
-  init_unum(m);
-  init_unumberformatter(m);
-  init_unumberrangeformatter(m);
-  init_upluralrules(m);
-  init_uregex(m);
-  init_uregion(m);
-  init_ureldatefmt(m);
-  init_ures(m);
-  init_uscript(m);
-  init_usearch(m);
-  init_uset(m);
-  init_ushape(m);
-  init_usimplenumberformatter(m);
-  init_uspoof(m);
-  init_usprep(m);
-  init_ustring(m);
-  init_utext(m);
-  init_utf(m);
   init_utfiterator(m, header);
-  init_utmscale(m);
-  init_utrans(m);
-  init_utypes(m);
-  init_uversion(m);
 
   // <unicode/umachine.h>
   m.attr("INT16_MAX") = INT16_MAX;
