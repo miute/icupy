@@ -2,35 +2,59 @@
 #define ICUPY_UREGEX_HPP
 
 #include "main.hpp"
+#include <functional>
+#include <optional>
 #include <pybind11/functional.h>
 #include <unicode/uregex.h>
-#include <variant>
 
-class _URegexFindProgressCallbackPtr {
+namespace icupy {
+
+class ConstVoidPtr;
+class URegexFindProgressCallbackPtr;
+
+using FindProgressCallbackArgs = bool(py::object, int);
+
+using FindProgressCallbackAndContextPair =
+    std::pair<URegexFindProgressCallbackPtr *, ConstVoidPtr *>;
+
+using SharedFindProgressCallbackAndContextPair =
+    std::shared_ptr<FindProgressCallbackAndContextPair>;
+
+class URegexFindProgressCallbackPtr {
 public:
-  _URegexFindProgressCallbackPtr(URegexFindProgressCallback *action);
+  URegexFindProgressCallbackPtr() {};
 
-  _URegexFindProgressCallbackPtr(const py::function &action);
+  URegexFindProgressCallbackPtr(
+      const std::function<FindProgressCallbackArgs> &action)
+      : action_(action) {};
 
-  ~_URegexFindProgressCallbackPtr();
+  ~URegexFindProgressCallbackPtr() {};
 
-  static UBool callback(const void *context, int64_t match_index);
-
-  template <typename T> T &get() { return std::get<T>(action_); };
-
-  template <typename T> auto get_if() {
-    return std::holds_alternative<T>(action_) ? std::get<T>(action_) : nullptr;
+  const std::function<FindProgressCallbackArgs> &action() const {
+    return action_.value();
   };
 
-  bool has_value() {
-    return !action_.valueless_by_exception() &&
-           (get_if<URegexFindProgressCallback *>() || action_.index() != 0);
-  };
+  URegexFindProgressCallback *get_native_callback() {
+    return action_.has_value() ? callback : nullptr;
+  }
+
+  bool has_action() const { return action_.has_value(); };
+
+  FindProgressCallbackAndContextPair *set_context(ConstVoidPtr *context) {
+    callback_and_context_ =
+        std::make_shared<FindProgressCallbackAndContextPair>(
+            std::make_pair(this, context));
+    return callback_and_context_.get();
+  }
 
 private:
-  _URegexFindProgressCallbackPtr() = delete;
-  std::variant<URegexFindProgressCallback *, py::function> action_;
+  static UBool callback(const void *context, int64_t match_index);
+
+  std::optional<std::function<FindProgressCallbackArgs>> action_;
+  SharedFindProgressCallbackAndContextPair callback_and_context_;
 };
+
+} // namespace icupy
 
 class _URegexMatchCallbackPtr {
 public:
