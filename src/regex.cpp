@@ -184,25 +184,32 @@ void init_regex(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
       ;
 
-  rm.def("get_find_progress_callback", [](RegexMatcher &self) {
-    URegexFindProgressCallback *callback;
-    const void *context = nullptr;
-    ErrorCode error_code;
-    self.getFindProgressCallback(callback, context, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    if (callback == _URegexFindProgressCallbackPtr::callback) {
-      // Python callback function and callback data
-      auto python_context =
-          reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
-      auto action = _URegexFindProgressCallbackPtr(python_context->action());
-      return py::make_tuple(action, python_context);
-    }
-    // C callback function and callback data
-    return py::make_tuple(_URegexFindProgressCallbackPtr(callback),
-                          icupy::ConstVoidPtr(context));
-  });
+  rm.def(
+      "get_find_progress_callback",
+      [](RegexMatcher &self) {
+        URegexFindProgressCallback *native_callback;
+        const void *native_context;
+        ErrorCode error_code;
+        self.getFindProgressCallback(native_callback, native_context,
+                                     error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        icupy::URegexFindProgressCallbackPtr *callback;
+        icupy::ConstVoidPtr *context;
+        if (native_context) {
+          auto pair =
+              reinterpret_cast<icupy::FindProgressCallbackAndContextPair *>(
+                  const_cast<void *>(native_context));
+          callback = pair->first;
+          context = pair->second;
+        } else {
+          callback = new icupy::URegexFindProgressCallbackPtr();
+          context = new icupy::ConstVoidPtr();
+        }
+        return std::make_tuple(callback, context);
+      },
+      py::return_value_policy::reference);
 
   rm.def(
       "get_input",
@@ -467,26 +474,18 @@ void init_regex(py::module &m) {
 
   rm.def(
       "set_find_progress_callback",
-      [](RegexMatcher &self, _URegexFindProgressCallbackPtr &callback,
-         icupy::ConstVoidPtr &context) {
-        auto fn = callback.get_if<URegexFindProgressCallback *>();
-        const void *value = nullptr;
-        if (fn == nullptr && callback.has_value()) {
-          // New Python callback function and callback data
-          fn = callback.callback;
-          context.set_action(callback.get<py::function>());
-          value = &context;
-        } else if (context.has_value()) {
-          // New C callback data
-          value = context.data();
-        }
+      [](RegexMatcher &self, icupy::URegexFindProgressCallbackPtr *callback,
+         icupy::ConstVoidPtr *context) {
+        auto native_callback = callback->get_native_callback();
+        auto native_context = callback->set_context(context);
         ErrorCode error_code;
-        self.setFindProgressCallback(fn, value, error_code);
+        self.setFindProgressCallback(native_callback, native_context,
+                                     error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("callback"), py::arg("context"));
+      py::arg("callback").none(false), py::arg("context").none(false));
 
   rm.def(
       "set_match_callback",

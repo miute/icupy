@@ -1,27 +1,27 @@
 #include "uregex.hpp"
 #include "voidptr.hpp"
+#include <pybind11/stl.h>
 
-_URegexFindProgressCallbackPtr::_URegexFindProgressCallbackPtr(
-    URegexFindProgressCallback *action)
-    : action_(action) {}
+namespace icupy {
 
-_URegexFindProgressCallbackPtr::_URegexFindProgressCallbackPtr(
-    const py::function &action)
-    : action_(action) {}
-
-_URegexFindProgressCallbackPtr::~_URegexFindProgressCallbackPtr() {}
-
-UBool _URegexFindProgressCallbackPtr::callback(const void *context,
-                                               int64_t match_index) {
-  if (context == nullptr) {
+UBool URegexFindProgressCallbackPtr::callback(const void *native_context,
+                                              int64_t match_index) {
+  if (native_context == nullptr) {
     return false;
   }
-  auto python_context =
-      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
-  auto &action = python_context->action();
-  auto value = python_context->value();
-  return action(value, match_index).cast<UBool>();
+  auto pair = reinterpret_cast<FindProgressCallbackAndContextPair *>(
+      const_cast<void *>(native_context));
+  auto callback = pair->first;
+  if (!callback->has_action()) {
+    return false;
+  }
+  auto &action = callback->action();
+  auto context = pair->second;
+  auto value = context->value();
+  return action(value, match_index);
 }
+
+} // namespace icupy
 
 _URegexMatchCallbackPtr::_URegexMatchCallbackPtr(URegexMatchCallback *action)
     : action_(action) {}
@@ -91,8 +91,26 @@ void init_uregex(py::module &m) {
   //
   // URegexFindProgressCallback
   //
-  py::class_<_URegexFindProgressCallbackPtr>(m, "URegexFindProgressCallbackPtr")
-      .def(py::init<py::function>(), py::arg("action"));
+  py::class_<icupy::URegexFindProgressCallbackPtr> ufpc(
+      m, "URegexFindProgressCallback", R"doc(
+      A wrapper class for a regular expression find callback function.
+      )doc");
+
+  ufpc.def(py::init<>(), R"doc(
+           Initialize the ``URegexFindProgressCallback`` instance without a callback
+           function.
+           )doc")
+      .def(py::init<std::function<icupy::FindProgressCallbackArgs>>(),
+           py::arg("action"), R"doc(
+           Initialize the ``URegexFindProgressCallback`` instance with a callback function
+           `action`.
+           )doc");
+
+  ufpc.def("__bool__", &icupy::URegexFindProgressCallbackPtr::has_action,
+           R"doc(
+           Return ``True`` if the ``URegexFindProgressCallback`` instance has a callback
+           function.
+           )doc");
 
   //
   // URegexMatchCallback
