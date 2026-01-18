@@ -11,6 +11,7 @@ namespace icupy {
 
 class ConstVoidPtr;
 class URegexFindProgressCallbackPtr;
+class URegexMatchCallbackPtr;
 
 using FindProgressCallbackArgs = bool(py::object, int);
 
@@ -19,6 +20,14 @@ using FindProgressCallbackAndContextPair =
 
 using SharedFindProgressCallbackAndContextPair =
     std::shared_ptr<FindProgressCallbackAndContextPair>;
+
+using MatchCallbackArgs = bool(py::object &, int32_t);
+
+using MatchCallbackAndContextPair =
+    std::pair<const std::function<MatchCallbackArgs>, const ConstVoidPtr *>;
+
+using SharedMatchCallbackAndContextPair =
+    std::shared_ptr<MatchCallbackAndContextPair>;
 
 class URegexFindProgressCallbackPtr {
 public:
@@ -54,32 +63,39 @@ private:
   SharedFindProgressCallbackAndContextPair callback_and_context_;
 };
 
-} // namespace icupy
-
-class _URegexMatchCallbackPtr {
+class URegexMatchCallbackPtr {
 public:
-  _URegexMatchCallbackPtr(URegexMatchCallback *action);
+  URegexMatchCallbackPtr() {};
 
-  _URegexMatchCallbackPtr(const py::function &action);
-
-  ~_URegexMatchCallbackPtr();
-
-  static UBool callback(const void *context, int32_t steps);
-
-  template <typename T> T &get() { return std::get<T>(action_); };
-
-  template <typename T> auto get_if() {
-    return std::holds_alternative<T>(action_) ? std::get<T>(action_) : nullptr;
+  URegexMatchCallbackPtr(const std::function<MatchCallbackArgs> &action,
+                         const ConstVoidPtr *context) {
+    action_and_context_ =
+        std::make_shared<MatchCallbackAndContextPair>(action, context);
   };
 
-  bool has_value() {
-    return !action_.valueless_by_exception() &&
-           (get_if<URegexMatchCallback *>() || action_.index() != 0);
+  URegexMatchCallbackPtr(const MatchCallbackAndContextPair *pair) {
+    action_and_context_ = std::make_shared<MatchCallbackAndContextPair>(
+        pair->first, pair->second);
   };
+
+  ~URegexMatchCallbackPtr() {};
+
+  MatchCallbackAndContextPair *context() const {
+    return action_and_context_.get();
+  };
+
+  bool empty() const noexcept { return action_and_context_.get() == nullptr; };
+
+  URegexMatchCallback *get_native_callback() {
+    return action_and_context_ ? callback : nullptr;
+  }
 
 private:
-  _URegexMatchCallbackPtr() = delete;
-  std::variant<URegexMatchCallback *, py::function> action_;
+  static UBool callback(const void *context, int32_t steps);
+
+  SharedMatchCallbackAndContextPair action_and_context_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UREGEX_HPP

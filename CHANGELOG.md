@@ -9,6 +9,9 @@
 - **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `UnicodeString` to `str`
 - **Breaking:** remove the `time_type` argument from `icupy.icu.TimeZoneFormat.format()` and `icupy.icu.TimeZoneFormat.parse()`, and return the output `time_type` together with the original return value as a tuple
 - **Breaking:** rename `icupy.icu.URegexFindProgressCallbackPtr` to `icupy.icu.URegexFindProgressCallback`
+- **Breaking:** rename `icupy.icu.URegexMatchCallbackPtr` to `icupy.icu.URegexMatchCallback` and change the `__init__` argument from `(action: collections.abc.Callable)` to `(action: collections.abc.Callable[[object, typing.SupportsInt], bool], context: ConstVoidPtr)`
+- **Breaking:** change the return type of `icupy.icu.RegexMatcher.get_match_callback()` from `tuple[URegexMatchCallbackPtr, ConstVoidPtr]` to `URegexMatchCallback | None`
+- **Breaking:** change the argument type of `icupy.icu.RegexMatcher.set_match_callback()` from `(action: URegexMatchCallbackPtr, context: ConstVoidPtr)` to `(action: URegexMatchCallback)`
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 

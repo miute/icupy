@@ -223,25 +223,26 @@ void init_regex(py::module &m) {
       },
       py::arg("dest") = std::nullopt);
 
-  rm.def("get_match_callback", [](RegexMatcher &self) {
-    URegexMatchCallback *callback = nullptr;
-    const void *context = nullptr;
-    ErrorCode error_code;
-    self.getMatchCallback(callback, context, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    if (callback == _URegexMatchCallbackPtr::callback) {
-      // Python callback function and callback data
-      auto python_context =
-          reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
-      auto action = _URegexMatchCallbackPtr(python_context->action());
-      return py::make_tuple(action, python_context);
-    }
-    // C callback function and callback data
-    return py::make_tuple(_URegexMatchCallbackPtr(callback),
-                          icupy::ConstVoidPtr(context));
-  });
+  rm.def(
+      "get_match_callback",
+      [](RegexMatcher &self) -> std::optional<icupy::URegexMatchCallbackPtr> {
+        URegexMatchCallback *native_callback;
+        const void *native_context;
+        ErrorCode error_code;
+        self.getMatchCallback(native_callback, native_context, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        if (native_context == nullptr) {
+          return std::nullopt;
+        }
+        auto pair = reinterpret_cast<icupy::MatchCallbackAndContextPair *>(
+            const_cast<void *>(native_context));
+        return icupy::URegexMatchCallbackPtr(pair);
+      },
+      R"doc(
+      Get the callback function for this ``RegexMatcher``.
+      )doc");
 
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
 
@@ -489,26 +490,42 @@ void init_regex(py::module &m) {
 
   rm.def(
       "set_match_callback",
-      [](RegexMatcher &self, _URegexMatchCallbackPtr &callback,
-         icupy::ConstVoidPtr &context) {
-        auto fn = callback.get_if<URegexMatchCallback *>();
-        const void *value = nullptr;
-        if (fn == nullptr && callback.has_value()) {
-          // New Python callback function and callback data
-          fn = callback.callback;
-          context.set_action(callback.get<py::function>());
-          value = &context;
-        } else if (context.has_value()) {
-          // New C callback data
-          value = context.data();
-        }
+      [](RegexMatcher &self, icupy::URegexMatchCallbackPtr &callback) {
+        auto native_callback = callback.get_native_callback();
+        auto native_context = callback.context();
         ErrorCode error_code;
-        self.setMatchCallback(fn, value, error_code);
+        self.setMatchCallback(native_callback, native_context, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("callback"), py::arg("context"));
+      py::arg("callback"), R"doc(
+      Set the callback function to be used with this ``RegexMatcher``.
+
+      `callback` must outlive the ``RegexMatcher`` object.
+
+      Example:
+          >>> from icupy import icu
+          >>> matcher = icu.RegexMatcher("((.)+\\2)+x", 0)
+          >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
+          >>> matcher.reset(src)
+          >>> def matching_callback(info: dict, steps: int) -> bool:
+          ...     if not isinstance(info, dict):
+          ...         return False
+          ...     info.setdefault("numCalls", 0)
+          ...     info["numCalls"] += 1
+          ...     info["lastSteps"] = steps
+          ...     return True
+          ...
+          >>> d = {}
+          >>> context = icu.ConstVoidPtr(d)
+          >>> callback = icu.URegexMatchCallback(matching_callback, context)
+          >>> matcher.set_match_callback(callback)
+          >>> matcher.matches()
+          False
+          >>> d
+          {'numCalls': 16, 'lastSteps': 16}
+      )doc");
 
   rm.def(
       "set_stack_limit",
