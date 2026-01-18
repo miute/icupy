@@ -714,13 +714,14 @@ def test_set_match_callback() -> None:
 
     # UBool URegexMatchCallback(const void *context, int32_t steps)
     def _match_callback1(_context: object, _steps: int) -> bool:
-        assert _context is None
+        _ = _context
         nonlocal result1
         result1.append(_steps)
         return True
 
     def _match_callback2(_context: object, _steps: int) -> bool:
-        assert isinstance(_context, list)
+        if not isinstance(_context, list):
+            return False
         _context.append(_steps)
         return _steps < 5
 
@@ -733,49 +734,62 @@ def test_set_match_callback() -> None:
     #       const void *&context,
     #       UErrorCode &status
     # )
-    callback0, context0 = matcher.get_match_callback()
-    assert isinstance(callback0, icu.URegexMatchCallbackPtr)
-    assert isinstance(context0, icu.ConstVoidPtr)
+    callback0 = matcher.get_match_callback()
+    assert callback0 is None
 
     # void icu::RegexMatcher::setMatchCallback(
     #       URegexMatchCallback *callback,
     #       const void *context,
     #       UErrorCode &status
     # )
-    callback1 = icu.URegexMatchCallbackPtr(_match_callback1)
-    context1 = icu.ConstVoidPtr(None)
-    matcher.set_match_callback(callback1, context1)
+    context1 = icu.ConstVoidPtr()
+    callback1 = icu.URegexMatchCallback(_match_callback1, context1)
+    matcher.set_match_callback(callback1)
     matcher.reset(src)
     assert not matcher.matches()
     assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
-    callback1a, context1a = matcher.get_match_callback()
-    assert isinstance(callback1a, icu.URegexMatchCallbackPtr)
+    callback1a = matcher.get_match_callback()
+    assert isinstance(callback1a, icu.URegexMatchCallback)
+    assert bool(callback1a) is True
+    context1a = callback1a.context()
     assert isinstance(context1a, icu.ConstVoidPtr)
+    assert context1a.value() is None
 
     result2: list[int] = []
-    callback2 = icu.URegexMatchCallbackPtr(_match_callback2)
     context2 = icu.ConstVoidPtr(result2)
-    matcher.set_match_callback(callback2, context2)
+    callback2 = icu.URegexMatchCallback(_match_callback2, context2)
+    matcher.set_match_callback(callback2)
     matcher.reset(src)
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.matches()
     assert exc_info.value.args[0] == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 2, 3, 4, 5]
 
+    callback2a = matcher.get_match_callback()
+    assert isinstance(callback2a, icu.URegexMatchCallback)
+    assert bool(callback2a) is True
+    context2a = callback2a.context()
+    assert isinstance(context2a, icu.ConstVoidPtr)
+    assert context2a.value() == result2
+
     result1.clear()
     result2.clear()
-    matcher.set_match_callback(callback0, context0)
+    matcher.set_match_callback(callback1a)
+    matcher.reset(src)
+    assert not matcher.matches()
+    assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+    result1.clear()
+    result2.clear()
+    callback3 = icu.URegexMatchCallback()
+    matcher.set_match_callback(callback3)
     matcher.reset(src)
     assert not matcher.matches()
     assert len(result1) == len(result2) == 0
 
-    result1.clear()
-    result2.clear()
-    matcher.set_match_callback(callback1a, context1a)
-    matcher.reset(src)
-    assert not matcher.matches()
-    assert result1 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    callback3a = matcher.get_match_callback()
+    assert callback3a is None
 
 
 def test_split() -> None:
