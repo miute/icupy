@@ -186,7 +186,8 @@ void init_regex(py::module &m) {
 
   rm.def(
       "get_find_progress_callback",
-      [](RegexMatcher &self) {
+      [](RegexMatcher &self)
+          -> std::optional<icupy::URegexFindProgressCallbackPtr> {
         URegexFindProgressCallback *native_callback;
         const void *native_context;
         ErrorCode error_code;
@@ -195,21 +196,17 @@ void init_regex(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        icupy::URegexFindProgressCallbackPtr *callback;
-        icupy::ConstVoidPtr *context;
-        if (native_context) {
-          auto pair =
-              reinterpret_cast<icupy::FindProgressCallbackAndContextPair *>(
-                  const_cast<void *>(native_context));
-          callback = pair->first;
-          context = pair->second;
-        } else {
-          callback = new icupy::URegexFindProgressCallbackPtr();
-          context = new icupy::ConstVoidPtr();
+        if (native_context == nullptr) {
+          return std::nullopt;
         }
-        return std::make_tuple(callback, context);
+        auto pair =
+            reinterpret_cast<icupy::FindProgressCallbackAndContextPair *>(
+                const_cast<void *>(native_context));
+        return icupy::URegexFindProgressCallbackPtr(pair);
       },
-      py::return_value_policy::reference);
+      R"doc(
+      Get the find progress callback function for this ``RegexMatcher``.
+      )doc");
 
   rm.def(
       "get_input",
@@ -475,10 +472,9 @@ void init_regex(py::module &m) {
 
   rm.def(
       "set_find_progress_callback",
-      [](RegexMatcher &self, icupy::URegexFindProgressCallbackPtr *callback,
-         icupy::ConstVoidPtr *context) {
-        auto native_callback = callback->get_native_callback();
-        auto native_context = callback->set_context(context);
+      [](RegexMatcher &self, icupy::URegexFindProgressCallbackPtr &callback) {
+        auto native_callback = callback.get_native_callback();
+        auto native_context = callback.context();
         ErrorCode error_code;
         self.setFindProgressCallback(native_callback, native_context,
                                      error_code);
@@ -486,7 +482,33 @@ void init_regex(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("callback").none(false), py::arg("context").none(false));
+      py::arg("callback"), R"doc(
+      Set the find progress callback function to be used with this
+      ``RegexMatcher``.
+
+      `callback` must outlive the ``RegexMatcher`` object.
+
+      Example:
+          >>> from icupy import icu
+          >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
+          >>> matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
+          >>> def progress_callback(info: dict[str, int], match_index: int) -> bool:
+          ...     if not isinstance(info, dict):
+          ...         return False
+          ...     info.setdefault("numCalls", 0)
+          ...     info["numCalls"] += 1
+          ...     info["lastIndex"] = match_index
+          ...     return True
+          ...
+          >>> d = {}
+          >>> context = icu.ConstVoidPtr(d)
+          >>> callback = icu.URegexFindProgressCallback(progress_callback, context)
+          >>> matcher.set_find_progress_callback(callback)
+          >>> matcher.find(0)
+          False
+          >>> d
+          {'numCalls': 18, 'lastIndex': 18}
+      )doc");
 
   rm.def(
       "set_match_callback",
@@ -506,10 +528,9 @@ void init_regex(py::module &m) {
 
       Example:
           >>> from icupy import icu
-          >>> matcher = icu.RegexMatcher("((.)+\\2)+x", 0)
           >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
-          >>> matcher.reset(src)
-          >>> def matching_callback(info: dict, steps: int) -> bool:
+          >>> matcher = icu.RegexMatcher("((.)+\\2)+x", src, 0)
+          >>> def matching_callback(info: dict[str, int], steps: int) -> bool:
           ...     if not isinstance(info, dict):
           ...         return False
           ...     info.setdefault("numCalls", 0)
