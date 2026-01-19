@@ -7,15 +7,14 @@ namespace icupy {
 UBool URegexFindProgressCallbackPtr::callback(const void *native_context,
                                               int64_t match_index) {
   if (native_context == nullptr) {
-    return false;
+    throw py::value_error("URegexFindProgressCallback: context is null");
   }
   auto pair = reinterpret_cast<FindProgressCallbackAndContextPair *>(
       const_cast<void *>(native_context));
-  auto callback = pair->first;
-  if (!callback->has_action()) {
-    return false;
+  auto &action = pair->first;
+  if (!action) {
+    throw py::value_error("URegexFindProgressCallback: action is not set");
   }
-  auto &action = callback->action();
   auto context = pair->second;
   auto value = context->value();
   return action(value, match_index);
@@ -24,13 +23,13 @@ UBool URegexFindProgressCallbackPtr::callback(const void *native_context,
 UBool URegexMatchCallbackPtr::callback(const void *native_context,
                                        int32_t steps) {
   if (native_context == nullptr) {
-    return false;
+    throw py::value_error("URegexMatchCallback: context is null");
   }
   auto pair = reinterpret_cast<MatchCallbackAndContextPair *>(
       const_cast<void *>(native_context));
   auto &action = pair->first;
   if (!action) {
-    return false;
+    throw py::value_error("URegexMatchCallback: action is not set");
   }
   auto context = pair->second;
   auto value = context->value();
@@ -90,24 +89,45 @@ void init_uregex(py::module &m) {
   //
   py::class_<icupy::URegexFindProgressCallbackPtr> rfcb(
       m, "URegexFindProgressCallback", R"doc(
-      A wrapper class for a regular expression find callback function.
+      Wrapper class for a regular expression find callback function.
       )doc");
 
   rfcb.def(py::init<>(), R"doc(
            Initialize the ``URegexFindProgressCallback`` instance without a callback
            function.
            )doc")
-      .def(py::init<std::function<icupy::FindProgressCallbackArgs>>(),
-           py::arg("action"), R"doc(
+      .def(py::init<const std::function<icupy::FindProgressCallbackArgs> &,
+                    const icupy::ConstVoidPtr *>(),
+           py::arg("action"), py::arg("context").none(false), R"doc(
            Initialize the ``URegexFindProgressCallback`` instance with a callback function
-           `action`.
+           `action` and the user context `context`.
+
+           `action` and `context` must outlive the ``URegexFindProgressCallback`` object.
            )doc");
 
-  rfcb.def("__bool__", &icupy::URegexFindProgressCallbackPtr::has_action,
-           R"doc(
-           Return ``True`` if the ``URegexFindProgressCallback`` instance has a callback
-           function.
-           )doc");
+  rfcb.def(
+      "__bool__",
+      [](const icupy::URegexFindProgressCallbackPtr &self) {
+        return !self.empty();
+      },
+      R"doc(
+      Return ``True`` if the ``URegexFindProgressCallback`` has a callback function.
+      )doc");
+
+  rfcb.def(
+      "context",
+      [](const icupy::URegexFindProgressCallbackPtr &self)
+          -> std::optional<const icupy::ConstVoidPtr *> {
+        auto pair = self.context();
+        if (pair == nullptr) {
+          return std::nullopt;
+        }
+        return pair->second;
+      },
+      py::return_value_policy::reference,
+      R"doc(
+      Get the user context.
+      )doc");
 
   //
   // URegexMatchCallback

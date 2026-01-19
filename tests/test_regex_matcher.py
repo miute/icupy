@@ -631,50 +631,50 @@ def test_set_find_progress_callback() -> None:
     #       const void *&context,
     #       UErrorCode &status
     # )
-    callback0, context0 = matcher.get_find_progress_callback()
-    assert isinstance(callback0, icu.URegexFindProgressCallback)
-    assert bool(callback0) is False
-    assert isinstance(context0, icu.ConstVoidPtr)
-    assert context0.value() is None
+    callback0 = matcher.get_find_progress_callback()
+    assert callback0 is None
 
     # void icu::RegexMatcher::setFindProgressCallback(
     #       URegexFindProgressCallback *callback,
     #       const void *context,
     #       UErrorCode &status
     # )
-    callback1 = icu.URegexFindProgressCallback(_find_progress_callback1)
-    context1 = icu.ConstVoidPtr(None)
-    matcher.set_find_progress_callback(callback1, context1)
+    context1 = icu.ConstVoidPtr()
+    callback1 = icu.URegexFindProgressCallback(_find_progress_callback1, context1)
+    matcher.set_find_progress_callback(callback1)
     assert matcher.find() is True
     assert matcher.find() is True
     assert matcher.find() is False
     assert result1 == [1, 5, 6]
 
-    callback1a, context1a = matcher.get_find_progress_callback()
+    callback1a = matcher.get_find_progress_callback()
     assert isinstance(callback1a, icu.URegexFindProgressCallback)
     assert bool(callback1a) is True
+    context1a = callback1a.context()
     assert isinstance(context1a, icu.ConstVoidPtr)
     assert context1a.value() is None
 
     result2: list[int] = []
-    callback2 = icu.URegexFindProgressCallback(_find_progress_callback2)
     context2 = icu.ConstVoidPtr(result2)
-    matcher.set_find_progress_callback(callback2, context2)
+    callback2 = icu.URegexFindProgressCallback(_find_progress_callback2, context2)
+    matcher.set_find_progress_callback(callback2)
     assert matcher.find(0) is True
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.find()
     assert exc_info.value.args[0] == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 5]
 
-    callback2a, context2a = matcher.get_find_progress_callback()
+    callback2a = matcher.get_find_progress_callback()
     assert isinstance(callback2a, icu.URegexFindProgressCallback)
     assert bool(callback2a) is True
+    context2a = callback2a.context()
     assert isinstance(context2a, icu.ConstVoidPtr)
     assert context2a.value() == result2
 
     result1.clear()
     result2.clear()
-    matcher.set_find_progress_callback(callback0, context0)
+    callback0 = icu.URegexFindProgressCallback()
+    matcher.set_find_progress_callback(callback0)
     assert matcher.find(0) is True
     assert matcher.find() is True
     assert matcher.find() is False
@@ -682,7 +682,7 @@ def test_set_find_progress_callback() -> None:
 
     result1.clear()
     result2.clear()
-    matcher.set_find_progress_callback(callback1a, context1a)
+    matcher.set_find_progress_callback(callback1a)
     assert matcher.find(0) is True
     assert matcher.find() is True
     assert matcher.find() is False
@@ -691,7 +691,7 @@ def test_set_find_progress_callback() -> None:
 
     result1.clear()
     result2.clear()
-    matcher.set_find_progress_callback(callback2a, context2a)
+    matcher.set_find_progress_callback(callback2a)
     assert matcher.reset()
     assert matcher.find() is True
     with pytest.raises(icu.ICUError) as exc_info:
@@ -701,12 +701,13 @@ def test_set_find_progress_callback() -> None:
 
     result1.clear()
     result2.clear()
-    matcher.set_find_progress_callback(callback2, context0)
+    matcher.set_find_progress_callback(callback2)
     assert matcher.reset()
+    assert matcher.find() is True
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.find()
     assert exc_info.value.error_code == icu.U_REGEX_STOPPED_BY_CALLER
-    assert len(result1) == len(result2) == 0
+    assert result2 == [1, 5]
 
 
 def test_set_match_callback() -> None:

@@ -13,10 +13,11 @@ class ConstVoidPtr;
 class URegexFindProgressCallbackPtr;
 class URegexMatchCallbackPtr;
 
-using FindProgressCallbackArgs = bool(py::object, int);
+using FindProgressCallbackArgs = bool(py::object &, int64_t);
 
 using FindProgressCallbackAndContextPair =
-    std::pair<URegexFindProgressCallbackPtr *, ConstVoidPtr *>;
+    std::pair<const std::function<FindProgressCallbackArgs>,
+              const ConstVoidPtr *>;
 
 using SharedFindProgressCallbackAndContextPair =
     std::shared_ptr<FindProgressCallbackAndContextPair>;
@@ -34,33 +35,34 @@ public:
   URegexFindProgressCallbackPtr() {};
 
   URegexFindProgressCallbackPtr(
-      const std::function<FindProgressCallbackArgs> &action)
-      : action_(action) {};
+      const std::function<FindProgressCallbackArgs> &action,
+      const ConstVoidPtr *context) {
+    action_and_context_ =
+        std::make_shared<FindProgressCallbackAndContextPair>(action, context);
+  };
+
+  URegexFindProgressCallbackPtr(
+      const FindProgressCallbackAndContextPair *pair) {
+    action_and_context_ = std::make_shared<FindProgressCallbackAndContextPair>(
+        pair->first, pair->second);
+  };
 
   ~URegexFindProgressCallbackPtr() {};
 
-  const std::function<FindProgressCallbackArgs> &action() const {
-    return action_.value();
+  FindProgressCallbackAndContextPair *context() const {
+    return action_and_context_.get();
   };
 
+  bool empty() const noexcept { return action_and_context_.get() == nullptr; };
+
   URegexFindProgressCallback *get_native_callback() {
-    return action_.has_value() ? callback : nullptr;
-  }
-
-  bool has_action() const { return action_.has_value(); };
-
-  FindProgressCallbackAndContextPair *set_context(ConstVoidPtr *context) {
-    callback_and_context_ =
-        std::make_shared<FindProgressCallbackAndContextPair>(
-            std::make_pair(this, context));
-    return callback_and_context_.get();
+    return action_and_context_ ? callback : nullptr;
   }
 
 private:
   static UBool callback(const void *context, int64_t match_index);
 
-  std::optional<std::function<FindProgressCallbackArgs>> action_;
-  SharedFindProgressCallbackAndContextPair callback_and_context_;
+  SharedFindProgressCallbackAndContextPair action_and_context_;
 };
 
 class URegexMatchCallbackPtr {
