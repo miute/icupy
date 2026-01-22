@@ -9,12 +9,16 @@
 - **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `UnicodeString` to `str`
 - **Breaking:** remove the `time_type` argument from `icupy.icu.TimeZoneFormat.format()` and `icupy.icu.TimeZoneFormat.parse()`, and return the output `time_type` together with the original return value as a tuple
 - **Breaking:** refactor `icupy.icu.RegexMatcher` callback API:
-  - Rename `icupy.icu.URegexFindProgressCallbackPtr` to `icupy.icu.URegexFindProgressCallback` and change the `__init__` argument from `(action: collections.abc.Callable)` to `(action: collections.abc.Callable[[object, typing.SupportsInt], bool], context: ConstVoidPtr)`
-  - Rename `icupy.icu.URegexMatchCallbackPtr` to `icupy.icu.URegexMatchCallback` and change the `__init__` argument from `(action: collections.abc.Callable)` to `(action: collections.abc.Callable[[object, typing.SupportsInt], bool], context: ConstVoidPtr)`
-  - Change the return type of `icupy.icu.RegexMatcher.get_find_progress_callback()` from `tuple[URegexFindProgressCallbackPtr, ConstVoidPtr]` to `URegexFindProgressCallback | None`
-  - Change the return type of `icupy.icu.RegexMatcher.get_match_callback()` from `tuple[URegexMatchCallbackPtr, ConstVoidPtr]` to `URegexMatchCallback | None`
-  - Change the argument type of `icupy.icu.RegexMatcher.set_find_progress_callback()` from `(action: URegexFindProgressCallbackPtr, context: ConstVoidPtr)` to `(action: URegexFindProgressCallback)`
-  - Change the argument type of `icupy.icu.RegexMatcher.set_match_callback()` from `(action: URegexMatchCallbackPtr, context: ConstVoidPtr)` to `(action: URegexMatchCallback)`
+  - Rename `icupy.icu.URegexFindProgressCallbackPtr` to `icupy.icu.URegexFindProgressCallback`
+  - Move the `context` argument of `icupy.icu.RegexMatcher.set_find_progress_callback()` to `icupy.icu.URegexFindProgressCallback.__init__()`
+  - Update `icupy.icu.RegexMatcher.get_find_progress_callback()` to return `icupy.icu.URegexFindProgressCallback`  instead of a tuple
+  - Rename `icupy.icu.URegexMatchCallbackPtr` to `icupy.icu.URegexMatchCallback`
+  - Move the `context` argument of `icupy.icu.RegexMatcher.set_match_callback()` to `icupy.icu.URegexMatchCallback.__init__()`
+  - Update `icupy.icu.RegexMatcher.get_match_callback()` to return `icupy.icu.URegexMatchCallback` instead of a tuple
+- **Breaking:** refactor UBiDi callback API:
+  - Rename `icupy.icu.UBiDiClassCallbackPtr` to `icupy.icu.UBiDiClassCallback`
+  - Move the `context` argument of `icupy.icu.ubidi_set_class_callback()` to `icupy.icu.UBiDiClassCallback.__init__()`
+  - Update `icupy.icu.ubidi_get_class_callback()` and `icupy.icu.ubidi_set_class_callback()` to return `icupy.icu.UBiDiClassCallback` instead of a tuple
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 
