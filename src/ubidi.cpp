@@ -7,48 +7,48 @@
 
 using namespace icu;
 
-_UBiDiPtr::_UBiDiPtr(UBiDi *p) : p_(p) {}
+namespace icupy {
 
-_UBiDiPtr::~_UBiDiPtr() {}
+UBiDiPtr::UBiDiPtr(UBiDi *p) : p_(p) {}
 
-UBiDi *_UBiDiPtr::get() const { return p_; }
+UBiDiPtr::~UBiDiPtr() {}
 
-void _UBiDiPtr::set_embedding_levels(
+UBiDi *UBiDiPtr::get() const { return p_; }
+
+void UBiDiPtr::set_embedding_levels(
     const std::shared_ptr<UBiDiLevel[]> &embedding_levels) {
   embedding_levels_ = embedding_levels;
 }
 
-void _UBiDiPtr::set_epilogue(const std::shared_ptr<std::u16string> &epilogue) {
+void UBiDiPtr::set_epilogue(const std::shared_ptr<std::u16string> &epilogue) {
   epilogue_ = epilogue;
 }
 
-void _UBiDiPtr::set_prologue(const std::shared_ptr<std::u16string> &prologue) {
+void UBiDiPtr::set_prologue(const std::shared_ptr<std::u16string> &prologue) {
   prologue_ = prologue;
 }
 
-void _UBiDiPtr::set_text(const std::shared_ptr<std::u16string> &text) {
+void UBiDiPtr::set_text(const std::shared_ptr<std::u16string> &text) {
   text_ = text;
 }
 
-_UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(std::nullptr_t action)
-    : action_(action) {}
-
-_UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(UBiDiClassCallback *action)
-    : action_(action) {}
-
-_UBiDiClassCallbackPtr::_UBiDiClassCallbackPtr(const py::function &action)
-    : action_(action) {}
-
-_UBiDiClassCallbackPtr::~_UBiDiClassCallbackPtr() {}
-
-UCharDirection _UBiDiClassCallbackPtr::callback(const void *context,
-                                                UChar32 c) {
-  auto python_context =
-      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
-  auto &action = python_context->action();
-  auto value = python_context->value();
-  return static_cast<UCharDirection>(action(value, c).cast<int32_t>());
+UCharDirection UBiDiClassCallbackPtr::callback(const void *native_context,
+                                               UChar32 c) {
+  if (native_context == nullptr) {
+    throw py::value_error("UBiDiClassCallback: context is null");
+  }
+  auto pair = reinterpret_cast<ClassCallbackAndContextPair *>(
+      const_cast<void *>(native_context));
+  auto &action = pair->first;
+  if (!action) {
+    throw py::value_error("UBiDiClassCallback: action is not set");
+  }
+  auto context = pair->second;
+  auto value = context->value();
+  return action(value, c);
 }
+
+} // namespace icupy
 
 void init_ubidi(py::module &m) {
   //
@@ -235,30 +235,75 @@ void init_ubidi(py::module &m) {
   //
   // UBiDiClassCallback
   //
-  py::class_<_UBiDiClassCallbackPtr>(m, "UBiDiClassCallbackPtr")
-      .def(py::init<std::nullptr_t>(), py::arg("fn"))
-      .def(py::init<py::function>(), py::arg("fn"));
+  py::class_<icupy::UBiDiClassCallbackPtr> bccb(m, "UBiDiClassCallback", R"doc(
+    Wrapper class for a callback function that override the default Bidi class
+    values with custom values.
+
+    See Also:
+        :func:`ubidi_set_class_callback` and :func:`ubidi_get_class_callback`
+    )doc");
+
+  bccb.def(py::init<>(), R"doc(
+          Initialize the ``UBiDiClassCallback`` instance without a callback
+          function.
+          )doc")
+      .def(py::init<const std::function<icupy::ClassCallbackArgs> &,
+                    const icupy::ConstVoidPtr *>(),
+           py::arg("action"), py::arg("context").none(false), R"doc(
+           Initialize the ``UBiDiClassCallback`` instance with a callback
+           function `action` and the user context `context`.
+
+           `action` and `context` must outlive the ``UBiDiClassCallback``
+           object.
+           )doc");
+
+  bccb.def(
+      "__bool__",
+      [](const icupy::UBiDiClassCallbackPtr &self) { return !self.empty(); },
+      R"doc(
+      Return ``True`` if the ``UBiDiClassCallback`` has a callback function.
+      )doc");
+
+  bccb.def(
+      "context",
+      [](const icupy::UBiDiClassCallbackPtr &self)
+          -> std::optional<const icupy::ConstVoidPtr *> {
+        auto pair = self.context();
+        if (pair == nullptr) {
+          return std::nullopt;
+        }
+        return pair->second;
+      },
+      py::return_value_policy::reference,
+      R"doc(
+      Get the user context.
+      )doc");
 
   //
   // struct UBiDi
   //
-  py::class_<_UBiDiPtr>(m, "_UBiDiPtr");
+  py::class_<icupy::UBiDiPtr>(m, "UBiDi", R"doc(
+  UBiDi structure.
+
+  See Also:
+      :func:`ubidi_open`, :func:`ubidi_open_sized`, and :func:`ubidi_close`
+  )doc");
 
   //
   // Functions
   //
   m.def(
-      "ubidi_close", [](_UBiDiPtr &bidi) { ubidi_close(bidi); },
+      "ubidi_close", [](icupy::UBiDiPtr &bidi) { ubidi_close(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_count_paragraphs",
-      [](_UBiDiPtr &bidi) { return ubidi_countParagraphs(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_countParagraphs(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_count_runs",
-      [](_UBiDiPtr &bidi) {
+      [](icupy::UBiDiPtr &bidi) {
         ErrorCode error_code;
         auto result = ubidi_countRuns(bidi, error_code);
         if (error_code.isFailure()) {
@@ -273,49 +318,51 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_class_callback",
-      [](_UBiDiPtr &bidi) {
-        UBiDiClassCallback *callback = nullptr;
+      [](icupy::UBiDiPtr &bidi) -> std::optional<icupy::UBiDiClassCallbackPtr> {
+        UBiDiClassCallback *fn = nullptr;
         const void *context = nullptr;
-        ubidi_getClassCallback(bidi, &callback, &context);
-        if (callback == _UBiDiClassCallbackPtr::callback) {
-          // Python callback function and callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
-              const_cast<void *>(context));
-          auto action = _UBiDiClassCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+        ubidi_getClassCallback(bidi, &fn, &context);
+        if (context == nullptr) {
+          return std::nullopt;
         }
-        // C callback function and callback data
-        return py::make_tuple(_UBiDiClassCallbackPtr(callback),
-                              icupy::ConstVoidPtr(context));
+        auto pair = reinterpret_cast<icupy::ClassCallbackAndContextPair *>(
+            const_cast<void *>(context));
+        return icupy::UBiDiClassCallbackPtr(pair);
       },
-      py::arg("bidi"));
+      py::arg("bidi"), R"doc(
+      Get the callback function for this ``UBiDi``.
+
+      See Also:
+          :func:`ubidi_set_class_callback`
+      )doc");
 
   m.def(
       "ubidi_get_customized_class",
-      [](_UBiDiPtr &bidi, UChar32 c) {
+      [](icupy::UBiDiPtr &bidi, UChar32 c) {
         return ubidi_getCustomizedClass(bidi, c);
       },
       py::arg("bidi"), py::arg("c"));
 
   m.def(
       "ubidi_get_direction",
-      [](_UBiDiPtr &bidi) { return ubidi_getDirection(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getDirection(bidi); },
       py::arg("bidi"));
 
   m.def(
-      "ubidi_get_length", [](_UBiDiPtr &bidi) { return ubidi_getLength(bidi); },
+      "ubidi_get_length",
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getLength(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_get_level_at",
-      [](_UBiDiPtr &bidi, int32_t char_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t char_index) {
         return ubidi_getLevelAt(bidi, char_index);
       },
       py::arg("bidi"), py::arg("char_index"));
 
   m.def(
       "ubidi_get_levels",
-      [](_UBiDiPtr &bidi) {
+      [](icupy::UBiDiPtr &bidi) {
         ErrorCode error_code;
         auto p = ubidi_getLevels(bidi, error_code);
         if (error_code.isFailure()) {
@@ -329,7 +376,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_logical_index",
-      [](_UBiDiPtr &bidi, int32_t visual_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t visual_index) {
         ErrorCode error_code;
         auto result = ubidi_getLogicalIndex(bidi, visual_index, error_code);
         if (error_code.isFailure()) {
@@ -341,7 +388,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_logical_map",
-      [](_UBiDiPtr &bidi) {
+      [](icupy::UBiDiPtr &bidi) {
         const int32_t length =
             ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_INSERT_MARKS
                 ? ubidi_getResultLength(bidi)
@@ -358,7 +405,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_logical_run",
-      [](_UBiDiPtr &bidi, int32_t logical_position) {
+      [](icupy::UBiDiPtr &bidi, int32_t logical_position) {
         int32_t logical_limit;
         UBiDiLevel level;
         ubidi_getLogicalRun(bidi, logical_position, &logical_limit, &level);
@@ -368,7 +415,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_paragraph",
-      [](_UBiDiPtr &bidi, int32_t char_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t char_index) {
         int32_t para_start, para_limit;
         UBiDiLevel para_level;
         ErrorCode error_code;
@@ -383,7 +430,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_paragraph_by_index",
-      [](_UBiDiPtr &bidi, int32_t para_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t para_index) {
         int32_t para_start, para_limit;
         UBiDiLevel para_level;
         ErrorCode error_code;
@@ -398,36 +445,37 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_para_level",
-      [](_UBiDiPtr &bidi) { return ubidi_getParaLevel(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getParaLevel(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_get_processed_length",
-      [](_UBiDiPtr &bidi) { return ubidi_getProcessedLength(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getProcessedLength(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_get_reordering_mode",
-      [](_UBiDiPtr &bidi) { return ubidi_getReorderingMode(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getReorderingMode(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_get_reordering_options",
-      [](_UBiDiPtr &bidi) { return ubidi_getReorderingOptions(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getReorderingOptions(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_get_result_length",
-      [](_UBiDiPtr &bidi) { return ubidi_getResultLength(bidi); },
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getResultLength(bidi); },
       py::arg("bidi"));
 
   m.def(
-      "ubidi_get_text", [](_UBiDiPtr &bidi) { return ubidi_getText(bidi); },
+      "ubidi_get_text",
+      [](icupy::UBiDiPtr &bidi) { return ubidi_getText(bidi); },
       py::return_value_policy::reference, py::arg("bidi"));
 
   m.def(
       "ubidi_get_visual_index",
-      [](_UBiDiPtr &bidi, int32_t logical_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t logical_index) {
         ErrorCode error_code;
         auto result = ubidi_getVisualIndex(bidi, logical_index, error_code);
         if (error_code.isFailure()) {
@@ -439,7 +487,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_visual_map",
-      [](_UBiDiPtr &bidi) {
+      [](icupy::UBiDiPtr &bidi) {
         const int32_t length =
             ubidi_getReorderingOptions(bidi) & UBIDI_OPTION_REMOVE_CONTROLS
                 ? ubidi_getProcessedLength(bidi)
@@ -456,7 +504,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_get_visual_run",
-      [](_UBiDiPtr &bidi, int32_t run_index) {
+      [](icupy::UBiDiPtr &bidi, int32_t run_index) {
         int32_t logical_start, length;
         auto result =
             ubidi_getVisualRun(bidi, run_index, &logical_start, &length);
@@ -475,19 +523,19 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_is_inverse",
-      [](_UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); },
+      [](icupy::UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_is_order_paragraphs_ltr",
-      [](_UBiDiPtr &bidi) -> py::bool_ {
+      [](icupy::UBiDiPtr &bidi) -> py::bool_ {
         return ubidi_isOrderParagraphsLTR(bidi);
       },
       py::arg("bidi"));
 
   m.def("ubidi_open", []() {
     auto bidi = ubidi_open();
-    return std::make_unique<_UBiDiPtr>(bidi);
+    return std::make_unique<icupy::UBiDiPtr>(bidi);
   });
 
   m.def(
@@ -498,13 +546,13 @@ void init_ubidi(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UBiDiPtr>(bidi);
+        return std::make_unique<icupy::UBiDiPtr>(bidi);
       },
       py::arg("max_length"), py::arg("max_run_count"));
 
   m.def(
       "ubidi_order_paragraphs_ltr",
-      [](_UBiDiPtr &bidi, py::bool_ order_paragraphs_ltr) {
+      [](icupy::UBiDiPtr &bidi, py::bool_ order_paragraphs_ltr) {
         ubidi_orderParagraphsLTR(bidi, order_paragraphs_ltr);
       },
       py::arg("bidi"), py::arg("order_paragraphs_ltr"));
@@ -529,46 +577,60 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_class_callback",
-      [](_UBiDiPtr &bidi, _UBiDiClassCallbackPtr &new_fn,
-         icupy::ConstVoidPtr &new_context) {
-        auto callback = new_fn.get_if<UBiDiClassCallback *>();
-        const void *context = nullptr;
-        if (callback == nullptr && new_fn.has_value()) {
-          // New Python callback function and new callback data
-          callback = new_fn.callback;
-          new_context.set_action(new_fn.get<py::function>());
-          context = &new_context;
-        } else if (new_context.has_value()) {
-          // New C callback data (not tested)
-          context = new_context.data();
-        }
-
+      [](icupy::UBiDiPtr &bidi, icupy::UBiDiClassCallbackPtr &new_fn)
+          -> std::optional<icupy::UBiDiClassCallbackPtr> {
+        auto fn = new_fn.get_native_callback();
+        auto context = new_fn.context();
         UBiDiClassCallback *old_fn = nullptr;
         const void *old_context = nullptr;
         ErrorCode error_code;
-        ubidi_setClassCallback(bidi, callback, context, &old_fn, &old_context,
+        ubidi_setClassCallback(bidi, fn, context, &old_fn, &old_context,
                                error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        if (old_fn == new_fn.callback) {
-          // Old Python callback function and old callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
-              const_cast<void *>(old_context));
-          auto action = _UBiDiClassCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+        if (old_context == nullptr) {
+          return std::nullopt;
         }
-        // Old C callback function and old callback data
-        return py::make_tuple(_UBiDiClassCallbackPtr(old_fn),
-                              icupy::ConstVoidPtr(old_context));
+        auto pair = reinterpret_cast<icupy::ClassCallbackAndContextPair *>(
+            const_cast<void *>(old_context));
+        return icupy::UBiDiClassCallbackPtr(pair);
       },
-      py::return_value_policy::reference, py::keep_alive<2, 1>(),
-      py::keep_alive<3, 1>(), py::arg("bidi"), py::arg("new_fn"),
-      py::arg("new_context"));
+      py::arg("bidi"), py::arg("new_fn"), R"doc(
+      Set the callback function to be used with this ``UBiDi``.
+
+      `new_fn` must outlive the ``UBiDi`` object.
+
+      See Also:
+          :func:`ubidi_get_class_callback`
+
+      Example:
+          >>> from icupy import icu
+          >>> from icupy.utils import gc
+          >>> def class_callback(_: object, c: int) -> icu.UCharDirection:
+          ...     if icu.u_isdigit(c):
+          ...         return icu.U_LEFT_TO_RIGHT
+          ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
+          ...     return icu.UCharDirection(value)
+          ...
+          >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
+          ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
+          ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
+          ...     context = icu.ConstVoidPtr()
+          ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
+          ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
+          ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
+          ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
+          ...
+          <UCharDirection.U_EUROPEAN_NUMBER: 2>
+          <UCharDirection.U_ARABIC_NUMBER: 5>
+          <UCharDirection.U_LEFT_TO_RIGHT: 0>
+          <UCharDirection.U_LEFT_TO_RIGHT: 0>
+      )doc");
 
   m.def(
       "ubidi_set_context",
-      [](_UBiDiPtr &bidi, std::optional<const std::u16string> &prologue,
+      [](icupy::UBiDiPtr &bidi, std::optional<const std::u16string> &prologue,
          int32_t pro_length, std::optional<const std::u16string> &epilogue,
          int32_t epi_length) {
         auto normalized_pro_length = pro_length;
@@ -598,15 +660,15 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_inverse",
-      [](_UBiDiPtr &bidi, py::bool_ is_inverse) {
+      [](icupy::UBiDiPtr &bidi, py::bool_ is_inverse) {
         ubidi_setInverse(bidi, is_inverse);
       },
       py::arg("bidi"), py::arg("is_inverse"));
 
   m.def(
       "ubidi_set_line",
-      [](_UBiDiPtr &para_bidi, int32_t start, int32_t limit,
-         _UBiDiPtr &line_bidi) {
+      [](icupy::UBiDiPtr &para_bidi, int32_t start, int32_t limit,
+         icupy::UBiDiPtr &line_bidi) {
         ErrorCode error_code;
         ubidi_setLine(para_bidi, start, limit, line_bidi, error_code);
         if (error_code.isFailure()) {
@@ -618,7 +680,7 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_para",
-      [](_UBiDiPtr &bidi, const std::u16string &text, int32_t length,
+      [](icupy::UBiDiPtr &bidi, const std::u16string &text, int32_t length,
          UBiDiLevel para_level,
          std::optional<std::vector<UBiDiLevel>> &embedding_levels) {
         auto normalized_length = length;
@@ -651,21 +713,21 @@ void init_ubidi(py::module &m) {
 
   m.def(
       "ubidi_set_reordering_mode",
-      [](_UBiDiPtr &bidi, UBiDiReorderingMode reordering_mode) {
+      [](icupy::UBiDiPtr &bidi, UBiDiReorderingMode reordering_mode) {
         ubidi_setReorderingMode(bidi, reordering_mode);
       },
       py::arg("bidi"), py::arg("reordering_mode"));
 
   m.def(
       "ubidi_set_reordering_options",
-      [](_UBiDiPtr &bidi, int32_t reordering_options) {
+      [](icupy::UBiDiPtr &bidi, int32_t reordering_options) {
         ubidi_setReorderingOptions(bidi, reordering_options);
       },
       py::arg("bidi"), py::arg("reordering_options"));
 
   m.def(
       "ubidi_write_reordered",
-      [](_UBiDiPtr &bidi, uint16_t options) {
+      [](icupy::UBiDiPtr &bidi, uint16_t options) {
         int32_t dest_size = 0;
         ErrorCode error_code;
         if (options & UBIDI_INSERT_LRM_FOR_NUMERIC) {

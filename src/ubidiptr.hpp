@@ -1,16 +1,31 @@
 #ifndef ICUPY_UBIDIPTR_HPP
 #define ICUPY_UBIDIPTR_HPP
 
+#include <functional>
 #include <memory>
-#include <pybind11/functional.h>
 #include <unicode/ubidi.h>
-#include <variant>
 
-class _UBiDiPtr {
+namespace icupy {
+
+class ConstVoidPtr;
+class UBiDiClassCallbackPtr;
+
+using ClassCallbackArgs = UCharDirection(py::object &, UChar32);
+
+using ClassCallbackAndContextPair =
+    std::pair<const std::function<ClassCallbackArgs>, const ConstVoidPtr *>;
+
+using SharedClassCallbackAndContextPair =
+    std::shared_ptr<ClassCallbackAndContextPair>;
+
+//
+// struct UBiDi
+//
+class UBiDiPtr {
 public:
-  _UBiDiPtr(UBiDi *p);
+  UBiDiPtr(UBiDi *p);
 
-  ~_UBiDiPtr();
+  ~UBiDiPtr();
 
   UBiDi *get() const;
 
@@ -26,7 +41,7 @@ public:
   void set_text(const std::shared_ptr<std::u16string> &text);
 
 private:
-  _UBiDiPtr() = delete;
+  UBiDiPtr() = delete;
   UBiDi *p_;
   std::shared_ptr<std::u16string> text_;
   std::shared_ptr<std::u16string> prologue_;
@@ -34,32 +49,42 @@ private:
   std::shared_ptr<UBiDiLevel[]> embedding_levels_;
 };
 
-class _UBiDiClassCallbackPtr {
+//
+// UBiDiClassCallback
+//
+class UBiDiClassCallbackPtr {
 public:
-  _UBiDiClassCallbackPtr(std::nullptr_t action);
+  UBiDiClassCallbackPtr() {}
 
-  _UBiDiClassCallbackPtr(UBiDiClassCallback *action);
+  UBiDiClassCallbackPtr(const std::function<ClassCallbackArgs> &action,
+                        const ConstVoidPtr *context) {
+    action_and_context_ =
+        std::make_shared<ClassCallbackAndContextPair>(action, context);
+  }
 
-  _UBiDiClassCallbackPtr(const py::function &action);
+  UBiDiClassCallbackPtr(const ClassCallbackAndContextPair *pair) {
+    action_and_context_ = std::make_shared<ClassCallbackAndContextPair>(
+        pair->first, pair->second);
+  }
 
-  ~_UBiDiClassCallbackPtr();
+  ~UBiDiClassCallbackPtr() {}
 
-  static UCharDirection callback(const void *context, UChar32 c);
+  ClassCallbackAndContextPair *context() const {
+    return action_and_context_.get();
+  }
 
-  template <typename T> T get() const { return std::get<T>(action_); };
+  bool empty() const noexcept { return action_and_context_.get() == nullptr; };
 
-  template <typename T> auto get_if() const {
-    return std::holds_alternative<T>(action_) ? std::get<T>(action_) : nullptr;
-  };
-
-  bool has_value() const {
-    return !action_.valueless_by_exception() &&
-           (get_if<UBiDiClassCallback *>() || action_.index() != 0);
-  };
+  UBiDiClassCallback *get_native_callback() {
+    return action_and_context_ ? callback : nullptr;
+  }
 
 private:
-  _UBiDiClassCallbackPtr() = delete;
-  std::variant<UBiDiClassCallback *, py::function> action_;
+  static UCharDirection callback(const void *context, UChar32 c);
+
+  SharedClassCallbackAndContextPair action_and_context_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UBIDIPTR_HPP
