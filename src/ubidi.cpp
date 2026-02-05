@@ -9,6 +9,9 @@ using namespace icu;
 
 namespace icupy {
 
+//
+// struct UBiDi
+//
 UBiDiPtr::UBiDiPtr(UBiDi *p) : p_(p) {}
 
 UBiDiPtr::~UBiDiPtr() {}
@@ -32,16 +35,23 @@ void UBiDiPtr::set_text(const std::shared_ptr<std::u16string> &text) {
   text_ = text;
 }
 
+//
+// UBiDiClassCallback
+//
 UCharDirection UBiDiClassCallbackPtr::callback(const void *native_context,
                                                UChar32 c) {
   if (native_context == nullptr) {
-    throw py::value_error("UBiDiClassCallback: context is null");
+    throw std::runtime_error("UBiDiClassCallback: context is not set");
   }
   auto pair = reinterpret_cast<ClassCallbackAndContextPair *>(
       const_cast<void *>(native_context));
+  if (pair->second == nullptr) {
+    throw std::runtime_error("UBiDiClassCallback: callback context is not set");
+  }
   auto &action = pair->first;
   if (!action) {
-    throw py::value_error("UBiDiClassCallback: action is not set");
+    throw std::runtime_error(
+        "UBiDiClassCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
   auto value = context->value();
