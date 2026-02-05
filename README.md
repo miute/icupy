@@ -42,51 +42,84 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 ## Examples
 
 - [icu::UnicodeString](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1UnicodeString.html) with
-  [error callback](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__err_8h.html)
+  [predefined error callback function](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__err_8h.html)
 
   ```python
+  # from Unicode to codepage
   from icupy import icu
-  cnv = icu.ucnv_open('utf-8')
-  action = icu.UCNV_TO_U_CALLBACK_ESCAPE
+  cnv = icu.ucnv_open("iso8859-1")
   context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
-  icu.ucnv_set_to_ucall_back(cnv, action, context)
-  utf8 = b'\x61\xfe\x62'  # Impossible bytes
-  s = icu.UnicodeString(utf8, -1, cnv)
-  str(s)  # → 'a\\xFEb'
+  action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
+  old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+  s = icu.UnicodeString("A€B")
+  s.extract(cnv)  # → b'A\\u20ACB'
+  ```
 
-  action = icu.UCNV_TO_U_CALLBACK_ESCAPE
-  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_DEC)
-  icu.ucnv_set_to_ucall_back(cnv, action, context)
-  s = icu.UnicodeString(utf8, -1, cnv)
-  str(s)  # → 'a&#254;b'
+  ```python
+  # from codepage to Unicode
+  from icupy import icu
+  cnv = icu.ucnv_open("Shift-JIS")
+  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
+  action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
+  old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+  s = icu.UnicodeString(src, -1, cnv)
+  str(s)  # → 'a&#xEB;&#x40;b'
   ```
 
 - [icu::UnicodeString](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1UnicodeString.html) with
-  [user callback](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__cb_8h.html)
+  [custom error callback function](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__cb_8h.html)
 
   ```python
+  # from Unicode to codepage
   from icupy import icu
-  def _to_callback(
-      _context: object,
-      _args: icu.UConverterToUnicodeArgs,
-      _code_units: bytes,
-      _length: int,
-      _reason: icu.UConverterCallbackReason,
-      _error_code: icu.UErrorCode,
-  ) -> icu.UErrorCode:
-      if _reason == icu.UCNV_ILLEGAL:
-          _source = ''.join(['%{:02X}'.format(x) for x in _code_units])
-          icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
-          _error_code = icu.U_ZERO_ERROR
-      return _error_code
+  def from_unicode_cb(
+      options: object,
+      args: icu.UConverterFromUnicodeArgs,
+      code_units: str,
+      length: int,
+      code_point: int,
+      reason: icu.UConverterCallbackReason,
+      error_code: icu.ErrorCode,
+  ) -> None:
+      _ = options, length, code_point  # unused
+      if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+          error_code.set(icu.U_ZERO_ERROR)
+          source = "".join(f"\\u{ord(c):04X}" for c in code_units)
+          icu.ucnv_cb_from_uwrite_bytes(args, source, len(source), 0)
 
-  cnv = icu.ucnv_open('utf-8')
-  action = icu.UConverterToUCallbackPtr(_to_callback)
+  cnv = icu.ucnv_open("iso8859-1")
   context = icu.ConstVoidPtr()
-  icu.ucnv_set_to_ucall_back(cnv, action, context)
-  utf8 = b'\x61\xfe\x62'  # Impossible bytes
-  s = icu.UnicodeString(utf8, -1, cnv)
-  str(s)  # → 'a%FEb'
+  action = icu.UConverterFromUCallback(from_unicode_cb, context)
+  old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+  s = icu.UnicodeString("A€B")
+  s.extract(cnv)  # → b'A\\u20ACB'
+  ```
+
+  ```python
+  # from codepage to Unicode
+  from icupy import icu
+  def to_unicode_cb(
+      options: object,
+      args: icu.UConverterToUnicodeArgs,
+      code_units: bytes,
+      length: int,
+      reason: icu.UConverterCallbackReason,
+      error_code: icu.ErrorCode,
+  ) -> None:
+      _= options, length  # unused
+      if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+          error_code.set(icu.U_ZERO_ERROR)
+          source = "".join(f"%{b:02X}" for b in code_units)
+          icu.ucnv_cb_to_uwrite_uchars(args, source, len(source), 0)
+
+  cnv = icu.ucnv_open("Shift-JIS")
+  context = icu.ConstVoidPtr()
+  action = icu.UConverterToUCallback(to_unicode_cb, context)
+  old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+  s = icu.UnicodeString(src, -1, cnv)
+  str(s)  # → 'a%EB%40b'
   ```
 
 - [icu::DateFormat](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1DateFormat.html)

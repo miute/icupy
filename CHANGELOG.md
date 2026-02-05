@@ -19,6 +19,13 @@
   - Rename `icupy.icu.UBiDiClassCallbackPtr` to `icupy.icu.UBiDiClassCallback`
   - Move the `context` argument of `icupy.icu.ubidi_set_class_callback()` to `icupy.icu.UBiDiClassCallback.__init__()`
   - Update `icupy.icu.ubidi_get_class_callback()` and `icupy.icu.ubidi_set_class_callback()` to return `icupy.icu.UBiDiClassCallback` instead of a tuple
+- **Breaking:** refactor UConverter callback API:
+  - Rename `icupy.icu.UConverterFromUCallbackPtr` to `icupy.icu.UConverterFromUCallback`
+  - Move the `context` argument of `icupy.icu.ucnv_set_from_ucall_back()` to `icupy.icu.UConverterFromUCallback.__init__()`
+  - Update `icupy.icu.ucnv_get_from_ucall_back()` and `icupy.icu.ucnv_set_from_ucall_back()` to return `icupy.icu.UConverterFromUCallback`  instead of a tuple
+  - Rename `icupy.icu.UConverterToUCallbackPtr` to `icupy.icu.UConverterToUCallback`
+  - Move the `context` argument of `icupy.icu.ucnv_set_to_ucall_back()` to `icupy.icu.UConverterToUCallback.__init__()`
+  - Update `icupy.icu.ucnv_get_to_ucall_back()` and `icupy.icu.ucnv_set_to_ucall_back()` to return `icupy.icu.UConverterToUCallback`  instead of a tuple
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 
@@ -40,6 +47,7 @@
 
 ### Fixed
 
+- Fix UnicodeDecodeError in UConverter From Unicode callback function
 - Add missing functions (#148)
 - Change the return type of the comparison operator for `icupy.icu.UnicodeSet` from `int` to `bool`
 

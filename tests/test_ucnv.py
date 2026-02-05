@@ -1,5 +1,6 @@
 from functools import partial
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -160,7 +161,8 @@ def test_clone() -> None:
         test1 = icu.UnicodeString("a\uff71b\U0001f338c", -1)
 
         context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_DEC)
-        icu.ucnv_set_from_ucall_back(cnv1, icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
+        action = icu.UConverterFromUCallbackEscape(context)
+        icu.ucnv_set_from_ucall_back(cnv1, action)
 
         # UConverter *ucnv_clone(
         #       const UConverter *cnv,
@@ -193,343 +195,794 @@ def test_open_package() -> None:
         assert icu.ucnv_get_subst_chars(cnv) == b"\xff"
 
 
-def test_set_from_ucall_back() -> None:
-    result1, result2, result3 = [], [], []
+def test_set_from_u_call_back() -> None:
+    """Set the custom From Unicode error callback function."""
 
-    # void (* UConverterFromUCallback)(const void *context,
-    #                                  UConverterFromUnicodeArgs *args,
-    #                                  const UChar *codeUnits,
-    #                                  int32_t length,
-    #                                  UChar32 codePoint,
-    #                                  UConverterCallbackReason reason,
-    #                                  UErrorCode *pErrorCode)
-    def _from_u_callback1(
-        _context: object,
+    # typedef void( * UConverterFromUCallback) (
+    #       const void *context,
+    #       UConverterFromUnicodeArgs *args,
+    #       const UChar *codeUnits,
+    #       int32_t length,
+    #       UChar32 codePoint,
+    #       UConverterCallbackReason reason,
+    #       UErrorCode *pErrorCode
+    # )
+    def _from_unicode_cb(
+        _info: dict[str, Any],
         _args: icu.UConverterFromUnicodeArgs,
         _code_units: str,
         _length: int,
         _code_point: int,
         _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert _context is None
-        nonlocal result1
-        result1.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
-        if _reason == icu.UConverterCallbackReason.UCNV_UNASSIGNED:
-            _source = "?"
+        _error_code: icu.ErrorCode,
+    ) -> None:
+        if not isinstance(_info, dict):
+            _error_code.set(icu.U_ILLEGAL_ARGUMENT_ERROR)
+            return
+        if _reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+            _error_code.set(icu.U_ZERO_ERROR)
+            _calls = _info.setdefault("numCalls", 0)
+            _info["numCalls"] = _calls + 1
+            _t = _info.setdefault("reason", [])
+            _t.append((_code_units, _length, _code_point, _reason))
+            _source = "".join([f"%u{ord(c):04X}" for c in _code_units])
             icu.ucnv_cb_from_uwrite_bytes(_args, _source, len(_source), 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
 
-    def _from_u_callback2(
-        _context: object,
+    def _from_unicode_stop_cb(
+        _info: dict[str, Any],
         _args: icu.UConverterFromUnicodeArgs,
         _code_units: str,
         _length: int,
         _code_point: int,
         _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert isinstance(_context, str)
-        assert _context == "foo bar baz"
-        nonlocal result2
-        result2.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
-        if _reason == icu.UConverterCallbackReason.UCNV_UNASSIGNED:
-            icu.ucnv_cb_from_uwrite_sub(_args, 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
+        _error_code: icu.ErrorCode,
+    ) -> None:
+        _ = _args, _code_units, _length, _code_point
+        assert isinstance(_info, dict)
+        if _reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL]:
+            _error_code.set(icu.U_INTERNAL_PROGRAM_ERROR)
+            _calls = _info.setdefault("numCalls", 0)
+            _info["numCalls"] = _calls + 1
 
-    def _from_u_callback3(
-        _context: object,
-        _args: icu.UConverterFromUnicodeArgs,
-        _code_units: str,
+    # U+20AC: UCNV_UNASSIGNED
+    # U+D800: UCNV_ILLEGAL
+    s = icu.UnicodeString("A€\\uD800B").unescape()
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        # Default behavior
+        icu.ucnv_set_subst_string(cnv, "[?]")
+        assert s.extract(cnv) == b"A[?][?]B"
+
+        # Get the default callback function
+        action1 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action1, icu.UConverterFromUCallback)
+
+        # Set a new callback function
+        info: dict[str, Any] = {}
+        context2 = icu.ConstVoidPtr(info)
+        action2 = icu.UConverterFromUCallback(_from_unicode_cb, context2)
+        assert action2.context().value() == info
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action2)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        assert s.extract(cnv) == b"A%u20AC%uD800B"
+        assert info["numCalls"] > 0
+        reason = info["reason"]
+        assert reason[0] == ("€", 1, 0x20AC, icu.UCNV_UNASSIGNED)
+        assert reason[1] == ("\ud800", 1, 0xD800, icu.UCNV_ILLEGAL)
+
+        # Set a new callback function
+        action3 = icu.UConverterFromUCallback(_from_unicode_stop_cb, context2)
+        assert action3.context().value() == info
+        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterFromUCallback)
+        assert old_action2.context().value() == info
+
+        info.clear()
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_INTERNAL_PROGRAM_ERROR
+        assert info["numCalls"] > 0
+
+        # Set the old callback function
+        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        info.clear()
+        assert s.extract(cnv) == b"A%u20AC%uD800B"
+        assert info["numCalls"] > 0
+        reason = info["reason"]
+        assert reason[0] == ("€", 1, 0x20AC, icu.UCNV_UNASSIGNED)
+        assert reason[1] == ("\ud800", 1, 0xD800, icu.UCNV_ILLEGAL)
+
+        # Set the old callback function
+        icu.ucnv_set_from_ucall_back(cnv, action1)
+        info.clear()
+        assert s.extract(cnv) == b"A[?][?]B"
+        assert len(info) == 0
+
+
+@pytest.mark.parametrize(
+    ("option", "expected"),
+    [
+        (None, b"A%U20AC%UD800B"),
+        (icu.UCNV_ESCAPE_ICU, b"A%U20AC%UD800B"),
+        (icu.UCNV_ESCAPE_JAVA, b"A\\u20AC\\uD800B"),
+        (icu.UCNV_ESCAPE_C, b"A\\u20AC\\uD800B"),
+        (icu.UCNV_ESCAPE_XML_DEC, b"A&#8364;&#55296;B"),
+        (icu.UCNV_ESCAPE_XML_HEX, b"A&#x20AC;&#xD800;B"),
+    ],
+)
+def test_set_from_u_call_back_escape(option: str | None, expected: bytes) -> None:
+    """Set the UCNV_FROM_U_CALLBACK_ESCAPE callback function."""
+
+    # U+20AC: UCNV_UNASSIGNED
+    # U+D800: UCNV_ILLEGAL
+    s = icu.UnicodeString("A€\\uD800B").unescape()
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        context = icu.ConstVoidPtr(option)
+        action = icu.UConverterFromUCallbackEscape(context)
+        assert action.context() is None
+        assert action.option() == option
+        old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+        assert isinstance(old_action, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context() is None
+        assert action2.option() == option
+
+        assert s.extract(cnv) == expected
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        context = icu.ConstVoidPtr(option)
+        action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
+        assert action.context().value() == option
+        old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+        assert isinstance(old_action, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context().value() == option
+
+        assert s.extract(cnv) == expected
+
+
+def test_set_from_u_call_back_skip() -> None:
+    """Set the UCNV_FROM_U_CALLBACK_SKIP callback function."""
+
+    # U+20AC: UCNV_UNASSIGNED
+    # U+D800: UCNV_ILLEGAL
+    s = icu.UnicodeString("A€\\uD800B").unescape()
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallbackSkip(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        assert s.extract(cnv) == b"AB"
+
+        # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterFromUCallbackSkip(context3)
+        assert action3.context() is None
+        assert action3.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterFromUCallback)
+        assert old_action2.context() is None
+        assert old_action2.option() is None
+
+        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterFromUCallback)
+        assert action4.context() is None
+        assert action4.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        assert s.extract(cnv) == b"AB"
+
+        # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        icu.ucnv_set_from_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SKIP, context1)
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context().value() is None
+
+        assert s.extract(cnv) == b"AB"
+
+        # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SKIP, context3)
+        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterFromUCallback)
+        assert old_action2.context().value() is None
+
+        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterFromUCallback)
+        assert action4.context().value() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        assert s.extract(cnv) == b"AB"
+
+        # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        icu.ucnv_set_from_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+
+def test_set_from_u_call_back_stop() -> None:
+    """Set the UCNV_FROM_U_CALLBACK_STOP callback function."""
+
+    s = icu.UnicodeString("A€\\uD800B").unescape()
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        # U+20AC: UCNV_UNASSIGNED
+        s = icu.UnicodeString("A€B").unescape()
+
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallbackStop(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_INVALID_CHAR_FOUND
+
+        # U+D800: UCNV_ILLEGAL
+        s = icu.UnicodeString("A\\uD800B").unescape()
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        # U+20AC: UCNV_UNASSIGNED
+        s = icu.UnicodeString("A€B").unescape()
+
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_STOP, context1)
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context().value() is None
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_INVALID_CHAR_FOUND
+
+        # U+D800: UCNV_ILLEGAL
+        s = icu.UnicodeString("A\\uD800B").unescape()
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+
+def test_set_from_u_call_back_substitute() -> None:
+    """Set the UCNV_FROM_U_CALLBACK_SUBSTITUTE callback function."""
+
+    # U+20AC: UCNV_UNASSIGNED
+    # U+D800: UCNV_ILLEGAL
+    s = icu.UnicodeString("A€\\uD800B").unescape()
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        icu.ucnv_set_subst_chars(cnv, "?")
+
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallbackSubstitute(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        assert s.extract(cnv) == b"A??B"
+
+        # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        context1 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterFromUCallbackSubstitute(context1)
+        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterFromUCallback)
+        assert old_action2.context() is None
+        assert old_action2.option() is None
+
+        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterFromUCallback)
+        assert action4.context() is None
+        assert action4.option() == icu.UCNV_SUB_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        assert s.extract(cnv) == b"A??B"
+
+        # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        icu.ucnv_set_from_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+        icu.ucnv_set_subst_chars(cnv, "?")
+
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SUBSTITUTE, context1)
+        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterFromUCallback)
+
+        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterFromUCallback)
+        assert action2.context().value() is None
+
+        assert s.extract(cnv) == b"A??B"
+
+        # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SUBSTITUTE, context3)
+        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterFromUCallback)
+        assert old_action2.context().value() is None
+
+        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterFromUCallback)
+        assert action4.context().value() == icu.UCNV_SUB_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        assert s.extract(cnv) == b"A??B"
+
+        # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        icu.ucnv_set_from_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            s.extract(cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+
+def test_set_to_u_call_back() -> None:
+    """Set the custom To Unicode error callback function."""
+
+    # typedef void(* UConverterToUCallback)(
+    #       const void *context,
+    #       UConverterToUnicodeArgs *args,
+    #       const char *codeUnits,
+    #       int32_t length,
+    #       UConverterCallbackReason reason,
+    #       UErrorCode *pErrorCode
+    # )
+    def _to_unicode_cb(
+        _info: dict[str, Any],
+        _args: icu.UConverterToUnicodeArgs,
+        _code_units: bytes,
         _length: int,
-        _code_point: int,
         _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert isinstance(_context, dict)
-        assert _context["key"] == "foo bar baz"
-        nonlocal result3
-        result3.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "ibm-943_P15A-2003"
-        if _reason == icu.UConverterCallbackReason.UCNV_UNASSIGNED:
-            if _code_point >= 0xFFFF:
-                _fmt = "\\U{:08x}"
-            elif _code_point >= 0xFF:
-                _fmt = "\\u{:04x}"
-            else:
-                _fmt = "\\x{:02x}"
-            _source = _fmt.format(_code_point)
-            icu.ucnv_cb_from_uwrite_bytes(_args, _source, len(_source), 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
+        _error_code: icu.ErrorCode,
+    ) -> None:
+        if not isinstance(_info, dict):
+            _error_code.set(icu.U_ILLEGAL_ARGUMENT_ERROR)
+            return
+        if _reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+            assert icu.ucnv_get_name(_args.converter).startswith("ibm-943")
+            _error_code.set(icu.U_ZERO_ERROR)
+            _calls = _info.setdefault("numCalls", 0)
+            _info["numCalls"] = _calls + 1
+            _t = _info.setdefault("reason", [])
+            _t.append((_code_units, _length, _reason))
+            _source = "".join([f"%{b:02X}" for b in _code_units])
+            icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
 
-    with gc(icu.ucnv_open("ibm-943c"), icu.ucnv_close) as cnv:
+    # Invalid Shift-JIS characters
+    src = (
+        b"a"
+        b"\xeb\x40"  # UCNV_UNASSIGNED
+        b"\xfa\x30"  # UCNV_ILLEGAL
+        b"b"
+    )
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Default behavior
         assert icu.ucnv_get_subst_chars(cnv) == b"\xfc\xfc"
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
 
-        test1 = icu.UnicodeString("a\uff71b\U0001f338c", -1)
+        # Get the default callback function
+        action1 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action1, icu.UConverterToUCallback)
 
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b\xfc\xfcc"
+        # Set a new callback function
+        info: dict[str, Any] = {}
+        context2 = icu.ConstVoidPtr(info)
+        action2 = icu.UConverterToUCallback(_to_unicode_cb, context2)
+        assert action2.context().value() == info
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action2)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        # void ucnv_getFromUCallBack(const UConverter *converter,
-        #                            UConverterFromUCallback *action,
-        #                            const void **context
-        # )
-        old_action1, old_context1 = icu.ucnv_get_from_ucall_back(cnv)
+        assert len(info) == 0
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a%EB%40%FA\x30b"
+        assert info["numCalls"] > 0
+        reason = info["reason"]
+        assert reason[0] == (b"\xeb\x40", 2, icu.UCNV_UNASSIGNED)
+        assert reason[1] == (b"\xfa", 1, icu.UCNV_ILLEGAL)
 
-        # void ucnv_setFromUCallBack(UConverter *converter,
-        #                            UConverterFromUCallback newAction,
-        #                            const void *newContext,
-        #                            UConverterFromUCallback *oldAction,
-        #                            const void **oldContext,
-        #                            UErrorCode *err
-        # )
-        context2 = icu.ConstVoidPtr(None)
-        icu.ucnv_set_from_ucall_back(cnv, icu.UCNV_FROM_U_CALLBACK_ESCAPE, context2)  # %UXXXX
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b%UD83C%UDF38c"
+        # Set the old callback function
+        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action2, icu.UConverterToUCallback)
+        info.clear()
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
+        assert len(info) == 0
 
-        context3 = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
-        old_action3, old_context3 = icu.ucnv_set_from_ucall_back(
-            cnv, icu.UCNV_FROM_U_CALLBACK_ESCAPE, context3
-        )  # \\uXXXX
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b\\U0001F338c"
-
-        context4 = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
-        icu.ucnv_set_from_ucall_back(cnv, icu.UCNV_FROM_U_CALLBACK_ESCAPE, context4)  # &#xXXXX;
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b&#x1F338;c"
-
-        action5 = icu.UConverterFromUCallbackPtr(_from_u_callback1)
-        context5 = icu.ConstVoidPtr(None)
-        icu.ucnv_set_from_ucall_back(cnv, action5, context5)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert len(result1) > 0
-        assert dest == b"a\xb1b?c"
-
-        action5a, context5a = icu.ucnv_get_from_ucall_back(cnv)
-
-        action6 = icu.UConverterFromUCallbackPtr(_from_u_callback2)
-        context6 = icu.ConstVoidPtr("foo bar baz")
-        icu.ucnv_set_from_ucall_back(cnv, action6, context6)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert len(result2) > 0
-        assert dest == b"a\xb1b\xfc\xfcc"
-
-        action7 = icu.UConverterFromUCallbackPtr(_from_u_callback3)
-        d = {"key": "foo bar baz"}
-        context7 = icu.ConstVoidPtr(d)
-        old_action7, old_context7 = icu.ucnv_set_from_ucall_back(cnv, action7, context7)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert len(result3) > 0
-        assert dest == b"a\xb1b\\U0001f338c"
-
-        icu.ucnv_set_from_ucall_back(cnv, old_action7, old_context7)
-        result1.clear()
-        result2.clear()
-        result3.clear()
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert len(result2) > 0
-        assert dest == b"a\xb1b\xfc\xfcc"
-
-        icu.ucnv_set_from_ucall_back(cnv, old_action3, old_context3)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b%UD83C%UDF38c"
-
-        icu.ucnv_set_from_ucall_back(cnv, old_action1, old_context1)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert dest == b"a\xb1b\xfc\xfcc"
-
-        icu.ucnv_set_from_ucall_back(cnv, action5a, context5a)
-        dest = test1.extract(cnv)  # utf-8 to ibm-943c
-        assert len(result1) > 0
-        assert dest == b"a\xb1b?c"
+        # Set a new callback function
+        old_action3 = icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        assert isinstance(old_action3, icu.UConverterToUCallback)
+        info.clear()
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a%EB%40%FA\x30b"
+        assert info["numCalls"] > 0
+        reason = info["reason"]
+        assert reason[0] == (b"\xeb\x40", 2, icu.UCNV_UNASSIGNED)
+        assert reason[1] == (b"\xfa", 1, icu.UCNV_ILLEGAL)
 
 
-def test_set_to_ucall_back() -> None:
-    result1, result2, result3 = [], [], []
+@pytest.mark.parametrize(
+    ("option", "expected"),
+    [
+        (None, "a%XEB%X40%XFA\x30b"),
+        (icu.UCNV_ESCAPE_ICU, "a%XEB%X40%XFA\x30b"),
+        (icu.UCNV_ESCAPE_JAVA, "a%XEB%X40%XFA\x30b"),
+        (icu.UCNV_ESCAPE_C, "a\\xEB\\x40\\xFA\x30b"),
+        (icu.UCNV_ESCAPE_XML_DEC, "a&#235;&#64;&#250;\x30b"),
+        (icu.UCNV_ESCAPE_XML_HEX, "a&#xEB;&#x40;&#xFA;\x30b"),
+        (icu.UCNV_ESCAPE_UNICODE, "a%XEB%X40%XFA\x30b"),
+    ],
+)
+def test_set_to_u_call_back_escape(option: str | None, expected: str) -> None:
+    """Set the UCNV_TO_U_CALLBACK_ESCAPE callback function."""
 
-    # void (* UConverterToUCallback)(const void *context,
-    #                                UConverterToUnicodeArgs *args,
-    #                                const char *codeUnits,
-    #                                int32_t length,
-    #                                UConverterCallbackReason reason,
-    #                                UErrorCode *pErrorCode)
-    def _to_u_callback1(
-        _context: object,
-        _args: icu.UConverterToUnicodeArgs,
-        _code_units: bytes,
-        _length: int,
-        _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert _context is None
-        nonlocal result1
-        result1.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "UTF-8"
-        if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            icu.ucnv_cb_to_uwrite_sub(_args, 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
+    # Invalid Shift-JIS characters
+    src = (
+        b"a"
+        b"\xeb\x40"  # UCNV_UNASSIGNED
+        b"\xfa\x30"  # UCNV_ILLEGAL
+        b"b"
+    )
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        context = icu.ConstVoidPtr(option)
+        action = icu.UConverterToUCallbackEscape(context)
+        assert action.context() is None
+        assert action.option() == option
+        old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+        assert isinstance(old_action, icu.UConverterToUCallback)
 
-    def _to_u_callback2(
-        _context: object,
-        _args: icu.UConverterToUnicodeArgs,
-        _code_units: bytes,
-        _length: int,
-        _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert isinstance(_context, str)
-        assert _context == "foo bar baz"
-        nonlocal result2
-        result2.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "UTF-8"
-        if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            _source = "".join([f"\\x{x:02x}" for x in _code_units])
-            icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context() is None
+        assert action2.option() == option
 
-    def _to_u_callback3(
-        _context: object,
-        _args: icu.UConverterToUnicodeArgs,
-        _code_units: bytes,
-        _length: int,
-        _reason: icu.UConverterCallbackReason,
-        _error_code: icu.UErrorCode,
-    ) -> icu.UErrorCode:
-        assert isinstance(_context, dict)
-        assert _context["key"] == "foo bar baz"
-        nonlocal result3
-        result3.append((_reason, _error_code, _code_units))
-        assert icu.ucnv_get_name(_args.converter) == "UTF-8"
-        if _reason == icu.UConverterCallbackReason.UCNV_ILLEGAL:
-            _source = "".join([f"%x{x:02X}" for x in _code_units])
-            icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
-            _error_code = icu.UErrorCode.U_ZERO_ERROR
-        return _error_code
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == expected
 
-    with gc(icu.ucnv_open("utf-8"), icu.ucnv_close) as cnv:
-        assert icu.ucnv_get_subst_chars(cnv) == b"\xef\xbf\xbd"
+    # Backward compatibility
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        context = icu.ConstVoidPtr(option)
+        action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
+        assert action.context().value() == option
+        old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+        assert isinstance(old_action, icu.UConverterToUCallback)
 
-        # Illegal UTF-8 characters
-        utf8 = (
-            b"\x61"
-            b"\xfe"  # Impossible bytes
-            b"\xc0\xaf"  # Overlong sequences
-            b"\xed\xa0\x80"  # Illegal code positions
-            b"\x62"
-        )
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context().value() == option
 
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert (
-            dest.encode() == b"a"
-            b"\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == expected
+
+
+def test_set_to_u_call_back_skip() -> None:
+    """Set the UCNV_TO_U_CALLBACK_SKIP callback function."""
+
+    # Invalid Shift-JIS characters
+    src = (
+        b"a"
+        b"\xeb\x40"  # UCNV_UNASSIGNED
+        b"\xfa\x30"  # UCNV_ILLEGAL
+        b"b"
+    )
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallbackSkip(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
+
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\x30b"
+
+        # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterToUCallbackSkip(context3)
+        assert action3.context() is None
+        assert action3.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterToUCallback)
+        assert old_action2.context() is None
+        assert old_action2.option() is None
+
+        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterToUCallback)
+        assert action4.context() is None
+        assert action4.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\x30b"
+
+        # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        icu.ucnv_set_to_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SKIP, context1)
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
+
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context().value() is None
+
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\x30b"
+
+        # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SKIP, context3)
+        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterToUCallback)
+        assert old_action2.context().value() is None
+
+        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterToUCallback)
+        assert action4.context().value() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\x30b"
+
+        # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
+        icu.ucnv_set_to_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+
+def test_set_to_u_call_back_stop() -> None:
+    """Set the UCNV_TO_U_CALLBACK_STOP callback function."""
+
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallbackStop(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
+
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        src = (
+            b"a"
+            b"\xeb\x40"  # UCNV_UNASSIGNED
             b"b"
         )
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_INVALID_CHAR_FOUND
 
-        # void ucnv_getToUCallBack(const UConverter *converter,
-        #                          UConverterToUCallback *action,
-        #                          const void **context
-        # )
-        old_action1, old_context1 = icu.ucnv_get_to_ucall_back(cnv)
-
-        # void ucnv_setToUCallBack(UConverter *converter,
-        #                          UConverterToUCallback newAction,
-        #                          const void *newContext,
-        #                          UConverterToUCallback *oldAction,
-        #                          const void **oldContext,
-        #                          UErrorCode *err
-        # )
-        context2 = icu.ConstVoidPtr(None)
-        icu.ucnv_set_to_ucall_back(cnv, icu.UCNV_TO_U_CALLBACK_ESCAPE, context2)  # %XNN
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert dest == "a%XFE%XC0%XAF%XED%XA0%X80b"
-
-        context3 = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
-        old_action3, old_context3 = icu.ucnv_set_to_ucall_back(
-            cnv, icu.UCNV_TO_U_CALLBACK_ESCAPE, context3
-        )  # \\xXX
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert dest == "a\\xFE\\xC0\\xAF\\xED\\xA0\\x80b"
-
-        context4 = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
-        icu.ucnv_set_to_ucall_back(cnv, icu.UCNV_TO_U_CALLBACK_ESCAPE, context4)  # &#xXX;
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert dest == "a&#xFE;&#xC0;&#xAF;&#xED;&#xA0;&#x80;b"
-
-        action5 = icu.UConverterToUCallbackPtr(_to_u_callback1)
-        context5 = icu.ConstVoidPtr(None)
-        icu.ucnv_set_to_ucall_back(cnv, action5, context5)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        assert len(result1) > 0
-        dest = test1.extract()
-        assert (
-            dest.encode() == b"a"
-            b"\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+        src = (
+            b"a"
+            b"\xfa\x30"  # UCNV_ILLEGAL
             b"b"
         )
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
-        action6 = icu.UConverterToUCallbackPtr(_to_u_callback2)
-        context6 = icu.ConstVoidPtr("foo bar baz")
-        icu.ucnv_set_to_ucall_back(cnv, action6, context6)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        assert len(result2) > 0
-        dest = test1.extract()
-        assert dest == "a\\xfe\\xc0\\xaf\\xed\\xa0\\x80b"
+    # Backward compatibility
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_STOP, context1)
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action6a, context6a = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context().value() is None
 
-        action7 = icu.UConverterToUCallbackPtr(_to_u_callback3)
-        d = {"key": "foo bar baz"}
-        context7 = icu.ConstVoidPtr(d)
-        old_action7, old_context7 = icu.ucnv_set_to_ucall_back(cnv, action7, context7)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        assert len(result3) > 0
-        dest = test1.extract()
-        assert dest == "a%xFE%xC0%xAF%xED%xA0%x80b"
-
-        icu.ucnv_set_to_ucall_back(cnv, old_action7, old_context7)
-        result1.clear()
-        result2.clear()
-        result3.clear()
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        assert len(result2) > 0
-        dest = test1.extract()
-        assert dest == "a\\xfe\\xc0\\xaf\\xed\\xa0\\x80b"
-
-        icu.ucnv_set_to_ucall_back(cnv, old_action3, old_context3)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert dest == "a%XFE%XC0%XAF%XED%XA0%X80b"
-
-        icu.ucnv_set_to_ucall_back(cnv, old_action1, old_context1)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        dest = test1.extract()
-        assert (
-            dest.encode() == b"a"
-            b"\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd"
-            b"\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd"
+        src = (
+            b"a"
+            b"\xeb\x40"  # UCNV_UNASSIGNED
             b"b"
         )
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_INVALID_CHAR_FOUND
 
-        icu.ucnv_set_to_ucall_back(cnv, action6a, context6a)
-        test1 = icu.UnicodeString(utf8, -1, cnv)  # utf-8 to utf-8
-        assert len(result2) > 0
-        dest = test1.extract()
-        assert dest == "a\\xfe\\xc0\\xaf\\xed\\xa0\\x80b"
+        src = (
+            b"a"
+            b"\xfa\x30"  # UCNV_ILLEGAL
+            b"b"
+        )
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+
+def test_set_to_u_call_back_substitute() -> None:
+    """Set the UCNV_TO_U_CALLBACK_SUBSTITUTE callback function."""
+
+    # Invalid Shift-JIS characters
+    src = (
+        b"a"
+        b"\xeb\x40"  # UCNV_UNASSIGNED
+        b"\xfa\x30"  # UCNV_ILLEGAL
+        b"b"
+    )
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallbackSubstitute(context1)
+        assert action1.context() is None
+        assert action1.option() is None
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
+
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context() is None
+        assert action2.option() is None
+
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
+
+        # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        context1 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterToUCallbackSubstitute(context1)
+        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterToUCallback)
+        assert old_action2.context() is None
+        assert old_action2.option() is None
+
+        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterToUCallback)
+        assert action4.context() is None
+        assert action4.option() == icu.UCNV_SUB_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
+
+        # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        icu.ucnv_set_to_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+    # Backward compatibility
+    with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+        # Set a new callback function: option = None
+        context1 = icu.ConstVoidPtr()
+        action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SUBSTITUTE, context1)
+        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        assert isinstance(old_action1, icu.UConverterToUCallback)
+
+        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action2, icu.UConverterToUCallback)
+        assert action2.context().value() is None
+
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
+
+        # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        context3 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
+        action3 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SUBSTITUTE, context3)
+        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        assert isinstance(old_action2, icu.UConverterToUCallback)
+        assert old_action2.context().value() is None
+
+        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        assert isinstance(action4, icu.UConverterToUCallback)
+        assert action4.context().value() == icu.UCNV_SUB_STOP_ON_ILLEGAL
+
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
+
+        # Set the old callback function: option = None
+        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        s = icu.UnicodeString(src, -1, cnv)
+        assert str(s) == "a\ufffd\x1a\x30b"
+
+        # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
+        icu.ucnv_set_to_ucall_back(cnv, action4)
+        with pytest.raises(icu.ICUError) as exc_info:
+            _ = icu.UnicodeString(src, -1, cnv)
+        assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND

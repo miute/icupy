@@ -87,19 +87,20 @@ void init_ucnv(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
   m.def(
       "ucnv_clone",
-      [](_UConverterPtr &cnv) {
+      [](icupy::UConverterPtr &cnv) {
         ErrorCode error_code;
         auto p = ucnv_clone(cnv, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UConverterPtr>(p);
+        return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("cnv"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
   m.def(
-      "ucnv_close", [](_UConverterPtr &converter) { ucnv_close(converter); },
+      "ucnv_close",
+      [](icupy::UConverterPtr &converter) { ucnv_close(converter); },
       py::arg("converter"));
 
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"),
@@ -141,7 +142,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_fix_file_separator",
-      [](const _UConverterPtr &cnv, const std::u16string &source,
+      [](const icupy::UConverterPtr &cnv, const std::u16string &source,
          int32_t source_length) {
         auto normalized_source_length = source_length;
         if (normalized_source_length == -1) {
@@ -204,7 +205,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_ccsid",
-      [](_UConverterPtr &converter) {
+      [](icupy::UConverterPtr &converter) {
         ErrorCode error_code;
         auto result = ucnv_getCCSID(converter, error_code);
         if (error_code.isFailure()) {
@@ -218,7 +219,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_display_name",
-      [](_UConverterPtr &converter, const std::string &display_locale) {
+      [](icupy::UConverterPtr &converter, const std::string &display_locale) {
         auto display_locale_data = display_locale.data();
         ErrorCode error_code;
         const auto display_name_capacity = ucnv_getDisplayName(
@@ -236,26 +237,30 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_from_ucall_back",
-      [](const _UConverterPtr &converter) {
-        UConverterFromUCallback callback = nullptr;
+      [](const icupy::UConverterPtr &converter) {
+        UConverterFromUCallback action = nullptr;
         const void *context = nullptr;
-        ucnv_getFromUCallBack(converter, &callback, &context);
-        if (callback == _UConverterFromUCallbackPtr::callback) {
-          // Python callback function and callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+        ucnv_getFromUCallBack(converter, &action, &context);
+        if (icupy::UConverterFromUCallbackPtr::is_cpp_function(action)) {
+          // C++ (Python) callback function
+          auto pair = reinterpret_cast<icupy::FromUCallbackAndContextPair *>(
               const_cast<void *>(context));
-          auto action = _UConverterFromUCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+          return icupy::UConverterFromUCallbackPtr(pair);
         }
-        // C callback function and callback data
-        return py::make_tuple(_UConverterFromUCallbackPtr(callback),
-                              icupy::ConstVoidPtr(context));
+        // Predefined callback function
+        return icupy::UConverterFromUCallbackPtr(action, context);
       },
-      py::return_value_policy::reference, py::arg("converter"));
+      py::arg("converter"),
+      R"doc(
+      Get the current From Unicode callback function.
+
+      See Also:
+          :func:`ucnv_set_from_ucall_back`
+      )doc");
 
   m.def(
       "ucnv_get_name",
-      [](const _UConverterPtr &converter) {
+      [](const icupy::UConverterPtr &converter) {
         ErrorCode error_code;
         auto result = ucnv_getName(converter, error_code);
         if (error_code.isFailure()) {
@@ -267,7 +272,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_platform",
-      [](const _UConverterPtr &converter) {
+      [](const icupy::UConverterPtr &converter) {
         ErrorCode error_code;
         auto result = ucnv_getPlatform(converter, error_code);
         if (error_code.isFailure()) {
@@ -305,7 +310,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_subst_chars",
-      [](const _UConverterPtr &converter) {
+      [](const icupy::UConverterPtr &converter) {
         char sub_chars[UCNV_ERROR_BUFFER_LENGTH];
         int8_t length = sizeof(sub_chars);
         ErrorCode error_code;
@@ -319,31 +324,37 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_to_ucall_back",
-      [](const _UConverterPtr &converter) {
-        UConverterToUCallback callback = nullptr;
+      [](const icupy::UConverterPtr &converter) {
+        UConverterToUCallback action = nullptr;
         const void *context = nullptr;
-        ucnv_getToUCallBack(converter, &callback, &context);
-        if (callback == _UConverterToUCallbackPtr::callback) {
-          // Python callback function and callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+        ucnv_getToUCallBack(converter, &action, &context);
+        if (icupy::UConverterToUCallbackPtr::is_cpp_function(action)) {
+          // C++ (Python) callback function
+          auto pair = reinterpret_cast<icupy::ToUCallbackAndContextPair *>(
               const_cast<void *>(context));
-          auto action = _UConverterToUCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+          return icupy::UConverterToUCallbackPtr(pair);
         }
-        // C callback function and callback data
-        return py::make_tuple(_UConverterToUCallbackPtr(callback),
-                              icupy::ConstVoidPtr(context));
+        // Predefined callback function
+        return icupy::UConverterToUCallbackPtr(action, context);
       },
-      py::return_value_policy::reference, py::arg("converter"));
+      py::arg("converter"),
+      R"doc(
+      Get the current To Unicode callback function.
+
+      See Also:
+          :func:`ucnv_set_to_ucall_back`
+      )doc");
 
   m.def(
       "ucnv_get_type",
-      [](const _UConverterPtr &converter) { return ucnv_getType(converter); },
+      [](const icupy::UConverterPtr &converter) {
+        return ucnv_getType(converter);
+      },
       py::arg("converter"));
 
   m.def(
       "ucnv_get_unicode_set",
-      [](const _UConverterPtr &cnv, _USetPtr &set_fill_in,
+      [](const icupy::UConverterPtr &cnv, _USetPtr &set_fill_in,
          UConverterUnicodeSet which_set) {
         ErrorCode error_code;
         ucnv_getUnicodeSet(cnv, set_fill_in, which_set, error_code);
@@ -355,14 +366,14 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_is_ambiguous",
-      [](const _UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
         return ucnv_isAmbiguous(cnv);
       },
       py::arg("cnv"));
 
   m.def(
       "ucnv_is_fixed_width",
-      [](const _UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
         ErrorCode error_code;
         auto result = ucnv_isFixedWidth(cnv, error_code);
         if (error_code.isFailure()) {
@@ -380,7 +391,7 @@ void init_ucnv(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UConverterPtr>(p);
+        return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("converter_name"));
 
@@ -401,7 +412,7 @@ void init_ucnv(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UConverterPtr>(p);
+        return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("codepage"), py::arg("platform"));
 
@@ -414,7 +425,7 @@ void init_ucnv(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UConverterPtr>(p);
+        return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("package_name"), py::arg("converter_name"));
 
@@ -432,17 +443,18 @@ void init_ucnv(py::module &m) {
       py::arg("conv_name"), py::arg("standard"));
 
   m.def(
-      "ucnv_reset", [](_UConverterPtr &converter) { ucnv_reset(converter); },
+      "ucnv_reset",
+      [](icupy::UConverterPtr &converter) { ucnv_reset(converter); },
       py::arg("converter"));
 
   m.def(
       "ucnv_reset_from_unicode",
-      [](_UConverterPtr &converter) { ucnv_resetFromUnicode(converter); },
+      [](icupy::UConverterPtr &converter) { ucnv_resetFromUnicode(converter); },
       py::arg("converter"));
 
   m.def(
       "ucnv_reset_to_unicode",
-      [](_UConverterPtr &converter) { ucnv_resetToUnicode(converter); },
+      [](icupy::UConverterPtr &converter) { ucnv_resetToUnicode(converter); },
       py::arg("converter"));
 
   m.def(
@@ -454,54 +466,84 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_set_fallback",
-      [](_UConverterPtr &cnv, py::bool_ uses_fallback) {
+      [](icupy::UConverterPtr &cnv, py::bool_ uses_fallback) {
         ucnv_setFallback(cnv, uses_fallback);
       },
       py::arg("cnv"), py::arg("uses_fallback"));
 
   m.def(
       "ucnv_set_from_ucall_back",
-      [](_UConverterPtr &converter, _UConverterFromUCallbackPtr &new_action,
-         icupy::ConstVoidPtr &new_context) {
-        auto callback = new_action.get_if<UConverterFromUCallback>();
+      [](icupy::UConverterPtr &converter,
+         icupy::UConverterFromUCallbackPtr &new_action) {
+        auto action = new_action.get_native_callback();
+        auto new_pair = new_action.context();
         const void *context = nullptr;
-        if (callback == nullptr) {
-          // New Python callback function and callback data
-          callback = new_action.callback;
-          new_context.set_action(new_action.get<py::function>());
-          context = &new_context;
-        } else if (new_context.has_value()) {
-          // New C callback data
-          context = new_context.data();
+        if (new_action.is_cpp_function()) {
+          // New C++ (Python) callback function
+          context = new_pair;
+        } else {
+          // Predefined callback function
+          context = new_pair->second;
         }
-
         UConverterFromUCallback old_action = nullptr;
         const void *old_context = nullptr;
         ErrorCode error_code;
-        ucnv_setFromUCallBack(converter, callback, context, &old_action,
+        ucnv_setFromUCallBack(converter, action, context, &old_action,
                               &old_context, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        if (old_action == new_action.callback) {
-          // Old Python callback function and callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+        if (icupy::UConverterFromUCallbackPtr::is_cpp_function(old_action)) {
+          // Old C++ (Python) callback function
+          auto pair = reinterpret_cast<icupy::FromUCallbackAndContextPair *>(
               const_cast<void *>(old_context));
-          auto action = _UConverterFromUCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+          return icupy::UConverterFromUCallbackPtr(pair);
         }
-        // Old C callback function and callback data
-        return py::make_tuple(_UConverterFromUCallbackPtr(old_action),
-                              icupy::ConstVoidPtr(old_context));
+        // Predefined callback function
+        return icupy::UConverterFromUCallbackPtr(old_action, old_context);
       },
-      py::return_value_policy::reference, py::keep_alive<2, 1>(),
-      py::keep_alive<3, 1>(), py::arg("converter"), py::arg("new_action"),
-      py::arg("new_context"));
+      py::arg("converter"), py::arg("new_action"), R"doc(
+      Set the From Unicode callback function used when this ``UConverter``
+      founds an illegal or invalid Unicode sequence.
+
+      `new_action` must outlive the ``UConverter`` object.
+
+      See Also:
+          :func:`ucnv_get_from_ucall_back`
+          :meth:`UnicodeString.extract`
+
+      Example:
+          >>> from icupy import icu
+          >>> from icupy.utils import gc
+          >>> def from_unicode_cb(
+          ...     options: object,
+          ...     args: icu.UConverterFromUnicodeArgs,
+          ...     code_units: str,
+          ...     length: int,
+          ...     code_point: int,
+          ...     reason: icu.UConverterCallbackReason,
+          ...     error_code: icu.ErrorCode,
+          ... ) -> None:
+          ...     _ = options, length, code_point  # unused
+          ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+          ...         error_code.set(icu.U_ZERO_ERROR)
+          ...         source = "".join(f"\\u{ord(c):04X}" for c in code_units)
+          ...         icu.ucnv_cb_from_uwrite_bytes(args, source, len(source), 0)
+          ...
+          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+          ...     context = icu.ConstVoidPtr()
+          ...     action = icu.UConverterFromUCallback(from_unicode_cb, context)
+          ...     old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+          ...     s = icu.UnicodeString("A€B")
+          ...     s.extract(cnv)
+          ...
+          b'A\\u20ACB'
+      )doc");
 
   m.def(
       "ucnv_set_subst_chars",
-      [](_UConverterPtr &converter, const icupy::CharPtrVariant &sub_chars,
-         int8_t length) {
+      [](icupy::UConverterPtr &converter,
+         const icupy::CharPtrVariant &sub_chars, int8_t length) {
         const auto sub_chars_value = icupy::CharPtr(sub_chars);
         if (length == -1) {
           length = static_cast<int8_t>(sub_chars_value.size());
@@ -516,7 +558,8 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_set_subst_string",
-      [](_UConverterPtr &converter, const std::u16string &s, int32_t length) {
+      [](icupy::UConverterPtr &converter, const std::u16string &s,
+         int32_t length) {
         ErrorCode error_code;
         ucnv_setSubstString(converter, s.data(), length, error_code);
         if (error_code.isFailure()) {
@@ -527,46 +570,76 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_set_to_ucall_back",
-      [](_UConverterPtr &converter, _UConverterToUCallbackPtr &new_action,
-         icupy::ConstVoidPtr &new_context) {
-        auto callback = new_action.get_if<UConverterToUCallback>();
+      [](icupy::UConverterPtr &converter,
+         icupy::UConverterToUCallbackPtr &new_action) {
+        auto action = new_action.get_native_callback();
+        auto new_pair = new_action.context();
         const void *context = nullptr;
-        if (callback == nullptr) {
-          // New Python callback function and callback data
-          callback = new_action.callback;
-          new_context.set_action(new_action.get<py::function>());
-          context = &new_context;
-        } else if (new_context.has_value()) {
-          // New C callback data
-          context = new_context.data();
+        if (new_action.is_cpp_function()) {
+          // New C++ (Python) callback function
+          context = new_pair;
+        } else {
+          // Predefined callback function
+          context = new_pair->second;
         }
-
         UConverterToUCallback old_action = nullptr;
         const void *old_context = nullptr;
         ErrorCode error_code;
-        ucnv_setToUCallBack(converter, callback, context, &old_action,
+        ucnv_setToUCallBack(converter, action, context, &old_action,
                             &old_context, error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        if (old_action == new_action.callback) {
-          // Old Python callback function and callback data
-          auto python_context = reinterpret_cast<icupy::ConstVoidPtr *>(
+        if (icupy::UConverterToUCallbackPtr::is_cpp_function(old_action)) {
+          // Old C++ (Python) callback function
+          auto pair = reinterpret_cast<icupy::ToUCallbackAndContextPair *>(
               const_cast<void *>(old_context));
-          auto action = _UConverterToUCallbackPtr(python_context->action());
-          return py::make_tuple(action, python_context);
+          return icupy::UConverterToUCallbackPtr(pair);
         }
-        // Old C callback function and callback data
-        return py::make_tuple(_UConverterToUCallbackPtr(old_action),
-                              icupy::ConstVoidPtr(old_context));
+        // Predefined callback function
+        return icupy::UConverterToUCallbackPtr(old_action, old_context);
       },
-      py::return_value_policy::reference, py::keep_alive<2, 1>(),
-      py::keep_alive<3, 1>(), py::arg("converter"), py::arg("new_action"),
-      py::arg("new_context"));
+      py::arg("converter"), py::arg("new_action"), R"doc(
+      Set the To Unicode callback function used when this ``UConverter``
+      founds an illegal or invalid codepage sequence.
+
+      `new_action` must outlive the ``UConverter`` object.
+
+      See Also:
+          :func:`ucnv_get_to_ucall_back`
+          :meth:`UnicodeString.__init__`
+
+      Example:
+          >>> from icupy import icu
+          >>> from icupy.utils import gc
+          >>> def to_unicode_cb(
+          ...     options: object,
+          ...     args: icu.UConverterToUnicodeArgs,
+          ...     code_units: bytes,
+          ...     length: int,
+          ...     reason: icu.UConverterCallbackReason,
+          ...     error_code: icu.ErrorCode,
+          ... ) -> None:
+          ...     _= options, length  # unused
+          ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+          ...         error_code.set(icu.U_ZERO_ERROR)
+          ...         source = "".join(f"%{b:02X}" for b in code_units)
+          ...         icu.ucnv_cb_to_uwrite_uchars(args, source, len(source), 0)
+          ...
+          >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+          ...     context = icu.ConstVoidPtr()
+          ...     action = icu.UConverterToUCallback(to_unicode_cb, context)
+          ...     old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+          ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+          ...     s = icu.UnicodeString(src, -1, cnv)
+          ...     str(s)
+          ...
+          'a%EB%40b'
+      )doc");
 
   m.def(
       "ucnv_uses_fallback",
-      [](const _UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
         return ucnv_usesFallback(cnv);
       },
       py::arg("cnv"));
