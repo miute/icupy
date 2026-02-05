@@ -150,7 +150,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
           //                    UConverter *cnv,
           //                    UErrorCode &errorCode)
           py::init([](const py::bytes &src, int32_t src_length,
-                      _UConverterPtr &cnv) {
+                      icupy::UConverterPtr &cnv) {
             const auto src_text = src.cast<std::string>();
             if (src_length == -1) {
               src_length = static_cast<int32_t>(src_text.size());
@@ -647,7 +647,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
         // [1] extract(char *dest, int32_t destCapacity, UConverter *cnv,
         //             UErrorCode &errorCode)
         "extract",
-        [](const UnicodeString &self, _UConverterPtr &cnv) {
+        [](const UnicodeString &self, icupy::UConverterPtr &cnv) {
           ErrorCode error_code;
           const auto length = self.extract(nullptr, 0, cnv, error_code);
           std::string dest(length, '\0');
