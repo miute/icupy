@@ -4,32 +4,48 @@
 
 namespace icupy {
 
+//
+// URegexFindProgressCallback
+//
 UBool URegexFindProgressCallbackPtr::callback(const void *native_context,
                                               int64_t match_index) {
   if (native_context == nullptr) {
-    throw py::value_error("URegexFindProgressCallback: context is null");
+    throw std::runtime_error("URegexFindProgressCallback: context is not set");
   }
   auto pair = reinterpret_cast<FindProgressCallbackAndContextPair *>(
       const_cast<void *>(native_context));
+  if (pair->second == nullptr) {
+    throw std::runtime_error(
+        "URegexFindProgressCallback: callback context is not set");
+  }
   auto &action = pair->first;
   if (!action) {
-    throw py::value_error("URegexFindProgressCallback: action is not set");
+    throw std::runtime_error(
+        "URegexFindProgressCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
   auto value = context->value();
   return action(value, match_index);
 }
 
+//
+// URegexMatchCallback
+//
 UBool URegexMatchCallbackPtr::callback(const void *native_context,
                                        int32_t steps) {
   if (native_context == nullptr) {
-    throw py::value_error("URegexMatchCallback: context is null");
+    throw std::runtime_error("URegexMatchCallback: context is not set");
   }
   auto pair = reinterpret_cast<MatchCallbackAndContextPair *>(
       const_cast<void *>(native_context));
+  if (pair->second == nullptr) {
+    throw std::runtime_error(
+        "URegexMatchCallback: callback context is not set");
+  }
   auto &action = pair->first;
   if (!action) {
-    throw py::value_error("URegexMatchCallback: action is not set");
+    throw std::runtime_error(
+        "URegexMatchCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
   auto value = context->value();
