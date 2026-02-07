@@ -2,44 +2,69 @@
 #define ICUPY_UCPMAPPTR_HPP
 
 #include "main.hpp"
-#include <pybind11/functional.h>
+#include "voidptr.hpp"
+#include <functional>
 #include <unicode/ucpmap.h>
-#include <variant>
 
-class _ConstUCPMapPtr {
+namespace icupy {
+
+using ValueFilterArgs = uint32_t(py::object &, uint32_t);
+
+using ValueFilterFunction = std::function<ValueFilterArgs>;
+
+using ValueFilterAndContextPair =
+    std::pair<const ValueFilterFunction, const ConstVoidPtr *>;
+
+using SharedValueFilterAndContextPair =
+    std::shared_ptr<ValueFilterAndContextPair>;
+
+//
+// struct UCPMap
+//
+class UCPMapPtr {
 public:
-  _ConstUCPMapPtr(const UCPMap *p);
+  UCPMapPtr(const UCPMap *p);
 
-  ~_ConstUCPMapPtr();
+  ~UCPMapPtr();
 
   const UCPMap *get() const;
 
   operator const UCPMap *() const { return get(); }
 
 private:
-  _ConstUCPMapPtr() = delete;
+  UCPMapPtr() = delete;
   const UCPMap *p_;
 };
 
-class _UCPMapValueFilterPtr {
+//
+// UCPMapValueFilter
+//
+class UCPMapValueFilterPtr {
 public:
-  _UCPMapValueFilterPtr(std::nullptr_t filter);
+  UCPMapValueFilterPtr(const ValueFilterFunction &filter,
+                       const ConstVoidPtr *context) {
+    action_and_context_ =
+        std::make_shared<ValueFilterAndContextPair>(filter, context);
+  }
 
-  _UCPMapValueFilterPtr(const py::function &filter);
+  ~UCPMapValueFilterPtr() {}
 
-  ~_UCPMapValueFilterPtr();
+  ValueFilterAndContextPair *context() const {
+    return action_and_context_.get();
+  }
+
+  UCPMapValueFilter *get_native_callback() {
+    return action_and_context_ ? filter : nullptr;
+  }
+
+private:
+  UCPMapValueFilterPtr() = delete;
 
   static uint32_t filter(const void *context, uint32_t value);
 
-  template <typename T> T get() const { return std::get<T>(action_); };
-
-  bool has_value() const {
-    return !action_.valueless_by_exception() && action_.index() != 0;
-  };
-
-private:
-  _UCPMapValueFilterPtr() = delete;
-  std::variant<std::nullptr_t, py::function> action_;
+  SharedValueFilterAndContextPair action_and_context_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UCPMAPPTR_HPP

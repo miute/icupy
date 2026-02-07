@@ -239,9 +239,12 @@ def test_u_get_int_property_map() -> None:
     # )
     ucpmap = icu.u_get_int_property_map(icu.UProperty.UCHAR_EAST_ASIAN_WIDTH)
 
+    # U+0031: Digit One
     # U+FF11: Fullwidth Digit One
-    assert icu.ucpmap_get(ucpmap, ord("1")) == icu.UEastAsianWidth.U_EA_NARROW
+    # U+00B1: Plus minus symbol
+    assert icu.ucpmap_get(ucpmap, 0x31) == icu.UEastAsianWidth.U_EA_NARROW
     assert icu.ucpmap_get(ucpmap, 0xFF11) == icu.UEastAsianWidth.U_EA_FULLWIDTH
+    assert icu.ucpmap_get(ucpmap, 0xB1) == icu.UEastAsianWidth.U_EA_AMBIGUOUS
 
     # uint32_t UCPMapValueFilter(const void *context,
     #                            uint32_t value)
@@ -249,10 +252,9 @@ def test_u_get_int_property_map() -> None:
         assert _context is None
         return _value | 0x1000
 
-    def _filter2(_context: object, _value: int) -> int:
-        assert isinstance(_context, dict)
-        assert isinstance(_context["key"], int)
-        return _value | _context["key"]
+    def _filter2(_new_map: dict[int, int], _value: int) -> int:
+        assert isinstance(_new_map, dict)
+        return _new_map.get(_value, _value)
 
     # UChar32 ucpmap_getRange(const UCPMap *map,
     #                         UChar32 start,
@@ -265,39 +267,60 @@ def test_u_get_int_property_map() -> None:
     # Without filter
     result, value = icu.ucpmap_get_range(
         ucpmap,
-        0xFF11,
+        0xFF11,  # U+FF11: Fullwidth Digit One
         icu.UCPMapRangeOption.UCPMAP_RANGE_NORMAL,
         0,
-        icu.UCPMapValueFilterPtr(None),
-        icu.ConstVoidPtr(None),
     )
     assert result != -1
     assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH
 
-    # With filter
+    # With filter1
+    action = icu.UCPMapValueFilter(_filter1)
+    assert action.context() is None
     result, value = icu.ucpmap_get_range(
         ucpmap,
-        0xFF11,
+        0xFF11,  # U+FF11: Fullwidth Digit One
         icu.UCPMapRangeOption.UCPMAP_RANGE_NORMAL,
         0,
-        icu.UCPMapValueFilterPtr(_filter1),
-        icu.ConstVoidPtr(None),
+        action,
     )
     assert result != -1
     assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH | 0x1000
 
-    # With filter and context
-    context = {"key": 0x2000}
+    # With filter2 and context
+    eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
+    context = icu.ConstVoidPtr(eaw_map)
+    action = icu.UCPMapValueFilter(_filter2, context)
+    assert action.context().value() == eaw_map
     result, value = icu.ucpmap_get_range(
         ucpmap,
-        0xFF11,
+        0x31,  # U+0031: Digit One
         icu.UCPMapRangeOption.UCPMAP_RANGE_NORMAL,
         0,
-        icu.UCPMapValueFilterPtr(_filter2),
-        icu.ConstVoidPtr(context),
+        action,
     )
     assert result != -1
-    assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH | 0x2000
+    assert value == icu.UEastAsianWidth.U_EA_NARROW
+
+    result, value = icu.ucpmap_get_range(
+        ucpmap,
+        0xFF11,  # U+FF11: Fullwidth Digit One
+        icu.UCPMapRangeOption.UCPMAP_RANGE_NORMAL,
+        0,
+        action,
+    )
+    assert result != -1
+    assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH
+
+    result, value = icu.ucpmap_get_range(
+        ucpmap,
+        0xB1,  # U+00B1: Plus minus symbol
+        icu.UCPMapRangeOption.UCPMAP_RANGE_NORMAL,
+        0,
+        action,
+    )
+    assert result != -1
+    assert value == icu.UEastAsianWidth.U_EA_FULLWIDTH
 
 
 def test_u_get_unicode_version() -> None:

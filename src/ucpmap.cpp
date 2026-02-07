@@ -1,32 +1,43 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
 #include "ucpmapptr.hpp"
-#include "voidptr.hpp"
 #include <pybind11/stl.h>
 
 using namespace icu;
 
-_ConstUCPMapPtr::_ConstUCPMapPtr(const UCPMap *p) : p_(p) {}
+namespace icupy {
 
-_ConstUCPMapPtr::~_ConstUCPMapPtr() {}
+//
+// struct UCPMap
+//
+UCPMapPtr::UCPMapPtr(const UCPMap *p) : p_(p) {}
 
-const UCPMap *_ConstUCPMapPtr::get() const { return p_; }
+UCPMapPtr::~UCPMapPtr() {}
 
-_UCPMapValueFilterPtr::_UCPMapValueFilterPtr(std::nullptr_t filter)
-    : action_(filter) {}
+const UCPMap *UCPMapPtr::get() const { return p_; }
 
-_UCPMapValueFilterPtr::_UCPMapValueFilterPtr(const py::function &filter)
-    : action_(filter) {}
-
-_UCPMapValueFilterPtr::~_UCPMapValueFilterPtr() {}
-
-uint32_t _UCPMapValueFilterPtr::filter(const void *context, uint32_t value) {
-  auto python_context =
-      reinterpret_cast<icupy::ConstVoidPtr *>(const_cast<void *>(context));
-  auto &action = python_context->action();
-  auto python_value = python_context->value();
-  return action(python_value, value).cast<uint32_t>();
+//
+// UCPMapValueFilter
+//
+uint32_t UCPMapValueFilterPtr::filter(const void *native_context,
+                                      uint32_t value) {
+  if (native_context == nullptr) {
+    throw std::runtime_error("UCPMapValueFilter: context is not set");
+  }
+  auto pair = reinterpret_cast<ValueFilterAndContextPair *>(
+      const_cast<void *>(native_context));
+  auto &action = pair->first;
+  if (!action) {
+    throw std::runtime_error(
+        "UCPMapValueFilter: callback function is not set or invalid");
+  }
+  auto context = pair->second;
+  auto object = context ? context->value() : py::none();
+  return action(object, value);
 }
+
+} // namespace icupy
+
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 void init_ucpmap(py::module &m) {
@@ -78,42 +89,125 @@ void init_ucpmap(py::module &m) {
   //
   // struct UCPMap
   //
-  py::class_<_ConstUCPMapPtr>(m, "_ConstUCPMapPtr");
+  py::class_<icupy::UCPMapPtr>(m, "UCPMap", R"doc(
+    Abstract map from Unicode code points [U+0000, U+10FFFF] to integer values.
+
+    See Also:
+        :func:`u_get_int_property_map`
+    )doc");
 
   //
   // UCPMapValueFilter
   //
-  py::class_<_UCPMapValueFilterPtr>(m, "UCPMapValueFilterPtr")
-      .def(py::init<py::function &>(), py::arg("filter_"))
-      .def(py::init<std::nullptr_t>(), py::arg("filter_"));
+  py::class_<icupy::UCPMapValueFilterPtr> vf(m, "UCPMapValueFilter", R"doc(
+    Wrapper class for a callback function that modify map data value.
+
+    See Also:
+        :func:`ucpmap_get_range`
+    )doc");
+
+  vf.def(py::init([](const icupy::ValueFilterFunction &action,
+                     std::optional<const icupy::ConstVoidPtr *> context) {
+           return std::make_unique<icupy::UCPMapValueFilterPtr>(
+               action, context.value_or(nullptr));
+         }),
+         py::arg("action"), py::arg("context") = std::nullopt, R"doc(
+         Initialize the ``UCPMapValueFilter`` instance with a callback
+         function `action` and the user context `context`.
+
+         `action` and `context` must outlive the ``UCPMapValueFilter``
+         object.
+         )doc");
+
+  vf.def(
+      "context",
+      [](const icupy::UCPMapValueFilterPtr &self)
+          -> std::optional<const icupy::ConstVoidPtr *> {
+        auto pair = self.context();
+        if (pair == nullptr || pair->second == nullptr) {
+          return std::nullopt;
+        }
+        return reinterpret_cast<const icupy::ConstVoidPtr *>(pair->second);
+      },
+      py::return_value_policy::reference,
+      R"doc(
+      Get the user context.
+      )doc");
 
   //
   // Functions
   //
   m.def(
       "ucpmap_get",
-      [](_ConstUCPMapPtr &map, UChar32 c) { return ucpmap_get(map, c); },
-      py::arg("map_"), py::arg("c"));
+      [](const icupy::UCPMapPtr &map, UChar32 c) { return ucpmap_get(map, c); },
+      py::arg("ucpmap"), py::arg("c"), R"doc(
+      Get the property value for a code point in a map.
+
+      `c` must be between 0 and 0x10FFFF.
+
+      See Also:
+          :func:`u_get_int_property_map`
+      )doc");
 
   m.def(
       "ucpmap_get_range",
-      [](_ConstUCPMapPtr &map, UChar32 start, UCPMapRangeOption option,
-         uint32_t surrogate_value, _UCPMapValueFilterPtr &filter,
-         icupy::ConstVoidPtr &context) {
-        UCPMapValueFilter *callback = nullptr;
-        const void *filter_context = nullptr;
+      [](const icupy::UCPMapPtr &map, UChar32 start, UCPMapRangeOption option,
+         uint32_t surrogate_value,
+         std::optional<icupy::UCPMapValueFilterPtr> &filter) {
+        UCPMapValueFilter *new_filter = nullptr;
+        const void *new_context = nullptr;
         if (filter.has_value()) {
-          callback = filter.filter;
-          context.set_action(filter.get<py::function>());
-          filter_context = &context;
+          new_filter = filter->get_native_callback();
+          new_context = filter->context();
         }
-
-        uint32_t value;
+        uint32_t value = 0;
         auto result = ucpmap_getRange(map, start, option, surrogate_value,
-                                      callback, filter_context, &value);
-        return py::make_tuple(result, value);
+                                      new_filter, new_context, &value);
+        return std::make_tuple(result, value);
       },
-      py::arg("map_"), py::arg("start"), py::arg("option"),
-      py::arg("surrogate_value"), py::arg("filter_"), py::arg("context"));
+      py::arg("ucpmap"), py::arg("start"), py::arg("option"),
+      py::arg("surrogate_value"), py::arg("filter") = std::nullopt, R"doc(
+      Get the last code point and property value in the range that has
+      the same property value as the code point starting at `start`
+      as a tuple ``(end, value)``.
+
+      See Also:
+          :func:`u_get_int_property_map`
+
+      Examples:
+          >>> from icupy import icu
+          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
+          >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+          >>> start = 0
+          >>> while start <= 0x10fff:
+          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0)
+          ...     if end < 0:
+          ...         break
+          ...     result.append((start, end, icu.UEastAsianWidth(value)))
+          ...     start = end + 1
+          ...
+          >>> [x for x in result if x[2] == icu.U_EA_FULLWIDTH]
+          [(12288, 12288, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65281, 65376, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65504, 65510, <UEastAsianWidth.U_EA_FULLWIDTH: 3>)]
+
+          >>> from icupy import icu
+          >>> def my_filter(new_map: dict[int, int], value: int) -> int:
+          ...     return new_map.get(value, value)
+          ...
+          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
+          >>> eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
+          >>> context = icu.ConstVoidPtr(eaw_map)
+          >>> action = icu.UCPMapValueFilter(my_filter, context)
+          >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+          >>> start = 0
+          >>> while start <= 0x10fff:
+          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0, action)
+          ...     if end < 0:
+          ...         break
+          ...     result.append((start, end, icu.UEastAsianWidth(value)))
+          ...     start = end + 1
+          ...
+          >>> len([x for x in result if x[2] == icu.U_EA_FULLWIDTH])
+          173
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 }
