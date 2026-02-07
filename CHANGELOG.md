@@ -26,6 +26,10 @@
   - Rename `icupy.icu.UConverterToUCallbackPtr` to `icupy.icu.UConverterToUCallback`
   - Move the `context` argument of `icupy.icu.ucnv_set_to_ucall_back()` to `icupy.icu.UConverterToUCallback.__init__()`
   - Update `icupy.icu.ucnv_get_to_ucall_back()` and `icupy.icu.ucnv_set_to_ucall_back()` to return `icupy.icu.UConverterToUCallback`  instead of a tuple
+- **Breaking:** refactor `ucpmap_get_range()`:
+  - Rename `icupy.icu.UCPMapValueFilterPtr` to `icupy.icu.UCPMapValueFilter`
+  - Move the `context` argument of `icupy.icu.ucpmap_get_range()` to `icupy.icu.UCPMapValueFilter.__init__()`
+  - The `filter` argument is now optional
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 

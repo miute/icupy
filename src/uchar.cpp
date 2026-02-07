@@ -1849,9 +1849,18 @@ void init_uchar(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_ConstUCPMapPtr>(p);
+        return std::make_unique<icupy::UCPMapPtr>(p);
       },
-      py::return_value_policy::reference, py::arg("property_"));
+      py::arg("property_"), R"doc(
+      Get an integer property map for a given `property`.
+
+      `property` must be between :attr:`UProperty.UCHAR_INT_START` and
+      :attr:`UProperty.UCHAR_INT_LIMIT`-1.
+
+      See Also:
+          :func:`ucpmap_get`
+          :func:`ucpmap_get_range`
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   m.def("u_get_int_property_max_value", &u_getIntPropertyMaxValue,
