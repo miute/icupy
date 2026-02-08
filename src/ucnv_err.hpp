@@ -121,7 +121,7 @@ public:
 
   const char *option() const {
     auto pair = context();
-    if (pair == nullptr) {
+    if (pair == nullptr || pair->second == nullptr) {
       return nullptr;
     }
     return is_cpp_function() ? nullptr
@@ -196,7 +196,7 @@ public:
 
   const char *option() const {
     auto pair = context();
-    if (pair == nullptr) {
+    if (pair == nullptr || pair->second == nullptr) {
       return nullptr;
     }
     return is_cpp_function() ? nullptr

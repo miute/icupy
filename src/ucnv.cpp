@@ -481,7 +481,7 @@ void init_ucnv(py::module &m) {
         if (new_action.is_cpp_function()) {
           // New C++ (Python) callback function
           context = new_pair;
-        } else {
+        } else if (new_pair) {
           // Predefined callback function
           context = new_pair->second;
         }
@@ -531,8 +531,7 @@ void init_ucnv(py::module &m) {
           ...         icu.ucnv_cb_from_uwrite_bytes(args, source, len(source), 0)
           ...
           >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     context = icu.ConstVoidPtr()
-          ...     action = icu.UConverterFromUCallback(from_unicode_cb, context)
+          ...     action = icu.UConverterFromUCallback(from_unicode_cb)
           ...     old_action = icu.ucnv_set_from_ucall_back(cnv, action)
           ...     s = icu.UnicodeString("A€B")
           ...     s.extract(cnv)
@@ -578,7 +577,7 @@ void init_ucnv(py::module &m) {
         if (new_action.is_cpp_function()) {
           // New C++ (Python) callback function
           context = new_pair;
-        } else {
+        } else if (new_pair) {
           // Predefined callback function
           context = new_pair->second;
         }
@@ -627,8 +626,7 @@ void init_ucnv(py::module &m) {
           ...         icu.ucnv_cb_to_uwrite_uchars(args, source, len(source), 0)
           ...
           >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
-          ...     context = icu.ConstVoidPtr()
-          ...     action = icu.UConverterToUCallback(to_unicode_cb, context)
+          ...     action = icu.UConverterToUCallback(to_unicode_cb)
           ...     old_action = icu.ucnv_set_to_ucall_back(cnv, action)
           ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
           ...     s = icu.UnicodeString(src, -1, cnv)

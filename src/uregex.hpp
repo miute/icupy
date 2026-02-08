@@ -3,8 +3,6 @@
 
 #include "main.hpp"
 #include <functional>
-#include <optional>
-#include <pybind11/functional.h>
 #include <unicode/uregex.h>
 
 namespace icupy {
@@ -15,21 +13,27 @@ class URegexMatchCallbackPtr;
 
 using FindProgressCallbackArgs = bool(py::object &, int64_t);
 
+using FindProgressCallbackFunction = std::function<FindProgressCallbackArgs>;
+
 using FindProgressCallbackAndContextPair =
-    std::pair<const std::function<FindProgressCallbackArgs>,
-              const ConstVoidPtr *>;
+    std::pair<const FindProgressCallbackFunction, const ConstVoidPtr *>;
 
 using SharedFindProgressCallbackAndContextPair =
     std::shared_ptr<FindProgressCallbackAndContextPair>;
 
 using MatchCallbackArgs = bool(py::object &, int32_t);
 
+using MatchCallbackFunction = std::function<MatchCallbackArgs>;
+
 using MatchCallbackAndContextPair =
-    std::pair<const std::function<MatchCallbackArgs>, const ConstVoidPtr *>;
+    std::pair<const MatchCallbackFunction, const ConstVoidPtr *>;
 
 using SharedMatchCallbackAndContextPair =
     std::shared_ptr<MatchCallbackAndContextPair>;
 
+//
+// URegexFindProgressCallback
+//
 class URegexFindProgressCallbackPtr {
 public:
   URegexFindProgressCallbackPtr() {};
@@ -65,6 +69,9 @@ private:
   SharedFindProgressCallbackAndContextPair action_and_context_;
 };
 
+//
+// URegexMatchCallback
+//
 class URegexMatchCallbackPtr {
 public:
   URegexMatchCallbackPtr() {};

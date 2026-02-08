@@ -89,8 +89,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
           icu.ucnv_cb_from_uwrite_bytes(args, source, len(source), 0)
 
   cnv = icu.ucnv_open("iso8859-1")
-  context = icu.ConstVoidPtr()
-  action = icu.UConverterFromUCallback(from_unicode_cb, context)
+  action = icu.UConverterFromUCallback(from_unicode_cb)
   old_action = icu.ucnv_set_from_ucall_back(cnv, action)
   s = icu.UnicodeString("A€B")
   s.extract(cnv)  # → b'A\\u20ACB'
@@ -114,8 +113,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
           icu.ucnv_cb_to_uwrite_uchars(args, source, len(source), 0)
 
   cnv = icu.ucnv_open("Shift-JIS")
-  context = icu.ConstVoidPtr()
-  action = icu.UConverterToUCallback(to_unicode_cb, context)
+  action = icu.UConverterToUCallback(to_unicode_cb)
   old_action = icu.ucnv_set_to_ucall_back(cnv, action)
   src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
   s = icu.UnicodeString(src, -1, cnv)

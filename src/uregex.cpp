@@ -1,5 +1,6 @@
 #include "uregex.hpp"
 #include "voidptr.hpp"
+#include <optional>
 #include <pybind11/stl.h>
 
 namespace icupy {
@@ -14,18 +15,14 @@ UBool URegexFindProgressCallbackPtr::callback(const void *native_context,
   }
   auto pair = reinterpret_cast<FindProgressCallbackAndContextPair *>(
       const_cast<void *>(native_context));
-  if (pair->second == nullptr) {
-    throw std::runtime_error(
-        "URegexFindProgressCallback: callback context is not set");
-  }
   auto &action = pair->first;
   if (!action) {
     throw std::runtime_error(
         "URegexFindProgressCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
-  auto value = context->value();
-  return action(value, match_index);
+  auto object = context ? context->value() : py::none();
+  return action(object, match_index);
 }
 
 //
@@ -38,18 +35,14 @@ UBool URegexMatchCallbackPtr::callback(const void *native_context,
   }
   auto pair = reinterpret_cast<MatchCallbackAndContextPair *>(
       const_cast<void *>(native_context));
-  if (pair->second == nullptr) {
-    throw std::runtime_error(
-        "URegexMatchCallback: callback context is not set");
-  }
   auto &action = pair->first;
   if (!action) {
     throw std::runtime_error(
         "URegexMatchCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
-  auto value = context->value();
-  return action(value, steps);
+  auto object = context ? context->value() : py::none();
+  return action(object, steps);
 }
 
 } // namespace icupy
@@ -112,9 +105,12 @@ void init_uregex(py::module &m) {
            Initialize the ``URegexFindProgressCallback`` instance without a callback
            function.
            )doc")
-      .def(py::init<const std::function<icupy::FindProgressCallbackArgs> &,
-                    const icupy::ConstVoidPtr *>(),
-           py::arg("action"), py::arg("context").none(false), R"doc(
+      .def(py::init([](const icupy::FindProgressCallbackFunction &action,
+                       std::optional<const icupy::ConstVoidPtr *> &context) {
+             return std::make_unique<icupy::URegexFindProgressCallbackPtr>(
+                 action, context.value_or(nullptr));
+           }),
+           py::arg("action"), py::arg("context") = std::nullopt, R"doc(
            Initialize the ``URegexFindProgressCallback`` instance with a callback function
            `action` and the user context `context`.
 
@@ -135,7 +131,7 @@ void init_uregex(py::module &m) {
       [](const icupy::URegexFindProgressCallbackPtr &self)
           -> std::optional<const icupy::ConstVoidPtr *> {
         auto pair = self.context();
-        if (pair == nullptr) {
+        if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
         }
         return pair->second;
@@ -157,9 +153,12 @@ void init_uregex(py::module &m) {
            Initialize the ``URegexMatchCallback`` instance without a callback
            function.
            )doc")
-      .def(py::init<const std::function<icupy::MatchCallbackArgs> &,
-                    const icupy::ConstVoidPtr *>(),
-           py::arg("action"), py::arg("context").none(false), R"doc(
+      .def(py::init([](const icupy::MatchCallbackFunction &action,
+                       std::optional<const icupy::ConstVoidPtr *> &context) {
+             return std::make_unique<icupy::URegexMatchCallbackPtr>(
+                 action, context.value_or(nullptr));
+           }),
+           py::arg("action"), py::arg("context") = std::nullopt, R"doc(
            Initialize the ``URegexMatchCallback`` instance with a callback function
            `action` and the user context `context`.
 
@@ -178,7 +177,7 @@ void init_uregex(py::module &m) {
       [](const icupy::URegexMatchCallbackPtr &self)
           -> std::optional<const icupy::ConstVoidPtr *> {
         auto pair = self.context();
-        if (pair == nullptr) {
+        if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
         }
         return pair->second;

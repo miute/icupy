@@ -616,7 +616,7 @@ def test_set_find_progress_callback() -> None:
         result1.append(_match_index)
         return True
 
-    def _find_progress_callback2(_context: object, _match_index: int) -> bool:
+    def _find_progress_callback2(_context: list[int], _match_index: int) -> bool:
         if not isinstance(_context, list):
             return False
         _context.append(_match_index)
@@ -639,8 +639,8 @@ def test_set_find_progress_callback() -> None:
     #       const void *context,
     #       UErrorCode &status
     # )
-    context1 = icu.ConstVoidPtr()
-    callback1 = icu.URegexFindProgressCallback(_find_progress_callback1, context1)
+    callback1 = icu.URegexFindProgressCallback(_find_progress_callback1)
+    assert callback1.context() is None
     matcher.set_find_progress_callback(callback1)
     assert matcher.find() is True
     assert matcher.find() is True
@@ -650,9 +650,7 @@ def test_set_find_progress_callback() -> None:
     callback1a = matcher.get_find_progress_callback()
     assert isinstance(callback1a, icu.URegexFindProgressCallback)
     assert bool(callback1a) is True
-    context1a = callback1a.context()
-    assert isinstance(context1a, icu.ConstVoidPtr)
-    assert context1a.value() is None
+    assert callback1a.context() is None
 
     result2: list[int] = []
     context2 = icu.ConstVoidPtr(result2)
@@ -662,7 +660,9 @@ def test_set_find_progress_callback() -> None:
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.find()
     assert exc_info.value.args[0] == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
+    assert exc_info.value.error_code == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 5]
+    assert callback2.context().value() == result2
 
     callback2a = matcher.get_find_progress_callback()
     assert isinstance(callback2a, icu.URegexFindProgressCallback)
@@ -674,6 +674,7 @@ def test_set_find_progress_callback() -> None:
     result1.clear()
     result2.clear()
     callback0 = icu.URegexFindProgressCallback()
+    assert callback0.context() is None
     matcher.set_find_progress_callback(callback0)
     assert matcher.find(0) is True
     assert matcher.find() is True
@@ -696,6 +697,7 @@ def test_set_find_progress_callback() -> None:
     assert matcher.find() is True
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.find()
+    assert exc_info.value.args[0] == icu.U_REGEX_STOPPED_BY_CALLER
     assert exc_info.value.error_code == icu.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 5]
 
@@ -706,6 +708,7 @@ def test_set_find_progress_callback() -> None:
     assert matcher.find() is True
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.find()
+    assert exc_info.value.args[0] == icu.U_REGEX_STOPPED_BY_CALLER
     assert exc_info.value.error_code == icu.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 5]
 
@@ -720,7 +723,7 @@ def test_set_match_callback() -> None:
         result1.append(_steps)
         return True
 
-    def _match_callback2(_context: object, _steps: int) -> bool:
+    def _match_callback2(_context: list[int], _steps: int) -> bool:
         if not isinstance(_context, list):
             return False
         _context.append(_steps)
@@ -743,8 +746,8 @@ def test_set_match_callback() -> None:
     #       const void *context,
     #       UErrorCode &status
     # )
-    context1 = icu.ConstVoidPtr()
-    callback1 = icu.URegexMatchCallback(_match_callback1, context1)
+    callback1 = icu.URegexMatchCallback(_match_callback1)
+    assert callback1.context() is None
     matcher.set_match_callback(callback1)
     matcher.reset(src)
     assert not matcher.matches()
@@ -753,9 +756,7 @@ def test_set_match_callback() -> None:
     callback1a = matcher.get_match_callback()
     assert isinstance(callback1a, icu.URegexMatchCallback)
     assert bool(callback1a) is True
-    context1a = callback1a.context()
-    assert isinstance(context1a, icu.ConstVoidPtr)
-    assert context1a.value() is None
+    assert callback1a.context() is None
 
     result2: list[int] = []
     context2 = icu.ConstVoidPtr(result2)
@@ -765,7 +766,9 @@ def test_set_match_callback() -> None:
     with pytest.raises(icu.ICUError) as exc_info:
         matcher.matches()
     assert exc_info.value.args[0] == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
+    assert exc_info.value.error_code == icu.UErrorCode.U_REGEX_STOPPED_BY_CALLER
     assert result2 == [1, 2, 3, 4, 5]
+    assert callback2.context().value() == result2
 
     callback2a = matcher.get_match_callback()
     assert isinstance(callback2a, icu.URegexMatchCallback)
@@ -784,6 +787,7 @@ def test_set_match_callback() -> None:
     result1.clear()
     result2.clear()
     callback3 = icu.URegexMatchCallback()
+    assert callback3.context() is None
     matcher.set_match_callback(callback3)
     matcher.reset(src)
     assert not matcher.matches()

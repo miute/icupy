@@ -12,8 +12,10 @@ class UBiDiClassCallbackPtr;
 
 using ClassCallbackArgs = UCharDirection(py::object &, UChar32);
 
+using ClassCallbackFunction = std::function<ClassCallbackArgs>;
+
 using ClassCallbackAndContextPair =
-    std::pair<const std::function<ClassCallbackArgs>, const ConstVoidPtr *>;
+    std::pair<const ClassCallbackFunction, const ConstVoidPtr *>;
 
 using SharedClassCallbackAndContextPair =
     std::shared_ptr<ClassCallbackAndContextPair>;
