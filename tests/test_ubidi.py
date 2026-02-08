@@ -309,8 +309,7 @@ def test_set_class_callback() -> None:
         #                             const void **oldContext,
         #                             UErrorCode *pErrorCode
         # )
-        context2 = icu.ConstVoidPtr()
-        fn2 = icu.UBiDiClassCallback(_callback1, context2)
+        fn2 = icu.UBiDiClassCallback(_callback1)
         assert bool(fn2)
         old_fn1 = icu.ubidi_set_class_callback(bidi, fn2)
         assert old_fn1 is None
@@ -321,9 +320,7 @@ def test_set_class_callback() -> None:
         fn2a = icu.ubidi_get_class_callback(bidi)
         assert isinstance(fn2a, icu.UBiDiClassCallback)
         assert bool(fn2a)
-        context2a = fn2a.context()
-        assert isinstance(context2a, icu.ConstVoidPtr)
-        assert context2a.value() is None
+        assert fn2a.context() is None
 
         # old_fn3, old_context3 = icu.ubidi_set_class_callback(bidi, old_fn1, old_context1)
         # result = icu.ubidi_get_customized_class(bidi, 0x52)
@@ -342,9 +339,7 @@ def test_set_class_callback() -> None:
         old_fn2 = icu.ubidi_set_class_callback(bidi, fn4)
         assert isinstance(old_fn2, icu.UBiDiClassCallback)
         assert bool(old_fn2)
-        old_context2 = old_fn2.context()
-        assert isinstance(old_context2, icu.ConstVoidPtr)
-        assert old_context2.value() is None
+        assert old_fn2.context() is None
 
         assert icu.ubidi_get_customized_class(bidi, 0x52) == icu.UCharDirection.U_RIGHT_TO_LEFT
         assert icu.ubidi_get_customized_class(bidi, 0x39) == icu.UCharDirection.U_ARABIC_NUMBER

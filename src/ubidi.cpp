@@ -45,17 +45,14 @@ UCharDirection UBiDiClassCallbackPtr::callback(const void *native_context,
   }
   auto pair = reinterpret_cast<ClassCallbackAndContextPair *>(
       const_cast<void *>(native_context));
-  if (pair->second == nullptr) {
-    throw std::runtime_error("UBiDiClassCallback: callback context is not set");
-  }
   auto &action = pair->first;
   if (!action) {
     throw std::runtime_error(
         "UBiDiClassCallback: callback function is not set or invalid");
   }
   auto context = pair->second;
-  auto value = context->value();
-  return action(value, c);
+  auto object = context ? context->value() : py::none();
+  return action(object, c);
 }
 
 } // namespace icupy
@@ -257,9 +254,12 @@ void init_ubidi(py::module &m) {
           Initialize the ``UBiDiClassCallback`` instance without a callback
           function.
           )doc")
-      .def(py::init<const std::function<icupy::ClassCallbackArgs> &,
-                    const icupy::ConstVoidPtr *>(),
-           py::arg("action"), py::arg("context").none(false), R"doc(
+      .def(py::init([](const icupy::ClassCallbackFunction &action,
+                       std::optional<const icupy::ConstVoidPtr *> &context) {
+             return std::make_unique<icupy::UBiDiClassCallbackPtr>(
+                 action, context.value_or(nullptr));
+           }),
+           py::arg("action"), py::arg("context") = std::nullopt, R"doc(
            Initialize the ``UBiDiClassCallback`` instance with a callback
            function `action` and the user context `context`.
 
@@ -279,7 +279,7 @@ void init_ubidi(py::module &m) {
       [](const icupy::UBiDiClassCallbackPtr &self)
           -> std::optional<const icupy::ConstVoidPtr *> {
         auto pair = self.context();
-        if (pair == nullptr) {
+        if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
         }
         return pair->second;
@@ -617,7 +617,8 @@ void init_ubidi(py::module &m) {
       Example:
           >>> from icupy import icu
           >>> from icupy.utils import gc
-          >>> def class_callback(_: object, c: int) -> icu.UCharDirection:
+          >>> def class_callback(options: object, c: int) -> icu.UCharDirection:
+          ...     _ = options  # unused
           ...     if icu.u_isdigit(c):
           ...         return icu.U_LEFT_TO_RIGHT
           ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
@@ -626,8 +627,7 @@ void init_ubidi(py::module &m) {
           >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
           ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
           ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
-          ...     context = icu.ConstVoidPtr()
-          ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
+          ...     new_fn = icu.UBiDiClassCallback(class_callback)
           ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
           ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
           ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
