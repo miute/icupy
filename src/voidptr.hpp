@@ -18,17 +18,9 @@ public:
 
   ~ConstVoidPtr() {};
 
-  const py::function &action() const { return action_.value(); }
-
   const void *data() const;
 
-  bool has_action() const { return action_.has_value(); }
-
   bool has_value() const { return context_.has_value(); }
-
-  void set_action(const std::optional<py::function> &action) {
-    action_ = action;
-  }
 
   py::object to_object() const;
 
@@ -36,7 +28,6 @@ public:
 
 private:
   std::any context_;
-  std::optional<py::function> action_;
 };
 
 } // namespace icupy
