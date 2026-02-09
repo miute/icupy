@@ -2,9 +2,9 @@
 #include <memory>
 #include <pybind11/warnings.h>
 
-using SharedString = std::shared_ptr<std::string>;
-
 namespace icupy {
+
+using SharedString = std::shared_ptr<std::string>;
 
 ConstVoidPtr::ConstVoidPtr(const py::object &value) {
   if (py::isinstance<py::str>(value)) {
@@ -55,7 +55,7 @@ void init_voidptr(py::module &m) {
   // icupy::ConstVoidPtr
   //
   py::class_<icupy::ConstVoidPtr> cvp(m, "ConstVoidPtr", R"doc(
-    A wrapper class for the C/C++ ``const void *`` type.
+    Storage type that can hold any value.
     )doc");
 
   cvp.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
