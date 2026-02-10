@@ -1,11 +1,9 @@
 #include "main.hpp"
 #include "utextvec.hpp"
-#include <cassert>
 #include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
-#include <unicode/ustring.h>
 
 using namespace icu;
 

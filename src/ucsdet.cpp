@@ -1,7 +1,6 @@
 #include "main.hpp"
 #include "ucsdetptr.hpp"
 #include "uenumptr.hpp"
-#include <memory>
 #include <optional>
 #include <pybind11/stl.h>
 

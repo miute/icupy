@@ -1,4 +1,3 @@
-#include "main.hpp"
 #include "uregex.hpp"
 #include "utextvec.hpp"
 #include "voidptr.hpp"
@@ -6,7 +5,6 @@
 #include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <sstream>
 #include <unicode/regex.h>
 
 using namespace icu;

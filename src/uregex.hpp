@@ -8,8 +8,6 @@
 namespace icupy {
 
 class ConstVoidPtr;
-class URegexFindProgressCallbackPtr;
-class URegexMatchCallbackPtr;
 
 using FindProgressCallbackArgs = bool(py::object &, int64_t);
 

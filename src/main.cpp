@@ -1,8 +1,6 @@
 #include "main.hpp"
 #include <unicode/decimfmt.h>
-#include <unicode/errorcode.h>
 #include <unicode/fmtable.h>
-#include <unicode/locid.h>
 #include <unicode/plurrule.h>
 
 #ifndef MODULE_NAME

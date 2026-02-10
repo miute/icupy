@@ -3,7 +3,6 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <unicode/locid.h>
 #include <unicode/strenum.h>
 #include <unicode/tznames.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)

@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include <pybind11/stl.h>
-#include <unicode/unistr.h>
 #include <unicode/uscript.h>
 
 using namespace icu;

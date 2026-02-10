@@ -3,7 +3,6 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
 #include <pybind11/stl.h>
 #include <unicode/decimfmt.h>
-#include <unicode/locid.h>
 #include <unicode/scientificnumberformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
 

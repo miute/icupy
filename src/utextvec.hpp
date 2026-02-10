@@ -1,9 +1,9 @@
 #ifndef ICUPY_UTEXTVEC_HPP
 #define ICUPY_UTEXTVEC_HPP
 
-#include "main.hpp"
 #include "utextptr.hpp"
-#include <functional>
+#include <list>
+#include <vector>
 
 class _UTextVector {
 public:

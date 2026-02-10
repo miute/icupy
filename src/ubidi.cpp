@@ -2,8 +2,8 @@
 #include "ubidiptr.hpp"
 #include "voidptr.hpp"
 #include <optional>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
-#include <unicode/ustring.h>
 
 using namespace icu;
 

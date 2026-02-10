@@ -1,6 +1,7 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
 #include "ucpmapptr.hpp"
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
 using namespace icu;

@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include "usetptr.hpp"
-#include <memory>
 
 _ConstUSetPtr::_ConstUSetPtr(const USet *p) : p_(p) {}
 
