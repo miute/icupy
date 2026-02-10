@@ -46,7 +46,7 @@ void init_measfmt(py::module &m) {
             }
             return result;
           }),
-          py::arg("locale"), py::arg("width_"));
+          py::arg("locale"), py::arg("width"));
 
   // FIXME: Implement "icu::MeasureFormat::MeasureFormat(const Locale &locale,
   //  UMeasureFormatWidth width, NumberFormat *nfToAdopt, UErrorCode &status)".

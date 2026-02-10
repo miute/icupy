@@ -102,7 +102,7 @@ void init_plurrule(py::module &, py::class_<PluralRules, UObject> &pr) {
             }
             return result;
           },
-          py::arg("locale"), py::arg("type_"))
+          py::arg("locale"), py::arg("type"))
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
       ;
 

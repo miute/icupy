@@ -2666,7 +2666,7 @@ void init_measunit(py::module &m) {
           }
           return result;
         },
-        py::arg("type_"))
+        py::arg("type"))
       .def_static("get_available", []() {
         ErrorCode error_code;
         const auto dest_capacity =

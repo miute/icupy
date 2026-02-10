@@ -329,7 +329,7 @@ void init_tzfmt(py::module &m) {
           py::arg("digits"));
 
   tzf.def("get_gmt_offset_pattern", &TimeZoneFormat::getGMTOffsetPattern,
-          py::arg("type_"), py::arg("pattern"));
+          py::arg("type"), py::arg("pattern"));
 
   tzf.def("get_gmt_pattern", &TimeZoneFormat::getGMTPattern,
           py::arg("pattern"));
@@ -430,7 +430,7 @@ void init_tzfmt(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("type_"), py::arg("pattern"));
+      py::arg("type"), py::arg("pattern"));
 
   tzf.def(
       "set_gmt_pattern",

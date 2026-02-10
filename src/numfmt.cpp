@@ -359,7 +359,7 @@ void init_numfmt(py::module & /* m */, py::class_<NumberFormat, Format> &nf) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   nf.def("get_currency", &NumberFormat::getCurrency);

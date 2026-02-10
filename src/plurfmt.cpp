@@ -67,7 +67,7 @@ void init_plurfmt(py::module &m) {
             }
             return result;
           }),
-          py::arg("locale"), py::arg("type_"))
+          py::arg("locale"), py::arg("type"))
       .def(
           // [6] icu::PluralFormat
           py::init([](const icupy::UnicodeStringVariant &pattern) {
@@ -135,7 +135,7 @@ void init_plurfmt(py::module &m) {
             }
             return result;
           }),
-          py::arg("locale"), py::arg("type_"), py::arg("pattern"))
+          py::arg("locale"), py::arg("type"), py::arg("pattern"))
       .def(
           // [11] icu::PluralFormat
           py::init<const PluralFormat &>(), py::arg("other"));
@@ -265,7 +265,7 @@ void init_plurfmt(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("format_").none(false));
+      py::arg("format").none(false));
 
   pf.def("to_pattern", &PluralFormat::toPattern, py::arg("append_to"));
 }

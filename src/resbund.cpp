@@ -173,7 +173,7 @@ void init_resbund(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   res.def("get_name", &ResourceBundle::getName,
           py::return_value_policy::reference);

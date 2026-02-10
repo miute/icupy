@@ -243,7 +243,7 @@ void init_datefmt(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   df.def("get_number_format", &DateFormat::getNumberFormat,

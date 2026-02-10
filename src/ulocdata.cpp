@@ -105,7 +105,7 @@ void init_ulocdata(py::module &m) {
         }
         return result;
       },
-      py::arg("uld"), py::arg("type_"));
+      py::arg("uld"), py::arg("type"));
 
   m.def(
       "ulocdata_get_exemplar_set",

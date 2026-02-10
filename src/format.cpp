@@ -80,7 +80,7 @@ void init_format(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   fmt.def(
          "parse_object",

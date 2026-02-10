@@ -100,7 +100,7 @@ void init_localebuilder(py::module &m) {
          const std::optional<std::string> &type) -> LocaleBuilder & {
         return self.setUnicodeLocaleKeyword(key, type ? type->data() : nullptr);
       },
-      py::arg("key"), py::arg("type_"));
+      py::arg("key"), py::arg("type"));
 
   lb.def(
       "set_variant",

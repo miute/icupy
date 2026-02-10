@@ -117,7 +117,7 @@ void init_coleitr(py::module &m) {
              throw icupy::ICUError(error_code);
            }
          },
-         py::arg("str_"))
+         py::arg("text"))
       .def(
           "set_text",
           [](CollationElementIterator &self,
@@ -128,7 +128,7 @@ void init_coleitr(py::module &m) {
               throw icupy::ICUError(error_code);
             }
           },
-          py::arg("str_"));
+          py::arg("text"));
 
   cei.def("strength_order", &CollationElementIterator::strengthOrder,
           py::arg("order"));

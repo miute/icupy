@@ -552,7 +552,7 @@ void init_ucnv(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("converter"), py::arg("sub_chars"), py::arg("len_") = -1);
+      py::arg("converter"), py::arg("sub_chars"), py::arg("length") = -1);
 
   m.def(
       "ucnv_set_subst_string",

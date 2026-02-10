@@ -61,7 +61,7 @@ void init_listformatter(py::module &m) {
         }
         return result;
       },
-      py::arg("locale"), py::arg("type_"), py::arg("width"));
+      py::arg("locale"), py::arg("type"), py::arg("width"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   lf.def(
