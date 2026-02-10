@@ -2,6 +2,8 @@
 #define ICUPY_UTEXTVEC_HPP
 
 #include "utextptr.hpp"
+#include <list>
+#include <vector>
 
 class _UTextVector {
 public:
