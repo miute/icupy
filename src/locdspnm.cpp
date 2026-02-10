@@ -41,7 +41,7 @@ void init_locdspnm(py::module &m) {
       },
       py::arg("locale"), py::arg("contexts"), py::arg("length") = -1);
 
-  ldn.def("get_context", &LocaleDisplayNames::getContext, py::arg("type_"));
+  ldn.def("get_context", &LocaleDisplayNames::getContext, py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   ldn.def("get_dialect_handling", &LocaleDisplayNames::getDialectHandling);

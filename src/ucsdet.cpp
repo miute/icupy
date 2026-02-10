@@ -79,7 +79,7 @@ void init_ucsdet(py::module &m) {
       [](_UCharsetDetectorPtr &ucsd, py::bool_ filter) -> py::bool_ {
         return ucsdet_enableInputFilter(ucsd, filter);
       },
-      py::arg("ucsd"), py::arg("filter_"));
+      py::arg("ucsd"), py::arg("filter"));
 
   m.def(
       "ucsdet_get_all_detectable_charsets",
@@ -190,5 +190,5 @@ void init_ucsdet(py::module &m) {
         }
         ucsd.set_source(text_in_ptr);
       },
-      py::arg("ucsd"), py::arg("text_in"), py::arg("len_") = -1);
+      py::arg("ucsd"), py::arg("text_in"), py::arg("length") = -1);
 }

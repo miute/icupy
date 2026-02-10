@@ -248,7 +248,7 @@ void init_gregocal(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   cal.def(
       "get_maximum",

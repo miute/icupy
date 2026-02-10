@@ -59,7 +59,7 @@ void init_regex(py::module &m) {
             }
             return result;
           }),
-          py::arg("regexp"), py::arg("input_"), py::arg("flags"))
+          py::arg("regexp"), py::arg("input"), py::arg("flags"))
       .def(
           // [4] RegexMatcher::RegexMatcher
           py::init([](_UTextPtr &regexp, _UTextPtr &input, uint32_t flags) {
@@ -71,7 +71,7 @@ void init_regex(py::module &m) {
             }
             return result;
           }),
-          py::arg("regexp"), py::arg("input_"), py::arg("flags"));
+          py::arg("regexp"), py::arg("input"), py::arg("flags"));
 
   rm.def(
         "append_replacement",
@@ -449,7 +449,7 @@ void init_regex(py::module &m) {
   rm.def("reset", py::overload_cast<>(&RegexMatcher::reset))
       .def("reset",
            py::overload_cast<const UnicodeString &>(&RegexMatcher::reset),
-           py::arg("input_"))
+           py::arg("input"))
       .def(
           "reset",
           [](RegexMatcher &self, int64_t index) -> RegexMatcher & {
@@ -466,7 +466,7 @@ void init_regex(py::module &m) {
           [](RegexMatcher &self, _UTextPtr &input) -> RegexMatcher & {
             return self.reset(input);
           },
-          py::arg("input_"));
+          py::arg("input"));
 
   rm.def(
       "set_find_progress_callback",
@@ -583,7 +583,7 @@ void init_regex(py::module &m) {
           }
           return result;
         },
-        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
+        py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
           [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest,
@@ -602,7 +602,7 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1);
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1);
 
   rm.def(
         "start",
@@ -800,7 +800,7 @@ void init_regex(py::module &m) {
           }
           return result;
         },
-        py::arg("input_"))
+        py::arg("input"))
       .def("matcher", [](const RegexPattern &self) {
         ErrorCode error_code;
         auto result = self.matcher(error_code);
@@ -822,7 +822,7 @@ void init_regex(py::module &m) {
           }
           return result;
         },
-        py::arg("regex"), py::arg("input_"), py::arg("pe"))
+        py::arg("regex"), py::arg("input"), py::arg("pe"))
       .def_static(
           "matches",
           [](_UTextPtr &regex, _UTextPtr &input, UParseError &pe) -> py::bool_ {
@@ -833,7 +833,7 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("regex"), py::arg("input_"), py::arg("pe"));
+          py::arg("regex"), py::arg("input"), py::arg("pe"));
 
   rp.def("pattern", &RegexPattern::pattern);
 
@@ -861,7 +861,7 @@ void init_regex(py::module &m) {
           }
           return result;
         },
-        py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1)
+        py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
           [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest,
@@ -880,5 +880,5 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("input_"), py::arg("dest"), py::arg("dest_capacity") = -1);
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1);
 }

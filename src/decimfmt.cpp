@@ -325,10 +325,10 @@ void init_decimfmt(py::module & /* m */,
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   df.def("set_maximum_significant_digits",
-         &DecimalFormat::setMaximumSignificantDigits, py::arg("max_"));
+         &DecimalFormat::setMaximumSignificantDigits, py::arg("new_value"));
 
   df.def("set_minimum_exponent_digits",
-         &DecimalFormat::setMinimumExponentDigits, py::arg("min_exp_dig"));
+         &DecimalFormat::setMinimumExponentDigits, py::arg("new_value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("set_minimum_grouping_digits",
@@ -336,7 +336,7 @@ void init_decimfmt(py::module & /* m */,
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   df.def("set_minimum_significant_digits",
-         &DecimalFormat::setMinimumSignificantDigits, py::arg("min_"));
+         &DecimalFormat::setMinimumSignificantDigits, py::arg("new_value"));
 
   df.def("set_multiplier", &DecimalFormat::setMultiplier, py::arg("new_value"));
 

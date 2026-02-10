@@ -65,7 +65,7 @@ void init_translit(py::module &m) {
                icupy::to_unistr(id),
                adopted_filter ? (*adopted_filter)->clone() : nullptr);
          }),
-         py::arg("id_"), py::arg("adopted_filter"))
+         py::arg("id"), py::arg("adopted_filter"))
       .def(py::init([](const PyTransliterator &other) {
              return std::make_unique<PyTransliterator>(other);
            }),
@@ -117,7 +117,7 @@ void init_translit(py::module &m) {
         return PyTransliterator::createBasicInstance(icupy::to_unistr(id),
                                                      canon.value_or(nullptr));
       },
-      py::arg("id_"), py::arg("canon"));
+      py::arg("id"), py::arg("canon"));
 
   tl.def_static(
       "create_from_rules",
@@ -133,8 +133,7 @@ void init_translit(py::module &m) {
         }
         return result;
       },
-      py::arg("id_"), py::arg("rules"), py::arg("dir_"),
-      py::arg("parse_error"));
+      py::arg("id"), py::arg("rules"), py::arg("dir"), py::arg("parse_error"));
 
   tl.def_static(
         "create_instance",
@@ -147,7 +146,7 @@ void init_translit(py::module &m) {
           }
           return result;
         },
-        py::arg("id_"), py::arg("dir_"))
+        py::arg("id"), py::arg("dir"))
       .def_static(
           "create_instance",
           [](const icupy::UnicodeStringVariant &id, UTransDirection dir,
@@ -160,7 +159,7 @@ void init_translit(py::module &m) {
             }
             return result;
           },
-          py::arg("id_"), py::arg("dir_"), py::arg("parse_error"));
+          py::arg("id"), py::arg("dir"), py::arg("parse_error"));
 
   tl.def("create_inverse", [](const Transliterator &self) {
     ErrorCode error_code;
@@ -222,14 +221,14 @@ void init_translit(py::module &m) {
           return Transliterator::getDisplayName(
               icupy::to_unistr(id), icupy::to_locale(in_locale), result);
         },
-        py::arg("id_"), py::arg("in_locale"), py::arg("result"))
+        py::arg("id"), py::arg("in_locale"), py::arg("result"))
       .def_static(
           "get_display_name",
           [](const icupy::UnicodeStringVariant &id,
              UnicodeString &result) -> UnicodeString & {
             return Transliterator::getDisplayName(icupy::to_unistr(id), result);
           },
-          py::arg("id_"), py::arg("result"));
+          py::arg("id"), py::arg("result"));
 
   tl.def(
       "get_element",
@@ -285,7 +284,7 @@ void init_translit(py::module &m) {
       [](PyTransliterator &self, const icupy::UnicodeStringVariant &id) {
         self.setID(icupy::to_unistr(id));
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   tl.def("_set_maximum_context_length",
          &PyTransliterator::setMaximumContextLength,
@@ -348,5 +347,5 @@ void init_translit(py::module &m) {
       [](const icupy::UnicodeStringVariant &id) {
         Transliterator::unregister(icupy::to_unistr(id));
       },
-      py::arg("id_"));
+      py::arg("id"));
 }

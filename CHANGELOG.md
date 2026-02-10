@@ -30,6 +30,7 @@
   - Rename `icupy.icu.UCPMapValueFilterPtr` to `icupy.icu.UCPMapValueFilter`
   - Move the `context` argument of `icupy.icu.ucpmap_get_range()` to `icupy.icu.UCPMapValueFilter.__init__()`
   - The `filter` argument is now optional
+- **Breaking:** remove trailing underscores from parameter names across several APIs
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 

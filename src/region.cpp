@@ -49,7 +49,7 @@ void init_region(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   reg.def("get_contained_regions",
           [](const Region &self) {
@@ -70,7 +70,7 @@ void init_region(py::module &m) {
             }
             return result;
           },
-          py::arg("type_"));
+          py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
 
   reg.def("get_containing_region",
@@ -79,7 +79,7 @@ void init_region(py::module &m) {
       .def("get_containing_region",
            py::overload_cast<URegionType>(&Region::getContainingRegion,
                                           py::const_),
-           py::return_value_policy::reference, py::arg("type_"));
+           py::return_value_policy::reference, py::arg("type"));
 
   reg.def_static(
          "get_instance",

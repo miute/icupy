@@ -212,7 +212,7 @@ void init_dtitvfmt(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
   fmt.def("get_date_format", &DateIntervalFormat::getDateFormat,

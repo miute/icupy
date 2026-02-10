@@ -188,7 +188,7 @@ void init_rbbi(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   bi.def("get_rule_status", &BreakIterator::getRuleStatus);

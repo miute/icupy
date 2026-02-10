@@ -97,7 +97,7 @@ void init_timezone(py::module &m) {
       [](const icupy::UnicodeStringVariant &id) {
         return TimeZone::countEquivalentIDs(icupy::to_unistr(id));
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   tz.def_static("create_default",
                 []() -> std::variant<BasicTimeZone *, TimeZone *> {
@@ -177,7 +177,7 @@ void init_timezone(py::module &m) {
         }
         return tz;
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   tz.def_static(
       "create_time_zone_id_enumeration",
@@ -219,7 +219,7 @@ void init_timezone(py::module &m) {
         }
         return py::make_tuple(result, py::bool_(is_system_id));
       },
-      py::arg("id_"), py::arg("canonical_id"));
+      py::arg("id"), py::arg("canonical_id"));
 
   tz.def(
         "get_display_name",
@@ -258,7 +258,7 @@ void init_timezone(py::module &m) {
       [](const icupy::UnicodeStringVariant &id, int32_t index) {
         return TimeZone::getEquivalentID(icupy::to_unistr(id), index);
       },
-      py::arg("id_"), py::arg("index"));
+      py::arg("id"), py::arg("index"));
 
   tz.def_static("get_gmt", &TimeZone::getGMT,
                 py::return_value_policy::reference);
@@ -276,10 +276,10 @@ void init_timezone(py::module &m) {
         }
         return result;
       },
-      py::arg("id_"), py::arg("iana_id"));
+      py::arg("id"), py::arg("iana_id"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 
-  tz.def("get_id", &TimeZone::getID, py::arg("id_"));
+  tz.def("get_id", &TimeZone::getID, py::arg("id"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   tz.def_static(
@@ -296,7 +296,7 @@ void init_timezone(py::module &m) {
         }
         return result;
       },
-      py::arg("winid"), py::arg("region"), py::arg("id_"));
+      py::arg("winid"), py::arg("region"), py::arg("id"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
   tz.def(
@@ -357,7 +357,7 @@ void init_timezone(py::module &m) {
         result.resize(length);
         return result;
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   tz.def_static("get_tz_data_version", []() {
     ErrorCode error_code;
@@ -386,7 +386,7 @@ void init_timezone(py::module &m) {
         }
         return result;
       },
-      py::arg("id_"), py::arg("winid"));
+      py::arg("id"), py::arg("winid"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
   tz.def(
@@ -403,7 +403,7 @@ void init_timezone(py::module &m) {
       [](TimeZone &self, const icupy::UnicodeStringVariant &id) {
         self.setID(icupy::to_unistr(id));
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
 
@@ -528,7 +528,7 @@ void init_timezone(py::module &m) {
              return std::make_unique<RuleBasedTimeZone>(icupy::to_unistr(id),
                                                         initial_rule->clone());
            }),
-           py::arg("id_"), py::arg("initial_rule").none(false))
+           py::arg("id"), py::arg("initial_rule").none(false))
       .def(py::init<const RuleBasedTimeZone &>(), py::arg("other"));
 
   rbtz.def("__copy__", &RuleBasedTimeZone::clone);
@@ -589,7 +589,7 @@ void init_timezone(py::module &m) {
              return std::make_unique<SimpleTimeZone>(raw_offset_gmt,
                                                      icupy::to_unistr(id));
            }),
-           py::arg("raw_offset_gmt"), py::arg("id_"))
+           py::arg("raw_offset_gmt"), py::arg("id"))
       .def(py::init(
                [](int32_t raw_offset_gmt, const icupy::UnicodeStringVariant &id,
                   int8_t savings_start_month,
@@ -610,7 +610,7 @@ void init_timezone(py::module &m) {
                  }
                  return result;
                }),
-           py::arg("raw_offset_gmt"), py::arg("id_"),
+           py::arg("raw_offset_gmt"), py::arg("id"),
            py::arg("savings_start_month"),
            py::arg("savings_start_day_of_week_in_month"),
            py::arg("savings_start_day_of_week"), py::arg("savings_start_time"),
@@ -638,7 +638,7 @@ void init_timezone(py::module &m) {
              }
              return result;
            }),
-           py::arg("raw_offset_gmt"), py::arg("id_"),
+           py::arg("raw_offset_gmt"), py::arg("id"),
            py::arg("savings_start_month"),
            py::arg("savings_start_day_of_week_in_month"),
            py::arg("savings_start_day_of_week"), py::arg("savings_start_time"),
@@ -671,7 +671,7 @@ void init_timezone(py::module &m) {
                  }
                  return result;
                }),
-           py::arg("raw_offset_gmt"), py::arg("id_"),
+           py::arg("raw_offset_gmt"), py::arg("id"),
            py::arg("savings_start_month"),
            py::arg("savings_start_day_of_week_in_month"),
            py::arg("savings_start_day_of_week"), py::arg("savings_start_time"),
@@ -984,7 +984,7 @@ void init_timezone(py::module &m) {
       [](const icupy::UnicodeStringVariant &id) {
         return VTimeZone::createVTimeZoneByID(icupy::to_unistr(id));
       },
-      py::arg("id_"));
+      py::arg("id"));
 
   vtz.def_static(
       "create_vtime_zone_from_basic_time_zone",

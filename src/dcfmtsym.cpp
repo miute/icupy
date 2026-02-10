@@ -161,7 +161,7 @@ void init_dcfmtsym(py::module &m) {
             }
             return result;
           },
-          py::arg("type_"));
+          py::arg("type"));
 
   dfs.def(
       "get_pattern_for_currency_spacing",
@@ -175,7 +175,7 @@ void init_dcfmtsym(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"), py::arg("before_currency"));
+      py::arg("type"), py::arg("before_currency"));
 
   dfs.def("get_symbol", &DecimalFormatSymbols::getSymbol, py::arg("symbol"));
 
@@ -187,7 +187,7 @@ void init_dcfmtsym(py::module &m) {
         self.setPatternForCurrencySpacing(type, before_currency,
                                           icupy::to_unistr(pattern));
       },
-      py::arg("type_"), py::arg("before_currency"), py::arg("pattern"));
+      py::arg("type"), py::arg("before_currency"), py::arg("pattern"));
 
   dfs.def(
       "set_symbol",

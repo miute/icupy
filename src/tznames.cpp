@@ -124,7 +124,7 @@ void init_tznames(py::module &m) {
          UnicodeString &name) -> UnicodeString & {
         return self.getDisplayName(icupy::to_unistr(tz_id), type, date, name);
       },
-      py::arg("tz_id"), py::arg("type_"), py::arg("date"), py::arg("name"));
+      py::arg("tz_id"), py::arg("type"), py::arg("date"), py::arg("name"));
 
   tzn.def(
       "get_exemplar_location_name",
@@ -140,7 +140,7 @@ void init_tznames(py::module &m) {
          UTimeZoneNameType type, UnicodeString &name) -> UnicodeString & {
         return self.getMetaZoneDisplayName(icupy::to_unistr(mz_id), type, name);
       },
-      py::arg("mz_id"), py::arg("type_"), py::arg("name"));
+      py::arg("mz_id"), py::arg("type"), py::arg("name"));
 
   tzn.def(
       "get_meta_zone_id",
@@ -165,6 +165,6 @@ void init_tznames(py::module &m) {
          UTimeZoneNameType type, UnicodeString &name) -> UnicodeString & {
         return self.getTimeZoneDisplayName(icupy::to_unistr(tz_id), type, name);
       },
-      py::arg("tz_id"), py::arg("type_"), py::arg("name"));
+      py::arg("tz_id"), py::arg("type"), py::arg("name"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

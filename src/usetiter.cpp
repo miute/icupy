@@ -10,7 +10,7 @@ void init_usetiter(py::module &m) {
   //
   py::class_<UnicodeSetIterator, UObject> usi(m, "UnicodeSetIterator");
 
-  usi.def(py::init<const UnicodeSet &>(), py::arg("set_")).def(py::init<>());
+  usi.def(py::init<const UnicodeSet &>(), py::arg("set")).def(py::init<>());
 
   usi.def("get_codepoint", &UnicodeSetIterator::getCodepoint);
 
@@ -32,7 +32,7 @@ void init_usetiter(py::module &m) {
   usi.def("reset", py::overload_cast<>(&UnicodeSetIterator::reset))
       .def("reset",
            py::overload_cast<const UnicodeSet &>(&UnicodeSetIterator::reset),
-           py::arg("set_"));
+           py::arg("set"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   usi.def("skip_to_strings", &UnicodeSetIterator::skipToStrings);

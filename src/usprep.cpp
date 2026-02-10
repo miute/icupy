@@ -85,7 +85,7 @@ void init_usprep(py::module &m) {
         }
         return std::make_unique<_UStringPrepProfilePtr>(profile);
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   m.def(
       "usprep_prepare",

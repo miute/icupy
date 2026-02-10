@@ -1794,7 +1794,7 @@ void init_uchar(py::module &m) {
         }
         return std::make_unique<_ConstUSetPtr>(p);
       },
-      py::arg("property_"));
+      py::arg("property"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   m.def("u_get_combining_class", &u_getCombiningClass, py::arg("c"));
@@ -1851,7 +1851,7 @@ void init_uchar(py::module &m) {
         }
         return std::make_unique<icupy::UCPMapPtr>(p);
       },
-      py::arg("property_"), R"doc(
+      py::arg("property"), R"doc(
       Get an integer property map for a given `property`.
 
       `property` must be between :attr:`UProperty.UCHAR_INT_START` and
@@ -1876,14 +1876,14 @@ void init_uchar(py::module &m) {
 
   m.def("u_get_property_enum", &u_getPropertyEnum, py::arg("alias"));
 
-  m.def("u_get_property_name", &u_getPropertyName, py::arg("property_"),
+  m.def("u_get_property_name", &u_getPropertyName, py::arg("property"),
         py::arg("name_choice"), py::return_value_policy::reference);
 
   m.def("u_get_property_value_enum", &u_getPropertyValueEnum,
-        py::arg("property_"), py::arg("alias"));
+        py::arg("property"), py::arg("alias"));
 
   m.def("u_get_property_value_name", &u_getPropertyValueName,
-        py::arg("property_"), py::arg("value"), py::arg("name_choice"));
+        py::arg("property"), py::arg("value"), py::arg("name_choice"));
 
   m.def("u_get_unicode_version", []() {
     UVersionInfo info;
@@ -1903,7 +1903,7 @@ void init_uchar(py::module &m) {
       py::arg("c"), py::arg("which"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
-  m.def("u_has_id_type", &u_hasIDType, py::arg("c"), py::arg("type_"));
+  m.def("u_has_id_type", &u_hasIDType, py::arg("c"), py::arg("type"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
   m.def(

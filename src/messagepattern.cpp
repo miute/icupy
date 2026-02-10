@@ -200,7 +200,7 @@ void init_messagepattern(py::module &m) {
       [](UMessagePatternPartType type) -> py::bool_ {
         return MessagePattern::Part::hasNumericValue(type);
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   //
   // class icu::MessagePattern

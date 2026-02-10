@@ -147,7 +147,7 @@ void init_dtfmtsym(py::module &m) {
         }
         return result;
       },
-      py::arg("type_"));
+      py::arg("type"));
 
   dfs.def("get_local_pattern_chars", &DateFormatSymbols::getLocalPatternChars,
           py::arg("result"));

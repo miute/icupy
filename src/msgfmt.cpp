@@ -307,7 +307,7 @@ void init_msgfmt(py::module &m) {
             }
             return result;
           },
-          py::arg("type_"));
+          py::arg("type"));
 
   mf.def(
         // [1] MessageFormat::parse
@@ -354,12 +354,12 @@ void init_msgfmt(py::module &m) {
             throw icupy::ICUError(error_code);
           }
         },
-        py::arg("format_name"), py::arg("format_"))
+        py::arg("format_name"), py::arg("format"))
       .def(
           // [2] MessageFormat::setFormat
           "set_format",
           py::overload_cast<int32_t, const Format &>(&MessageFormat::setFormat),
-          py::arg("format_number"), py::arg("format_"));
+          py::arg("format_number"), py::arg("format"));
 
   mf.def(
       "set_formats",
