@@ -7,7 +7,6 @@
 #define strdup _strdup
 #endif // _MSC_VER
 
-#include <list>
 #include <pybind11/pybind11.h>
 #include <unicode/errorcode.h>
 #include <unicode/locid.h>

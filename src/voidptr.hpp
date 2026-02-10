@@ -3,8 +3,6 @@
 
 #include "main.hpp"
 #include <any>
-#include <optional>
-#include <pybind11/functional.h>
 
 namespace icupy {
 

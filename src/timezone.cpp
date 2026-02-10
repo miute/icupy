@@ -2,7 +2,6 @@
 #include <optional>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <unicode/locid.h>
 #include <unicode/rbtz.h>
 #include <unicode/simpletz.h>
 #include <unicode/strenum.h>

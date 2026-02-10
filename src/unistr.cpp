@@ -8,8 +8,6 @@
 #include <pybind11/stl.h>
 #include <sstream>
 #include <unicode/brkiter.h>
-#include <unicode/locid.h>
-#include <unicode/uchar.h>
 #include <unicode/uchriter.h>
 
 using namespace icu;

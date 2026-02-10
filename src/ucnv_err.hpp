@@ -5,7 +5,6 @@
 #include "voidptr.hpp"
 #include <functional>
 #include <unicode/ucnv.h>
-#include <variant>
 
 // From icu/source/common/ucnv_bld.h
 #ifndef UCNV_ERROR_BUFFER_LENGTH
@@ -13,9 +12,6 @@
 #endif // UCNV_ERROR_BUFFER_LENGTH
 
 namespace icupy {
-
-class UConverterFromUCallbackPtr;
-class UConverterToUCallbackPtr;
 
 // UConverterFromUCallback
 using FromUCallbackArgs = void(py::object &, UConverterFromUnicodeArgs *,

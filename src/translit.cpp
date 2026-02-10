@@ -1,7 +1,6 @@
 #include "main.hpp"
 #include <optional>
 #include <pybind11/stl.h>
-#include <unicode/locid.h>
 #include <unicode/translit.h>
 #include <unicode/uniset.h>
 

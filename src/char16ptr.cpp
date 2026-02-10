@@ -1,7 +1,5 @@
 #include "char16ptr.hpp"
 #include "main.hpp"
-#include <memory>
-#include <pybind11/stl.h>
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 59)
 #include <unicode/char16ptr.h>

@@ -1,6 +1,7 @@
 #include "uregex.hpp"
 #include "voidptr.hpp"
 #include <optional>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
 namespace icupy {

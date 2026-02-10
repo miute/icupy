@@ -1,4 +1,5 @@
 #include "ucnv_err.hpp"
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
 namespace icupy {

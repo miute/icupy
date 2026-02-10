@@ -1,7 +1,6 @@
 #include "main.hpp"
 #include <pybind11/stl.h>
 #include <unicode/ucnv_cb.h>
-#include <variant>
 
 using namespace icu;
 
