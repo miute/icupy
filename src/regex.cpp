@@ -37,7 +37,7 @@ void init_regex(py::module &m) {
         py::arg("regexp"), py::arg("flags"))
       .def(
           // [2] RegexMatcher::RegexMatcher
-          py::init([](_UTextPtr &regexp, uint32_t flags) {
+          py::init([](icupy::UTextPtr &regexp, uint32_t flags) {
             ErrorCode error_code;
             auto result =
                 std::make_unique<RegexMatcher>(regexp, flags, error_code);
@@ -62,7 +62,8 @@ void init_regex(py::module &m) {
           py::arg("regexp"), py::arg("input"), py::arg("flags"))
       .def(
           // [4] RegexMatcher::RegexMatcher
-          py::init([](_UTextPtr &regexp, _UTextPtr &input, uint32_t flags) {
+          py::init([](icupy::UTextPtr &regexp, icupy::UTextPtr &input,
+                      uint32_t flags) {
             ErrorCode error_code;
             auto result = std::make_unique<RegexMatcher>(regexp, input, flags,
                                                          error_code);
@@ -88,8 +89,8 @@ void init_regex(py::module &m) {
         py::arg("dest"), py::arg("replacement"))
       .def(
           "append_replacement",
-          [](RegexMatcher &self, _UTextPtr &dest,
-             _UTextPtr &replacement) -> RegexMatcher & {
+          [](RegexMatcher &self, icupy::UTextPtr &dest,
+             icupy::UTextPtr &replacement) -> RegexMatcher & {
             ErrorCode error_code;
             auto &result =
                 self.appendReplacement(dest, replacement, error_code);
@@ -105,13 +106,13 @@ void init_regex(py::module &m) {
          py::arg("dest"))
       .def(
           "append_tail",
-          [](RegexMatcher &self, _UTextPtr &dest) {
+          [](RegexMatcher &self, icupy::UTextPtr &dest) {
             ErrorCode error_code;
             auto p = self.appendTail(dest, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return std::make_unique<_UTextPtr>(p);
+            return std::make_unique<icupy::UTextPtr>(p);
           },
           py::arg("dest"));
 
@@ -208,13 +209,13 @@ void init_regex(py::module &m) {
 
   rm.def(
       "get_input",
-      [](const RegexMatcher &self, std::optional<_UTextPtr> &dest) {
+      [](const RegexMatcher &self, std::optional<icupy::UTextPtr> &dest) {
         ErrorCode error_code;
         auto p = self.getInput(dest.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UTextPtr>(p);
+        return std::make_unique<icupy::UTextPtr>(p);
       },
       py::arg("dest") = std::nullopt);
 
@@ -257,7 +258,7 @@ void init_regex(py::module &m) {
       .def(
           "group",
           [](const RegexMatcher &self, int32_t group_num,
-             std::optional<_UTextPtr> &dest) {
+             std::optional<icupy::UTextPtr> &dest) {
             int64_t group_len;
             ErrorCode error_code;
             auto p = self.group(group_num, dest.value_or(nullptr), group_len,
@@ -265,7 +266,8 @@ void init_regex(py::module &m) {
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return py::make_tuple(std::make_unique<_UTextPtr>(p), group_len);
+            return py::make_tuple(std::make_unique<icupy::UTextPtr>(p),
+                                  group_len);
           },
           py::arg("group_num"), py::arg("dest"))
       .def("group",
@@ -279,14 +281,15 @@ void init_regex(py::module &m) {
            })
       .def(
           "group",
-          [](const RegexMatcher &self, std::optional<_UTextPtr> &dest) {
+          [](const RegexMatcher &self, std::optional<icupy::UTextPtr> &dest) {
             int64_t group_len;
             ErrorCode error_code;
             auto p = self.group(dest.value_or(nullptr), group_len, error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return py::make_tuple(std::make_unique<_UTextPtr>(p), group_len);
+            return py::make_tuple(std::make_unique<icupy::UTextPtr>(p),
+                                  group_len);
           },
           py::arg("dest"));
 
@@ -307,7 +310,7 @@ void init_regex(py::module &m) {
 
   rm.def("input_text", [](const RegexMatcher &self) {
     auto p = self.inputText();
-    return std::make_unique<_UTextPtr>(p);
+    return std::make_unique<icupy::UTextPtr>(p);
   });
 
   rm.def(
@@ -404,15 +407,15 @@ void init_regex(py::module &m) {
         py::arg("replacement"))
       .def(
           "replace_all",
-          [](RegexMatcher &self, _UTextPtr &replacement,
-             std::optional<_UTextPtr> &dest) {
+          [](RegexMatcher &self, icupy::UTextPtr &replacement,
+             std::optional<icupy::UTextPtr> &dest) {
             ErrorCode error_code;
             auto p = self.replaceAll(replacement, dest.value_or(nullptr),
                                      error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return std::make_unique<_UTextPtr>(p);
+            return std::make_unique<icupy::UTextPtr>(p);
           },
           py::arg("replacement"), py::arg("dest"));
 
@@ -430,15 +433,15 @@ void init_regex(py::module &m) {
         py::arg("replacement"))
       .def(
           "replace_first",
-          [](RegexMatcher &self, _UTextPtr &replacement,
-             std::optional<_UTextPtr> &dest) {
+          [](RegexMatcher &self, icupy::UTextPtr &replacement,
+             std::optional<icupy::UTextPtr> &dest) {
             ErrorCode error_code;
             auto p = self.replaceFirst(replacement, dest.value_or(nullptr),
                                        error_code);
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return std::make_unique<_UTextPtr>(p);
+            return std::make_unique<icupy::UTextPtr>(p);
           },
           py::arg("replacement"), py::arg("dest"));
 
@@ -463,7 +466,7 @@ void init_regex(py::module &m) {
           py::arg("index"))
       .def(
           "reset",
-          [](RegexMatcher &self, _UTextPtr &input) -> RegexMatcher & {
+          [](RegexMatcher &self, icupy::UTextPtr &input) -> RegexMatcher & {
             return self.reset(input);
           },
           py::arg("input"));
@@ -586,8 +589,8 @@ void init_regex(py::module &m) {
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](RegexMatcher &self, _UTextPtr &input, _UTextVector &dest,
-             int32_t dest_capacity) {
+          [](RegexMatcher &self, icupy::UTextPtr &input,
+             icupy::UTextVector &dest, int32_t dest_capacity) {
             if (dest_capacity == -1) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }
@@ -727,7 +730,7 @@ void init_regex(py::module &m) {
           py::arg("regex"), py::arg("pe"))
       .def_static(
           "compile",
-          [](_UTextPtr &regex, uint32_t flags) {
+          [](icupy::UTextPtr &regex, uint32_t flags) {
             ErrorCode error_code;
             auto result = RegexPattern::compile(regex, flags, error_code);
             if (error_code.isFailure()) {
@@ -738,7 +741,7 @@ void init_regex(py::module &m) {
           py::arg("regex"), py::arg("flags"))
       .def_static(
           "compile",
-          [](_UTextPtr &regex, uint32_t flags, UParseError &pe) {
+          [](icupy::UTextPtr &regex, uint32_t flags, UParseError &pe) {
             ErrorCode error_code;
             auto result = RegexPattern::compile(regex, flags, pe, error_code);
             if (error_code.isFailure()) {
@@ -749,7 +752,7 @@ void init_regex(py::module &m) {
           py::arg("regex"), py::arg("flags"), py::arg("pe"))
       .def_static(
           "compile",
-          [](_UTextPtr &regex, UParseError &pe) {
+          [](icupy::UTextPtr &regex, UParseError &pe) {
             ErrorCode error_code;
             auto result = RegexPattern::compile(regex, pe, error_code);
             if (error_code.isFailure()) {
@@ -825,7 +828,8 @@ void init_regex(py::module &m) {
         py::arg("regex"), py::arg("input"), py::arg("pe"))
       .def_static(
           "matches",
-          [](_UTextPtr &regex, _UTextPtr &input, UParseError &pe) -> py::bool_ {
+          [](icupy::UTextPtr &regex, icupy::UTextPtr &input,
+             UParseError &pe) -> py::bool_ {
             ErrorCode error_code;
             auto result = RegexPattern::matches(regex, input, pe, error_code);
             if (error_code.isFailure()) {
@@ -843,7 +847,7 @@ void init_regex(py::module &m) {
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
-    return std::make_unique<_UTextPtr>(p);
+    return std::make_unique<icupy::UTextPtr>(p);
   });
 
   rp.def(
@@ -864,8 +868,8 @@ void init_regex(py::module &m) {
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
-          [](const RegexPattern &self, _UTextPtr &input, _UTextVector &dest,
-             int32_t dest_capacity) {
+          [](const RegexPattern &self, icupy::UTextPtr &input,
+             icupy::UTextVector &dest, int32_t dest_capacity) {
             if (dest_capacity == -1) {
               dest_capacity = static_cast<int32_t>(dest.size());
             }

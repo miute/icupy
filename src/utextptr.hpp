@@ -4,33 +4,40 @@
 #include <memory>
 #include <unicode/utext.h>
 
-class _UTextPtr {
+namespace icupy {
+
+using SharedVoidPtr = std::shared_ptr<void>;
+
+//
+// struct UText
+//
+class UTextPtr {
 public:
-  _UTextPtr();
+  UTextPtr();
 
-  _UTextPtr(UText *p);
+  UTextPtr(UText *p);
 
-  _UTextPtr(UText *p, const std::shared_ptr<void> &source);
+  UTextPtr(UText *p, const SharedVoidPtr &source);
 
-  ~_UTextPtr();
+  ~UTextPtr();
 
   UText *get() const;
 
   operator UText *() const { return get(); }
 
-  bool operator!=(const _UTextPtr &other) {
-    return !utext_equals(get(), other);
-  }
+  bool operator!=(const UTextPtr &other) { return !utext_equals(get(), other); }
 
-  bool operator==(const _UTextPtr &other) { return utext_equals(get(), other); }
+  bool operator==(const UTextPtr &other) { return utext_equals(get(), other); }
 
   const UText *operator->() const { return get(); }
 
-  const std::shared_ptr<void> &get_source() const;
+  const SharedVoidPtr &get_source() const;
 
 private:
   UText *p_;
-  std::shared_ptr<void> source_;
+  SharedVoidPtr source_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UTEXTPTR_HPP

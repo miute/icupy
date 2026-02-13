@@ -6,11 +6,18 @@
 
 using namespace icu;
 
-_ULocaleDataPtr::_ULocaleDataPtr(ULocaleData *p) : p_(p) {}
+namespace icupy {
 
-_ULocaleDataPtr::~_ULocaleDataPtr() {}
+//
+// struct ULocaleData
+//
+ULocaleDataPtr::ULocaleDataPtr(ULocaleData *p) : p_(p) {}
 
-ULocaleData *_ULocaleDataPtr::get() const { return p_; }
+ULocaleDataPtr::~ULocaleDataPtr() {}
+
+ULocaleData *ULocaleDataPtr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_ulocdata(py::module &m) {
   //
@@ -68,13 +75,19 @@ void init_ulocdata(py::module &m) {
   //
   // struct ULocaleData
   //
-  py::class_<_ULocaleDataPtr>(m, "_ULocaleDataPtr");
+  py::class_<icupy::ULocaleDataPtr>(m, "ULocaleData", R"doc(
+    ULocaleData structure.
+
+    See Also:
+        :func:`ulocdata_close`
+        :func:`ulocdata_open`
+    )doc");
 
   //
   // Functions
   //
   m.def(
-      "ulocdata_close", [](_ULocaleDataPtr &uld) { ulocdata_close(uld); },
+      "ulocdata_close", [](icupy::ULocaleDataPtr &uld) { ulocdata_close(uld); },
       py::arg("uld"));
 
   m.def("ulocdata_get_cldr_version", []() {
@@ -93,7 +106,7 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_delimiter",
-      [](_ULocaleDataPtr &uld, ULocaleDataDelimiterType type) {
+      [](icupy::ULocaleDataPtr &uld, ULocaleDataDelimiterType type) {
         ErrorCode error_code;
         auto dest_size =
             ulocdata_getDelimiter(uld, type, nullptr, 0, error_code);
@@ -109,7 +122,7 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_exemplar_set",
-      [](_ULocaleDataPtr &uld, std::optional<_USetPtr> &fill_in,
+      [](icupy::ULocaleDataPtr &uld, std::optional<icupy::USetPtr> &fill_in,
          uint32_t options, ULocaleDataExemplarSetType extype) {
         ErrorCode error_code;
         auto p = ulocdata_getExemplarSet(uld, fill_in.value_or(nullptr),
@@ -117,14 +130,14 @@ void init_ulocdata(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_USetPtr>(p);
+        return std::make_unique<icupy::USetPtr>(p);
       },
       py::arg("uld"), py::arg("fill_in"), py::arg("options"),
       py::arg("extype"));
 
   m.def(
       "ulocdata_get_locale_display_pattern",
-      [](_ULocaleDataPtr &uld) {
+      [](icupy::ULocaleDataPtr &uld) {
         ErrorCode error_code;
         auto dest_size =
             ulocdata_getLocaleDisplayPattern(uld, nullptr, 0, error_code);
@@ -141,7 +154,7 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_locale_separator",
-      [](_ULocaleDataPtr &uld) {
+      [](icupy::ULocaleDataPtr &uld) {
         ErrorCode error_code;
         auto dest_size =
             ulocdata_getLocaleSeparator(uld, nullptr, 0, error_code);
@@ -170,7 +183,7 @@ void init_ulocdata(py::module &m) {
 
   m.def(
       "ulocdata_get_no_substitute",
-      [](_ULocaleDataPtr &uld) -> py::bool_ {
+      [](icupy::ULocaleDataPtr &uld) -> py::bool_ {
         return ulocdata_getNoSubstitute(uld);
       },
       py::arg("uld"));
@@ -196,13 +209,13 @@ void init_ulocdata(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_ULocaleDataPtr>(p);
+        return std::make_unique<icupy::ULocaleDataPtr>(p);
       },
       py::arg("locale_id"));
 
   m.def(
       "ulocdata_set_no_substitute",
-      [](_ULocaleDataPtr &uld, py::bool_ setting) {
+      [](icupy::ULocaleDataPtr &uld, py::bool_ setting) {
         ulocdata_setNoSubstitute(uld, setting);
       },
       py::arg("uld"), py::arg("setting"));

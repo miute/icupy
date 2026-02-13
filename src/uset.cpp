@@ -1,17 +1,27 @@
 #include "main.hpp"
 #include "usetptr.hpp"
 
-_ConstUSetPtr::_ConstUSetPtr(const USet *p) : p_(p) {}
+namespace icupy {
 
-_ConstUSetPtr::~_ConstUSetPtr() {}
+//
+// const USet structure
+//
+ConstUSetPtr::ConstUSetPtr(const USet *p) : p_(p) {}
 
-const USet *_ConstUSetPtr::get() const { return p_; }
+ConstUSetPtr::~ConstUSetPtr() {}
 
-_USetPtr::_USetPtr(USet *p) : p_(p) {}
+const USet *ConstUSetPtr::get() const { return p_; }
 
-_USetPtr::~_USetPtr() {}
+//
+// USet structure
+//
+USetPtr::USetPtr(USet *p) : p_(p) {}
 
-USet *_USetPtr::get() const { return p_; }
+USetPtr::~USetPtr() {}
+
+USet *USetPtr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_uset(py::module &m) {
   //
@@ -125,14 +135,34 @@ void init_uset(py::module &m) {
       .export_values();
 
   //
-  // struct const USet
+  // const struct USet
   //
-  py::class_<_ConstUSetPtr>(m, "_ConstUSetPtr");
+  py::class_<icupy::ConstUSetPtr>(m, "ImmutableUSet", R"doc(
+    Immutable USet structure.
+
+    See Also:
+        :class:`USet`
+        :func:`u_get_binary_property_set`
+        :func:`uspoof_get_allowed_chars`
+        :func:`uspoof_get_check_result_numerics`
+        :func:`uspoof_get_inclusion_set`
+        :func:`uspoof_get_recommended_set`
+        :meth:`UnicodeSet.from_uset`
+    )doc");
 
   //
   // struct USet
   //
-  py::class_<_USetPtr>(m, "_USetPtr");
+  py::class_<icupy::USetPtr>(m, "USet", R"doc(
+    USet structure.
+
+    See Also:
+        :class:`ImmutableUSet`
+        :func:`ucnv_get_unicode_set`
+        :func:`ulocdata_get_exemplar_set`
+        :meth:`UnicodeSet.from_uset`
+        :meth:`UnicodeSet.to_uset`
+    )doc");
 
   //
   // struct USerializedSet

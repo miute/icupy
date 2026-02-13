@@ -3,34 +3,44 @@
 
 #include <unicode/uset.h>
 
-class _ConstUSetPtr {
-public:
-  _ConstUSetPtr(const USet *p);
+namespace icupy {
 
-  ~_ConstUSetPtr();
+//
+// const USet structure
+//
+class ConstUSetPtr {
+public:
+  ConstUSetPtr(const USet *p);
+
+  ~ConstUSetPtr();
 
   const USet *get() const;
 
   operator const USet *() const { return get(); }
 
 private:
-  _ConstUSetPtr() = delete;
+  ConstUSetPtr() = delete;
   const USet *p_;
 };
 
-class _USetPtr {
+//
+// USet structure
+//
+class USetPtr {
 public:
-  _USetPtr(USet *p);
+  USetPtr(USet *p);
 
-  ~_USetPtr();
+  ~USetPtr();
 
   USet *get() const;
 
   operator USet *() const { return get(); }
 
 private:
-  _USetPtr() = delete;
+  USetPtr() = delete;
   USet *p_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_USETPTR_HPP

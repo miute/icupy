@@ -1,29 +1,27 @@
 #include "char16ptr.hpp"
 #include "main.hpp"
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 59)
-#include <unicode/char16ptr.h>
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 59)
+namespace icupy {
 
-using namespace icu;
-
-_ConstChar16Ptr::_ConstChar16Ptr(const char16_t *p, int32_t length,
-                                 int32_t capacity)
+ConstChar16Ptr::ConstChar16Ptr(const char16_t *p, int32_t length,
+                               int32_t capacity)
     : p_(p), length_(length), capacity_(capacity) {}
 
-_ConstChar16Ptr::~_ConstChar16Ptr() {}
+ConstChar16Ptr::~ConstChar16Ptr() {}
 
-const char16_t *_ConstChar16Ptr::get() const { return p_; }
+const char16_t *ConstChar16Ptr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_char16ptr(py::module &m) {
   //
-  // class _ConstChar16Ptr
+  // class ConstChar16Ptr
   //
-  py::class_<_ConstChar16Ptr> pccp(m, "_ConstChar16Ptr");
+  py::class_<icupy::ConstChar16Ptr> pccp(m, "ConstChar16Ptr");
 
   pccp.def(
       "__getitem__",
-      [](const _ConstChar16Ptr &self, int32_t index) -> uint16_t {
+      [](const icupy::ConstChar16Ptr &self, int32_t index) -> uint16_t {
         auto n = index;
         const auto capacity = self.capacity();
         if (n < 0) {
@@ -37,5 +35,5 @@ void init_char16ptr(py::module &m) {
       },
       py::arg("index"));
 
-  pccp.def("__len__", &_ConstChar16Ptr::capacity);
+  pccp.def("__len__", &icupy::ConstChar16Ptr::capacity);
 }

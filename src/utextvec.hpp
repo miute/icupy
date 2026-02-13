@@ -5,38 +5,43 @@
 #include <list>
 #include <vector>
 
-class _UTextVector {
-public:
-  _UTextVector();
+namespace icupy {
 
-  _UTextVector(
+//
+// class UTextVector
+//
+class UTextVector {
+public:
+  UTextVector();
+
+  UTextVector(
       const std::list<std::reference_wrapper<icu::UnicodeString>> &iterable);
 
-  ~_UTextVector();
+  ~UTextVector();
 
-  _UTextPtr operator[](size_t index) const { return values_[index]; }
+  UTextPtr operator[](size_t index) const { return values_[index]; }
 
-  _UTextPtr &operator[](size_t index) { return values_[index]; }
+  UTextPtr &operator[](size_t index) { return values_[index]; }
 
   void append(icu::UnicodeString &src);
 
   void append(UText *ut, icu::UnicodeString &src);
 
-  std::vector<_UTextPtr>::iterator begin() noexcept { return values_.begin(); }
+  std::vector<UTextPtr>::iterator begin() noexcept { return values_.begin(); }
 
-  std::vector<_UTextPtr>::const_iterator begin() const noexcept {
+  std::vector<UTextPtr>::const_iterator begin() const noexcept {
     return values_.begin();
   }
 
   void clear();
 
-  _UTextPtr *data() noexcept { return values_.data(); };
+  UTextPtr *data() noexcept { return values_.data(); };
 
-  const _UTextPtr *data() const noexcept { return values_.data(); };
+  const UTextPtr *data() const noexcept { return values_.data(); };
 
-  std::vector<_UTextPtr>::iterator end() noexcept { return values_.end(); }
+  std::vector<UTextPtr>::iterator end() noexcept { return values_.end(); }
 
-  std::vector<_UTextPtr>::const_iterator end() const noexcept {
+  std::vector<UTextPtr>::const_iterator end() const noexcept {
     return values_.end();
   }
 
@@ -55,8 +60,10 @@ public:
   // UText *value(size_t index) const { return values_[index]; }
 
 private:
-  std::vector<_UTextPtr> values_;
+  std::vector<UTextPtr> values_;
   std::vector<std::reference_wrapper<icu::UnicodeString>> sources_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UTEXTVEC_HPP

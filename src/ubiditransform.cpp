@@ -6,11 +6,19 @@
 
 using namespace icu;
 
-_UBiDiTransformPtr::_UBiDiTransformPtr(UBiDiTransform *p) : p_(p) {}
+namespace icupy {
 
-_UBiDiTransformPtr::~_UBiDiTransformPtr() {}
+//
+// struct UBiDiTransform
+//
+UBiDiTransformPtr::UBiDiTransformPtr(UBiDiTransform *p) : p_(p) {}
 
-UBiDiTransform *_UBiDiTransformPtr::get() const { return p_; }
+UBiDiTransformPtr::~UBiDiTransformPtr() {}
+
+UBiDiTransform *UBiDiTransformPtr::get() const { return p_; }
+
+} // namespace icupy
+
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 
 void init_ubiditransform(py::module &m) {
@@ -80,14 +88,21 @@ void init_ubiditransform(py::module &m) {
   //
   // struct UBiDiTransform
   //
-  py::class_<_UBiDiTransformPtr>(m, "_UBiDiTransformPtr");
+  py::class_<icupy::UBiDiTransformPtr>(m, "UBiDiTransform", R"doc(
+    UBiDiTransform structure that stores information used by the layout
+    transformation engine.
+
+    See Also:
+        :func:`ubiditransform_close`
+        :func:`ubiditransform_open`
+    )doc");
 
   //
   // Functions
   //
   m.def(
       "ubiditransform_close",
-      [](_UBiDiTransformPtr &bidi_transform) {
+      [](icupy::UBiDiTransformPtr &bidi_transform) {
         ubiditransform_close(bidi_transform);
       },
       py::arg("bidi_transform"));
@@ -98,12 +113,12 @@ void init_ubiditransform(py::module &m) {
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
-    return std::make_unique<_UBiDiTransformPtr>(bidi_transform);
+    return std::make_unique<icupy::UBiDiTransformPtr>(bidi_transform);
   });
 
   m.def(
       "ubiditransform_transform",
-      [](_UBiDiTransformPtr &bidi_transform, const std::u16string &src,
+      [](icupy::UBiDiTransformPtr &bidi_transform, const std::u16string &src,
          int32_t src_length, UBiDiLevel in_para_level, UBiDiOrder in_order,
          UBiDiLevel out_para_level, UBiDiOrder out_order,
          UBiDiMirroring do_mirroring, uint32_t shaping_options) {

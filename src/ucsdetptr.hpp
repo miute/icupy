@@ -4,26 +4,34 @@
 #include <memory>
 #include <unicode/ucsdet.h>
 
-class _ConstUCharsetMatchPtr {
-public:
-  _ConstUCharsetMatchPtr(const UCharsetMatch *p);
+namespace icupy {
 
-  ~_ConstUCharsetMatchPtr();
+//
+// struct UCharsetMatch
+//
+class UCharsetMatchPtr {
+public:
+  UCharsetMatchPtr(const UCharsetMatch *p);
+
+  ~UCharsetMatchPtr();
 
   const UCharsetMatch *get() const;
 
   operator const UCharsetMatch *() const { return get(); }
 
 private:
-  _ConstUCharsetMatchPtr() = delete;
+  UCharsetMatchPtr() = delete;
   const UCharsetMatch *p_;
 };
 
-class _UCharsetDetectorPtr {
+//
+// struct UCharsetDetector
+//
+class UCharsetDetectorPtr {
 public:
-  _UCharsetDetectorPtr(UCharsetDetector *p);
+  UCharsetDetectorPtr(UCharsetDetector *p);
 
-  ~_UCharsetDetectorPtr();
+  ~UCharsetDetectorPtr();
 
   UCharsetDetector *get() const;
 
@@ -32,9 +40,11 @@ public:
   void set_source(std::unique_ptr<std::string> &source);
 
 private:
-  _UCharsetDetectorPtr() = delete;
+  UCharsetDetectorPtr() = delete;
   UCharsetDetector *p_;
   std::unique_ptr<std::string> source_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UCSDETPTR_HPP

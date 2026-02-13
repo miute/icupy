@@ -211,13 +211,13 @@ void init_rbbi(py::module &m) {
 
   bi.def(
       "get_utext",
-      [](const BreakIterator &self, std::optional<_UTextPtr> &fill_in) {
+      [](const BreakIterator &self, std::optional<icupy::UTextPtr> &fill_in) {
         ErrorCode error_code;
         auto p = self.getUText(fill_in.value_or(nullptr), error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UTextPtr>(p);
+        return std::make_unique<icupy::UTextPtr>(p);
       },
       py::keep_alive<0, 1>(), py::arg("fill_in") = std::nullopt);
 
@@ -249,7 +249,7 @@ void init_rbbi(py::module &m) {
          py::arg("text"))
       .def(
           "set_text",
-          [](BreakIterator &self, _UTextPtr &text) {
+          [](BreakIterator &self, icupy::UTextPtr &text) {
             ErrorCode error_code;
             self.setText(text, error_code);
             if (error_code.isFailure()) {

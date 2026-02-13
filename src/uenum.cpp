@@ -6,32 +6,47 @@
 
 using namespace icu;
 
-_UEnumerationPtr::_UEnumerationPtr(UEnumeration *p) : p_(p) {}
+namespace icupy {
 
-_UEnumerationPtr::_UEnumerationPtr(UEnumeration *p,
-                                   const std::shared_ptr<void> &source)
+//
+// struct UEnumeration
+//
+UEnumerationPtr::UEnumerationPtr(UEnumeration *p) : p_(p) {}
+
+UEnumerationPtr::UEnumerationPtr(UEnumeration *p,
+                                 const std::shared_ptr<void> &source)
     : p_(p), source_(source) {}
 
-_UEnumerationPtr::~_UEnumerationPtr() {}
+UEnumerationPtr::~UEnumerationPtr() {}
 
-UEnumeration *_UEnumerationPtr::get() const { return p_; }
+UEnumeration *UEnumerationPtr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_uenum(py::module &m) {
   //
   // struct UEnumeration
   //
-  py::class_<_UEnumerationPtr>(m, "_UEnumerationPtr");
+  py::class_<icupy::UEnumerationPtr>(m, "UEnumeration", R"doc(
+    UEnumeration structure representing an enumeration.
+
+    See Also:
+        :func:`uenum_close`
+        :func:`uenum_open_char_strings_enumeration`
+        :func:`uenum_open_from_string_enumeration`
+        :func:`uenum_open_uchar_strings_enumeration`
+    )doc");
 
   //
   // Functions
   //
   m.def(
-      "uenum_close", [](_UEnumerationPtr &en) { uenum_close(en); },
+      "uenum_close", [](icupy::UEnumerationPtr &en) { uenum_close(en); },
       py::arg("en"));
 
   m.def(
       "uenum_count",
-      [](_UEnumerationPtr &en) {
+      [](icupy::UEnumerationPtr &en) {
         ErrorCode error_code;
         auto result = uenum_count(en, error_code);
         if (error_code.isFailure()) {
@@ -43,7 +58,7 @@ void init_uenum(py::module &m) {
 
   m.def(
       "uenum_next",
-      [](_UEnumerationPtr &en) {
+      [](icupy::UEnumerationPtr &en) {
         ErrorCode error_code;
         auto result = uenum_next(en, nullptr, error_code);
         if (error_code.isFailure()) {
@@ -75,7 +90,7 @@ void init_uenum(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p, strings_ptr);
+        return std::make_unique<icupy::UEnumerationPtr>(p, strings_ptr);
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
@@ -88,7 +103,7 @@ void init_uenum(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p);
+        return std::make_unique<icupy::UEnumerationPtr>(p);
       },
       py::arg("adopted").none(false));
 
@@ -115,14 +130,14 @@ void init_uenum(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p, strings_ptr);
+        return std::make_unique<icupy::UEnumerationPtr>(p, strings_ptr);
       },
       py::arg("strings"), py::arg("count") = -1);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
   m.def(
       "uenum_reset",
-      [](_UEnumerationPtr &en) {
+      [](icupy::UEnumerationPtr &en) {
         ErrorCode error_code;
         uenum_reset(en, error_code);
         if (error_code.isFailure()) {
@@ -133,7 +148,7 @@ void init_uenum(py::module &m) {
 
   m.def(
       "uenum_unext",
-      [](_UEnumerationPtr &en) {
+      [](icupy::UEnumerationPtr &en) {
         ErrorCode error_code;
         auto result = uenum_unext(en, nullptr, error_code);
         if (error_code.isFailure()) {

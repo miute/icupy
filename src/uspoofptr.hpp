@@ -3,36 +3,46 @@
 
 #include <unicode/uspoof.h>
 
-class _USpoofCheckerPtr {
-public:
-  _USpoofCheckerPtr(USpoofChecker *p);
+namespace icupy {
 
-  ~_USpoofCheckerPtr();
+//
+// struct USpoofChecker
+//
+class USpoofCheckerPtr {
+public:
+  USpoofCheckerPtr(USpoofChecker *p);
+
+  ~USpoofCheckerPtr();
 
   USpoofChecker *get() const;
 
   operator USpoofChecker *() const { return get(); }
 
 private:
-  _USpoofCheckerPtr() = delete;
+  USpoofCheckerPtr() = delete;
   USpoofChecker *p_;
 };
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
-class _USpoofCheckResultPtr {
+//
+// struct USpoofCheckResult
+//
+class USpoofCheckResultPtr {
 public:
-  _USpoofCheckResultPtr(USpoofCheckResult *p);
+  USpoofCheckResultPtr(USpoofCheckResult *p);
 
-  ~_USpoofCheckResultPtr();
+  ~USpoofCheckResultPtr();
 
   USpoofCheckResult *get() const;
 
   operator USpoofCheckResult *() const { return get(); }
 
 private:
-  _USpoofCheckResultPtr() = delete;
+  USpoofCheckResultPtr() = delete;
   USpoofCheckResult *p_;
 };
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
+
+} // namespace icupy
 
 #endif // ICUPY_USPOOFPTR_HPP

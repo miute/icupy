@@ -1792,7 +1792,7 @@ void init_uchar(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_ConstUSetPtr>(p);
+        return std::make_unique<icupy::ConstUSetPtr>(p);
       },
       py::arg("property"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)

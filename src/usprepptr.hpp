@@ -3,19 +3,26 @@
 
 #include <unicode/usprep.h>
 
-class _UStringPrepProfilePtr {
-public:
-  _UStringPrepProfilePtr(UStringPrepProfile *p);
+namespace icupy {
 
-  ~_UStringPrepProfilePtr();
+//
+// struct UStringPrepProfile
+//
+class UStringPrepProfilePtr {
+public:
+  UStringPrepProfilePtr(UStringPrepProfile *p);
+
+  ~UStringPrepProfilePtr();
 
   UStringPrepProfile *get() const;
 
   operator UStringPrepProfile *() const { return get(); }
 
 private:
-  _UStringPrepProfilePtr() = delete;
+  UStringPrepProfilePtr() = delete;
   UStringPrepProfile *p_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_USPREPPTR_HPP
