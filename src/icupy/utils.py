@@ -2,38 +2,37 @@ from __future__ import annotations
 
 from collections.abc import Callable, Generator
 from contextlib import contextmanager
-from typing import Any
+from typing import Any, TypeVar
 
 __all__ = ["gc"]
 
+T = TypeVar("T")
+
 
 @contextmanager
-def gc(obj: Any, closer: Callable[[Any], Any]) -> Generator[Any]:  # noqa: ANN401
-    """Context to automatically release something at the end of a block.
-
-    Args:
-        obj (Any): The object that needs to be released.
-        closer (Callable[[Any], Any]): A function to release `obj`.
-
-    Yields:
-        Any: The object that needs to be released.
+def gc(thing: T, closer: Callable[[T], Any]) -> Generator[T, None, None]:
+    """Return a context manager that calls `closer(thing)` when the block
+    completes.
 
     Example:
-        >>> with icupy.utils.gc(icupy.icu.ubidi_open(), icupy.icu.ubidi_close) as bidi:
+        >>> from icupy import icu
+        >>> from icupy.utils import gc
+        >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
         ...     pass
 
         is equivalent to this:
 
-        >>> bidi = icupy.icu.ubidi_open()
+        >>> from icupy import icu
+        >>> bidi = icu.ubidi_open()
         >>> try:
         ...     pass
         ... finally:
-        ...     icupy.icu.ubidi_close(bidi)
+        ...     icu.ubidi_close(bidi)
     """
     if not callable(closer):
         msg = f"{type(closer).__name__!r} object is not callable"
         raise TypeError(msg)
     try:
-        yield obj
+        yield thing
     finally:
-        closer(obj)
+        closer(thing)
