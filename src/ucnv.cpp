@@ -353,7 +353,7 @@ void init_ucnv(py::module &m) {
 
   m.def(
       "ucnv_get_unicode_set",
-      [](const icupy::UConverterPtr &cnv, _USetPtr &set_fill_in,
+      [](const icupy::UConverterPtr &cnv, icupy::USetPtr &set_fill_in,
          UConverterUnicodeSet which_set) {
         ErrorCode error_code;
         ucnv_getUnicodeSet(cnv, set_fill_in, which_set, error_code);
@@ -400,7 +400,7 @@ void init_ucnv(py::module &m) {
     if (error_code.isFailure()) {
       throw icupy::ICUError(error_code);
     }
-    return std::make_unique<_UEnumerationPtr>(p);
+    return std::make_unique<icupy::UEnumerationPtr>(p);
   });
 
   m.def(
@@ -437,7 +437,7 @@ void init_ucnv(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UEnumerationPtr>(p);
+        return std::make_unique<icupy::UEnumerationPtr>(p);
       },
       py::arg("conv_name"), py::arg("standard"));
 

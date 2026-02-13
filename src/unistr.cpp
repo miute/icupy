@@ -815,13 +815,13 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   us.def(
       "get_buffer",
       [](const UnicodeString &self)
-          -> std::optional<std::unique_ptr<_ConstChar16Ptr>> {
+          -> std::optional<std::unique_ptr<icupy::ConstChar16Ptr>> {
         auto p = self.getBuffer();
         if (p == nullptr) {
           return std::nullopt;
         }
-        return std::make_unique<_ConstChar16Ptr>(p, self.length(),
-                                                 self.getCapacity());
+        return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
+                                                       self.getCapacity());
       },
       py::keep_alive<0, 1>());
 
@@ -834,13 +834,13 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   us.def(
       "get_terminated_buffer",
       [](UnicodeString &self)
-          -> std::optional<std::unique_ptr<_ConstChar16Ptr>> {
+          -> std::optional<std::unique_ptr<icupy::ConstChar16Ptr>> {
         auto p = self.getTerminatedBuffer();
         if (p == nullptr) {
           return std::nullopt;
         }
-        return std::make_unique<_ConstChar16Ptr>(p, self.length(),
-                                                 self.getCapacity());
+        return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
+                                                       self.getCapacity());
       },
       py::keep_alive<0, 1>());
 

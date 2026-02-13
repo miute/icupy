@@ -67,7 +67,7 @@ void init_resbund(py::module &m) {
           py::init<const ResourceBundle &>(), py::arg("other"))
       .def(
           // [6] ResourceBundle::ResourceBundle
-          py::init([](_UResourceBundlePtr &res) {
+          py::init([](icupy::UResourceBundlePtr &res) {
             ErrorCode error_code;
             auto result = std::make_unique<ResourceBundle>(res, error_code);
             if (error_code.isFailure()) {

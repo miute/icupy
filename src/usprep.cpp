@@ -5,11 +5,18 @@
 
 using namespace icu;
 
-_UStringPrepProfilePtr::_UStringPrepProfilePtr(UStringPrepProfile *p) : p_(p) {}
+namespace icupy {
 
-_UStringPrepProfilePtr::~_UStringPrepProfilePtr() {}
+//
+// struct UStringPrepProfile
+//
+UStringPrepProfilePtr::UStringPrepProfilePtr(UStringPrepProfile *p) : p_(p) {}
 
-UStringPrepProfile *_UStringPrepProfilePtr::get() const { return p_; }
+UStringPrepProfilePtr::~UStringPrepProfilePtr() {}
+
+UStringPrepProfile *UStringPrepProfilePtr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_usprep(py::module &m) {
   //
@@ -52,14 +59,22 @@ void init_usprep(py::module &m) {
   //
   // struct UStringPrepProfile
   //
-  py::class_<_UStringPrepProfilePtr>(m, "_UStringPrepProfilePtr");
+  py::class_<icupy::UStringPrepProfilePtr>(m, "UStringPrepProfile", R"doc(
+       UStringPrepProfile structure for the StingPrep framework as defined
+       in RFC 3454.
+
+       See Also:
+           :func:`usprep_close`
+           :func:`usprep_open`
+           :func:`usprep_open_by_type`
+       )doc");
 
   //
   // Functions
   //
   m.def(
       "usprep_close",
-      [](_UStringPrepProfilePtr &profile) { usprep_close(profile); },
+      [](icupy::UStringPrepProfilePtr &profile) { usprep_close(profile); },
       py::arg("profile"));
 
   m.def(
@@ -71,7 +86,7 @@ void init_usprep(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UStringPrepProfilePtr>(profile);
+        return std::make_unique<icupy::UStringPrepProfilePtr>(profile);
       },
       py::arg("path"), py::arg("file_name"));
 
@@ -83,13 +98,13 @@ void init_usprep(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UStringPrepProfilePtr>(profile);
+        return std::make_unique<icupy::UStringPrepProfilePtr>(profile);
       },
       py::arg("type"));
 
   m.def(
       "usprep_prepare",
-      [](_UStringPrepProfilePtr &prep, const std::u16string &src,
+      [](icupy::UStringPrepProfilePtr &prep, const std::u16string &src,
          int32_t src_length, int32_t options,
          std::optional<UParseError *> &parse_error) {
         auto src_data = src.data();

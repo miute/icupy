@@ -6,11 +6,15 @@
 
 using namespace icu;
 
-_UResourceBundlePtr::_UResourceBundlePtr(UResourceBundle *p) : p_(p) {}
+namespace icupy {
 
-_UResourceBundlePtr::~_UResourceBundlePtr() {}
+UResourceBundlePtr::UResourceBundlePtr(UResourceBundle *p) : p_(p) {}
 
-UResourceBundle *_UResourceBundlePtr::get() const { return p_; }
+UResourceBundlePtr::~UResourceBundlePtr() {}
+
+UResourceBundle *UResourceBundlePtr::get() const { return p_; }
+
+} // namespace icupy
 
 void init_ures(py::module &m) {
   //
@@ -65,14 +69,24 @@ void init_ures(py::module &m) {
   //
   // struct UResourceBundle
   //
-  py::class_<_UResourceBundlePtr>(m, "_UResourceBundlePtr");
+  py::class_<icupy::UResourceBundlePtr>(m, "UResourceBundle", R"doc(
+       UResourceBundle structure.
+
+       See Also:
+           :func:`ures_close`
+           :func:`ures_open`
+           :func:`ures_open_direct`
+           :meth:`ResourceBundle.__init__`
+       )doc");
 
   //
   // Functions
   //
   m.def(
       "ures_close",
-      [](_UResourceBundlePtr &resource_bundle) { ures_close(resource_bundle); },
+      [](icupy::UResourceBundlePtr &resource_bundle) {
+        ures_close(resource_bundle);
+      },
       py::arg("resource_bundle"));
 
   m.def(
@@ -86,7 +100,7 @@ void init_ures(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UResourceBundlePtr>(resource_bundle);
+        return std::make_unique<icupy::UResourceBundlePtr>(resource_bundle);
       },
       py::arg("package_name") = std::nullopt, py::arg("locale") = std::nullopt);
 
@@ -101,7 +115,7 @@ void init_ures(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_unique<_UResourceBundlePtr>(resource_bundle);
+        return std::make_unique<icupy::UResourceBundlePtr>(resource_bundle);
       },
       py::arg("package_name") = std::nullopt, py::arg("locale") = std::nullopt);
 }

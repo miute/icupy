@@ -4,20 +4,27 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
 #include <unicode/ubiditransform.h>
 
-class _UBiDiTransformPtr {
-public:
-  _UBiDiTransformPtr(UBiDiTransform *p);
+namespace icupy {
 
-  ~_UBiDiTransformPtr();
+//
+// struct UBiDiTransform
+//
+class UBiDiTransformPtr {
+public:
+  UBiDiTransformPtr(UBiDiTransform *p);
+
+  ~UBiDiTransformPtr();
 
   UBiDiTransform *get() const;
 
   operator UBiDiTransform *() const { return get(); }
 
 private:
-  _UBiDiTransformPtr() = delete;
+  UBiDiTransformPtr() = delete;
   UBiDiTransform *p_;
 };
+
+} // namespace icupy
 
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 

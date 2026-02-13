@@ -3,19 +3,26 @@
 
 #include <unicode/ulocdata.h>
 
-class _ULocaleDataPtr {
-public:
-  _ULocaleDataPtr(ULocaleData *p);
+namespace icupy {
 
-  ~_ULocaleDataPtr();
+//
+// struct ULocaleData
+//
+class ULocaleDataPtr {
+public:
+  ULocaleDataPtr(ULocaleData *p);
+
+  ~ULocaleDataPtr();
 
   ULocaleData *get() const;
 
   operator ULocaleData *() const { return get(); }
 
 private:
-  _ULocaleDataPtr() = delete;
+  ULocaleDataPtr() = delete;
   ULocaleData *p_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_ULOCDATAPTR_HPP

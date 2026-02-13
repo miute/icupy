@@ -183,13 +183,13 @@ void init_uniset(py::module &m, py::module &h) {
         py::is_operator(), py::arg("other"))
       .def(
           "__eq__",
-          [](const UnicodeSet &self, _ConstUSetPtr &other) -> py::bool_ {
+          [](const UnicodeSet &self, icupy::ConstUSetPtr &other) -> py::bool_ {
             return uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"))
       .def(
           "__eq__",
-          [](const UnicodeSet &self, _USetPtr &other) -> py::bool_ {
+          [](const UnicodeSet &self, icupy::USetPtr &other) -> py::bool_ {
             return uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"));
@@ -257,13 +257,13 @@ void init_uniset(py::module &m, py::module &h) {
         py::is_operator(), py::arg("other"))
       .def(
           "__ne__",
-          [](const UnicodeSet &self, _ConstUSetPtr &other) {
+          [](const UnicodeSet &self, icupy::ConstUSetPtr &other) {
             return !uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"))
       .def(
           "__ne__",
-          [](const UnicodeSet &self, _USetPtr &other) {
+          [](const UnicodeSet &self, icupy::USetPtr &other) {
             return !uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"));
@@ -480,11 +480,11 @@ void init_uniset(py::module &m, py::module &h) {
 
   us.def_static(
         "from_uset",
-        [](_ConstUSetPtr &uset) { return UnicodeSet::fromUSet(uset); },
+        [](icupy::ConstUSetPtr &uset) { return UnicodeSet::fromUSet(uset); },
         py::return_value_policy::reference, py::arg("uset"))
       .def_static(
           "from_uset",
-          [](_USetPtr &uset) { return UnicodeSet::fromUSet(uset); },
+          [](icupy::USetPtr &uset) { return UnicodeSet::fromUSet(uset); },
           py::return_value_policy::reference, py::arg("uset"));
 
   us.def("get_range_count", &UnicodeSet::getRangeCount);
@@ -637,7 +637,7 @@ void init_uniset(py::module &m, py::module &h) {
 
   us.def("to_uset", [](UnicodeSet &self) {
     auto uset = self.toUSet();
-    return std::make_unique<_USetPtr>(uset);
+    return std::make_unique<icupy::USetPtr>(uset);
   });
 
   us.def_property_readonly_static(

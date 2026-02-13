@@ -3,11 +3,14 @@
 
 #include <cstdint>
 
-class _ConstChar16Ptr {
-public:
-  _ConstChar16Ptr(const char16_t *p, int32_t length, int32_t capacity);
+namespace icupy {
 
-  ~_ConstChar16Ptr();
+// TODO: Remove icupy::ConstChar16Ptr in a future release.
+class ConstChar16Ptr {
+public:
+  ConstChar16Ptr(const char16_t *p, int32_t length, int32_t capacity);
+
+  ~ConstChar16Ptr();
 
   const char16_t *get() const;
 
@@ -20,10 +23,12 @@ public:
   int32_t length() const { return length_; }
 
 private:
-  _ConstChar16Ptr() = delete;
+  ConstChar16Ptr() = delete;
   const char16_t *p_;
   int32_t length_;
   int32_t capacity_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_CHAR16PTR_HPP

@@ -4,22 +4,29 @@
 #include <memory>
 #include <unicode/uenum.h>
 
-class _UEnumerationPtr {
+namespace icupy {
+
+//
+// struct UEnumeration
+//
+class UEnumerationPtr {
 public:
-  _UEnumerationPtr(UEnumeration *p);
+  UEnumerationPtr(UEnumeration *p);
 
-  _UEnumerationPtr(UEnumeration *p, const std::shared_ptr<void> &source);
+  UEnumerationPtr(UEnumeration *p, const std::shared_ptr<void> &source);
 
-  ~_UEnumerationPtr();
+  ~UEnumerationPtr();
 
   UEnumeration *get() const;
 
   operator UEnumeration *() const { return get(); }
 
 private:
-  _UEnumerationPtr() = delete;
+  UEnumerationPtr() = delete;
   UEnumeration *p_;
   std::shared_ptr<void> source_;
 };
+
+} // namespace icupy
 
 #endif // ICUPY_UENUMPTR_HPP
