@@ -53,7 +53,7 @@ jobs:
         run: uv build --wheel
 
       - name: Store distribution archives
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dist-${{matrix.os}}-${{matrix.python-version}}
           path: |
@@ -71,7 +71,7 @@ jobs:
     needs: [parse-icu-versions, build]
     steps:
       - name: Merge artifacts
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@v7
         with:
           name: dist-icupy-icu${{needs.parse-icu-versions.outputs.latest-version}}
           pattern: dist-*
