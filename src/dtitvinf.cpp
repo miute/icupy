@@ -9,7 +9,12 @@ void init_dtitvinf(py::module &m) {
   //
   // class icu::DateIntervalInfo
   //
-  py::class_<DateIntervalInfo, UObject> dii(m, "DateIntervalInfo");
+  py::class_<DateIntervalInfo, UObject> dii(m, "DateIntervalInfo", R"doc(
+      Encapsulate a localizable date-time interval pattern.
+
+      See Also:
+          :class:`DateIntervalFormat`
+      )doc");
 
   dii.def(py::init([](const icupy::LocaleVariant &locale) {
             ErrorCode error_code;

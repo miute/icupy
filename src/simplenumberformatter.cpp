@@ -14,17 +14,39 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
   //
   // class icu::number::SimpleNumber
   //
-  py::class_<SimpleNumber, UMemory> sn(m2, "SimpleNumber");
+  py::class_<SimpleNumber, UMemory> sn(m2, "SimpleNumber", R"doc(
+      Input type for :class:`SimpleNumberFormatter`.
+      )doc");
 
   //
   // class icu::number::SimpleNumberFormatter
   //
-  py::class_<SimpleNumberFormatter, UMemory> fmt(m2, "SimpleNumberFormatter");
+  py::class_<SimpleNumberFormatter, UMemory> fmt(m2, "SimpleNumberFormatter",
+                                                 R"doc(
+      Special :class:`NumberFormatter` focused on smaller binary size and
+      memory use.
+
+      SimpleNumberFormatter is capable of basic number formatting, including
+      grouping separators, sign display, and rounding. It is not capable of
+      currencies, compact notation, or units.
+
+      Example:
+
+      .. code-block:: python
+
+          from icupy import icu
+          from icupy.icu import number
+          fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy("de-CH", icu.UNUM_GROUPING_ON_ALIGNED)
+          fmtval = fmt.format_int64(1234567)
+          fmtval.to_string()  # "1'234'567"
+      )doc");
 
   //
   // class icu::number::SimpleNumber
   //
-  sn.def(py::init<>());
+  sn.def(py::init<>(), R"doc(
+      Initialize a ``SimpleNumber`` instance as an empty SimpleNumber.
+      )doc");
 
   sn.def_static(
       "for_int64",
@@ -36,7 +58,9 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("value"));
+      py::arg("value"), R"doc(
+      Create a ``SimpleNumber`` for an integer.
+      )doc");
 
   sn.def(
       "multiply_by_power_of_ten",
@@ -47,7 +71,9 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("power"));
+      py::arg("power"), R"doc(
+      Change the value of the ``SimpleNumber`` by a power of 10.
+      )doc");
 
   sn.def(
       "round_to",
@@ -59,7 +85,12 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("power"), py::arg("rounding_mode"));
+      py::arg("power"), py::arg("rounding_mode"), R"doc(
+      Round the value currently stored in the ``SimpleNumber`` to the given
+      power of 10, which can be before or after the decimal separator.
+
+      This function does not change minimum integer digits.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
   sn.def(
@@ -71,7 +102,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("maximum_integer_digits"));
+      py::arg("maximum_integer_digits"), R"doc(
+      Set the number of integer digits to the given amount, truncating if
+      necessary.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
   sn.def(
@@ -83,7 +117,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("minimum_fraction_digits"));
+      py::arg("minimum_fraction_digits"), R"doc(
+      Pad the end of the number with zeros up to the given minimum number of
+      fraction digits.
+      )doc");
 
   sn.def(
       "set_minimum_integer_digits",
@@ -94,7 +131,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("minimum_integer_digits"));
+      py::arg("minimum_integer_digits"), R"doc(
+      Pad the beginning of the number with zeros up to the given minimum number
+      of integer digits.
+      )doc");
 
   sn.def(
       "set_sign",
@@ -105,7 +145,15 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("sign"));
+      py::arg("sign"), R"doc(
+      Set the sign of the number.
+
+      This setting is applied upon formatting the number.
+
+      .. note::
+
+          This does not support accounting sign notation.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM < 76)
   sn.def(
@@ -117,13 +165,18 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("maximum_integer_digits"));
+      py::arg("maximum_integer_digits"), R"doc(
+      Deprecated: ICU 75. Use :meth:`set_maximum_integer_digits` instead.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM < 76)
 
   //
   // class icu::number::SimpleNumberFormatter
   //
-  fmt.def(py::init<>());
+  fmt.def(py::init<>(), R"doc(
+      Initialize a ``SimpleNumberFormatter`` as a non-functional
+      SimpleNumberFormatter.
+      )doc");
 
   fmt.def_static(
       "for_locale",
@@ -136,7 +189,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("locale"));
+      py::arg("locale"), R"doc(
+      Create a new ``SimpleNumberFormatter`` instance with all locale
+      defaults.
+      )doc");
 
   fmt.def_static(
       "for_locale_and_grouping_strategy",
@@ -150,7 +206,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("locale"), py::arg("grouping_strategy"));
+      py::arg("locale"), py::arg("grouping_strategy"), R"doc(
+      Override the grouping strategy to create a new ``SimpleNumberFormatter``
+      instance with all locale defaults.
+      )doc");
 
   fmt.def_static(
       "for_locale_and_symbols_and_grouping_strategy",
@@ -167,7 +226,15 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("locale"), py::arg("symbols"), py::arg("grouping_strategy"));
+      py::arg("locale"), py::arg("symbols"), py::arg("grouping_strategy"),
+      R"doc(
+      Override the grouping strategy and symbols to create a new
+      ``SimpleNumberFormatter`` instance with all locale defaults.
+
+      .. important::
+
+          *symbols* must outlive the ``SimpleNumberFormatter`` object.
+      )doc");
 
   fmt.def(
       "format",
@@ -179,7 +246,15 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("value"));
+      py::arg("value"), R"doc(
+      Format a value using this ``SimpleNumberFormatter``.
+
+      .. important::
+
+          The :class:`SimpleNumber` argument is consumed. A new
+          :class:`SimpleNumber` object should be created for every formatting
+          operation.
+      )doc");
 
   fmt.def(
       "format_int64",
@@ -191,6 +266,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
         return result;
       },
-      py::arg("value"));
+      py::arg("value"), R"doc(
+      Format an integer value using this ``SimpleNumberFormatter``.
+
+      For more control over the formatting, use :class:`SimpleNumber`.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 }

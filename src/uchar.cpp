@@ -18,14 +18,25 @@ void init_uchar(py::module &m) {
   // enum UBidiPairedBracketType
   //
   py::enum_<UBidiPairedBracketType>(m, "UBidiPairedBracketType",
-                                    py::arithmetic(),
-                                    "Bidi Paired Bracket Type constants.")
-      .value("U_BPT_NONE", U_BPT_NONE, "Not a paired bracket.")
-      .value("U_BPT_OPEN", U_BPT_OPEN, "Open paired bracket.")
-      .value("U_BPT_CLOSE", U_BPT_CLOSE, "Close paired bracket.")
-      .value("U_BPT_COUNT", U_BPT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+                                    py::arithmetic(), R"doc(
+Bidi Paired Bracket Type constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_BIDI_PAIRED_BRACKET_TYPE`
+      )doc")
+      .value("U_BPT_NONE", U_BPT_NONE, R"doc(
+             Not a paired bracket.
+             )doc")
+      .value("U_BPT_OPEN", U_BPT_OPEN, R"doc(
+             Open paired bracket.
+             )doc")
+      .value("U_BPT_CLOSE", U_BPT_CLOSE, R"doc(
+             Close paired bracket.
+             )doc")
+      .value("U_BPT_COUNT", U_BPT_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
@@ -35,8 +46,9 @@ void init_uchar(py::module &m) {
   py::enum_<UBlockCode>(
       m, "UBlockCode", py::arithmetic(),
       "Constants for Unicode blocks, see the Unicode Data file Blocks.txt.")
-      .value("UBLOCK_NO_BLOCK", UBLOCK_NO_BLOCK,
-             "New No_Block value in Unicode 4.")
+      .value("UBLOCK_NO_BLOCK", UBLOCK_NO_BLOCK, R"doc(
+             New No_Block value in Unicode 4.
+             )doc")
       .value("UBLOCK_BASIC_LATIN", UBLOCK_BASIC_LATIN)
       .value("UBLOCK_LATIN_1_SUPPLEMENT", UBLOCK_LATIN_1_SUPPLEMENT)
       .value("UBLOCK_LATIN_EXTENDED_A", UBLOCK_LATIN_EXTENDED_A)
@@ -45,8 +57,9 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_SPACING_MODIFIER_LETTERS", UBLOCK_SPACING_MODIFIER_LETTERS)
       .value("UBLOCK_COMBINING_DIACRITICAL_MARKS",
              UBLOCK_COMBINING_DIACRITICAL_MARKS)
-      .value("UBLOCK_GREEK", UBLOCK_GREEK,
-             "Unicode 3.2 renames this block to \"Greek and Coptic\".")
+      .value("UBLOCK_GREEK", UBLOCK_GREEK, R"doc(
+             Unicode 3.2 renames this block to "Greek and Coptic".
+             )doc")
       .value("UBLOCK_CYRILLIC", UBLOCK_CYRILLIC)
       .value("UBLOCK_ARMENIAN", UBLOCK_ARMENIAN)
       .value("UBLOCK_HEBREW", UBLOCK_HEBREW)
@@ -85,9 +98,10 @@ void init_uchar(py::module &m) {
              UBLOCK_SUPERSCRIPTS_AND_SUBSCRIPTS)
       .value("UBLOCK_CURRENCY_SYMBOLS", UBLOCK_CURRENCY_SYMBOLS)
       .value("UBLOCK_COMBINING_MARKS_FOR_SYMBOLS",
-             UBLOCK_COMBINING_MARKS_FOR_SYMBOLS,
-             "Unicode 3.2 renames this block to \"Combining Diacritical Marks "
-             "for Symbols\".")
+             UBLOCK_COMBINING_MARKS_FOR_SYMBOLS, R"doc(
+             Unicode 3.2 renames this block to "Combining Diacritical Marks
+             for Symbols".
+             )doc")
       .value("UBLOCK_LETTERLIKE_SYMBOLS", UBLOCK_LETTERLIKE_SYMBOLS)
       .value("UBLOCK_NUMBER_FORMS", UBLOCK_NUMBER_FORMS)
       .value("UBLOCK_ARROWS", UBLOCK_ARROWS)
@@ -129,20 +143,24 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_HIGH_PRIVATE_USE_SURROGATES",
              UBLOCK_HIGH_PRIVATE_USE_SURROGATES)
       .value("UBLOCK_LOW_SURROGATES", UBLOCK_LOW_SURROGATES)
-      .value("UBLOCK_PRIVATE_USE_AREA", UBLOCK_PRIVATE_USE_AREA,
-             "Same as UBLOCK_PRIVATE_USE.\n\n  "
-             "Until Unicode 3.1.1, the corresponding block name was \"Private "
-             "Use\", and multiple code point ranges "
-             "had this block. Unicode 3.2 renames the block for the BMP PUA to "
-             "\"Private Use Area\" and adds separate "
-             "blocks for the supplementary PUAs.")
-      .value("UBLOCK_PRIVATE_USE", UBLOCK_PRIVATE_USE,
-             "Same as UBLOCK_PRIVATE_USE_AREA.\n\n  "
-             "Until Unicode 3.1.1, the corresponding block name was \"Private "
-             "Use\", and multiple code point ranges "
-             "had this block. Unicode 3.2 renames the block for the BMP PUA to "
-             "\"Private Use Area\" and adds separate "
-             "blocks for the supplementary PUAs.")
+      .value("UBLOCK_PRIVATE_USE_AREA", UBLOCK_PRIVATE_USE_AREA, R"doc(
+             Same as UBLOCK_PRIVATE_USE.
+
+             Until Unicode 3.1.1, the corresponding block name was
+             "Private Use", and multiple code point ranges
+             had this block. Unicode 3.2 renames the block for the BMP PUA to
+             "Private Use Area" and adds separate blocks for the supplementary
+             PUAs.
+             )doc")
+      .value("UBLOCK_PRIVATE_USE", UBLOCK_PRIVATE_USE, R"doc(
+             Same as UBLOCK_PRIVATE_USE_AREA.
+
+             Until Unicode 3.1.1, the corresponding block name was
+             "Private Use", and multiple code point ranges
+             had this block. Unicode 3.2 renames the block for the BMP PUA to
+             "Private Use Area" and adds separate blocks for the supplementary
+             PUAs.
+             )doc")
       .value("UBLOCK_CJK_COMPATIBILITY_IDEOGRAPHS",
              UBLOCK_CJK_COMPATIBILITY_IDEOGRAPHS)
       .value("UBLOCK_ALPHABETIC_PRESENTATION_FORMS",
@@ -172,8 +190,10 @@ void init_uchar(py::module &m) {
       .value("UBLOCK_TAGS", UBLOCK_TAGS)
       .value("UBLOCK_CYRILLIC_SUPPLEMENT", UBLOCK_CYRILLIC_SUPPLEMENT)
       .value("UBLOCK_CYRILLIC_SUPPLEMENTARY", UBLOCK_CYRILLIC_SUPPLEMENTARY,
-             "Unicode 4.0.1 renames the \"Cyrillic Supplementary\" block to "
-             "\"Cyrillic Supplement\".")
+             R"doc(
+             Unicode 4.0.1 renames the "Cyrillic Supplementary" block to
+             "Cyrillic Supplement".
+             )doc")
       .value("UBLOCK_TAGALOG", UBLOCK_TAGALOG)
       .value("UBLOCK_HANUNOO", UBLOCK_HANUNOO)
       .value("UBLOCK_BUHID", UBLOCK_BUHID)
@@ -465,150 +485,268 @@ void init_uchar(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
       .value("UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A",
-             UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A, "[13460]")
-      .value("UBLOCK_GARAY", UBLOCK_GARAY, "[10D40]")
-      .value("UBLOCK_GURUNG_KHEMA", UBLOCK_GURUNG_KHEMA, "[16100]")
-      .value("UBLOCK_KIRAT_RAI", UBLOCK_KIRAT_RAI, "[16D40]")
-      .value("UBLOCK_MYANMAR_EXTENDED_C", UBLOCK_MYANMAR_EXTENDED_C, "[116D0]")
-      .value("UBLOCK_OL_ONAL", UBLOCK_OL_ONAL, "[1E5D0]")
-      .value("UBLOCK_SUNUWAR", UBLOCK_SUNUWAR, "[11BC0]")
+             UBLOCK_EGYPTIAN_HIEROGLYPHS_EXTENDED_A)
+      .value("UBLOCK_GARAY", UBLOCK_GARAY)
+      .value("UBLOCK_GURUNG_KHEMA", UBLOCK_GURUNG_KHEMA)
+      .value("UBLOCK_KIRAT_RAI", UBLOCK_KIRAT_RAI)
+      .value("UBLOCK_MYANMAR_EXTENDED_C", UBLOCK_MYANMAR_EXTENDED_C)
+      .value("UBLOCK_OL_ONAL", UBLOCK_OL_ONAL)
+      .value("UBLOCK_SUNUWAR", UBLOCK_SUNUWAR)
       .value("UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT",
-             UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT, "[1CC00]")
-      .value("UBLOCK_TODHRI", UBLOCK_TODHRI, "[105C0]")
-      .value("UBLOCK_TULU_TIGALARI", UBLOCK_TULU_TIGALARI, "[11380]")
+             UBLOCK_SYMBOLS_FOR_LEGACY_COMPUTING_SUPPLEMENT)
+      .value("UBLOCK_TODHRI", UBLOCK_TODHRI)
+      .value("UBLOCK_TULU_TIGALARI", UBLOCK_TULU_TIGALARI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
-      .value("UBLOCK_BERIA_ERFE", UBLOCK_BERIA_ERFE, "[16EA0]")
+      .value("UBLOCK_BERIA_ERFE", UBLOCK_BERIA_ERFE)
       .value("UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J",
-             UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J, "[323B0]")
+             UBLOCK_CJK_UNIFIED_IDEOGRAPHS_EXTENSION_J)
       .value("UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT",
-             UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT, "[1CEC0]")
-      .value("UBLOCK_SHARADA_SUPPLEMENT", UBLOCK_SHARADA_SUPPLEMENT, "[11B60]")
-      .value("UBLOCK_SIDETIC", UBLOCK_SIDETIC, "[10940]")
-      .value("UBLOCK_TAI_YO", UBLOCK_TAI_YO, "[1E6C0]")
+             UBLOCK_MISCELLANEOUS_SYMBOLS_SUPPLEMENT)
+      .value("UBLOCK_SHARADA_SUPPLEMENT", UBLOCK_SHARADA_SUPPLEMENT)
+      .value("UBLOCK_SIDETIC", UBLOCK_SIDETIC)
+      .value("UBLOCK_TAI_YO", UBLOCK_TAI_YO)
       .value("UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT",
-             UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT, "[18D80]")
-      .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI, "[11DB0]")
+             UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT)
+      .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-      .value("UBLOCK_COUNT", UBLOCK_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("UBLOCK_COUNT", UBLOCK_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .value("UBLOCK_INVALID_CODE", UBLOCK_INVALID_CODE)
       .export_values();
 
   //
   // enum UCharCategory
   //
-  py::enum_<UCharCategory>(
-      m, "UCharCategory", py::arithmetic(),
-      "Data for enumerated Unicode general category types.\n\n"
-      "See http://www.unicode.org/Public/UNIDATA/UnicodeData.html")
-      .value("U_UNASSIGNED", U_UNASSIGNED,
-             "Non-category for unassigned and non-character code points.")
-      .value("U_GENERAL_OTHER_TYPES", U_GENERAL_OTHER_TYPES,
-             "Cn \"Other, Not Assigned (no characters in [UnicodeData.txt] "
-             "have this property)\" (same as "
-             "*U_UNASSIGNED*!)")
-      .value("U_UPPERCASE_LETTER", U_UPPERCASE_LETTER, "Lu.")
-      .value("U_LOWERCASE_LETTER", U_LOWERCASE_LETTER, "Ll.")
-      .value("U_TITLECASE_LETTER", U_TITLECASE_LETTER, "Lt.")
-      .value("U_MODIFIER_LETTER", U_MODIFIER_LETTER, "Lm.")
-      .value("U_OTHER_LETTER", U_OTHER_LETTER, "Lo.")
-      .value("U_NON_SPACING_MARK", U_NON_SPACING_MARK, "Mn.")
-      .value("U_ENCLOSING_MARK", U_ENCLOSING_MARK, "Me.")
-      .value("U_COMBINING_SPACING_MARK", U_COMBINING_SPACING_MARK, "Mc.")
-      .value("U_DECIMAL_DIGIT_NUMBER", U_DECIMAL_DIGIT_NUMBER, "Nd.")
-      .value("U_LETTER_NUMBER", U_LETTER_NUMBER, "Nl.")
-      .value("U_OTHER_NUMBER", U_OTHER_NUMBER, "No.")
-      .value("U_SPACE_SEPARATOR", U_SPACE_SEPARATOR, "Zs.")
-      .value("U_LINE_SEPARATOR", U_LINE_SEPARATOR, "Zl.")
-      .value("U_PARAGRAPH_SEPARATOR", U_PARAGRAPH_SEPARATOR, "Zp.")
-      .value("U_CONTROL_CHAR", U_CONTROL_CHAR, "Cc.")
-      .value("U_FORMAT_CHAR", U_FORMAT_CHAR, "Cf.")
-      .value("U_PRIVATE_USE_CHAR", U_PRIVATE_USE_CHAR, "Co.")
-      .value("U_SURROGATE", U_SURROGATE, "Cs.")
-      .value("U_DASH_PUNCTUATION", U_DASH_PUNCTUATION, "Pd.")
-      .value("U_START_PUNCTUATION", U_START_PUNCTUATION, "Ps.")
-      .value("U_END_PUNCTUATION", U_END_PUNCTUATION, "Pe.")
-      .value("U_CONNECTOR_PUNCTUATION", U_CONNECTOR_PUNCTUATION, "Pc.")
-      .value("U_OTHER_PUNCTUATION", U_OTHER_PUNCTUATION, "Po.")
-      .value("U_MATH_SYMBOL", U_MATH_SYMBOL, "Sm.")
-      .value("U_CURRENCY_SYMBOL", U_CURRENCY_SYMBOL, "Sc.")
-      .value("U_MODIFIER_SYMBOL", U_MODIFIER_SYMBOL, "Sk.")
-      .value("U_OTHER_SYMBOL", U_OTHER_SYMBOL, "So.")
-      .value("U_INITIAL_PUNCTUATION", U_INITIAL_PUNCTUATION, "Pi.")
-      .value("U_FINAL_PUNCTUATION", U_FINAL_PUNCTUATION, "Pf.")
-      .value("U_CHAR_CATEGORY_COUNT", U_CHAR_CATEGORY_COUNT,
-             "One higher than the last enum *UCharCategory* constant.\n\n  "
-             "This numeric value is stable (will not change), see "
-             "http://www.unicode.org/policies/"
-             "stability_policy.html#Property_Value")
+  py::enum_<UCharCategory>(m, "UCharCategory", py::arithmetic(), R"doc(
+Data for enumerated Unicode general category types.
+
+See http://www.unicode.org/Public/UNIDATA/UnicodeData.html
+      )doc")
+      .value("U_UNASSIGNED", U_UNASSIGNED, R"doc(
+             Non-category for unassigned and non-character code points.
+             )doc")
+      .value("U_GENERAL_OTHER_TYPES", U_GENERAL_OTHER_TYPES, R"doc(
+             Cn "Other, Not Assigned (no characters in [UnicodeData.txt]
+             have this property)" (same as U_UNASSIGNED!)
+             )doc")
+      .value("U_UPPERCASE_LETTER", U_UPPERCASE_LETTER, R"doc(
+             Lu.
+             )doc")
+      .value("U_LOWERCASE_LETTER", U_LOWERCASE_LETTER, R"doc(
+             Ll.
+             )doc")
+      .value("U_TITLECASE_LETTER", U_TITLECASE_LETTER, R"doc(
+             Lt.
+             )doc")
+      .value("U_MODIFIER_LETTER", U_MODIFIER_LETTER, R"doc(
+             Lm.
+             )doc")
+      .value("U_OTHER_LETTER", U_OTHER_LETTER, R"doc(
+             Lo.
+             )doc")
+      .value("U_NON_SPACING_MARK", U_NON_SPACING_MARK, R"doc(
+             Mn.
+             )doc")
+      .value("U_ENCLOSING_MARK", U_ENCLOSING_MARK, R"doc(
+             Me.
+             )doc")
+      .value("U_COMBINING_SPACING_MARK", U_COMBINING_SPACING_MARK, R"doc(
+             Mc.
+             )doc")
+      .value("U_DECIMAL_DIGIT_NUMBER", U_DECIMAL_DIGIT_NUMBER, R"doc(
+             Nd.
+             )doc")
+      .value("U_LETTER_NUMBER", U_LETTER_NUMBER, R"doc(
+             Nl.
+             )doc")
+      .value("U_OTHER_NUMBER", U_OTHER_NUMBER, R"doc(
+             No.
+             )doc")
+      .value("U_SPACE_SEPARATOR", U_SPACE_SEPARATOR, R"doc(
+             Zs.
+             )doc")
+      .value("U_LINE_SEPARATOR", U_LINE_SEPARATOR, R"doc(
+             Zl.
+             )doc")
+      .value("U_PARAGRAPH_SEPARATOR", U_PARAGRAPH_SEPARATOR, R"doc(
+             Zp.
+             )doc")
+      .value("U_CONTROL_CHAR", U_CONTROL_CHAR, R"doc(
+             Cc.
+             )doc")
+      .value("U_FORMAT_CHAR", U_FORMAT_CHAR, R"doc(
+             Cf.
+             )doc")
+      .value("U_PRIVATE_USE_CHAR", U_PRIVATE_USE_CHAR, R"doc(
+             Co.
+             )doc")
+      .value("U_SURROGATE", U_SURROGATE, R"doc(
+             Cs.
+             )doc")
+      .value("U_DASH_PUNCTUATION", U_DASH_PUNCTUATION, R"doc(
+             Pd.
+             )doc")
+      .value("U_START_PUNCTUATION", U_START_PUNCTUATION, R"doc(
+             Ps.
+             )doc")
+      .value("U_END_PUNCTUATION", U_END_PUNCTUATION, R"doc(
+             Pe.
+             )doc")
+      .value("U_CONNECTOR_PUNCTUATION", U_CONNECTOR_PUNCTUATION, R"doc(
+             Pc.
+             )doc")
+      .value("U_OTHER_PUNCTUATION", U_OTHER_PUNCTUATION, R"doc(
+             Po.
+             )doc")
+      .value("U_MATH_SYMBOL", U_MATH_SYMBOL, R"doc(
+             Sm.
+             )doc")
+      .value("U_CURRENCY_SYMBOL", U_CURRENCY_SYMBOL, R"doc(
+             Sc.
+             )doc")
+      .value("U_MODIFIER_SYMBOL", U_MODIFIER_SYMBOL, R"doc(
+             Sk.
+             )doc")
+      .value("U_OTHER_SYMBOL", U_OTHER_SYMBOL, R"doc(
+             So.
+             )doc")
+      .value("U_INITIAL_PUNCTUATION", U_INITIAL_PUNCTUATION, R"doc(
+             Pi.
+             )doc")
+      .value("U_FINAL_PUNCTUATION", U_FINAL_PUNCTUATION, R"doc(
+             Pf.
+             )doc")
+      .value("U_CHAR_CATEGORY_COUNT", U_CHAR_CATEGORY_COUNT, R"doc(
+             One higher than the last enum :class:`UCharCategory` constant.
+
+             This numeric value is stable (will not change), see
+             http://www.unicode.org/policies/stability_policy.html#Property_Value
+             )doc")
       .export_values();
 
   //
   // enum UCharDirection
   //
-  py::enum_<UCharDirection>(
-      m, "UCharDirection", py::arithmetic(),
-      "This specifies the language directional property of a character set.")
-      .value("U_LEFT_TO_RIGHT", U_LEFT_TO_RIGHT, "L.")
-      .value("U_RIGHT_TO_LEFT", U_RIGHT_TO_LEFT, "R.")
-      .value("U_EUROPEAN_NUMBER", U_EUROPEAN_NUMBER, "EN.")
-      .value("U_EUROPEAN_NUMBER_SEPARATOR", U_EUROPEAN_NUMBER_SEPARATOR, "ES.")
+  py::enum_<UCharDirection>(m, "UCharDirection", py::arithmetic(),
+                            "Language directional property of a character set.")
+      .value("U_LEFT_TO_RIGHT", U_LEFT_TO_RIGHT, R"doc(
+             L.
+             )doc")
+      .value("U_RIGHT_TO_LEFT", U_RIGHT_TO_LEFT, R"doc(
+             R.
+             )doc")
+      .value("U_EUROPEAN_NUMBER", U_EUROPEAN_NUMBER, R"doc(
+             EN.
+             )doc")
+      .value("U_EUROPEAN_NUMBER_SEPARATOR", U_EUROPEAN_NUMBER_SEPARATOR, R"doc(
+             ES.
+             )doc")
       .value("U_EUROPEAN_NUMBER_TERMINATOR", U_EUROPEAN_NUMBER_TERMINATOR,
-             "ET.")
-      .value("U_ARABIC_NUMBER", U_ARABIC_NUMBER, "AN.")
-      .value("U_COMMON_NUMBER_SEPARATOR", U_COMMON_NUMBER_SEPARATOR, "CS.")
-      .value("U_BLOCK_SEPARATOR", U_BLOCK_SEPARATOR, "B.")
-      .value("U_SEGMENT_SEPARATOR", U_SEGMENT_SEPARATOR, "S.")
-      .value("U_WHITE_SPACE_NEUTRAL", U_WHITE_SPACE_NEUTRAL, "WS.")
-      .value("U_OTHER_NEUTRAL", U_OTHER_NEUTRAL, "ON.")
-      .value("U_LEFT_TO_RIGHT_EMBEDDING", U_LEFT_TO_RIGHT_EMBEDDING, "LRE.")
-      .value("U_LEFT_TO_RIGHT_OVERRIDE", U_LEFT_TO_RIGHT_OVERRIDE, "LRO.")
-      .value("U_RIGHT_TO_LEFT_ARABIC", U_RIGHT_TO_LEFT_ARABIC, "AL.")
-      .value("U_RIGHT_TO_LEFT_EMBEDDING", U_RIGHT_TO_LEFT_EMBEDDING, "RLE.")
-      .value("U_RIGHT_TO_LEFT_OVERRIDE", U_RIGHT_TO_LEFT_OVERRIDE, "RLO.")
-      .value("U_POP_DIRECTIONAL_FORMAT", U_POP_DIRECTIONAL_FORMAT, "PDF.")
-      .value("U_DIR_NON_SPACING_MARK", U_DIR_NON_SPACING_MARK, "NSM.")
-      .value("U_BOUNDARY_NEUTRAL", U_BOUNDARY_NEUTRAL, "BN.")
-      .value("U_FIRST_STRONG_ISOLATE", U_FIRST_STRONG_ISOLATE, "FSI.")
-      .value("U_LEFT_TO_RIGHT_ISOLATE", U_LEFT_TO_RIGHT_ISOLATE, "LRI.")
-      .value("U_RIGHT_TO_LEFT_ISOLATE", U_RIGHT_TO_LEFT_ISOLATE, "RLI.")
-      .value("U_POP_DIRECTIONAL_ISOLATE", U_POP_DIRECTIONAL_ISOLATE, "PDI.")
-      .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+             R"doc(
+             ET.
+             )doc")
+      .value("U_ARABIC_NUMBER", U_ARABIC_NUMBER, R"doc(
+             AN.
+             )doc")
+      .value("U_COMMON_NUMBER_SEPARATOR", U_COMMON_NUMBER_SEPARATOR, R"doc(
+             CS.
+             )doc")
+      .value("U_BLOCK_SEPARATOR", U_BLOCK_SEPARATOR, R"doc(
+             B.
+             )doc")
+      .value("U_SEGMENT_SEPARATOR", U_SEGMENT_SEPARATOR, R"doc(
+             S.
+             )doc")
+      .value("U_WHITE_SPACE_NEUTRAL", U_WHITE_SPACE_NEUTRAL, R"doc(
+             WS.
+             )doc")
+      .value("U_OTHER_NEUTRAL", U_OTHER_NEUTRAL, R"doc(
+             ON.
+             )doc")
+      .value("U_LEFT_TO_RIGHT_EMBEDDING", U_LEFT_TO_RIGHT_EMBEDDING, R"doc(
+             LRE.
+             )doc")
+      .value("U_LEFT_TO_RIGHT_OVERRIDE", U_LEFT_TO_RIGHT_OVERRIDE, R"doc(
+             LRO.
+             )doc")
+      .value("U_RIGHT_TO_LEFT_ARABIC", U_RIGHT_TO_LEFT_ARABIC, R"doc(
+             AL.
+             )doc")
+      .value("U_RIGHT_TO_LEFT_EMBEDDING", U_RIGHT_TO_LEFT_EMBEDDING, R"doc(
+             RLE.
+             )doc")
+      .value("U_RIGHT_TO_LEFT_OVERRIDE", U_RIGHT_TO_LEFT_OVERRIDE, R"doc(
+             RLO.
+             )doc")
+      .value("U_POP_DIRECTIONAL_FORMAT", U_POP_DIRECTIONAL_FORMAT, R"doc(
+             PDF.
+             )doc")
+      .value("U_DIR_NON_SPACING_MARK", U_DIR_NON_SPACING_MARK, R"doc(
+             NSM.
+             )doc")
+      .value("U_BOUNDARY_NEUTRAL", U_BOUNDARY_NEUTRAL, R"doc(
+             BN.
+             )doc")
+      .value("U_FIRST_STRONG_ISOLATE", U_FIRST_STRONG_ISOLATE, R"doc(
+             FSI.
+             )doc")
+      .value("U_LEFT_TO_RIGHT_ISOLATE", U_LEFT_TO_RIGHT_ISOLATE, R"doc(
+             LRI.
+             )doc")
+      .value("U_RIGHT_TO_LEFT_ISOLATE", U_RIGHT_TO_LEFT_ISOLATE, R"doc(
+             RLI.
+             )doc")
+      .value("U_POP_DIRECTIONAL_ISOLATE", U_POP_DIRECTIONAL_ISOLATE, R"doc(
+             PDI.
+             )doc")
+      .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UCharNameChoice
   //
-  py::enum_<UCharNameChoice>(
-      m, "UCharNameChoice", py::arithmetic(),
-      "Selector constants for *u_char_name()*.\n\n"
-      "*u_char_name()* returns the \"modern\" name of a Unicode character; or "
-      "the name that was "
-      "defined in Unicode version 1.0, before the Unicode standard merged with "
-      "ISO-10646; or an "
-      "\"extended\" name that gives each Unicode code point a unique name.")
-      .value("U_UNICODE_CHAR_NAME", U_UNICODE_CHAR_NAME,
-             "Unicode character name (Name property).")
-      .value("U_UNICODE_10_CHAR_NAME", U_UNICODE_10_CHAR_NAME,
-             "**Deprecated:** ICU 49")
-      .value("U_EXTENDED_CHAR_NAME", U_EXTENDED_CHAR_NAME,
-             "Standard or synthetic character name.")
-      .value("U_CHAR_NAME_ALIAS", U_CHAR_NAME_ALIAS,
-             "Corrected name from NameAliases.txt.")
-      .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+  py::enum_<UCharNameChoice>(m, "UCharNameChoice", py::arithmetic(), R"doc(
+Selector constants for :func:`u_char_name`.
+
+:func:`u_char_name` returns the "modern" name of a Unicode character;
+or the name that was defined in Unicode version 1.0, before the Unicode
+standard merged with ISO-10646;
+or an "extended" name that gives each Unicode code point a unique name.
+      )doc")
+      .value("U_UNICODE_CHAR_NAME", U_UNICODE_CHAR_NAME, R"doc(
+             Unicode character name (Name property).
+             )doc")
+      .value("U_UNICODE_10_CHAR_NAME", U_UNICODE_10_CHAR_NAME, R"doc(
+             Deprecated: ICU 49
+             )doc")
+      .value("U_EXTENDED_CHAR_NAME", U_EXTENDED_CHAR_NAME, R"doc(
+             Standard or synthetic character name.
+             )doc")
+      .value("U_CHAR_NAME_ALIAS", U_CHAR_NAME_ALIAS, R"doc(
+             Corrected name from NameAliases.txt.
+             )doc")
+      .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UDecompositionType
   //
   py::enum_<UDecompositionType>(m, "UDecompositionType", py::arithmetic(),
-                                "Decomposition Type constants.")
+                                R"doc(
+Decomposition Type constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_DECOMPOSITION_TYPE`
+      )doc")
       .value("U_DT_NONE", U_DT_NONE)
       .value("U_DT_CANONICAL", U_DT_CANONICAL)
       .value("U_DT_COMPAT", U_DT_COMPAT)
@@ -627,32 +765,43 @@ void init_uchar(py::module &m) {
       .value("U_DT_SUPER", U_DT_SUPER)
       .value("U_DT_VERTICAL", U_DT_VERTICAL)
       .value("U_DT_WIDE", U_DT_WIDE)
-      .value("U_DT_COUNT", U_DT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_DT_COUNT", U_DT_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UEastAsianWidth
   //
-  py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic(),
-                             "East Asian Width constants.")
+  py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic(), R"doc(
+East Asian Width constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_EAST_ASIAN_WIDTH`
+      )doc")
       .value("U_EA_NEUTRAL", U_EA_NEUTRAL)
       .value("U_EA_AMBIGUOUS", U_EA_AMBIGUOUS)
       .value("U_EA_HALFWIDTH", U_EA_HALFWIDTH)
       .value("U_EA_FULLWIDTH", U_EA_FULLWIDTH)
       .value("U_EA_NARROW", U_EA_NARROW)
       .value("U_EA_WIDE", U_EA_WIDE)
-      .value("U_EA_COUNT", U_EA_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_EA_COUNT", U_EA_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UGraphemeClusterBreak
   //
   py::enum_<UGraphemeClusterBreak>(m, "UGraphemeClusterBreak", py::arithmetic(),
-                                   "Grapheme Cluster Break constants.")
+                                   R"doc(
+Grapheme Cluster Break constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_GRAPHEME_CLUSTER_BREAK`
+      )doc")
       .value("U_GCB_OTHER", U_GCB_OTHER)
       .value("U_GCB_CONTROL", U_GCB_CONTROL)
       .value("U_GCB_CR", U_GCB_CR)
@@ -675,35 +824,46 @@ void init_uchar(py::module &m) {
       .value("U_GCB_GLUE_AFTER_ZWJ", U_GCB_GLUE_AFTER_ZWJ)
       .value("U_GCB_ZWJ", U_GCB_ZWJ)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      .value("U_GCB_COUNT", U_GCB_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_GCB_COUNT", U_GCB_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UHangulSyllableType
   //
   py::enum_<UHangulSyllableType>(m, "UHangulSyllableType", py::arithmetic(),
-                                 "Hangul Syllable Type constants.")
+                                 R"doc(
+Hangul Syllable Type constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_HANGUL_SYLLABLE_TYPE`
+      )doc")
       .value("U_HST_NOT_APPLICABLE", U_HST_NOT_APPLICABLE)
       .value("U_HST_LEADING_JAMO", U_HST_LEADING_JAMO)
       .value("U_HST_VOWEL_JAMO", U_HST_VOWEL_JAMO)
       .value("U_HST_TRAILING_JAMO", U_HST_TRAILING_JAMO)
       .value("U_HST_LV_SYLLABLE", U_HST_LV_SYLLABLE)
       .value("U_HST_LVT_SYLLABLE", U_HST_LVT_SYLLABLE)
-      .value("U_HST_COUNT", U_HST_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_HST_COUNT", U_HST_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
   //
   // enum UIdentifierStatus
   //
-  py::enum_<UIdentifierStatus>(
-      m, "UIdentifierStatus", py::arithmetic(),
-      "Identifier Status constants.\n\n"
-      "See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.")
+  py::enum_<UIdentifierStatus>(m, "UIdentifierStatus", py::arithmetic(), R"doc(
+Identifier Status constants.
+
+See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.
+
+See Also:
+    :attr:`~UProperty.UCHAR_IDENTIFIER_STATUS`
+      )doc")
       .value("U_ID_STATUS_RESTRICTED", U_ID_STATUS_RESTRICTED)
       .value("U_ID_STATUS_ALLOWED", U_ID_STATUS_ALLOWED)
       .export_values();
@@ -711,10 +871,14 @@ void init_uchar(py::module &m) {
   //
   // enum UIdentifierType
   //
-  py::enum_<UIdentifierType>(
-      m, "UIdentifierType", py::arithmetic(),
-      "Identifier Type constants.\n\n"
-      "See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.")
+  py::enum_<UIdentifierType>(m, "UIdentifierType", py::arithmetic(), R"doc(
+Identifier Type constants.
+
+See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.
+
+See Also:
+    :attr:`~UProperty.UCHAR_IDENTIFIER_TYPE`
+      )doc")
       .value("U_ID_TYPE_NOT_CHARACTER", U_ID_TYPE_NOT_CHARACTER)
       .value("U_ID_TYPE_DEPRECATED", U_ID_TYPE_DEPRECATED)
       .value("U_ID_TYPE_DEFAULT_IGNORABLE", U_ID_TYPE_DEFAULT_IGNORABLE)
@@ -735,7 +899,12 @@ void init_uchar(py::module &m) {
   // enum UIndicConjunctBreak
   //
   py::enum_<UIndicConjunctBreak>(m, "UIndicConjunctBreak", py::arithmetic(),
-                                 "Indic Conjunct Break constants.")
+                                 R"doc(
+Indic Conjunct Break constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_INDIC_CONJUNCT_BREAK`
+      )doc")
       .value("U_INCB_NONE", U_INCB_NONE)
       .value("U_INCB_CONSONANT", U_INCB_CONSONANT)
       .value("U_INCB_EXTEND", U_INCB_EXTEND)
@@ -748,8 +917,12 @@ void init_uchar(py::module &m) {
   // enum UIndicPositionalCategory
   //
   py::enum_<UIndicPositionalCategory>(m, "UIndicPositionalCategory",
-                                      py::arithmetic(),
-                                      "Indic Positional Category constants.")
+                                      py::arithmetic(), R"doc(
+Indic Positional Category constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_INDIC_POSITIONAL_CATEGORY`
+      )doc")
       .value("U_INPC_NA", U_INPC_NA)
       .value("U_INPC_BOTTOM", U_INPC_BOTTOM)
       .value("U_INPC_BOTTOM_AND_LEFT", U_INPC_BOTTOM_AND_LEFT)
@@ -776,8 +949,12 @@ void init_uchar(py::module &m) {
   // enum UIndicSyllabicCategory
   //
   py::enum_<UIndicSyllabicCategory>(m, "UIndicSyllabicCategory",
-                                    py::arithmetic(),
-                                    "Indic Syllabic Category constants.")
+                                    py::arithmetic(), R"doc(
+Indic Syllabic Category constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_INDIC_SYLLABIC_CATEGORY`
+      )doc")
       .value("U_INSC_OTHER", U_INSC_OTHER)
       .value("U_INSC_AVAGRAHA", U_INSC_AVAGRAHA)
       .value("U_INSC_BINDU", U_INSC_BINDU)
@@ -826,8 +1003,12 @@ void init_uchar(py::module &m) {
   //
   // enum UJoiningGroup
   //
-  py::enum_<UJoiningGroup>(m, "UJoiningGroup", py::arithmetic(),
-                           "Joining Group constants.")
+  py::enum_<UJoiningGroup>(m, "UJoiningGroup", py::arithmetic(), R"doc(
+Joining Group constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_JOINING_GROUP`
+      )doc")
       .value("U_JG_NO_JOINING_GROUP", U_JG_NO_JOINING_GROUP)
       .value("U_JG_AIN", U_JG_AIN)
       .value("U_JG_ALAPH", U_JG_ALAPH)
@@ -951,32 +1132,42 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_JG_THIN_NOON", U_JG_THIN_NOON)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-      .value("U_JG_COUNT", U_JG_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_JG_COUNT", U_JG_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UJoiningType
   //
-  py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic(),
-                          "Joining Type constants.")
+  py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic(), R"doc(
+Joining Type constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_JOINING_TYPE`
+      )doc")
       .value("U_JT_NON_JOINING", U_JT_NON_JOINING)
       .value("U_JT_JOIN_CAUSING", U_JT_JOIN_CAUSING)
       .value("U_JT_DUAL_JOINING", U_JT_DUAL_JOINING)
       .value("U_JT_LEFT_JOINING", U_JT_LEFT_JOINING)
       .value("U_JT_RIGHT_JOINING", U_JT_RIGHT_JOINING)
       .value("U_JT_TRANSPARENT", U_JT_TRANSPARENT)
-      .value("U_JT_COUNT", U_JT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_JT_COUNT", U_JT_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum ULineBreak
   //
-  py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic(),
-                        "Line Break constants.")
+  py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic(), R"doc(
+Line Break constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_LINE_BREAK`
+      )doc")
       .value("U_LB_UNKNOWN", U_LB_UNKNOWN)
       .value("U_LB_AMBIGUOUS", U_LB_AMBIGUOUS)
       .value("U_LB_ALPHABETIC", U_LB_ALPHABETIC)
@@ -992,9 +1183,10 @@ void init_uchar(py::module &m) {
       .value("U_LB_GLUE", U_LB_GLUE)
       .value("U_LB_HYPHEN", U_LB_HYPHEN)
       .value("U_LB_IDEOGRAPHIC", U_LB_IDEOGRAPHIC)
-      .value("U_LB_INSEPARABLE", U_LB_INSEPARABLE,
-             "Renamed from the misspelled \"inseperable\" in Unicode 4.0.1/ICU "
-             "3.0.")
+      .value("U_LB_INSEPARABLE", U_LB_INSEPARABLE, R"doc(
+             Renamed from the misspelled "inseperable" in
+             Unicode 4.0.1/ICU 3.0.
+             )doc")
       .value("U_LB_INSEPERABLE", U_LB_INSEPERABLE)
       .value("U_LB_INFIX_NUMERIC", U_LB_INFIX_NUMERIC)
       .value("U_LB_LINE_FEED", U_LB_LINE_FEED)
@@ -1040,604 +1232,879 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_LB_UNAMBIGUOUS_HYPHEN", U_LB_UNAMBIGUOUS_HYPHEN, "[HH]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-      .value("U_LB_COUNT", U_LB_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_LB_COUNT", U_LB_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UNumericType
   //
-  py::enum_<UNumericType>(m, "UNumericType", py::arithmetic(),
-                          "Numeric Type constants.")
+  py::enum_<UNumericType>(m, "UNumericType", py::arithmetic(), R"doc(
+Numeric Type constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_NUMERIC_TYPE`
+      )doc")
       .value("U_NT_NONE", U_NT_NONE)
       .value("U_NT_DECIMAL", U_NT_DECIMAL)
       .value("U_NT_DIGIT", U_NT_DIGIT)
       .value("U_NT_NUMERIC", U_NT_NUMERIC)
-      .value("U_NT_COUNT", U_NT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_NT_COUNT", U_NT_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum UProperty
   //
-  py::enum_<UProperty>(
-      m, "UProperty", py::arithmetic(),
-      "Selection constants for Unicode properties.\n\n"
-      "These constants are used in functions like *u_has_binary_property* to "
-      "select one of the Unicode properties.\n\n"
-      "The properties APIs are intended to reflect Unicode properties as "
-      "defined in the Unicode Character Database "
-      "(UCD) and Unicode Technical Reports (UTR).\n\n"
-      "For details about the properties see UAX #44: Unicode Character "
-      "Database "
-      "(http://www.unicode.org/reports/tr44/).\n\n"
-      "Important: If ICU is built with UCD files from Unicode versions below, "
-      "e.g., 3.2, then properties marked with "
-      "\"new in Unicode 3.2\" are not or not fully available. Check "
-      "*u_get_unicode_version* to be sure.")
-      .value("UCHAR_ALPHABETIC", UCHAR_ALPHABETIC,
-             "Binary property Alphabetic.\n\n  "
-             "Same as *u_is_ualphabetic*, different from *u_isalpha*. "
-             "Lu+Ll+Lt+Lm+Lo+Nl+Other_Alphabetic")
-      .value("UCHAR_BINARY_START", UCHAR_BINARY_START,
-             "First constant for binary Unicode properties.")
-      .value("UCHAR_ASCII_HEX_DIGIT", UCHAR_ASCII_HEX_DIGIT,
-             "Binary property ASCII_Hex_Digit.\n\n  "
-             "0-9 A-F a-f")
-      .value("UCHAR_BIDI_CONTROL", UCHAR_BIDI_CONTROL,
-             "Binary property Bidi_Control.\n\n  "
-             "Format controls which have specific functions in the Bidi "
-             "Algorithm.")
-      .value("UCHAR_BIDI_MIRRORED", UCHAR_BIDI_MIRRORED,
-             "Binary property Bidi_Mirrored.\n\n  "
-             "Characters that may change display in RTL text. Same as "
-             "*u_is_mirrored*. See Bidi Algorithm, UTR 9.")
-      .value("UCHAR_DASH", UCHAR_DASH,
-             "Binary property Dash.\n\n  "
-             "Variations of dashes.")
+  py::enum_<UProperty>(m, "UProperty", py::arithmetic(), R"doc(
+Selection constants for Unicode properties.
+
+These constants are used in functions like :func:`u_has_binary_property` to
+select one of the Unicode properties.
+
+The properties APIs are intended to reflect Unicode properties as
+defined in the Unicode Character Database
+(UCD) and Unicode Technical Reports (UTR).
+
+For details about the properties see UAX #44: Unicode Character Database
+(http://www.unicode.org/reports/tr44/).
+
+.. important::
+
+    If ICU is built with UCD files from Unicode versions below,
+    e.g., 3.2, then properties marked with "new in Unicode 3.2" are not or not
+    fully available. Check :func:`u_get_unicode_version` to be sure.
+
+See Also:
+    :func:`u_get_int_property_value`
+      )doc")
+      .value("UCHAR_ALPHABETIC", UCHAR_ALPHABETIC, R"doc(
+             Binary property Alphabetic.
+
+             Same as :func:`u_is_ualphabetic`,
+             different from :func:`u_isalpha`.
+             Lu+Ll+Lt+Lm+Lo+Nl+Other_Alphabetic
+             )doc")
+      .value("UCHAR_BINARY_START", UCHAR_BINARY_START, R"doc(
+             First constant for binary Unicode properties.
+             )doc")
+      .value("UCHAR_ASCII_HEX_DIGIT", UCHAR_ASCII_HEX_DIGIT, R"doc(
+             Binary property ASCII_Hex_Digit.
+
+             0-9 A-F a-f
+             )doc")
+      .value("UCHAR_BIDI_CONTROL", UCHAR_BIDI_CONTROL, R"doc(
+             Binary property Bidi_Control.
+
+             Format controls which have specific functions in the Bidi
+             Algorithm.
+             )doc")
+      .value("UCHAR_BIDI_MIRRORED", UCHAR_BIDI_MIRRORED, R"doc(
+             Binary property Bidi_Mirrored.
+
+             Characters that may change display in RTL text. Same as
+             :func:`u_is_mirrored`. See Bidi Algorithm, UTR 9.
+             )doc")
+      .value("UCHAR_DASH", UCHAR_DASH, R"doc(
+             Binary property Dash.
+
+             Variations of dashes.
+             )doc")
       .value("UCHAR_DEFAULT_IGNORABLE_CODE_POINT",
-             UCHAR_DEFAULT_IGNORABLE_CODE_POINT,
-             "Binary property Default_Ignorable_Code_Point (new in Unicode "
-             "3.2).\n\n  "
-             "Ignorable in most processing. <2060..206F, FFF0..FFFB, "
-             "E0000..E0FFF>+Other_Default_Ignorable_Code_Point+(Cf+Cc+Cs-White_"
-             "Space)")
-      .value("UCHAR_DEPRECATED", UCHAR_DEPRECATED,
-             "Binary property Deprecated (new in Unicode 3.2).\n\n  "
-             "The usage of deprecated characters is strongly discouraged.")
-      .value("UCHAR_DIACRITIC", UCHAR_DIACRITIC,
-             "Binary property Diacritic.\n\n  "
-             "Characters that linguistically modify the meaning of another "
-             "character to which they apply.")
-      .value("UCHAR_EXTENDER", UCHAR_EXTENDER,
-             "Binary property Extender.\n\n  "
-             "Extend the value or shape of a preceding alphabetic character, "
-             "e.g., length and iteration marks.")
+             UCHAR_DEFAULT_IGNORABLE_CODE_POINT, R"doc(
+             Binary property Default_Ignorable_Code_Point (new in Unicode 3.2).
+
+             Ignorable in most processing. <2060..206F, FFF0..FFFB,
+             E0000..E0FFF>+Other_Default_Ignorable_Code_Point+(Cf+Cc+Cs-White_Space)
+             )doc")
+      .value("UCHAR_DEPRECATED", UCHAR_DEPRECATED, R"doc(
+             Binary property Deprecated (new in Unicode 3.2).
+
+             The usage of deprecated characters is strongly discouraged.
+             )doc")
+      .value("UCHAR_DIACRITIC", UCHAR_DIACRITIC, R"doc(
+             Binary property Diacritic.
+
+             Characters that linguistically modify the meaning of another
+             character to which they apply.
+             )doc")
+      .value("UCHAR_EXTENDER", UCHAR_EXTENDER, R"doc(
+             Binary property Extender.
+
+             Extend the value or shape of a preceding alphabetic character,
+             e.g., length and iteration marks.
+             )doc")
       .value("UCHAR_FULL_COMPOSITION_EXCLUSION",
-             UCHAR_FULL_COMPOSITION_EXCLUSION,
-             "Binary property Full_Composition_Exclusion.\n\n  "
-             "CompositionExclusions.txt+Singleton Decompositions+ Non-Starter "
-             "Decompositions.")
-      .value(
-          "UCHAR_GRAPHEME_BASE", UCHAR_GRAPHEME_BASE,
-          "Binary property Grapheme_Base (new in Unicode 3.2).\n\n  "
-          "For programmatic determination of grapheme cluster boundaries. "
-          "[0..10FFFF]-Cc-Cf-Cs-Co-Cn-Zl-Zp-Grapheme_Link-Grapheme_Extend-CGJ")
-      .value("UCHAR_GRAPHEME_EXTEND", UCHAR_GRAPHEME_EXTEND,
-             "Binary property Grapheme_Extend (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of grapheme cluster boundaries. "
-             "Me+Mn+Mc+Other_Grapheme_Extend-Grapheme_Link-CGJ")
-      .value("UCHAR_GRAPHEME_LINK", UCHAR_GRAPHEME_LINK,
-             "Binary property Grapheme_Link (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of grapheme cluster boundaries.")
-      .value("UCHAR_HEX_DIGIT", UCHAR_HEX_DIGIT,
-             "Binary property Hex_Digit.\n\n  "
-             "Characters commonly used for hexadecimal numbers.")
-      .value("UCHAR_HYPHEN", UCHAR_HYPHEN,
-             "Binary property Hyphen.\n\n  "
-             "Dashes used to mark connections between pieces of words, plus "
-             "the Katakana middle dot.")
-      .value("UCHAR_ID_CONTINUE", UCHAR_ID_CONTINUE,
-             "Binary property ID_Continue.\n\n  "
-             "Characters that can continue an identifier. "
-             "DerivedCoreProperties.txt also says \"NOTE: Cf characters "
-             "should be filtered out.\" ID_Start+Mn+Mc+Nd+Pc")
-      .value("UCHAR_ID_START", UCHAR_ID_START,
-             "Binary property ID_Start.\n\n  "
-             "Characters that can start an identifier. Lu+Ll+Lt+Lm+Lo+Nl")
-      .value("UCHAR_IDEOGRAPHIC", UCHAR_IDEOGRAPHIC,
-             "Binary property Ideographic.\n\n  "
-             "CJKV ideographs.")
-      .value("UCHAR_IDS_BINARY_OPERATOR", UCHAR_IDS_BINARY_OPERATOR,
-             "Binary property IDS_Binary_Operator (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of Ideographic Description "
-             "Sequences.")
-      .value("UCHAR_IDS_TRINARY_OPERATOR", UCHAR_IDS_TRINARY_OPERATOR,
-             "Binary property IDS_Trinary_Operator (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of Ideographic Description "
-             "Sequences.")
-      .value("UCHAR_JOIN_CONTROL", UCHAR_JOIN_CONTROL,
-             "Binary property Join_Control.\n\n  "
-             "Format controls for cursive joining and ligation.")
-      .value(
-          "UCHAR_LOGICAL_ORDER_EXCEPTION", UCHAR_LOGICAL_ORDER_EXCEPTION,
-          "Binary property Logical_Order_Exception (new in Unicode 3.2).\n\n  "
-          "Characters that do not use logical order and require special "
-          "handling in most processing.")
-      .value("UCHAR_LOWERCASE", UCHAR_LOWERCASE,
-             "Binary property Lowercase.\n\n  "
-             "Same as *u_is_ulowercase*, different from *u_is_lower*. "
-             "Ll+Other_Lowercase")
-      .value("UCHAR_MATH", UCHAR_MATH,
-             "Binary property Math.\n\n  "
-             "Sm+Other_Math")
+             UCHAR_FULL_COMPOSITION_EXCLUSION, R"doc(
+             Binary property Full_Composition_Exclusion.
+
+             CompositionExclusions.txt+Singleton Decompositions+ Non-Starter
+             Decompositions.
+             )doc")
+      .value("UCHAR_GRAPHEME_BASE", UCHAR_GRAPHEME_BASE, R"doc(
+             Binary property Grapheme_Base (new in Unicode 3.2).
+
+             For programmatic determination of grapheme cluster boundaries.
+             [0..10FFFF]-Cc-Cf-Cs-Co-Cn-Zl-Zp-Grapheme_Link-Grapheme_Extend-CGJ
+             )doc")
+      .value("UCHAR_GRAPHEME_EXTEND", UCHAR_GRAPHEME_EXTEND, R"doc(
+             Binary property Grapheme_Extend (new in Unicode 3.2).
+
+             For programmatic determination of grapheme cluster boundaries.
+             Me+Mn+Mc+Other_Grapheme_Extend-Grapheme_Link-CGJ
+             )doc")
+      .value("UCHAR_GRAPHEME_LINK", UCHAR_GRAPHEME_LINK, R"doc(
+             Binary property Grapheme_Link (new in Unicode 3.2).
+
+             For programmatic determination of grapheme cluster boundaries.
+             )doc")
+      .value("UCHAR_HEX_DIGIT", UCHAR_HEX_DIGIT, R"doc(
+             Binary property Hex_Digit.
+
+             Characters commonly used for hexadecimal numbers.
+             )doc")
+      .value("UCHAR_HYPHEN", UCHAR_HYPHEN, R"doc(
+             Binary property Hyphen.
+
+             Dashes used to mark connections between pieces of words, plus
+             the Katakana middle dot.
+             )doc")
+      .value("UCHAR_ID_CONTINUE", UCHAR_ID_CONTINUE, R"doc(
+             Binary property ID_Continue.
+
+             Characters that can continue an identifier.
+             DerivedCoreProperties.txt also says "NOTE: Cf characters
+             should be filtered out." ID_Start+Mn+Mc+Nd+Pc
+             )doc")
+      .value("UCHAR_ID_START", UCHAR_ID_START, R"doc(
+             Binary property ID_Start.
+
+             Characters that can start an identifier. Lu+Ll+Lt+Lm+Lo+Nl
+             )doc")
+      .value("UCHAR_IDEOGRAPHIC", UCHAR_IDEOGRAPHIC, R"doc(
+             Binary property Ideographic.
+
+             CJKV ideographs.
+             )doc")
+      .value("UCHAR_IDS_BINARY_OPERATOR", UCHAR_IDS_BINARY_OPERATOR, R"doc(
+             Binary property IDS_Binary_Operator (new in Unicode 3.2).
+
+             For programmatic determination of Ideographic Description
+             Sequences.
+             )doc")
+      .value("UCHAR_IDS_TRINARY_OPERATOR", UCHAR_IDS_TRINARY_OPERATOR, R"doc(
+             Binary property IDS_Trinary_Operator (new in Unicode 3.2).
+
+             For programmatic determination of Ideographic Description
+             Sequences.
+             )doc")
+      .value("UCHAR_JOIN_CONTROL", UCHAR_JOIN_CONTROL, R"doc(
+             Binary property Join_Control.
+
+             Format controls for cursive joining and ligation.
+             )doc")
+      .value("UCHAR_LOGICAL_ORDER_EXCEPTION", UCHAR_LOGICAL_ORDER_EXCEPTION,
+             R"doc(
+             Binary property Logical_Order_Exception (new in Unicode 3.2).
+
+             Characters that do not use logical order and require special
+             handling in most processing.
+             )doc")
+      .value("UCHAR_LOWERCASE", UCHAR_LOWERCASE, R"doc(
+             Binary property Lowercase.
+
+             Same as :func:`u_is_ulowercase`,
+             different from :func:`u_islower`.
+             Ll+Other_Lowercase
+             )doc")
+      .value("UCHAR_MATH", UCHAR_MATH, R"doc(
+             Binary property Math.
+
+             Sm+Other_Math
+             )doc")
       .value("UCHAR_NONCHARACTER_CODE_POINT", UCHAR_NONCHARACTER_CODE_POINT,
-             "Binary property Noncharacter_Code_Point.\n\n  "
-             "Code points that are explicitly defined as illegal for the "
-             "encoding of characters.")
-      .value("UCHAR_QUOTATION_MARK", UCHAR_QUOTATION_MARK,
-             "Binary property Quotation_Mark.")
-      .value("UCHAR_RADICAL", UCHAR_RADICAL,
-             "Binary property Radical (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of Ideographic Description "
-             "Sequences.")
-      .value("UCHAR_SOFT_DOTTED", UCHAR_SOFT_DOTTED,
-             "Binary property Soft_Dotted (new in Unicode 3.2).\n\n  "
-             "Characters with a \"soft dot\", like i or j. An accent placed on "
-             "these characters causes the dot to "
-             "disappear.")
-      .value("UCHAR_TERMINAL_PUNCTUATION", UCHAR_TERMINAL_PUNCTUATION,
-             "Binary property Terminal_Punctuation.\n\n  "
-             "Punctuation characters that generally mark the end of textual "
-             "units.")
-      .value("UCHAR_UNIFIED_IDEOGRAPH", UCHAR_UNIFIED_IDEOGRAPH,
-             "Binary property Unified_Ideograph (new in Unicode 3.2).\n\n  "
-             "For programmatic determination of Ideographic Description "
-             "Sequences.")
-      .value("UCHAR_UPPERCASE", UCHAR_UPPERCASE,
-             "Binary property Uppercase.\n\n  "
-             "Same as *u_is_uuppercase*, different from *u_isupper*. "
-             "Lu+Other_Uppercase")
-      .value("UCHAR_WHITE_SPACE", UCHAR_WHITE_SPACE,
-             "Binary property White_Space.\n\n  "
-             "Same as *u_is_uwhite_space*, different from *u_isspace* and "
-             "*u_is_whitespace*. Space "
-             "characters+TAB+CR+LF-ZWSP-ZWNBSP")
-      .value("UCHAR_XID_CONTINUE", UCHAR_XID_CONTINUE,
-             "Binary property XID_Continue.\n\n  "
-             "ID_Continue modified to allow closure under normalization forms "
-             "NFKC and NFKD.")
-      .value("UCHAR_XID_START", UCHAR_XID_START,
-             "Binary property XID_Start.\n\n  "
-             "ID_Start modified to allow closure under normalization forms "
-             "NFKC and NFKD.")
-      .value("UCHAR_CASE_SENSITIVE", UCHAR_CASE_SENSITIVE,
-             "Binary property Case_Sensitive.\n\n  "
-             "Either the source of a case mapping or in the target of a case "
-             "mapping. Not the same as the general "
-             "category Cased_Letter.")
-      .value("UCHAR_S_TERM", UCHAR_S_TERM,
-             "Binary property STerm (new in Unicode 4.0.1).\n\n  "
-             "Sentence Terminal. Used in UAX #29: Text Boundaries "
-             "(http://www.unicode.org/reports/tr29/)")
-      .value("UCHAR_VARIATION_SELECTOR", UCHAR_VARIATION_SELECTOR,
-             "Binary property Variation_Selector (new in Unicode 4.0.1).\n\n  "
-             "Indicates all those characters that qualify as Variation "
-             "Selectors. For details on the behavior of these "
-             "characters, see StandardizedVariants.html and 15.6 Variation "
-             "Selectors.")
-      .value("UCHAR_NFD_INERT", UCHAR_NFD_INERT,
-             "Binary property NFD_Inert.\n\n  "
-             "ICU-specific property for characters that are inert under NFD, "
-             "i.e., they do not interact with adjacent "
-             "characters. See the documentation for the *Normalizer2* class "
-             "and the *Normalizer2::is_inert()* method.")
-      .value("UCHAR_NFKD_INERT", UCHAR_NFKD_INERT,
-             "Binary property NFKD_Inert.\n\n  "
-             "ICU-specific property for characters that are inert under NFKD, "
-             "i.e., they do not interact with adjacent "
-             "characters. See the documentation for the *Normalizer2* class "
-             "and the *Normalizer2::is_inert()* method.")
-      .value("UCHAR_NFC_INERT", UCHAR_NFC_INERT,
-             "Binary property NFC_Inert.\n\n  "
-             "ICU-specific property for characters that are inert under NFC, "
-             "i.e., they do not interact with adjacent "
-             "characters. See the documentation for the *Normalizer2* class "
-             "and the *Normalizer2::is_inert()* method.")
-      .value("UCHAR_NFKC_INERT", UCHAR_NFKC_INERT,
-             "Binary property NFKC_Inert.\n\n  "
-             "ICU-specific property for characters that are inert under NFKC, "
-             "i.e., they do not interact with adjacent "
-             "characters. See the documentation for the *Normalizer2* class "
-             "and the *Normalizer2::is_inert()* method.")
-      .value("UCHAR_SEGMENT_STARTER", UCHAR_SEGMENT_STARTER,
-             "Binary Property Segment_Starter.\n\n  "
-             "ICU-specific property for characters that are starters in terms "
-             "of Unicode normalization and combining "
-             "character sequences. They have ccc=0 and do not occur in "
-             "non-initial position of the canonical "
-             "decomposition of any character (like a-umlaut in NFD and a Jamo "
-             "T in an NFD(Hangul LVT)). ICU uses this "
-             "property for segmenting a string for generating a set of "
-             "canonically equivalent strings, e.g. for "
-             "canonical closure while processing collation tailoring rules.")
-      .value("UCHAR_PATTERN_SYNTAX", UCHAR_PATTERN_SYNTAX,
-             "Binary property Pattern_Syntax (new in Unicode 4.1).\n\n  "
-             "See UAX #31 Identifier and Pattern Syntax "
-             "(http://www.unicode.org/reports/tr31/)")
-      .value("UCHAR_PATTERN_WHITE_SPACE", UCHAR_PATTERN_WHITE_SPACE,
-             "Binary property Pattern_White_Space (new in Unicode 4.1).\n\n  "
-             "See UAX #31 Identifier and Pattern Syntax "
-             "(http://www.unicode.org/reports/tr31/)")
-      .value("UCHAR_POSIX_ALNUM", UCHAR_POSIX_ALNUM,
-             "Binary property alnum (a C/POSIX character class).\n\n  "
-             "Implemented according to the UTS #18 Annex C Standard "
-             "Recommendation. See the uchar.h file "
-             "documentation.")
-      .value("UCHAR_POSIX_BLANK", UCHAR_POSIX_BLANK,
-             "Binary property blank (a C/POSIX character class).\n\n  "
-             "Implemented according to the UTS #18 Annex C Standard "
-             "Recommendation. See the uchar.h file "
-             "documentation.")
-      .value("UCHAR_POSIX_GRAPH", UCHAR_POSIX_GRAPH,
-             "Binary property graph (a C/POSIX character class).\n\n  "
-             "Implemented according to the UTS #18 Annex C Standard "
-             "Recommendation. See the uchar.h file "
-             "documentation.")
-      .value("UCHAR_POSIX_PRINT", UCHAR_POSIX_PRINT,
-             "Binary property print (a C/POSIX character class).\n\n  "
-             "Implemented according to the UTS #18 Annex C Standard "
-             "Recommendation. See the uchar.h file "
-             "documentation.")
-      .value("UCHAR_POSIX_XDIGIT", UCHAR_POSIX_XDIGIT,
-             "Binary property xdigit (a C/POSIX character class).\n\n  "
-             "Implemented according to the UTS #18 Annex C Standard "
-             "Recommendation. See the uchar.h file "
-             "documentation.")
-      .value("UCHAR_CASED", UCHAR_CASED,
-             "Binary property Cased.\n\n  "
-             "For Lowercase, Uppercase and Titlecase characters.")
-      .value("UCHAR_CASE_IGNORABLE", UCHAR_CASE_IGNORABLE,
-             "Binary property Case_Ignorable.\n\n  "
-             "Used in context-sensitive case mappings.")
+             R"doc(
+             Binary property Noncharacter_Code_Point.
+
+             Code points that are explicitly defined as illegal for the
+             encoding of characters.
+             )doc")
+      .value("UCHAR_QUOTATION_MARK", UCHAR_QUOTATION_MARK, R"doc(
+             Binary property Quotation_Mark.
+             )doc")
+      .value("UCHAR_RADICAL", UCHAR_RADICAL, R"doc(
+             Binary property Radical (new in Unicode 3.2).
+
+             For programmatic determination of Ideographic Description
+             Sequences.
+             )doc")
+      .value("UCHAR_SOFT_DOTTED", UCHAR_SOFT_DOTTED, R"doc(
+             Binary property Soft_Dotted (new in Unicode 3.2).
+
+             Characters with a "soft dot", like i or j. An accent placed on
+             these characters causes the dot to
+             disappear.
+             )doc")
+      .value("UCHAR_TERMINAL_PUNCTUATION", UCHAR_TERMINAL_PUNCTUATION, R"doc(
+             Binary property Terminal_Punctuation.
+
+             Punctuation characters that generally mark the end of textual
+             units.
+             )doc")
+      .value("UCHAR_UNIFIED_IDEOGRAPH", UCHAR_UNIFIED_IDEOGRAPH, R"doc(
+             Binary property Unified_Ideograph (new in Unicode 3.2).
+
+             For programmatic determination of Ideographic Description
+             Sequences.
+             )doc")
+      .value("UCHAR_UPPERCASE", UCHAR_UPPERCASE, R"doc(
+             Binary property Uppercase.
+
+             Same as :func:`u_is_uuppercase`,
+             different from :func:`u_isupper`.
+             Lu+Other_Uppercase
+             )doc")
+      .value("UCHAR_WHITE_SPACE", UCHAR_WHITE_SPACE, R"doc(
+             Binary property White_Space.
+
+             Same as :func:`u_is_uwhite_space`,
+             different from :func:`u_isspace` and
+             :func:`u_is_whitespace`.
+             Space characters+TAB+CR+LF-ZWSP-ZWNBSP
+             )doc")
+      .value("UCHAR_XID_CONTINUE", UCHAR_XID_CONTINUE, R"doc(
+             Binary property XID_Continue.
+
+             ID_Continue modified to allow closure under normalization forms
+             NFKC and NFKD.
+             )doc")
+      .value("UCHAR_XID_START", UCHAR_XID_START, R"doc(
+             Binary property XID_Start.
+
+             ID_Start modified to allow closure under normalization forms
+             NFKC and NFKD.
+             )doc")
+      .value("UCHAR_CASE_SENSITIVE", UCHAR_CASE_SENSITIVE, R"doc(
+             Binary property Case_Sensitive.
+
+             Either the source of a case mapping or in the target of a case
+             mapping. Not the same as the general category Cased_Letter.
+             )doc")
+      .value("UCHAR_S_TERM", UCHAR_S_TERM, R"doc(
+             Binary property STerm (new in Unicode 4.0.1).
+
+             Sentence Terminal. Used in UAX #29: Text Boundaries
+             "(http://www.unicode.org/reports/tr29/)
+             )doc")
+      .value("UCHAR_VARIATION_SELECTOR", UCHAR_VARIATION_SELECTOR, R"doc(
+             Binary property Variation_Selector (new in Unicode 4.0.1).
+
+             Indicates all those characters that qualify as Variation
+             Selectors. For details on the behavior of these
+             characters, see StandardizedVariants.html and 15.6 Variation
+             Selectors.
+             )doc")
+      .value("UCHAR_NFD_INERT", UCHAR_NFD_INERT, R"doc(
+             Binary property NFD_Inert.
+
+             ICU-specific property for characters that are inert under NFD,
+             i.e., they do not interact with adjacent
+             characters. See the documentation for the :class:`Normalizer2`
+             class and the :meth:`Normalizer2.is_inert` method.
+             )doc")
+      .value("UCHAR_NFKD_INERT", UCHAR_NFKD_INERT, R"doc(
+             Binary property NFKD_Inert.
+
+             ICU-specific property for characters that are inert under NFKD,
+             i.e., they do not interact with adjacent
+             characters. See the documentation for the :class:`Normalizer2`
+             class and the :meth:`Normalizer2.is_inert` method.
+             )doc")
+      .value("UCHAR_NFC_INERT", UCHAR_NFC_INERT, R"doc(
+             Binary property NFC_Inert.
+
+             ICU-specific property for characters that are inert under NFC,
+             i.e., they do not interact with adjacent
+             characters. See the documentation for the :class:`Normalizer2`
+             class and the :meth:`Normalizer2.is_inert` method.
+             )doc")
+      .value("UCHAR_NFKC_INERT", UCHAR_NFKC_INERT, R"doc(
+             Binary property NFKC_Inert.
+
+             ICU-specific property for characters that are inert under NFKC,
+             i.e., they do not interact with adjacent
+             characters. See the documentation for the :class:`Normalizer2`
+             class and the :meth:`Normalizer2.is_inert` method.
+             )doc")
+      .value("UCHAR_SEGMENT_STARTER", UCHAR_SEGMENT_STARTER, R"doc(
+             Binary Property Segment_Starter.
+
+             ICU-specific property for characters that are starters in terms
+             of Unicode normalization and combining
+             character sequences. They have ccc=0 and do not occur in
+             non-initial position of the canonical
+             decomposition of any character (like a-umlaut in NFD and a Jamo
+             T in an NFD(Hangul LVT)). ICU uses this
+             property for segmenting a string for generating a set of
+             canonically equivalent strings, e.g. for
+             canonical closure while processing collation tailoring rules.
+             )doc")
+      .value("UCHAR_PATTERN_SYNTAX", UCHAR_PATTERN_SYNTAX, R"doc(
+             Binary property Pattern_Syntax (new in Unicode 4.1).
+
+             See UAX #31 Identifier and Pattern Syntax
+             (http://www.unicode.org/reports/tr31/)
+             )doc")
+      .value("UCHAR_PATTERN_WHITE_SPACE", UCHAR_PATTERN_WHITE_SPACE, R"doc(
+             Binary property Pattern_White_Space (new in Unicode 4.1).
+
+             See UAX #31 Identifier and Pattern Syntax
+             (http://www.unicode.org/reports/tr31/)
+             )doc")
+      .value("UCHAR_POSIX_ALNUM", UCHAR_POSIX_ALNUM, R"doc(
+             Binary property alnum (a C/POSIX character class).
+
+             Implemented according to the UTS #18 Annex C Standard
+             Recommendation. See the uchar.h file documentation.
+             )doc")
+      .value("UCHAR_POSIX_BLANK", UCHAR_POSIX_BLANK, R"doc(
+             Binary property blank (a C/POSIX character class).
+
+             Implemented according to the UTS #18 Annex C Standard
+             Recommendation. See the uchar.h file documentation.
+             )doc")
+      .value("UCHAR_POSIX_GRAPH", UCHAR_POSIX_GRAPH, R"doc(
+             Binary property graph (a C/POSIX character class).
+
+             Implemented according to the UTS #18 Annex C Standard
+             Recommendation. See the uchar.h file documentation.
+             )doc")
+      .value("UCHAR_POSIX_PRINT", UCHAR_POSIX_PRINT, R"doc(
+             Binary property print (a C/POSIX character class).
+
+             Implemented according to the UTS #18 Annex C Standard
+             Recommendation. See the uchar.h file documentation.
+             )doc")
+      .value("UCHAR_POSIX_XDIGIT", UCHAR_POSIX_XDIGIT, R"doc(
+             Binary property xdigit (a C/POSIX character class).
+
+             Implemented according to the UTS #18 Annex C Standard
+             Recommendation. See the uchar.h file documentation.
+             )doc")
+      .value("UCHAR_CASED", UCHAR_CASED, R"doc(
+             Binary property Cased.
+
+             For Lowercase, Uppercase and Titlecase characters.
+             )doc")
+      .value("UCHAR_CASE_IGNORABLE", UCHAR_CASE_IGNORABLE, R"doc(
+             Binary property Case_Ignorable.
+
+             Used in context-sensitive case mappings.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_LOWERCASED", UCHAR_CHANGES_WHEN_LOWERCASED,
-             "Binary property Changes_When_Lowercased.")
+             R"doc(
+             Binary property Changes_When_Lowercased.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_UPPERCASED", UCHAR_CHANGES_WHEN_UPPERCASED,
-             "Binary property Changes_When_Uppercased.")
+             R"doc(
+             Binary property Changes_When_Uppercased.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_TITLECASED", UCHAR_CHANGES_WHEN_TITLECASED,
-             "Binary property Changes_When_Titlecased.")
+             R"doc(
+             Binary property Changes_When_Titlecased.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_CASEFOLDED", UCHAR_CHANGES_WHEN_CASEFOLDED,
-             "Binary property Changes_When_Casefolded.")
+             R"doc(
+             Binary property Changes_When_Casefolded.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_CASEMAPPED", UCHAR_CHANGES_WHEN_CASEMAPPED,
-             "Binary property Changes_When_Casemapped.")
+             R"doc(
+             Binary property Changes_When_Casemapped.
+             )doc")
       .value("UCHAR_CHANGES_WHEN_NFKC_CASEFOLDED",
-             UCHAR_CHANGES_WHEN_NFKC_CASEFOLDED,
-             "Binary property Changes_When_NFKC_Casefolded.")
+             UCHAR_CHANGES_WHEN_NFKC_CASEFOLDED, R"doc(
+             Binary property Changes_When_NFKC_Casefolded.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
-      .value("UCHAR_EMOJI", UCHAR_EMOJI,
-             "Binary property Emoji.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
-      .value("UCHAR_EMOJI_PRESENTATION", UCHAR_EMOJI_PRESENTATION,
-             "Binary property Emoji_Presentation.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
-      .value("UCHAR_EMOJI_MODIFIER", UCHAR_EMOJI_MODIFIER,
-             "Binary property Emoji_Modifier.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
-      .value("UCHAR_EMOJI_MODIFIER_BASE", UCHAR_EMOJI_MODIFIER_BASE,
-             "Binary property Emoji_Modifier_Base.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
+      .value("UCHAR_EMOJI", UCHAR_EMOJI, R"doc(
+             Binary property Emoji.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
+      .value("UCHAR_EMOJI_PRESENTATION", UCHAR_EMOJI_PRESENTATION, R"doc(
+             Binary property Emoji_Presentation.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
+      .value("UCHAR_EMOJI_MODIFIER", UCHAR_EMOJI_MODIFIER, R"doc(
+             Binary property Emoji_Modifier.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
+      .value("UCHAR_EMOJI_MODIFIER_BASE", UCHAR_EMOJI_MODIFIER_BASE, R"doc(
+             Binary property Emoji_Modifier_Base.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
-      .value("UCHAR_EMOJI_COMPONENT", UCHAR_EMOJI_COMPONENT,
-             "Binary property Emoji_Component.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
-      .value("UCHAR_REGIONAL_INDICATOR", UCHAR_REGIONAL_INDICATOR,
-             "Binary property Regional_Indicator.")
+      .value("UCHAR_EMOJI_COMPONENT", UCHAR_EMOJI_COMPONENT, R"doc(
+             Binary property Emoji_Component.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
+      .value("UCHAR_REGIONAL_INDICATOR", UCHAR_REGIONAL_INDICATOR, R"doc(
+             Binary property Regional_Indicator.
+             )doc")
       .value("UCHAR_PREPENDED_CONCATENATION_MARK",
-             UCHAR_PREPENDED_CONCATENATION_MARK,
-             "Binary property Prepended_Concatenation_Mark.")
+             UCHAR_PREPENDED_CONCATENATION_MARK, R"doc(
+             Binary property Prepended_Concatenation_Mark.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
-      .value("UCHAR_EXTENDED_PICTOGRAPHIC", UCHAR_EXTENDED_PICTOGRAPHIC,
-             "Binary property Extended_Pictographic.\n\n  "
-             "See http://www.unicode.org/reports/tr51/#Emoji_Properties")
+      .value("UCHAR_EXTENDED_PICTOGRAPHIC", UCHAR_EXTENDED_PICTOGRAPHIC, R"doc(
+             Binary property Extended_Pictographic.
+
+             See http://www.unicode.org/reports/tr51/#Emoji_Properties
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
-      .value("UCHAR_BASIC_EMOJI", UCHAR_BASIC_EMOJI,
-             "Binary property of strings Basic_Emoji.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
-      .value("UCHAR_EMOJI_KEYCAP_SEQUENCE", UCHAR_EMOJI_KEYCAP_SEQUENCE,
-             "Binary property of strings Emoji_Keycap_Sequence.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+      .value("UCHAR_BASIC_EMOJI", UCHAR_BASIC_EMOJI, R"doc(
+             Binary property of strings Basic_Emoji.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
+      .value("UCHAR_EMOJI_KEYCAP_SEQUENCE", UCHAR_EMOJI_KEYCAP_SEQUENCE, R"doc(
+             Binary property of strings Emoji_Keycap_Sequence.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
       .value("UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE",
-             UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE,
-             "Binary property of strings RGI_Emoji_Modifier_Sequence.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+             UCHAR_RGI_EMOJI_MODIFIER_SEQUENCE, R"doc(
+             Binary property of strings RGI_Emoji_Modifier_Sequence.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
       .value("UCHAR_RGI_EMOJI_FLAG_SEQUENCE", UCHAR_RGI_EMOJI_FLAG_SEQUENCE,
-             "Binary property of strings RGI_Emoji_Flag_Sequence.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+             R"doc(
+             Binary property of strings RGI_Emoji_Flag_Sequence.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
       .value("UCHAR_RGI_EMOJI_TAG_SEQUENCE", UCHAR_RGI_EMOJI_TAG_SEQUENCE,
-             "Binary property of strings RGI_Emoji_Tag_Sequence.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+             R"doc(
+             Binary property of strings RGI_Emoji_Tag_Sequence.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
       .value("UCHAR_RGI_EMOJI_ZWJ_SEQUENCE", UCHAR_RGI_EMOJI_ZWJ_SEQUENCE,
-             "Binary property of strings RGI_Emoji_ZWJ_Sequence.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
-      .value("UCHAR_RGI_EMOJI", UCHAR_RGI_EMOJI,
-             "Binary property of strings RGI_Emoji.\n\n  "
-             "See https://www.unicode.org/reports/tr51/#Emoji_Sets")
+             R"doc(
+             Binary property of strings RGI_Emoji_ZWJ_Sequence.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
+      .value("UCHAR_RGI_EMOJI", UCHAR_RGI_EMOJI, R"doc(
+             Binary property of strings RGI_Emoji.
+
+             See https://www.unicode.org/reports/tr51/#Emoji_Sets
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 70)
 #if (U_ICU_VERSION_MAJOR_NUM >= 74)
-      .value("UCHAR_IDS_UNARY_OPERATOR", UCHAR_IDS_UNARY_OPERATOR,
-             "Binary property IDS_Unary_Operator.\n\n"
-             "For programmatic determination of Ideographic Description "
-             "Sequences.")
-      .value("UCHAR_ID_COMPAT_MATH_START", UCHAR_ID_COMPAT_MATH_START,
-             "Binary property ID_Compat_Math_Start.\n\n"
-             "Used in mathematical identifier profile in UAX #31.")
+      .value("UCHAR_IDS_UNARY_OPERATOR", UCHAR_IDS_UNARY_OPERATOR, R"doc(
+             Binary property IDS_Unary_Operator.
+
+             For programmatic determination of Ideographic Description
+             Sequences.
+             )doc")
+      .value("UCHAR_ID_COMPAT_MATH_START", UCHAR_ID_COMPAT_MATH_START, R"doc(
+             Binary property ID_Compat_Math_Start.
+
+             Used in mathematical identifier profile in UAX #31.
+             )doc")
       .value("UCHAR_ID_COMPAT_MATH_CONTINUE", UCHAR_ID_COMPAT_MATH_CONTINUE,
-             "Binary property ID_Compat_Math_Continue.\n\n"
-             "Used in mathematical identifier profile in UAX #31.")
+             R"doc(
+             Binary property ID_Compat_Math_Continue.
+
+             Used in mathematical identifier profile in UAX #31.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 74)
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
       .value("UCHAR_MODIFIER_COMBINING_MARK", UCHAR_MODIFIER_COMBINING_MARK,
-             "Binary property Modifier_Combining_Mark.\n\n"
-             "Used by the AMTRA algorithm in UAX #53.")
+             R"doc(
+             Binary property Modifier_Combining_Mark.
+
+             Used by the AMTRA algorithm in UAX #53.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
-      .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value("UCHAR_BIDI_CLASS", UCHAR_BIDI_CLASS,
-             "Enumerated property Bidi_Class.\n\n  "
-             "Same as *u_char_direction*, returns *UCharDirection* values.")
-      .value("UCHAR_INT_START", UCHAR_INT_START,
-             "First constant for enumerated/integer Unicode properties.")
-      .value("UCHAR_BLOCK", UCHAR_BLOCK,
-             "Enumerated property Block.\n\n  "
-             "Same as *ublock_get_code*, returns *UBlockCode* values.")
+      .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_BIDI_CLASS", UCHAR_BIDI_CLASS, R"doc(
+             Enumerated property Bidi_Class.
+
+             Same as :func:`u_char_direction`,
+             returns :class:`UCharDirection` values.
+             )doc")
+      .value("UCHAR_INT_START", UCHAR_INT_START, R"doc(
+             First constant for enumerated/integer Unicode properties.
+             )doc")
+      .value("UCHAR_BLOCK", UCHAR_BLOCK, R"doc(
+             Enumerated property Block.
+
+             Same as :func:`ublock_get_code`,
+             returns :class:`UBlockCode` values.
+             )doc")
       .value("UCHAR_CANONICAL_COMBINING_CLASS", UCHAR_CANONICAL_COMBINING_CLASS,
-             "Enumerated property Canonical_Combining_Class.\n\n  "
-             "Same as *u_get_combining_class*, returns 8-bit numeric values.")
-      .value("UCHAR_DECOMPOSITION_TYPE", UCHAR_DECOMPOSITION_TYPE,
-             "Enumerated property Decomposition_Type.\n\n  "
-             "Returns *UDecompositionType* values.")
-      .value("UCHAR_EAST_ASIAN_WIDTH", UCHAR_EAST_ASIAN_WIDTH,
-             "Enumerated property East_Asian_Width.\n\n  "
-             "See http://www.unicode.org/reports/tr11/ Returns "
-             "*UEastAsianWidth* values.")
-      .value("UCHAR_GENERAL_CATEGORY", UCHAR_GENERAL_CATEGORY,
-             "Enumerated property General_Category.\n\n  "
-             "Same as *u_char_type*, returns *UCharCategory* values.")
-      .value("UCHAR_JOINING_GROUP", UCHAR_JOINING_GROUP,
-             "Enumerated property Joining_Group.\n\n  "
-             "Returns *UJoiningGroup* values.")
-      .value("UCHAR_JOINING_TYPE", UCHAR_JOINING_TYPE,
-             "Enumerated property Joining_Type.\n\n  "
-             "Returns *UJoiningType* values.")
-      .value("UCHAR_LINE_BREAK", UCHAR_LINE_BREAK,
-             "Enumerated property Line_Break.\n\n  "
-             "Returns *ULineBreak* values.")
-      .value("UCHAR_NUMERIC_TYPE", UCHAR_NUMERIC_TYPE,
-             "Enumerated property Numeric_Type.\n\n  "
-             "Returns *UNumericType* values.")
-      .value("UCHAR_SCRIPT", UCHAR_SCRIPT,
-             "Enumerated property Script.\n\n  "
-             "Same as *uscript_get_script*, returns *UScriptCode* values.")
-      .value("UCHAR_HANGUL_SYLLABLE_TYPE", UCHAR_HANGUL_SYLLABLE_TYPE,
-             "Enumerated property Hangul_Syllable_Type, new in Unicode 4.\n\n  "
-             "Returns *UHangulSyllableType* values.")
-      .value("UCHAR_NFD_QUICK_CHECK", UCHAR_NFD_QUICK_CHECK,
-             "Enumerated property NFD_Quick_Check.\n\n  "
-             "Returns *UNormalizationCheckResult* values.")
-      .value("UCHAR_NFKD_QUICK_CHECK", UCHAR_NFKD_QUICK_CHECK,
-             "Enumerated property NFKD_Quick_Check.\n\n  "
-             "Returns *UNormalizationCheckResult* values.")
-      .value("UCHAR_NFC_QUICK_CHECK", UCHAR_NFC_QUICK_CHECK,
-             "Enumerated property NFC_Quick_Check.\n\n  "
-             "Returns *UNormalizationCheckResult* values.")
-      .value("UCHAR_NFKC_QUICK_CHECK", UCHAR_NFKC_QUICK_CHECK,
-             "Enumerated property NFKC_Quick_Check.\n\n  "
-             "Returns *UNormalizationCheckResult* values.")
+             R"doc(
+             Enumerated property Canonical_Combining_Class.
+
+             Same as :func:`u_get_combining_class`,
+             returns 8-bit numeric values.
+             )doc")
+      .value("UCHAR_DECOMPOSITION_TYPE", UCHAR_DECOMPOSITION_TYPE, R"doc(
+             Enumerated property Decomposition_Type.
+
+             Returns :class:`UDecompositionType` values.
+             )doc")
+      .value("UCHAR_EAST_ASIAN_WIDTH", UCHAR_EAST_ASIAN_WIDTH, R"doc(
+             Enumerated property East_Asian_Width.
+
+             See http://www.unicode.org/reports/tr11/ Returns
+             :class:`UEastAsianWidth` values.
+             )doc")
+      .value("UCHAR_GENERAL_CATEGORY", UCHAR_GENERAL_CATEGORY, R"doc(
+             Enumerated property General_Category.
+
+             Same as :func:`u_char_type`,
+             returns :class:`UCharCategory` values.
+             )doc")
+      .value("UCHAR_JOINING_GROUP", UCHAR_JOINING_GROUP, R"doc(
+             Enumerated property Joining_Group.
+
+             Returns :class:`UJoiningGroup` values.
+             )doc")
+      .value("UCHAR_JOINING_TYPE", UCHAR_JOINING_TYPE, R"doc(
+             Enumerated property Joining_Type.
+
+             Returns :class:`UJoiningType` values.
+             )doc")
+      .value("UCHAR_LINE_BREAK", UCHAR_LINE_BREAK, R"doc(
+             Enumerated property Line_Break.
+
+             Returns :class:`ULineBreak` values.
+             )doc")
+      .value("UCHAR_NUMERIC_TYPE", UCHAR_NUMERIC_TYPE, R"doc(
+             Enumerated property Numeric_Type.
+
+             Returns :class:`UNumericType` values.
+             )doc")
+      .value("UCHAR_SCRIPT", UCHAR_SCRIPT, R"doc(
+             Enumerated property Script.
+
+             Same as :func:`uscript_get_script`,
+             returns :class:`UScriptCode` values.
+             )doc")
+      .value("UCHAR_HANGUL_SYLLABLE_TYPE", UCHAR_HANGUL_SYLLABLE_TYPE, R"doc(
+             Enumerated property Hangul_Syllable_Type, new in Unicode 4.
+
+             Returns :class:`UHangulSyllableType` values.
+             )doc")
+      .value("UCHAR_NFD_QUICK_CHECK", UCHAR_NFD_QUICK_CHECK, R"doc(
+             Enumerated property NFD_Quick_Check.
+
+             Returns :class:`UNormalizationCheckResult` values.
+             )doc")
+      .value("UCHAR_NFKD_QUICK_CHECK", UCHAR_NFKD_QUICK_CHECK, R"doc(
+             Enumerated property NFKD_Quick_Check.
+
+             Returns :class:`UNormalizationCheckResult` values.
+             )doc")
+      .value("UCHAR_NFC_QUICK_CHECK", UCHAR_NFC_QUICK_CHECK, R"doc(
+             Enumerated property NFC_Quick_Check.
+
+             Returns :class:`UNormalizationCheckResult` values.
+             )doc")
+      .value("UCHAR_NFKC_QUICK_CHECK", UCHAR_NFKC_QUICK_CHECK, R"doc(
+             Enumerated property NFKC_Quick_Check.
+
+             Returns :class:`UNormalizationCheckResult` values.
+             )doc")
       .value("UCHAR_LEAD_CANONICAL_COMBINING_CLASS",
-             UCHAR_LEAD_CANONICAL_COMBINING_CLASS,
-             "Enumerated property Lead_Canonical_Combining_Class.\n\n  "
-             "ICU-specific property for the ccc of the first code point of the "
-             "decomposition, "
-             "or lccc(c)=ccc(NFD(c)[0]). Useful for checking for canonically "
-             "ordered text; see UNORM_FCD and "
-             "http://www.unicode.org/notes/tn5/#FCD . Returns 8-bit numeric "
-             "values like "
-             "*UCHAR_CANONICAL_COMBINING_CLASS*.")
+             UCHAR_LEAD_CANONICAL_COMBINING_CLASS, R"doc(
+             Enumerated property Lead_Canonical_Combining_Class.
+
+             ICU-specific property for the ccc of the first code point of the
+             decomposition, or lccc(c)=ccc(NFD(c)[0]). Useful for checking for
+             canonically ordered text; see UNORM_FCD and
+             http://www.unicode.org/notes/tn5/#FCD . Returns 8-bit numeric
+             values like UCHAR_CANONICAL_COMBINING_CLASS.
+             )doc")
       .value("UCHAR_TRAIL_CANONICAL_COMBINING_CLASS",
-             UCHAR_TRAIL_CANONICAL_COMBINING_CLASS,
-             "Enumerated property Trail_Canonical_Combining_Class.\n\n  "
-             "ICU-specific property for the ccc of the last code point of the "
-             "decomposition, or "
-             "tccc(c)=ccc(NFD(c)[last]). Useful for checking for canonically "
-             "ordered text; see UNORM_FCD and "
-             "http://www.unicode.org/notes/tn5/#FCD . Returns 8-bit numeric "
-             "values like "
-             "*UCHAR_CANONICAL_COMBINING_CLASS*.")
+             UCHAR_TRAIL_CANONICAL_COMBINING_CLASS, R"doc(
+             Enumerated property Trail_Canonical_Combining_Class.
+
+             ICU-specific property for the ccc of the last code point of the
+             decomposition, or tccc(c)=ccc(NFD(c)[last]). Useful for checking
+             for canonically ordered text; see UNORM_FCD and
+             "http://www.unicode.org/notes/tn5/#FCD . Returns 8-bit numeric
+             values like UCHAR_CANONICAL_COMBINING_CLASS.
+             )doc")
       .value("UCHAR_GRAPHEME_CLUSTER_BREAK", UCHAR_GRAPHEME_CLUSTER_BREAK,
-             "Enumerated property Grapheme_Cluster_Break (new in Unicode "
-             "4.1).\n\n  "
-             "Used in UAX #29: Text Boundaries "
-             "(http://www.unicode.org/reports/tr29/) Returns "
-             "*UGraphemeClusterBreak* "
-             "values.")
-      .value("UCHAR_SENTENCE_BREAK", UCHAR_SENTENCE_BREAK,
-             "Enumerated property Sentence_Break (new in Unicode 4.1).\n\n  "
-             "Used in UAX #29: Text Boundaries "
-             "(http://www.unicode.org/reports/tr29/) Returns *USentenceBreak* "
-             "values.")
-      .value(
-          "UCHAR_WORD_BREAK", UCHAR_WORD_BREAK,
-          "Enumerated property Word_Break (new in Unicode 4.1).\n\n  "
-          "Used in UAX #29: Text Boundaries "
-          "(http://www.unicode.org/reports/tr29/) Returns *UWordBreakValues* "
-          "values.")
+             R"doc(
+             Enumerated property Grapheme_Cluster_Break (new in Unicode 4.1).
+
+             Used in UAX #29: Text Boundaries
+             (http://www.unicode.org/reports/tr29/) Returns
+             :class:`UGraphemeClusterBreak` values.
+             )doc")
+      .value("UCHAR_SENTENCE_BREAK", UCHAR_SENTENCE_BREAK, R"doc(
+             Enumerated property Sentence_Break (new in Unicode 4.1).
+
+             Used in UAX #29: Text Boundaries
+             (http://www.unicode.org/reports/tr29/) Returns
+             :class:`USentenceBreak` values.
+             )doc")
+      .value("UCHAR_WORD_BREAK", UCHAR_WORD_BREAK, R"doc(
+             Enumerated property Word_Break (new in Unicode 4.1).
+
+             Used in UAX #29: Text Boundaries
+             (http://www.unicode.org/reports/tr29/) Returns
+             :class:`UWordBreakValues` values.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
       .value("UCHAR_BIDI_PAIRED_BRACKET_TYPE", UCHAR_BIDI_PAIRED_BRACKET_TYPE,
-             "Enumerated property Bidi_Paired_Bracket_Type (new in Unicode "
-             "6.3).\n\n  "
-             "Used in UAX #9: Unicode Bidirectional Algorithm "
-             "(http://www.unicode.org/reports/tr9/) Returns "
-             "*UBidiPairedBracketType* values.")
+             R"doc(
+             Enumerated property Bidi_Paired_Bracket_Type (new in Unicode 6.3).
+
+             Used in UAX #9: Unicode Bidirectional Algorithm
+             (http://www.unicode.org/reports/tr9/) Returns
+             :class:`UBidiPairedBracketType` values.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
       .value("UCHAR_INDIC_POSITIONAL_CATEGORY", UCHAR_INDIC_POSITIONAL_CATEGORY,
-             "Enumerated property Indic_Positional_Category.\n\n  "
-             "New in Unicode 6.0 as provisional property Indic_Matra_Category; "
-             "renamed and changed to informative in "
-             "Unicode 8.0. See "
-             "http://www.unicode.org/reports/tr44/#IndicPositionalCategory.txt")
+             R"doc(
+             Enumerated property Indic_Positional_Category.
+
+             New in Unicode 6.0 as provisional property Indic_Matra_Category;
+             renamed and changed to informative in Unicode 8.0. See
+             http://www.unicode.org/reports/tr44/#IndicPositionalCategory.txt
+             )doc")
       .value("UCHAR_INDIC_SYLLABIC_CATEGORY", UCHAR_INDIC_SYLLABIC_CATEGORY,
-             "Enumerated property Indic_Syllabic_Category.\n\n  "
-             "New in Unicode 6.0 as provisional; informative since Unicode "
-             "8.0. See "
-             "http://www.unicode.org/reports/tr44/#IndicSyllabicCategory.txt")
-      .value("UCHAR_VERTICAL_ORIENTATION", UCHAR_VERTICAL_ORIENTATION,
-             "Enumerated property Vertical_Orientation.\n\n  "
-             "Used for UAX #50 Unicode Vertical Text Layout "
-             "(https://www.unicode.org/reports/tr50/). New as a UCD "
-             "property in Unicode 10.0.")
+             R"doc(
+             Enumerated property Indic_Syllabic_Category.
+
+             New in Unicode 6.0 as provisional; informative since Unicode 8.0.
+             See
+             http://www.unicode.org/reports/tr44/#IndicSyllabicCategory.txt
+             )doc")
+      .value("UCHAR_VERTICAL_ORIENTATION", UCHAR_VERTICAL_ORIENTATION, R"doc(
+             Enumerated property Vertical_Orientation.
+
+             Used for UAX #50 Unicode Vertical Text Layout
+             (https://www.unicode.org/reports/tr50/). New as a UCD property in
+             Unicode 10.0.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
-      .value(
-          "UCHAR_IDENTIFIER_STATUS", UCHAR_IDENTIFIER_STATUS,
-          "Enumerated property Identifier_Status.\n\n"
-          "Used for UTS #39 General Security Profile for Identifiers "
-          "(https://www.unicode.org/reports/tr39/#General_Security_Profile).")
+      .value("UCHAR_IDENTIFIER_STATUS", UCHAR_IDENTIFIER_STATUS, R"doc(
+             Enumerated property Identifier_Status.
+
+             Used for UTS #39 General Security Profile for Identifiers
+             (https://www.unicode.org/reports/tr39/#General_Security_Profile).
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
-      .value("UCHAR_INDIC_CONJUNCT_BREAK", UCHAR_INDIC_CONJUNCT_BREAK,
-             "Enumerated property Indic_Conjunct_Break.\n\n"
-             "Used in the grapheme cluster break algorithm in UAX #29.")
+      .value("UCHAR_INDIC_CONJUNCT_BREAK", UCHAR_INDIC_CONJUNCT_BREAK, R"doc(
+             Enumerated property Indic_Conjunct_Break.
+
+             Used in the grapheme cluster break algorithm in UAX #29.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
-      .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value("UCHAR_GENERAL_CATEGORY_MASK", UCHAR_GENERAL_CATEGORY_MASK,
-             "Bitmask property General_Category_Mask.\n\n  "
-             "This is the General_Category property returned as a bit mask. "
-             "When used in "
-             "*u_get_int_property_value(c)*, same as *u_mask(u_char_type(c))*, "
-             "returns bit masks for *UCharCategory* "
-             "values where exactly one bit is set. When used with "
-             "*u_get_property_value_name()* and "
-             "*u_get_property_value_enum()*, a multi-bit mask is used for sets "
-             "of categories like \"Letters\". Mask "
-             "values should be cast to uint32_t.")
-      .value("UCHAR_MASK_START", UCHAR_MASK_START,
-             "First constant for bit-mask Unicode properties.")
-      .value("UCHAR_MASK_LIMIT", UCHAR_MASK_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value("UCHAR_NUMERIC_VALUE", UCHAR_NUMERIC_VALUE,
-             "Double property Numeric_Value.\n\n  "
-             "Corresponds to *u_get_numeric_value*.")
-      .value("UCHAR_DOUBLE_START", UCHAR_DOUBLE_START,
-             "First constant for double Unicode properties.")
-      .value("UCHAR_DOUBLE_LIMIT", UCHAR_DOUBLE_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value("UCHAR_AGE", UCHAR_AGE,
-             "String property Age.\n\n  "
-             "Corresponds to *u_char_age*.")
-      .value("UCHAR_STRING_START", UCHAR_STRING_START,
-             "First constant for string Unicode properties.")
-      .value("UCHAR_BIDI_MIRRORING_GLYPH", UCHAR_BIDI_MIRRORING_GLYPH,
-             "String property Bidi_Mirroring_Glyph.\n\n  "
-             "Corresponds to *u_char_mirror*.")
-      .value("UCHAR_CASE_FOLDING", UCHAR_CASE_FOLDING,
-             "String property Case_Folding.\n\n  "
-             "Corresponds to *u_str_fold_case* in ustring.h.")
-      .value("UCHAR_ISO_COMMENT", UCHAR_ISO_COMMENT, "**Deprecated:** ICU 49")
-      .value("UCHAR_LOWERCASE_MAPPING", UCHAR_LOWERCASE_MAPPING,
-             "String property Lowercase_Mapping.\n\n  "
-             "Corresponds to *u_str_to_lower* in ustring.h.")
-      .value("UCHAR_NAME", UCHAR_NAME,
-             "String property Name.\n\n  "
-             "Corresponds to *u_char_name*.")
-      .value("UCHAR_SIMPLE_CASE_FOLDING", UCHAR_SIMPLE_CASE_FOLDING,
-             "String property Simple_Case_Folding.\n\n  "
-             "Corresponds to *u_fold_case*.")
+      .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_GENERAL_CATEGORY_MASK", UCHAR_GENERAL_CATEGORY_MASK, R"doc(
+             Bitmask property General_Category_Mask.
+
+             This is the General_Category property returned as a bit mask.
+             When used in :func:`u_get_int_property_value`,
+             same as u_mask(u_char_type(c)),
+             returns bit masks for :class:`UCharCategory`
+             values where exactly one bit is set. When used with
+             :func:`u_get_property_value_name` and
+             :func:`u_get_property_value_enum`, a multi-bit mask is used for
+             sets of categories like "Letters". Mask values should be cast to
+             ``uint32_t``.
+             )doc")
+      .value("UCHAR_MASK_START", UCHAR_MASK_START, R"doc(
+             First constant for bit-mask Unicode properties.
+             )doc")
+      .value("UCHAR_MASK_LIMIT", UCHAR_MASK_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_NUMERIC_VALUE", UCHAR_NUMERIC_VALUE, R"doc(
+             Double property Numeric_Value.
+
+             Corresponds to :func:`u_get_numeric_value`.
+             )doc")
+      .value("UCHAR_DOUBLE_START", UCHAR_DOUBLE_START, R"doc(
+             First constant for double Unicode properties.
+             )doc")
+      .value("UCHAR_DOUBLE_LIMIT", UCHAR_DOUBLE_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_AGE", UCHAR_AGE, R"doc(
+             String property Age.
+
+             Corresponds to :func:`u_char_age`.
+             )doc")
+      .value("UCHAR_STRING_START", UCHAR_STRING_START, R"doc(
+             First constant for string Unicode properties.
+             )doc")
+      .value("UCHAR_BIDI_MIRRORING_GLYPH", UCHAR_BIDI_MIRRORING_GLYPH, R"doc(
+             String property Bidi_Mirroring_Glyph.
+
+             Corresponds to :func:`u_char_mirror`.
+             )doc")
+      .value("UCHAR_CASE_FOLDING", UCHAR_CASE_FOLDING, R"doc(
+             String property Case_Folding.
+
+             Corresponds to :meth:`CaseMap.fold`.
+             )doc")
+      .value("UCHAR_ISO_COMMENT", UCHAR_ISO_COMMENT, R"doc(
+             Deprecated: ICU 49
+             )doc")
+      .value("UCHAR_LOWERCASE_MAPPING", UCHAR_LOWERCASE_MAPPING, R"doc(
+             String property Lowercase_Mapping.
+
+             Corresponds to :meth:`CaseMap.to_lower`.
+             )doc")
+      .value("UCHAR_NAME", UCHAR_NAME, R"doc(
+             String property Name.
+
+             Corresponds to :func:`u_char_name`.
+             )doc")
+      .value("UCHAR_SIMPLE_CASE_FOLDING", UCHAR_SIMPLE_CASE_FOLDING, R"doc(
+             String property Simple_Case_Folding.
+
+             Corresponds to :func:`u_fold_case`.
+             )doc")
       .value("UCHAR_SIMPLE_LOWERCASE_MAPPING", UCHAR_SIMPLE_LOWERCASE_MAPPING,
-             "String property Simple_Lowercase_Mapping.\n\n  "
-             "Corresponds to *u_tolower*.")
+             R"doc(
+             String property Simple_Lowercase_Mapping.
+
+             Corresponds to :func:`u_tolower`.
+             )doc")
       .value("UCHAR_SIMPLE_TITLECASE_MAPPING", UCHAR_SIMPLE_TITLECASE_MAPPING,
-             "String property Simple_Titlecase_Mapping.\n\n  "
-             "Corresponds to *u_totitle*.")
+             R"doc(
+             String property Simple_Titlecase_Mapping.
+
+             Corresponds to :func:`u_totitle`.
+             )doc")
       .value("UCHAR_SIMPLE_UPPERCASE_MAPPING", UCHAR_SIMPLE_UPPERCASE_MAPPING,
-             "String property Simple_Uppercase_Mapping.\n\n  "
-             "Corresponds to *u_toupper*.")
-      .value("UCHAR_TITLECASE_MAPPING", UCHAR_TITLECASE_MAPPING,
-             "String property Titlecase_Mapping.\n\n  "
-             "Corresponds to *u_str_to_title* in ustring.h.")
-      .value("UCHAR_UNICODE_1_NAME", UCHAR_UNICODE_1_NAME,
-             "**Deprecated:** ICU 49")
-      .value("UCHAR_UPPERCASE_MAPPING", UCHAR_UPPERCASE_MAPPING,
-             "String property Uppercase_Mapping.\n\n  "
-             "Corresponds to *u_str_to_upper* in ustring.h.")
-      .value("UCHAR_BIDI_PAIRED_BRACKET", UCHAR_BIDI_PAIRED_BRACKET,
-             "String property Bidi_Paired_Bracket (new in Unicode 6.3).\n\n  "
-             "Corresponds to *u_get_bidi_paired_bracket*.")
-      .value("UCHAR_STRING_LIMIT", UCHAR_STRING_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value(
-          "UCHAR_SCRIPT_EXTENSIONS", UCHAR_SCRIPT_EXTENSIONS,
-          "Miscellaneous property Script_Extensions (new in Unicode 6.0).\n\n  "
-          "Some characters are commonly used in multiple scripts. For more "
-          "information, see UAX #24: "
-          "http://www.unicode.org/reports/tr24/. Corresponds to "
-          "*uscript_has_script* and "
-          "*uscript_get_script_extensions* in uscript.h.")
-      .value("UCHAR_OTHER_PROPERTY_START", UCHAR_OTHER_PROPERTY_START,
-             "First constant for Unicode properties with unusual value types.")
+             R"doc(
+             String property Simple_Uppercase_Mapping.
+
+             Corresponds to :func:`u_toupper`.
+             )doc")
+      .value("UCHAR_TITLECASE_MAPPING", UCHAR_TITLECASE_MAPPING, R"doc(
+             String property Titlecase_Mapping.
+
+             Corresponds to :meth:`CaseMap.to_title`.
+             )doc")
+      .value("UCHAR_UNICODE_1_NAME", UCHAR_UNICODE_1_NAME, R"doc(
+             Deprecated: ICU 49
+             )doc")
+      .value("UCHAR_UPPERCASE_MAPPING", UCHAR_UPPERCASE_MAPPING, R"doc(
+             String property Uppercase_Mapping.
+
+             Corresponds to :meth:`CaseMap.to_upper`.
+             )doc")
+      .value("UCHAR_BIDI_PAIRED_BRACKET", UCHAR_BIDI_PAIRED_BRACKET, R"doc(
+             String property Bidi_Paired_Bracket (new in Unicode 6.3).
+
+             Corresponds to :func:`u_get_bidi_paired_bracket`.
+             )doc")
+      .value("UCHAR_STRING_LIMIT", UCHAR_STRING_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_SCRIPT_EXTENSIONS", UCHAR_SCRIPT_EXTENSIONS, R"doc(
+             Miscellaneous property Script_Extensions (new in Unicode 6.0).
+
+             Some characters are commonly used in multiple scripts. For more
+             information, see UAX #24:
+             http://www.unicode.org/reports/tr24/. Corresponds to
+             :func:`uscript_has_script` and
+             :func:`uscript_get_script_extensions` in uscript.h.
+             )doc")
+      .value("UCHAR_OTHER_PROPERTY_START", UCHAR_OTHER_PROPERTY_START, R"doc(
+             First constant for Unicode properties with unusual value types.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
-      .value(
-          "UCHAR_IDENTIFIER_TYPE", UCHAR_IDENTIFIER_TYPE,
-          "Miscellaneous property Identifier_Type.\n\n"
-          "Used for UTS #39 General Security Profile for Identifiers "
-          "(https://www.unicode.org/reports/tr39/"
-          "#General_Security_Profile).\n\n"
-          "Corresponds to *u_has_id_type()* and *u_get_id_types()*.\n\n"
-          "Each code point maps to a <i>set</i> of *UIdentifierType* values.")
+      .value("UCHAR_IDENTIFIER_TYPE", UCHAR_IDENTIFIER_TYPE, R"doc(
+             Miscellaneous property Identifier_Type.
+
+             Used for UTS #39 General Security Profile for Identifiers
+             (https://www.unicode.org/reports/tr39/#General_Security_Profile).
+
+             Corresponds to :func:`u_has_id_type` and :func:`u_get_id_types`.
+
+             Each code point maps to a *set* of :class:`UIdentifierType`
+             values.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
-      .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
-      .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE,
-             "Represents a nonexistent or invalid property or property value.")
+      .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
+      .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE, R"doc(
+             Represent a nonexistent or invalid property or property value.
+             )doc")
       .export_values();
 
   //
   // enum UPropertyNameChoice
   //
-  py::enum_<UPropertyNameChoice>(
-      m, "UPropertyNameChoice", py::arithmetic(),
-      "Selector constants for *u_get_property_name()* and "
-      "*u_get_property_value_name()*.\n\n"
-      "These selectors are used to choose which name is returned for a given "
-      "property or value. All properties and "
-      "values have a long name. Most have a short name, but some do not. "
-      "Unicode allows for additional names, beyond "
-      "the long and short name, which would be indicated by "
-      "*U_LONG_PROPERTY_NAME* + i, where i=1, 2,...")
+  py::enum_<UPropertyNameChoice>(m, "UPropertyNameChoice", py::arithmetic(),
+                                 R"doc(
+Selector constants for :func:`u_get_property_name` and
+:func:`u_get_property_value_name`.
+
+These selectors are used to choose which name is returned for a given property
+or value. All properties and values have a long name. Most have a short name,
+but some do not.
+Unicode allows for additional names, beyond the long and short name, which
+would be indicated by :attr:`~UPropertyNameChoice.U_LONG_PROPERTY_NAME` + i,
+where i=1, 2,...
+      )doc")
       .value("U_SHORT_PROPERTY_NAME", U_SHORT_PROPERTY_NAME)
       .value("U_LONG_PROPERTY_NAME", U_LONG_PROPERTY_NAME)
       .value("U_PROPERTY_NAME_CHOICE_COUNT", U_PROPERTY_NAME_CHOICE_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+             R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
   // enum USentenceBreak
   //
-  py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic(),
-                            "Sentence Break constants.")
+  py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic(), R"doc(
+Sentence Break constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_SENTENCE_BREAK`
+      )doc")
       .value("U_SB_OTHER", U_SB_OTHER)
       .value("U_SB_ATERM", U_SB_ATERM)
       .value("U_SB_CLOSE", U_SB_CLOSE)
@@ -1653,9 +2120,10 @@ void init_uchar(py::module &m) {
       .value("U_SB_EXTEND", U_SB_EXTEND)
       .value("U_SB_LF", U_SB_LF)
       .value("U_SB_SCONTINUE", U_SB_SCONTINUE)
-      .value("U_SB_COUNT", U_SB_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_SB_COUNT", U_SB_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -1663,7 +2131,12 @@ void init_uchar(py::module &m) {
   // enum UVerticalOrientation
   //
   py::enum_<UVerticalOrientation>(m, "UVerticalOrientation", py::arithmetic(),
-                                  "Vertical Orientation constants.")
+                                  R"doc(
+Vertical Orientation constants.
+
+See Also:
+    :attr:`~UProperty.UCHAR_VERTICAL_ORIENTATION`
+      )doc")
       .value("U_VO_ROTATED", U_VO_ROTATED)
       .value("U_VO_TRANSFORMED_ROTATED", U_VO_TRANSFORMED_ROTATED)
       .value("U_VO_TRANSFORMED_UPRIGHT", U_VO_TRANSFORMED_UPRIGHT)
@@ -1674,10 +2147,15 @@ void init_uchar(py::module &m) {
   //
   // enum UWordBreakValues
   //
-  py::enum_<UWordBreakValues>(m, "UWordBreakValues", py::arithmetic(),
-                              "Word Break constants.\n\n"
-                              "(*UWordBreak* is a pre-existing enum type in "
-                              "ubrk.h for word break status tags.)")
+  py::enum_<UWordBreakValues>(m, "UWordBreakValues", py::arithmetic(), R"doc(
+Word Break constants.
+
+(:class:`UWordBreak` is a pre-existing enum type in ubrk.h for word break
+status tags.)
+
+See Also:
+    :attr:`~UProperty.UCHAR_WORD_BREAK`
+      )doc")
       .value("U_WB_OTHER", U_WB_OTHER)
       .value("U_WB_ALETTER", U_WB_ALETTER)
       .value("U_WB_FORMAT", U_WB_FORMAT)
@@ -1709,9 +2187,10 @@ void init_uchar(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("U_WB_WSEGSPACE", U_WB_WSEGSPACE)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-      .value("U_WB_COUNT", U_WB_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+      .value("U_WB_COUNT", U_WB_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
@@ -1852,10 +2331,10 @@ void init_uchar(py::module &m) {
         return std::make_unique<icupy::UCPMapPtr>(p);
       },
       py::arg("property"), R"doc(
-      Get an integer property map for a given `property`.
+      Return an integer property map for the specified *property*.
 
-      `property` must be between :attr:`UProperty.UCHAR_INT_START` and
-      :attr:`UProperty.UCHAR_INT_LIMIT`-1.
+      *property* must be between :attr:`~UProperty.UCHAR_INT_START` and
+      :attr:`~UProperty.UCHAR_INT_LIMIT` - 1.
 
       See Also:
           :func:`ucpmap_get`

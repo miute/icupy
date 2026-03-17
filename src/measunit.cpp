@@ -10,75 +10,100 @@ void init_measunit(py::module &m) {
   //
   // enum UMeasurePrefix
   //
-  py::enum_<UMeasurePrefix>(
-      m, "UMeasurePrefix", py::arithmetic(),
-      "Enumeration for SI and binary prefixes, e.g. "
-      "\"kilo-\", \"nano-\", \"mebi-\".\n\n"
-      "Enum values should be treated as opaque: use *umeas_get_prefix_power()* "
-      "and "
-      "*umeas_get_prefix_base()* to find their corresponding values.")
-      .value("UMEASURE_PREFIX_ONE", UMEASURE_PREFIX_ONE,
-             "The absence of an SI or binary prefix.\n\n  "
-             "The integer representation of this enum value is an arbitrary "
-             "implementation detail and should not be "
-             "relied upon: use *umeas_get_prefix_power()* to obtain meaningful "
-             "values.")
-      .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA,
-             "SI prefix: yotta, 10^24.")
-      .value("UMEASURE_PREFIX_ZETTA", UMEASURE_PREFIX_ZETTA,
-             "SI prefix: zetta, 10^21.")
-      .value("UMEASURE_PREFIX_EXA", UMEASURE_PREFIX_EXA,
-             "SI prefix: exa, 10^18.")
-      .value("UMEASURE_PREFIX_PETA", UMEASURE_PREFIX_PETA,
-             "SI prefix: peta, 10^15.")
-      .value("UMEASURE_PREFIX_TERA", UMEASURE_PREFIX_TERA,
-             "SI prefix: tera, 10^12.")
-      .value("UMEASURE_PREFIX_GIGA", UMEASURE_PREFIX_GIGA,
-             "SI prefix: giga, 10^9.")
-      .value("UMEASURE_PREFIX_MEGA", UMEASURE_PREFIX_MEGA,
-             "SI prefix: mega, 10^6.")
-      .value("UMEASURE_PREFIX_KILO", UMEASURE_PREFIX_KILO,
-             "SI prefix: kilo, 10^3.")
-      .value("UMEASURE_PREFIX_HECTO", UMEASURE_PREFIX_HECTO,
-             "SI prefix: hecto, 10^2.")
-      .value("UMEASURE_PREFIX_DEKA", UMEASURE_PREFIX_DEKA,
-             "SI prefix: deka, 10^1.")
-      .value("UMEASURE_PREFIX_DECI", UMEASURE_PREFIX_DECI,
-             "SI prefix: deci, 10^-1.")
-      .value("UMEASURE_PREFIX_CENTI", UMEASURE_PREFIX_CENTI,
-             "SI prefix: centi, 10^-2.")
-      .value("UMEASURE_PREFIX_MILLI", UMEASURE_PREFIX_MILLI,
-             "SI prefix: milli, 10^-3.")
-      .value("UMEASURE_PREFIX_MICRO", UMEASURE_PREFIX_MICRO,
-             "SI prefix: micro, 10^-6.")
-      .value("UMEASURE_PREFIX_NANO", UMEASURE_PREFIX_NANO,
-             "SI prefix: nano, 10^-9.")
-      .value("UMEASURE_PREFIX_PICO", UMEASURE_PREFIX_PICO,
-             "SI prefix: pico, 10^-12.")
-      .value("UMEASURE_PREFIX_FEMTO", UMEASURE_PREFIX_FEMTO,
-             "SI prefix: femto, 10^-15.")
-      .value("UMEASURE_PREFIX_ATTO", UMEASURE_PREFIX_ATTO,
-             "SI prefix: atto, 10^-18.")
-      .value("UMEASURE_PREFIX_ZEPTO", UMEASURE_PREFIX_ZEPTO,
-             "SI prefix: zepto, 10^-21.")
-      .value("UMEASURE_PREFIX_YOCTO", UMEASURE_PREFIX_YOCTO,
-             "SI prefix: yocto, 10^-24.")
-      .value("UMEASURE_PREFIX_KIBI", UMEASURE_PREFIX_KIBI,
-             "Binary prefix: kibi, 1024^1.")
-      .value("UMEASURE_PREFIX_MEBI", UMEASURE_PREFIX_MEBI,
-             "Binary prefix: mebi, 1024^2.")
-      .value("UMEASURE_PREFIX_GIBI", UMEASURE_PREFIX_GIBI,
-             "Binary prefix: gibi, 1024^3.")
-      .value("UMEASURE_PREFIX_TEBI", UMEASURE_PREFIX_TEBI,
-             "Binary prefix: tebi, 1024^4.")
-      .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI,
-             "Binary prefix: pebi, 1024^5.")
-      .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI,
-             "Binary prefix: exbi, 1024^6.")
-      .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI,
-             "Binary prefix: zebi, 1024^7.")
-      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI,
-             "Binary prefix: yobi, 1024^8.")
+  py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(), R"doc(
+Enumeration for SI and binary prefixes, e.g. "kilo-", "nano-", "mebi-".
+      )doc")
+      .value("UMEASURE_PREFIX_ONE", UMEASURE_PREFIX_ONE, R"doc(
+             The absence of an SI or binary prefix.
+
+             The integer representation of this enum value is an arbitrary
+             implementation detail and should not be relied upon: use
+             ``umeas_getPrefixPower()`` to obtain meaningful values.
+             )doc")
+      .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA, R"doc(
+             SI prefix: yotta, 10^24.
+             )doc")
+      .value("UMEASURE_PREFIX_ZETTA", UMEASURE_PREFIX_ZETTA, R"doc(
+             SI prefix: zetta, 10^21.
+             )doc")
+      .value("UMEASURE_PREFIX_EXA", UMEASURE_PREFIX_EXA, R"doc(
+             SI prefix: exa, 10^18.
+             )doc")
+      .value("UMEASURE_PREFIX_PETA", UMEASURE_PREFIX_PETA, R"doc(
+             SI prefix: peta, 10^15.
+             )doc")
+      .value("UMEASURE_PREFIX_TERA", UMEASURE_PREFIX_TERA, R"doc(
+             SI prefix: tera, 10^12.
+             )doc")
+      .value("UMEASURE_PREFIX_GIGA", UMEASURE_PREFIX_GIGA, R"doc(
+             SI prefix: giga, 10^9.
+             )doc")
+      .value("UMEASURE_PREFIX_MEGA", UMEASURE_PREFIX_MEGA, R"doc(
+             SI prefix: mega, 10^6.
+             )doc")
+      .value("UMEASURE_PREFIX_KILO", UMEASURE_PREFIX_KILO, R"doc(
+             SI prefix: kilo, 10^3.
+             )doc")
+      .value("UMEASURE_PREFIX_HECTO", UMEASURE_PREFIX_HECTO, R"doc(
+             SI prefix: hecto, 10^2.
+             )doc")
+      .value("UMEASURE_PREFIX_DEKA", UMEASURE_PREFIX_DEKA, R"doc(
+             SI prefix: deka, 10^1.
+             )doc")
+      .value("UMEASURE_PREFIX_DECI", UMEASURE_PREFIX_DECI, R"doc(
+             SI prefix: deci, 10^-1.
+             )doc")
+      .value("UMEASURE_PREFIX_CENTI", UMEASURE_PREFIX_CENTI, R"doc(
+             SI prefix: centi, 10^-2.
+             )doc")
+      .value("UMEASURE_PREFIX_MILLI", UMEASURE_PREFIX_MILLI, R"doc(
+             SI prefix: milli, 10^-3.
+             )doc")
+      .value("UMEASURE_PREFIX_MICRO", UMEASURE_PREFIX_MICRO, R"doc(
+             SI prefix: micro, 10^-6.
+             )doc")
+      .value("UMEASURE_PREFIX_NANO", UMEASURE_PREFIX_NANO, R"doc(
+             SI prefix: nano, 10^-9.
+             )doc")
+      .value("UMEASURE_PREFIX_PICO", UMEASURE_PREFIX_PICO, R"doc(
+             SI prefix: pico, 10^-12.
+             )doc")
+      .value("UMEASURE_PREFIX_FEMTO", UMEASURE_PREFIX_FEMTO, R"doc(
+             SI prefix: femto, 10^-15.
+             )doc")
+      .value("UMEASURE_PREFIX_ATTO", UMEASURE_PREFIX_ATTO, R"doc(
+             SI prefix: atto, 10^-18.
+             )doc")
+      .value("UMEASURE_PREFIX_ZEPTO", UMEASURE_PREFIX_ZEPTO, R"doc(
+             SI prefix: zepto, 10^-21.
+             )doc")
+      .value("UMEASURE_PREFIX_YOCTO", UMEASURE_PREFIX_YOCTO, R"doc(
+             SI prefix: yocto, 10^-24.
+             )doc")
+      .value("UMEASURE_PREFIX_KIBI", UMEASURE_PREFIX_KIBI, R"doc(
+             Binary prefix: kibi, 1024^1.
+             )doc")
+      .value("UMEASURE_PREFIX_MEBI", UMEASURE_PREFIX_MEBI, R"doc(
+             Binary prefix: mebi, 1024^2.
+             )doc")
+      .value("UMEASURE_PREFIX_GIBI", UMEASURE_PREFIX_GIBI, R"doc(
+             Binary prefix: gibi, 1024^3.
+             )doc")
+      .value("UMEASURE_PREFIX_TEBI", UMEASURE_PREFIX_TEBI, R"doc(
+             Binary prefix: tebi, 1024^4.
+             )doc")
+      .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI, R"doc(
+             Binary prefix: pebi, 1024^5.
+             )doc")
+      .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI, R"doc(
+             Binary prefix: exbi, 1024^6.
+             )doc")
+      .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI, R"doc(
+             Binary prefix: zebi, 1024^7.
+             )doc")
+      .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI, R"doc(
+             Binary prefix: yobi, 1024^8.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
@@ -86,34 +111,46 @@ void init_measunit(py::module &m) {
   //
   // enum UMeasureUnitComplexity
   //
-  py::enum_<UMeasureUnitComplexity>(
-      m, "UMeasureUnitComplexity", py::arithmetic(),
-      "Enumeration for unit complexity.\n\n"
-      "There are three levels:\n\n"
-      "* SINGLE: A single unit, optionally with a power and/or SI or binary "
-      "prefix. "
-      "Examples: hectare, square-kilometer, kilojoule, per-second, mebibyte.\n"
-      "* COMPOUND: A unit composed of the product of multiple single units. "
-      "Examples: "
-      "meter-per-second, kilowatt-hour, kilogram-meter-per-square-second.\n"
-      "* MIXED: A unit composed of the sum of multiple single units. Examples: "
-      "foot+inch, hour+minute+second, degree+arcminute+arcsecond.\n\n"
-      "The complexity determines which operations are available. For example, "
-      "you cannot "
-      "set the power or prefix of a compound unit.")
-      .value("UMEASURE_UNIT_SINGLE", UMEASURE_UNIT_SINGLE,
-             "A single unit, like kilojoule.")
-      .value("UMEASURE_UNIT_COMPOUND", UMEASURE_UNIT_COMPOUND,
-             "A compound unit, like meter-per-second.")
-      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED,
-             "A mixed unit, like hour+minute.")
+  py::enum_<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity",
+                                    py::arithmetic(), R"doc(
+Enumeration for unit complexity.
+
+There are three levels:
+
+- SINGLE: A single unit, optionally with a power and/or SI or binary prefix.
+  Examples: hectare, square-kilometer, kilojoule, per-second, mebibyte.
+- COMPOUND: A unit composed of the product of multiple single units.
+  Examples: meter-per-second, kilowatt-hour, kilogram-meter-per-square-second.
+- MIXED: A unit composed of the sum of multiple single units. Examples:
+  foot+inch, hour+minute+second, degree+arcminute+arcsecond.
+
+The complexity determines which operations are available. For example, you
+cannot set the power or prefix of a compound unit.
+      )doc")
+      .value("UMEASURE_UNIT_SINGLE", UMEASURE_UNIT_SINGLE, R"doc(
+             A single unit, like kilojoule.
+             )doc")
+      .value("UMEASURE_UNIT_COMPOUND", UMEASURE_UNIT_COMPOUND, R"doc(
+             A compound unit, like meter-per-second.
+             )doc")
+      .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED, R"doc(
+             A mixed unit, like hour+minute.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //
   // class icu::MeasureUnit
   //
-  py::class_<MeasureUnit, UObject> mu(m, "MeasureUnit");
+  py::class_<MeasureUnit, UObject> mu(m, "MeasureUnit", R"doc(
+      Unit such as length, mass, volume, currency, etc.
+
+      A unit is coupled with a numeric amount to produce a :class:`Measure`.
+
+      See Also:
+          :class:`CurrencyUnit`
+          :class:`TimeUnit`
+      )doc");
 
   mu.def(py::init<const MeasureUnit &>(), py::arg("other"));
 

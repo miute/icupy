@@ -23,37 +23,57 @@ void init_usprep(py::module &m) {
   // enum UStringPrepProfileType
   //
   py::enum_<UStringPrepProfileType>(m, "UStringPrepProfileType",
-                                    py::arithmetic(),
-                                    "enums for the standard stringprep profile "
-                                    "types supported by *usprep_open_by_type*.")
-      .value("USPREP_RFC3491_NAMEPREP", USPREP_RFC3491_NAMEPREP,
-             "RFC3491 Nameprep.")
-      .value("USPREP_RFC3530_NFS4_CS_PREP", USPREP_RFC3530_NFS4_CS_PREP,
-             "RFC3530 nfs4_cs_prep.")
+                                    py::arithmetic(), R"doc(
+Enums for the standard StringPrep profile types supported by
+:func:`usprep_open_by_type`.
+      )doc")
+      .value("USPREP_RFC3491_NAMEPREP", USPREP_RFC3491_NAMEPREP, R"doc(
+             RFC3491 Nameprep.
+             )doc")
+      .value("USPREP_RFC3530_NFS4_CS_PREP", USPREP_RFC3530_NFS4_CS_PREP, R"doc(
+             RFC3530 nfs4_cs_prep.
+             )doc")
       .value("USPREP_RFC3530_NFS4_CS_PREP_CI", USPREP_RFC3530_NFS4_CS_PREP_CI,
-             "RFC3530 nfs4_cs_prep with case insensitive option.")
+             R"doc(
+             RFC3530 nfs4_cs_prep with case insensitive option.
+             )doc")
       .value("USPREP_RFC3530_NFS4_CIS_PREP", USPREP_RFC3530_NFS4_CIS_PREP,
-             "RFC3530 nfs4_cis_prep.")
+             R"doc(
+             RFC3530 nfs4_cis_prep.
+             )doc")
       .value("USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX",
-             USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX,
-             "RFC3530 nfs4_mixed_prep for prefix.")
+             USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX, R"doc(
+             RFC3530 nfs4_mixed_prep for prefix.
+             )doc")
       .value("USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX",
-             USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX,
-             "RFC3530 nfs4_mixed_prep for suffix.")
-      .value("USPREP_RFC3722_ISCSI", USPREP_RFC3722_ISCSI, "RFC3722 iSCSI.")
-      .value("USPREP_RFC3920_NODEPREP", USPREP_RFC3920_NODEPREP,
-             "RFC3920 XMPP Nodeprep.")
-      .value("USPREP_RFC3920_RESOURCEPREP", USPREP_RFC3920_RESOURCEPREP,
-             "RFC3920 XMPP Resourceprep.")
-      .value("USPREP_RFC4011_MIB", USPREP_RFC4011_MIB,
-             "RFC4011 Policy MIB Stringprep.")
-      .value("USPREP_RFC4013_SASLPREP", USPREP_RFC4013_SASLPREP,
-             "RFC4013 SASLprep.")
-      .value("USPREP_RFC4505_TRACE", USPREP_RFC4505_TRACE, "RFC4505 trace.")
-      .value("USPREP_RFC4518_LDAP", USPREP_RFC4518_LDAP, "RFC4518 LDAP.")
-      .value("USPREP_RFC4518_LDAP_CI", USPREP_RFC4518_LDAP_CI,
-             "RFC4518 LDAP for case ignore, numeric and stored prefix matching "
-             "rules.")
+             USPREP_RFC3530_NFS4_MIXED_PREP_SUFFIX, R"doc(
+             RFC3530 nfs4_mixed_prep for suffix.
+             )doc")
+      .value("USPREP_RFC3722_ISCSI", USPREP_RFC3722_ISCSI, R"doc(
+             RFC3722 iSCSI.
+             )doc")
+      .value("USPREP_RFC3920_NODEPREP", USPREP_RFC3920_NODEPREP, R"doc(
+             RFC3920 XMPP Nodeprep.
+             )doc")
+      .value("USPREP_RFC3920_RESOURCEPREP", USPREP_RFC3920_RESOURCEPREP, R"doc(
+             RFC3920 XMPP Resourceprep.
+             )doc")
+      .value("USPREP_RFC4011_MIB", USPREP_RFC4011_MIB, R"doc(
+             RFC4011 Policy MIB Stringprep.
+             )doc")
+      .value("USPREP_RFC4013_SASLPREP", USPREP_RFC4013_SASLPREP, R"doc(
+             RFC4013 SASLprep.
+             )doc")
+      .value("USPREP_RFC4505_TRACE", USPREP_RFC4505_TRACE, R"doc(
+             RFC4505 trace.
+             )doc")
+      .value("USPREP_RFC4518_LDAP", USPREP_RFC4518_LDAP, R"doc(
+             RFC4518 LDAP.
+             )doc")
+      .value("USPREP_RFC4518_LDAP_CI", USPREP_RFC4518_LDAP_CI, R"doc(
+             RFC4518 LDAP for case ignore, numeric and stored prefix matching
+             rules.
+             )doc")
       .export_values();
 
   //

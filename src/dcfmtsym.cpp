@@ -9,7 +9,11 @@ void init_dcfmtsym(py::module &m) {
   //
   // class icu::DecimalFormatSymbols
   //
-  py::class_<DecimalFormatSymbols, UObject> dfs(m, "DecimalFormatSymbols");
+  py::class_<DecimalFormatSymbols, UObject> dfs(m, "DecimalFormatSymbols",
+                                                R"doc(
+      Representation of the set of symbols required by :class:`DecimalFormat`
+      for number formatting.
+      )doc");
 
   //
   // enum icu::DecimalFormatSymbols::ENumberFormatSymbol
@@ -18,68 +22,107 @@ void init_dcfmtsym(py::module &m) {
       dfs, "ENumberFormatSymbol", py::arithmetic(),
       "Constants for specifying a number format symbol.")
       .value("DECIMAL_SEPARATOR_SYMBOL",
-             DecimalFormatSymbols::kDecimalSeparatorSymbol,
-             "The decimal separator.")
+             DecimalFormatSymbols::kDecimalSeparatorSymbol, R"doc(
+             The decimal separator.
+             )doc")
       .value("GROUPING_SEPARATOR_SYMBOL",
-             DecimalFormatSymbols::kGroupingSeparatorSymbol,
-             "The grouping separator.")
+             DecimalFormatSymbols::kGroupingSeparatorSymbol, R"doc(
+             The grouping separator.
+             )doc")
       .value("PATTERN_SEPARATOR_SYMBOL",
-             DecimalFormatSymbols::kPatternSeparatorSymbol,
-             "The pattern separator.")
-      .value("PERCENT_SYMBOL", DecimalFormatSymbols::kPercentSymbol,
-             "The percent sign.")
-      .value("ZERO_DIGIT_SYMBOL", DecimalFormatSymbols::kZeroDigitSymbol,
-             "Zero.")
-      .value("DIGIT_SYMBOL", DecimalFormatSymbols::kDigitSymbol,
-             "Character representing a digit in the pattern.")
-      .value("MINUS_SIGN_SYMBOL", DecimalFormatSymbols::kMinusSignSymbol,
-             "The minus sign.")
-      .value("PLUS_SIGN_SYMBOL", DecimalFormatSymbols::kPlusSignSymbol,
-             "The plus sign.")
-      .value("CURRENCY_SYMBOL", DecimalFormatSymbols::kCurrencySymbol,
-             "The currency symbol.")
+             DecimalFormatSymbols::kPatternSeparatorSymbol, R"doc(
+             The pattern separator.
+             )doc")
+      .value("PERCENT_SYMBOL", DecimalFormatSymbols::kPercentSymbol, R"doc(
+             The percent sign.
+             )doc")
+      .value("ZERO_DIGIT_SYMBOL", DecimalFormatSymbols::kZeroDigitSymbol, R"doc(
+             Zero.
+             )doc")
+      .value("DIGIT_SYMBOL", DecimalFormatSymbols::kDigitSymbol, R"doc(
+             Character representing a digit in the pattern.
+             )doc")
+      .value("MINUS_SIGN_SYMBOL", DecimalFormatSymbols::kMinusSignSymbol, R"doc(
+             The minus sign.
+             )doc")
+      .value("PLUS_SIGN_SYMBOL", DecimalFormatSymbols::kPlusSignSymbol, R"doc(
+             The plus sign.
+             )doc")
+      .value("CURRENCY_SYMBOL", DecimalFormatSymbols::kCurrencySymbol, R"doc(
+             The currency symbol.
+             )doc")
       .value("INTL_CURRENCY_SYMBOL", DecimalFormatSymbols::kIntlCurrencySymbol,
-             "The international currency symbol.")
+             R"doc(
+             The international currency symbol.
+             )doc")
       .value("MONETARY_SEPARATOR_SYMBOL",
-             DecimalFormatSymbols::kMonetarySeparatorSymbol,
-             "The monetary separator.")
+             DecimalFormatSymbols::kMonetarySeparatorSymbol, R"doc(
+             The monetary separator.
+             )doc")
       .value("EXPONENTIAL_SYMBOL", DecimalFormatSymbols::kExponentialSymbol,
-             "The exponential symbol.")
-      .value("PER_MILL_SYMBOL", DecimalFormatSymbols::kPerMillSymbol,
-             "Per mill symbol - replaces kPermillSymbol.")
-      .value("PAD_ESCAPE_SYMBOL", DecimalFormatSymbols::kPadEscapeSymbol,
-             "Escape padding character.")
-      .value("INFINITY_SYMBOL", DecimalFormatSymbols::kInfinitySymbol,
-             "Infinity symbol.")
-      .value("NAN_SYMBOL", DecimalFormatSymbols::kNaNSymbol, "Nan symbol.")
+             R"doc(
+             The exponential symbol.
+             )doc")
+      .value("PER_MILL_SYMBOL", DecimalFormatSymbols::kPerMillSymbol, R"doc(
+             Per mill symbol.
+             )doc")
+      .value("PAD_ESCAPE_SYMBOL", DecimalFormatSymbols::kPadEscapeSymbol, R"doc(
+             Escape padding character.
+             )doc")
+      .value("INFINITY_SYMBOL", DecimalFormatSymbols::kInfinitySymbol, R"doc(
+             Infinity symbol.
+             )doc")
+      .value("NAN_SYMBOL", DecimalFormatSymbols::kNaNSymbol, R"doc(
+             Nan symbol.
+             )doc")
       .value("SIGNIFICANT_DIGIT_SYMBOL",
-             DecimalFormatSymbols::kSignificantDigitSymbol,
-             "Significant digit symbol.")
+             DecimalFormatSymbols::kSignificantDigitSymbol, R"doc(
+             Significant digit symbol.
+             )doc")
       .value("MONETARY_GROUPING_SEPARATOR_SYMBOL",
-             DecimalFormatSymbols::kMonetaryGroupingSeparatorSymbol,
-             "The monetary grouping separator.")
-      .value("ONE_DIGIT_SYMBOL", DecimalFormatSymbols::kOneDigitSymbol, "One.")
-      .value("TWO_DIGIT_SYMBOL", DecimalFormatSymbols::kTwoDigitSymbol, "Two.")
+             DecimalFormatSymbols::kMonetaryGroupingSeparatorSymbol, R"doc(
+             The monetary grouping separator.
+             )doc")
+      .value("ONE_DIGIT_SYMBOL", DecimalFormatSymbols::kOneDigitSymbol, R"doc(
+             One.
+             )doc")
+      .value("TWO_DIGIT_SYMBOL", DecimalFormatSymbols::kTwoDigitSymbol, R"doc(
+             Two.
+             )doc")
       .value("THREE_DIGIT_SYMBOL", DecimalFormatSymbols::kThreeDigitSymbol,
-             "Three.")
-      .value("FOUR_DIGIT_SYMBOL", DecimalFormatSymbols::kFourDigitSymbol,
-             "Four.")
-      .value("FIVE_DIGIT_SYMBOL", DecimalFormatSymbols::kFiveDigitSymbol,
-             "Five.")
-      .value("SIX_DIGIT_SYMBOL", DecimalFormatSymbols::kSixDigitSymbol, "Six.")
+             R"doc(
+             Three.
+             )doc")
+      .value("FOUR_DIGIT_SYMBOL", DecimalFormatSymbols::kFourDigitSymbol, R"doc(
+             Four.
+             )doc")
+      .value("FIVE_DIGIT_SYMBOL", DecimalFormatSymbols::kFiveDigitSymbol, R"doc(
+             Five.
+             )doc")
+      .value("SIX_DIGIT_SYMBOL", DecimalFormatSymbols::kSixDigitSymbol, R"doc(
+             Six.
+             )doc")
       .value("SEVEN_DIGIT_SYMBOL", DecimalFormatSymbols::kSevenDigitSymbol,
-             "Seven.")
+             R"doc(
+             Seven.
+             )doc")
       .value("EIGHT_DIGIT_SYMBOL", DecimalFormatSymbols::kEightDigitSymbol,
-             "Eight.")
-      .value("NINE_DIGIT_SYMBOL", DecimalFormatSymbols::kNineDigitSymbol,
-             "Nine.")
+             R"doc(
+             Eight.
+             )doc")
+      .value("NINE_DIGIT_SYMBOL", DecimalFormatSymbols::kNineDigitSymbol, R"doc(
+             Nine.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("EXPONENT_MULTIPLICATION_SYMBOL",
-             DecimalFormatSymbols::kExponentMultiplicationSymbol,
-             "Multiplication sign.")
+             DecimalFormatSymbols::kExponentMultiplicationSymbol, R"doc(
+             Multiplication sign.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("FORMAT_SYMBOL_COUNT", DecimalFormatSymbols::kFormatSymbolCount,
-             "Count symbol constants.")
+             R"doc(
+             Count symbol constants.
+             )doc")
       .export_values();
 
   //

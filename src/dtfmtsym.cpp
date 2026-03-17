@@ -9,7 +9,14 @@ void init_dtfmtsym(py::module &m) {
   //
   // class icu::DateFormatSymbols
   //
-  py::class_<DateFormatSymbols, UObject> dfs(m, "DateFormatSymbols");
+  py::class_<DateFormatSymbols, UObject> dfs(m, "DateFormatSymbols", R"doc(
+      Public class for encapsulating localizable date and time format data
+      (including time zone data).
+
+      See Also:
+          :class:`DateFormat`
+          :class:`SimpleDateFormat`
+      )doc");
 
   //
   // enum icu::DateFormatSymbols::DtContextType
@@ -20,9 +27,10 @@ void init_dtfmtsym(py::module &m) {
       .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT)
       .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE)
       .value("DT_CONTEXT_COUNT",
-             DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+             DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
@@ -35,12 +43,15 @@ void init_dtfmtsym(py::module &m) {
       .value("WIDE", DateFormatSymbols::DtWidthType::WIDE)
       .value("NARROW", DateFormatSymbols::DtWidthType::NARROW)
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("SHORT", DateFormatSymbols::DtWidthType::SHORT,
-             "Short width is currently only supported for weekday names.")
+      .value("SHORT", DateFormatSymbols::DtWidthType::SHORT, R"doc(
+             Short width is currently only supported for weekday names.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+             R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //

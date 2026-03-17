@@ -8,7 +8,14 @@ void init_dtintrv(py::module &m) {
   //
   // class icu::DateInterval
   //
-  py::class_<DateInterval, UObject> di(m, "DateInterval");
+  py::class_<DateInterval, UObject> di(m, "DateInterval", R"doc(
+      Date interval representation.
+
+      This is a pair of ``UDate`` values from the start date to the end date.
+
+      See Also:
+          :class:`DateIntervalFormat`
+      )doc");
 
   di.def(py::init<UDate, UDate>(), py::arg("from_date"), py::arg("to_date"))
       .def(py::init<const DateInterval &>(), py::arg("other"));

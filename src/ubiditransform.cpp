@@ -26,63 +26,74 @@ void init_ubiditransform(py::module &m) {
   //
   // enum UBiDiMirroring
   //
-  py::enum_<UBiDiMirroring>(
-      m, "UBiDiMirroring", py::arithmetic(),
-      "*UBiDiMirroring* indicates whether or not characters with the "
-      "\"mirrored\" property in "
-      "RTL runs should be replaced with their mirror-image counterparts.")
-      .value("UBIDI_MIRRORING_OFF", UBIDI_MIRRORING_OFF,
-             "0: Constant indicating that character mirroring should not be "
-             "performed.\n\n  "
-             "This is the default.")
-      .value("UBIDI_MIRRORING_ON", UBIDI_MIRRORING_ON,
-             "1: Constant indicating that character mirroring should be "
-             "performed.\n\n  "
-             "This corresponds to calling *ubidi_write_reordered* or "
-             "*ubidi_write_reverse* with the "
-             "*UBIDI_DO_MIRRORING* option bit set.")
+  py::enum_<UBiDiMirroring>(m, "UBiDiMirroring", py::arithmetic(), R"doc(
+UBiDiMirroring indicates whether or not characters with the "mirrored" property
+in RTL runs should be replaced with their mirror-image counterparts.
+
+See Also:
+    :func:`ubidi_set_reordering_options`
+    :func:`ubidi_write_reordered`
+    :func:`ubidi_write_reverse`
+      )doc")
+      .value("UBIDI_MIRRORING_OFF", UBIDI_MIRRORING_OFF, R"doc(
+             Constant indicating that character mirroring should not be
+             performed.
+
+             This is the default.
+             )doc")
+      .value("UBIDI_MIRRORING_ON", UBIDI_MIRRORING_ON, R"doc(
+             Constant indicating that character mirroring should be performed.
+
+             This corresponds to calling :func:`ubidi_write_reordered` or
+             :func:`ubidi_write_reverse` with the
+             :attr:`UBIDI_DO_MIRRORING` option bit set.
+             )doc")
       .export_values();
 
   //
   // enum UBiDiOrder
   //
-  py::enum_<UBiDiOrder>(
-      m, "UBiDiOrder", py::arithmetic(),
-      "*UBiDiOrder* indicates the order of text.\n\n"
-      "This bidi transformation engine supports all possible combinations (4 "
-      "in total) of input and output text "
-      "order:\n\n"
-      "* <logical input, visual output>: unless the output direction is RTL, "
-      "this corresponds to a normal operation of "
-      "the Bidi algorithm as described in the Unicode Technical Report and "
-      "implemented by *UBiDi* when the reordering "
-      "mode is set to *UBIDI_REORDER_DEFAULT*. Visual RTL mode is not "
-      "supported by *UBiDi* and is accomplished through "
-      "reversing a visual LTR string,\n"
-      "* <visual input, logical output>: unless the input direction is RTL, "
-      "this corresponds to an \"inverse bidi "
-      "algorithm\" in *UBiDi* with the reordering mode set to "
-      "*UBIDI_REORDER_INVERSE_LIKE_DIRECT*. Visual RTL mode is "
-      "not not supported by *UBiDi* and is accomplished through reversing a "
-      "visual LTR string,\n"
-      "* <logical input, logical output>: if the input and output base "
-      "directions mismatch, this corresponds to the "
-      "*UBiDi* implementation with the reordering mode set to "
-      "*UBIDI_REORDER_RUNS_ONLY*; and if the input and output "
-      "base directions are identical, the transformation engine will only "
-      "handle character mirroring and Arabic "
-      "shaping operations without reordering,\n"
-      "* <visual input, visual output>: this reordering mode is not supported "
-      "by the *UBiDi* engine; it implies "
-      "character mirroring, Arabic shaping, and - if the input/output base "
-      "directions mismatch - string reverse "
-      "operations.")
-      .value("UBIDI_LOGICAL", UBIDI_LOGICAL,
-             "0: Constant indicating a logical order.\n\n  "
-             "This is the default for input text.")
-      .value("UBIDI_VISUAL", UBIDI_VISUAL,
-             "1: Constant indicating a visual order.\n\n  "
-             "This is a default for output text.")
+  py::enum_<UBiDiOrder>(m, "UBiDiOrder", py::arithmetic(), R"doc(
+UBiDiOrder indicates the order of text.
+
+This bidi transformation engine supports all possible combinations (4 in total)
+of input and output text order:
+
+- <logical input, visual output>: unless the output direction is RTL,
+  this corresponds to a normal operation of the Bidi algorithm as described
+  in the Unicode Technical Report and implemented by UBiDi when the reordering
+  mode is set to :attr:`~UBiDiReorderingMode.UBIDI_REORDER_DEFAULT`.
+  Visual RTL mode is not supported by UBiDi and is accomplished through
+  reversing a visual LTR string,
+- <visual input, logical output>: unless the input direction is RTL,
+  this corresponds to an "inverse bidi algorithm" in UBiDi with the reordering
+  mode set to :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_LIKE_DIRECT`.
+  Visual RTL mode is not supported by UBiDi and is accomplished through
+  reversing a visual LTR string,
+- <logical input, logical output>: if the input and output base directions
+  mismatch, this corresponds to the UBiDi implementation with the reordering
+  mode set to :attr:`~UBiDiReorderingMode.UBIDI_REORDER_RUNS_ONLY`;
+  and if the input and output base directions are identical, the
+  transformation engine will only handle character mirroring and Arabic shaping
+  operations without reordering,
+- <visual input, visual output>: this reordering mode is not supported by the
+  UBiDi engine; it implies character mirroring, Arabic shaping, and - if the
+  input/output base directions mismatch - string reverse operations.
+
+See Also:
+    :func:`ubidi_set_inverse`
+    :func:`ubidi_set_reordering_mode`
+      )doc")
+      .value("UBIDI_LOGICAL", UBIDI_LOGICAL, R"doc(
+             Constant indicating a logical order.
+
+             This is the default for input text.
+             )doc")
+      .value("UBIDI_VISUAL", UBIDI_VISUAL, R"doc(
+             Constant indicating a visual order.
+
+             This is a default for output text.
+             )doc")
       .export_values();
 
   //

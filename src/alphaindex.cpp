@@ -17,43 +17,57 @@ void init_alphaindex(py::module &m) {
   //
   // enum UAlphabeticIndexLabelType
   //
-  py::enum_<UAlphabeticIndexLabelType>(
-      m, "UAlphabeticIndexLabelType", py::arithmetic(),
-      "Constants for Alphabetic Index Label Types.\n\n"
-      "The form of these enum constants anticipates having a plain C API for "
-      "Alphabetic Indexes that will also use them.")
-      .value("U_ALPHAINDEX_NORMAL", U_ALPHAINDEX_NORMAL,
-             "Normal Label, typically the starting letter of the names in the "
-             "bucket with this label.")
-      .value("U_ALPHAINDEX_UNDERFLOW", U_ALPHAINDEX_UNDERFLOW,
-             "Undeflow Label.\n\n  "
-             "The bucket with this label contains names in scripts that sort "
-             "before any of the bucket labels in this "
-             "index.")
-      .value("U_ALPHAINDEX_INFLOW", U_ALPHAINDEX_INFLOW,
-             "Inflow Label.\n\n  "
-             "The bucket with this label contains names in scripts that sort "
-             "between two of the bucket labels in this "
-             "index. Inflow labels are created when an index contains normal "
-             "labels for multiple scripts, and skips "
-             "other scripts that sort between some of the included scripts.")
-      .value("U_ALPHAINDEX_OVERFLOW", U_ALPHAINDEX_OVERFLOW,
-             "Overflow Label.\n\n  "
-             "Te bucket with this label contains names in scripts that sort "
-             "after all of the bucket labels in this "
-             "index.")
+  py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType",
+                                       py::arithmetic(), R"doc(
+Constants for Alphabetic Index Label Types.
+
+The form of these enum constants anticipates having a plain C API for
+Alphabetic Indexes that will also use them.
+      )doc")
+      .value("U_ALPHAINDEX_NORMAL", U_ALPHAINDEX_NORMAL, R"doc(
+             Normal Label, typically the starting letter of the names in the
+             bucket with this label.
+             )doc")
+      .value("U_ALPHAINDEX_UNDERFLOW", U_ALPHAINDEX_UNDERFLOW, R"doc(
+             Undeflow Label.
+
+             The bucket with this label contains names in scripts that sort
+             before any of the bucket labels in this
+             index.
+             )doc")
+      .value("U_ALPHAINDEX_INFLOW", U_ALPHAINDEX_INFLOW, R"doc(
+             Inflow Label.
+
+             The bucket with this label contains names in scripts that sort
+             between two of the bucket labels in this index. Inflow labels are
+             created when an index contains normal labels for multiple scripts,
+             and skips other scripts that sort between some of the included
+             scripts.
+             )doc")
+      .value("U_ALPHAINDEX_OVERFLOW", U_ALPHAINDEX_OVERFLOW, R"doc(
+             Overflow Label.
+
+             Te bucket with this label contains names in scripts that sort
+             after all of the bucket labels in this
+             index.
+             )doc")
       .export_values();
 
   //
   // class icu::AlphabeticIndex
   //
-  py::class_<AlphabeticIndex, UObject> ai(m, "AlphabeticIndex");
+  py::class_<AlphabeticIndex, UObject> ai(m, "AlphabeticIndex", R"doc(
+      AlphabeticIndex supports the creation of a UI index appropriate for a
+      given language.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
   // class icu::AlphabeticIndex::Bucket
   //
-  py::class_<AlphabeticIndex::Bucket, UObject> bkt(ai, "Bucket");
+  py::class_<AlphabeticIndex::Bucket, UObject> bkt(ai, "Bucket", R"doc(
+      An index "bucket" with a label string and type.
+      )doc");
 
   bkt.def("get_label", &Bucket::getLabel);
 
@@ -62,7 +76,10 @@ void init_alphaindex(py::module &m) {
   //
   // class icu::AlphabeticIndex::ImmutableIndex
   //
-  py::class_<AlphabeticIndex::ImmutableIndex, UObject> ii(ai, "ImmutableIndex");
+  py::class_<AlphabeticIndex::ImmutableIndex, UObject> ii(ai, "ImmutableIndex",
+                                                          R"doc(
+      An immutable index.
+      )doc");
 
   ii.def("get_bucket", &ImmutableIndex::getBucket,
          py::return_value_policy::reference, py::arg("index"));

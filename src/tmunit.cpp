@@ -7,7 +7,9 @@ void init_tmunit(py::module &m) {
   //
   // class icu::TimeUnit
   //
-  py::class_<TimeUnit, MeasureUnit> tu(m, "TimeUnit");
+  py::class_<TimeUnit, MeasureUnit> tu(m, "TimeUnit", R"doc(
+      Measurement unit for time units.
+      )doc");
 
   //
   // enum icu::TimeUnit::UTimeUnitFields

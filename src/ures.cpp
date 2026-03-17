@@ -20,50 +20,75 @@ void init_ures(py::module &m) {
   //
   // enum UResType
   //
-  py::enum_<UResType>(m, "UResType", py::arithmetic(),
-                      "Numeric constants for types of resource items.")
-      .value("URES_NONE", URES_NONE,
-             "Resource type constant for \"no resource\".")
-      .value("URES_STRING", URES_STRING,
-             "Resource type constant for 16-bit Unicode strings.")
-      .value("URES_BINARY", URES_BINARY,
-             "Resource type constant for binary data.")
-      .value("URES_TABLE", URES_TABLE,
-             "Resource type constant for tables of key-value pairs.")
-      .value("URES_ALIAS", URES_ALIAS,
-             "Resource type constant for aliases; internally stores a string "
-             "which identifies the actual resource "
-             "storing the data (can be in a different resource bundle).\n\n  "
-             "Resolved internally before delivering the actual resource "
-             "through the API.")
-      .value("URES_INT", URES_INT,
-             "Resource type constant for a single 28-bit integer, interpreted "
-             "as signed or unsigned by the "
-             "*ures_get_int()* or *ures_get_uint()* function.")
-      .value("URES_ARRAY", URES_ARRAY,
-             "Resource type constant for arrays of resources.")
-      .value("URES_INT_VECTOR", URES_INT_VECTOR,
-             "Resource type constant for vectors of 32-bit integers.")
-      .value("RES_NONE", RES_NONE,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_STRING", RES_STRING,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_BINARY", RES_BINARY,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_TABLE", RES_TABLE,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_ALIAS", RES_ALIAS,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_INT", RES_INT,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_ARRAY", RES_ARRAY,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_INT_VECTOR", RES_INT_VECTOR,
-             "**Deprecated:** ICU 2.6 Use the URES_ constant instead.")
-      .value("RES_RESERVED", RES_RESERVED, "**Deprecated:** ICU 2.6 Not used.")
-      .value("URES_LIMIT", URES_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+  py::enum_<UResType>(m, "UResType", py::arithmetic(), R"doc(
+Numeric constants for types of resource items.
+
+See Also:
+    :meth:`ResourceBundle.get_type`
+      )doc")
+      .value("URES_NONE", URES_NONE, R"doc(
+             Resource type constant for "no resource".
+             )doc")
+      .value("URES_STRING", URES_STRING, R"doc(
+             Resource type constant for 16-bit Unicode strings.
+             )doc")
+      .value("URES_BINARY", URES_BINARY, R"doc(
+             Resource type constant for binary data.
+             )doc")
+      .value("URES_TABLE", URES_TABLE, R"doc(
+             Resource type constant for tables of key-value pairs.
+             )doc")
+      .value("URES_ALIAS", URES_ALIAS, R"doc(
+             Resource type constant for aliases; internally stores a string
+             which identifies the actual resource storing the data (can be in
+             a different resource bundle).
+
+             Resolved internally before delivering the actual resource
+             through the API.
+             )doc")
+      .value("URES_INT", URES_INT, R"doc(
+             Resource type constant for a single 28-bit integer, interpreted
+             as signed or unsigned by the :meth:`ResourceBundle.get_int` or
+             :meth:`ResourceBundle.get_uint` function.
+             )doc")
+      .value("URES_ARRAY", URES_ARRAY, R"doc(
+             Resource type constant for arrays of resources.
+             )doc")
+      .value("URES_INT_VECTOR", URES_INT_VECTOR, R"doc(
+             Resource type constant for vectors of 32-bit integers.
+             )doc")
+      .value("RES_NONE", RES_NONE, R"doc(
+             Deprecated: ICU 2.6 Use the URES_NONE constant instead.
+             )doc")
+      .value("RES_STRING", RES_STRING, R"doc(
+             Deprecated: ICU 2.6 Use the URES_STRING constant instead.
+             )doc")
+      .value("RES_BINARY", RES_BINARY, R"doc(
+             Deprecated: ICU 2.6 Use the URES_BINARY constant instead.
+             )doc")
+      .value("RES_TABLE", RES_TABLE, R"doc(
+             Deprecated: ICU 2.6 Use the URES_TABLE constant instead.
+             )doc")
+      .value("RES_ALIAS", RES_ALIAS, R"doc(
+             Deprecated: ICU 2.6 Use the URES_ALIAS constant instead.
+             )doc")
+      .value("RES_INT", RES_INT, R"doc(
+             Deprecated: ICU 2.6 Use the URES_INT constant instead.
+             )doc")
+      .value("RES_ARRAY", RES_ARRAY, R"doc(
+             Deprecated: ICU 2.6 Use the URES_ARRAY constant instead.
+             )doc")
+      .value("RES_INT_VECTOR", RES_INT_VECTOR, R"doc(
+             Deprecated: ICU 2.6 Use the URES_INT_VECTOR constant instead.
+             )doc")
+      .value("RES_RESERVED", RES_RESERVED,
+             R"doc(
+             Deprecated: ICU 2.6 Not used.
+             )doc")
+      .value("URES_LIMIT", URES_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //

@@ -58,14 +58,16 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   //
   // enum icu::UnicodeString::EInvariant
   //
-  py::enum_<UnicodeString::EInvariant>(
-      us, "EInvariant", py::arithmetic(),
-      "Constant to be used in the *UnicodeString(char *, int32_t, EInvariant)* "
-      "constructor which constructs a Unicode "
-      "string from an invariant-character char \\* string.\n\n"
-      "Use the macro *US_INV* instead of the full qualification for this "
-      "value.")
-      .value("INVARIANT", UnicodeString::kInvariant)
+  py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic(),
+                                       R"doc(
+Constant to be used in the ``UnicodeString(src, text_length, inv)``
+constructor which constructs a Unicode string from an invariant-character
+string.
+      )doc")
+      .value("INVARIANT", UnicodeString::kInvariant, R"doc(
+             Use the :attr:`US_INV` instead of the full qualification for this
+             value.
+      )doc")
       .export_values();
 
   //
@@ -73,14 +75,26 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   //
   us.def(
         // [1] UnicodeString()
-        py::init<>())
+        py::init<>(), R"doc(
+      Initialize a ``UnicodeString`` instance as an empty string.
+      )doc")
       .def(
           // [2] UnicodeString(int32_t capacity, UChar32 c, int32_t count)
           py::init<int32_t, UChar32, int32_t>(), py::arg("capacity"),
-          py::arg("c"), py::arg("count"))
+          py::arg("c"), py::arg("count"), R"doc(
+      Initialize a ``UnicodeString`` instance with a string consisting of the
+      code unit *c* repeated *count* times.
+
+      *capacity* is the number of char16_ts that this ``UnicodeString`` can
+      hold before resizing is required. If *count* is greater than 0 and
+      *count* code points *c* occupy more space than *capacity*, *capacity* is
+      adjusted accordingly.
+      )doc")
       .def(
           // [4] UnicodeString(UChar32 ch)
-          py::init<UChar32>(), py::arg("ch"))
+          py::init<UChar32>(), py::arg("ch"), R"doc(
+      Initialize a ``UnicodeString`` instance with the single code unit *ch*.
+      )doc")
       .def(
           // [10] UnicodeString(const S &text)
           //      UnicodeString(const char16_t *text)
@@ -91,13 +105,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             return std::make_unique<UnicodeString>(text.data());
 #endif
           }),
-          py::arg("text"))
+          py::arg("text"), R"doc(
+      Initialize a ``UnicodeString`` instance with the string literal.
+      )doc")
       .def(
           // [6] UnicodeString(const char16_t *text, int32_t textLength)
           py::init([](const std::u16string &text, int32_t text_length) {
             return std::make_unique<UnicodeString>(text.data(), text_length);
           }),
-          py::arg("text"), py::arg("text_length"))
+          py::arg("text"), py::arg("text_length"), R"doc(
+      Initialize a ``UnicodeString`` instance with the string literal.
+
+      Copy at most *text_length* characters from *text* to ``UnicodeString``.
+      )doc")
       .def(
           // [16] UnicodeString(const char *codepageData)
           py::init([](const py::bytes &codepage_data) {
@@ -105,7 +125,10 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                 PyBytes_AS_STRING(codepage_data.ptr());
             return std::make_unique<UnicodeString>(codepage_data_text);
           }),
-          py::arg("codepage_data"))
+          py::arg("codepage_data"), R"doc(
+      Initialize a ``UnicodeString`` instance from null-terminated
+      *codepage_data* using the default converter.
+      )doc")
       .def(
           // [18] UnicodeString(const char *codepageData, const char *codepage)
           py::init([](const py::bytes &codepage_data,
@@ -115,7 +138,18 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             return std::make_unique<UnicodeString>(
                 codepage_data_text, codepage ? codepage->data() : nullptr);
           }),
-          py::arg("codepage_data"), py::arg("codepage"))
+          py::arg("codepage_data"), py::arg("codepage"), R"doc(
+      Initialize a ``UnicodeString`` instance from null-terminated
+      *codepage_data* using the converter specified by *codepage*.
+
+      If *codepage* is ``None``, the default converter is used. If *codepage*
+      is an empty string (""), *codepage_data* must be an
+      "invariant characters".
+
+      .. note::
+          For invariant-character strings use
+          ``UnicodeString(src, text_length, inv)`` instead.
+      )doc")
       .def(
           // [17] UnicodeString(const char *codepageData, int32_t dataLength)
           py::init([](const py::bytes &codepage_data, int32_t data_length) {
@@ -126,7 +160,12 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             return std::make_unique<UnicodeString>(codepage_data_text.data(),
                                                    data_length);
           }),
-          py::arg("codepage_data"), py::arg("data_length"))
+          py::arg("codepage_data"), py::arg("data_length"), R"doc(
+      Initialize a ``UnicodeString`` instance from *codepage_data* using the
+      default converter.
+
+      *data_length* is the number of bytes in *codepage_data*.
+      )doc")
       .def(
           // [19] UnicodeString(const char *codepageData,
           //                    int32_t data_length,
@@ -141,7 +180,21 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                 codepage_data_text.data(), data_length,
                 codepage ? codepage->data() : nullptr);
           }),
-          py::arg("codepage_data"), py::arg("data_length"), py::arg("codepage"))
+          py::arg("codepage_data"), py::arg("data_length"), py::arg("codepage"),
+          R"doc(
+      Initialize a ``UnicodeString`` instance from *codepage_data* using the
+      converter specified by *codepage*.
+
+      *data_length* is the number of bytes in *codepage_data*.
+
+      If *codepage* is ``None``, the default converter is used. If *codepage*
+      is an empty string (""), *codepage_data* must be an
+      "invariant characters".
+
+      .. note::
+          For invariant-character strings use
+          ``UnicodeString(src, text_length, inv)`` instead.
+      )doc")
       .def(
           // [20] UnicodeString(const char *src,
           //                    int32_t srcLength,
@@ -161,7 +214,15 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             }
             return result;
           }),
-          py::arg("src"), py::arg("src_length"), py::arg("cnv"))
+          py::arg("src"), py::arg("src_length"), py::arg("cnv"), R"doc(
+      Initialize a ``UnicodeString`` instance from *src* using the existing
+      :class:`UConverter`.
+
+      *src_length* is the number of bytes in *src*.
+
+      .. seealso::
+          :func:`ucnv_set_to_ucall_back`
+      )doc")
       .def(
           // [21] UnicodeString(const char *src,
           //                    int32_t textLength,
@@ -171,21 +232,38 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             return std::make_unique<UnicodeString>(src.data(), text_length,
                                                    inv);
           }),
-          py::arg("src"), py::arg("text_length"), py::arg("inv"))
+          py::arg("src"), py::arg("text_length"), py::arg("inv"), R"doc(
+      Initialize a ``UnicodeString`` instance with an invariant-characters.
+
+      *text_length* is the length of *src*.
+
+      .. note::
+          For *inv*, use :attr:`US_INV` instead of the fully qualified name.
+      )doc")
       .def(
           // [22] UnicodeString(const UnicodeString &that)
-          py::init<const UnicodeString &>(), py::arg("other"))
+          py::init<const UnicodeString &>(), py::arg("other"), R"doc(
+      Initialize a ``UnicodeString`` instance from another ``UnicodeString``.
+      )doc")
       .def(
           // [24] UnicodeString(const UnicodeString &src,
           //                    int32_t srcStart)
           py::init<const UnicodeString &, int32_t>(), py::arg("src"),
-          py::arg("src_start"))
+          py::arg("src_start"), R"doc(
+      Initialize a ``UnicodeString`` instance from the substring of an existing
+      ``UnicodeString`` object that is from the specified position *src_start*
+      to the tail.
+      )doc")
       .def(
           // [25] UnicodeString(const UnicodeString &src,
           //                    int32_t srcStart,
           //                    int32_t srcLength)
           py::init<const UnicodeString &, int32_t, int32_t>(), py::arg("src"),
-          py::arg("src_start"), py::arg("src_length"));
+          py::arg("src_start"), py::arg("src_length"), R"doc(
+      Initialize a ``UnicodeString`` instance from the substring in the range
+      [*src_start*, *src_start* + *src_length*) of an existing
+      ``UnicodeString`` object.
+      )doc");
 
   us.def(
       "__add__",
@@ -237,7 +315,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
           }
           return py::str(PyUnicode_FromOrdinal(self[actual_index]));
         },
-        py::arg("index"))
+        py::arg("index"), R"doc(
+      Return the code unit at offset *index*.
+      )doc")
       .def(
           "__getitem__",
           [](const UnicodeString &self, const py::slice &slice) {
@@ -258,7 +338,9 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             }
             return result ? py::str(result) : py::str();
           },
-          py::arg("slice"));
+          py::arg("slice"), R"doc(
+      Return a set of code units in the range(*start*, *stop*, *step*).
+      )doc");
 
   us.def(
       "__gt__",
@@ -350,11 +432,18 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
       },
       py::arg("index"), py::arg("value"));
 
-  us.def("__str__", [](const UnicodeString &self) {
-    std::string result;
-    self.toUTF8String(result);
-    return result;
-  });
+  us.def(
+      "__str__",
+      [](const UnicodeString &self) {
+        std::string result;
+        self.toUTF8String(result);
+        return result;
+      },
+      R"doc(
+      Return the string representation.
+
+      This is equivalent to :meth:`.to_utf8_string`.
+      )doc");
 
   us.def(
         // [2] append(const char16_t *srcChars, int32_t srcStart,
@@ -657,7 +746,13 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
           }
           return py::bytes(dest.data(), length);
         },
-        py::arg("cnv"))
+        py::arg("cnv"), R"doc(
+      Convert a ``UnicodeString`` to a code page string using the existing
+      :class:`UConverter` and return the result.
+
+      .. seealso::
+          :func:`ucnv_set_from_ucall_back`
+      )doc")
       .def(
           // [2] extract(Char16Ptr dest, int32_t destCapacity,
           //             UErrorCode &errorCode)
@@ -671,13 +766,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
               throw icupy::ICUError(error_code);
             }
             return result;
-          })
+          },
+          R"doc(
+      Convert a ``UnicodeString`` to a UTF-8 string and return the result.
+      )doc")
       .def(
           // [4] extract(int32_t start, int32_t length, UnicodeString &target)
           "extract",
           py::overload_cast<int32_t, int32_t, UnicodeString &>(
               &UnicodeString::extract, py::const_),
-          py::arg("start"), py::arg("length"), py::arg("target"))
+          py::arg("start"), py::arg("length"), py::arg("target"), R"doc(
+      Copy the characters in the range [*start*, *start* + *length*) into the
+      *target*.
+      )doc")
       .def(
           // [5] extract(int32_t start, int32_t startLength, char *target,
           //             const char *codepage = 0)
@@ -694,7 +795,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
             self.extract(start, start_length, target.data(), codepage_data);
             return py::bytes(target.data(), length);
           },
-          py::arg("start"), py::arg("start_length"), py::arg("codepage"))
+          py::arg("start"), py::arg("start_length"), py::arg("codepage"),
+          R"doc(
+      Convert the characters in the range [*start*, *start* + *start_length*)
+      to the specified *codepage* string and return the result.
+
+      If *codepage* is ``None``, the default converter is used. If *codepage*
+      is an empty string (""), all characters must be an
+      "invariant characters".
+
+      .. note::
+          For invariant-character strings use
+          ``extract(start, start_length, inv)`` instead.
+      )doc")
       .def(
           // [6] extract(int32_t start, int32_t startLength, char *target,
           //             int32_t targetCapacity,
@@ -712,7 +825,16 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                          static_cast<int32_t>(target.size()), inv);
             return py::bytes(target.data(), length);
           },
-          py::arg("start"), py::arg("start_length"), py::arg("inv"))
+          py::arg("start"), py::arg("start_length"), py::arg("inv"), R"doc(
+      Convert the characters in the range [*start*, *start* + *start_length*)
+      using a simple converter and return the result.
+
+      .. note::
+          All characters must be an "invariant characters".
+
+      .. note::
+          For *inv*, use :attr:`US_INV` instead of the fully qualified name.
+      )doc")
       .def(
           // [7] extract(int32_t start, int32_t startLength, char *target,
           //             uint32_t targetLength)
@@ -728,7 +850,10 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                          static_cast<uint32_t>(target.size()));
             return py::bytes(target.data(), length);
           },
-          py::arg("start"), py::arg("start_length"));
+          py::arg("start"), py::arg("start_length"), R"doc(
+      Convert the characters in the range [*start*, *start* + *start_length*)
+      to the platform's default code page and return the result.
+      )doc");
 
   us.def(
         // [1] extractBetween(int32_t start, int32_t limit, char16_t *dst,
@@ -1311,18 +1436,33 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
     return std::u32string(dest.begin(), dest.end());
   });
 
-  us.def("to_utf8", [](const UnicodeString &self) {
-    std::string result;
-    auto sink = StringByteSink(&result);
-    self.toUTF8(sink);
-    return py::bytes(result.data(), result.size());
-  });
+  us.def(
+      "to_utf8",
+      [](const UnicodeString &self) {
+        std::string result;
+        auto sink = StringByteSink(&result);
+        self.toUTF8(sink);
+        return py::bytes(result.data(), result.size());
+      },
+      R"doc(
+      Convert a ``UnicodeString`` to UTF-8 and return the result as a ``bytes``
+      object.
 
-  us.def("to_utf8_string", [](const UnicodeString &self) {
-    std::string result;
-    self.toUTF8String(result);
-    return result;
-  });
+      Unpaired surrogates are replaced with U+FFFD.
+      )doc");
+
+  us.def(
+      "to_utf8_string",
+      [](const UnicodeString &self) {
+        std::string result;
+        self.toUTF8String(result);
+        return result;
+      },
+      R"doc(
+      Convert a ``UnicodeString`` to a UTF-8 string and return the result.
+
+      Unpaired surrogates are replaced with U+FFFD.
+      )doc");
 
   us.def("trim", &UnicodeString::trim);
 

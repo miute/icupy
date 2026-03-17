@@ -5,25 +5,30 @@ void init_uloc(py::module &m) {
   //
   // enum UAcceptResult
   //
-  py::enum_<UAcceptResult>(m, "UAcceptResult", py::arithmetic(),
-                           "Output values which *uloc_accept_language()* "
-                           "writes to the 'out_result' parameter.")
-      .value("ULOC_ACCEPT_FAILED", ULOC_ACCEPT_FAILED,
-             "No exact match was found.")
-      .value("ULOC_ACCEPT_VALID", ULOC_ACCEPT_VALID,
-             "An exact match was found.")
-      .value("ULOC_ACCEPT_FALLBACK", ULOC_ACCEPT_FALLBACK,
-             "A fallback was found.\n\n  "
-             "For example, the Accept-Language list includes 'ja_JP' and is "
-             "matched with available locale 'ja'.")
+  py::enum_<UAcceptResult>(m, "UAcceptResult", py::arithmetic(), R"doc(
+Output values which uloc_acceptLanguage()
+writes to the `outResult` parameter.
+      )doc")
+      .value("ULOC_ACCEPT_FAILED", ULOC_ACCEPT_FAILED, R"doc(
+             No exact match was found.
+             )doc")
+      .value("ULOC_ACCEPT_VALID", ULOC_ACCEPT_VALID, R"doc(
+             An exact match was found.
+             )doc")
+      .value("ULOC_ACCEPT_FALLBACK", ULOC_ACCEPT_FALLBACK, R"doc(
+             A fallback was found.
+
+             For example, the Accept-Language list includes 'ja_JP' and is
+             matched with available locale 'ja'.
+             )doc")
       .export_values();
 
   //
   // enum ULayoutType
   //
-  py::enum_<ULayoutType>(m, "ULayoutType", py::arithmetic(),
-                         "enums for the return value for the character and "
-                         "line orientation functions.")
+  py::enum_<ULayoutType>(m, "ULayoutType", py::arithmetic(), R"doc(
+Enums for the return value for the character and line orientation functions.
+      )doc")
       .value("ULOC_LAYOUT_LTR", ULOC_LAYOUT_LTR)
       .value("ULOC_LAYOUT_RTL", ULOC_LAYOUT_RTL)
       .value("ULOC_LAYOUT_TTB", ULOC_LAYOUT_TTB)
@@ -35,57 +40,65 @@ void init_uloc(py::module &m) {
   //
   // enum ULocAvailableType
   //
-  py::enum_<ULocAvailableType>(m, "ULocAvailableType", py::arithmetic(),
-                               "Types for *uloc_get_available_by_type* and "
-                               "*uloc_count_available_by_type*.")
-      .value("ULOC_AVAILABLE_DEFAULT", ULOC_AVAILABLE_DEFAULT,
-             "Locales that return data when passed to ICU APIs, but not "
-             "including legacy or alias locales.")
+  py::enum_<ULocAvailableType>(m, "ULocAvailableType", py::arithmetic(), R"doc(
+Types for ``uloc_getAvailableByType`` and ``uloc_countAvailableByType``.
+      )doc")
+      .value("ULOC_AVAILABLE_DEFAULT", ULOC_AVAILABLE_DEFAULT, R"doc(
+             Locales that return data when passed to ICU APIs, but not
+             including legacy or alias locales.
+             )doc")
       .value("ULOC_AVAILABLE_ONLY_LEGACY_ALIASES",
-             ULOC_AVAILABLE_ONLY_LEGACY_ALIASES,
-             "Legacy or alias locales that return data when passed to ICU "
-             "APIs.\n\n  "
-             "Examples of supported legacy or alias locales:\n\n  "
-             "* iw (alias to he)\n  "
-             "* mo (alias to ro)\n  "
-             "* zh_CN (alias to zh_Hans_CN)\n  "
-             "* sr_BA (alias to sr_Cyrl_BA)\n  "
-             "* ars (alias to ar_SA)\n\n  "
-             "The locales in this set are disjoint from the ones in "
-             "*ULOC_AVAILABLE_DEFAULT*. To get both sets at the "
-             "same time, use *ULOC_AVAILABLE_WITH_LEGACY_ALIASES*.")
+             ULOC_AVAILABLE_ONLY_LEGACY_ALIASES, R"doc(
+             Legacy or alias locales that return data when passed to ICU APIs.
+
+             Examples of supported legacy or alias locales:
+
+             - iw (alias to he)
+             - mo (alias to ro)
+             - zh_CN (alias to zh_Hans_CN)
+             - sr_BA (alias to sr_Cyrl_BA)
+             - ars (alias to ar_SA)
+
+             The locales in this set are disjoint from the ones in
+             ULOC_AVAILABLE_DEFAULT. To get both sets at the same time, use
+             ULOC_AVAILABLE_WITH_LEGACY_ALIASES.
+             )doc")
       .value("ULOC_AVAILABLE_WITH_LEGACY_ALIASES",
-             ULOC_AVAILABLE_WITH_LEGACY_ALIASES,
-             "The union of the locales in *ULOC_AVAILABLE_DEFAULT* and "
-             "*ULOC_AVAILABLE_ONLY_LEGACY_ALIAS*.")
+             ULOC_AVAILABLE_WITH_LEGACY_ALIASES, R"doc(
+             The union of the locales in ULOC_AVAILABLE_DEFAULT and
+             ULOC_AVAILABLE_ONLY_LEGACY_ALIASES.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
   //
   // enum ULocDataLocaleType
   //
-  py::enum_<ULocDataLocaleType>(
-      m, "ULocDataLocaleType", py::arithmetic(),
-      "Constants for *get_locale()*.\n\n"
-      "Allow user to select whether she wants information on requested, valid "
-      "or actual locale. "
-      "For example, a collator for \"en_US_CALIFORNIA\" was requested. In the "
-      "current state of ICU (2.0), the "
-      "requested locale is \"en_US_CALIFORNIA\", the valid locale is \"en_US\" "
-      "(most specific locale supported by ICU) "
-      "and the actual locale is \"root\" (the collation data comes unmodified "
-      "from the UCA) The locale is considered "
-      "supported by ICU if there is a core ICU bundle for that locale "
-      "(although it may be empty).")
-      .value("ULOC_ACTUAL_LOCALE", ULOC_ACTUAL_LOCALE,
-             "This is locale the data actually comes from.")
-      .value("ULOC_VALID_LOCALE", ULOC_VALID_LOCALE,
-             "This is the most specific locale supported by ICU.")
-      .value("ULOC_REQUESTED_LOCALE", ULOC_REQUESTED_LOCALE,
-             "**Deprecated:** ICU 2.8")
-      .value("ULOC_DATA_LOCALE_TYPE_LIMIT", ULOC_DATA_LOCALE_TYPE_LIMIT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+  py::enum_<ULocDataLocaleType>(m, "ULocDataLocaleType", py::arithmetic(),
+                                R"doc(
+Constants for ``.get_locale()``.
+
+Allow user to select whether she wants information on requested, valid or
+actual locale. For example, a collator for "en_US_CALIFORNIA" was requested.
+In the current state of ICU (2.0), the requested locale is "en_US_CALIFORNIA",
+the valid locale is "en_US" (most specific locale supported by ICU) and the
+actual locale is "root" (the collation data comes unmodified from the UCA).
+The locale is considered supported by ICU if there is a core ICU bundle for
+that locale (although it may be empty).
+      )doc")
+      .value("ULOC_ACTUAL_LOCALE", ULOC_ACTUAL_LOCALE, R"doc(
+             This is locale the data actually comes from.
+             )doc")
+      .value("ULOC_VALID_LOCALE", ULOC_VALID_LOCALE, R"doc(
+             This is the most specific locale supported by ICU.
+             )doc")
+      .value("ULOC_REQUESTED_LOCALE", ULOC_REQUESTED_LOCALE, R"doc(
+             Deprecated: ICU 2.8
+             )doc")
+      .value("ULOC_DATA_LOCALE_TYPE_LIMIT", ULOC_DATA_LOCALE_TYPE_LIMIT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   m.attr("ULOC_CANADA") = ULOC_CANADA;

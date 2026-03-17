@@ -46,45 +46,56 @@ void init_ucpmap(py::module &m) {
   //
   // enum UCPMapRangeOption
   //
-  py::enum_<UCPMapRangeOption>(
-      m, "UCPMapRangeOption", py::arithmetic(),
-      "Selectors for how *ucpmap_get_range()* etc.\n\n"
-      "Should report value ranges overlapping with surrogates. Most users "
-      "should use *UCPMAP_RANGE_NORMAL*.")
-      .value("UCPMAP_RANGE_NORMAL", UCPMAP_RANGE_NORMAL,
-             "*ucpmap_get_range()* enumerates all same-value ranges as stored "
-             "in the map.\n\n  "
-             "Most users should use this option.")
+  py::enum_<UCPMapRangeOption>(m, "UCPMapRangeOption", py::arithmetic(), R"doc(
+Selectors for how :func:`ucpmap_get_range` etc.
+
+Should report value ranges overlapping with surrogates. Most users
+should use :attr:`UCPMAP_RANGE_NORMAL`.
+      )doc")
+      .value("UCPMAP_RANGE_NORMAL", UCPMAP_RANGE_NORMAL, R"doc(
+             :func:`ucpmap_get_range` enumerates all same-value ranges as stored
+             in the map.
+
+             Most users should use this option.
+             )doc")
       .value("UCPMAP_RANGE_FIXED_LEAD_SURROGATES",
-             UCPMAP_RANGE_FIXED_LEAD_SURROGATES,
-             "*ucpmap_get_range()* enumerates all same-value ranges as stored "
-             "in the map, except that lead surrogates "
-             "(U+D800..U+DBFF) are treated as having the *surrogate_value*, "
-             "which is passed to *get_range()* as a "
-             "separate parameter.\n\n  "
-             "The *surrogate_value* is not transformed via *filter()*. See "
-             "*u_is_lead(c)*.\n\n  "
-             "Most users should use *UCPMAP_RANGE_NORMAL* instead.\n\n  "
-             "This option is useful for maps that map surrogate code units to "
-             "special values optimized for UTF-16 "
-             "string processing or for special error behavior for unpaired "
-             "surrogates, but those values are not to be "
-             "associated with the lead surrogate code points.")
+             UCPMAP_RANGE_FIXED_LEAD_SURROGATES, R"doc(
+             :func:`ucpmap_get_range` enumerates all same-value ranges as stored
+             in the map, except that lead surrogates
+             (U+D800..U+DBFF) are treated as having the *surrogate_value*,
+             which is passed to :func:`ucpmap_get_range` as a
+             separate parameter.
+
+             The *surrogate_value* is not transformed via *filter*. See
+             :func:`u_is_lead`.
+
+             Most users should use :attr:`UCPMAP_RANGE_NORMAL` instead.
+
+             This option is useful for maps that map surrogate code *units* to
+             special values optimized for UTF-16
+             string processing or for special error behavior for unpaired
+             surrogates, but those values are not to be
+             associated with the lead surrogate code points.
+             )doc")
       .value("UCPMAP_RANGE_FIXED_ALL_SURROGATES",
-             UCPMAP_RANGE_FIXED_ALL_SURROGATES,
-             "*ucpmap_get_range()* enumerates all same-value ranges as stored "
-             "in the map, except that all surrogates "
-             "(U+D800..U+DFFF) are treated as having the *surrogate_value*, "
-             "which is passed to *get_range()* as a "
-             "separate parameter.\n\n  "
-             "The *surrogate_value* is not transformed via *filter()*. See "
-             "*u_is_surrogate(c)*.\n\n  "
-             "Most users should use *UCPMAP_RANGE_NORMAL* instead.\n\n  "
-             "This option is useful for maps that map surrogate code units to "
-             "special values optimized for UTF-16 "
-             "string processing or for special error behavior for unpaired "
-             "surrogates, but those values are not to be "
-             "associated with the lead surrogate code points.")
+             UCPMAP_RANGE_FIXED_ALL_SURROGATES, R"doc(
+             :func:`ucpmap_get_range` enumerates all same-value ranges as stored
+             in the map, except that all surrogates
+             (U+D800..U+DFFF) are treated as having the *surrogate_value*,
+             which is passed to :func:`ucpmap_get_range` as a
+             separate parameter.
+
+             The *surrogate_value* is not transformed via *filter*. See
+             :func:`u_is_surrogate`.
+
+             Most users should use :attr:`UCPMAP_RANGE_NORMAL` instead.
+
+             This option is useful for maps that map surrogate code *units* to
+             special values optimized for UTF-16
+             string processing or for special error behavior for unpaired
+             surrogates, but those values are not to be
+             associated with the lead surrogate code points.
+             )doc")
       .export_values();
 
   //
@@ -113,11 +124,13 @@ void init_ucpmap(py::module &m) {
                action, context.value_or(nullptr));
          }),
          py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-         Initialize the ``UCPMapValueFilter`` instance with a callback
-         function `action` and the user context `context`.
+         Initialize the ``UCPMapValueFilter`` instance with the specified
+         callback function and the user context.
 
-         `action` and `context` must outlive the ``UCPMapValueFilter``
-         object.
+         .. important::
+
+             *action* and *context* must outlive the ``UCPMapValueFilter``
+             object.
          )doc");
 
   vf.def(
@@ -132,7 +145,7 @@ void init_ucpmap(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 
   //
@@ -142,9 +155,9 @@ void init_ucpmap(py::module &m) {
       "ucpmap_get",
       [](const icupy::UCPMapPtr &map, UChar32 c) { return ucpmap_get(map, c); },
       py::arg("ucpmap"), py::arg("c"), R"doc(
-      Get the property value for a code point in a map.
+      Return the property value for a code point in a map.
 
-      `c` must be between 0 and 0x10FFFF.
+      *c* must be between 0 and 0x10FFFF.
 
       See Also:
           :func:`u_get_int_property_map`
@@ -168,14 +181,16 @@ void init_ucpmap(py::module &m) {
       },
       py::arg("ucpmap"), py::arg("start"), py::arg("option"),
       py::arg("surrogate_value"), py::arg("filter") = std::nullopt, R"doc(
-      Get the last code point and property value in the range that has
-      the same property value as the code point starting at `start`
+      Return the last code point and property value in the range that has
+      the same property value as the code point starting at *start*
       as a tuple ``(end, value)``.
 
       See Also:
           :func:`u_get_int_property_map`
 
       Examples:
+          Basic usage:
+
           >>> from icupy import icu
           >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
           >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
@@ -189,6 +204,8 @@ void init_ucpmap(py::module &m) {
           ...
           >>> [x for x in result if x[2] == icu.U_EA_FULLWIDTH]
           [(12288, 12288, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65281, 65376, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65504, 65510, <UEastAsianWidth.U_EA_FULLWIDTH: 3>)]
+
+          Using custom filter:
 
           >>> from icupy import icu
           >>> def my_filter(new_map: dict[int, int], value: int) -> int:

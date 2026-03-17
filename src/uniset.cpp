@@ -16,52 +16,66 @@ void init_uniset(py::module &m, py::module &h) {
   //
   // enum icu::UMatchDegree
   //
-  py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic(),
-                          "Constants returned by *UnicodeMatcher::matches()* "
-                          "indicating the degree of match.")
-      .value("U_MISMATCH", U_MISMATCH,
-             "Constant returned by *matches()* indicating a mismatch between "
-             "the text and this matcher.\n\n  "
-             "The text contains a character which does not match, or the text "
-             "does not contain all desired characters "
-             "for a non-incremental match.")
-      .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH,
-             "Constant returned by *matches()* indicating a partial match "
-             "between the text and this matcher.\n\n  "
-             "This value is only returned for incremental match operations. "
-             "All characters of the text match, but more "
-             "characters are required for a complete match. Alternatively, for "
-             "variable-length matchers, all "
-             "characters of the text match, and if more characters were "
-             "supplied at limit, they might also match.")
-      .value("U_MATCH", U_MATCH,
-             "Constant returned by *matches()* indicating a complete match "
-             "between the text and this matcher.\n\n  "
-             "For an incremental variable-length match, this value is returned "
-             "if the given text matches, and it is "
-             "known that additional characters would not alter the extent of "
-             "the match.")
+  py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic(), R"doc(
+Constants returned by :meth:`UnicodeMatcher.matches` indicating the degree of
+match.
+)doc")
+      .value("U_MISMATCH", U_MISMATCH, R"doc(
+             Constant returned by :meth:`UnicodeMatcher.matches` indicating a
+             mismatch between the text and this matcher.
+
+             The text contains a character which does not match, or the text
+             does not contain all desired characters for a non-incremental
+             match.
+             )doc")
+      .value("U_PARTIAL_MATCH", U_PARTIAL_MATCH, R"doc(
+             Constant returned by :meth:`UnicodeMatcher.matches` indicating
+             a partial match between the text and this matcher.
+
+             This value is only returned for incremental match operations.
+             All characters of the text match, but more characters are required
+             for a complete match. Alternatively, for variable-length matchers,
+             all characters of the text match, and if more characters were
+             supplied at limit, they might also match.
+             )doc")
+      .value("U_MATCH", U_MATCH, R"doc(
+             Constant returned by :meth:`UnicodeMatcher.matches` indicating
+             a complete match between the text and this matcher.
+
+             For an incremental variable-length match, this value is returned
+             if the given text matches, and it is known that additional
+             characters would not alter the extent of the match.
+             )doc")
       .export_values();
 
   //
   // class icu::UnicodeFunctor
   //
-  py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor");
+  py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor", R"doc(
+      Abstract base class for :class:`UnicodeFilter`.
+      )doc");
 
   //
   // class icu::UnicodeMatcher
   //
-  py::class_<UnicodeMatcher> umat(m, "UnicodeMatcher");
+  py::class_<UnicodeMatcher> umat(m, "UnicodeMatcher", R"doc(
+      Abstract base class for :class:`UnicodeFilter`.
+      )doc");
 
   //
   // class icu::UnicodeFilter
   //
-  py::class_<UnicodeFilter, UnicodeFunctor, UnicodeMatcher>(m, "UnicodeFilter");
+  py::class_<UnicodeFilter, UnicodeFunctor, UnicodeMatcher>(m, "UnicodeFilter",
+                                                            R"doc(
+      Abstract base class for :class:`UnicodeSet`.
+      )doc");
 
   //
   // class icu::UnicodeSet
   //
-  py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet");
+  py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet", R"doc(
+      Mutable set of Unicode characters and multicharacter strings.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   //
@@ -120,10 +134,12 @@ void init_uniset(py::module &m, py::module &h) {
   // class icu::UnicodeSet
   //
   py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())
-      .value("MIN_VALUE", UnicodeSet::MIN_VALUE,
-             "Minimum value that can be stored in a *UnicodeSet*.")
-      .value("MAX_VALUE", UnicodeSet::MAX_VALUE,
-             "Maximum value that can be stored in a *UnicodeSet*.")
+      .value("MIN_VALUE", UnicodeSet::MIN_VALUE, R"doc(
+             Minimum value that can be stored in a UnicodeSet.
+             )doc")
+      .value("MAX_VALUE", UnicodeSet::MAX_VALUE, R"doc(
+             Maximum value that can be stored in a UnicodeSet.
+             )doc")
       .export_values();
 
   us.def(py::init<>())

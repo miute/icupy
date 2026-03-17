@@ -13,7 +13,13 @@ void init_gregocal(py::module &m) {
   //
   // class icu::Calendar
   //
-  py::class_<Calendar, UObject> cal(m, "Calendar");
+  py::class_<Calendar, UObject> cal(m, "Calendar", R"doc(
+      Abstract base class for converting between a UDate object and a set of
+      integer fields such as YEAR, MONTH, DAY, HOUR, and so on.
+
+      See Also:
+          :class:`GregorianCalendar`
+      )doc");
 
   cal.def(
       "__eq__",
@@ -458,14 +464,50 @@ void init_gregocal(py::module &m) {
   //
   // class icu::GregorianCalendar
   //
-  py::class_<GregorianCalendar, Calendar> gc(m, "GregorianCalendar");
+  py::class_<GregorianCalendar, Calendar> gc(m, "GregorianCalendar", R"doc(
+      Concrete class which provides the standard calendar used by most of the
+      world.
+
+      The standard (Gregorian) calendar has 2 eras, BC and AD.
+
+      This implementation handles a single discontinuity, which corresponds by
+      default to the date the Gregorian calendar was originally instituted
+      (October 15, 1582). Not all countries adopted the Gregorian calendar
+      then, so this cutover date may be changed by the caller.
+
+      Prior to the institution of the Gregorian Calendar, New Year's Day was
+      March 25. To avoid confusion, this Calendar always uses January 1.
+      A manual adjustment may be made if desired for dates that are prior to
+      the Gregorian changeover and which fall between January 1 and March 24.
+
+      Example:
+          .. code-block:: python
+
+              from icupy import icu
+              # get the supported ids for GMT-08:00 (Pacific Standard Time)
+              offset = -8 * 60 * 60 * 1000
+              ids = icu.TimeZone.create_enumeration(offset)
+              # create a Pacific Standard Time time zone
+              pdt = icu.SimpleTimeZone(offset, ids.unext())
+              # set up rules for daylight savings time
+              pdt.set_start_rule(icu.UCAL_MARCH, 1, icu.UCAL_SUNDAY, 2 * 60 * 60 * 1000);
+              pdt.set_end_rule(icu.UCAL_NOVEMBER, 2, icu.UCAL_SUNDAY, 2 * 60 * 60 * 1000);
+              # create a GregorianCalendar with the Pacific Daylight time zone and the current date and time
+              calendar = icu.GregorianCalendar(pdt)
+              calendar.get(icu.UCAL_ZONE_OFFSET) / (60 * 60 * 1000)  # -8.0
+              calendar.get(icu.UCAL_DST_OFFSET) / (60 * 60 * 1000)  # 0 or 1.0
+              # reset the date and time to April 1 at 0:00
+              calendar.set(calendar.get(icu.UCAL_YEAR), icu.UCAL_APRIL, 1, 0, 0, 0)
+              calendar.get(icu.UCAL_ZONE_OFFSET) / (60 * 60 * 1000)  # -8.0
+              calendar.get(icu.UCAL_DST_OFFSET) / (60 * 60 * 1000)  # 1.0
+      )doc");
 
   //
   // enum icu::GregorianCalendar::EEras
   //
-  py::enum_<GregorianCalendar::EEras>(
-      gc, "EEras", py::arithmetic(),
-      "Useful constants for *GregorianCalendar* and *TimeZone*.")
+  py::enum_<GregorianCalendar::EEras>(gc, "EEras", py::arithmetic(), R"doc(
+Useful constants for :class:`GregorianCalendar` and :class:`TimeZone`.
+      )doc")
       .value("BC", GregorianCalendar::EEras::BC)
       .value("AD", GregorianCalendar::EEras::AD)
       .export_values();

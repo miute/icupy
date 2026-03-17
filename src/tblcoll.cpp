@@ -14,33 +14,58 @@ void init_tblcoll(py::module &m) {
   //
   // class icu::Collator
   //
-  py::class_<Collator, UObject> coll(m, "Collator");
+  py::class_<Collator, UObject> coll(m, "Collator", R"doc(
+      Perform locale-sensitive string comparison.
+
+      See Also:
+          :class:`RuleBasedCollator`
+
+      Example:
+          Natural sort (human-friendly sorting):
+
+          >>> from icupy import icu
+          >>> coll = icu.Collator.create_instance(icu.ULOC_US)
+          >>> coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
+          >>> data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
+          >>> sorted(data, key=coll.get_sort_key)
+          ['file1.txt', 'file2.txt', 'file3.txt', 'file10.txt', 'file20.txt']
+      )doc");
 
   //
   // enum icu::Collator::ECollationStrength
   //
-  py::enum_<Collator::ECollationStrength>(
-      coll, "ECollationStrength", py::arithmetic(),
-      "Base letter represents a primary difference.\n\n"
-      "Set comparison level to PRIMARY to ignore secondary and tertiary "
-      "differences. Use this to set the strength of "
-      "a Collator object.\n"
-      "Example of primary difference, \"abc\" < \"abd\"\n\n"
-      "Diacritical differences on the same base letter represent a secondary "
-      "difference. Set comparison level to "
-      "SECONDARY to ignore tertiary differences. Use this to set the strength "
-      "of a Collator object.\n"
-      "Example of secondary difference, \"&auml;\" >> \"a\".\n\n"
-      "Uppercase and lowercase versions of the same character represents a "
-      "tertiary difference. Set comparison level "
-      "to TERTIARY to include all comparison differences. Use this to set the "
-      "strength of a Collator object.\n"
-      "Example of tertiary difference, \"abc\" <<< \"ABC\".\n\n"
-      "Two characters are considered \"identical\" when they have the same "
-      "unicode spellings.\n"
-      "For example, \"&auml;\" == \"&auml;\".\n\n"
-      "*UCollationStrength* is also used to determine the strength of sort "
-      "keys generated from Collator objects.")
+  py::enum_<Collator::ECollationStrength>(coll, "ECollationStrength",
+                                          py::arithmetic(), R"doc(
+Base letter represent a primary difference.
+
+Set comparison level to :attr:`PRIMARY` to ignore secondary and tertiary
+differences. Use this to set the strength of a :class:`Collator` object.
+
+Example of primary difference, "abc" < "abd"
+
+Diacritical differences on the same base letter represent a secondary
+difference. Set comparison level to :attr:`SECONDARY` to ignore tertiary
+differences. Use this to set the strength of a :class:`Collator` object.
+
+Example of secondary difference, "ä" >> "a".
+
+Uppercase and lowercase versions of the same character represent a tertiary
+difference. Set comparison level to :attr:`TERTIARY` to include all comparison
+differences. Use this to set the strength of a :class:`Collator` object.
+
+Example of tertiary difference, "abc" <<< "ABC".
+
+Two characters are considered "identical" when they have the same unicode
+spellings.
+
+For example, "ä" == "ä".
+
+:class:`UCollationStrength` is also used to determine the strength of sort keys
+generated from :class:`Collator` objects.
+
+See Also:
+    :class:`UColAttributeValue`
+      )doc")
       .value("PRIMARY", Collator::PRIMARY)
       .value("SECONDARY", Collator::SECONDARY)
       .value("TERTIARY", Collator::TERTIARY)
@@ -51,9 +76,10 @@ void init_tblcoll(py::module &m) {
   //
   // enum icu::Collator::EComparisonResult
   //
-  py::enum_<Collator::EComparisonResult>(
-      coll, "EComparisonResult", py::arithmetic(),
-      "**Deprecated:** ICU 2.6. Use C enum UCollationResult defined in ucol.h")
+  py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult",
+                                         py::arithmetic(), R"doc(
+Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
+      )doc")
       .value("LESS", Collator::LESS)
       .value("EQUAL", Collator::EQUAL)
       .value("GREATER", Collator::GREATER)
@@ -62,26 +88,48 @@ void init_tblcoll(py::module &m) {
   //
   // class icu::Collator
   //
-  coll.def("__copy__", &Collator::clone);
+  coll.def("__copy__", &Collator::clone, R"doc(
+      Return a copy of this object.
+
+      This is equivalent to :meth:`.clone`.
+      )doc");
 
   coll.def(
       "__deepcopy__",
       [](const Collator &self, py::dict & /* memo */) { return self.clone(); },
-      py::arg("memo"));
+      py::arg("memo"), R"doc(
+      Return a copy of this object.
+
+      This is equivalent to :meth:`.clone`.
+      )doc");
 
   coll.def(
       "__eq__",
       [](const Collator &self, const Collator &other) { return self == other; },
-      py::is_operator(), py::arg("other"));
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* == *other*.
+      )doc");
 
-  coll.def("__hash__", &Collator::hashCode);
+  coll.def("__hash__", &Collator::hashCode, R"doc(
+      Return the hash value of this object.
+
+      This is equivalent to :meth:`hash_code`.
+      )doc");
 
   coll.def(
       "__ne__",
       [](const Collator &self, const Collator &other) { return self != other; },
-      py::is_operator(), py::arg("other"));
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* != *other*.
+      )doc");
 
-  coll.def("clone", &Collator::clone);
+  coll.def("clone", &Collator::clone, R"doc(
+      Return a copy of this object.
+
+      See Also:
+          :meth:`.__copy__`
+          :meth:`.__deepcopy__`
+      )doc");
 
   coll.def(
           // [2] icu::Collator::compare
@@ -99,7 +147,13 @@ void init_tblcoll(py::module &m) {
             return result;
           },
           py::arg("source"), py::arg("source_length"), py::arg("target"),
-          py::arg("target_length"))
+          py::arg("target_length"), R"doc(
+      Return :attr:`~UCollationResult.UCOL_LESS` if *source* < *target*
+      (up to the specified length),
+      :attr:`~UCollationResult.UCOL_GREATER` if *source* > *target*
+      (up to the specified length), and
+      :attr:`~UCollationResult.UCOL_EQUAL` otherwise.
+      )doc")
       .def(
           // [5] icu::Collator::compare
           "compare",
@@ -114,7 +168,13 @@ void init_tblcoll(py::module &m) {
             }
             return result;
           },
-          py::arg("source"), py::arg("target"), py::arg("length"))
+          py::arg("source"), py::arg("target"), py::arg("length"), R"doc(
+      Return :attr:`~UCollationResult.UCOL_LESS` if *source* < *target*
+      (up to the specified length),
+      :attr:`~UCollationResult.UCOL_GREATER` if *source* > *target*
+      (up to the specified length), and
+      :attr:`~UCollationResult.UCOL_EQUAL` otherwise.
+      )doc")
       .def(
           // [6] icu::Collator::compare
           "compare",
@@ -128,7 +188,11 @@ void init_tblcoll(py::module &m) {
             }
             return result;
           },
-          py::arg("source"), py::arg("target"))
+          py::arg("source"), py::arg("target"), R"doc(
+      Return :attr:`~UCollationResult.UCOL_LESS` if *source* < *target*,
+      :attr:`~UCollationResult.UCOL_GREATER` if *source* > *target*, and
+      :attr:`~UCollationResult.UCOL_EQUAL` otherwise.
+      )doc")
       // FIXME: Implement uiter C API.
       /*
       .def(
@@ -158,7 +222,11 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return :attr:`~UCollationResult.UCOL_LESS` if *source* < *target*,
+      :attr:`~UCollationResult.UCOL_GREATER` if *source* > *target*, and
+      :attr:`~UCollationResult.UCOL_EQUAL` otherwise.
+      )doc");
 
   coll.def_static(
           "create_instance",
@@ -171,15 +239,22 @@ void init_tblcoll(py::module &m) {
             }
             return result;
           },
-          py::arg("loc"))
-      .def_static("create_instance", []() {
-        ErrorCode error_code;
-        auto result = Collator::createInstance(error_code);
-        if (error_code.isFailure()) {
-          throw icupy::ICUError(error_code);
-        }
-        return result;
-      });
+          py::arg("loc"), R"doc(
+      Create the ``Collator`` object for the desired locale.
+      )doc")
+      .def_static(
+          "create_instance",
+          []() {
+            ErrorCode error_code;
+            auto result = Collator::createInstance(error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          R"doc(
+      Create the ``Collator`` object for the current default locale.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   coll.def(
@@ -189,7 +264,10 @@ void init_tblcoll(py::module &m) {
         return self.equal_to()(icupy::to_unistr(source),
                                icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the strings are equal according to the collation
+      rules. ``False`` otherwise.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   coll.def(
@@ -198,7 +276,10 @@ void init_tblcoll(py::module &m) {
          const icupy::UnicodeStringVariant &target) -> py::bool_ {
         return self.equals(icupy::to_unistr(source), icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the strings are equal according to the collation
+      rules. ``False`` otherwise.
+      )doc");
 
   coll.def(
       "get_attribute",
@@ -210,7 +291,12 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("attr"));
+      py::arg("attr"), R"doc(
+      Return the value of the specified attribute.
+
+      See Also:
+          :meth:`.set_attribute`
+      )doc");
 
   coll.def_static(
       "get_available_locales",
@@ -223,7 +309,13 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::return_value_policy::reference);
+      py::return_value_policy::reference, R"doc(
+      Return the set of locales for which collations are installed.
+
+      .. note::
+
+          This does not include locales supported by registered collators.
+      )doc");
 
   coll.def_static(
       "get_bound",
@@ -249,7 +341,9 @@ void init_tblcoll(py::module &m) {
                          result_length);
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"),
-      py::arg("no_of_levels"));
+      py::arg("no_of_levels"), R"doc(
+      Produce a bound for the specified sortkey and number of levels.
+      )doc");
 
   coll.def(
           "get_collation_key",
@@ -263,7 +357,10 @@ void init_tblcoll(py::module &m) {
             }
             return result;
           },
-          py::arg("source"), py::arg("source_length"), py::arg("key"))
+          py::arg("source"), py::arg("source_length"), py::arg("key"), R"doc(
+      Transform the string (up to the specified length) into a series of
+      characters that can be compared with :meth:`CollationKey.compare_to`.
+      )doc")
       .def(
           "get_collation_key",
           [](const Collator &self, const icupy::UnicodeStringVariant &source,
@@ -276,7 +373,10 @@ void init_tblcoll(py::module &m) {
             }
             return result;
           },
-          py::arg("source"), py::arg("key"));
+          py::arg("source"), py::arg("key"), R"doc(
+      Transform the string into a series of characters that can be compared
+      with :meth:`CollationKey.compare_to`.
+      )doc");
 
   coll.def_static(
           "get_display_name",
@@ -287,7 +387,11 @@ void init_tblcoll(py::module &m) {
                                             icupy::to_locale(display_locale),
                                             name);
           },
-          py::arg("object_locale"), py::arg("display_locale"), py::arg("name"))
+          py::arg("object_locale"), py::arg("display_locale"), py::arg("name"),
+          R"doc(
+      Return the object name for the desired locale, in the desired
+      language.
+      )doc")
       .def_static(
           "get_display_name",
           [](const icupy::LocaleVariant &object_locale,
@@ -295,7 +399,10 @@ void init_tblcoll(py::module &m) {
             return Collator::getDisplayName(icupy::to_locale(object_locale),
                                             name);
           },
-          py::arg("object_locale"), py::arg("name"));
+          py::arg("object_locale"), py::arg("name"), R"doc(
+      Return the object name for the desired locale, in the language of the
+      default locale.
+      )doc");
 
   coll.def_static(
       "get_equivalent_reorder_codes",
@@ -312,7 +419,16 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("reorder_code"));
+      py::arg("reorder_code"), R"doc(
+      Return the reorder codes that are grouped with the specified reorder
+      code.
+
+      See Also:
+          :class:`UColReorderCode`
+          :class:`UScriptCode`
+          :meth:`.get_reorder_codes`
+          :meth:`.set_reorder_codes`
+      )doc");
 
   coll.def_static(
       "get_functional_equivalent",
@@ -326,16 +442,25 @@ void init_tblcoll(py::module &m) {
         }
         return py::make_tuple(result, py::bool_(is_available));
       },
-      py::arg("keyword"), py::arg("locale"));
+      py::arg("keyword"), py::arg("locale"), R"doc(
+      Return the functionally equivalent locale for the specified requested
+      locale and keyword, for the collation service.
+      )doc");
 
-  coll.def_static("get_keywords", []() {
-    ErrorCode error_code;
-    auto result = Collator::getKeywords(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  coll.def_static(
+      "get_keywords",
+      []() {
+        ErrorCode error_code;
+        auto result = Collator::getKeywords(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Return a string enumeration of all possible keywords that are relevant to
+      collation.
+      )doc");
 
   coll.def_static(
       "get_keyword_values",
@@ -347,7 +472,10 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("keyword"));
+      py::arg("keyword"), R"doc(
+      Create a string enumeration of all currently used values for the
+      specified keyword.
+      )doc");
 
   coll.def_static(
       "get_keyword_values_for_locale",
@@ -362,23 +490,43 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"));
+      py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"), R"doc(
+      Create a string enumeration of all currently used values for the
+      specified keyword and locale.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
-  coll.def("get_max_variable", &Collator::getMaxVariable);
+  coll.def("get_max_variable", &Collator::getMaxVariable, R"doc(
+      Return the maximum reordering group whose characters are affected by
+      :attr:`~UColAttribute.UCOL_ALTERNATE_HANDLING`.
+
+      See Also:
+          :meth:`.set_max_variable`
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
-  coll.def("get_reorder_codes", [](const Collator &self) {
-    ErrorCode error_code;
-    const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
-    error_code.reset();
-    std::vector<int32_t> result(dest_capacity, 0);
-    self.getReorderCodes(result.data(), dest_capacity, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  coll.def(
+      "get_reorder_codes",
+      [](const Collator &self) {
+        ErrorCode error_code;
+        const auto dest_capacity = self.getReorderCodes(nullptr, 0, error_code);
+        error_code.reset();
+        std::vector<int32_t> result(dest_capacity, 0);
+        self.getReorderCodes(result.data(), dest_capacity, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Return the reordering codes for this collator.
+
+      See Also:
+          :class:`UColReorderCode`
+          :class:`UScriptCode`
+          :meth:`.get_equivalent_reorder_codes`
+          :meth:`.set_reorder_codes`
+      )doc");
 
   coll.def(
           "get_sort_key",
@@ -393,7 +541,9 @@ void init_tblcoll(py::module &m) {
             return py::bytes(reinterpret_cast<char *>(result.data()),
                              result_length);
           },
-          py::arg("source"), py::arg("source_length"))
+          py::arg("source"), py::arg("source_length"), R"doc(
+      Return the sort key as an array of bytes from a ``str``.
+      )doc")
       .def(
           "get_sort_key",
           [](const Collator &self, const icupy::UnicodeStringVariant &source) {
@@ -405,35 +555,53 @@ void init_tblcoll(py::module &m) {
             return py::bytes(reinterpret_cast<char *>(result.data()),
                              result_length);
           },
-          py::arg("source"));
+          py::arg("source"), R"doc(
+      Return the sort key as an array of bytes from a :class:`UnicodeString`.
+      )doc");
 
-  coll.def("get_tailored_set", [](const Collator &self) {
-    ErrorCode error_code;
-    auto result = self.getTailoredSet(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  coll.def(
+      "get_tailored_set",
+      [](const Collator &self) {
+        ErrorCode error_code;
+        auto result = self.getTailoredSet(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Return a :class:`UnicodeSet` containing all code points and sequences
+      that may be sorted in an order different from that of the root collator.
+      )doc");
 
-  coll.def("get_variable_top", [](const Collator &self) {
-    ErrorCode error_code;
-    auto result = self.getVariableTop(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  coll.def(
+      "get_variable_top",
+      [](const Collator &self) {
+        ErrorCode error_code;
+        auto result = self.getVariableTop(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Return the variable top primary weight.
+      )doc");
 
-  coll.def("get_version", [](const Collator &self) {
-    UVersionInfo info;
-    self.getVersion(info);
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(info), std::end(info),
-                  [&](auto v) { result[n++] = v; });
-    return result;
-  });
+  coll.def(
+      "get_version",
+      [](const Collator &self) {
+        UVersionInfo info;
+        self.getVersion(info);
+        py::tuple result(U_MAX_VERSION_LENGTH);
+        int n = 0;
+        std::for_each(std::begin(info), std::end(info),
+                      [&](auto v) { result[n++] = v; });
+        return result;
+      },
+      R"doc(
+      Return the version information for a ``Collator``.
+      )doc");
 
   coll.def(
       "greater",
@@ -441,7 +609,10 @@ void init_tblcoll(py::module &m) {
          const icupy::UnicodeStringVariant &target) -> py::bool_ {
         return self.greater(icupy::to_unistr(source), icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the first string is greater than the second one,
+      according to the collation rules. ``False`` otherwise.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   coll.def(
@@ -451,7 +622,10 @@ void init_tblcoll(py::module &m) {
         return self.greater_equal()(icupy::to_unistr(source),
                                     icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the first string is greater than or equal to the
+      second one, according to the collation rules. ``False`` otherwise.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   coll.def(
@@ -461,9 +635,17 @@ void init_tblcoll(py::module &m) {
         return self.greaterOrEqual(icupy::to_unistr(source),
                                    icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the first string is greater than or equal to the
+      second one, according to the collation rules. ``False`` otherwise.
+      )doc");
 
-  coll.def("hash_code", &Collator::hashCode);
+  coll.def("hash_code", &Collator::hashCode, R"doc(
+      Return the hash code for the collation object.
+
+      See Also:
+          :meth:`.__hash__`
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
   coll.def(
@@ -472,7 +654,10 @@ void init_tblcoll(py::module &m) {
          icupy::UnicodeStringVariant &target) {
         return self.less()(icupy::to_unistr(source), icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the first string is less than the second one,
+      according to the collation rules. ``False`` otherwise.
+      )doc");
 
   coll.def(
       "less_equal",
@@ -481,7 +666,10 @@ void init_tblcoll(py::module &m) {
         return self.less_equal()(icupy::to_unistr(source),
                                  icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the first string is less than or equal to the
+      second one, according to the collation rules. ``False`` otherwise.
+      )doc");
 
   coll.def(
       "not_equal_to",
@@ -490,7 +678,10 @@ void init_tblcoll(py::module &m) {
         return self.not_equal_to()(icupy::to_unistr(source),
                                    icupy::to_unistr(target));
       },
-      py::arg("source"), py::arg("target"));
+      py::arg("source"), py::arg("target"), R"doc(
+      Return ``True`` if the strings are not equal according to the collation
+      rules. ``False`` otherwise.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   // TODO: Implement "static URegistryKey icu::Collator::registerFactory(
@@ -508,7 +699,12 @@ void init_tblcoll(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("attr"), py::arg("value"));
+      py::arg("attr"), py::arg("value"), R"doc(
+      Set the *value* of the specified attribute.
+
+      See Also:
+          :meth:`.get_attribute`
+      )doc");
 
   coll.def(
       "set_max_variable",
@@ -520,7 +716,17 @@ void init_tblcoll(py::module &m) {
         }
         return result;
       },
-      py::arg("group"));
+      py::arg("group"), R"doc(
+      Set the variable top to the top of the specified reordering group.
+
+      The variable top determines the highest-sorting character which is
+      affected by :attr:`~UColAttribute.UCOL_ALTERNATE_HANDLING`. If that
+      attribute is set to :attr:`~UColAttributeValue.UCOL_NON_IGNORABLE`, then
+      the variable top has no effect.
+
+      See Also:
+          :meth:`.get_max_variable`
+      )doc");
 
   coll.def(
       "set_reorder_codes",
@@ -533,7 +739,17 @@ void init_tblcoll(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("reorder_codes"), py::arg("reorder_codes_length"));
+      py::arg("reorder_codes"), py::arg("reorder_codes_length"), R"doc(
+      Set the reordering codes for this collator.
+
+      The reordering codes are a combination of script codes and reorder codes.
+
+      See Also:
+          :class:`UColReorderCode`
+          :class:`UScriptCode`
+          :meth:`.get_equivalent_reorder_codes`
+          :meth:`.get_reorder_codes`
+      )doc");
 
   // TODO: Implement "static UBool icu::Collator::unregister(URegistryKey key,
   //  UErrorCode &status)".
@@ -541,7 +757,12 @@ void init_tblcoll(py::module &m) {
   //
   // class icu::RuleBasedCollator
   //
-  py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator");
+  py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator", R"doc(
+      :class:`Collator` using data-driven tables.
+
+      For more information, see the ICU User Guide:
+      `Collation <https://unicode-org.github.io/icu/userguide/collation>`__.
+      )doc");
 
   rbc.def(py::init([](const icupy::UnicodeStringVariant &rules) {
             ErrorCode error_code;

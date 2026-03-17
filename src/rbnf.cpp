@@ -11,17 +11,36 @@ void init_rbnf(py::module &m) {
   //
   py::enum_<URBNFRuleSetTag>(m, "URBNFRuleSetTag", py::arithmetic(),
                              "Tags for the predefined rulesets.")
-      .value("URBNF_SPELLOUT", URBNF_SPELLOUT)
-      .value("URBNF_ORDINAL", URBNF_ORDINAL)
-      .value("URBNF_DURATION", URBNF_DURATION)
-      .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM)
+      .value("URBNF_SPELLOUT", URBNF_SPELLOUT, R"doc(
+             Requests predefined ruleset for spelling out numeric values in
+             words.
+             )doc")
+      .value("URBNF_ORDINAL", URBNF_ORDINAL, R"doc(
+             Requests predefined ruleset for the ordinal form of a number.
+             )doc")
+      .value("URBNF_DURATION", URBNF_DURATION, R"doc(
+             Deprecated: ICU 74 Use :class:`MeasureFormat` instead.
+             )doc")
+      .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM, R"doc(
+             Requests predefined ruleset for various non-place-value numbering
+             systems.
+
+             .. warning::
+
+                 The same resource contains rule sets for a variety of different
+                 numbering systems. You need to call
+                 :meth:`RuleBasedNumberFormat.set_default_rule_set` on the
+                 formatter to choose the actual numbering system.
+             )doc")
       .export_values();
 
   //
   // class icu::RuleBasedNumberFormat
   //
-  py::class_<RuleBasedNumberFormat, NumberFormat> rbnf(m,
-                                                       "RuleBasedNumberFormat");
+  py::class_<RuleBasedNumberFormat, NumberFormat> rbnf(
+      m, "RuleBasedNumberFormat", R"doc(
+      Format numbers according to a set of rules.
+      )doc");
 
   rbnf.def(
           // [1] RuleBasedNumberFormat::RuleBasedNumberFormat

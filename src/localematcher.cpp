@@ -14,96 +14,116 @@ void init_localematcher(py::module &m) {
   //
   // enum ULocMatchDemotion
   //
-  py::enum_<ULocMatchDemotion>(
-      m, "ULocMatchDemotion", py::arithmetic(),
-      "*Builder* option for whether all desired locales are treated equally or "
-      "earlier ones are preferred.")
-      .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE,
-             "All desired locales are treated equally.")
-      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION,
-             "Earlier desired locales are preferred. From each desired locale "
-             "to the next, the distance to any "
-             "supported locale is increased by an additional amount which is "
-             "at least as large as most region "
-             "mismatches. A later desired locale has to have a better match "
-             "with some supported locale due to more "
-             "than merely having the same region subtag.\n\n  "
-             "For example: *Supported={en, sv} desired=[en-GB, sv]* yields "
-             "*Result(en-GB, en)* because with the "
-             "demotion of sv its perfect match is no better than the region "
-             "distance between the earlier desired "
-             "locale en-GB and en=en-US.\n\n  "
-             "Notes:\n\n  "
-             "* In some cases, language and/or script differences can be as "
-             "small as the typical region difference. "
-             "(Example: sr-Latn vs. sr-Cyrl)\n  "
-             "* It is possible for certain region differences to be larger "
-             "than usual, and larger than the demotion. "
-             "(As of CLDR 35 there is no such case, but this is possible in "
-             "future versions of the data.)")
+  py::enum_<ULocMatchDemotion>(m, "ULocMatchDemotion", py::arithmetic(), R"doc(
+:class:`~LocaleMatcher.Builder` option for whether all desired locales are
+treated equally or earlier ones are preferred.
+      )doc")
+      .value("ULOCMATCH_DEMOTION_NONE", ULOCMATCH_DEMOTION_NONE, R"doc(
+             All desired locales are treated equally.
+             )doc")
+      .value("ULOCMATCH_DEMOTION_REGION", ULOCMATCH_DEMOTION_REGION, R"doc(
+             Earlier desired locales are preferred.
+
+             From each desired locale to the next, the distance to any
+             supported locale is increased by an additional amount which is
+             at least as large as most region mismatches. A later desired
+             locale has to have a better match with some supported locale due
+             to more than merely having the same region subtag.
+
+             For example: ``Supported={en, sv} desired=[en-GB, sv]`` yields
+             ``Result(en-GB, en)`` because with the demotion of sv its perfect
+             match is no better than the region distance between the earlier
+             desired locale en-GB and en=en-US.
+
+             Notes:
+
+             - In some cases, language and/or script differences can be as
+               small as the typical region difference.
+               (Example: sr-Latn vs. sr-Cyrl)
+             - It is possible for certain region differences to be larger
+               than usual, and larger than the demotion.
+               (As of CLDR 35 there is no such case, but this is possible in
+               future versions of the data.)
+             )doc")
       .export_values();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
   // enum ULocMatchDirection
   //
-  py::enum_<ULocMatchDirection>(
-      m, "ULocMatchDirection", py::arithmetic(),
-      "*Builder* option for whether to include or ignore one-way (fallback) "
-      "match data.\n\n"
-      "The *LocaleMatcher* uses CLDR languageMatch data which includes "
-      "fallback (oneway=true) entries. Sometimes it is "
-      "desirable to ignore those.\n\n"
-      "For example, consider a web application with the UI in a given "
-      "language, with a link to another, related web "
-      "app. The link should include the UI language, and the target server may "
-      "also use the client’s Accept-Language "
-      "header data. The target server has its own list of supported languages. "
-      "One may want to favor UI language "
-      "consistency, that is, if there is a decent match for the original UI "
-      "language, we want to use it, but not if it "
-      "is merely a fallback.")
+  py::enum_<ULocMatchDirection>(m, "ULocMatchDirection", py::arithmetic(),
+                                R"doc(
+:class:`~LocaleMatcher.Builder` option for whether to include or ignore
+one-way (fallback) match data.
+
+The :class:`LocaleMatcher` uses CLDR languageMatch data which includes
+fallback (oneway=true) entries. Sometimes it is desirable to ignore those.
+
+For example, consider a web application with the UI in a given language, with
+a link to another, related web app. The link should include the UI language,
+and the target server may also use the client’s Accept-Language header data.
+The target server has its own list of supported languages. One may want to
+favor UI language consistency, that is, if there is a decent match for the
+original UI language, we want to use it, but not if it is merely a fallback.
+      )doc")
       .value("ULOCMATCH_DIRECTION_WITH_ONE_WAY",
-             ULOCMATCH_DIRECTION_WITH_ONE_WAY,
-             "Locale matching includes one-way matches such as Breton→French. "
-             "(default)")
+             ULOCMATCH_DIRECTION_WITH_ONE_WAY, R"doc(
+             Locale matching includes one-way matches such as Breton→French.
+             (default)
+             )doc")
       .value("ULOCMATCH_DIRECTION_ONLY_TWO_WAY",
-             ULOCMATCH_DIRECTION_ONLY_TWO_WAY,
-             "Locale matching limited to two-way matches including e.g. "
-             "Danish↔Norwegian but ignoring one-way matches.")
+             ULOCMATCH_DIRECTION_ONLY_TWO_WAY, R"doc(
+             Locale matching limited to two-way matches including e.g.
+             Danish↔Norwegian but ignoring one-way matches.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //
   // enum ULocMatchFavorSubtag
   //
-  py::enum_<ULocMatchFavorSubtag>(
-      m, "ULocMatchFavorSubtag", py::arithmetic(),
-      "*Builder* option for whether the language subtag or the script subtag "
-      "is most important.")
-      .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE,
-             "Language differences are most important, then script "
-             "differences, then region differences. (This is the "
-             "default behavior.)")
-      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT,
-             "Makes script differences matter relatively more than language "
-             "differences.")
+  py::enum_<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag", py::arithmetic(),
+                                  R"doc(
+:class:`~LocaleMatcher.Builder` option for whether the language subtag or the
+script subtag is most important.
+      )doc")
+      .value("ULOCMATCH_FAVOR_LANGUAGE", ULOCMATCH_FAVOR_LANGUAGE, R"doc(
+             Language differences are most important, then script differences,
+             then region differences. (This is the default behavior.)
+             )doc")
+      .value("ULOCMATCH_FAVOR_SCRIPT", ULOCMATCH_FAVOR_SCRIPT, R"doc(
+             Makes script differences matter relatively more than language
+             differences.
+             )doc")
       .export_values();
 
   //
   // class icu::LocaleMatcher
   //
-  py::class_<LocaleMatcher, UMemory> lm(m, "LocaleMatcher");
+  py::class_<LocaleMatcher, UMemory> lm(m, "LocaleMatcher", R"doc(
+      Immutable class that picks the best match between a user's desired
+      locales and an application's supported locales.
+
+      Example:
+          >>> from icupy import icu
+          >>> matcher = icu.LocaleMatcher.Builder().set_supported_locales_from_list_string("fr, en-GB, en").build()
+          >>> matcher.get_best_match(icu.ULOC_US)
+          Locale('en')
+      )doc");
 
   //
   // class icu::LocaleMatcher::Builder
   //
-  py::class_<Builder, UMemory> lmb(lm, "Builder");
+  py::class_<Builder, UMemory> lmb(lm, "Builder", R"doc(
+      LocaleMatcher builder.
+      )doc");
 
   //
   // class icu::LocaleMatcher::Result
   //
-  py::class_<Result, UMemory> lmr(lm, "Result");
+  py::class_<Result, UMemory> lmr(lm, "Result", R"doc(
+      Data for the best-matching pair of a desired and a supported locale.
+      )doc");
 
   //
   // class icu::LocaleMatcher
