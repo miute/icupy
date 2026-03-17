@@ -34,6 +34,7 @@
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
 - Update docstring
+- Bump `pybind11` from 3.0.1 to 3.0.2
 
 ### Added
 
