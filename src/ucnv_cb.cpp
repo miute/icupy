@@ -21,7 +21,18 @@ void init_ucnv_cb(py::module &m) {
         }
       },
       py::arg("args").none(false), py::arg("source"), py::arg("length"),
-      py::arg("offset_index"));
+      py::arg("offset_index"), R"doc(
+      Write out the specified output bytes to the target byte buffer or to
+      converter internal buffers.
+
+      .. important::
+
+          ONLY used by From Unicode callback functions.
+
+      See Also:
+          :class:`UConverterFromUCallback`
+          :func:`ucnv_cb_from_uwrite_sub`
+      )doc");
 
   m.def(
       "ucnv_cb_from_uwrite_sub",
@@ -32,7 +43,17 @@ void init_ucnv_cb(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("args").none(false), py::arg("offset_index"));
+      py::arg("args").none(false), py::arg("offset_index"), R"doc(
+      Write out the correct substitution character sequence to the target.
+
+      .. important::
+
+          ONLY used by From Unicode callback functions.
+
+      See Also:
+          :class:`UConverterFromUCallback`
+          :func:`ucnv_cb_from_uwrite_bytes`
+      )doc");
 
   m.def(
       "ucnv_cb_to_uwrite_sub",
@@ -43,7 +64,17 @@ void init_ucnv_cb(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("args").none(false), py::arg("offset_index"));
+      py::arg("args").none(false), py::arg("offset_index"), R"doc(
+      Write out the Unicode substitution character (U+FFFD).
+
+      .. important::
+
+          ONLY used by To Unicode callback functions.
+
+      See Also:
+          :class:`UConverterToUCallback`
+          :func:`ucnv_cb_to_uwrite_uchars`
+      )doc");
 
   m.def(
       "ucnv_cb_to_uwrite_uchars",
@@ -57,5 +88,15 @@ void init_ucnv_cb(py::module &m) {
         }
       },
       py::arg("args").none(false), py::arg("source"), py::arg("length"),
-      py::arg("offset_index"));
+      py::arg("offset_index"), R"doc(
+      Write out the specified characters to the target ``UChar`` buffer.
+
+      .. important::
+
+          ONLY used by To Unicode callback functions.
+
+      See Also:
+          :class:`UConverterToUCallback`
+          :func:`ucnv_cb_to_uwrite_sub`
+      )doc");
 }

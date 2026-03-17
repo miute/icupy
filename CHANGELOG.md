@@ -33,6 +33,7 @@
 - **Breaking:** remove trailing underscores from parameter names across several APIs
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
 - Improve type checking (#154)
+- Update docstring
 
 ### Added
 

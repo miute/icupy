@@ -12,25 +12,39 @@ void init_utfiterator(py::module &m, py::module &h) {
   //
   // enum UTFIllFormedBehavior
   //
-  py::enum_<UTFIllFormedBehavior>(
-      m, "UTFIllFormedBehavior", py::arithmetic(),
-      "Some defined behaviors for handling ill-formed Unicode strings.\n\n  "
-      "This is a template parameter for UTFIterator and related classes.\n\n  "
-      "When a validating UTFIterator encounters an ill-formed code unit "
-      "sequence, then "
-      "CodeUnits.codePoint() is a value according to this parameter.")
-      .value("UTF_BEHAVIOR_NEGATIVE", UTF_BEHAVIOR_NEGATIVE,
-             "Returns a negative value (-1=U_SENTINEL) instead of a code "
-             "point.\n\n  "
-             "If the CP32 template parameter for the relevant classes is an "
-             "unsigned type, then the negative value "
-             "becomes 0xffffffff=UINT32_MAX.")
-      .value("UTF_BEHAVIOR_FFFD", UTF_BEHAVIOR_FFFD,
-             "Returns U+FFFD Replacement Character.")
-      .value("UTF_BEHAVIOR_SURROGATE", UTF_BEHAVIOR_SURROGATE,
-             "UTF-8: Not allowed; UTF-16: returns the unpaired surrogate; "
-             "UTF-32: returns the surrogate code point, or "
-             "U+FFFD if out of range.")
+  py::enum_<UTFIllFormedBehavior>(m, "UTFIllFormedBehavior", py::arithmetic(),
+                                  R"doc(
+Some defined behaviors for handling ill-formed Unicode strings.
+
+This is a template parameter for UTFIterator and related classes.
+
+When a validating UTFIterator encounters an ill-formed code unit sequence, then
+:meth:`header.UnsafeCodeUnits.code_point` is a value according to this
+parameter.
+
+See Also:
+    :class:`header.CodeUnits`
+    :class:`header.UTFStringCodePointsFFFD`
+    :class:`header.UTFStringCodePointsNegative`
+    :class:`header.UTFStringCodePointsSurrogate`
+      )doc")
+      .value("UTF_BEHAVIOR_NEGATIVE", UTF_BEHAVIOR_NEGATIVE, R"doc(
+             Returns a negative value (-1 = :attr:`U_SENTINEL`) instead of
+             a code point.
+
+             If the CP32 template parameter for the relevant classes is an
+             unsigned type, then the negative value becomes
+             0xffffffff = :attr:`UINT32_MAX`.
+             )doc")
+      .value("UTF_BEHAVIOR_FFFD", UTF_BEHAVIOR_FFFD, R"doc(
+             Returns U+FFFD Replacement Character.
+             )doc")
+      .value("UTF_BEHAVIOR_SURROGATE", UTF_BEHAVIOR_SURROGATE, R"doc(
+             - UTF-8: Not allowed.
+             - UTF-16: Returns the unpaired surrogate.
+             - UTF-32: Returns the surrogate code point, or U+FFFD if out of
+               range.
+             )doc")
       .export_values();
 
   //

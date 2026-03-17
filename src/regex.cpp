@@ -13,12 +13,29 @@ void init_regex(py::module &m) {
   //
   // class icu::RegexMatcher
   //
-  py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher");
+  py::class_<RegexMatcher, UObject> rm(m, "RegexMatcher", R"doc(
+      Provide regular expression matching, searching, and replacement
+      operations.
+
+      For more information, see the ICU User Guide:
+      `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
+
+      See Also:
+          :class:`RegexPattern`
+      )doc");
 
   //
   // class icu::RegexPattern
   //
-  py::class_<RegexPattern, UObject> rp(m, "RegexPattern");
+  py::class_<RegexPattern, UObject> rp(m, "RegexPattern", R"doc(
+      Representation of a compiled regular expression.
+
+      For more information, see the ICU User Guide:
+      `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
+
+      See Also:
+          :class:`RegexMatcher`
+      )doc");
 
   //
   // class icu::RegexMatcher
@@ -204,7 +221,10 @@ void init_regex(py::module &m) {
         return icupy::URegexFindProgressCallbackPtr(pair);
       },
       R"doc(
-      Get the find progress callback function for this ``RegexMatcher``.
+      Return the find progress callback function for this ``RegexMatcher``.
+
+      See Also:
+          :meth:`.set_find_progress_callback`
       )doc");
 
   rm.def(
@@ -237,7 +257,10 @@ void init_regex(py::module &m) {
         return icupy::URegexMatchCallbackPtr(pair);
       },
       R"doc(
-      Get the callback function for this ``RegexMatcher``.
+      Return the callback function for this ``RegexMatcher``.
+
+      See Also:
+          :meth:`.set_match_callback`
       )doc");
 
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
@@ -487,28 +510,40 @@ void init_regex(py::module &m) {
       Set the find progress callback function to be used with this
       ``RegexMatcher``.
 
-      `callback` must outlive the ``RegexMatcher`` object.
+      .. important::
+
+          *callback* must outlive the ``RegexMatcher`` object.
+
+      See Also:
+          :meth:`.get_find_progress_callback`
 
       Example:
           >>> from icupy import icu
           >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
           >>> matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
-          >>> def progress_callback(info: dict[str, int], match_index: int) -> bool:
-          ...     if not isinstance(info, dict):
+          >>> def progress_callback(options: dict[str, int], match_index: int) -> bool:
+          ...     if not isinstance(options, dict):
           ...         return False
-          ...     info.setdefault("numCalls", 0)
-          ...     info["numCalls"] += 1
-          ...     info["lastIndex"] = match_index
-          ...     return True
+          ...     calls = options.get("numCalls", 0) + 1
+          ...     options["numCalls"] = calls
+          ...     options["lastIndex"] = match_index
+          ...     max_calls = options.get("maxCalls", -1)
+          ...     return True if max_calls < 0 else calls < max_calls
           ...
-          >>> d = {}
-          >>> context = icu.ConstVoidPtr(d)
+          >>> info: dict[str, int] = {}
+          >>> context = icu.ConstVoidPtr(info)
           >>> callback = icu.URegexFindProgressCallback(progress_callback, context)
           >>> matcher.set_find_progress_callback(callback)
           >>> matcher.find(0)
           False
-          >>> d
+          >>> info
           {'numCalls': 18, 'lastIndex': 18}
+          >>> info.clear()
+          >>> info["maxCalls"] = 5
+          >>> matcher.find(0)
+          icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
+          >>> info
+          {'maxCalls': 5, 'numCalls': 5, 'lastIndex': 5}
       )doc");
 
   rm.def(
@@ -525,28 +560,40 @@ void init_regex(py::module &m) {
       py::arg("callback"), R"doc(
       Set the callback function to be used with this ``RegexMatcher``.
 
-      `callback` must outlive the ``RegexMatcher`` object.
+      .. important::
+
+          *callback* must outlive the ``RegexMatcher`` object.
+
+      See Also:
+          :meth:`.get_match_callback`
 
       Example:
           >>> from icupy import icu
           >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
           >>> matcher = icu.RegexMatcher("((.)+\\2)+x", src, 0)
-          >>> def matching_callback(info: dict[str, int], steps: int) -> bool:
-          ...     if not isinstance(info, dict):
+          >>> def matching_callback(options: dict[str, int], steps: int) -> bool:
+          ...     if not isinstance(options, dict):
           ...         return False
-          ...     info.setdefault("numCalls", 0)
-          ...     info["numCalls"] += 1
-          ...     info["lastSteps"] = steps
-          ...     return True
+          ...     calls = options.get("numCalls", 0) + 1
+          ...     options["numCalls"] = calls
+          ...     options["lastSteps"] = steps
+          ...     max_calls = options.get("maxCalls", -1)
+          ...     return True if max_calls < 0 else calls < max_calls
           ...
-          >>> d = {}
-          >>> context = icu.ConstVoidPtr(d)
+          >>> info: dict[str, int] = {}
+          >>> context = icu.ConstVoidPtr(info)
           >>> callback = icu.URegexMatchCallback(matching_callback, context)
           >>> matcher.set_match_callback(callback)
-          >>> matcher.matches()
+          >>> matcher.matches(0)
           False
-          >>> d
+          >>> info
           {'numCalls': 16, 'lastSteps': 16}
+          >>> info.clear()
+          >>> info["maxCalls"] = 5
+          >>> matcher.matches(0)
+          icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
+          >>> info
+          {'maxCalls': 5, 'numCalls': 5, 'lastSteps': 5}
       )doc");
 
   rm.def(

@@ -13,51 +13,84 @@ void init_timezone(py::module &m) {
   //
   // class icu::TimeZone
   //
-  py::class_<TimeZone, UObject> tz(m, "TimeZone");
+  py::class_<TimeZone, UObject> tz(m, "TimeZone", R"doc(
+      Representation of a time zone.
+
+      See Also:
+          :class:`BasicTimeZone`
+      )doc");
 
   //
   // class icu::BasicTimeZone
   //
-  py::class_<BasicTimeZone, TimeZone> btz(m, "BasicTimeZone");
+  py::class_<BasicTimeZone, TimeZone> btz(m, "BasicTimeZone", R"doc(
+      Abstract class extending :class:`TimeZone`.
+
+      See Also:
+          :class:`RuleBasedTimeZone`
+          :class:`SimpleTimeZone`
+          :class:`VTimeZone`
+      )doc");
 
   //
   // class icu::RuleBasedTimeZone
   //
-  py::class_<RuleBasedTimeZone, BasicTimeZone> rbtz(m, "RuleBasedTimeZone");
+  py::class_<RuleBasedTimeZone, BasicTimeZone> rbtz(m, "RuleBasedTimeZone",
+                                                    R"doc(
+      Subclass of :class:`BasicTimeZone` constructed from the initial state of
+      the time zone and the transition of rules over time.
+      )doc");
 
   //
   // class icu::SimpleTimeZone
   //
-  py::class_<SimpleTimeZone, BasicTimeZone> stz(m, "SimpleTimeZone");
+  py::class_<SimpleTimeZone, BasicTimeZone> stz(m, "SimpleTimeZone", R"doc(
+      Concrete subclass of :class:`TimeZone` that represent a time zone for
+      use with a Gregorian calendar.
+      )doc");
 
   //
   // class icu::VTimeZone
   //
-  py::class_<VTimeZone, BasicTimeZone> vtz(m, "VTimeZone");
+  py::class_<VTimeZone, BasicTimeZone> vtz(m, "VTimeZone", R"doc(
+      Implementation of the standard iCalendar specification RFC2445
+      (VTIMEZONE).
+      )doc");
 
   //
   // enum icu::TimeZone::EDisplayType
   //
-  py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic(),
-                                    "Enum for use with *get_display_name*.")
-      .value("SHORT", TimeZone::EDisplayType::SHORT,
-             "Selector for short display name.")
-      .value("LONG", TimeZone::EDisplayType::LONG,
-             "Selector for long display name.")
-      .value("SHORT_GENERIC", TimeZone::EDisplayType::SHORT_GENERIC,
-             "Selector for short generic display name.")
-      .value("LONG_GENERIC", TimeZone::EDisplayType::LONG_GENERIC,
-             "Selector for long generic display name.")
-      .value("SHORT_GMT", TimeZone::EDisplayType::SHORT_GMT,
-             "Selector for short display name derived from time zone offset.")
-      .value("LONG_GMT", TimeZone::EDisplayType::LONG_GMT,
-             "Selector for long display name derived from time zone offset.")
+  py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic(), R"doc(
+Enum for use with :meth:`TimeZone.get_display_name`.
+      )doc")
+      .value("SHORT", TimeZone::EDisplayType::SHORT, R"doc(
+             Selector for short display name.
+             )doc")
+      .value("LONG", TimeZone::EDisplayType::LONG, R"doc(
+             Selector for long display name.
+             )doc")
+      .value("SHORT_GENERIC", TimeZone::EDisplayType::SHORT_GENERIC, R"doc(
+             Selector for short generic display name.
+             )doc")
+      .value("LONG_GENERIC", TimeZone::EDisplayType::LONG_GENERIC, R"doc(
+             Selector for long generic display name.
+             )doc")
+      .value("SHORT_GMT", TimeZone::EDisplayType::SHORT_GMT, R"doc(
+             Selector for short display name derived from time zone offset.
+             )doc")
+      .value("LONG_GMT", TimeZone::EDisplayType::LONG_GMT, R"doc(
+             Selector for long display name derived from time zone offset.
+             )doc")
       .value("SHORT_COMMONLY_USED", TimeZone::EDisplayType::SHORT_COMMONLY_USED,
-             "Selector for short display name derived from the time zone's "
-             "fallback name.")
+             R"doc(
+             Selector for short display name derived from the time zone's
+             fallback name.
+             )doc")
       .value("GENERIC_LOCATION", TimeZone::EDisplayType::GENERIC_LOCATION,
-             "Selector for long display name derived from the time zone's "
-             "fallback name.")
+             R"doc(
+             Selector for long display name derived from the time zone's
+             fallback name.
+             )doc")
       .export_values();
 
   //
@@ -564,17 +597,16 @@ void init_timezone(py::module &m) {
   //
   // enum icu::SimpleTimeZone::TimeMode
   //
-  py::enum_<SimpleTimeZone::TimeMode>(
-      stz, "TimeMode", py::arithmetic(),
-      "*TimeMode* is used, together with a millisecond offset after midnight, "
-      "to specify a rule transition time.\n\n"
-      "Most rules transition at a local wall time, that is, according to the "
-      "current time in effect, either standard, "
-      "or DST. However, some rules transition at local standard time, and some "
-      "at a specific UTC time. Although it "
-      "might seem that all times could be converted to wall time, thus "
-      "eliminating the need for this parameter, this "
-      "is not the case.")
+  py::enum_<SimpleTimeZone::TimeMode>(stz, "TimeMode", py::arithmetic(), R"doc(
+TimeMode is used, together with a millisecond offset after midnight, to specify
+a rule transition time.
+
+Most rules transition at a local wall time, that is, according to the current
+time in effect, either standard, or DST. However, some rules transition at
+local standard time, and some at a specific UTC time. Although it might seem
+that all times could be converted to wall time, thus eliminating the need for
+this parameter, this is not the case.
+      )doc")
       .value("WALL_TIME", SimpleTimeZone::TimeMode::WALL_TIME)
       .value("STANDARD_TIME", SimpleTimeZone::TimeMode::STANDARD_TIME)
       .value("UTC_TIME", SimpleTimeZone::TimeMode::UTC_TIME)

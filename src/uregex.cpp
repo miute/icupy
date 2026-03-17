@@ -52,46 +52,66 @@ void init_uregex(py::module &m) {
   //
   // enum URegexpFlag
   //
-  py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic(),
-                         "Constants for Regular Expression Match Modes.")
-      .value("UREGEX_CANON_EQ", UREGEX_CANON_EQ,
-             "Forces normalization of pattern and strings.\n\n  "
-             "Not implemented yet, just a placeholder, hence draft.")
-      .value("UREGEX_CASE_INSENSITIVE", UREGEX_CASE_INSENSITIVE,
-             "Enable case insensitive matching.")
-      .value("UREGEX_COMMENTS", UREGEX_COMMENTS,
-             "Allow white space and comments within patterns.")
-      .value("UREGEX_DOTALL", UREGEX_DOTALL,
-             "If set, '.' matches line terminators, otherwise '.' matching "
-             "stops at line end.")
-      .value("UREGEX_LITERAL", UREGEX_LITERAL,
-             "If set, treat the entire pattern as a literal string.\n\n  "
-             "Metacharacters or escape sequences in the input sequence will be "
-             "given no special meaning.\n\n  "
-             "The flag *UREGEX_CASE_INSENSITIVE* retains its impact on "
-             "matching when used in conjunction with this "
-             "flag. The other flags become superfluous.")
-      .value("UREGEX_MULTILINE", UREGEX_MULTILINE,
-             "Control behavior of \"$\" and \"^\" If set, recognize line "
-             "terminators within string, otherwise, match "
-             "only at start and end of input string.")
-      .value("UREGEX_UNIX_LINES", UREGEX_UNIX_LINES,
-             "Unix-only line endings.\n\n  "
-             "When this mode is enabled, only \\\\u000a is recognized as a "
-             "line ending in the behavior of ., ^, and $.")
-      .value(
-          "UREGEX_UWORD", UREGEX_UWORD,
-          "Unicode word boundaries.\n\n  "
-          "If set, uses the Unicode TR 29 definition of word boundaries. "
-          "Warning: Unicode word boundaries are quite "
-          "different from traditional regular expression word boundaries. See "
-          "http://unicode.org/reports/tr29/#Word_Boundaries")
+  py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic(), R"doc(
+Constants for Regular Expression Match Modes.
+
+See Also:
+    :meth:`RegexMatcher.__init__`
+      )doc")
+      .value("UREGEX_CANON_EQ", UREGEX_CANON_EQ, R"doc(
+             Forces normalization of pattern and strings.
+
+             Not implemented yet, just a placeholder, hence draft.
+             )doc")
+      .value("UREGEX_CASE_INSENSITIVE", UREGEX_CASE_INSENSITIVE, R"doc(
+             Enable case insensitive matching.
+             )doc")
+      .value("UREGEX_COMMENTS", UREGEX_COMMENTS, R"doc(
+             Allow white space and comments within patterns.
+             )doc")
+      .value("UREGEX_DOTALL", UREGEX_DOTALL, R"doc(
+             If set, '.' matches line terminators, otherwise '.' matching
+             stops at line end.
+             )doc")
+      .value("UREGEX_LITERAL", UREGEX_LITERAL, R"doc(
+             If set, treat the entire pattern as a literal string.
+
+             Metacharacters or escape sequences in the input sequence will be
+             given no special meaning.
+
+             The flag :attr:`UREGEX_CASE_INSENSITIVE` retains its impact on
+             matching when used in conjunction with this
+             flag. The other flags become superfluous.
+             )doc")
+      .value("UREGEX_MULTILINE", UREGEX_MULTILINE, R"doc(
+             Control behavior of '$' and '^' If set, recognize line
+             terminators within string, otherwise, match
+             only at start and end of input string.
+             )doc")
+      .value("UREGEX_UNIX_LINES", UREGEX_UNIX_LINES, R"doc(
+             Unix-only line endings.
+
+             When this mode is enabled, only '\\u000a' is recognized as a
+             line ending in the behavior of '.', '^', and '$'.
+             )doc")
+      .value("UREGEX_UWORD", UREGEX_UWORD, R"doc(
+             Unicode word boundaries.
+
+             If set, uses the Unicode TR 29 definition of word boundaries.
+
+             Warning: Unicode word boundaries are quite
+             different from traditional regular expression word boundaries. See
+             http://unicode.org/reports/tr29/#Word_Boundaries
+             )doc")
       .value("UREGEX_ERROR_ON_UNKNOWN_ESCAPES", UREGEX_ERROR_ON_UNKNOWN_ESCAPES,
-             "Error on Unrecognized backslash escapes.\n\n  "
-             "If set, fail with an error on patterns that contain "
-             "backslash-escaped ASCII letters without a known "
-             "special meaning. If this flag is not set, these escaped letters "
-             "represent themselves.")
+             R"doc(
+             Error on Unrecognized backslash escapes.
+
+             If set, fail with an error on patterns that contain
+             backslash-escaped ASCII letters without a known
+             special meaning. If this flag is not set, these escaped letters
+             represent themselves.
+             )doc")
       .export_values();
 
   //
@@ -100,11 +120,15 @@ void init_uregex(py::module &m) {
   py::class_<icupy::URegexFindProgressCallbackPtr> rfcb(
       m, "URegexFindProgressCallback", R"doc(
       Wrapper class for a regular expression find callback function.
+
+      See Also:
+          :meth:`RegexMatcher.get_find_progress_callback`
+          :meth:`RegexMatcher.set_find_progress_callback`
       )doc");
 
   rfcb.def(py::init<>(), R"doc(
-           Initialize the ``URegexFindProgressCallback`` instance without a callback
-           function.
+           Initialize the ``URegexFindProgressCallback`` instance without a
+           callback function.
            )doc")
       .def(py::init([](const icupy::FindProgressCallbackFunction &action,
                        std::optional<const icupy::ConstVoidPtr *> &context) {
@@ -112,10 +136,13 @@ void init_uregex(py::module &m) {
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``URegexFindProgressCallback`` instance with a callback function
-           `action` and the user context `context`.
+           Initialize the ``URegexFindProgressCallback`` instance with the
+           specified callback function and the user context.
 
-           `action` and `context` must outlive the ``URegexFindProgressCallback`` object.
+           .. important::
+
+               *action* and *context* must outlive the
+               ``URegexFindProgressCallback`` object.
            )doc");
 
   rfcb.def(
@@ -124,7 +151,8 @@ void init_uregex(py::module &m) {
         return !self.empty();
       },
       R"doc(
-      Return ``True`` if the ``URegexFindProgressCallback`` has a callback function.
+      Return ``True`` if the ``URegexFindProgressCallback`` has a callback
+      function.
       )doc");
 
   rfcb.def(
@@ -139,7 +167,7 @@ void init_uregex(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 
   //
@@ -148,6 +176,10 @@ void init_uregex(py::module &m) {
   py::class_<icupy::URegexMatchCallbackPtr> rmcb(m, "URegexMatchCallback",
                                                  R"doc(
       Wrapper class for a regular expression matching callback function.
+
+      See Also:
+          :meth:`RegexMatcher.get_match_callback`
+          :meth:`RegexMatcher.set_match_callback`
       )doc");
 
   rmcb.def(py::init<>(), R"doc(
@@ -160,10 +192,13 @@ void init_uregex(py::module &m) {
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``URegexMatchCallback`` instance with a callback function
-           `action` and the user context `context`.
+           Initialize the ``URegexMatchCallback`` instance with the specified
+           callback function and the user context.
 
-           `action` and `context` must outlive the ``URegexMatchCallback`` object.
+           .. important::
+
+               *action* and *context* must outlive the ``URegexMatchCallback``
+               object.
            )doc");
 
   rmcb.def(
@@ -185,6 +220,6 @@ void init_uregex(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 }

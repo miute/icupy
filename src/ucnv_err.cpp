@@ -187,44 +187,52 @@ void init_ucnv_err(py::module &m) {
   //
   // enum UConverterCallbackReason
   //
-  py::enum_<UConverterCallbackReason>(
-      m, "UConverterCallbackReason", py::arithmetic(),
-      "The process condition code to be used with the callbacks.\n\n"
-      "Codes which are greater than *UCNV_IRREGULAR* should be passed on to "
-      "any chained callbacks.")
-      .value("UCNV_UNASSIGNED", UCNV_UNASSIGNED,
-             "The code point is unassigned.\n\n  "
-             "The error code *U_INVALID_CHAR_FOUND* will be set.")
-      .value("UCNV_ILLEGAL", UCNV_ILLEGAL,
-             "The code point is illegal.\n\n  "
-             "For example, \\\\x81\\\\x2E is illegal in SJIS because \\\\x2E "
-             "is not a valid trail byte for the \\\\x81 "
-             "lead byte. Also, starting with Unicode 3.0.1, non-shortest byte "
-             "sequences in UTF-8 (like \\\\xC1\\\\xA1 "
-             "instead of \\\\x61 for U+0061) are also illegal, not just "
-             "irregular. The error code "
-             "*U_ILLEGAL_CHAR_FOUND* will be set.")
-      .value("UCNV_IRREGULAR", UCNV_IRREGULAR,
-             "The codepoint is not a regular sequence in the encoding.\n\n  "
-             "For example, \\\\xED\\\\xA0\\\\x80..\\\\xED\\\\xBF\\\\xBF are "
-             "irregular UTF-8 byte sequences for single "
-             "surrogate code points. The error code *U_INVALID_CHAR_FOUND* "
-             "will be set.")
-      .value("UCNV_RESET", UCNV_RESET,
-             "The callback is called with this reason when a 'reset' has "
-             "occurred.\n\n  "
-             "Callback should reset all state.")
-      .value("UCNV_CLOSE", UCNV_CLOSE,
-             "Called when the converter is closed.\n\n  "
-             "The callback should release any allocated memory.")
-      .value("UCNV_CLONE", UCNV_CLONE,
-             "Called when *ucnv_safe_clone()* is called on the converter.\n\n  "
-             "the pointer available as the 'context' is an alias to the "
-             "original converters' context pointer. If the "
-             "context must be owned by the new converter, the callback must "
-             "clone the data and call "
-             "*ucnv_set_from_ucall_back* (or *set_to_ucall_back*) with the "
-             "correct pointer.")
+  py::enum_<UConverterCallbackReason>(m, "UConverterCallbackReason",
+                                      py::arithmetic(), R"doc(
+Process condition code to be used with the callbacks.
+
+Codes which are greater than :attr:`UCNV_IRREGULAR` should be passed on to
+any chained callbacks.
+      )doc")
+      .value("UCNV_UNASSIGNED", UCNV_UNASSIGNED, R"doc(
+             The code point is unassigned.
+
+             The error code :attr:`~UErrorCode.U_INVALID_CHAR_FOUND`
+             will be set.
+             )doc")
+      .value("UCNV_ILLEGAL", UCNV_ILLEGAL, R"doc(
+             The code point is illegal.
+
+             For example, \\x81\\x2E is illegal in SJIS because \\x2E
+             is not a valid trail byte for the \\x81
+             lead byte. Also, starting with Unicode 3.0.1, non-shortest byte
+             sequences in UTF-8 (like \\xC1\\xA1 instead of \\x61 for U+0061)
+             are also illegal, not just irregular.
+             The error code :attr:`~UErrorCode.U_ILLEGAL_CHAR_FOUND`
+             will be set.
+             )doc")
+      .value("UCNV_IRREGULAR", UCNV_IRREGULAR, R"doc(
+             The codepoint is not a regular sequence in the encoding.
+
+             For example, \\xED\\xA0\\x80..\\xED\\xBF\\xBF are irregular UTF-8
+             byte sequences for single surrogate code points.
+             The error code :attr:`~UErrorCode.U_INVALID_CHAR_FOUND`
+             will be set.
+             )doc")
+      .value("UCNV_RESET", UCNV_RESET, R"doc(
+             The callback is called with this reason when a 'reset' has
+             occurred.
+
+             Callback should reset all state.
+             )doc")
+      .value("UCNV_CLOSE", UCNV_CLOSE, R"doc(
+             Called when the converter is closed.
+
+             The callback should release any allocated memory.
+             )doc")
+      .value("UCNV_CLONE", UCNV_CLONE, R"doc(
+             Called when :func:`ucnv_safe_clone` is called on the converter.
+             )doc")
       .export_values();
 
   //
@@ -243,20 +251,44 @@ void init_ucnv_err(py::module &m) {
   //
   // struct UConverterFromUnicodeArgs
   //
-  py::class_<UConverterFromUnicodeArgs>(m, "UConverterFromUnicodeArgs")
-      .def_property_readonly("converter",
-                             [](const UConverterFromUnicodeArgs &self) {
-                               return icupy::UConverterPtr(self.converter);
-                             });
+  py::class_<UConverterFromUnicodeArgs> fua(m, "UConverterFromUnicodeArgs",
+                                            R"doc(
+Structure for the From Unicode callback function parameter.
+
+See Also:
+    :class:`UConverterFromUCallback`
+      )doc");
+
+  fua.def_property_readonly(
+      "converter",
+      [](const UConverterFromUnicodeArgs &self) {
+        return icupy::UConverterPtr(self.converter);
+      },
+      R"doc(
+      UConverter: Converter that is opened and to which this struct is passed
+          as an argument.
+      )doc");
 
   //
   // struct UConverterToUnicodeArgs
   //
-  py::class_<UConverterToUnicodeArgs>(m, "UConverterToUnicodeArgs")
-      .def_property_readonly("converter",
-                             [](const UConverterToUnicodeArgs &self) {
-                               return icupy::UConverterPtr(self.converter);
-                             });
+  py::class_<UConverterToUnicodeArgs> fta(m, "UConverterToUnicodeArgs",
+                                          R"doc(
+Structure for the To Unicode callback function parameter.
+
+See Also:
+    :class:`UConverterToUCallback`
+      )doc");
+
+  fta.def_property_readonly(
+      "converter",
+      [](const UConverterToUnicodeArgs &self) {
+        return icupy::UConverterPtr(self.converter);
+      },
+      R"doc(
+      UConverter: Converter that is opened and to which this struct is passed
+          as an argument.
+      )doc");
 
   //
   // UConverterFromUCallback
@@ -281,11 +313,13 @@ void init_ucnv_err(py::module &m) {
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallback`` instance with a callback
-      function `action` and the user context `context`.
+      Initialize the ``UConverterFromUCallback`` instance with the specified
+      callback function and the user context.
 
-      `action` and `context` must outlive the ``UConverterFromUCallback``
-      object.
+      .. important::
+
+          *action* and *context* must outlive the ``UConverterFromUCallback``
+          object.
       )doc");
 
   fucb.def(
@@ -301,7 +335,7 @@ void init_ucnv_err(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 
   fucb.def(
@@ -310,7 +344,7 @@ void init_ucnv_err(py::module &m) {
           -> std::optional<const char *> { return self.option(); },
       py::return_value_policy::reference,
       R"doc(
-      Get the predefined error callback option.
+      Return the predefined error callback option.
       )doc");
 
   //
@@ -319,7 +353,7 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterFromUCallbackEscapePtr,
              icupy::UConverterFromUCallbackPtr>
       fucb_esc(m, "UConverterFromUCallbackEscape", R"doc(
-      Wrapper class for UCNV_FROM_U_CALLBACK_ESCAPE callback function.
+      Wrapper class for :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function.
 
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal codepoints.
@@ -350,10 +384,10 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterFromUCallbackEscape`` instance with
-      :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function and the user
-      context `context`.
+      :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function and the specified
+      user context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_ESCAPE_ICU`,
       :attr:`UCNV_ESCAPE_JAVA`,
       :attr:`UCNV_ESCAPE_C`,
@@ -361,7 +395,9 @@ void init_ucnv_err(py::module &m) {
       :attr:`UCNV_ESCAPE_XML_HEX`,
       or ``None``.
 
-      `context` must outlive the ``UConverterFromUCallbackEscape`` object.
+      .. important::
+
+        *context* must outlive the ``UConverterFromUCallbackEscape`` object.
       )doc");
 
   //
@@ -370,7 +406,7 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterFromUCallbackSkipPtr,
              icupy::UConverterFromUCallbackPtr>
       fucb_skip(m, "UConverterFromUCallbackSkip", R"doc(
-      Wrapper class for UCNV_FROM_U_CALLBACK_SKIP callback function.
+      Wrapper class for :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function.
 
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
@@ -399,15 +435,17 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterFromUCallbackSkip`` instance with
-      :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function and the user
-      context `context`.
+      :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function and the specified
+      user context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
       or ``None``.
 
-      `context` must outlive the ``UConverterFromUCallbackSkip``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterFromUCallbackSkip``
+          object.
       )doc");
 
   //
@@ -416,7 +454,7 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterFromUCallbackStopPtr,
              icupy::UConverterFromUCallbackPtr>
       fucb_stop(m, "UConverterFromUCallbackStop", R"doc(
-      Wrapper class for UCNV_FROM_U_CALLBACK_STOP callback function.
+      Wrapper class for :func:`UCNV_FROM_U_CALLBACK_STOP` callback function.
 
       Stop at the ILLEGAL SEQUENCE.
 
@@ -445,11 +483,13 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterFromUCallbackStop`` instance with
-      :func:`UCNV_FROM_U_CALLBACK_STOP` callback function and the user
-      context `context`.
+      :func:`UCNV_FROM_U_CALLBACK_STOP` callback function and the specified
+      user context.
 
-      `context` must outlive the ``UConverterFromUCallbackStop``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterFromUCallbackStop``
+          object.
       )doc");
 
   //
@@ -458,7 +498,8 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterFromUCallbackSubstitutePtr,
              icupy::UConverterFromUCallbackPtr>
       fucb_sub(m, "UConverterFromUCallbackSubstitute", R"doc(
-      Wrapper class for UCNV_FROM_U_CALLBACK_SUBSTITUTE callback function.
+      Wrapper class for :func:`UCNV_FROM_U_CALLBACK_SUBSTITUTE` callback
+      function.
 
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
       substitution string for the converter.
@@ -493,13 +534,15 @@ void init_ucnv_err(py::module &m) {
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterFromUCallbackSubstitute`` instance
       with :func:`UCNV_FROM_U_CALLBACK_SUBSTITUTE` callback function and
-      the user context `context`.
+      the specified user context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
       or ``None``.
 
-      `context` must outlive the ``UConverterFromUCallbackSubstitute``
+      .. important::
+
+          *context* must outlive the ``UConverterFromUCallbackSubstitute``
       object.
       )doc");
 
@@ -526,11 +569,13 @@ void init_ucnv_err(py::module &m) {
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallback`` instance with a callback
-      function `action` and the user context `context`.
+      Initialize the ``UConverterToUCallback`` instance with the specified
+      callback function and the user context.
 
-      `action` and `context` must outlive the ``UConverterToUCallback``
-      object.
+      .. important::
+
+          *action* and *context* must outlive the ``UConverterToUCallback``
+          object.
       )doc");
 
   tucb.def(
@@ -546,7 +591,7 @@ void init_ucnv_err(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 
   tucb.def(
@@ -555,7 +600,7 @@ void init_ucnv_err(py::module &m) {
           -> std::optional<const char *> { return self.option(); },
       py::return_value_policy::reference,
       R"doc(
-      Get the predefined error callback option.
+      Return the predefined error callback option.
       )doc");
 
   //
@@ -565,7 +610,7 @@ void init_ucnv_err(py::module &m) {
              icupy::UConverterToUCallbackPtr>
       tucb_esc(m, "UConverterToUCallbackEscape",
                R"doc(
-      Wrapper class for UCNV_TO_U_CALLBACK_ESCAPE callback function.
+      Wrapper class for :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function.
 
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal bytes.
@@ -584,10 +629,10 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterToUCallbackEscape`` instance with
-      :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function and the user
-      context `context`.
+      :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function and the specified
+      user context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_ESCAPE_ICU`,
       :attr:`UCNV_ESCAPE_JAVA`,
       :attr:`UCNV_ESCAPE_C`,
@@ -596,8 +641,10 @@ void init_ucnv_err(py::module &m) {
       :attr:`UCNV_ESCAPE_UNICODE`,
       or ``None``.
 
-      `context` must outlive the ``UConverterToUCallbackEscape``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterToUCallbackEscape``
+          object.
       )doc");
 
   //
@@ -606,7 +653,7 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterToUCallbackSkipPtr,
              icupy::UConverterToUCallbackPtr>
       tucb_skip(m, "UConverterToUCallbackSkip", R"doc(
-      Wrapper class for UCNV_TO_U_CALLBACK_SKIP callback function.
+      Wrapper class for :func:`UCNV_TO_U_CALLBACK_SKIP` callback function.
 
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
@@ -624,15 +671,17 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterToUCallbackSkip`` instance with
-      :func:`UCNV_TO_U_CALLBACK_SKIP` callback function and the user
-      context `context`.
+      :func:`UCNV_TO_U_CALLBACK_SKIP` callback function and the specified user
+      context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
       or ``None``.
 
-      `context` must outlive the ``UConverterToUCallbackSkip``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterToUCallbackSkip``
+          object.
       )doc");
 
   //
@@ -641,7 +690,7 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterToUCallbackStopPtr,
              icupy::UConverterToUCallbackPtr>
       tucb_stop(m, "UConverterToUCallbackStop", R"doc(
-      Wrapper class for UCNV_TO_U_CALLBACK_STOP callback function.
+      Wrapper class for :func:`UCNV_TO_U_CALLBACK_STOP` callback function.
 
       Stop at the ILLEGAL SEQUENCE.
 
@@ -659,11 +708,13 @@ void init_ucnv_err(py::module &m) {
       }),
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterToUCallbackStop`` instance with
-      :func:`UCNV_TO_U_CALLBACK_STOP` callback function and the user
-      context `context`.
+      :func:`UCNV_TO_U_CALLBACK_STOP` callback function and the specified user
+      context.
 
-      `context` must outlive the ``UConverterToUCallbackStop``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterToUCallbackStop``
+          object.
       )doc");
 
   //
@@ -672,7 +723,8 @@ void init_ucnv_err(py::module &m) {
   py::class_<icupy::UConverterToUCallbackSubstitutePtr,
              icupy::UConverterToUCallbackPtr>
       tucb_sub(m, "UConverterToUCallbackSubstitute", R"doc(
-      Wrapper class for UCNV_TO_U_CALLBACK_SUBSTITUTE callback function.
+      Wrapper class for :func:`UCNV_TO_U_CALLBACK_SUBSTITUTE` callback
+      function.
 
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
       substitution character, U+FFFD.
@@ -692,14 +744,16 @@ void init_ucnv_err(py::module &m) {
       py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterToUCallbackSubstitute`` instance
       with :func:`UCNV_TO_U_CALLBACK_SUBSTITUTE` callback function and
-      the user context `context`.
+      the specified user context.
 
-      `context` can be
+      *context* can be
       :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
       or ``None``.
 
-      `context` must outlive the ``UConverterToUCallbackSubstitute``
-      object.
+      .. important::
+
+          *context* must outlive the ``UConverterToUCallbackSubstitute``
+          object.
       )doc");
 
   //
@@ -726,8 +780,10 @@ void init_ucnv_err(py::module &m) {
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal codepoints.
 
-      This function has overhead;
-      use :class:`UConverterFromUCallbackEscape` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterFromUCallbackEscape` instead.
 
       See Also:
           :class:`UConverterFromUCallback`
@@ -753,8 +809,10 @@ void init_ucnv_err(py::module &m) {
       py::arg("error_code"), R"doc(
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      This function has overhead;
-      use :class:`UConverterFromUCallbackSkip` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterFromUCallbackSkip` instead.
 
       See Also:
           :class:`UConverterFromUCallback`
@@ -780,8 +838,10 @@ void init_ucnv_err(py::module &m) {
       py::arg("error_code"), R"doc(
       Stop at the ILLEGAL SEQUENCE.
 
-      This function has overhead;
-      use :class:`UConverterFromUCallbackStop` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterFromUCallbackStop` instead.
 
       See Also:
           :class:`UConverterFromUCallback`
@@ -808,8 +868,10 @@ void init_ucnv_err(py::module &m) {
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
       substitution string for the converter.
 
-      This function has overhead;
-      use :class:`UConverterFromUCallbackSubstitute` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterFromUCallbackSubstitute` instead.
 
       See Also:
           :class:`UConverterFromUCallback`
@@ -837,8 +899,10 @@ void init_ucnv_err(py::module &m) {
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal bytes.
 
-      This function has overhead;
-      use :class:`UConverterToUCallbackEscape` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterToUCallbackEscape` instead.
 
       See Also:
           :class:`UConverterToUCallback`
@@ -862,8 +926,10 @@ void init_ucnv_err(py::module &m) {
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      This function has overhead;
-      use :class:`UConverterToUCallbackSkip` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterToUCallbackSkip` instead.
 
       See Also:
           :class:`UConverterToUCallback`
@@ -887,8 +953,10 @@ void init_ucnv_err(py::module &m) {
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Stop at the ILLEGAL SEQUENCE.
 
-      This function has overhead;
-      use :class:`UConverterToUCallbackStop` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterToUCallbackStop` instead.
 
       See Also:
           :class:`UConverterToUCallback`
@@ -914,8 +982,10 @@ void init_ucnv_err(py::module &m) {
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
       substitution character, U+FFFD.
 
-      This function has overhead;
-      use :class:`UConverterToUCallbackSubstitute` instead.
+      .. caution::
+
+          This function has overhead;
+          use :class:`UConverterToUCallbackSubstitute` instead.
 
       See Also:
           :class:`UConverterToUCallback`

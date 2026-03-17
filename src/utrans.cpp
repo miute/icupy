@@ -6,25 +6,28 @@ void init_utrans(py::module &m) {
   //
   // enum UTransDirection
   //
-  py::enum_<UTransDirection>(
-      m, "UTransDirection", py::arithmetic(),
-      "Direction constant indicating the direction in a transliterator, e.g., "
-      "the forward or reverse rules of a "
-      "*RuleBasedTransliterator*.\n\n"
-      "Specified when a transliterator is opened. An \"A-B\" transliterator "
-      "transliterates A to B when operating in "
-      "the forward direction, and B to A when operating in the reverse "
-      "direction.")
-      .value("UTRANS_FORWARD", UTRANS_FORWARD,
-             "*UTRANS_FORWARD* means from <source> to <target> for a "
-             "transliterator with ID <source>-<target>.\n\n  "
-             "For a transliterator opened using a rule, it means forward "
-             "direction rules, e.g., \"A > B\".")
-      .value("UTRANS_REVERSE", UTRANS_REVERSE,
-             "*UTRANS_REVERSE* means from <target> to <source> for a "
-             "transliterator with ID <source>-<target>.\n\n  "
-             "For a transliterator opened using a rule, it means reverse "
-             "direction rules, e.g., \"A < B\".")
+  py::enum_<UTransDirection>(m, "UTransDirection", py::arithmetic(), R"doc(
+Direction constant indicating the direction in a transliterator, e.g., the
+forward or reverse rules of a RuleBasedTransliterator.
+
+Specified when a transliterator is opened. An "A-B" transliterator
+transliterates A to B when operating in the forward direction, and B to A when
+operating in the reverse direction.
+      )doc")
+      .value("UTRANS_FORWARD", UTRANS_FORWARD, R"doc(
+             UTRANS_FORWARD means from <source> to <target> for a
+             transliterator with ID <source>-<target>.
+
+             For a transliterator opened using a rule, it means forward
+             direction rules, e.g., "A > B".
+             )doc")
+      .value("UTRANS_REVERSE", UTRANS_REVERSE, R"doc(
+             UTRANS_REVERSE means from <target> to <source> for a
+             transliterator with ID <source>-<target>.
+
+             For a transliterator opened using a rule, it means reverse
+             direction rules, e.g., "A < B".
+             )doc")
       .export_values();
 
   //

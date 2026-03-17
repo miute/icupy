@@ -13,7 +13,7 @@ void init_unounclass(py::module &m) {
   //
   py::enum_<NounClass>(
       m, "NounClass", py::arithmetic(),
-      "Represents all the grammatical noun classes that are supported by CLDR.")
+      "Represent all the grammatical noun classes that are supported by CLDR.")
       .value("OTHER", OTHER)
       .value("NEUTER", NEUTER)
       .value("FEMININE", FEMININE)

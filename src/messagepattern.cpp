@@ -11,68 +11,86 @@ void init_messagepattern(py::module &m) {
   //
   // enum UMessagePatternApostropheMode
   //
-  py::enum_<UMessagePatternApostropheMode>(
-      m, "UMessagePatternApostropheMode", py::arithmetic(),
-      "Mode for when an apostrophe starts quoted literal text for "
-      "*MessageFormat* output.\n\n"
-      "The default is DOUBLE_OPTIONAL unless overridden via uconfig.h "
-      "(*UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE*).\n\n"
-      "A pair of adjacent apostrophes always results in a single apostrophe in "
-      "the output, even when the pair is "
-      "between two single, text-quoting apostrophes.")
+  py::enum_<UMessagePatternApostropheMode>(m, "UMessagePatternApostropheMode",
+                                           py::arithmetic(), R"doc(
+Mode for when an apostrophe starts quoted literal text for
+:class:`MessageFormat` output.
+
+The default is DOUBLE_OPTIONAL unless overridden via uconfig.h
+(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE).
+
+A pair of adjacent apostrophes always results in a single apostrophe in the
+output, even when the pair is between two single, text-quoting apostrophes.
+      )doc")
       .value("UMSGPAT_APOS_DOUBLE_OPTIONAL", UMSGPAT_APOS_DOUBLE_OPTIONAL,
-             "A literal apostrophe is represented by either a single or a "
-             "double apostrophe pattern character.\n\n  "
-             "Within a MessageFormat pattern, a single apostrophe only starts "
-             "quoted literal text if it immediately "
-             "precedes a curly brace {}, or a pipe symbol | if inside a choice "
-             "format, or a pound symbol # if inside a "
-             "plural format.\n\n  "
-             "This is the default behavior starting with ICU 4.8.")
+             R"doc(
+             A literal apostrophe is represented by either a single or a
+             double apostrophe pattern character.
+
+             Within a :class:`MessageFormat` pattern, a single apostrophe only
+             starts quoted literal text if it immediately precedes a curly
+             brace {}, or a pipe symbol | if inside a choice format, or a pound
+             symbol # if inside a plural format.
+
+             This is the default behavior starting with ICU 4.8.
+             )doc")
       .value("UMSGPAT_APOS_DOUBLE_REQUIRED", UMSGPAT_APOS_DOUBLE_REQUIRED,
-             "A literal apostrophe must be represented by a double apostrophe "
-             "pattern character.\n\n  "
-             "A single apostrophe always starts quoted literal text.\n\n  "
-             "This is the behavior of ICU 4.6 and earlier, and of the JDK.")
+             R"doc(
+             A literal apostrophe must be represented by a double apostrophe
+             pattern character.
+
+             A single apostrophe always starts quoted literal text.
+
+             This is the behavior of ICU 4.6 and earlier, and of the JDK.
+             )doc")
       .export_values();
 
   //
   // enum UMessagePatternArgType
   //
-  py::enum_<UMessagePatternArgType>(
-      m, "UMessagePatternArgType", py::arithmetic(),
-      "Argument type constants.\n\n"
-      "Returned by *Part.get_arg_type()* for ARG_START and ARG_LIMIT parts.\n\n"
-      "Messages nested inside an argument are each delimited by MSG_START and "
-      "MSG_LIMIT, "
-      "with a nesting level one greater than the surrounding message.")
-      .value("UMSGPAT_ARG_TYPE_NONE", UMSGPAT_ARG_TYPE_NONE,
-             "The argument has no specified type.")
-      .value("UMSGPAT_ARG_TYPE_SIMPLE", UMSGPAT_ARG_TYPE_SIMPLE,
-             "The argument has a \"simple\" type which is provided by the "
-             "ARG_TYPE part. An ARG_STYLE part might "
-             "follow that.")
-      .value("UMSGPAT_ARG_TYPE_CHOICE", UMSGPAT_ARG_TYPE_CHOICE,
-             "The argument is a *ChoiceFormat* with one or more ((ARG_INT | "
-             "ARG_DOUBLE), ARG_SELECTOR, message) "
-             "tuples.")
-      .value("UMSGPAT_ARG_TYPE_PLURAL", UMSGPAT_ARG_TYPE_PLURAL,
-             "The argument is a cardinal-number *PluralFormat* with an "
-             "optional ARG_INT or ARG_DOUBLE offset "
-             "(e.g., offset:1) and one or more (ARG_SELECTOR [explicit-value] "
-             "message) tuples.\n\n  "
-             "If the selector has an explicit value (e.g., =2), then that "
-             "value is provided by the ARG_INT or "
-             "ARG_DOUBLE part preceding the message. Otherwise the message "
-             "immediately follows the ARG_SELECTOR.")
-      .value("UMSGPAT_ARG_TYPE_SELECT", UMSGPAT_ARG_TYPE_SELECT,
-             "The argument is a *SelectFormat* with one or more (ARG_SELECTOR, "
-             "message) pairs.")
+  py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType",
+                                    py::arithmetic(), R"doc(
+Argument type constants.
+
+Returned by :meth:`MessagePattern.Part.get_arg_type` for ARG_START and
+ARG_LIMIT parts.
+
+Messages nested inside an argument are each delimited by MSG_START and
+MSG_LIMIT, with a nesting level one greater than the surrounding message.
+      )doc")
+      .value("UMSGPAT_ARG_TYPE_NONE", UMSGPAT_ARG_TYPE_NONE, R"doc(
+             The argument has no specified type.
+             )doc")
+      .value("UMSGPAT_ARG_TYPE_SIMPLE", UMSGPAT_ARG_TYPE_SIMPLE, R"doc(
+             The argument has a "simple" type which is provided by the
+             ARG_TYPE part.
+
+             An ARG_STYLE part might follow that.
+             )doc")
+      .value("UMSGPAT_ARG_TYPE_CHOICE", UMSGPAT_ARG_TYPE_CHOICE, R"doc(
+             The argument is a :class:`ChoiceFormat` with one or more
+             ((ARG_INT | ARG_DOUBLE), ARG_SELECTOR, message) tuples.
+             )doc")
+      .value("UMSGPAT_ARG_TYPE_PLURAL", UMSGPAT_ARG_TYPE_PLURAL, R"doc(
+             The argument is a cardinal-number :class:`PluralFormat` with an
+             optional ARG_INT or ARG_DOUBLE offset (e.g., offset:1) and one or
+             more (ARG_SELECTOR [explicit-value] message) tuples.
+
+             If the selector has an explicit value (e.g., =2), then that
+             value is provided by the ARG_INT or ARG_DOUBLE part preceding the
+             message. Otherwise the message immediately follows the
+             ARG_SELECTOR.
+             )doc")
+      .value("UMSGPAT_ARG_TYPE_SELECT", UMSGPAT_ARG_TYPE_SELECT, R"doc(
+             The argument is a :class:`SelectFormat` with one or more
+             (ARG_SELECTOR, message) pairs.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
       .value("UMSGPAT_ARG_TYPE_SELECTORDINAL", UMSGPAT_ARG_TYPE_SELECTORDINAL,
-             "The argument is an ordinal-number *PluralFormat* with the same "
-             "style parts sequence and semantics as "
-             "*UMSGPAT_ARG_TYPE_PLURAL*.")
+             R"doc(
+             The argument is an ordinal-number :class:`PluralFormat` with the same
+             style parts sequence and semantics as :attr:`UMSGPAT_ARG_TYPE_PLURAL`.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
       .export_values();
 
@@ -80,86 +98,128 @@ void init_messagepattern(py::module &m) {
   // enum UMessagePatternPartType
   //
   py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType",
-                                     py::arithmetic(),
-                                     "*MessagePattern::Part* type constants.")
-      .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START,
-             "Start of a message pattern (main or nested).\n\n  "
-             "The length is 0 for the top-level message and for a choice "
-             "argument sub-message, otherwise 1 for the "
-             "'{'. The value indicates the nesting level, starting with 0 for "
-             "the main message.\n\n  "
-             "There is always a later MSG_LIMIT part.")
-      .value("UMSGPAT_PART_TYPE_MSG_LIMIT", UMSGPAT_PART_TYPE_MSG_LIMIT,
-             "End of a message pattern (main or nested).\n\n  "
-             "The length is 0 for the top-level message and the last "
-             "sub-message of a choice argument, otherwise 1 for "
-             "the '}' or (in a choice argument style) the '|'. The value "
-             "indicates the nesting level, starting with 0 "
-             "for the main message.")
+                                     py::arithmetic(), R"doc(
+:class:`MessagePattern.Part` type constants.
+      )doc")
+      .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START, R"doc(
+             Start of a message pattern (main or nested).
+
+             The length is 0 for the top-level message and for a choice
+             argument sub-message, otherwise 1 for the '{'. The value indicates
+             the nesting level, starting with 0 for the main message.
+
+             There is always a later MSG_LIMIT part.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_MSG_LIMIT", UMSGPAT_PART_TYPE_MSG_LIMIT, R"doc(
+             End of a message pattern (main or nested).
+
+             The length is 0 for the top-level message and the last
+             sub-message of a choice argument, otherwise 1 for the '}' or (in
+             a choice argument style) the '|'. The value indicates the nesting
+             level, starting with 0 for the main message.
+             )doc")
       .value("UMSGPAT_PART_TYPE_SKIP_SYNTAX", UMSGPAT_PART_TYPE_SKIP_SYNTAX,
-             "Indicates a substring of the pattern string which is to be "
-             "skipped when formatting.\n\n  "
-             "For example, an apostrophe that begins or ends quoted text would "
-             "be indicated with such a part. The "
-             "value is undefined and currently always 0.")
+             R"doc(
+             Indicates a substring of the pattern string which is to be
+             skipped when formatting.
+
+             For example, an apostrophe that begins or ends quoted text would
+             be indicated with such a part. The value is undefined and
+             currently always 0.
+             )doc")
       .value("UMSGPAT_PART_TYPE_INSERT_CHAR", UMSGPAT_PART_TYPE_INSERT_CHAR,
-             "Indicates that a syntax character needs to be inserted for "
-             "auto-quoting.\n\n  "
-             "The length is 0. The value is the character code of the "
-             "insertion character. (U+0027=APOSTROPHE)")
+             R"doc(
+             Indicates that a syntax character needs to be inserted for
+             auto-quoting.
+
+             The length is 0. The value is the character code of the insertion
+             character. (U+0027=APOSTROPHE)
+             )doc")
       .value("UMSGPAT_PART_TYPE_REPLACE_NUMBER",
-             UMSGPAT_PART_TYPE_REPLACE_NUMBER,
-             "Indicates a syntactic (non-escaped) # symbol in a plural "
-             "variant.\n\n  "
-             "When formatting, replace this part's substring with the "
-             "(value-offset) for the plural argument value. "
-             "The value is undefined and currently always 0.")
-      .value("UMSGPAT_PART_TYPE_ARG_START", UMSGPAT_PART_TYPE_ARG_START,
-             "Start of an argument.\n\n  "
-             "The length is 1 for the '{'. The value is the ordinal value of "
-             "the ArgType. Use *get_arg_type()*.\n\n  "
-             "This part is followed by either an ARG_NUMBER or ARG_NAME, "
-             "followed by optional argument sub-parts "
-             "(see *UMessagePatternArgType* constants) and finally an "
-             "ARG_LIMIT part.")
-      .value("UMSGPAT_PART_TYPE_ARG_LIMIT", UMSGPAT_PART_TYPE_ARG_LIMIT,
-             "End of an argument.\n\n  "
-             "The length is 1 for the '}'. The value is the ordinal value of "
-             "the ArgType. Use *get_arg_type()*.")
+             UMSGPAT_PART_TYPE_REPLACE_NUMBER, R"doc(
+             Indicates a syntactic (non-escaped) # symbol in a plural
+             variant.
+
+             When formatting, replace this part's substring with the
+             (value-offset) for the plural argument value.
+             The value is undefined and currently always 0.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_START", UMSGPAT_PART_TYPE_ARG_START, R"doc(
+             Start of an argument.
+
+             The length is 1 for the '{'. The value is the ordinal value of
+             the ArgType. Use :meth:`MessagePattern.Part.get_arg_type`.
+             This part is followed by either an ARG_NUMBER or ARG_NAME,
+             followed by optional argument sub-parts (see
+             :class:`UMessagePatternArgType` constants) and finally an
+             ARG_LIMIT part.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_LIMIT", UMSGPAT_PART_TYPE_ARG_LIMIT, R"doc(
+             End of an argument.
+
+             The length is 1 for the '}'. The value is the ordinal value of
+             the ArgType. Use :meth:`MessagePattern.Part.get_arg_type`.
+             )doc")
       .value("UMSGPAT_PART_TYPE_ARG_NUMBER", UMSGPAT_PART_TYPE_ARG_NUMBER,
-             "The argument number, provided by the value.")
-      .value("UMSGPAT_PART_TYPE_ARG_NAME", UMSGPAT_PART_TYPE_ARG_NAME,
-             "The argument name.\n\n  "
-             "The value is undefined and currently always 0.")
-      .value("UMSGPAT_PART_TYPE_ARG_TYPE", UMSGPAT_PART_TYPE_ARG_TYPE,
-             "The argument type.\n\n  "
-             "The value is undefined and currently always 0.")
-      .value("UMSGPAT_PART_TYPE_ARG_STYLE", UMSGPAT_PART_TYPE_ARG_STYLE,
-             "The argument style text.\n\n  "
-             "The value is undefined and currently always 0.")
+             R"doc(
+             The argument number, provided by the value.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_NAME", UMSGPAT_PART_TYPE_ARG_NAME, R"doc(
+             The argument name.
+
+             The value is undefined and currently always 0.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_TYPE", UMSGPAT_PART_TYPE_ARG_TYPE, R"doc(
+             The argument type.
+
+             The value is undefined and currently always 0.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_STYLE", UMSGPAT_PART_TYPE_ARG_STYLE, R"doc(
+             The argument style text.
+
+             The value is undefined and currently always 0.
+             )doc")
       .value("UMSGPAT_PART_TYPE_ARG_SELECTOR", UMSGPAT_PART_TYPE_ARG_SELECTOR,
-             "A selector substring in a \"complex\" argument style.\n\n  "
-             "The value is undefined and currently always 0.")
-      .value("UMSGPAT_PART_TYPE_ARG_INT", UMSGPAT_PART_TYPE_ARG_INT,
-             "An integer value, for example the offset or an explicit selector "
-             "value in a *PluralFormat* style.\n\n  "
-             "The part value is the integer value.")
+             R"doc(
+             A selector substring in a "complex" argument style.
+
+             The value is undefined and currently always 0.
+             )doc")
+      .value("UMSGPAT_PART_TYPE_ARG_INT", UMSGPAT_PART_TYPE_ARG_INT, R"doc(
+             An integer value, for example the offset or an explicit selector
+             value in a :class:`PluralFormat` style.
+
+             The part value is the integer value.
+             )doc")
       .value("UMSGPAT_PART_TYPE_ARG_DOUBLE", UMSGPAT_PART_TYPE_ARG_DOUBLE,
-             "A numeric value, for example the offset or an explicit selector "
-             "value in a *PluralFormat* style.\n\n  "
-             "The part value is an index into an internal array of numeric "
-             "values; use *get_numeric_value()*.")
+             R"doc(
+             A numeric value, for example the offset or an explicit selector
+             value in a :class:`PluralFormat` style.
+
+             The part value is an index into an internal array of numeric
+             values; use :meth:`MessagePattern.get_numeric_value`.
+             )doc")
       .export_values();
 
   //
   // class icu::MessagePattern
   //
-  py::class_<MessagePattern, UObject> mp(m, "MessagePattern");
+  py::class_<MessagePattern, UObject> mp(m, "MessagePattern", R"doc(
+      Parse and represent ICU :class:`MessageFormat`,
+      :class:`PluralFormat` and
+      :class:`SelectFormat` patterns.
+      )doc");
 
   //
   // class icu::MessagePattern::Part
   //
-  py::class_<MessagePattern::Part, UMemory> part(mp, "Part");
+  py::class_<MessagePattern::Part, UMemory> part(mp, "Part", R"doc(
+      A message pattern "part", representing a pattern parsing event.
+
+      There is a part for the start and end of a message or argument, for
+      quoting and escaping of and with ASCII apostrophes, and for syntax
+      elements of "complex" arguments.
+      )doc");
 
   // FIXME: Unresolved external symbol error with
   //  "icu::MessagePattern::Part::operator==(const Part &other)".

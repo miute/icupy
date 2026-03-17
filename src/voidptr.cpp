@@ -59,16 +59,16 @@ void init_voidptr(py::module &m) {
     )doc");
 
   cvp.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
-    Initialize a ``ConstVoidPtr`` instance with `value`.
+    Initialize a ``ConstVoidPtr`` instance with the specified *value*.
     )doc");
 
   // TODO: Remove deprecated method in future releases.
   cvp.def("to_object", &icupy::ConstVoidPtr::to_object, R"doc(
     .. deprecated:: 0.23
-       Use :meth:`.value` instead.
+        Use :meth:`.value` instead.
     )doc");
 
   cvp.def("value", &icupy::ConstVoidPtr::value, R"doc(
-    Get the value of the ``ConstVoidPtr`` instance.
+    Return the value associated with this object.
     )doc");
 }

@@ -188,37 +188,76 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   // class icu::UMemory
   //
-  py::class_<UMemory>(m, "UMemory");
+  py::class_<UMemory>(m, "UMemory", R"doc(
+      Common ICU base class.
+      )doc");
 
   //
   // class icu::UObject
   //
-  py::class_<UObject, UMemory>(m, "UObject");
+  py::class_<UObject, UMemory>(m, "UObject", R"doc(
+      Common ICU "boilerplate" class.
+      )doc");
 
   //
   // class icu::Locale
   //
-  py::class_<Locale, UObject> loc(m, "Locale");
+  py::class_<Locale, UObject> loc(m, "Locale", R"doc(
+      Representation of a specific geographic, political, or cultural region.
+
+      See Also:
+          :class:`LocaleBuilder`
+          :class:`LocaleMatcher`
+      )doc");
 
   //
   // class icu::Replaceable
   //
-  py::class_<Replaceable, UObject> rep(m, "Replaceable");
+  py::class_<Replaceable, UObject> rep(m, "Replaceable", R"doc(
+      Abstract base class for :class:`UnicodeString`.
+      )doc");
 
   //
   // class icu::UnicodeString
   //
-  py::class_<UnicodeString, Replaceable> us(m, "UnicodeString");
+  py::class_<UnicodeString, Replaceable> us(m, "UnicodeString", R"doc(
+      String class that stores Unicode characters directly and provides similar
+      functionality as the Java String and StringBuffer/StringBuilder classes.
+
+      See Also:
+          :class:`StringCharacterIterator`
+          :class:`UnicodeStringAppendable`
+      )doc");
 
   //
   // class icu::Formattable
   //
-  py::class_<Formattable, UObject> fmt(m, "Formattable");
+  py::class_<Formattable, UObject> fmt(m, "Formattable", R"doc(
+      Thin wrapper class which interconverts between the primitive numeric
+      types (float, int, etc.) as well as ``UDate`` and
+      :class:`UnicodeString`.
+
+      Formattable objects can be passed to the Format class or its subclasses
+      for formatting.
+      )doc");
 
   //
   // class icu::PluralRules
   //
-  py::class_<PluralRules, UObject> pr(m, "PluralRules");
+  py::class_<PluralRules, UObject> pr(m, "PluralRules", R"doc(
+      Define rules for mapping non-negative numeric values onto a small set of
+      keywords.
+
+      Rules are constructed from a text description, consisting of a series of
+      keywords and conditions. The select method examines each condition in
+      order and returns the keyword for the first condition that matches the
+      number.
+      If none match, default rule(other) is returned.
+
+      For more information, details, and tips for writing rules, see the LDML
+      spec, Part 3: `Language Plural Rules
+      <https://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules>`__.
+      )doc");
 
   //
   // class icupy::UnicodeStringVector
@@ -329,12 +368,37 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   // class icu::NumberFormat
   //
-  py::class_<NumberFormat, Format> numfmt(m, "NumberFormat");
+  py::class_<NumberFormat, Format> numfmt(m, "NumberFormat", R"doc(
+      Abstract base class for formatting and parsing numbers.
+
+      .. important::
+
+          Use :class:`number.NumberFormatter` and
+          :class:`number.NumberRangeFormatter`
+          instead of this class for new code. Although not deprecated, this
+          class is provided for backwards compatibility only.
+
+      See Also:
+          :class:`DecimalFormat`
+          :class:`RuleBasedNumberFormat`
+      )doc");
 
   //
   // class icu::DecimalFormat
   //
-  py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat");
+  py::class_<DecimalFormat, NumberFormat> decfmt(m, "DecimalFormat", R"doc(
+      Format decimal numbers.
+
+      .. important::
+
+          Use :class:`number.NumberFormatter` and
+          :class:`number.NumberRangeFormatter`
+          instead of this class for new code. Although not deprecated, this
+          class is provided for backwards compatibility only.
+
+      See Also:
+          :class:`CompactDecimalFormat`
+      )doc");
 
   init_numfmt(m, numfmt); // icu::NumberFormat
   init_rbnf(m);           // icu::RuleBasedNumberFormat

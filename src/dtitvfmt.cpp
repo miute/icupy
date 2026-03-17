@@ -13,7 +13,13 @@ void init_dtitvfmt(py::module &m) {
   // class icu::FormattedDateInterval
   //
   py::class_<FormattedDateInterval, UMemory, FormattedValue> fdi(
-      m, "FormattedDateInterval");
+      m, "FormattedDateInterval", R"doc(
+      Immutable class containing the result of a date interval formatting
+      operation.
+
+      See Also:
+          :class:`DateIntervalFormat`
+      )doc");
 
   fdi.def(py::init<>());
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -21,7 +27,21 @@ void init_dtitvfmt(py::module &m) {
   //
   // class icu::DateIntervalFormat
   //
-  py::class_<DateIntervalFormat, Format> fmt(m, "DateIntervalFormat");
+  py::class_<DateIntervalFormat, Format> fmt(m, "DateIntervalFormat", R"doc(
+      Perform date interval formatting and parsing in a language-independent
+      manner.
+
+      Example:
+          >>> from icupy import icu
+          >>> fmt = icu.DateIntervalFormat.create_instance(icu.UDAT_YEAR_MONTH_DAY, icu.Locale("en", "GB", ""))
+          >>> interval = icu.DateInterval(1000 * 3600 * 24, 1000 * 3600 * 24 * 2)
+          >>> dest = icu.UnicodeString()
+          >>> pos = icu.FieldPosition()
+          >>> fmt.format(interval, dest, pos)
+          UnicodeString('2\u2009\u2013\u20093 January 1970', text_length=18)
+          >>> print(dest)
+          2 – 3 January 1970
+      )doc");
 
   fmt.def("__copy__", &DateIntervalFormat::clone);
 

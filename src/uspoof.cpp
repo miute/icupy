@@ -35,50 +35,61 @@ void init_uspoof(py::module &m) {
   //
   // enum URestrictionLevel
   //
-  py::enum_<URestrictionLevel>(
-      m, "URestrictionLevel", py::arithmetic(),
-      "Constants from UAX #39 for use in *uspoof_set_restriction_level*, and "
-      "for returned "
-      "identifier restriction levels in check results.")
-      .value("USPOOF_ASCII", USPOOF_ASCII,
-             "All characters in the string are in the identifier profile and "
-             "all characters in the string are in the "
-             "ASCII range.")
+  py::enum_<URestrictionLevel>(m, "URestrictionLevel", py::arithmetic(), R"doc(
+Constants from UAX #39 for use in :func:`uspoof_set_restriction_level`, and
+for returned identifier restriction levels in check results.
+
+See Also:
+    :func:`uspoof_set_restriction_level`
+    :func:`uspoof_check`
+      )doc")
+      .value("USPOOF_ASCII", USPOOF_ASCII, R"doc(
+             All characters in the string are in the identifier profile and
+             all characters in the string are in the ASCII range.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
       .value("USPOOF_SINGLE_SCRIPT_RESTRICTIVE",
-             USPOOF_SINGLE_SCRIPT_RESTRICTIVE,
-             "The string classifies as ASCII-Only, or all characters in the "
-             "string are in the identifier profile and "
-             "the string is single-script, according to the definition in UTS "
-             "39 section 5.1.")
+             USPOOF_SINGLE_SCRIPT_RESTRICTIVE, R"doc(
+             The string classifies as ASCII-Only, or all characters in the
+             string are in the identifier profile and the string is
+             single-script, according to the definition in UTS 39 section 5.1.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-      .value("USPOOF_HIGHLY_RESTRICTIVE", USPOOF_HIGHLY_RESTRICTIVE,
-             "The string classifies as Single Script, or all characters in the "
-             "string are in the identifier profile "
-             "and the string is covered by any of the following sets of "
-             "scripts, according to the definition in UTS 39 "
-             "section 5.1:\n\n  "
-             "* Latin + Han + Bopomofo (or equivalently: Latn + Hanb)\n  "
-             "* Latin + Han + Hiragana + Katakana (or equivalently: Latn + "
-             "Jpan)\n  "
-             "* Latin + Han + Hangul (or equivalently: Latn +Kore)\n\n  "
-             "This is the default restriction in ICU.")
+      .value("USPOOF_HIGHLY_RESTRICTIVE", USPOOF_HIGHLY_RESTRICTIVE, R"doc(
+             The string classifies as Single Script, or all characters in the
+             string are in the identifier profile and the string is covered by
+             any of the following sets of scripts, according to the definition
+             in UTS 39 section 5.1:
+
+             - Latin + Han + Bopomofo (or equivalently: Latn + Hanb)
+             - Latin + Han + Hiragana + Katakana (or equivalently: Latn + Jpan)
+             - Latin + Han + Hangul (or equivalently: Latn +Kore)
+
+             This is the default restriction in ICU.
+             )doc")
       .value("USPOOF_MODERATELY_RESTRICTIVE", USPOOF_MODERATELY_RESTRICTIVE,
-             "The string classifies as Highly Restrictive, or all characters "
-             "in the string are in the identifier "
-             "profile and the string is covered by Latin and any one other "
-             "Recommended or Aspirational script, except "
-             "Cyrillic, Greek, and Cherokee.")
+             R"doc(
+             The string classifies as Highly Restrictive, or all characters
+             in the string are in the identifier profile and the string is
+             covered by Latin and any one other Recommended or Aspirational
+             script, except Cyrillic, Greek, and Cherokee.
+             )doc")
       .value("USPOOF_MINIMALLY_RESTRICTIVE", USPOOF_MINIMALLY_RESTRICTIVE,
-             "All characters in the string are in the identifier profile. "
-             "Allow arbitrary mixtures of scripts.")
-      .value("USPOOF_UNRESTRICTIVE", USPOOF_UNRESTRICTIVE,
-             "Any valid identifiers, including characters outside of the "
-             "Identifier Profile.")
+             R"doc(
+             All characters in the string are in the identifier profile.
+
+             Allow arbitrary mixtures of scripts.
+             )doc")
+      .value("USPOOF_UNRESTRICTIVE", USPOOF_UNRESTRICTIVE, R"doc(
+             Any valid identifiers, including characters outside of the
+             Identifier Profile.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
       .value("USPOOF_RESTRICTION_LEVEL_MASK", USPOOF_RESTRICTION_LEVEL_MASK,
-             "Mask for selecting the Restriction Level bits from the return "
-             "value of *uspoof_check*.")
+             R"doc(
+             Mask for selecting the Restriction Level bits from the return
+             value of :func:`uspoof_check`.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
@@ -86,104 +97,127 @@ void init_uspoof(py::module &m) {
   //
   // enum USpoofChecks
   //
-  py::enum_<USpoofChecks>(
-      m, "USpoofChecks", py::arithmetic(),
-      "Enum for the kinds of checks that *USpoofChecker* can perform.\n\n"
-      "These enum values are used both to select the set of checks that will "
-      "be performed, and to "
-      "report results from the check function.")
+  py::enum_<USpoofChecks>(m, "USpoofChecks", py::arithmetic(), R"doc(
+Enum for the kinds of checks that :class:`USpoofChecker` can perform.
+
+These enum values are used both to select the set of checks that will
+be performed, and to report results from the check function.
+      )doc")
       .value("USPOOF_SINGLE_SCRIPT_CONFUSABLE", USPOOF_SINGLE_SCRIPT_CONFUSABLE,
-             "When performing the two-string *uspoof_are_confusable* test, "
-             "this flag in the return value indicates "
-             "that the two strings are visually confusable and that they are "
-             "from the same script, according to UTS 39 "
-             "section 4.")
+             R"doc(
+             When performing the two-string :func:`uspoof_are_confusable` test,
+             this flag in the return value indicates that the two strings are
+             visually confusable and that they are from the same script,
+             according to UTS 39 section 4.
+             )doc")
       .value("USPOOF_MIXED_SCRIPT_CONFUSABLE", USPOOF_MIXED_SCRIPT_CONFUSABLE,
-             "When performing the two-string *uspoof_are_confusable* test, "
-             "this flag in the return value indicates "
-             "that the two strings are visually confusable and that they are "
-             "not from the same script, according to "
-             "UTS 39 section 4.")
+             R"doc(
+             When performing the two-string :func:`uspoof_are_confusable` test,
+             this flag in the return value indicates that the two strings are
+             visually confusable and that they are not from the same script,
+             according to UTS 39 section 4.
+             )doc")
       .value("USPOOF_WHOLE_SCRIPT_CONFUSABLE", USPOOF_WHOLE_SCRIPT_CONFUSABLE,
-             "When performing the two-string *uspoof_are_confusable* test, "
-             "this flag in the return value indicates "
-             "that the two strings are visually confusable and that they are "
-             "not from the same script but both of them "
-             "are single-script strings, according to UTS 39 section 4.")
+             R"doc(
+             When performing the two-string :func:`uspoof_are_confusable` test,
+             this flag in the return value indicates that the two strings are
+             visually confusable and that they are not from the same script but
+             both of them are single-script strings, according to UTS 39
+             section 4.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
-      .value("USPOOF_CONFUSABLE", USPOOF_CONFUSABLE,
-             "Enable this flag in *uspoof_set_checks* to turn on all types of "
-             "confusables.\n\n  "
-             "You may set the checks to some subset of "
-             "SINGLE_SCRIPT_CONFUSABLE, MIXED_SCRIPT_CONFUSABLE, or "
-             "WHOLE_SCRIPT_CONFUSABLE to make *uspoof_are_confusable* return "
-             "only those types of confusables.")
+      .value("USPOOF_CONFUSABLE", USPOOF_CONFUSABLE, R"doc(
+             Enable this flag in :func:`uspoof_set_checks` to turn on all types
+             of confusables.
+
+             You may set the checks to some subset of
+             :attr:`USPOOF_SINGLE_SCRIPT_CONFUSABLE`,
+             :attr:`USPOOF_MIXED_SCRIPT_CONFUSABLE`, or
+             :attr:`USPOOF_WHOLE_SCRIPT_CONFUSABLE` to make
+             :func:`uspoof_are_confusable` return only those types of
+             confusables.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      .value("USPOOF_ANY_CASE", USPOOF_ANY_CASE,
-             "**Deprecated:** ICU 58 Any case confusable mappings were removed "
-             "from UTS 39; the corresponding ICU API "
-             "was deprecated.")
-      .value("USPOOF_RESTRICTION_LEVEL", USPOOF_RESTRICTION_LEVEL,
-             "Check that an identifier is no looser than the specified "
-             "RestrictionLevel.\n\n  "
-             "The default if *uspoof_set_restriction_level* is not called is "
-             "HIGHLY_RESTRICTIVE.\n\n  "
-             "If *USPOOF_AUX_INFO* is enabled the actual restriction level of "
-             "the identifier being tested will also be "
-             "returned by *uspoof_check()*.")
-      .value("USPOOF_SINGLE_SCRIPT", USPOOF_SINGLE_SCRIPT,
-             "**Deprecated:** ICU 51 Use RESTRICTION_LEVEL instead.")
-      .value("USPOOF_INVISIBLE", USPOOF_INVISIBLE,
-             "Check an identifier for the presence of invisible characters, "
-             "such as zero-width spaces, or character "
-             "sequences that are likely not to display, such as multiple "
-             "occurrences of the same non-spacing mark. "
-             "This check does not test the input string as a whole for "
-             "conformance to any particular syntax for "
-             "identifiers.")
-      .value("USPOOF_CHAR_LIMIT", USPOOF_CHAR_LIMIT,
-             "Check that an identifier contains only characters from a "
-             "specified set of acceptable characters.\n\n  "
-             "See *uspoof_set_allowed_chars* and *uspoof_set_allowed_locales*. "
-             "Note that a string that fails this "
-             "check will also fail the *USPOOF_RESTRICTION_LEVEL* check.")
-      .value("USPOOF_MIXED_NUMBERS", USPOOF_MIXED_NUMBERS,
-             "Check that an identifier does not mix numbers from different "
-             "numbering systems.\n\n  "
-             "For more information, see UTS 39 section 5.3.")
+      .value("USPOOF_ANY_CASE", USPOOF_ANY_CASE, R"doc(
+             Deprecated: ICU 58 Any case confusable mappings were removed from
+             UTS 39; the corresponding ICU API was deprecated.
+             )doc")
+      .value("USPOOF_RESTRICTION_LEVEL", USPOOF_RESTRICTION_LEVEL, R"doc(
+             Check that an identifier is no looser than the specified
+             RestrictionLevel.
+
+             The default if :func:`uspoof_set_restriction_level` is not called
+             is :attr:`URestrictionLevel.USPOOF_HIGHLY_RESTRICTIVE`.
+
+             If :attr:`USPOOF_AUX_INFO` is enabled the actual restriction level
+             of the identifier being tested will also be returned by
+             :func:`uspoof_check`.
+             )doc")
+      .value("USPOOF_SINGLE_SCRIPT", USPOOF_SINGLE_SCRIPT, R"doc(
+             Deprecated: ICU 51 Use :attr:`USPOOF_RESTRICTION_LEVEL` instead.
+             )doc")
+      .value("USPOOF_INVISIBLE", USPOOF_INVISIBLE, R"doc(
+             Check an identifier for the presence of invisible characters,
+             such as zero-width spaces, or character sequences that are likely
+             not to display, such as multiple occurrences of the same
+             non-spacing mark. This check does not test the input string as a
+             whole for conformance to any particular syntax for identifiers.
+             )doc")
+      .value("USPOOF_CHAR_LIMIT", USPOOF_CHAR_LIMIT, R"doc(
+             Check that an identifier contains only characters from a specified
+             set of acceptable characters.
+
+             See :func:`uspoof_set_allowed_chars` and
+             :func:`uspoof_set_allowed_locales`. Note that a string that fails
+             this check will also fail the :attr:`USPOOF_RESTRICTION_LEVEL`
+             check.
+             )doc")
+      .value("USPOOF_MIXED_NUMBERS", USPOOF_MIXED_NUMBERS, R"doc(
+             Check that an identifier does not mix numbers from different
+             numbering systems.
+
+             For more information, see UTS 39 section 5.3.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
-      .value("USPOOF_HIDDEN_OVERLAY", USPOOF_HIDDEN_OVERLAY,
-             "Check that an identifier does not have a combining character "
-             "following a character in which that "
-             "combining character would be hidden; for example 'i' followed by "
-             "a U+0307 combining dot.\n\n  "
-             "More specifically, the following characters are forbidden from "
-             "preceding a U+0307:\n\n  "
-             "* Those with the Soft_Dotted Unicode property (which includes "
-             "'i' and 'j')\n  "
-             "* Latin lowercase letter 'l'\n  "
-             "* Dotless 'i' and 'j' ('ı' and 'ȷ', U+0131 and U+0237)\n  "
-             "* Any character whose confusable prototype ends with such a "
-             "character (Soft_Dotted, 'l', 'ı', or "
-             "'ȷ')\n\n  "
-             "In addition, combining characters are allowed between the above "
-             "characters and U+0307 except those "
-             "with combining class 0 or combining class \"Above\" (230, same "
-             "class as U+0307).\n\n  "
-             "This list and the number of combing characters considered by "
-             "this check may grow over time.")
+      .value("USPOOF_HIDDEN_OVERLAY", USPOOF_HIDDEN_OVERLAY, R"doc(
+             Check that an identifier does not have a combining character
+             following a character in which that combining character would be
+             hidden; for example 'i' followed by a U+0307 combining dot.
+
+             More specifically, the following characters are forbidden from
+             preceding a U+0307:
+
+             - Those with the Soft_Dotted Unicode property (which includes
+               'i' and 'j')
+             - Latin lowercase letter 'l'
+             - Dotless 'i' and 'j' ('ı' and 'ȷ', U+0131 and U+0237)
+             - Any character whose confusable prototype ends with such a
+               character (Soft_Dotted, 'l', 'ı', or 'ȷ')
+
+             In addition, combining characters are allowed between the above
+             characters and U+0307 except those with combining class 0 or
+             combining class "Above" (230, same class as U+0307).
+
+             This list and the number of combing characters considered by this
+             check may grow over time.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
-      .value("USPOOF_ALL_CHECKS", USPOOF_ALL_CHECKS, "Enable all spoof checks.")
-      .value("USPOOF_AUX_INFO", USPOOF_AUX_INFO,
-             "Enable the return of auxiliary (non-error) information in the "
-             "upper bits of the check results "
-             "value.\n\n  "
-             "If this \"check\" is not enabled, the results of *uspoof_check* "
-             "will be zero when an identifier passes "
-             "all of the enabled checks.\n\n  "
-             "If this \"check\" is enabled, (*uspoof_check()* & "
-             "*USPOOF_ALL_CHECKS*) will be zero when an identifier "
-             "passes all checks.")
+      .value("USPOOF_ALL_CHECKS", USPOOF_ALL_CHECKS,
+             R"doc(
+             Enable all spoof checks.
+             )doc")
+      .value("USPOOF_AUX_INFO", USPOOF_AUX_INFO, R"doc(
+             Enable the return of auxiliary (non-error) information in the
+             upper bits of the check results value.
+
+             If this "check" is not enabled, the results of
+             :func:`uspoof_check` will be zero when an identifier passes all
+             of the enabled checks.
+
+             If this "check" is enabled, (:func:`uspoof_check` &
+             :attr:`USPOOF_ALL_CHECKS`) will be zero when an identifier
+             passes all checks.
+             )doc")
       .export_values();
 
   //

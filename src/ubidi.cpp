@@ -63,180 +63,223 @@ void init_ubidi(py::module &m) {
   //
   py::enum_<UBiDiDirection>(
       m, "UBiDiDirection", py::arithmetic(),
-      "*UBiDiDirection* values indicate the text direction.")
-      .value("UBIDI_LTR", UBIDI_LTR,
-             "Left-to-right text.\n\n  "
-             "This is a 0 value.\n\n  "
-             "* As return value for *ubidi_get_direction()*, it means that the "
-             "source string contains no right-to-left "
-             "characters, or that the source string is empty and the paragraph "
-             "level is even.\n  "
-             "* As return value for *ubidi_get_base_direction()*, it means "
-             "that the first strong character of the "
-             "source string has a left-to-right direction.")
-      .value("UBIDI_RTL", UBIDI_RTL,
-             "Right-to-left text.\n\n  "
-             "This is a 1 value.\n\n  "
-             "* As return value for *ubidi_get_direction()*, it means that the "
-             "source string contains no left-to-right "
-             "characters, or that the source string is empty and the paragraph "
-             "level is odd.\n  "
-             "* As return value for *ubidi_get_base_direction()*, it means "
-             "that the first strong character of the "
-             "source string has a right-to-left direction.")
-      .value("UBIDI_MIXED", UBIDI_MIXED,
-             "Mixed-directional text.\n\n  "
-             "As return value for *ubidi_get_direction()*, it means that the "
-             "source string contains both left-to-right "
-             "and right-to-left characters.")
-      .value("UBIDI_NEUTRAL", UBIDI_NEUTRAL,
-             "No strongly directional text.\n\n  "
-             "As return value for *ubidi_get_base_direction()*, it means that "
-             "the source string is missing or empty, "
-             "or contains neither left-to-right nor right-to-left characters.")
+      "UBiDiDirection values indicate the text direction.")
+      .value("UBIDI_LTR", UBIDI_LTR, R"doc(
+             Left-to-right text.
+             This is a 0 value.
+
+             - As return value for :func:`ubidi_get_direction`, it means that the
+               source string contains no right-to-left
+               characters, or that the source string is empty and the paragraph
+               level is even.
+             - As return value for :func:`ubidi_get_base_direction`, it means
+               that the first strong character of the
+               source string has a left-to-right direction.
+             )doc")
+      .value("UBIDI_RTL", UBIDI_RTL, R"doc(
+             Right-to-left text.
+             This is a 1 value.
+
+             - As return value for :func:`ubidi_get_direction`, it means that the
+               source string contains no left-to-right
+               characters, or that the source string is empty and the paragraph
+               level is odd.
+             - As return value for :func:`ubidi_get_base_direction`, it means
+               that the first strong character of the
+               source string has a right-to-left direction.
+             )doc")
+      .value("UBIDI_MIXED", UBIDI_MIXED, R"doc(
+             Mixed-directional text.
+
+             As return value for :func:`ubidi_get_direction`, it means that the
+             source string contains both left-to-right
+             and right-to-left characters.
+             )doc")
+      .value("UBIDI_NEUTRAL", UBIDI_NEUTRAL, R"doc(
+             No strongly directional text.
+
+             As return value for :func:`ubidi_get_base_direction`, it means that
+             the source string is missing or empty,
+             or contains neither left-to-right nor right-to-left characters.
+             )doc")
       .export_values();
 
   //
   // enum UBiDiReorderingMode
   //
   py::enum_<UBiDiReorderingMode>(m, "UBiDiReorderingMode", py::arithmetic(),
-                                 "*UBiDiReorderingMode* values indicate which "
-                                 "variant of the Bidi algorithm to use.")
-      .value(
-          "UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT,
-          "Regular Logical to Visual Bidi algorithm according to Unicode.\n\n  "
-          "This is a 0 value.")
+                                 R"doc(
+UBiDiReorderingMode values indicate which variant of the Bidi algorithm to use.
+
+See Also:
+    :func:`ubidi_set_inverse`
+    :func:`ubidi_set_reordering_mode`
+      )doc")
+      .value("UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT, R"doc(
+             Regular Logical to Visual Bidi algorithm according to Unicode.
+
+             This is a 0 value.
+             )doc")
       .value("UBIDI_REORDER_NUMBERS_SPECIAL", UBIDI_REORDER_NUMBERS_SPECIAL,
-             "Logical to Visual algorithm which handles numbers in a way which "
-             "mimics the behavior of Windows XP.")
+             R"doc(
+             Logical to Visual algorithm which handles numbers in a way which
+             mimics the behavior of Windows XP.
+             )doc")
       .value("UBIDI_REORDER_GROUP_NUMBERS_WITH_R",
-             UBIDI_REORDER_GROUP_NUMBERS_WITH_R,
-             "Logical to Visual algorithm grouping numbers with adjacent R "
-             "characters (reversible algorithm).")
-      .value("UBIDI_REORDER_RUNS_ONLY", UBIDI_REORDER_RUNS_ONLY,
-             "Reorder runs only to transform a Logical LTR string to the "
-             "Logical RTL string with the same display, or "
-             "vice-versa.\n\n  "
-             "If this mode is set together with option "
-             "*UBIDI_OPTION_INSERT_MARKS*, some Bidi controls in the source "
-             "text may be removed and other controls may be added to produce "
-             "the minimum combination which has the "
-             "required display.")
+             UBIDI_REORDER_GROUP_NUMBERS_WITH_R, R"doc(
+             Logical to Visual algorithm grouping numbers with adjacent R
+             characters (reversible algorithm).
+             )doc")
+      .value("UBIDI_REORDER_RUNS_ONLY", UBIDI_REORDER_RUNS_ONLY, R"doc(
+             Reorder runs only to transform a Logical LTR string to the
+             Logical RTL string with the same display, or
+             vice-versa.
+
+             If this mode is set together with option
+             :attr:`~UBiDiReorderingOption.UBIDI_OPTION_INSERT_MARKS`,
+             some Bidi controls in the source
+             text may be removed and other controls may be added to produce
+             the minimum combination which has the
+             required display.
+             )doc")
       .value("UBIDI_REORDER_INVERSE_NUMBERS_AS_L",
-             UBIDI_REORDER_INVERSE_NUMBERS_AS_L,
-             "Visual to Logical algorithm which handles numbers like L (same "
-             "algorithm as selected by "
-             "*ubidi_set_inverse(True)*.")
+             UBIDI_REORDER_INVERSE_NUMBERS_AS_L, R"doc(
+             Visual to Logical algorithm which handles numbers like L (same
+             algorithm as selected by
+             ubidi_set_inverse(True).
+             )doc")
       .value("UBIDI_REORDER_INVERSE_LIKE_DIRECT",
-             UBIDI_REORDER_INVERSE_LIKE_DIRECT,
-             "Visual to Logical algorithm equivalent to the regular Logical to "
-             "Visual algorithm.")
+             UBIDI_REORDER_INVERSE_LIKE_DIRECT, R"doc(
+             Visual to Logical algorithm equivalent to the regular Logical to
+             Visual algorithm.
+             )doc")
       .value("UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL",
-             UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL,
-             "Inverse Bidi (Visual to Logical) algorithm for the "
-             "*UBIDI_REORDER_NUMBERS_SPECIAL* Bidi algorithm.")
+             UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL, R"doc(
+             Inverse Bidi (Visual to Logical) algorithm for the
+             :attr:`~UBIDI_REORDER_NUMBERS_SPECIAL` Bidi algorithm.
+             )doc")
       .export_values();
 
   //
   // enum UBiDiReorderingOption
   //
-  py::enum_<UBiDiReorderingOption>(
-      m, "UBiDiReorderingOption", py::arithmetic(),
-      "*UBiDiReorderingOption* values indicate which options are specified to "
-      "affect the Bidi algorithm.")
-      .value("UBIDI_OPTION_DEFAULT", UBIDI_OPTION_DEFAULT,
-             "option value for *ubidi_set_reordering_options*: disable all the "
-             "options which can be set with this "
-             "function.")
-      .value("UBIDI_OPTION_INSERT_MARKS", UBIDI_OPTION_INSERT_MARKS,
-             "option bit for *ubidi_set_reordering_options*: insert Bidi marks "
-             "(LRM or RLM) when needed to ensure "
-             "correct result of a reordering to a Logical order.\n\n  "
-             "This option must be set or reset before calling "
-             "*ubidi_set_para*.\n\n  "
-             "This option is significant only with reordering modes which "
-             "generate a result with Logical order, "
-             "specifically:\n\n  "
-             "* UBIDI_REORDER_RUNS_ONLY\n  "
-             "* UBIDI_REORDER_INVERSE_NUMBERS_AS_L\n  "
-             "* UBIDI_REORDER_INVERSE_LIKE_DIRECT\n  "
-             "* UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL\n\n  "
-             "If this option is set in conjunction with reordering mode "
-             "*UBIDI_REORDER_INVERSE_NUMBERS_AS_L* or with "
-             "calling *ubidi_set_inverse(True)*, it implies option "
-             "*UBIDI_INSERT_LRM_FOR_NUMERIC* in calls to function "
-             "*ubidi_write_reordered()*.\n\n  "
-             "For other reordering modes, a minimum number of LRM or RLM "
-             "characters will be added to the source text "
-             "after reordering it so as to ensure round trip, i.e. when "
-             "applying the inverse reordering mode on the "
-             "resulting logical text with removal of Bidi marks (option "
-             "*UBIDI_OPTION_REMOVE_CONTROLS* set before "
-             "calling *ubidi_set_para()* or option "
-             "*UBIDI_REMOVE_BIDI_CONTROLS* in *ubidi_write_reordered*), the "
-             "result will be identical to the source text in the first "
-             "transformation.\n\n  "
-             "This option will be ignored if specified together with option "
-             "*UBIDI_OPTION_REMOVE_CONTROLS*. It "
-             "inhibits option *UBIDI_REMOVE_BIDI_CONTROLS* in calls to "
-             "function *ubidi_write_reordered()* and it "
-             "implies option *UBIDI_INSERT_LRM_FOR_NUMERIC* in calls to "
-             "function *ubidi_write_reordered()* if the "
-             "reordering mode is *UBIDI_REORDER_INVERSE_NUMBERS_AS_L*.")
+  py::enum_<UBiDiReorderingOption>(m, "UBiDiReorderingOption", py::arithmetic(),
+                                   R"doc(
+UBiDiReorderingOption values indicate which options are specified to affect
+the Bidi algorithm.
+      )doc")
+      .value("UBIDI_OPTION_DEFAULT", UBIDI_OPTION_DEFAULT, R"doc(
+             Option value for :func:`ubidi_set_reordering_options`: disable
+             all the options which can be set with this function.
+             )doc")
+      .value("UBIDI_OPTION_INSERT_MARKS", UBIDI_OPTION_INSERT_MARKS, R"doc(
+             Option bit for :func:`ubidi_set_reordering_options`: insert Bidi marks
+             (LRM or RLM) when needed to ensure
+             correct result of a reordering to a Logical order.
+
+             This option must be set or reset before calling
+             :func:`ubidi_set_para`.
+
+             This option is significant only with reordering modes which
+             generate a result with Logical order,
+             specifically:
+
+             - :attr:`~UBiDiReorderingMode.UBIDI_REORDER_RUNS_ONLY`
+             - :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_NUMBERS_AS_L`
+             - :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_LIKE_DIRECT`
+             - :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL`
+
+             If this option is set in conjunction with reordering mode
+             :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_NUMBERS_AS_L`
+             or with calling ubidi_set_inverse(True), it implies option
+             :attr:`~UBIDI_INSERT_LRM_FOR_NUMERIC` in calls to function
+             :func:`ubidi_write_reordered`.
+
+             For other reordering modes, a minimum number of LRM or RLM
+             characters will be added to the source text
+             after reordering it so as to ensure round trip, i.e. when
+             applying the inverse reordering mode on the
+             resulting logical text with removal of Bidi marks (option
+             :attr:`~UBIDI_OPTION_REMOVE_CONTROLS` set before
+             calling :func:`ubidi_set_para` or option
+             :attr:`~UBIDI_REMOVE_BIDI_CONTROLS` in
+             :func:`ubidi_write_reordered`, the
+             result will be identical to the source text in the first
+             transformation.
+
+             This option will be ignored if specified together with option
+             :attr:`~UBIDI_OPTION_REMOVE_CONTROLS`. It
+             inhibits option :attr:`~UBIDI_REMOVE_BIDI_CONTROLS` in calls to
+             function :func:`ubidi_write_reordered` and it
+             implies option :attr:`~UBIDI_INSERT_LRM_FOR_NUMERIC` in calls to
+             function :func:`ubidi_write_reordered` if the
+             reordering mode is
+             :attr:`~UBiDiReorderingMode.UBIDI_REORDER_INVERSE_NUMBERS_AS_L`.
+             )doc")
       .value("UBIDI_OPTION_REMOVE_CONTROLS", UBIDI_OPTION_REMOVE_CONTROLS,
-             "option bit for *ubidi_set_reordering_options*: remove Bidi "
-             "control characters.\n\n  "
-             "This option must be set or reset before calling "
-             "*ubidi_set_para*.\n\n  "
-             "This option nullifies option *UBIDI_OPTION_INSERT_MARKS*. It "
-             "inhibits option "
-             "*UBIDI_INSERT_LRM_FOR_NUMERIC* in calls to function "
-             "*ubidi_write_reordered()* and it implies option "
-             "*UBIDI_REMOVE_BIDI_CONTROLS* in calls to that function.")
-      .value("UBIDI_OPTION_STREAMING", UBIDI_OPTION_STREAMING,
-             "option bit for *ubidi_set_reordering_options*: process the "
-             "output as part of a stream to be "
-             "continued.\n\n  "
-             "This option must be set or reset before calling "
-             "*ubidi_set_para*.\n\n  "
-             "This option specifies that the caller is interested in "
-             "processing large text object in parts. The "
-             "results of the successive calls are expected to be concatenated "
-             "by the caller. Only the call for the "
-             "last part will have this option bit off.\n\n  "
-             "When this option bit is on, *ubidi_set_para()* may process less "
-             "than the full source text in order to "
-             "truncate the text at a meaningful boundary. The caller should "
-             "call *ubidi_get_processed_length()* "
-             "immediately after calling *ubidi_set_para()* in order to "
-             "determine how much of the source text has been "
-             "processed. Source text beyond that length should be resubmitted "
-             "in following calls to *ubidi_set_para*. "
-             "The processed length may be less than the length of the source "
-             "text if a character preceding the last "
-             "character of the source text constitutes a reasonable boundary "
-             "(like a block separator) for text to be "
-             "continued.\n  "
-             "If the last character of the source text constitutes a "
-             "reasonable boundary, the whole text will be "
-             "processed at once.\n  "
-             "If nowhere in the source text there exists such a reasonable "
-             "boundary, the processed length will be "
-             "zero.\n  "
-             "The caller should check for such an occurrence and do one of the "
-             "following:\n\n  "
-             "* submit a larger amount of text with a better chance to include "
-             "a reasonable boundary.\n  "
-             "* resubmit the same text after turning off option "
-             "*UBIDI_OPTION_STREAMING*.\n\n  "
-             "In all cases, this option should be turned off before processing "
-             "the last part of the text.\n\n  "
-             "When the *UBIDI_OPTION_STREAMING* option is used, it is "
-             "recommended to call "
-             "*ubidi_order_paragraphs_ltr()* with argument "
-             "*order_paragraphs_ltr* set to *True* before calling "
-             "*ubidi_set_para* so that later paragraphs may be concatenated to "
-             "previous paragraphs on the right.")
+             R"doc(
+             Option bit for :func:`ubidi_set_reordering_options`: remove Bidi
+             control characters.
+
+             This option must be set or reset before calling
+             :func:`ubidi_set_para`.
+
+             This option nullifies option :attr:`~UBIDI_OPTION_INSERT_MARKS`.
+             It inhibits option
+             :attr:`~UBIDI_INSERT_LRM_FOR_NUMERIC` in calls to function
+             :func:`ubidi_write_reordered` and it implies option
+             :attr:`~UBIDI_REMOVE_BIDI_CONTROLS` in calls to that function.
+             )doc")
+      .value("UBIDI_OPTION_STREAMING", UBIDI_OPTION_STREAMING, R"doc(
+             Option bit for :func:`ubidi_set_reordering_options`: process the
+             output as part of a stream to be continued.
+
+             This option must be set or reset before calling
+             :func:`ubidi_set_para`.
+
+             This option specifies that the caller is interested in
+             processing large text object in parts. The
+             results of the successive calls are expected to be concatenated
+             by the caller. Only the call for the
+             last part will have this option bit off.
+
+             When this option bit is on, :func:`ubidi_set_para` may process less
+             than the full source text in order to
+             truncate the text at a meaningful boundary. The caller should
+             call :func:`ubidi_get_processed_length`
+             immediately after calling :func:`ubidi_set_para` in order to
+             determine how much of the source text has been
+             processed. Source text beyond that length should be resubmitted
+             in following calls to :func:`ubidi_set_para`.
+             The processed length may be less than the length of the source
+             text if a character preceding the last
+             character of the source text constitutes a reasonable boundary
+             (like a block separator) for text to be continued.
+
+             If the last character of the source text constitutes a
+             reasonable boundary, the whole text will be processed at once.
+
+             If nowhere in the source text there exists such a reasonable
+             boundary, the processed length will be zero.
+
+             The caller should check for such an occurrence and do one of the
+             following:
+
+             - Submit a larger amount of text with a better chance to include
+               a reasonable boundary.
+             - Resubmit the same text after turning off option
+               :attr:`UBIDI_OPTION_STREAMING`.
+
+             In all cases, this option should be turned off before processing
+             the last part of the text.
+
+             When the :attr:`UBIDI_OPTION_STREAMING` option is used, it is
+             recommended to call
+             :func:`ubidi_order_paragraphs_ltr` with argument
+             *order_paragraphs_ltr* set to ``True`` before calling
+             :func:`ubidi_set_para` so that later paragraphs may be concatenated to
+             previous paragraphs on the right.
+             )doc")
       .export_values();
 
   //
@@ -247,7 +290,8 @@ void init_ubidi(py::module &m) {
     values with custom values.
 
     See Also:
-        :func:`ubidi_set_class_callback` and :func:`ubidi_get_class_callback`
+        :func:`ubidi_get_class_callback`
+        :func:`ubidi_set_class_callback`
     )doc");
 
   bccb.def(py::init<>(), R"doc(
@@ -260,11 +304,13 @@ void init_ubidi(py::module &m) {
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``UBiDiClassCallback`` instance with a callback
-           function `action` and the user context `context`.
+           Initialize the ``UBiDiClassCallback`` instance with the specified
+           callback function and the user context.
 
-           `action` and `context` must outlive the ``UBiDiClassCallback``
-           object.
+           .. important::
+
+               *action* and *context* must outlive the ``UBiDiClassCallback``
+               object.
            )doc");
 
   bccb.def(
@@ -286,7 +332,7 @@ void init_ubidi(py::module &m) {
       },
       py::return_value_policy::reference,
       R"doc(
-      Get the user context.
+      Return the user context.
       )doc");
 
   //
@@ -296,7 +342,9 @@ void init_ubidi(py::module &m) {
   UBiDi structure.
 
   See Also:
-      :func:`ubidi_open`, :func:`ubidi_open_sized`, and :func:`ubidi_close`
+      :func:`ubidi_close`
+      :func:`ubidi_open_sized`
+      :func:`ubidi_open`
   )doc");
 
   //
@@ -340,7 +388,7 @@ void init_ubidi(py::module &m) {
         return icupy::UBiDiClassCallbackPtr(pair);
       },
       py::arg("bidi"), R"doc(
-      Get the callback function for this ``UBiDi``.
+      Return the callback function for this ``UBiDi``.
 
       See Also:
           :func:`ubidi_set_class_callback`
@@ -351,7 +399,13 @@ void init_ubidi(py::module &m) {
       [](icupy::UBiDiPtr &bidi, UChar32 c) {
         return ubidi_getCustomizedClass(bidi, c);
       },
-      py::arg("bidi"), py::arg("c"));
+      py::arg("bidi"), py::arg("c"), R"doc(
+      Return the Bidi class for the specified code point.
+
+      See Also:
+          :class:`UBiDiClassCallback`
+          :func:`ubidi_set_class_callback`
+      )doc");
 
   m.def(
       "ubidi_get_direction",
@@ -607,35 +661,46 @@ void init_ubidi(py::module &m) {
         return icupy::UBiDiClassCallbackPtr(pair);
       },
       py::arg("bidi"), py::arg("new_fn"), R"doc(
-      Set the callback function to be used with this ``UBiDi``.
+      Set the new callback function to be used with this ``UBiDi``, and return
+      the old callback function.
 
-      `new_fn` must outlive the ``UBiDi`` object.
+      .. important::
+
+          *new_fn* must outlive the ``UBiDi`` object.
 
       See Also:
           :func:`ubidi_get_class_callback`
+          :func:`ubidi_get_customized_class`
 
       Example:
           >>> from icupy import icu
           >>> from icupy.utils import gc
-          >>> def class_callback(options: object, c: int) -> icu.UCharDirection:
-          ...     _ = options  # unused
+          >>> def class_callback(options: dict[str, icu.UCharDirection], c: int) -> icu.UCharDirection:
           ...     if icu.u_isdigit(c):
           ...         return icu.U_LEFT_TO_RIGHT
-          ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
-          ...     return icu.UCharDirection(value)
+          ...     return options["default"]
           ...
           >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
           ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
           ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
-          ...     new_fn = icu.UBiDiClassCallback(class_callback)
+          ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
+          ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
+          ...     custom_classes: dict[str, icu.UCharDirection] = {
+          ...         "default": icu.UCharDirection(value),
+          ...     }
+          ...     context = icu.ConstVoidPtr(custom_classes)
+          ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
           ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
           ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
           ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
+          ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
           ...
           <UCharDirection.U_EUROPEAN_NUMBER: 2>
           <UCharDirection.U_ARABIC_NUMBER: 5>
+          <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
           <UCharDirection.U_LEFT_TO_RIGHT: 0>
           <UCharDirection.U_LEFT_TO_RIGHT: 0>
+          <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
       )doc");
 
   m.def(

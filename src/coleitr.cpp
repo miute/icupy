@@ -10,17 +10,19 @@ void init_coleitr(py::module &m) {
   //
   // class icu::CollationElementIterator
   //
-  py::class_<CollationElementIterator, UObject> cei(m,
-                                                    "CollationElementIterator");
+  py::class_<CollationElementIterator, UObject> cei(
+      m, "CollationElementIterator", R"doc(
+      Iterator to walk through each character of an international string.
+      )doc");
 
   //
   // enum icu::CollationElementIterator::NULLORDER
   //
   py::enum_<decltype(CollationElementIterator::NULLORDER)>(
       cei, "CollationElementIterator", py::arithmetic())
-      .value(
-          "NULLORDER", CollationElementIterator::NULLORDER,
-          "*NULLORDER* indicates that an error has occurred while processing.")
+      .value("NULLORDER", CollationElementIterator::NULLORDER, R"doc(
+             NULLORDER indicates that an error has occurred while processing.
+             )doc")
       .export_values();
 
   //

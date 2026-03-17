@@ -16,31 +16,62 @@ void init_tznames(py::module &m) {
   //
   py::enum_<UTimeZoneNameType>(m, "UTimeZoneNameType", py::arithmetic(),
                                "Constants for time zone display name types.")
-      .value("UTZNM_UNKNOWN", UTZNM_UNKNOWN, "Unknown display name type.")
-      .value("UTZNM_LONG_GENERIC", UTZNM_LONG_GENERIC,
-             "Long display name, such as \"Eastern Time\".")
-      .value("UTZNM_LONG_STANDARD", UTZNM_LONG_STANDARD,
-             "Long display name for standard time, such as \"Eastern Standard "
-             "Time\".")
-      .value("UTZNM_LONG_DAYLIGHT", UTZNM_LONG_DAYLIGHT,
-             "Long display name for daylight saving time, such as \"Eastern "
-             "Daylight Time\".")
-      .value("UTZNM_SHORT_GENERIC", UTZNM_SHORT_GENERIC,
-             "Short display name, such as \"ET\".")
-      .value("UTZNM_SHORT_STANDARD", UTZNM_SHORT_STANDARD,
-             "Short display name for standard time, such as \"EST\".")
-      .value("UTZNM_SHORT_DAYLIGHT", UTZNM_SHORT_DAYLIGHT,
-             "Short display name for daylight saving time, such as \"EDT\".")
+      .value("UTZNM_UNKNOWN", UTZNM_UNKNOWN, R"doc(
+             Unknown display name type.
+             )doc")
+      .value("UTZNM_LONG_GENERIC", UTZNM_LONG_GENERIC, R"doc(
+             Long display name, such as "Eastern Time".
+             )doc")
+      .value("UTZNM_LONG_STANDARD", UTZNM_LONG_STANDARD, R"doc(
+             Long display name for standard time, such as "Eastern Standard
+             Time".
+             )doc")
+      .value("UTZNM_LONG_DAYLIGHT", UTZNM_LONG_DAYLIGHT, R"doc(
+             Long display name for daylight saving time, such as "Eastern
+             Daylight Time".
+             )doc")
+      .value("UTZNM_SHORT_GENERIC", UTZNM_SHORT_GENERIC, R"doc(
+             Short display name, such as "ET".
+             )doc")
+      .value("UTZNM_SHORT_STANDARD", UTZNM_SHORT_STANDARD, R"doc(
+             Short display name for standard time, such as "EST".
+             )doc")
+      .value("UTZNM_SHORT_DAYLIGHT", UTZNM_SHORT_DAYLIGHT, R"doc(
+             Short display name for daylight saving time, such as "EDT".
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .value("UTZNM_EXEMPLAR_LOCATION", UTZNM_EXEMPLAR_LOCATION,
-             "Exemplar location name, such as \"Los Angeles\".")
+      .value("UTZNM_EXEMPLAR_LOCATION", UTZNM_EXEMPLAR_LOCATION, R"doc(
+             Exemplar location name, such as "Los Angeles".
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .export_values();
 
   //
   // class icu::TimeZoneNames
   //
-  py::class_<TimeZoneNames, UObject> tzn(m, "TimeZoneNames");
+  py::class_<TimeZoneNames, UObject> tzn(m, "TimeZoneNames", R"doc(
+      Abstract class representing the time zone display name data model defined
+      in `Unicode's LDML (UTS#35) <http://www.unicode.org/reports/tr35/>`__.
+
+      .. note::
+
+          The methods of this class assume that the time zone ID is already
+          canonicalized. For example, calling a method with the time zone ID
+          "America/Indiana/Indianapolis" may not return the correct result
+          because it is not canonicalized (the canonicalized ID for this time
+          zone is "America/Indianapolis"). For ICU's canonicalized time zone
+          IDs, refer to :meth:`TimeZone.get_canonical_id`.
+
+      Example:
+          >>> from icupy import icu
+          >>> tzn = icu.TimeZoneNames.create_instance(icu.ULOC_US)
+          >>> tzid = "America/Los_Angeles"
+          >>> result = icu.UnicodeString()
+          >>> tzn.get_display_name(tzid, icu.UTZNM_LONG_STANDARD, 0, result)
+          UnicodeString('Pacific Standard Time', text_length=21)
+          >>> tzn.get_display_name(tzid, icu.UTZNM_SHORT_STANDARD, 0, result)
+          UnicodeString('PST', text_length=3)
+      )doc");
 
   tzn.def("__copy__", &TimeZoneNames::clone);
 

@@ -10,9 +10,15 @@ void init_ugender(py::module &m) {
   // enum UGender
   //
   py::enum_<UGender>(m, "UGender", "Genders.")
-      .value("UGENDER_MALE", UGENDER_MALE, "Male gender.")
-      .value("UGENDER_FEMALE", UGENDER_FEMALE, "Female gender.")
-      .value("UGENDER_OTHER", UGENDER_OTHER, "Neutral gender.")
+      .value("UGENDER_MALE", UGENDER_MALE, R"doc(
+             Male gender.
+             )doc")
+      .value("UGENDER_FEMALE", UGENDER_FEMALE, R"doc(
+             Female gender.
+             )doc")
+      .value("UGENDER_OTHER", UGENDER_OTHER, R"doc(
+             Neutral gender.
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

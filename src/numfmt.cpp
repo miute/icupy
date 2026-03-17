@@ -9,22 +9,19 @@ void init_numfmt(py::module & /* m */, py::class_<NumberFormat, Format> &nf) {
   //
   // enum icu::NumberFormat::EAlignmentFields
   //
-  py::enum_<NumberFormat::EAlignmentFields>(
-      nf, "EAlignmentFields", py::arithmetic(),
-      "Alignment Field constants used to construct a *FieldPosition* "
-      "object.\n\n"
-      "Signifies that the position of the integer part or fraction part of a "
-      "formatted number should be returned.\n\n"
-      "Note: as of ICU 4.4, the values in this enum have been extended to "
-      "support identification of all number format "
-      "fields, not just those pertaining to alignment.\n\n"
-      "These constants are provided for backwards compatibility only. Please "
-      "use the C style constants defined in the "
-      "header file unum.h.")
-      .value(
-          "INTEGER_FIELD", NumberFormat::kIntegerField,
-          "These constants are provided for backwards compatibility only.\n\n  "
-          "Please use the constants defined in the header file unum.h.")
+  py::enum_<NumberFormat::EAlignmentFields>(nf, "EAlignmentFields",
+                                            py::arithmetic(), R"doc(
+Alignment Field constants used to construct a :class:`FieldPosition` object.
+
+Signifies that the position of the integer part or fraction part of a
+formatted number should be returned.
+
+.. important::
+
+    These constants are provided for backwards compatibility only. Please
+    use the :class:`UNumberFormatFields` instead.
+      )doc")
+      .value("INTEGER_FIELD", NumberFormat::kIntegerField)
       .value("FRACTION_FIELD", NumberFormat::kFractionField)
       .value("DECIMAL_SEPARATOR_FIELD", NumberFormat::kDecimalSeparatorField)
       .value("EXPONENT_SYMBOL_FIELD", NumberFormat::kExponentSymbolField)
@@ -44,37 +41,51 @@ void init_numfmt(py::module & /* m */, py::class_<NumberFormat, Format> &nf) {
   //
   // enum icu::NumberFormat::ERoundingMode
   //
-  py::enum_<NumberFormat::ERoundingMode>(
-      nf, "ERoundingMode", py::arithmetic(),
-      "Rounding mode.\n\n"
-      "For more detail on rounding modes, see: "
-      "https://unicode-org.github.io/icu/userguide/format_parse/numbers/"
-      "rounding-modes")
-      .value("ROUND_CEILING", NumberFormat::kRoundCeiling,
-             "Round towards positive infinity.")
-      .value("ROUND_FLOOR", NumberFormat::kRoundFloor,
-             "Round towards negative infinity.")
-      .value("ROUND_DOWN", NumberFormat::kRoundDown, "Round towards zero.")
-      .value("ROUND_UP", NumberFormat::kRoundUp, "Round away from zero.")
-      .value("ROUND_HALF_EVEN", NumberFormat::kRoundHalfEven,
-             "Round towards the nearest integer, or towards the nearest even "
-             "integer if equidistant.")
-      .value(
-          "ROUND_HALF_DOWN", NumberFormat::kRoundHalfDown,
-          "Round towards the nearest integer, or towards zero if equidistant.")
-      .value("ROUND_HALF_UP", NumberFormat::kRoundHalfUp,
-             "Round towards the nearest integer, or away from zero if "
-             "equidistant.")
-      .value(
-          "ROUND_UNNECESSARY", NumberFormat::kRoundUnnecessary,
-          "Return *U_FORMAT_INEXACT_ERROR* if number does not format exactly.")
+  py::enum_<NumberFormat::ERoundingMode>(nf, "ERoundingMode", py::arithmetic(),
+                                         R"doc(
+Rounding mode.
+
+For more detail on rounding modes, see:
+https://unicode-org.github.io/icu/userguide/format_parse/numbers/
+rounding-modes
+      )doc")
+      .value("ROUND_CEILING", NumberFormat::kRoundCeiling, R"doc(
+             Round towards positive infinity.
+             )doc")
+      .value("ROUND_FLOOR", NumberFormat::kRoundFloor, R"doc(
+             Round towards negative infinity.
+             )doc")
+      .value("ROUND_DOWN", NumberFormat::kRoundDown, R"doc(
+             Round towards zero.
+             )doc")
+      .value("ROUND_UP", NumberFormat::kRoundUp, R"doc(
+             Round away from zero.
+             )doc")
+      .value("ROUND_HALF_EVEN", NumberFormat::kRoundHalfEven, R"doc(
+             Round towards the nearest integer, or towards the nearest even
+             integer if equidistant.
+             )doc")
+      .value("ROUND_HALF_DOWN", NumberFormat::kRoundHalfDown, R"doc(
+             Round towards the nearest integer, or towards zero if equidistant.
+             )doc")
+      .value("ROUND_HALF_UP", NumberFormat::kRoundHalfUp, R"doc(
+             Round towards the nearest integer, or away from zero if
+             equidistant.
+             )doc")
+      .value("ROUND_UNNECESSARY", NumberFormat::kRoundUnnecessary, R"doc(
+             Return :attr:`~UErrorCode.U_FORMAT_INEXACT_ERROR` if number does
+             not format exactly.
+             )doc")
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
-      .value("ROUND_HALF_ODD", NumberFormat::kRoundHalfOdd,
-             "Rounds ties toward the odd number.")
-      .value("ROUND_HALF_CEILING", NumberFormat::kRoundHalfCeiling,
-             "Rounds ties toward +infinity (U+221E).")
-      .value("ROUND_HALF_FLOOR", NumberFormat::kRoundHalfFloor,
-             "Rounds ties toward -infinity (U+221E).")
+      .value("ROUND_HALF_ODD", NumberFormat::kRoundHalfOdd, R"doc(
+             Rounds ties toward the odd number.
+             )doc")
+      .value("ROUND_HALF_CEILING", NumberFormat::kRoundHalfCeiling, R"doc(
+             Rounds ties toward +∞.
+             )doc")
+      .value("ROUND_HALF_FLOOR", NumberFormat::kRoundHalfFloor, R"doc(
+             Rounds ties toward -∞.
+             )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
       .export_values();
 

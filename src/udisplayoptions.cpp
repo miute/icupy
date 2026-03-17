@@ -11,37 +11,38 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsCapitalization>(
       m, "UDisplayOptionsCapitalization", py::arithmetic(),
-      "Represents all the capitalization options.")
+      "Represent all the capitalization options.")
       .value("UDISPOPT_CAPITALIZATION_UNDEFINED",
-             UDISPOPT_CAPITALIZATION_UNDEFINED,
-             "A possible setting for Capitalization. "
-             "The capitalization context to be used is unknown (this is the "
-             "default value).")
+             UDISPOPT_CAPITALIZATION_UNDEFINED, R"doc(
+             A possible setting for Capitalization.
+
+             The capitalization context to be used is unknown (this is the
+             default value).
+             )doc")
       .value("UDISPOPT_CAPITALIZATION_BEGINNING_OF_SENTENCE",
-             UDISPOPT_CAPITALIZATION_BEGINNING_OF_SENTENCE,
-             "The capitalization context if a date, date symbol or display "
-             "name is to be "
-             "formatted with capitalization appropriate for the beginning of a "
-             "sentence.")
+             UDISPOPT_CAPITALIZATION_BEGINNING_OF_SENTENCE, R"doc(
+             The capitalization context if a date, date symbol or display name
+             is to be formatted with capitalization appropriate for the
+             beginning of a sentence.
+             )doc")
       .value("UDISPOPT_CAPITALIZATION_MIDDLE_OF_SENTENCE",
-             UDISPOPT_CAPITALIZATION_MIDDLE_OF_SENTENCE,
-             "The capitalization context if a date, date symbol or display "
-             "name is to be "
-             "formatted with capitalization appropriate for the middle of a "
-             "sentence.")
+             UDISPOPT_CAPITALIZATION_MIDDLE_OF_SENTENCE, R"doc(
+             The capitalization context if a date, date symbol or display name
+             is to be formatted with capitalization appropriate for the middle
+             of a sentence.
+             )doc")
       .value("UDISPOPT_CAPITALIZATION_STANDALONE",
-             UDISPOPT_CAPITALIZATION_STANDALONE,
-             "The capitalization context if a date, date symbol or display "
-             "name is to be "
-             "formatted with capitalization appropriate for stand-alone usage "
-             "such as an "
-             "isolated name on a calendar page.")
+             UDISPOPT_CAPITALIZATION_STANDALONE, R"doc(
+             The capitalization context if a date, date symbol or display name
+             is to be formatted with capitalization appropriate for stand-alone
+             usage such as an isolated name on a calendar page.
+             )doc")
       .value("UDISPOPT_CAPITALIZATION_UI_LIST_OR_MENU",
-             UDISPOPT_CAPITALIZATION_UI_LIST_OR_MENU,
-             "The capitalization context if a date, date symbol or display "
-             "name is to be "
-             "formatted with capitalization appropriate for a user-interface "
-             "list or menu item.")
+             UDISPOPT_CAPITALIZATION_UI_LIST_OR_MENU, R"doc(
+             The capitalization context if a date, date symbol or display name
+             is to be formatted with capitalization appropriate for a
+             user-interface list or menu item.
+             )doc")
       .export_values();
 
   //
@@ -49,18 +50,24 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsDisplayLength>(m, "UDisplayOptionsDisplayLength",
                                           py::arithmetic(),
-                                          "Represents all the display lengths.")
+                                          "Represent all the display lengths.")
       .value("UDISPOPT_DISPLAY_LENGTH_UNDEFINED",
-             UDISPOPT_DISPLAY_LENGTH_UNDEFINED,
-             "A possible setting for DisplayLength. "
-             "The DisplayLength context to be used is unknown (this is the "
-             "default value).")
+             UDISPOPT_DISPLAY_LENGTH_UNDEFINED, R"doc(
+             A possible setting for DisplayLength.
+
+             The DisplayLength context to be used is unknown (this is the
+             default value).
+             )doc")
       .value("UDISPOPT_DISPLAY_LENGTH_FULL", UDISPOPT_DISPLAY_LENGTH_FULL,
-             "Uses full names when generating a locale name, "
-             "e.g. \"United States\" for US.")
+             R"doc(
+             Uses full names when generating a locale name, e.g.
+             "United States" for US.
+             )doc")
       .value("UDISPOPT_DISPLAY_LENGTH_SHORT", UDISPOPT_DISPLAY_LENGTH_SHORT,
-             "Use short names when generating a locale name, "
-             "e.g. \"U.S.\" for US.")
+             R"doc(
+             Use short names when generating a locale name, e.g.
+             "U.S." for US.
+             )doc")
       .export_values();
 
   //
@@ -68,12 +75,14 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsGrammaticalCase>(
       m, "UDisplayOptionsGrammaticalCase", py::arithmetic(),
-      "Represents all the grammatical cases that are supported by CLDR.")
+      "Represent all the grammatical cases that are supported by CLDR.")
       .value("UDISPOPT_GRAMMATICAL_CASE_UNDEFINED",
-             UDISPOPT_GRAMMATICAL_CASE_UNDEFINED,
-             "A possible setting for GrammaticalCase. "
-             "The grammatical case context to be used is unknown (this is the "
-             "default value).")
+             UDISPOPT_GRAMMATICAL_CASE_UNDEFINED, R"doc(
+             A possible setting for GrammaticalCase.
+
+             The grammatical case context to be used is unknown (this is the
+             default value).
+             )doc")
       .value("UDISPOPT_GRAMMATICAL_CASE_ABLATIVE",
              UDISPOPT_GRAMMATICAL_CASE_ABLATIVE)
       .value("UDISPOPT_GRAMMATICAL_CASE_ACCUSATIVE",
@@ -109,19 +118,24 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsNameStyle>(m, "UDisplayOptionsNameStyle",
                                       py::arithmetic(),
-                                      "Represents all the dialect handlings.")
+                                      "Represent all the dialect handlings.")
       .value("UDISPOPT_NAME_STYLE_UNDEFINED", UDISPOPT_NAME_STYLE_UNDEFINED,
-             "A possible setting for NameStyle. "
-             "The NameStyle context to be used is unknown (this is the default "
-             "value).")
+             R"doc(
+             A possible setting for NameStyle.
+
+             The NameStyle context to be used is unknown (this is the default
+             value).
+             )doc")
       .value("UDISPOPT_NAME_STYLE_STANDARD_NAMES",
-             UDISPOPT_NAME_STYLE_STANDARD_NAMES,
-             "Use standard names when generating a locale name, "
-             "e.g. en_GB displays as 'English (United Kingdom)'.")
+             UDISPOPT_NAME_STYLE_STANDARD_NAMES, R"doc(
+             Use standard names when generating a locale name, e.g. en_GB
+             displays as "English (United Kingdom)".
+             )doc")
       .value("UDISPOPT_NAME_STYLE_DIALECT_NAMES",
-             UDISPOPT_NAME_STYLE_DIALECT_NAMES,
-             "Use dialect names, when generating a locale name, "
-             "e.g. en_GB displays as 'British English'.")
+             UDISPOPT_NAME_STYLE_DIALECT_NAMES, R"doc(
+             Use dialect names, when generating a locale name, e.g. en_GB
+             displays as "British English".
+             )doc")
       .export_values();
 
   //
@@ -129,11 +143,14 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsNounClass>(
       m, "UDisplayOptionsNounClass", py::arithmetic(),
-      "Represents all the grammatical noun classes that are supported by CLDR.")
+      "Represent all the grammatical noun classes that are supported by CLDR.")
       .value("UDISPOPT_NOUN_CLASS_UNDEFINED", UDISPOPT_NOUN_CLASS_UNDEFINED,
-             "A possible setting for NounClass. "
-             "The noun class case context to be used is unknown (this is the "
-             "default value).")
+             R"doc(
+             A possible setting for NounClass.
+
+             The noun class case context to be used is unknown (this is the
+             default value).
+             )doc")
       .value("UDISPOPT_NOUN_CLASS_OTHER", UDISPOPT_NOUN_CLASS_OTHER)
       .value("UDISPOPT_NOUN_CLASS_NEUTER", UDISPOPT_NOUN_CLASS_NEUTER)
       .value("UDISPOPT_NOUN_CLASS_FEMININE", UDISPOPT_NOUN_CLASS_FEMININE)
@@ -147,17 +164,19 @@ void init_udisplayoptions(py::module &m) {
   //
   // enum UDisplayOptionsPluralCategory
   //
-  py::enum_<UDisplayOptionsPluralCategory>(
-      m, "UDisplayOptionsPluralCategory", py::arithmetic(),
-      "Standard CLDR plural form/category constants. "
-      "See "
-      "https://www.unicode.org/reports/tr35/"
-      "tr35-numbers.html#Language_Plural_Rules")
+  py::enum_<UDisplayOptionsPluralCategory>(m, "UDisplayOptionsPluralCategory",
+                                           py::arithmetic(), R"doc(
+Standard CLDR plural form/category constants.
+
+See https://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
+      )doc")
       .value("UDISPOPT_PLURAL_CATEGORY_UNDEFINED",
-             UDISPOPT_PLURAL_CATEGORY_UNDEFINED,
-             "A possible setting for PluralCategory. "
-             "The plural category case context to be used is unknown (this is "
-             "the default value).")
+             UDISPOPT_PLURAL_CATEGORY_UNDEFINED, R"doc(
+             A possible setting for PluralCategory.
+
+             The plural category case context to be used is unknown (this is
+             the default value).
+             )doc")
       .value("UDISPOPT_PLURAL_CATEGORY_ZERO", UDISPOPT_PLURAL_CATEGORY_ZERO)
       .value("UDISPOPT_PLURAL_CATEGORY_ONE", UDISPOPT_PLURAL_CATEGORY_ONE)
       .value("UDISPOPT_PLURAL_CATEGORY_TWO", UDISPOPT_PLURAL_CATEGORY_TWO)
@@ -171,20 +190,25 @@ void init_udisplayoptions(py::module &m) {
   //
   py::enum_<UDisplayOptionsSubstituteHandling>(
       m, "UDisplayOptionsSubstituteHandling", py::arithmetic(),
-      "Represents all the substitute handling.")
+      "Represent all the substitute handling.")
       .value("UDISPOPT_SUBSTITUTE_HANDLING_UNDEFINED",
-             UDISPOPT_SUBSTITUTE_HANDLING_UNDEFINED,
-             "A possible setting for SubstituteHandling. "
-             "The SubstituteHandling context to be used is unknown (this is "
-             "the default value).")
+             UDISPOPT_SUBSTITUTE_HANDLING_UNDEFINED, R"doc(
+             A possible setting for SubstituteHandling.
+
+             The SubstituteHandling context to be used is unknown (this is the
+             default value).
+             )doc")
       .value("UDISPOPT_SUBSTITUTE_HANDLING_SUBSTITUTE",
-             UDISPOPT_SUBSTITUTE_HANDLING_SUBSTITUTE,
-             "Returns a fallback value (e.g., the input code) when no data is "
-             "available. "
-             "This is the default behaviour.")
+             UDISPOPT_SUBSTITUTE_HANDLING_SUBSTITUTE, R"doc(
+             Returns a fallback value (e.g., the input code) when no data is
+             available.
+
+             This is the default behaviour.
+             )doc")
       .value("UDISPOPT_SUBSTITUTE_HANDLING_NO_SUBSTITUTE",
-             UDISPOPT_SUBSTITUTE_HANDLING_NO_SUBSTITUTE,
-             "Returns a null value when no data is available.")
+             UDISPOPT_SUBSTITUTE_HANDLING_NO_SUBSTITUTE, R"doc(
+             Returns a null value when no data is available.
+             )doc")
       .export_values();
 
   //

@@ -11,29 +11,44 @@ void init_measfmt(py::module &m) {
   //
   // enum UMeasureFormatWidth
   //
-  py::enum_<UMeasureFormatWidth>(
-      m, "UMeasureFormatWidth", py::arithmetic(),
-      "Constants for various widths.\n\n"
-      "There are 4 widths: Wide, Short, Narrow, Numeric. For example, for "
-      "English, when formatting \"3 hours\" Wide is "
-      "\"3 hours\"; short is \"3 hrs\"; narrow is \"3h\"; formatting \"3 hours "
-      "17 minutes\" as numeric give \"3:17\"")
-      .value("UMEASFMT_WIDTH_WIDE", UMEASFMT_WIDTH_WIDE,
-             "Spell out measure units.")
-      .value("UMEASFMT_WIDTH_SHORT", UMEASFMT_WIDTH_SHORT,
-             "Abbreviate measure units.")
-      .value("UMEASFMT_WIDTH_NARROW", UMEASFMT_WIDTH_NARROW,
-             "Use symbols for measure units when possible.")
-      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC,
-             "Completely omit measure units when possible.\n\n  "
-             "For example, format '5 hours, 37 minutes' as '5:37'")
+  py::enum_<UMeasureFormatWidth>(m, "UMeasureFormatWidth", py::arithmetic(),
+                                 R"doc(
+Constants for various widths.
+
+There are 4 widths: Wide, Short, Narrow, Numeric. For example, for English,
+when formatting "3 hours" Wide is "3 hours"; short is "3 hrs";
+narrow is "3h"; formatting "3 hours 17 minutes" as numeric give "3:17"
+      )doc")
+      .value("UMEASFMT_WIDTH_WIDE", UMEASFMT_WIDTH_WIDE, R"doc(
+             Spell out measure units.
+             )doc")
+      .value("UMEASFMT_WIDTH_SHORT", UMEASFMT_WIDTH_SHORT, R"doc(
+             Abbreviate measure units.
+             )doc")
+      .value("UMEASFMT_WIDTH_NARROW", UMEASFMT_WIDTH_NARROW, R"doc(
+             Use symbols for measure units when possible.
+             )doc")
+      .value("UMEASFMT_WIDTH_NUMERIC", UMEASFMT_WIDTH_NUMERIC, R"doc(
+             Completely omit measure units when possible.
+
+             For example, format "5 hours, 37 minutes" as "5:37".
+             )doc")
       .export_values();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   //
   // class icu::MeasureFormat
   //
-  py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat");
+  py::class_<MeasureFormat, Format> fmt(m, "MeasureFormat", R"doc(
+      Format measures.
+
+      .. important::
+
+          Use :class:`number.NumberFormatter` and
+          :class:`number.NumberRangeFormatter`
+          instead of this class for new code. Although not deprecated, this
+          class is provided for backwards compatibility only.
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   fmt.def(py::init([](const icupy::LocaleVariant &locale,

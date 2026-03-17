@@ -11,10 +11,17 @@ void init_ucnv(py::module &m) {
   //
   // enum UConverterPlatform
   //
-  py::enum_<UConverterPlatform>(
-      m, "UConverterPlatform", py::arithmetic(),
-      "Enum for specifying which platform a converter ID refers to.\n\n"
-      "The use of platform/CCSID is not recommended. See *ucnv_open_ccsid()*.")
+  py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic(),
+                                R"doc(
+Enum for specifying which platform a converter ID refers to.
+
+The use of platform/CCSID is not recommended.
+
+See Also:
+    :func:`ucnv_get_ccsid`
+    :func:`ucnv_get_platform`
+    :func:`ucnv_open_ccsid`
+      )doc")
       .value("UCNV_UNKNOWN", UCNV_UNKNOWN)
       .value("UCNV_IBM", UCNV_IBM)
       .export_values();
@@ -22,8 +29,12 @@ void init_ucnv(py::module &m) {
   //
   // enum UConverterType
   //
-  py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(),
-                            "Enum for specifying basic types of converters.")
+  py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(), R"doc(
+Enum for specifying basic types of converters.
+
+See Also:
+    :func:`ucnv_get_type`
+      )doc")
       .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
       .value("UCNV_SBCS", UCNV_SBCS)
       .value("UCNV_DBCS", UCNV_DBCS)
@@ -68,16 +79,22 @@ void init_ucnv(py::module &m) {
   // enum UConverterUnicodeSet
   //
   py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic(),
-                                  "Selectors for Unicode sets that can be "
-                                  "returned by *ucnv_get_unicode_set()*.")
-      .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET,
-             "Select the set of roundtrippable Unicode code points.")
+                                  R"doc(
+Selectors for Unicode sets that can be returned by
+:func:`ucnv_get_unicode_set`.
+      )doc")
+      .value("UCNV_ROUNDTRIP_SET", UCNV_ROUNDTRIP_SET, R"doc(
+             Select the set of round-trippable Unicode code points.
+             )doc")
       .value("UCNV_ROUNDTRIP_AND_FALLBACK_SET", UCNV_ROUNDTRIP_AND_FALLBACK_SET,
-             "Select the set of Unicode code points with roundtrip or fallback "
-             "mappings.")
-      .value("UCNV_SET_COUNT", UCNV_SET_COUNT,
-             "**Deprecated:** ICU 58 The numeric value may change over time, "
-             "see ICU ticket #12420.")
+             R"doc(
+             Select the set of Unicode code points with round-trip or fallback
+             mappings.
+             )doc")
+      .value("UCNV_SET_COUNT", UCNV_SET_COUNT, R"doc(
+             Deprecated: ICU 58 The numeric value may change over time,
+             see ICU ticket #12420.
+             )doc")
       .export_values();
 
   //
@@ -94,16 +111,38 @@ void init_ucnv(py::module &m) {
         }
         return std::make_unique<icupy::UConverterPtr>(p);
       },
-      py::arg("cnv"));
+      py::arg("cnv"), R"doc(
+      Return a copy of the unicode converter.
+
+      See Also:
+          :func:`ucnv_close`
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
   m.def(
       "ucnv_close",
       [](icupy::UConverterPtr &converter) { ucnv_close(converter); },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Delete the unicode converter and releases resources associated with just
+      this instance.
+
+      See Also:
+          :func:`ucnv_clone`
+          :func:`ucnv_open_ccsid`
+          :func:`ucnv_open_package`
+          :func:`ucnv_open`
+      )doc");
 
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"),
-        py::arg("name2"));
+        py::arg("name2"), R"doc(
+      Do a fuzzy compare of two converter/alias names.
+
+      The comparison is case-insensitive, ignores leading zeroes if they are
+      not followed by further digits, and ignores all but letters and digits.
+      Thus the strings "UTF-8", "utf_8", "u*T@f08" and "Utf 8" are exactly
+      equivalent. See section 1.4, Charset Alias Matching in Unicode Technical
+      Standard #22 at http://www.unicode.org/reports/tr22/.
+      )doc");
 
   m.def(
       "ucnv_count_aliases",
@@ -115,11 +154,26 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("alias"));
+      py::arg("alias"), R"doc(
+      Return the number of aliases for the specified converter or alias name.
 
-  m.def("ucnv_count_available", &ucnv_countAvailable);
+      See Also:
+          :func:`ucnv_get_alias`
+      )doc");
 
-  m.def("ucnv_count_standards", &ucnv_countStandards);
+  m.def("ucnv_count_available", &ucnv_countAvailable, R"doc(
+      Return the number of available converters.
+
+      See Also:
+          :func:`ucnv_get_available_name`
+      )doc");
+
+  m.def("ucnv_count_standards", &ucnv_countStandards, R"doc(
+      Return the number of standards associated to converter names.
+
+      See Also:
+          :func:`ucnv_get_standard`
+      )doc");
 
   m.def(
       "ucnv_detect_unicode_signature",
@@ -137,7 +191,12 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("source"), py::arg("source_length") = -1);
+      py::arg("source"), py::arg("source_length") = -1, R"doc(
+      Detect Unicode signature byte sequences at the start of the byte stream
+      and returns the charset name of the indicated Unicode charset.
+
+      ``None`` is returned when no Unicode signature is recognized.
+      )doc");
 
   m.def(
       "ucnv_fix_file_separator",
@@ -151,9 +210,14 @@ void init_ucnv(py::module &m) {
         ucnv_fixFileSeparator(cnv, result.data(), result.size());
         return result;
       },
-      py::arg("cnv"), py::arg("source"), py::arg("source_len") = -1);
+      py::arg("cnv"), py::arg("source"), py::arg("source_len") = -1, R"doc(
+      Fix mapping errors for backslash characters in specific encodings such as
+      Shift-JIS.
+      )doc");
 
-  m.def("ucnv_flush_cache", &ucnv_flushCache);
+  m.def("ucnv_flush_cache", &ucnv_flushCache, R"doc(
+      Free up memory occupied by unused, cached converter shared data.
+      )doc");
 
   m.def(
       "ucnv_get_alias",
@@ -165,7 +229,12 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("alias"), py::arg("n"));
+      py::arg("alias"), py::arg("n"), R"doc(
+      Return the name of the alias at the specified index of alias list.
+
+      See Also:
+          :func:`ucnv_count_aliases`
+      )doc");
 
   m.def(
       "ucnv_get_aliases",
@@ -184,9 +253,17 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("alias"));
+      py::arg("alias"), R"doc(
+      Return the list of alias names for the specified alias.
+      )doc");
 
-  m.def("ucnv_get_available_name", &ucnv_getAvailableName, py::arg("n"));
+  m.def("ucnv_get_available_name", &ucnv_getAvailableName, py::arg("n"), R"doc(
+      Return the canonical converter name of the specified converter from a
+      list of all available converters.
+
+      See Also:
+          :func:`ucnv_count_available`
+      )doc");
 
   m.def(
       "ucnv_get_canonical_name",
@@ -200,7 +277,12 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("alias"), py::arg("standard"));
+      py::arg("alias"), py::arg("standard"), R"doc(
+      Return the internal canonical converter name of the tagged alias.
+
+      See Also:
+          :func:`ucnv_get_standard_name`
+      )doc");
 
   m.def(
       "ucnv_get_ccsid",
@@ -212,9 +294,28 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Return a codepage number associated with the converter.
 
-  m.def("ucnv_get_default_name", &ucnv_getDefaultName);
+      .. important::
+
+          The use of CCSIDs is not recommended because it is limited to only
+          two platforms in principle and only one
+          (:attr:`~UConverterPlatform.UCNV_IBM`) in the current ICU converter
+          API. Also, CCSIDs are insufficient to identify IBM Unicode conversion
+          tables precisely. For more details see :func:`ucnv_open_ccsid`.
+
+      See Also:
+          :func:`ucnv_get_platform`
+          :func:`ucnv_open_ccsid`
+      )doc");
+
+  m.def("ucnv_get_default_name", &ucnv_getDefaultName, R"doc(
+      Return the current default converter name.
+
+      See Also:
+          :func:`ucnv_set_default_name`
+      )doc");
 
   m.def(
       "ucnv_get_display_name",
@@ -232,7 +333,16 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("converter"), py::arg("display_locale"));
+      py::arg("converter"), py::arg("display_locale"), R"doc(
+      Return the display name of the converter passed in based on the locale
+      passed in.
+
+      If the locale does not contain a display name, return the internal ASCII
+      name.
+
+      See Also:
+          :func:`ucnv_get_name`
+      )doc");
 
   m.def(
       "ucnv_get_from_ucall_back",
@@ -251,7 +361,7 @@ void init_ucnv(py::module &m) {
       },
       py::arg("converter"),
       R"doc(
-      Get the current From Unicode callback function.
+      Return the current From Unicode callback function.
 
       See Also:
           :func:`ucnv_set_from_ucall_back`
@@ -267,7 +377,12 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Return the internal, canonical name of the converter.
+
+      See Also:
+          :func:`ucnv_get_display_name`
+      )doc");
 
   m.def(
       "ucnv_get_platform",
@@ -279,7 +394,9 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Return a codepage platform associated with the converter.
+      )doc");
 
   m.def(
       "ucnv_get_standard",
@@ -291,7 +408,12 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("n"));
+      py::arg("n"), R"doc(
+      Return the name of the standard at the specified index of standard list.
+
+      See Also:
+          :func:`ucnv_count_standards`
+      )doc");
 
   m.def(
       "ucnv_get_standard_name",
@@ -305,7 +427,9 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("name"), py::arg("standard"));
+      py::arg("name"), py::arg("standard"), R"doc(
+      Return the standard converter name.
+      )doc");
 
   m.def(
       "ucnv_get_subst_chars",
@@ -319,7 +443,13 @@ void init_ucnv(py::module &m) {
         }
         return py::bytes(sub_chars, length);
       },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Return the substitution characters.
+
+      See Also:
+          :func:`ucnv_set_subst_chars`
+          :func:`ucnv_set_subst_string`
+      )doc");
 
   m.def(
       "ucnv_get_to_ucall_back",
@@ -338,7 +468,7 @@ void init_ucnv(py::module &m) {
       },
       py::arg("converter"),
       R"doc(
-      Get the current To Unicode callback function.
+      Return the current To Unicode callback function.
 
       See Also:
           :func:`ucnv_set_to_ucall_back`
@@ -349,7 +479,9 @@ void init_ucnv(py::module &m) {
       [](const icupy::UConverterPtr &converter) {
         return ucnv_getType(converter);
       },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Return the type of the converter.
+      )doc");
 
   m.def(
       "ucnv_get_unicode_set",
@@ -361,14 +493,23 @@ void init_ucnv(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("cnv"), py::arg("set_fill_in"), py::arg("which_set"));
+      py::arg("cnv"), py::arg("set_fill_in"), py::arg("which_set"), R"doc(
+      Return the set of Unicode code points that can be converted by an ICU
+      converter.
+
+      See Also:
+          :meth:`UnicodeSet.from_uset`
+      )doc");
 
   m.def(
       "ucnv_is_ambiguous",
       [](const icupy::UConverterPtr &cnv) -> py::bool_ {
         return ucnv_isAmbiguous(cnv);
       },
-      py::arg("cnv"));
+      py::arg("cnv"), R"doc(
+      Return ``True`` if the converter contains ambiguous mapping of the same
+      character, ``False`` otherwise.
+      )doc");
 
   m.def(
       "ucnv_is_fixed_width",
@@ -380,7 +521,9 @@ void init_ucnv(py::module &m) {
         }
         return result;
       },
-      py::arg("cnv"));
+      py::arg("cnv"), R"doc(
+      Return ``True`` if the converter is fixed-width, ``False`` otherwise.
+      )doc");
 
   m.def(
       "ucnv_open",
@@ -392,16 +535,28 @@ void init_ucnv(py::module &m) {
         }
         return std::make_unique<icupy::UConverterPtr>(p);
       },
-      py::arg("converter_name"));
+      py::arg("converter_name"), R"doc(
+      Create a ``UConverter`` object with the name of a coded character set.
 
-  m.def("ucnv_open_all_names", []() {
-    ErrorCode error_code;
-    auto p = ucnv_openAllNames(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return std::make_unique<icupy::UEnumerationPtr>(p);
-  });
+      See Also:
+          :func:`ucnv_close`
+      )doc");
+
+  m.def(
+      "ucnv_open_all_names",
+      []() {
+        ErrorCode error_code;
+        auto p = ucnv_openAllNames(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return std::make_unique<icupy::UEnumerationPtr>(p);
+      },
+      R"doc(
+      Return a ``UEnumeration`` to enumerate all of the canonical converter
+      names, as per the alias file, regardless of the ability to open each
+      converter.
+      )doc");
 
   m.def(
       "ucnv_open_ccsid",
@@ -413,7 +568,15 @@ void init_ucnv(py::module &m) {
         }
         return std::make_unique<icupy::UConverterPtr>(p);
       },
-      py::arg("codepage"), py::arg("platform"));
+      py::arg("codepage"), py::arg("platform"), R"doc(
+      Create a ``UConverter`` object from a CCSID number and platform pair.
+
+      Currently, the only *platform* supported in the ICU converter API is
+      :attr:`~UConverterPlatform.UCNV_IBM`.
+
+      See Also:
+          :func:`ucnv_close`
+      )doc");
 
   m.def(
       "ucnv_open_package",
@@ -426,7 +589,12 @@ void init_ucnv(py::module &m) {
         }
         return std::make_unique<icupy::UConverterPtr>(p);
       },
-      py::arg("package_name"), py::arg("converter_name"));
+      py::arg("package_name"), py::arg("converter_name"), R"doc(
+      Create a ``UConverter`` object from a package name and converter name.
+
+      See Also:
+          :func:`ucnv_close`
+      )doc");
 
   m.def(
       "ucnv_open_standard_names",
@@ -439,36 +607,72 @@ void init_ucnv(py::module &m) {
         }
         return std::make_unique<icupy::UEnumerationPtr>(p);
       },
-      py::arg("conv_name"), py::arg("standard"));
+      py::arg("conv_name"), py::arg("standard"), R"doc(
+      Return a new ``UEnumeration`` for enumerating all the alias names for
+      the specified converter that are recognized by a standard.
+      )doc");
 
   m.def(
       "ucnv_reset",
       [](icupy::UConverterPtr &converter) { ucnv_reset(converter); },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Reset the state of a converter to the default state.
+
+      This is used in the case of an error, to restart a conversion from a
+      known default state. It will also empty the internal output buffers.
+      )doc");
 
   m.def(
       "ucnv_reset_from_unicode",
       [](icupy::UConverterPtr &converter) { ucnv_resetFromUnicode(converter); },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Reset the from-Unicode part of a converter state to the default state.
+
+      This is used in the case of an error to restart a conversion from Unicode
+      to a known default state. It will also empty the internal output buffers
+      used for the conversion from Unicode codepoints.
+      )doc");
 
   m.def(
       "ucnv_reset_to_unicode",
       [](icupy::UConverterPtr &converter) { ucnv_resetToUnicode(converter); },
-      py::arg("converter"));
+      py::arg("converter"), R"doc(
+      Reset the to-Unicode part of a converter state to the default state.
+
+      This is used in the case of an error to restart a conversion to Unicode
+      to a known default state. It will also empty the internal output buffers
+      used for the conversion to Unicode codepoints.
+      )doc");
 
   m.def(
       "ucnv_set_default_name",
       [](std::optional<const std::string> &name) {
         ucnv_setDefaultName(name ? name->data() : nullptr);
       },
-      py::arg("name"));
+      py::arg("name"), R"doc(
+      Set the default converter name.
+
+      .. important::
+
+          This function is not thread safe.
+          DO NOT call this function when ANY ICU function is being used from
+          more than one thread.
+      )doc");
 
   m.def(
       "ucnv_set_fallback",
       [](icupy::UConverterPtr &cnv, py::bool_ uses_fallback) {
         ucnv_setFallback(cnv, uses_fallback);
       },
-      py::arg("cnv"), py::arg("uses_fallback"));
+      py::arg("cnv"), py::arg("uses_fallback"), R"doc(
+      Set the converter to use fallback mappings or not.
+
+      Regardless of this flag, the converter will always use fallbacks from
+      Unicode Private Use code points, as well as reverse fallbacks (to
+      Unicode). For details see
+      `.ucm File Format <https://unicode-org.github.io/icu/userguide/conversion/data.html#ucm-file-format>`__
+      in the "Conversion Data" chapter of the ICU User Guide.
+      )doc");
 
   m.def(
       "ucnv_set_from_ucall_back",
@@ -502,10 +706,13 @@ void init_ucnv(py::module &m) {
         return icupy::UConverterFromUCallbackPtr(old_action, old_context);
       },
       py::arg("converter"), py::arg("new_action"), R"doc(
-      Set the From Unicode callback function used when this ``UConverter``
-      founds an illegal or invalid Unicode sequence.
+      Set the new From Unicode callback function to be used when this
+      converter finds an illegal or invalid Unicode sequence, and return
+      the old callback function.
 
-      `new_action` must outlive the ``UConverter`` object.
+      .. important::
+
+          *new_action* must outlive the ``UConverter`` object.
 
       See Also:
           :func:`ucnv_get_from_ucall_back`
@@ -552,7 +759,21 @@ void init_ucnv(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("converter"), py::arg("sub_chars"), py::arg("length") = -1);
+      py::arg("converter"), py::arg("sub_chars"), py::arg("length") = -1,
+      R"doc(
+      Set the substitution chars when converting from unicode to a codepage.
+
+      The substitution is specified as a string of 1-4 bytes. The *sub_chars*
+      must represent a single character. The caller needs to know the byte
+      sequence of a valid character in the converter's charset. For some
+      converters, for example some ISO 2022 variants, only single-byte
+      substitution characters may be supported. The newer
+      :func:`ucnv_set_subst_string` relaxes these limitations.
+
+      See Also:
+          :func:`ucnv_get_subst_chars`
+          :func:`ucnv_set_subst_string`
+      )doc");
 
   m.def(
       "ucnv_set_subst_string",
@@ -564,7 +785,26 @@ void init_ucnv(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("converter"), py::arg("s"), py::arg("length") = -1);
+      py::arg("converter"), py::arg("s"), py::arg("length") = -1, R"doc(
+      Set a substitution string for converting from Unicode to a charset.
+
+      The caller need not know the charset byte sequence for each charset.
+
+      Unlike :func:`ucnv_set_subst_chars` which is designed to set a charset
+      byte sequence for a single character, this function takes a Unicode
+      string with zero, one or more characters, and immediately verifies that
+      the string can be converted to the charset. If not, or if the result is
+      too long (more than 32 bytes as of ICU 3.6), then the function returns
+      with an error accordingly.
+
+      Also unlike :func:`ucnv_set_subst_chars`, this function works for
+      stateful charsets by converting on the fly at the point of substitution
+      rather than setting a fixed byte sequence.
+
+      See Also:
+          :func:`ucnv_get_subst_chars`
+          :func:`ucnv_set_subst_chars`
+      )doc");
 
   m.def(
       "ucnv_set_to_ucall_back",
@@ -598,10 +838,13 @@ void init_ucnv(py::module &m) {
         return icupy::UConverterToUCallbackPtr(old_action, old_context);
       },
       py::arg("converter"), py::arg("new_action"), R"doc(
-      Set the To Unicode callback function used when this ``UConverter``
-      founds an illegal or invalid codepage sequence.
+      Set the new To Unicode callback function to be used when this
+      converter finds an illegal or invalid codepage sequence, and return
+      the old callback function.
 
-      `new_action` must outlive the ``UConverter`` object.
+      .. important::
+
+          *new_action* must outlive the ``UConverter`` object.
 
       See Also:
           :func:`ucnv_get_to_ucall_back`
@@ -639,7 +882,13 @@ void init_ucnv(py::module &m) {
       [](const icupy::UConverterPtr &cnv) -> py::bool_ {
         return ucnv_usesFallback(cnv);
       },
-      py::arg("cnv"));
+      py::arg("cnv"), R"doc(
+      Return ``True`` if the converter uses fallback mappings, ``False``
+      otherwise.
+
+      See Also:
+          :func:`ucnv_set_fallback`
+      )doc");
 
   m.attr("UCNV_LOCALE_OPTION_STRING") = UCNV_LOCALE_OPTION_STRING;
   m.attr("UCNV_OPTION_SEP_CHAR") = UCNV_OPTION_SEP_CHAR;

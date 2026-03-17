@@ -9,26 +9,31 @@ void init_dtrule(py::module &m) {
   //
   // class icu::DateTimeRule
   //
-  py::class_<DateTimeRule, UObject> dtr(m, "DateTimeRule");
+  py::class_<DateTimeRule, UObject> dtr(m, "DateTimeRule", R"doc(
+      Representation of a time in a year by a rule specified by month, day of
+      month, day of week and time in the day.
+      )doc");
 
   //
   // enum icu::DateTimeRule::DateRuleType
   //
   py::enum_<DateTimeRule::DateRuleType>(dtr, "DateRuleType", py::arithmetic(),
                                         "Date rule type constants.")
-      .value("DOM", DateTimeRule::DateRuleType::DOM,
-             "The exact day of month, for example, March 11.")
-      .value("DOW", DateTimeRule::DateRuleType::DOW,
-             "The Nth occurrence of the day of week, for example, 2nd Sunday "
-             "in March.")
-      .value("DOW_GEQ_DOM", DateTimeRule::DateRuleType::DOW_GEQ_DOM,
-             "The first occurrence of the day of week on or after the day of "
-             "monnth, for example, first Sunday on or "
-             "after March 8.")
-      .value("DOW_LEQ_DOM", DateTimeRule::DateRuleType::DOW_LEQ_DOM,
-             "The last occurrence of the day of week on or before the day of "
-             "month, for example, first Sunday on or "
-             "before March 14.")
+      .value("DOM", DateTimeRule::DateRuleType::DOM, R"doc(
+             The exact day of month, for example, March 11.
+             )doc")
+      .value("DOW", DateTimeRule::DateRuleType::DOW, R"doc(
+             The Nth occurrence of the day of week, for example, 2nd Sunday in
+             March.
+             )doc")
+      .value("DOW_GEQ_DOM", DateTimeRule::DateRuleType::DOW_GEQ_DOM, R"doc(
+             The first occurrence of the day of week on or after the day of
+             month, for example, first Sunday on or after March 8.
+             )doc")
+      .value("DOW_LEQ_DOM", DateTimeRule::DateRuleType::DOW_LEQ_DOM, R"doc(
+             The last occurrence of the day of week on or before the day of
+             month, for example, first Sunday on or before March 14.
+             )doc")
       .export_values();
 
   //
@@ -36,11 +41,15 @@ void init_dtrule(py::module &m) {
   //
   py::enum_<DateTimeRule::TimeRuleType>(dtr, "TimeRuleType", py::arithmetic(),
                                         "Time rule type constants.")
-      .value("WALL_TIME", DateTimeRule::TimeRuleType::WALL_TIME,
-             "The local wall clock time.")
-      .value("STANDARD_TIME", DateTimeRule::TimeRuleType::STANDARD_TIME,
-             "The local standard time.")
-      .value("UTC_TIME", DateTimeRule::TimeRuleType::UTC_TIME, "The UTC time.")
+      .value("WALL_TIME", DateTimeRule::TimeRuleType::WALL_TIME, R"doc(
+             The local wall clock time.
+             )doc")
+      .value("STANDARD_TIME", DateTimeRule::TimeRuleType::STANDARD_TIME, R"doc(
+             The local standard time.
+             )doc")
+      .value("UTC_TIME", DateTimeRule::TimeRuleType::UTC_TIME, R"doc(
+             The UTC time.
+             )doc")
       .export_values();
 
   //

@@ -9,18 +9,24 @@ void init_schriter(py::module &m) {
   //
   // class icu::ForwardCharacterIterator
   //
-  py::class_<ForwardCharacterIterator, UObject> fci(m,
-                                                    "ForwardCharacterIterator");
+  py::class_<ForwardCharacterIterator, UObject> fci(
+      m, "ForwardCharacterIterator", R"doc(
+      Abstract class that defines an API for forward-only iteration on text objects.
+
+      See Also:
+          :class:`CharacterIterator`
+      )doc");
 
   //
   // enum icu::ForwardCharacterIterator::DONE
   //
   py::enum_<decltype(ForwardCharacterIterator::DONE)>(
       fci, "ForwardCharacterIterator", py::arithmetic())
-      .value("DONE", ForwardCharacterIterator::DONE,
-             "Value returned by most of *ForwardCharacterIterator*'s functions "
-             "when the iterator has reached the "
-             "limits of its iteration.")
+      .value("DONE", ForwardCharacterIterator::DONE, R"doc(
+             Value returned by most of :class:`ForwardCharacterIterator`'s
+             functions when the iterator has reached the limits of its
+             iteration.
+             )doc")
       .export_values();
 
   //
@@ -54,14 +60,23 @@ void init_schriter(py::module &m) {
   // class icu::CharacterIterator
   //
   py::class_<CharacterIterator, ForwardCharacterIterator> ci(
-      m, "CharacterIterator");
+      m, "CharacterIterator", R"doc(
+      Abstract class that defines an API for iteration on text objects.
+
+      This is an interface for forward and backward iteration and random access
+      into a text object.
+
+      See Also:
+          :class:`UCharCharacterIterator`
+      )doc");
 
   //
   // enum icu::CharacterIterator::EOrigin
   //
-  py::enum_<CharacterIterator::EOrigin>(
-      ci, "EOrigin", py::arithmetic(),
-      "Origin enumeration for the *move()* and *move32()* functions.")
+  py::enum_<CharacterIterator::EOrigin>(ci, "EOrigin", py::arithmetic(), R"doc(
+Origin enumeration for the :meth:`CharacterIterator.move` and
+:meth:`CharacterIterator.move32` functions.
+      )doc")
       .value("START", CharacterIterator::kStart)
       .value("CURRENT", CharacterIterator::kCurrent)
       .value("END", CharacterIterator::kEnd)
@@ -150,7 +165,13 @@ void init_schriter(py::module &m) {
   // class icu::UCharCharacterIterator
   //
   py::class_<UCharCharacterIterator, CharacterIterator> uci(
-      m, "UCharCharacterIterator");
+      m, "UCharCharacterIterator", R"doc(
+      Subclass of :class:`CharacterIterator` that iterates over the characters
+      (code units or code points) in a ``char16_t`` array.
+
+      See Also:
+          :class:`StringCharacterIterator`
+      )doc");
 
   uci.def("__copy__", &UCharCharacterIterator::clone);
 
@@ -167,7 +188,10 @@ void init_schriter(py::module &m) {
   // class icu::StringCharacterIterator
   //
   py::class_<StringCharacterIterator, UCharCharacterIterator> sci(
-      m, "StringCharacterIterator");
+      m, "StringCharacterIterator", R"doc(
+      Concrete subclass of :class:`CharacterIterator` that iterates over the
+      characters (code units or code points) in a :class:`UnicodeString`.
+      )doc");
 
   sci.def(py::init([](const icupy::UnicodeStringVariant &text_str) {
             return std::make_unique<StringCharacterIterator>(
