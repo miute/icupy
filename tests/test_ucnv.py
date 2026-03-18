@@ -162,7 +162,7 @@ def test_clone() -> None:
 
         context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_DEC)
         action = icu.UConverterFromUCallbackEscape(context)
-        icu.ucnv_set_from_ucall_back(cnv1, action)
+        icu.ucnv_set_from_u_call_back(cnv1, action)
 
         # UConverter *ucnv_clone(
         #       const UConverter *cnv,
@@ -226,7 +226,7 @@ def test_set_from_u_call_back() -> None:
             _t = _info.setdefault("reason", [])
             _t.append((_code_units, _length, _code_point, _reason))
             _source = "".join([f"%u{ord(c):04X}" for c in _code_units])
-            icu.ucnv_cb_from_uwrite_bytes(_args, _source, len(_source), 0)
+            icu.ucnv_cb_from_u_write_bytes(_args, _source, len(_source), 0)
 
     def _from_unicode_stop_cb(
         _info: dict[str, Any],
@@ -268,7 +268,7 @@ def test_set_from_u_call_back() -> None:
         assert s.extract(cnv) == b"A[?][?]B"
 
         # Get the default callback function
-        action1 = icu.ucnv_get_from_ucall_back(cnv)
+        action1 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action1, icu.UConverterFromUCallback)
 
         # Set a new callback function
@@ -276,7 +276,7 @@ def test_set_from_u_call_back() -> None:
         context2 = icu.ConstVoidPtr(info)
         action2 = icu.UConverterFromUCallback(_from_unicode_cb, context2)
         assert action2.context().value() == info
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action2)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action2)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
         assert s.extract(cnv) == b"A%u20AC%uD800B"
@@ -288,7 +288,7 @@ def test_set_from_u_call_back() -> None:
         # Set a new callback function
         action3 = icu.UConverterFromUCallback(_from_unicode_stop_cb, context2)
         assert action3.context().value() == info
-        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_from_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterFromUCallback)
         assert old_action2.context().value() == info
 
@@ -299,7 +299,7 @@ def test_set_from_u_call_back() -> None:
         assert info["numCalls"] > 0
 
         # Set the old callback function
-        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        icu.ucnv_set_from_u_call_back(cnv, old_action2)
         info.clear()
         assert s.extract(cnv) == b"A%u20AC%uD800B"
         assert info["numCalls"] > 0
@@ -308,7 +308,7 @@ def test_set_from_u_call_back() -> None:
         assert reason[1] == ("\ud800", 1, 0xD800, icu.UCNV_ILLEGAL)
 
         # Set the old callback function
-        icu.ucnv_set_from_ucall_back(cnv, action1)
+        icu.ucnv_set_from_u_call_back(cnv, action1)
         info.clear()
         assert s.extract(cnv) == b"A[?][?]B"
         assert len(info) == 0
@@ -316,7 +316,7 @@ def test_set_from_u_call_back() -> None:
         # Set a new callback function
         action4 = icu.UConverterFromUCallback(_from_unicode_skip_cb)
         assert action4.context() is None
-        icu.ucnv_set_from_ucall_back(cnv, action4)
+        icu.ucnv_set_from_u_call_back(cnv, action4)
         assert s.extract(cnv) == b"AB"
 
 
@@ -342,10 +342,10 @@ def test_set_from_u_call_back_escape(option: str | None, expected: bytes) -> Non
         action = icu.UConverterFromUCallbackEscape(context)
         assert action.context() is None
         assert action.option() == option
-        old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+        old_action = icu.ucnv_set_from_u_call_back(cnv, action)
         assert isinstance(old_action, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
         assert action2.option() == option
@@ -357,10 +357,10 @@ def test_set_from_u_call_back_escape(option: str | None, expected: bytes) -> Non
         context = icu.ConstVoidPtr(option)
         action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
         assert action.context().value() == option
-        old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+        old_action = icu.ucnv_set_from_u_call_back(cnv, action)
         assert isinstance(old_action, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context().value() == option
 
@@ -378,10 +378,10 @@ def test_set_from_u_call_back_skip() -> None:
         action1 = icu.UConverterFromUCallbackSkip()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -393,12 +393,12 @@ def test_set_from_u_call_back_skip() -> None:
         action3 = icu.UConverterFromUCallbackSkip(context3)
         assert action3.context() is None
         assert action3.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
-        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_from_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterFromUCallback)
         assert old_action2.context() is None
         assert old_action2.option() is None
 
-        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        action4 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterFromUCallback)
         assert action4.context() is None
         assert action4.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
@@ -408,11 +408,11 @@ def test_set_from_u_call_back_skip() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        icu.ucnv_set_from_u_call_back(cnv, old_action2)
         assert s.extract(cnv) == b"AB"
 
         # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
-        icu.ucnv_set_from_ucall_back(cnv, action4)
+        icu.ucnv_set_from_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             s.extract(cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -421,10 +421,10 @@ def test_set_from_u_call_back_skip() -> None:
     with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
         # Set a new callback function: option = None
         action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SKIP)
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
 
@@ -433,11 +433,11 @@ def test_set_from_u_call_back_skip() -> None:
         # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
         context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
         action3 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SKIP, context3)
-        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_from_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterFromUCallback)
         assert old_action2.context() is None
 
-        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        action4 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterFromUCallback)
         assert action4.context().value() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
 
@@ -446,11 +446,11 @@ def test_set_from_u_call_back_skip() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        icu.ucnv_set_from_u_call_back(cnv, old_action2)
         assert s.extract(cnv) == b"AB"
 
         # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
-        icu.ucnv_set_from_ucall_back(cnv, action4)
+        icu.ucnv_set_from_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             s.extract(cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -468,10 +468,10 @@ def test_set_from_u_call_back_stop() -> None:
         action1 = icu.UConverterFromUCallbackStop()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -493,10 +493,10 @@ def test_set_from_u_call_back_stop() -> None:
         s = icu.UnicodeString("A€B").unescape()
 
         action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_STOP)
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
 
@@ -525,10 +525,10 @@ def test_set_from_u_call_back_substitute() -> None:
         action1 = icu.UConverterFromUCallbackSubstitute()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -538,12 +538,12 @@ def test_set_from_u_call_back_substitute() -> None:
         # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
         context1 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
         action3 = icu.UConverterFromUCallbackSubstitute(context1)
-        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_from_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterFromUCallback)
         assert old_action2.context() is None
         assert old_action2.option() is None
 
-        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        action4 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterFromUCallback)
         assert action4.context() is None
         assert action4.option() == icu.UCNV_SUB_STOP_ON_ILLEGAL
@@ -553,11 +553,11 @@ def test_set_from_u_call_back_substitute() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        icu.ucnv_set_from_u_call_back(cnv, old_action2)
         assert s.extract(cnv) == b"A??B"
 
         # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
-        icu.ucnv_set_from_ucall_back(cnv, action4)
+        icu.ucnv_set_from_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             s.extract(cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -568,10 +568,10 @@ def test_set_from_u_call_back_substitute() -> None:
 
         # Set a new callback function: option = None
         action1 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SUBSTITUTE)
-        old_action1 = icu.ucnv_set_from_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_from_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterFromUCallback)
 
-        action2 = icu.ucnv_get_from_ucall_back(cnv)
+        action2 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterFromUCallback)
         assert action2.context() is None
 
@@ -580,11 +580,11 @@ def test_set_from_u_call_back_substitute() -> None:
         # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
         context3 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
         action3 = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_SUBSTITUTE, context3)
-        old_action2 = icu.ucnv_set_from_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_from_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterFromUCallback)
         assert old_action2.context() is None
 
-        action4 = icu.ucnv_get_from_ucall_back(cnv)
+        action4 = icu.ucnv_get_from_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterFromUCallback)
         assert action4.context().value() == icu.UCNV_SUB_STOP_ON_ILLEGAL
 
@@ -593,11 +593,11 @@ def test_set_from_u_call_back_substitute() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_from_ucall_back(cnv, old_action2)
+        icu.ucnv_set_from_u_call_back(cnv, old_action2)
         assert s.extract(cnv) == b"A??B"
 
         # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
-        icu.ucnv_set_from_ucall_back(cnv, action4)
+        icu.ucnv_set_from_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             s.extract(cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -633,7 +633,7 @@ def test_set_to_u_call_back() -> None:
             _t = _info.setdefault("reason", [])
             _t.append((_code_units, _length, _reason))
             _source = "".join([f"%{b:02X}" for b in _code_units])
-            icu.ucnv_cb_to_uwrite_uchars(_args, _source, len(_source), 0)
+            icu.ucnv_cb_to_u_write_uchars(_args, _source, len(_source), 0)
 
     def _to_unicode_skip_cb(
         _info: object,
@@ -663,7 +663,7 @@ def test_set_to_u_call_back() -> None:
         assert str(s) == "a\ufffd\x1a\x30b"
 
         # Get the default callback function
-        action1 = icu.ucnv_get_to_ucall_back(cnv)
+        action1 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action1, icu.UConverterToUCallback)
 
         # Set a new callback function
@@ -671,7 +671,7 @@ def test_set_to_u_call_back() -> None:
         context2 = icu.ConstVoidPtr(info)
         action2 = icu.UConverterToUCallback(_to_unicode_cb, context2)
         assert action2.context().value() == info
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action2)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action2)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
         assert len(info) == 0
@@ -683,7 +683,7 @@ def test_set_to_u_call_back() -> None:
         assert reason[1] == (b"\xfa", 1, icu.UCNV_ILLEGAL)
 
         # Set the old callback function
-        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action2 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action2, icu.UConverterToUCallback)
         info.clear()
         s = icu.UnicodeString(src, -1, cnv)
@@ -691,7 +691,7 @@ def test_set_to_u_call_back() -> None:
         assert len(info) == 0
 
         # Set a new callback function
-        old_action3 = icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        old_action3 = icu.ucnv_set_to_u_call_back(cnv, old_action2)
         assert isinstance(old_action3, icu.UConverterToUCallback)
         info.clear()
         s = icu.UnicodeString(src, -1, cnv)
@@ -704,7 +704,7 @@ def test_set_to_u_call_back() -> None:
         # Set a new callback function
         action4 = icu.UConverterToUCallback(_to_unicode_skip_cb)
         assert action4.context() is None
-        icu.ucnv_set_to_ucall_back(cnv, action4)
+        icu.ucnv_set_to_u_call_back(cnv, action4)
         s = icu.UnicodeString(src, -1, cnv)
         assert str(s) == "a\x30b"
 
@@ -736,10 +736,10 @@ def test_set_to_u_call_back_escape(option: str | None, expected: str) -> None:
         action = icu.UConverterToUCallbackEscape(context)
         assert action.context() is None
         assert action.option() == option
-        old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+        old_action = icu.ucnv_set_to_u_call_back(cnv, action)
         assert isinstance(old_action, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
         assert action2.option() == option
@@ -752,10 +752,10 @@ def test_set_to_u_call_back_escape(option: str | None, expected: str) -> None:
         context = icu.ConstVoidPtr(option)
         action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
         assert action.context().value() == option
-        old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+        old_action = icu.ucnv_set_to_u_call_back(cnv, action)
         assert isinstance(old_action, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context().value() == option
 
@@ -778,10 +778,10 @@ def test_set_to_u_call_back_skip() -> None:
         action1 = icu.UConverterToUCallbackSkip()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -794,12 +794,12 @@ def test_set_to_u_call_back_skip() -> None:
         action3 = icu.UConverterToUCallbackSkip(context3)
         assert action3.context() is None
         assert action3.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
-        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_to_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterToUCallback)
         assert old_action2.context() is None
         assert old_action2.option() is None
 
-        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        action4 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterToUCallback)
         assert action4.context() is None
         assert action4.option() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
@@ -809,12 +809,12 @@ def test_set_to_u_call_back_skip() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        icu.ucnv_set_to_u_call_back(cnv, old_action2)
         s = icu.UnicodeString(src, -1, cnv)
         assert str(s) == "a\x30b"
 
         # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
-        icu.ucnv_set_to_ucall_back(cnv, action4)
+        icu.ucnv_set_to_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             _ = icu.UnicodeString(src, -1, cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -823,10 +823,10 @@ def test_set_to_u_call_back_skip() -> None:
     with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
         # Set a new callback function: option = None
         action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SKIP)
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
 
@@ -836,11 +836,11 @@ def test_set_to_u_call_back_skip() -> None:
         # Set a new callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
         context3 = icu.ConstVoidPtr(icu.UCNV_SKIP_STOP_ON_ILLEGAL)
         action3 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SKIP, context3)
-        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_to_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterToUCallback)
         assert old_action2.context() is None
 
-        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        action4 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterToUCallback)
         assert action4.context().value() == icu.UCNV_SKIP_STOP_ON_ILLEGAL
 
@@ -849,12 +849,12 @@ def test_set_to_u_call_back_skip() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        icu.ucnv_set_to_u_call_back(cnv, old_action2)
         s = icu.UnicodeString(src, -1, cnv)
         assert str(s) == "a\x30b"
 
         # Set the old callback function: option = UCNV_SKIP_STOP_ON_ILLEGAL
-        icu.ucnv_set_to_ucall_back(cnv, action4)
+        icu.ucnv_set_to_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             _ = icu.UnicodeString(src, -1, cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -868,10 +868,10 @@ def test_set_to_u_call_back_stop() -> None:
         action1 = icu.UConverterToUCallbackStop()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -897,10 +897,10 @@ def test_set_to_u_call_back_stop() -> None:
     # Backward compatibility
     with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
         action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_STOP)
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
 
@@ -938,10 +938,10 @@ def test_set_to_u_call_back_substitute() -> None:
         action1 = icu.UConverterToUCallbackSubstitute()
         assert action1.context() is None
         assert action1.option() is None
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
         assert action2.option() is None
@@ -952,12 +952,12 @@ def test_set_to_u_call_back_substitute() -> None:
         # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
         context1 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
         action3 = icu.UConverterToUCallbackSubstitute(context1)
-        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_to_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterToUCallback)
         assert old_action2.context() is None
         assert old_action2.option() is None
 
-        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        action4 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterToUCallback)
         assert action4.context() is None
         assert action4.option() == icu.UCNV_SUB_STOP_ON_ILLEGAL
@@ -967,12 +967,12 @@ def test_set_to_u_call_back_substitute() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        icu.ucnv_set_to_u_call_back(cnv, old_action2)
         s = icu.UnicodeString(src, -1, cnv)
         assert str(s) == "a\ufffd\x1a\x30b"
 
         # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
-        icu.ucnv_set_to_ucall_back(cnv, action4)
+        icu.ucnv_set_to_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             _ = icu.UnicodeString(src, -1, cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
@@ -981,10 +981,10 @@ def test_set_to_u_call_back_substitute() -> None:
     with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
         # Set a new callback function: option = None
         action1 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SUBSTITUTE)
-        old_action1 = icu.ucnv_set_to_ucall_back(cnv, action1)
+        old_action1 = icu.ucnv_set_to_u_call_back(cnv, action1)
         assert isinstance(old_action1, icu.UConverterToUCallback)
 
-        action2 = icu.ucnv_get_to_ucall_back(cnv)
+        action2 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action2, icu.UConverterToUCallback)
         assert action2.context() is None
 
@@ -994,11 +994,11 @@ def test_set_to_u_call_back_substitute() -> None:
         # Set a new callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
         context3 = icu.ConstVoidPtr(icu.UCNV_SUB_STOP_ON_ILLEGAL)
         action3 = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_SUBSTITUTE, context3)
-        old_action2 = icu.ucnv_set_to_ucall_back(cnv, action3)
+        old_action2 = icu.ucnv_set_to_u_call_back(cnv, action3)
         assert isinstance(old_action2, icu.UConverterToUCallback)
         assert old_action2.context() is None
 
-        action4 = icu.ucnv_get_to_ucall_back(cnv)
+        action4 = icu.ucnv_get_to_u_call_back(cnv)
         assert isinstance(action4, icu.UConverterToUCallback)
         assert action4.context().value() == icu.UCNV_SUB_STOP_ON_ILLEGAL
 
@@ -1007,12 +1007,12 @@ def test_set_to_u_call_back_substitute() -> None:
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND
 
         # Set the old callback function: option = None
-        icu.ucnv_set_to_ucall_back(cnv, old_action2)
+        icu.ucnv_set_to_u_call_back(cnv, old_action2)
         s = icu.UnicodeString(src, -1, cnv)
         assert str(s) == "a\ufffd\x1a\x30b"
 
         # Set the old callback function: option = UCNV_SUB_STOP_ON_ILLEGAL
-        icu.ucnv_set_to_ucall_back(cnv, action4)
+        icu.ucnv_set_to_u_call_back(cnv, action4)
         with pytest.raises(icu.ICUError) as exc_info:
             _ = icu.UnicodeString(src, -1, cnv)
         assert exc_info.value.error_code == icu.U_ILLEGAL_CHAR_FOUND

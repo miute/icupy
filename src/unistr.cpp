@@ -221,7 +221,7 @@ string.
       *src_length* is the number of bytes in *src*.
 
       .. seealso::
-          :func:`ucnv_set_to_ucall_back`
+          :func:`ucnv_set_to_u_call_back`
       )doc")
       .def(
           // [21] UnicodeString(const char *src,
@@ -751,7 +751,7 @@ string.
       :class:`UConverter` and return the result.
 
       .. seealso::
-          :func:`ucnv_set_from_ucall_back`
+          :func:`ucnv_set_from_u_call_back`
       )doc")
       .def(
           // [2] extract(Char16Ptr dest, int32_t destCapacity,
