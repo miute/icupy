@@ -50,7 +50,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   cnv = icu.ucnv_open("iso8859-1")
   context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
   action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
-  old_action = icu.ucnv_set_from_ucall_back(cnv, action)
+  old_action = icu.ucnv_set_from_u_call_back(cnv, action)
   s = icu.UnicodeString("A€B")
   s.extract(cnv)  # → b'A\\u20ACB'
   ```
@@ -61,7 +61,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   cnv = icu.ucnv_open("Shift-JIS")
   context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
   action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
-  old_action = icu.ucnv_set_to_ucall_back(cnv, action)
+  old_action = icu.ucnv_set_to_u_call_back(cnv, action)
   src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
   s = icu.UnicodeString(src, -1, cnv)
   str(s)  # → 'a&#xEB;&#x40;b'
@@ -73,6 +73,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   # from Unicode to codepage
   from icupy import icu
+  from icupy.utils import gc
   def from_unicode_cb(
       options: object,
       args: icu.UConverterFromUnicodeArgs,
@@ -86,18 +87,19 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
           error_code.set(icu.U_ZERO_ERROR)
           source = "".join(f"\\u{ord(c):04X}" for c in code_units)
-          icu.ucnv_cb_from_uwrite_bytes(args, source, len(source), 0)
+          icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
 
-  cnv = icu.ucnv_open("iso8859-1")
-  action = icu.UConverterFromUCallback(from_unicode_cb)
-  old_action = icu.ucnv_set_from_ucall_back(cnv, action)
-  s = icu.UnicodeString("A€B")
-  s.extract(cnv)  # → b'A\\u20ACB'
+  with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+      action = icu.UConverterFromUCallback(from_unicode_cb)
+      old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+      s = icu.UnicodeString("A€B")
+      s.extract(cnv)  # → b'A\\u20ACB'
   ```
 
   ```python
   # from codepage to Unicode
   from icupy import icu
+  from icupy.utils import gc
   def to_unicode_cb(
       options: object,
       args: icu.UConverterToUnicodeArgs,
@@ -110,14 +112,14 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
           error_code.set(icu.U_ZERO_ERROR)
           source = "".join(f"%{b:02X}" for b in code_units)
-          icu.ucnv_cb_to_uwrite_uchars(args, source, len(source), 0)
+          icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
 
-  cnv = icu.ucnv_open("Shift-JIS")
-  action = icu.UConverterToUCallback(to_unicode_cb)
-  old_action = icu.ucnv_set_to_ucall_back(cnv, action)
-  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
-  s = icu.UnicodeString(src, -1, cnv)
-  str(s)  # → 'a%EB%40b'
+  with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+      action = icu.UConverterToUCallback(to_unicode_cb)
+      old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+      src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+      s = icu.UnicodeString(src, -1, cnv)
+      str(s)  # → 'a%EB%40b'
   ```
 
 - [icu::DateFormat](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1DateFormat.html)
