@@ -957,7 +957,10 @@ string.
         return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
                                                        self.getCapacity());
       },
-      py::keep_alive<0, 1>());
+      py::keep_alive<0, 1>(), R"doc(
+      .. deprecated:: 0.23
+          Use :meth:`.__getitem__` instead.
+      )doc");
 
   us.def("get_capacity", &UnicodeString::getCapacity);
 
@@ -976,7 +979,10 @@ string.
         return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
                                                        self.getCapacity());
       },
-      py::keep_alive<0, 1>());
+      py::keep_alive<0, 1>(), R"doc(
+      .. deprecated:: 0.23
+          Use :meth:`.__getitem__` instead.
+      )doc");
 
   us.def("hash_code", &UnicodeString::hashCode);
 
