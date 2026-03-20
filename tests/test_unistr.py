@@ -871,12 +871,13 @@ def test_fold_case() -> None:
 
 def test_from_utf32() -> None:
     s1 = "a\U0001f338b"
+    b1 = s1.encode("utf-32-le")
 
     # static UnicodeString icu::UnicodeString::fromUTF32(
     #       const UChar32 *utf32,
     #       int32_t length
     # )
-    test1 = icu.UnicodeString.from_utf32(s1, len(s1))
+    test1 = icu.UnicodeString.from_utf32(b1)
     assert isinstance(test1, icu.UnicodeString)
     assert test1 == s1
 
@@ -885,9 +886,52 @@ def test_from_utf32() -> None:
     #       int32_t capacity,
     #       UErrorCode &errorCode
     # )
-    s2 = test1.to_utf32()
-    assert isinstance(s2, str)
-    assert s2 == s1
+    b2 = test1.to_utf32()
+    assert isinstance(b2, bytes)
+    assert b2.decode("utf-32-le") == s1
+
+    utf16 = [
+        0x41,
+        0xD900,
+        0x61,
+        0xDC00,
+        0x5A,
+        0xD900,
+        0xDC00,
+        0x7A,
+        0xD800,
+        0xDC00,
+        0xDBFF,
+        0xDFFF,
+    ]
+    expected_utf16 = [
+        0x41,
+        0xFFFD,
+        0x61,
+        0xFFFD,
+        0x5A,
+        0xFFFD,
+        0xFFFD,
+        0x7A,
+        0xFFFD,
+        0xFFFD,
+        0xFFFD,
+        0xFFFD,
+    ]
+    utf32 = [0x41, 0xFFFD, 0x61, 0xFFFD, 0x5A, 0x50000, 0x7A, 0x10000, 0x10FFFF]
+    test2 = icu.UnicodeString()
+    [test2.append(c) for c in utf16]
+
+    # UnicodeString → UTF-32
+    b3 = test2.to_utf32()  # illegal sequence → U+FFFD
+    s3 = b3.decode("utf-32-le")
+    assert [ord(c) for c in s3] == utf32
+
+    # UTF-32 → UnicodeString
+    s4 = "".join([chr(c) for c in utf16])
+    b4 = s4.encode("utf-32-le", "surrogatepass")
+    test3 = icu.UnicodeString.from_utf32(b4)
+    assert [ord(c) for c in test3] == expected_utf16
 
 
 def test_from_utf8() -> None:

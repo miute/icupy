@@ -6,6 +6,8 @@
 ### Changed
 
 - **Breaking:** change the `codepage_data` argument type from `str` to `bytes` in `icupy.icu.UnicodeString` (#148)
+- **Breaking:** change the parameter of `icupy.icu.UnicodeString.from_utf32()` from `(utf32: str, length: int)` to `(utf32: bytes)`
+- **Breaking:** change the return type of `icupy.icu.UnicodeString.to_utf32()` from `str` to `bytes`
 - **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `UnicodeString` to `str`
 - **Breaking:** remove the `time_type` argument from `icupy.icu.TimeZoneFormat.format()` and `icupy.icu.TimeZoneFormat.parse()`, and return the output `time_type` together with the original return value as a tuple
 - **Breaking:** refactor `icupy.icu.RegexMatcher` callback API:
