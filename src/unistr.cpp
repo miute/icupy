@@ -924,11 +924,20 @@ string.
 
   us.def_static(
       "from_utf32",
-      [](const std::u32string utf32, int32_t length) {
-        auto p = reinterpret_cast<const UChar32 *>(utf32.c_str());
+      [](const py::bytes &utf32) {
+        auto str = utf32.cast<std::string>();
+        auto p = reinterpret_cast<const UChar32 *>(str.data());
+        int32_t length = static_cast<int32_t>(str.size()) / sizeof(UChar32);
         return UnicodeString::fromUTF32(p, length);
       },
-      py::arg("utf32"), py::arg("length"));
+      py::arg("utf32"), R"doc(
+      Create a ``UnicodeString`` object from a UTF-32 byte sequence.
+
+      Illegal input is replaced with U+FFFD.
+
+      See Also:
+          :meth:`to_utf32`
+      )doc");
 
   us.def_static(
       "from_utf8",
@@ -1424,17 +1433,28 @@ string.
         py::arg("locale"))
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper));
 
-  us.def("to_utf32", [](const UnicodeString &self) {
-    ErrorCode error_code;
-    const auto length = self.toUTF32(nullptr, 0, error_code);
-    std::vector<UChar32> dest(length);
-    error_code.reset();
-    self.toUTF32(dest.data(), length, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return std::u32string(dest.begin(), dest.end());
-  });
+  us.def(
+      "to_utf32",
+      [](const UnicodeString &self) {
+        ErrorCode error_code;
+        const auto length = self.toUTF32(nullptr, 0, error_code);
+        std::vector<UChar32> dest(length, 0);
+        error_code.reset();
+        self.toUTF32(dest.data(), length, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(reinterpret_cast<const char *>(dest.data()),
+                         length * sizeof(UChar32));
+      },
+      R"doc(
+      Convert a ``UnicodeString`` to UTF-32 and return the result.
+
+      Unpaired surrogates are replaced with U+FFFD.
+
+      See Also:
+          :meth:`.from_utf32`
+      )doc");
 
   us.def(
       "to_utf8",
