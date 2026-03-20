@@ -235,13 +235,19 @@ void init_formattedvalue(py::module &m) {
       )doc");
 
   // TODO: Deprecate FormattedValue.to_temp_string().
-  fv.def("to_temp_string", [](const FormattedValue &self) {
-    ErrorCode error_code;
-    auto result = self.toTempString(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  fv.def(
+      "to_temp_string",
+      [](const FormattedValue &self) {
+        ErrorCode error_code;
+        auto result = self.toTempString(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      .. deprecated:: 0.23
+          Use :meth:`.to_string` instead.
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 }

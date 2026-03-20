@@ -35,6 +35,8 @@
 - **Breaking:** remove trailing underscores from parameter names across several APIs
 - Mark the previously deprecated API as stable again
 - Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
+- Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead
+- Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__()` instead
 - Improve type checking (#154)
 - Update docstring
 - Bump `pybind11` from 3.0.1 to 3.0.2
