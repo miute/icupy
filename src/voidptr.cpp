@@ -30,9 +30,9 @@ const void *ConstVoidPtr::data() const {
 
 // TODO: Remove deprecated method in future releases.
 py::object ConstVoidPtr::to_object() const {
-  py::warnings::warn("ConstVoidPtr.to_object() is deprecated. "
-                     "Use ConstVoidPtr.value() instead.",
-                     PyExc_DeprecationWarning, 1);
+  // py::warnings::warn("ConstVoidPtr.to_object() is deprecated. "
+  //                    "Use ConstVoidPtr.value() instead.",
+  //                    PyExc_DeprecationWarning, 1);
   return this->value();
 }
 
