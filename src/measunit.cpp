@@ -12,13 +12,17 @@ void init_measunit(py::module &m) {
   //
   py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(), R"doc(
 Enumeration for SI and binary prefixes, e.g. "kilo-", "nano-", "mebi-".
+
+See Also:
+    :func:`umeas_get_prefix_base`
+    :func:`umeas_get_prefix_power`
       )doc")
       .value("UMEASURE_PREFIX_ONE", UMEASURE_PREFIX_ONE, R"doc(
              The absence of an SI or binary prefix.
 
              The integer representation of this enum value is an arbitrary
              implementation detail and should not be relied upon: use
-             ``umeas_getPrefixPower()`` to obtain meaningful values.
+             :func:`umeas_get_prefix_power` to obtain meaningful values.
              )doc")
       .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA, R"doc(
              SI prefix: yotta, 10^24.
@@ -3279,14 +3283,28 @@ cannot set the power or prefix of a compound unit.
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
-  mu.def("get_prefix", [](const MeasureUnit &self) {
-    ErrorCode error_code;
-    auto result = self.getPrefix(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return result;
-  });
+  mu.def(
+      "get_prefix",
+      [](const MeasureUnit &self) {
+        ErrorCode error_code;
+        auto result = self.getPrefix(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Return the current SI or binary prefix of this SINGLE unit.
+
+      Note:
+          Only works on SINGLE units. If this is a COMPOUND or MIXED unit, an
+          error will occur. For more information, see
+          :class:`UMeasureUnitComplexity`.
+
+      See Also:
+          :func:`umeas_get_prefix_base`
+          :func:`umeas_get_prefix_power`
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -3505,5 +3523,26 @@ cannot set the power or prefix of a compound unit.
         return result;
       },
       py::arg("prefix"));
+
+  //
+  // Functions
+  //
+  m.def("umeas_get_prefix_base", &umeas_getPrefixBase, py::arg("unit_prefix"),
+        R"doc(
+      Return the base of the coefficient associated with the specified unit
+      prefix.
+
+      For example, the base is 10 for SI prefixes (kilo, micro) and 1024 for
+      binary prefixes (kibi, mebi).
+  )doc");
+
+  m.def("umeas_get_prefix_power", &umeas_getPrefixPower, py::arg("unit_prefix"),
+        R"doc(
+      Return the exponent of the factor associated with the specified unit
+      prefix.
+
+      For example, 3 for kilo, -6 for micro, 1 for kibi, 2 for mebi, 3 for
+      gibi.
+  )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 }

@@ -123,9 +123,17 @@ def test_get_dimensionality() -> None:
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 69, reason="ICU4C<69")
 def test_get_prefix() -> None:
-    # UMeasurePrefix icu::MeasureUnit::getPrefix(UErrorCode &status)
     unit = icu.MeasureUnit.get_kilometer()
-    assert unit.get_prefix() == icu.UMeasurePrefix.UMEASURE_PREFIX_KILO
+
+    # UMeasurePrefix icu::MeasureUnit::getPrefix(UErrorCode &status)
+    prefix = unit.get_prefix()
+    assert prefix == icu.UMeasurePrefix.UMEASURE_PREFIX_KILO
+
+    # int32_t icu::umeas_getPrefixBase(UMeasurePrefix unitPrefix)
+    assert icu.umeas_get_prefix_base(prefix) == 10
+
+    # int32_t icu::umeas_getPrefixPower(UMeasurePrefix unitPrefix)
+    assert icu.umeas_get_prefix_power(prefix) == 3
 
 
 def test_measure_unit_53() -> None:
