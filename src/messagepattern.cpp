@@ -46,6 +46,32 @@ output, even when the pair is between two single, text-quoting apostrophes.
       .export_values();
 
   //
+  // enum UMessagePatternArgName
+  //
+  py::enum_<decltype(UMSGPAT_ARG_NAME_NOT_NUMBER)>(m, "UMessagePatternArgName",
+                                                   py::arithmetic(), R"doc(
+Enum constants for :meth:`MessagePattern.validate_argument_name`.
+
+Warning:
+    ``UMessagePatternArgName`` is not standard. Do not use the fully qualified
+    name as this name may change in the future.
+  )doc")
+      .value("UMSGPAT_ARG_NAME_NOT_NUMBER", UMSGPAT_ARG_NAME_NOT_NUMBER, R"doc(
+             Return value from :meth:`MessagePattern.validate_argument_name`
+             for when the string is a valid "pattern identifier" but not a
+             number.
+             )doc")
+      .value("UMSGPAT_ARG_NAME_NOT_VALID", UMSGPAT_ARG_NAME_NOT_VALID, R"doc(
+             Return value from :meth:`MessagePattern.validate_argument_name`
+             for when the string is invalid.
+
+             It might not be a valid "pattern identifier", or it have only
+             ASCII digits but there is a leading zero or the number is too
+             large.
+             )doc")
+      .export_values();
+
+  //
   // enum UMessagePatternArgType
   //
   py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType",
@@ -436,7 +462,5 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
       },
       py::arg("name"));
 
-  m.attr("UMSGPAT_ARG_NAME_NOT_NUMBER") = int32_t{UMSGPAT_ARG_NAME_NOT_NUMBER};
-  m.attr("UMSGPAT_ARG_NAME_NOT_VALID") = int32_t{UMSGPAT_ARG_NAME_NOT_VALID};
   m.attr("UMSGPAT_NO_NUMERIC_VALUE") = UMSGPAT_NO_NUMERIC_VALUE;
 }

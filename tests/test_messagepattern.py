@@ -107,6 +107,8 @@ def test_api() -> None:
     # )
     assert icu.MessagePattern.validate_argument_name(icu.UnicodeString("3")) == 3
     assert icu.MessagePattern.validate_argument_name("3") == 3
+    assert icu.MessagePattern.validate_argument_name("x") == icu.UMSGPAT_ARG_NAME_NOT_NUMBER
+    assert icu.MessagePattern.validate_argument_name("03") == icu.UMSGPAT_ARG_NAME_NOT_VALID
 
 
 def test_message_pattern() -> None:
