@@ -19,23 +19,10 @@ void init_idna(py::module &m) {
   info.def("get_errors", &IDNAInfo::getErrors, R"doc(
       Return a bit set indicating :class:`IDNA` processing errors.
 
-      The bit set is a combination of the following values:
-      :attr:`UIDNA_ERROR_EMPTY_LABEL`,
-      :attr:`UIDNA_ERROR_LABEL_TOO_LONG`,
-      :attr:`UIDNA_ERROR_DOMAIN_NAME_TOO_LONG`,
-      :attr:`UIDNA_ERROR_LEADING_HYPHEN`,
-      :attr:`UIDNA_ERROR_TRAILING_HYPHEN`,
-      :attr:`UIDNA_ERROR_HYPHEN_3_4`,
-      :attr:`UIDNA_ERROR_LEADING_COMBINING_MARK`,
-      :attr:`UIDNA_ERROR_DISALLOWED`,
-      :attr:`UIDNA_ERROR_PUNYCODE`,
-      :attr:`UIDNA_ERROR_LABEL_HAS_DOT`,
-      :attr:`UIDNA_ERROR_INVALID_ACE_LABEL`,
-      :attr:`UIDNA_ERROR_BIDI`,
-      :attr:`UIDNA_ERROR_CONTEXTJ`,
-      :attr:`UIDNA_ERROR_CONTEXTO`,
-      :attr:`UIDNA_ERROR_CONTEXTO_PUNCTUATION`, and
-      :attr:`UIDNA_ERROR_CONTEXTO_DIGIT`.
+      0 if no errors. See UIDNA_ERROR\_... constants.
+
+      See Also:
+          :class:`UIDNAError`
       )doc");
 
   info.def(
@@ -88,84 +75,6 @@ void init_idna(py::module &m) {
       )doc");
 
   //
-  // enum
-  //
-  py::enum_<decltype(UIDNA_DEFAULT)>(idna, "IDNA", py::arithmetic(), R"doc(
-Bit set to modify the :class:`IDNA` processing and error checking.
-      )doc")
-      .value("DEFAULT", UIDNA_DEFAULT, R"doc(
-             Default options value: None of the other options are set.
-
-             For use in static worker and factory methods.
-             )doc")
-      .value("ALLOW_UNASSIGNED", UIDNA_ALLOW_UNASSIGNED, R"doc(
-             Deprecated: ICU 55 Use UTS #46 instead via class :class:`IDNA`.
-             )doc")
-      .value("USE_STD3_RULES", UIDNA_USE_STD3_RULES, R"doc(
-             Option to check whether the input conforms to the STD3 ASCII
-             rules, for example the restriction of labels to LDH characters
-             (ASCII Letters, Digits and Hyphen-Minus).
-
-             For use in static worker and factory methods.
-             )doc")
-      .value("CHECK_BIDI", UIDNA_CHECK_BIDI, R"doc(
-             IDNA option to check for whether the input conforms to the BiDi
-             rules.
-
-             For use in static worker and factory methods.
-
-             This option is ignored by the IDNA2003 implementation. (IDNA2003
-             always performs a BiDi check.)
-             )doc")
-      .value("CHECK_CONTEXTJ", UIDNA_CHECK_CONTEXTJ, R"doc(
-             IDNA option to check for whether the input conforms to the
-             CONTEXTJ rules.
-
-             For use in static worker and factory methods.
-
-             This option is ignored by the IDNA2003 implementation. (The
-             CONTEXTJ check is new in IDNA2008.)
-             )doc")
-      .value("NONTRANSITIONAL_TO_ASCII", UIDNA_NONTRANSITIONAL_TO_ASCII, R"doc(
-             IDNA option for nontransitional processing in to_ascii().
-
-             For use in static worker and factory methods.
-
-             By default, to_ascii() uses transitional processing.
-
-             This option is ignored by the IDNA2003 implementation. (This is
-             only relevant for compatibility of newer IDNA implementations with
-             IDNA2003.)
-             )doc")
-      .value("NONTRANSITIONAL_TO_UNICODE", UIDNA_NONTRANSITIONAL_TO_UNICODE,
-             R"doc(
-             IDNA option for nontransitional processing in to_unicode().
-
-             For use in static worker and factory methods.
-
-             By default, to_unicode() uses transitional processing.
-
-             This option is ignored by the IDNA2003 implementation. (This is
-             only relevant for compatibility of newer IDNA implementations with
-             IDNA2003.)
-             )doc")
-#if (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .value("CHECK_CONTEXTO", UIDNA_CHECK_CONTEXTO, R"doc(
-             IDNA option to check for whether the input conforms to the
-             CONTEXTO rules.
-
-             For use in static worker and factory methods.
-
-             This option is ignored by the IDNA2003 implementation. (The
-             CONTEXTO check is new in IDNA2008.)
-
-             This is for use by registries for IDNA2008 conformance. UTS #46
-             does not require the CONTEXTO check.
-             )doc")
-#endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .export_values();
-
-  //
   // class icu::IDNA
   //
   idna.def_static(
@@ -179,11 +88,14 @@ Bit set to modify the :class:`IDNA` processing and error checking.
         return result;
       },
       py::arg("options"), R"doc(
-      Create an ``IDNA`` object which implements UTS #46.
+      Create a ``IDNA`` object which implements UTS #46.
 
       *options* is a bit set to modify the processing and error checking.
       These should include :attr:`UIDNA_NONTRANSITIONAL_TO_ASCII` |
       :attr:`UIDNA_NONTRANSITIONAL_TO_UNICODE`.
+
+      See Also:
+          :class:`UIDNAOption`
       )doc");
 
   idna.def(
@@ -342,6 +254,41 @@ Bit set to modify the :class:`IDNA` processing and error checking.
 
       ``bytes`` version of :meth:`.name_to_unicode`, same behavior.
       )doc");
+
+  idna.def_property_readonly_static(
+      "DEFAULT", [](const py::object &) -> int32_t { return UIDNA_DEFAULT; });
+
+  idna.def_property_readonly_static(
+      "ALLOW_UNASSIGNED",
+      [](const py::object &) -> int32_t { return UIDNA_ALLOW_UNASSIGNED; });
+
+  idna.def_property_readonly_static(
+      "USE_STD3_RULES",
+      [](const py::object &) -> int32_t { return UIDNA_USE_STD3_RULES; });
+
+  idna.def_property_readonly_static(
+      "CHECK_BIDI",
+      [](const py::object &) -> int32_t { return UIDNA_CHECK_BIDI; });
+
+  idna.def_property_readonly_static(
+      "CHECK_CONTEXTJ",
+      [](const py::object &) -> int32_t { return UIDNA_CHECK_CONTEXTJ; });
+
+  idna.def_property_readonly_static("NONTRANSITIONAL_TO_ASCII",
+                                    [](const py::object &) -> int32_t {
+                                      return UIDNA_NONTRANSITIONAL_TO_ASCII;
+                                    });
+
+  idna.def_property_readonly_static("NONTRANSITIONAL_TO_UNICODE",
+                                    [](const py::object &) -> int32_t {
+                                      return UIDNA_NONTRANSITIONAL_TO_UNICODE;
+                                    });
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 49)
+  idna.def_property_readonly_static(
+      "CHECK_CONTEXTO",
+      [](const py::object &) -> int32_t { return UIDNA_CHECK_CONTEXTO; });
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
   idna.def_property_readonly_static(
       "ERROR_EMPTY_LABEL",

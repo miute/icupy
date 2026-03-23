@@ -4,18 +4,18 @@ from icupy import icu
 
 # From icu/source/test/intltest/uts46test.cpp
 _severe_errors = (
-    icu.IDNA.ERROR_LEADING_COMBINING_MARK
-    | icu.IDNA.ERROR_DISALLOWED
-    | icu.IDNA.ERROR_PUNYCODE
-    | icu.IDNA.ERROR_LABEL_HAS_DOT
-    | icu.IDNA.ERROR_INVALID_ACE_LABEL
+    icu.UIDNA_ERROR_LEADING_COMBINING_MARK
+    | icu.UIDNA_ERROR_DISALLOWED
+    | icu.UIDNA_ERROR_PUNYCODE
+    | icu.UIDNA_ERROR_LABEL_HAS_DOT
+    | icu.UIDNA_ERROR_INVALID_ACE_LABEL
 )
 
 _common_options = (
-    icu.IDNA.USE_STD3_RULES
-    | icu.IDNA.CHECK_BIDI
-    | icu.IDNA.CHECK_CONTEXTJ
-    | icu.IDNA.CHECK_CONTEXTO
+    icu.UIDNA_USE_STD3_RULES
+    | icu.UIDNA_CHECK_BIDI
+    | icu.UIDNA_CHECK_CONTEXTJ
+    | icu.UIDNA_CHECK_CONTEXTO
 )
 
 # static IDNA *icu::IDNA::createUTS46Instance(
@@ -24,7 +24,7 @@ _common_options = (
 # )
 _trans = icu.IDNA.create_uts46_instance(_common_options)
 _nontrans = icu.IDNA.create_uts46_instance(
-    _common_options | icu.IDNA.NONTRANSITIONAL_TO_ASCII | icu.IDNA.NONTRANSITIONAL_TO_UNICODE
+    _common_options | icu.UIDNA_NONTRANSITIONAL_TO_ASCII | icu.UIDNA_NONTRANSITIONAL_TO_UNICODE
 )
 
 _test_cases = [
