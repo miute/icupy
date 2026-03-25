@@ -5,61 +5,66 @@
 
 ### Changed
 
-- **Breaking:** change the `codepage_data` argument type from `str` to `bytes` in `icupy.icu.UnicodeString` (#148)
-- **Breaking:** change the parameter of `icupy.icu.UnicodeString.from_utf32()` from `(utf32: str, length: int)` to `(utf32: bytes)`
-- **Breaking:** change the return type of `icupy.icu.UnicodeString.to_utf32()` from `str` to `bytes`
-- **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `UnicodeString` to `str`
-- **Breaking:** remove the `time_type` argument from `icupy.icu.TimeZoneFormat.format()` and `icupy.icu.TimeZoneFormat.parse()`, and return the output `time_type` together with the original return value as a tuple
-- **Breaking:** refactor `icupy.icu.RegexMatcher` callback API:
+- **Breaking:** update parameters of `icupy.icu.UnicodeString.__init__()` (#148)
+- **Breaking:** update parameters of `icupy.icu.UnicodeString.from_utf32()` (#199)
+- **Breaking:** update return type of `icupy.icu.UnicodeString.to_utf32()` (#199)
+- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` (#164)
+- **Breaking:** update parameters and return type of `icupy.icu.TimeZoneFormat.format()` and `.parse()` (#167)
+- **Breaking:** refactor `icupy.icu.RegexMatcher` callback API (#174, #175, #176, #183)
   - Rename `icupy.icu.URegexFindProgressCallbackPtr` to `icupy.icu.URegexFindProgressCallback`
-  - Move the `context` argument of `icupy.icu.RegexMatcher.set_find_progress_callback()` to `icupy.icu.URegexFindProgressCallback.__init__()`
-  - Update `icupy.icu.RegexMatcher.get_find_progress_callback()` to return `icupy.icu.URegexFindProgressCallback`  instead of a tuple
+  - Update parameters of `icupy.icu.RegexMatcher.set_find_progress_callback()`
+  - Update parameters of `icupy.icu.URegexFindProgressCallback.__init__()`
+  - Update return type of `icupy.icu.RegexMatcher.get_find_progress_callback()`
   - Rename `icupy.icu.URegexMatchCallbackPtr` to `icupy.icu.URegexMatchCallback`
-  - Move the `context` argument of `icupy.icu.RegexMatcher.set_match_callback()` to `icupy.icu.URegexMatchCallback.__init__()`
-  - Update `icupy.icu.RegexMatcher.get_match_callback()` to return `icupy.icu.URegexMatchCallback` instead of a tuple
-- **Breaking:** refactor UBiDi callback API:
+  - Update parameters of `icupy.icu.RegexMatcher.set_match_callback()`
+  - Update parameters of `icupy.icu.URegexMatchCallback.__init__()`
+  - Update return type of `icupy.icu.RegexMatcher.get_match_callback()`
+- **Breaking:** refactor UBiDi callback API (#178, #183)
   - Rename `icupy.icu.UBiDiClassCallbackPtr` to `icupy.icu.UBiDiClassCallback`
-  - Move the `context` argument of `icupy.icu.ubidi_set_class_callback()` to `icupy.icu.UBiDiClassCallback.__init__()`
-  - Update `icupy.icu.ubidi_get_class_callback()` and `icupy.icu.ubidi_set_class_callback()` to return `icupy.icu.UBiDiClassCallback` instead of a tuple
-- **Breaking:** refactor UConverter callback API:
+  - Update parameters and return type of `icupy.icu.ubidi_set_class_callback()`
+  - Update parameters of `icupy.icu.UBiDiClassCallback.__init__()`
+  - Update return type of  `icupy.icu.ubidi_get_class_callback()`
+- **Breaking:** refactor UConverter callback API (#180, #183)
   - Rename `icupy.icu.UConverterFromUCallbackPtr` to `icupy.icu.UConverterFromUCallback`
-  - Move the `context` argument of `icupy.icu.ucnv_set_from_ucall_back()` to `icupy.icu.UConverterFromUCallback.__init__()`
-  - Update `icupy.icu.ucnv_get_from_ucall_back()` and `icupy.icu.ucnv_set_from_ucall_back()` to return `icupy.icu.UConverterFromUCallback`  instead of a tuple
+  - Update parameters and return type of `icupy.icu.ucnv_set_from_u_call_back()`
+  - Update parameters of `icupy.icu.UConverterFromUCallback.__init__()`
+  - Update return type of `icupy.icu.ucnv_get_from_u_call_back()`
   - Rename `icupy.icu.UConverterToUCallbackPtr` to `icupy.icu.UConverterToUCallback`
-  - Move the `context` argument of `icupy.icu.ucnv_set_to_ucall_back()` to `icupy.icu.UConverterToUCallback.__init__()`
-  - Update `icupy.icu.ucnv_get_to_ucall_back()` and `icupy.icu.ucnv_set_to_ucall_back()` to return `icupy.icu.UConverterToUCallback`  instead of a tuple
-- **Breaking:** refactor `ucpmap_get_range()`:
+  - Update parameters and return type of `icupy.icu.ucnv_set_to_u_call_back()`
+  - Update parameters of `icupy.icu.UConverterToUCallback.__init__()`
+  - Update return type of `icupy.icu.ucnv_get_to_u_call_back()`
+- **Breaking:** refactor `ucpmap_get_range()` (#182)
   - Rename `icupy.icu.UCPMapValueFilterPtr` to `icupy.icu.UCPMapValueFilter`
-  - Move the `context` argument of `icupy.icu.ucpmap_get_range()` to `icupy.icu.UCPMapValueFilter.__init__()`
-  - The `filter` argument is now optional
-- **Breaking:** remove trailing underscores from parameter names across several APIs
-- Mark the previously deprecated API as stable again
-- Deprecate `to_object()` in `icupy.icu.ConstVoidPtr`; use `value()` instead
-- Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead
-- Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__()` instead
+  - Update parameters of `icupy.icu.ucpmap_get_range()`
+  - Update parameters of `icupy.icu.UCPMapValueFilter.__init__()`
+- **Breaking:** remove trailing underscores from parameter names in several APIs (#187)
+- Mark previously deprecated API as stable again (#198)
+- Deprecate `icupy.icu.ConstVoidPtr.to_object()`; use `.value()` instead (#159)
+- Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead (#200)
+- Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__(index: int)` instead (#200)
 - Improve type checking (#154)
-- Update docstring
-- Bump `pybind11` from 3.0.1 to 3.0.2
+- Update docstring (#196)
+- Bump pybind11 from 3.0.1 to 3.0.2 (#197)
 
 ### Added
 
-- Add `error_code` attribute to `icupy.icu.ICUError` exception to store ICU4C error codes
-- Add support for [ICU 78.3]
+- Add support for [ICU 78.3] (#170, #205)
+- Add `error_code` attribute to `icupy.icu.ICUError` (#162)
 
 ### Fixed
 
-- Fix UnicodeDecodeError in UConverter From Unicode callback function
-- Add missing functions (#148)
-- Add missing enums
-- Change the return type of the comparison operator for `icupy.icu.UnicodeSet` from `int` to `bool`
+- Fix UnicodeDecodeError in UConverter From Unicode callback function (#180)
+- Add missing functions (#148, #202)
+- Add missing enums (#203)
+- Fix return type of comparison operator for `icupy.icu.UnicodeSet` (#165)
 
 <!-- 2025-04-06/2025-11-02 -->
 ## [0.22.0] - 2025-11-02
 
 ### Changed
 
-- **Breaking:** change the return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` from `UnicodeString` to `str` (#135)
-- Bump `pybind11` from 2.13.6 to 3.0.1 (#122, #131)
+- **Breaking:** update return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` (#135)
+- Bump pybind11 from 2.13.6 to 3.0.1 (#122, #131)
 
 ### Added
 
@@ -70,8 +75,8 @@
 
 - **Breaking:** drop support for CMake old than 3.15 (#115)
 - **Breaking:** drop support for Python 3.9 (#130)
-- Remove `icupy.icu.MeasureUnit.create_milligram_of_glucose_per_deciliter()`. Use `icupy.icu.MeasureUnit.create_milligram_ofglucose_per_deciliter()` instead (#134)
-- Remove `icupy.icu.MeasureUnit.get_milligram_of_glucose_per_deciliter()`. Use `icupy.icu.MeasureUnit.get_milligram_ofglucose_per_deciliter()` instead (#134)
+- Remove `icupy.icu.MeasureUnit.create_milligram_of_glucose_per_deciliter()`; use `.create_milligram_ofglucose_per_deciliter()` instead (#134)
+- Remove `icupy.icu.MeasureUnit.get_milligram_of_glucose_per_deciliter()`; use `.get_milligram_ofglucose_per_deciliter()` instead (#134)
 
 ### Fixed
 
@@ -90,8 +95,8 @@
 
 ### Changed
 
-- **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` from `int` to `UnicodeString` (#93)
-- Bump `pybind11` from 2.12.0 to 2.13.6
+- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` (#93)
+- Bump pybind11 from 2.12.0 to 2.13.6
 
 ### Added
 
@@ -108,7 +113,7 @@
 
 ### Changed
 
-- Bump `pybind11` from 2.11.1 to 2.12.0
+- Bump pybind11 from 2.11.1 to 2.12.0
 
 ### Added
 
@@ -120,9 +125,9 @@
 
 ### Changed
 
-- Change the argument type of the UTF-8 string from `str` to `bytes` (9bf09e3)
-- Change the argument type from `UnicodeString` to `UnicodeString | str` (25298f7)
-- Bump `pybind11` from 2.10.4 to 2.11.1
+- Change UTF-8 string parameter from `str` to `bytes` in several APIs (9bf09e3)
+- Change Unicode string parameter from `UnicodeString` to `UnicodeString | str` in several APIs (25298f7)
+- Bump pybind11 from 2.10.4 to 2.11.1
 
 ### Added
 
@@ -133,7 +138,7 @@
 ### Fixed
 
 - Add missing functions for UTF-8 strings (#56)
-- Change the C/C++ `UBool` type binding from `int` to `bool` (#59)
+- Change binding for C/C++ `UBool` type from `int` to `bool` (#59)
 
 <!-- 2023-05-16/2023-07-10 -->
 ## [0.17.0] - 2023-07-10
@@ -155,7 +160,7 @@
 
 ### Changed
 
-- Bump `pybind11` from 2.10.0 to 2.10.4
+- Bump pybind11 from 2.10.0 to 2.10.4
 
 ### Added
 
@@ -178,17 +183,17 @@
 
 ### Changed
 
-- **Breaking:** change the return type of `icupy.icu.UnicodeSet.__getitem__(slice: slice)` from `list[int]` to `UnicodeSet` (c0ad903)
-- **Breaking:** change the `values` argument type in `icupy.icu.CollationKey.__init__(...)` from `list[int]` to `bytes` (f585245)
-- **Breaking:** change the return type of `icupy.icu.CollationKey.get_byte_array()` from `list[int]` to `bytes` (f585245)
-- **Breaking:** change the return type of `icupy.icu.ResourceBundle.get_binary()` from `list[int]` to `bytes` (532667d)
-- **Breaking:** change the return type of `icupy.icu.RuleBasedCollator.get_sort_key(...)` from `list[int]` to `bytes` (6b13e2a)
-- **Breaking:** change the `source` argument and return type of `icupy.icu.Collator.get_bound(...)` from `list[int]` to `bytes` (056a18d)
-- **Breaking:** change the return type of the functions that takes `UVersionInfo` as an output parameter from `list` to `tuple` (b6b5d28)
-- **Breaking:** change the return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` from `str` to `UnicodeString` (eea7135)
+- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(slice: slice)` (c0ad903)
+- **Breaking:** update parameters of `icupy.icu.CollationKey.__init__()` (f585245)
+- **Breaking:** update return type of `icupy.icu.CollationKey.get_byte_array()` (f585245)
+- **Breaking:** update return type of `icupy.icu.ResourceBundle.get_binary()` (532667d)
+- **Breaking:** update return type of `icupy.icu.RuleBasedCollator.get_sort_key()` (6b13e2a)
+- **Breaking:** update parameters and return type of `icupy.icu.Collator.get_bound()` (056a18d)
+- **Breaking:** update return type of functions that takes `UVersionInfo` as an output parameter (b6b5d28)
+- **Breaking:** update return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` (eea7135)
 - Improve `icupy.icu.UTextVector` (aeb1d4c, 01a19e4)
 - Refactor `icupy.icu.UnicodeStringVector` (5e3bd6e)
-- Bump `pybind11` from 2.9.2 to 2.10.0
+- Bump pybind11 from 2.9.2 to 2.10.0
 
 ### Added
 
@@ -202,47 +207,47 @@
 ### Fixed
 
 - Make IndexError messages more human-readable (fb5b96c)
-- Raise IndexError when `icupy.icu._ConstChar16Ptr.__getitem__(...)` accessing beyond capacity (dda896b)
-- Change the return type of the comparison operator for `icupy.icu.UnicodeString` from `int` to `bool` (2e4c58d)
-- Fix the return value of `icupy.icu.UnicodeString.__iadd__(...)` to return itself (305dde4)
+- Raise IndexError when `icupy.icu._ConstChar16Ptr.__getitem__()` accessing beyond capacity (dda896b)
+- Fix return type of comparison operator for `icupy.icu.UnicodeString` (2e4c58d)
+- Fix return value of `icupy.icu.UnicodeString.__iadd__()` to return itself (305dde4)
 
 <!-- 2022-04-09/2022-07-12 -->
 ## 0.13.0 - 2022-07-12
 
 ### Changed
 
-- **Breaking:** change the `compiled_rules` argument type in `icupy.icu.RuleBasedBreakIterator` from `list[int]` to `buffer` (acb6eda)
-- Bump `pybind11` from 2.9.1 to 2.9.2
+- **Breaking:** update parameters of `icupy.icu.RuleBasedBreakIterator.__init__()` (acb6eda)
+- Bump pybind11 from 2.9.1 to 2.9.2
 
 ### Added
 
 - Enable the creation of subclasses of `icupy.icu.SearchIterator` (83da181, 34e91eb)
 - Enable the creation of subclasses of `icupy.icu.Transliterator` (3499f54)
-- Add `__hash__()` (97b0e6c)
-- Add `icupy.icu.UnicodeString.handle_replace_between(...)` (24a4935)
+- Add `.__hash__()` to several APIs (97b0e6c)
+- Add `icupy.icu.UnicodeString.handle_replace_between()` (24a4935)
 
 ### Fixed
 
-- Fix `repr()` format (aed7385)
+- Fix `repr` format in several APIs (aed7385)
 
 <!-- 2022-03-20/2022-04-08 -->
 ## 0.12.0 - 2022-04-09
 
 ### Changed
 
-- Change the argument type from `Locale` to `Locale | str` (d686d3e, dafa93e)
-- Change return type of `icupy.icu.RuleBasedCollator.clone_binary()` from `list[int]` to `bytes` (d95f4ee)
+- Change locale parameter from `Locale` to `Locale | str` in several APIs (d686d3e, dafa93e)
+- Update return type of `icupy.icu.RuleBasedCollator.clone_binary()` (d95f4ee)
 
 ### Added
 
 - Add support for [ICU 71.1] (e968747)
-- Add `icupy.icu.u_string_has_binary_property(...)` (fe37f49)
-- Add `icupy.icu.RuleBasedCollator.__init__(bin: buffer, length: int, base: RuleBasedCollator)` (f3decea)
+- Add `icupy.icu.u_string_has_binary_property()` (fe37f49)
+- Add `icupy.icu.RuleBasedCollator.__init__(bin: collections.abc.Buffer, length: int, base: RuleBasedCollator)` (f3decea)
 
 ### Removed
 
-- Remove `icupy.icu.ICUException`. Use `icupy.icu.ICUError` instead (6da1f49)
-- Remove `icupy.__version__`. Use `importlib.metadata` or `importlib-metadata` instead (3867b0d)
+- Remove `icupy.icu.ICUException`; use `icupy.icu.ICUError` instead (6da1f49)
+- Remove `icupy.__version__`; use `importlib.metadata` or `importlib-metadata` instead (3867b0d)
 
 ## 0.11.2 - 2022-03-02
 
