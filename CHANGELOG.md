@@ -1,7 +1,7 @@
 # Changelog
 
-<!-- 2025-11-11/ -->
-## Unreleased
+<!-- 2025-11-11/2026-03-26 -->
+## [0.23.0] - 2026-03-26
 
 ### Changed
 
@@ -297,3 +297,4 @@ Initial release.
 [0.20.0]: https://github.com/miute/icupy/releases/tag/v0.20.0
 [0.21.0]: https://github.com/miute/icupy/releases/tag/v0.21.0
 [0.22.0]: https://github.com/miute/icupy/releases/tag/v0.22.0
+[0.23.0]: https://github.com/miute/icupy/releases/tag/v0.23.0

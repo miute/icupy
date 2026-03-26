@@ -14,26 +14,28 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
 - **Naming Conventions**
 
-  Renamed functions, methods, and C++ enumerators to conform to [PEP 8](https://peps.python.org/pep-0008/#naming-conventions).
+  Renamed functions, methods, and enums to conform to [PEP 8](https://peps.python.org/pep-0008/#naming-conventions).
 
-  - Function Names:
-    Use `lower_case_with_underscores` style.
-  - Method Names:
-    Use `lower_case_with_underscores` style.
+  - **Function Names:**
+    use `lower_case_with_underscores` style.
+  - **Method Names:**
+    use `lower_case_with_underscores` style.
     Also, use one leading underscore only for protected methods.
-  - C++ Enumerators: Use `UPPER_CASE_WITH_UNDERSCORES` style without a leading "k". (e.g., `kDateOffset` → `DATE_OFFSET`)
-  - APIs that match Python reserved words: e.g.,
+  - **C++ Enum Member Names:**
+    use `UPPER_CASE_WITH_UNDERSCORES` style without a leading "k". (e.g., `kDateOffset` → `DATE_OFFSET`)
+  - **APIs that match Python reserved words:** e.g.,
     - `with()` → `with_()`
 
 - **Error Handling**
-  - If the ICU C/C++ API fails, you can obtain the error code `UErrorCode` from the `error_code` attribute of the `ICUError` exception.
+  - ICU C/C++ API errors are raised as `icupy.icu.ICUError` exceptions.
+    The underlying `UErrorCode` can be retrieved from the `error_code` attribute of the exception.
 
     For example:
 
     ```python
     from icupy import icu
     try:
-        ...
+        pass  # Call ICU API here...
     except icu.ICUError as e:
         print(e.error_code)  # → icu.ErrorCode
         print(e.error_code.get())  # → icu.UErrorCode
@@ -48,7 +50,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from Unicode to codepage
   from icupy import icu
   cnv = icu.ucnv_open("iso8859-1")
-  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)
+  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)  # \uXXXX
   action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
   old_action = icu.ucnv_set_from_u_call_back(cnv, action)
   s = icu.UnicodeString("A€B")
@@ -59,10 +61,10 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from codepage to Unicode
   from icupy import icu
   cnv = icu.ucnv_open("Shift-JIS")
-  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
+  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)  # &#xXXXX;
   action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
   old_action = icu.ucnv_set_to_u_call_back(cnv, action)
-  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
   s = icu.UnicodeString(src, -1, cnv)
   str(s)  # → 'a&#xEB;&#x40;b'
   ```
@@ -86,14 +88,14 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       _ = options, length, code_point  # unused
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
           error_code.set(icu.U_ZERO_ERROR)
-          source = "".join(f"\\u{ord(c):04X}" for c in code_units)
+          source = "".join(f"\\u{ord(c):04x}" for c in code_units)
           icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
 
   with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
       action = icu.UConverterFromUCallback(from_unicode_cb)
       old_action = icu.ucnv_set_from_u_call_back(cnv, action)
       s = icu.UnicodeString("A€B")
-      s.extract(cnv)  # → b'A\\u20ACB'
+      s.extract(cnv)  # → b'A\\u20acB'
   ```
 
   ```python
@@ -108,7 +110,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       reason: icu.UConverterCallbackReason,
       error_code: icu.ErrorCode,
   ) -> None:
-      _= options, length  # unused
+      _ = options, length  # unused
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
           error_code.set(icu.U_ZERO_ERROR)
           source = "".join(f"%{b:02X}" for b in code_units)
@@ -117,86 +119,102 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
       action = icu.UConverterToUCallback(to_unicode_cb)
       old_action = icu.ucnv_set_to_u_call_back(cnv, action)
-      src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+      src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
       s = icu.UnicodeString(src, -1, cnv)
       str(s)  # → 'a%EB%40b'
   ```
 
-- [icu::DateFormat](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1DateFormat.html)
+- [icu::BreakIterator](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1BreakIterator.html) for word-breaks
 
   ```python
   from icupy import icu
-  tz = icu.TimeZone.create_time_zone('America/Los_Angeles')
-  fmt = icu.DateFormat.create_instance_for_skeleton('yMMMMd', icu.Locale.get_english())
-  fmt.set_time_zone(tz)
-  dest = icu.UnicodeString()
-  s = fmt.format(0, dest)
-  str(s)  # → 'December 31, 1969'
+  bi = icu.BreakIterator.create_word_instance("en_US")
+  src = icu.UnicodeString("Alice was beginning to get very tired of sitting by her sister on the bank.")
+  bi.set_text(src)
+  result = []
+  start = bi.first()
+  while (end := bi.next()) != icu.BreakIterator.DONE:
+      if bi.get_rule_status() != icu.UBRK_WORD_NONE:
+          result.append(src[start:end])
+      start = end
+
+  # result: ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
   ```
 
-- [icu::MessageFormat](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1MessageFormat.html)
+- Natural sort (human-friendly sorting)
 
   ```python
   from icupy import icu
-  fmt = icu.MessageFormat(
-      "At {1,time,::jmm} on {1,date,::dMMMM}, "
-      "there was {2} on planet {0,number}.",
-      icu.Locale.get_us(),
-  )
-  tz = icu.TimeZone.get_gmt()
-  subfmts = fmt.get_formats()
-  subfmts[0].set_time_zone(tz)
-  subfmts[1].set_time_zone(tz)
-  date = 1637685775000.0  # 2021-11-23T16:42:55Z
-  obj = icu.Formattable(
-      [
-          icu.Formattable(7),
-          icu.Formattable(date, icu.Formattable.IS_DATE),
-          icu.Formattable(icu.UnicodeString('a disturbance in the Force')),
-      ]
-  )
-  dest = icu.UnicodeString()
-  s = fmt.format(obj, dest)
-  str(s)  # → 'At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.'
-  ```
-
-- [icu::number::NumberFormatter](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1number_1_1NumberFormatter.html)
-
-  ```python
-  from icupy import icu
-  fmt = icu.number.NumberFormatter.with_().unit(icu.MeasureUnit.get_meter()).per_unit(icu.MeasureUnit.get_second())
-  print(fmt.locale(icu.Locale.get_us()).format_double(3000).to_string())  # → '3,000 m/s'
-  print(fmt.locale(icu.Locale.get_france()).format_double(3000).to_string())  # → '3 000 m/s'
-  print(fmt.locale('ar').format_double(3000).to_string())  # → '٣٬٠٠٠ م/ث'
-  ```
-
-- [icu::BreakIterator](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1BreakIterator.html)
-
-  ```python
-  from icupy import icu
-  text = icu.UnicodeString('In the meantime Mr. Weston arrived with his small ship.')
-  bi = icu.BreakIterator.create_sentence_instance(icu.Locale('en'))
-  bi.set_text(text)
-  list(bi)  # → [20, 55]
-  # filter based on common English language abbreviations
-  bi = icu.BreakIterator.create_sentence_instance(icu.Locale('en@ss=standard'))
-  bi.set_text(text)
-  list(bi)  # → [55]
+  coll = icu.Collator.create_instance("en_US")
+  coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
+  data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
+  sorted(data, key=coll.get_sort_key)
+  # ['file1.txt', 'file2.txt', 'file3.txt', 'file10.txt', 'file20.txt']
   ```
 
 - [icu::IDNA](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1IDNA.html) (UTS #46)
 
   ```python
   from icupy import icu
-  uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_NONTRANSITIONAL_TO_ASCII)
+  uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ)
   dest = icu.UnicodeString()
   info = icu.IDNAInfo()
-  uts46.name_to_ascii(icu.UnicodeString('faß.ExAmPlE'), dest, info)
-  info.get_errors()  # → 0
-  str(dest)  # → 'xn--fa-hia.example'
+  # a + ZERO WIDTH NON-JOINER + b.com
+  uts46.name_to_ascii("a\u200cb.com", dest, info)  # → 'xn--ab-j1t.com'
+  bool(info.get_errors() & icu.UIDNA_ERROR_BIDI)  # → False
+  bool(info.get_errors() & icu.UIDNA_ERROR_CONTEXTJ)  # → True
   ```
 
-- For more examples, see [tests](https://github.com/miute/icupy/tree/main/tests).
+- [icu::number::NumberFormatter](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1number_1_1NumberFormatter.html) (ICU 60+)
+
+  ```python
+  from icupy import icu
+  from icupy.icu import number
+  template = (
+      number.NumberFormatter.with_()
+      .notation(number.Notation.compact_short())
+      .unit(icu.CurrencyUnit("EUR"))
+      .precision(number.Precision.max_significant_digits(2))
+  )
+  template.locale("en_US").format_int(1234).to_string()  # "€1.2K" in en-US
+  ```
+
+- [icu::RegexMatcher::find](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1RegexMatcher.html) with custom callback function
+
+  ```python
+  from icupy import icu
+  src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
+  matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
+  def progress_callback(options: dict[str, int], match_index: int) -> bool:
+      if not isinstance(options, dict):
+          return False
+      calls = options.get("numCalls", 0) + 1
+      options["numCalls"] = calls
+      options["lastIndex"] = match_index
+      max_calls = options.get("maxCalls", -1)
+      return True if max_calls < 0 else calls < max_calls
+
+  info = {}
+  context = icu.ConstVoidPtr(info)
+  callback = icu.URegexFindProgressCallback(progress_callback, context)
+  matcher.set_find_progress_callback(callback)
+  matcher.find(0)  # → False
+  # info: {'numCalls': 18, 'lastIndex': 18}
+  info.clear()
+  info["maxCalls"] = 5
+  matcher.find(0)  # → ICUError: U_REGEX_STOPPED_BY_CALLER
+  # info: {'maxCalls': 5, 'numCalls': 5, 'lastIndex': 5}
+  ```
+
+- [icu::number::SimpleNumberFormatter](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1number_1_1SimpleNumberFormatter.html) (ICU 73+)
+
+  ```python
+  from icupy import icu
+  from icupy.icu import number
+  fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy("de-CH", icu.UNUM_GROUPING_ON_ALIGNED)
+  fmtval = fmt.format_int64(1234567)
+  fmtval.to_string()  # → "1'234'567"
+  ```
 
 ## Installation
 
@@ -204,22 +222,22 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
 - [Python](https://www.python.org/) >=3.10
 - [ICU4C](https://github.com/unicode-org/icu/releases) [(ICU - The International Components for Unicode)](https://icu.unicode.org/) (>=70 recommended)
-- C++17 compatible compiler (see [supported compilers](https://github.com/pybind/pybind11#supported-compilers))
+- C++17 compatible compiler (see [Supported Compilers](https://github.com/pybind/pybind11#supported-platforms--compilers))
 - [CMake](https://cmake.org/) >=3.15
 
 ### Installing prerequisites
 
-- Windows
+- **Windows:**
 
-  Install the following dependencies.
+  Install the following dependencies:
 
   - [Python](https://www.python.org/downloads/) >=3.10
   - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=70 recommended)
-  - Visual Studio 2015 Update 3 or newer. Visual Studio 2019 or newer recommended
+  - C++17 compatible compiler. Visual Studio 2022 or newer recommended
   - [CMake](https://cmake.org/download/) >=3.15
     - *Note: Add CMake to the system PATH.*
 
-- Linux
+- **Linux:**
 
   To install dependencies, run the following command:
 
@@ -235,44 +253,50 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
     sudo dnf install gcc-c++ cmake icu libicu-devel python3-devel
     ```
 
-  If your system's ICU is out of date, consider
+  *Note: If your system's ICU is out of date, consider
   [building ICU4C from source](https://unicode-org.github.io/icu/userguide/icu4c/build.html) or installing [pre-built
-  ICU4C binary package](https://github.com/unicode-org/icu/releases).
+  ICU4C binary package](https://github.com/unicode-org/icu/releases).*
 
-### Building icupy from source
+### Installing icupy
 
-1. Configuring environment variables:
+1. **Configuring environment variables**
 
-   - Windows:
+   - **Windows:**
 
-     - Set the `ICU_ROOT` environment variable to the root of the ICU installation (default is `C:\icu`).
+     - Set the `ICU_ROOT` environment variable to the root of the ICU installation.
+
        For example, if the ICU is located in `C:\icu4c`:
 
-       ```bat
-       set ICU_ROOT=C:\icu4c
-       ```
-
-       or in PowerShell:
+       in PowerShell:
 
        ```powershell
        $env:ICU_ROOT = "C:\icu4c"
        ```
 
-     - To verify settings using `icuinfo` (64-bit):
+       or in Command Prompt:
 
-       ```bat
-       %ICU_ROOT%\bin64\icuinfo
+       ```batchfile
+       set ICU_ROOT=C:\icu4c
        ```
 
-       or in PowerShell:
+     - To verify settings using `icuinfo` (64-bit):
+
+       in PowerShell:
 
        ```powershell
        & $env:ICU_ROOT\bin64\icuinfo
        ```
 
-   - Linux:
+       or in Command Prompt:
+
+       ```batchfile
+       %ICU_ROOT%\bin64\icuinfo
+       ```
+
+   - **Linux:**
 
      - If the ICU is located in a non-regular place, set the `PKG_CONFIG_PATH` and `LD_LIBRARY_PATH` environment variables.
+
        For example, if the ICU is located in `/usr/local`:
 
        ```bash
@@ -283,11 +307,11 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
      - To verify settings using `pkg-config`:
 
        ```bash
-       $ pkg-config --cflags --libs icu-uc
-       -I/usr/local/include -L/usr/local/lib -licuuc -licudata
+       pkg-config --cflags --libs icu-uc
+       # -I/usr/local/include -L/usr/local/lib -licuuc
        ```
 
-2. Installing from PyPI:
+2. **Installing from PyPI**
 
    ```bash
    pip install icupy
@@ -308,33 +332,37 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
 ## Usage
 
-1. Configuring environment variables:
+1. **Configuring environment variables**
 
-   - Windows:
+   - **Windows:**
 
      - Set the `ICU_ROOT` environment variable to the root of the ICU installation (default is `C:\icu`).
+
        For example, if the ICU is located in `C:\icu4c`:
 
-       ```bat
-       set ICU_ROOT=C:\icu4c
-       ```
-
-       or in PowerShell:
+       in PowerShell:
 
        ```powershell
        $env:ICU_ROOT = "C:\icu4c"
        ```
 
-   - Linux:
+       or in Command Prompt:
+
+       ```batchfile
+       set ICU_ROOT=C:\icu4c
+       ```
+
+   - **Linux:**
 
      - If the ICU is located in a non-regular place, set the `LD_LIBRARY_PATH` environment variables.
+
        For example, if the ICU is located in `/usr/local`:
 
        ```bash
        export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
        ```
 
-2. Using `icupy`:
+2. **Using icupy**
 
    ```python
    import icupy.icu as icu
