@@ -217,7 +217,7 @@ void init_ulocdata(py::module &m) {
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(height, width);
+        return std::make_tuple(height, width);
       },
       py::arg("locale_id"));
 

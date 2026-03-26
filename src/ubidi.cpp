@@ -473,7 +473,7 @@ the Bidi algorithm.
         int32_t logical_limit;
         UBiDiLevel level;
         ubidi_getLogicalRun(bidi, logical_position, &logical_limit, &level);
-        return py::make_tuple(logical_limit, level);
+        return std::make_tuple(logical_limit, level);
       },
       py::arg("bidi"), py::arg("logical_position"));
 
@@ -488,7 +488,7 @@ the Bidi algorithm.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(result, para_start, para_limit, para_level);
+        return std::make_tuple(result, para_start, para_limit, para_level);
       },
       py::arg("bidi"), py::arg("char_index"));
 
@@ -503,7 +503,7 @@ the Bidi algorithm.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(para_start, para_limit, para_level);
+        return std::make_tuple(para_start, para_limit, para_level);
       },
       py::arg("bidi"), py::arg("para_index"));
 
@@ -572,7 +572,7 @@ the Bidi algorithm.
         int32_t logical_start, length;
         auto result =
             ubidi_getVisualRun(bidi, run_index, &logical_start, &length);
-        return py::make_tuple(result, logical_start, length);
+        return std::make_tuple(result, logical_start, length);
       },
       py::arg("bidi"), py::arg("run_index"));
 
