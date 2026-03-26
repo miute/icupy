@@ -289,8 +289,8 @@ void init_regex(py::module &m) {
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return py::make_tuple(std::make_unique<icupy::UTextPtr>(p),
-                                  group_len);
+            return std::make_tuple(std::make_unique<icupy::UTextPtr>(p),
+                                   group_len);
           },
           py::arg("group_num"), py::arg("dest"))
       .def("group",
@@ -311,8 +311,8 @@ void init_regex(py::module &m) {
             if (error_code.isFailure()) {
               throw icupy::ICUError(error_code);
             }
-            return py::make_tuple(std::make_unique<icupy::UTextPtr>(p),
-                                  group_len);
+            return std::make_tuple(std::make_unique<icupy::UTextPtr>(p),
+                                   group_len);
           },
           py::arg("dest"));
 

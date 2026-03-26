@@ -250,7 +250,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(result, py::bool_(is_system_id));
+        return std::make_tuple(std::ref(result), py::bool_(is_system_id));
       },
       py::arg("id"), py::arg("canonical_id"));
 
@@ -341,7 +341,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
           if (error_code.isFailure()) {
             throw icupy::ICUError(error_code);
           }
-          return py::make_tuple(raw_offset, dst_offset);
+          return std::make_tuple(raw_offset, dst_offset);
         },
         py::arg("date"), py::arg("local"))
       .def(
@@ -489,7 +489,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(raw_offset, dst_offset);
+        return std::make_tuple(raw_offset, dst_offset);
       },
       py::arg("date"), py::arg("non_existing_time_opt"),
       py::arg("duplicated_time_opt"));
@@ -514,7 +514,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(initial, trsrules[0], trsrules[1]);
+        return std::make_tuple(initial, trsrules[0], trsrules[1]);
       },
       py::return_value_policy::reference, py::arg("date"));
 
@@ -534,7 +534,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
           throw icupy::ICUError(error_code);
         }
         trsrules.resize(trscount);
-        return py::make_tuple(initial, trsrules);
+        return std::make_tuple(initial, trsrules);
       },
       py::return_value_policy::reference);
 
@@ -732,7 +732,7 @@ this parameter, this is not the case.
            if (error_code.isFailure()) {
              throw icupy::ICUError(error_code);
            }
-           return py::make_tuple(raw_offset, dst_offset);
+           return std::make_tuple(raw_offset, dst_offset);
          },
          py::arg("date"), py::arg("local"))
       .def(
@@ -1034,7 +1034,7 @@ this parameter, this is not the case.
   vtz.def("get_last_modified", [](const VTimeZone &self) {
     UDate last_modified;
     auto result = self.getLastModified(last_modified);
-    return py::make_tuple(py::bool_(result), last_modified);
+    return std::make_tuple(py::bool_(result), last_modified);
   });
 
   vtz.def(

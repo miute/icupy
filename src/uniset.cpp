@@ -95,7 +95,7 @@ match.
       [](UnicodeMatcher &self, const Replaceable &text, int32_t offset,
          int32_t limit, py::bool_ incremental) {
         auto result = self.matches(text, offset, limit, incremental);
-        return py::make_tuple(result, offset);
+        return std::make_tuple(result, offset);
       },
       py::arg("text"), py::arg("offset"), py::arg("limit"),
       py::arg("incremental"));

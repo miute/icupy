@@ -440,11 +440,14 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return py::make_tuple(result, py::bool_(is_available));
+        return std::make_tuple(result, py::bool_(is_available));
       },
       py::arg("keyword"), py::arg("locale"), R"doc(
-      Return the functionally equivalent locale for the specified requested
-      locale and keyword, for the collation service.
+      Return a tuple of the functionally equivalent locale and the
+      "available" flag for the specified requested locale and keyword.
+
+      A locale is defined as "available" if it physically exists within the
+      collation locale data.
       )doc");
 
   coll.def_static(
