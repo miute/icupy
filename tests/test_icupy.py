@@ -340,10 +340,13 @@ def test_u_version_to_string() -> None:
     #       const UVersionInfo versionArray,
     #       char *versionString
     # )
+
+    # from a list
     version_string = icu.u_version_to_string([123, 45, 67, 89])
     assert isinstance(version_string, str)
     assert version_string == "123.45.67.89"
 
+    # from a tuple
     version_string = icu.u_version_to_string((123, 45, 67, 89))
     assert isinstance(version_string, str)
     assert version_string == "123.45.67.89"
@@ -356,6 +359,11 @@ def test_u_version_to_string() -> None:
 
     with pytest.raises(TypeError):
         _ = icu.u_version_to_string([256, 0, 0, 0])  # [0, 255]
+
+    # from a UVersionInfo
+    version_string = icu.u_version_to_string(icu.UVersionInfo(123, 45, 67, 89))
+    assert isinstance(version_string, str)
+    assert version_string == "123.45.67.89"
 
 
 def test_uparse_error() -> None:
@@ -376,3 +384,177 @@ def test_uparse_error() -> None:
     assert repr(parse_error) == (
         "<UParseError(line=0, offset=7, pre_context='I see {', post_context='\\'many\\'}')>"
     )
+
+
+def test_uversion_info() -> None:
+    """UVersionInfo tests."""
+
+    # __init__(self, major=0, minor=0, patchlevel=0, buildlevel=0) -> None
+    vi = icu.UVersionInfo()
+    assert vi.major == 0
+    assert vi.minor == 0
+    assert vi.patchlevel == 0
+    assert vi.buildlevel == 0
+
+    vi = icu.UVersionInfo(1, 2, 3, 4)
+    assert vi.major == 1
+    assert vi.minor == 2
+    assert vi.patchlevel == 3
+    assert vi.buildlevel == 4
+
+    # TODO: Update value check in UVersionInfo.__init__: TypeError -> ValueError
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(-1, 0, 0, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, -1, 0, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, 0, -1, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, 0, 0, -1)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(256, 0, 0, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, 256, 0, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, 0, 256, 0)
+
+    with pytest.raises(TypeError):
+        _ = icu.UVersionInfo(0, 0, 0, 256)
+
+    # property setter
+    vi = icu.UVersionInfo()
+    vi.major = 1
+    vi.minor = 2
+    vi.patchlevel = 3
+    vi.buildlevel = 4
+    assert vi.major == 1
+    assert vi.minor == 2
+    assert vi.patchlevel == 3
+    assert vi.buildlevel == 4
+
+    # TODO: Update value check in property setter of UVersionInfo: TypeError -> ValueError
+    with pytest.raises(TypeError):
+        vi.major = -1
+
+    with pytest.raises(TypeError):
+        vi.minor = -1
+
+    with pytest.raises(TypeError):
+        vi.patchlevel = -1
+
+    with pytest.raises(TypeError):
+        vi.buildlevel = -1
+
+    with pytest.raises(TypeError):
+        vi.major = 256
+
+    with pytest.raises(TypeError):
+        vi.minor = 256
+
+    with pytest.raises(TypeError):
+        vi.patchlevel = 256
+
+    with pytest.raises(TypeError):
+        vi.buildlevel = 256
+
+    # __len__(self) -> int
+    vi = icu.UVersionInfo()
+    assert len(vi) == 4
+
+    # __getitem__(self, index) -> int
+    vi = icu.UVersionInfo(1, 2, 3, 4)
+    assert vi[0] == 1
+    assert vi[1] == 2
+    assert vi[2] == 3
+    assert vi[3] == 4
+    assert vi.major == 1
+    assert vi.minor == 2
+    assert vi.patchlevel == 3
+    assert vi.buildlevel == 4
+
+    # __setitem__(self, index, value) -> None
+    vi = icu.UVersionInfo()
+    vi[0] = 1
+    vi[1] = 2
+    vi[2] = 3
+    vi[3] = 4
+    assert vi[0] == 1
+    assert vi[1] == 2
+    assert vi[2] == 3
+    assert vi[3] == 4
+    assert vi.major == 1
+    assert vi.minor == 2
+    assert vi.patchlevel == 3
+    assert vi.buildlevel == 4
+
+    # TODO: Update value check in UVersionInfo.__setitem__: TypeError -> ValueError
+    with pytest.raises(TypeError):
+        vi[0] = -1
+
+    with pytest.raises(TypeError):
+        vi[0] = 256
+
+    # __str__(self) -> str
+    vi = icu.UVersionInfo(255, 1, 128, 0)
+    assert str(vi) == "255.1.128.0"
+
+    # __int__(self) -> int
+    vi = icu.UVersionInfo(0xFF, 0xFE, 0xFD, 0xFC)
+    assert int(vi) == 0xFFFEFDFC
+
+    # __eq__(self, other) -> bool
+    # __ne__(self, other) -> bool
+    vi = icu.UVersionInfo(100, 101, 102, 103)
+    assert (vi == icu.UVersionInfo(100, 101, 102, 103)) is True
+    assert (vi != icu.UVersionInfo(100, 101, 102, 0)) is True
+
+    assert (vi == (100, 101, 102, 103)) is True
+    assert (vi != (100, 101, 102, 0)) is True
+
+    # __gt__(self, other) -> bool
+    # __lt__(self, other) -> bool
+    vi = icu.UVersionInfo(100, 101, 102, 103)
+    assert (vi > icu.UVersionInfo(100, 101, 102, 103)) is False
+    assert (vi < icu.UVersionInfo(100, 101, 102, 103)) is False
+
+    assert (vi < icu.UVersionInfo(100, 101, 102, 104)) is True
+    assert (vi > icu.UVersionInfo(100, 101, 102, 104)) is False
+
+    assert (vi < icu.UVersionInfo(100, 101, 102, 102)) is False
+    assert (vi > icu.UVersionInfo(100, 101, 102, 102)) is True
+
+    assert (vi > (100, 101, 102, 103)) is False
+    assert (vi < (100, 101, 102, 103)) is False
+
+    assert (vi < (100, 101, 102, 104)) is True
+    assert (vi > (100, 101, 102, 104)) is False
+
+    assert (vi < (100, 101, 102, 102)) is False
+    assert (vi > (100, 101, 102, 102)) is True
+
+    # __ge__(self, other) -> bool
+    # __le__(self, other) -> bool
+    vi = icu.UVersionInfo(100, 101, 102, 103)
+    assert (vi >= icu.UVersionInfo(100, 101, 102, 103)) is True
+    assert (vi <= icu.UVersionInfo(100, 101, 102, 103)) is True
+
+    assert (vi <= icu.UVersionInfo(100, 101, 102, 104)) is True
+    assert (vi >= icu.UVersionInfo(100, 101, 102, 104)) is False
+
+    assert (vi <= icu.UVersionInfo(100, 101, 102, 102)) is False
+    assert (vi >= icu.UVersionInfo(100, 101, 102, 102)) is True
+
+    assert (vi >= (100, 101, 102, 103)) is True
+    assert (vi <= (100, 101, 102, 103)) is True
+
+    assert (vi <= (100, 101, 102, 104)) is True
+    assert (vi >= (100, 101, 102, 104)) is False
+
+    assert (vi <= (100, 101, 102, 102)) is False
+    assert (vi >= (100, 101, 102, 102)) is True

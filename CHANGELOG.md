@@ -1,5 +1,12 @@
 # Changelog
 
+<!-- 2026-03-27/ -->
+## Unreleased
+
+### Added
+
+- Add `icupy.icu.UVersionInfo` class and conversion function (#210)
+
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26
 
