@@ -1,7 +1,7 @@
 #include "main.hpp"
 #include "ulocdataptr.hpp"
 #include "usetptr.hpp"
-#include <algorithm>
+#include "uversion.hpp"
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -110,19 +110,20 @@ void init_ulocdata(py::module &m) {
       "ulocdata_close", [](icupy::ULocaleDataPtr &uld) { ulocdata_close(uld); },
       py::arg("uld"));
 
-  m.def("ulocdata_get_cldr_version", []() {
-    UVersionInfo version_array;
-    ErrorCode error_code;
-    ulocdata_getCLDRVersion(version_array, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(version_array), std::end(version_array),
-                  [&](auto v) { result[n++] = v; });
-    return result;
-  });
+  m.def(
+      "ulocdata_get_cldr_version",
+      []() {
+        UVersionInfo version_array{};
+        ErrorCode error_code;
+        ulocdata_getCLDRVersion(version_array, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return icupy::VersionInfo(version_array);
+      },
+      R"doc(
+      Return the current CLDR version information used by ICU.
+      )doc");
 
   m.def(
       "ulocdata_get_delimiter",

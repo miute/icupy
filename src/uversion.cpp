@@ -9,6 +9,9 @@ void init_uversion(py::module &m) {
   //
   py::class_<icupy::VersionInfo> vi(m, "UVersionInfo", R"doc(
       Array of four unsigned 8-bit integers for the ICU API version.
+
+      See Also:
+          :func:`u_version_to_string`
       )doc");
 
   vi.def_property(
@@ -256,28 +259,32 @@ void init_uversion(py::module &m) {
   //
   // Functions
   //
-  m.def("u_get_version", []() {
-    UVersionInfo info;
-    u_getVersion(info);
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(info), std::end(info),
-                  [&](auto v) { result[n++] = v; });
-    return result;
-  });
+  m.def(
+      "u_get_version",
+      []() {
+        UVersionInfo version_array{};
+        u_getVersion(version_array);
+        return icupy::VersionInfo(version_array);
+      },
+      R"doc(
+      Return the ICU release version information.
+      )doc");
 
   m.def(
       "u_version_from_string",
       [](const std::string &version_string) {
-        UVersionInfo info;
-        u_versionFromString(info, version_string.data());
-        py::tuple result(U_MAX_VERSION_LENGTH);
-        int n = 0;
-        std::for_each(std::begin(info), std::end(info),
-                      [&](auto v) { result[n++] = v; });
-        return result;
+        UVersionInfo version_array{};
+        u_versionFromString(version_array, version_string.data());
+        return icupy::VersionInfo(version_array);
       },
-      py::arg("version_string"));
+      py::arg("version_string"), R"doc(
+      Parse a string with dotted-decimal version information and return the
+      result.
+
+      *version_string* is a dot-separated decimal string with up to four
+      non-negative numeric fields, where the value of each field is between
+      0 and 255.
+      )doc");
 
   m.def(
        "u_version_to_string",

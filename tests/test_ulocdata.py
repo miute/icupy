@@ -8,8 +8,8 @@ def test_api() -> None:
     #       UErrorCode *status
     # )
     version_array = icu.ulocdata_get_cldr_version()
-    assert isinstance(version_array, tuple)
-    assert len(version_array) > 0
+    assert isinstance(version_array, icu.UVersionInfo)
+    assert len(version_array) == 4
     assert all(isinstance(x, int) for x in version_array)
 
     # UMeasurementSystem ulocdata_getMeasurementSystem(

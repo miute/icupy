@@ -580,7 +580,7 @@ def test_get_version() -> None:
 
     # void icu::Collator::getVersion(UVersionInfo info)
     info = coll.get_version()
-    assert isinstance(info, tuple)
+    assert isinstance(info, icu.UVersionInfo)
     assert len(info) == 4
     assert all(isinstance(x, int) for x in info)
     assert info[0] > 0

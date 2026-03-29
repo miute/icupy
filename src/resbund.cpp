@@ -1,6 +1,6 @@
 #include "main.hpp"
 #include "uresptr.hpp"
-#include <algorithm>
+#include "uversion.hpp"
 #include <optional>
 #include <pybind11/stl.h>
 #include <unicode/resbund.h>
@@ -241,15 +241,16 @@ void init_resbund(py::module &m) {
     return result;
   });
 
-  res.def("get_version", [](const ResourceBundle &self) {
-    UVersionInfo info;
-    self.getVersion(info);
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(info), std::end(info),
-                  [&](auto v) { result[n++] = v; });
-    return result;
-  });
+  res.def(
+      "get_version",
+      [](const ResourceBundle &self) {
+        UVersionInfo version_info{};
+        self.getVersion(version_info);
+        return icupy::VersionInfo(version_info);
+      },
+      R"doc(
+      Return the version information associated with this ``ResourceBundle``.
+      )doc");
 
   res.def("has_next", [](const ResourceBundle &self) -> py::bool_ {
     return self.hasNext();

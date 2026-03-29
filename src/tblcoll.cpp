@@ -1,5 +1,5 @@
 #include "main.hpp"
-#include <algorithm>
+#include "uversion.hpp"
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/chariter.h>
@@ -594,13 +594,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
   coll.def(
       "get_version",
       [](const Collator &self) {
-        UVersionInfo info;
+        UVersionInfo info{};
         self.getVersion(info);
-        py::tuple result(U_MAX_VERSION_LENGTH);
-        int n = 0;
-        std::for_each(std::begin(info), std::end(info),
-                      [&](auto v) { result[n++] = v; });
-        return result;
+        return icupy::VersionInfo(info);
       },
       R"doc(
       Return the version information for a ``Collator``.
