@@ -5,7 +5,7 @@
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #include "usetptr.hpp"
-#include <algorithm>
+#include "uversion.hpp"
 #include <memory>
 #include <pybind11/stl.h>
 #include <unicode/uchar.h>
@@ -2205,15 +2205,18 @@ See Also:
   m.def(
       "u_char_age",
       [](UChar32 c) {
-        UVersionInfo info;
-        u_charAge(c, info);
-        py::tuple result(U_MAX_VERSION_LENGTH);
-        int n = 0;
-        std::for_each(std::begin(info), std::end(info),
-                      [&](auto v) { result[n++] = v; });
-        return result;
+        UVersionInfo version_array{};
+        u_charAge(c, version_array);
+        return icupy::VersionInfo(version_array);
       },
-      py::arg("c"));
+      py::arg("c"), R"doc(
+      Return the "age" of the code point.
+
+      The "age" is the Unicode version when the code point was first designated
+      (as a non-character or for Private Use) or assigned a character. This can
+      be useful to avoid emitting code points to receiving processes that do
+      not accept newer characters. The data is from the UCD file DerivedAge.txt.
+      )doc");
 
   m.def("u_char_digit_value", &u_charDigitValue, py::arg("c"));
 
@@ -2364,15 +2367,16 @@ See Also:
   m.def("u_get_property_value_name", &u_getPropertyValueName,
         py::arg("property"), py::arg("value"), py::arg("name_choice"));
 
-  m.def("u_get_unicode_version", []() {
-    UVersionInfo info;
-    u_getUnicodeVersion(info);
-    py::tuple result(U_MAX_VERSION_LENGTH);
-    int n = 0;
-    std::for_each(std::begin(info), std::end(info),
-                  [&](auto v) { result[n++] = v; });
-    return result;
-  });
+  m.def(
+      "u_get_unicode_version",
+      []() {
+        UVersionInfo version_array{};
+        u_getUnicodeVersion(version_array);
+        return icupy::VersionInfo(version_array);
+      },
+      R"doc(
+      Return the Unicode version information that is currently used by ICU.
+      )doc");
 
   m.def(
       "u_has_binary_property",

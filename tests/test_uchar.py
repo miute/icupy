@@ -181,7 +181,7 @@ def test_u_char_age() -> None:
     # )
     # U+1F338: Cherry Blossom
     version_array = icu.u_char_age(0x1F338)
-    assert isinstance(version_array, tuple)
+    assert isinstance(version_array, icu.UVersionInfo)
     assert len(version_array) == 4
     assert version_array[0] == 6
     assert version_array[1] == 0
@@ -326,7 +326,7 @@ def test_u_get_int_property_map() -> None:
 def test_u_get_unicode_version() -> None:
     # void u_getUnicodeVersion(UVersionInfo versionArray)
     version_array = icu.u_get_unicode_version()
-    assert isinstance(version_array, tuple)
+    assert isinstance(version_array, icu.UVersionInfo)
     assert len(version_array) == 4
     assert version_array[0] > 0
     assert version_array[1] >= 0

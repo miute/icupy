@@ -275,6 +275,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   init_parseerr(m); // UParseError
 
+  init_uversion(m); // UVersionInfo
+
   init_parsepos(m);       // icu::ParsePosition
   init_uset(m);           // Uset
   init_ucpmap(m);         // UCPMap
@@ -333,7 +335,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utf(m);
   init_utmscale(m);
   init_utrans(m);
-  init_uversion(m);
 
   //
   // C++ APIs

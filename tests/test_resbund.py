@@ -268,13 +268,13 @@ def test_api2() -> None:
 
     # void icu::ResourceBundle::getVersion(UVersionInfo versionInfo)
     version_info = test12.get_version()
-    assert isinstance(version_info, tuple)
+    assert isinstance(version_info, icu.UVersionInfo)
     assert len(version_info) == 4
     assert version_info == (44, 0, 0, 0)
 
     test13 = icu.ResourceBundle(str(path), icu.Locale("te_IN"))
     version_info = test13.get_version()
-    assert isinstance(version_info, tuple)
+    assert isinstance(version_info, icu.UVersionInfo)
     assert len(version_info) == 4
     assert version_info == (55, 0, 0, 0)
 

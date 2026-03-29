@@ -300,7 +300,7 @@ def test_u_get_data_version() -> None:
     #       UErrorCode *status
     # )
     data_version = icu.u_get_data_version()
-    assert isinstance(data_version, tuple)
+    assert isinstance(data_version, icu.UVersionInfo)
     assert len(data_version) == 4
     assert all(isinstance(x, int) for x in data_version)
     assert all(x >= 0 for x in data_version)
@@ -309,7 +309,7 @@ def test_u_get_data_version() -> None:
 def test_u_get_version() -> None:
     # void u_getVersion(UVersionInfo versionArray)
     version_array = icu.u_get_version()
-    assert isinstance(version_array, tuple)
+    assert isinstance(version_array, icu.UVersionInfo)
     assert len(version_array) == 4
     assert all(isinstance(x, int) for x in version_array)
     assert all(x >= 0 for x in version_array)
@@ -327,7 +327,7 @@ def test_u_version_from_string() -> None:
     #       const char *versionString
     # )
     version_array = icu.u_version_from_string("123.45.67.89")
-    assert isinstance(version_array, tuple)
+    assert isinstance(version_array, icu.UVersionInfo)
     assert len(version_array) == 4
     assert version_array[0] == 123
     assert version_array[1] == 45

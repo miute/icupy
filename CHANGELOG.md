@@ -3,6 +3,10 @@
 <!-- 2026-03-27/ -->
 ## Unreleased
 
+### Changed
+
+- **Breaking:** update return type of version information functions (#211)
+
 ### Added
 
 - Add `icupy.icu.UVersionInfo` class and conversion function (#210)
