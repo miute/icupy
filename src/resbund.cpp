@@ -130,15 +130,21 @@ void init_resbund(py::module &m) {
           },
           py::arg("index"));
 
-  res.def("get_binary", [](const ResourceBundle &self) {
-    int32_t length;
-    ErrorCode error_code;
-    auto p = self.getBinary(length, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return py::bytes(reinterpret_cast<const char *>(p), length);
-  });
+  res.def(
+      "get_binary",
+      [](const ResourceBundle &self) {
+        int32_t length;
+        ErrorCode error_code;
+        auto p = self.getBinary(length, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::memoryview::from_memory(const_cast<uint8_t *>(p),
+                                           sizeof(uint8_t) * length, true);
+      },
+      R"doc(
+      Return a binary data from a resource.
+      )doc");
 
   res.def("get_int", [](const ResourceBundle &self) {
     ErrorCode error_code;

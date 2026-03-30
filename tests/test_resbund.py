@@ -157,7 +157,8 @@ def test_api2() -> None:
     #       UErrorCode &status
     # )
     result = test2.get_binary()
-    assert isinstance(result, bytes)
+    assert isinstance(result, memoryview)
+    assert result.readonly is True
     assert len(result) == 15
     assert result == b"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e"
 
@@ -166,7 +167,8 @@ def test_api2() -> None:
     assert isinstance(test3, icu.ResourceBundle)
     assert test3.get_type() == icu.UResType.URES_BINARY
     result = test3.get_binary()
-    assert isinstance(result, bytes)
+    assert isinstance(result, memoryview)
+    assert result.readonly is True
     assert len(result) == 0
 
     # "testtypes" > "minusone"
