@@ -142,6 +142,7 @@ void init_resbund(py::module &m) {
         return py::memoryview::from_memory(const_cast<uint8_t *>(p),
                                            sizeof(uint8_t) * length, true);
       },
+      py::keep_alive<0, 1>(),
       R"doc(
       Return a binary data from a resource.
       )doc");
