@@ -6,6 +6,7 @@
 ### Changed
 
 - **Breaking:** update return type of version information functions (#211)
+- Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
 
 ### Added
 

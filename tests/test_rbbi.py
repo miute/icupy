@@ -636,7 +636,7 @@ def test_rule_based_break_iterator() -> None:
     #       UErrorCode &status
     # )
     binary_rules = bi3.get_binary_rules()
-    assert isinstance(binary_rules, bytes)
+    assert isinstance(binary_rules, memoryview)
     assert len(binary_rules) > 0
     bi4 = icu.RuleBasedBreakIterator(binary_rules, len(binary_rules))
     bi4.set_text(src)

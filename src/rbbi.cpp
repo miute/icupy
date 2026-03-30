@@ -2,6 +2,7 @@
 #include "utextptr.hpp"
 #include <memory>
 #include <optional>
+#include <pybind11/numpy.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/rbbi.h>
@@ -622,9 +623,10 @@ void init_rbbi(py::module &m) {
       [](RuleBasedBreakIterator &self) {
         uint32_t length;
         auto p = self.getBinaryRules(length);
-        return py::bytes(reinterpret_cast<char *>(const_cast<uint8_t *>(p)),
-                         length);
+        return py::memoryview::from_memory(const_cast<uint8_t *>(p),
+                                           sizeof(uint8_t) * length);
       },
+      py::keep_alive<0, 1>(),
       R"doc(
       Return the binary form of compiled break rules.
 
