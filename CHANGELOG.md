@@ -8,10 +8,15 @@
 - **Breaking:** update return type of version information functions (#211)
 - Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
 - Update return type of `icupy.icu.ResourceBundle.get_binary()` (#213)
+- Update return type of `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` (#215)
 
 ### Added
 
 - Add `icupy.icu.UVersionInfo` class and conversion function (#210)
+
+### Removed
+
+- Delete `icupy.icu.ConstChar16Ptr` class (#215)
 
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26

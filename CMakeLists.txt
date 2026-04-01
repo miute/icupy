@@ -33,7 +33,6 @@ python_add_library(
     src/appendable.cpp
     src/caniter.cpp
     src/casemap.cpp
-    src/char16ptr.cpp
     src/coleitr.cpp
     src/compactdecimalformat.cpp
     src/currpinf.cpp
