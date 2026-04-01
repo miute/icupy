@@ -1,4 +1,3 @@
-#include "char16ptr.hpp"
 #include "main.hpp"
 #include "ucnv_err.hpp"
 #include <iomanip>
@@ -948,18 +947,27 @@ string.
 
   us.def(
       "get_buffer",
-      [](const UnicodeString &self)
-          -> std::optional<std::unique_ptr<icupy::ConstChar16Ptr>> {
+      [](const UnicodeString &self) -> std::optional<py::memoryview> {
         auto p = self.getBuffer();
         if (p == nullptr) {
           return std::nullopt;
         }
-        return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
-                                                       self.getCapacity());
+        return py::memoryview::from_buffer(
+            reinterpret_cast<uint16_t *>(const_cast<char16_t *>(p)),
+            sizeof(uint16_t), py::format_descriptor<uint16_t>::value,
+            {self.getCapacity()}, {sizeof(uint16_t)}, true);
       },
       py::keep_alive<0, 1>(), R"doc(
-      .. deprecated:: 0.23
-          Use :meth:`.__getitem__` instead.
+      Return a read-only internal buffer.
+
+      Note:
+          The ``memoryview`` object returned by this function is valid until
+          the ``UnicodeString`` object is modified. Once modified, the
+          ``memoryview`` object becomes semantically invalid and should not be
+          used anymore.
+
+      See Also:
+          :meth:`.get_terminated_buffer`
       )doc");
 
   us.def("get_capacity", &UnicodeString::getCapacity);
@@ -970,18 +978,29 @@ string.
 
   us.def(
       "get_terminated_buffer",
-      [](UnicodeString &self)
-          -> std::optional<std::unique_ptr<icupy::ConstChar16Ptr>> {
+      [](UnicodeString &self) -> std::optional<py::memoryview> {
         auto p = self.getTerminatedBuffer();
         if (p == nullptr) {
           return std::nullopt;
         }
-        return std::make_unique<icupy::ConstChar16Ptr>(p, self.length(),
-                                                       self.getCapacity());
+        return py::memoryview::from_buffer(
+            reinterpret_cast<uint16_t *>(const_cast<char16_t *>(p)),
+            sizeof(uint16_t), py::format_descriptor<uint16_t>::value,
+            {self.getCapacity()}, {sizeof(uint16_t)}, true);
       },
       py::keep_alive<0, 1>(), R"doc(
-      .. deprecated:: 0.23
-          Use :meth:`.__getitem__` instead.
+      Return a read-only internal buffer.
+
+      The buffer contents is guaranteed to be NULL-terminated.
+
+      Note:
+          The ``memoryview`` object returned by this function is valid until
+          the ``UnicodeString`` object is modified. Once modified, the
+          ``memoryview`` object becomes semantically invalid and should not be
+          used anymore.
+
+      See Also:
+          :meth:`.get_buffer`
       )doc");
 
   us.def("hash_code", &UnicodeString::hashCode);

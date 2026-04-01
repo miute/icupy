@@ -13,7 +13,6 @@ void init_alphaindex(py::module &m);
 void init_appendable(py::module &m);
 void init_caniter(py::module &m);
 void init_casemap(py::module &m);
-void init_char16ptr(py::module &m);
 void init_coleitr(py::module &m);
 void init_compactdecimalformat(py::module &m);
 void init_currpinf(py::module &m);
@@ -267,8 +266,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utypes(m);    // UErrorCode
   init_errorcode(m); // icu::ErrorCode
 
-  init_char16ptr(m); // ConstChar16Ptr
-  init_voidptr(m);   // ConstVoidPtr
+  init_voidptr(m); // ConstVoidPtr
 
   //
   // C APIs
