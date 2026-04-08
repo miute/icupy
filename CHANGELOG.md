@@ -14,6 +14,7 @@
 ### Added
 
 - Add `icupy.icu.UVersionInfo` class and conversion function (#210)
+- Add helper functions for 16-bit code unit (#218)
 
 ### Removed
 
