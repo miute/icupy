@@ -9,6 +9,7 @@
 - Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
 - Update return type of `icupy.icu.ResourceBundle.get_binary()` (#213)
 - Update return type of `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` (#215)
+- Bump pybind11 from 3.0.2 to 3.0.3 (#217)
 
 ### Added
 
