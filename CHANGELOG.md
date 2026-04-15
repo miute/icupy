@@ -9,6 +9,7 @@
 - Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
 - Update return type of `icupy.icu.ResourceBundle.get_binary()` (#213)
 - Update return type of `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` (#215)
+- Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` (#221)
 - Bump pybind11 from 3.0.2 to 3.0.3 (#217)
 
 ### Added
@@ -19,6 +20,11 @@
 ### Removed
 
 - Delete `icupy.icu.ConstChar16Ptr` class (#215)
+- Delete `icupy.icu.Transliterator.Token` class (#221)
+
+### Fixed
+
+- Fix `UTransPosition` changes in `icupy.icu.Transliterator._handle_transliterate()` to propagate to the caller (#221)
 
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26
