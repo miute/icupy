@@ -14,7 +14,7 @@ class _TestTrans(icu.Transliterator):
     # )
     def __init__(self, id_: icu.UnicodeString | str) -> None:
         super().__init__(id_, None)
-        self.num_calls: int = 0
+        self.num_calls = 0
 
     # virtual void icu::Transliterator::handleTransliterate(
     #       Replaceable &text,
@@ -40,23 +40,19 @@ class _TestTrans2(icu.Transliterator):
     def __init__(
         self,
         id_: icu.UnicodeString | str,
-        filter_set: icu.UnicodeSet = None,
+        filter_set: icu.UnicodeSet | None = None,
     ) -> None:
         super().__init__("Null", filter_set)
-        self.num_calls: int = 0
+        self.num_calls = 0
         self._trans: list[icu.Transliterator] = []
-        for basic_id in str(id_).strip(";").split(";"):
-            basic_id = basic_id.strip()  # noqa: PLW2901
-            if len(basic_id) == 0:
-                # static Transliterator *icu::Transliterator::createBasicInstance(
-                #       const UnicodeString &id,
-                #       const UnicodeString *canon
-                # )
-                t = self._create_basic_instance(icu.UnicodeString("Any-Null"), None)
-            else:
-                t = self._create_basic_instance(basic_id, None)
-            if t:
+        for basic_id in filter(None, map(str.strip, str(id_).split(";"))):
+            t = self._create_basic_instance(basic_id, None)
+            if t is not None:
                 self._trans.append(t)
+
+        if len(self._trans) == 0:
+            t = self._create_basic_instance(icu.UnicodeString("Any-Null"), None)
+            self._trans.append(t)
 
         names: list[str] = []
         x = 0

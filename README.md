@@ -216,6 +216,44 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   fmtval.to_string()  # → "1'234'567"
   ```
 
+- Subclassing [icu::Transliterator](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1Transliterator.html)
+
+  ```python
+  # Uppercase letters while skipping text enclosed in backticks
+  from icupy import icu
+  class TestTransliterator(icu.Transliterator):
+      def __init__(self, filter_set: icu.UnicodeSet | None = None) -> None:
+          icu.Transliterator.__init__(self, "Any-UpperWithoutCode", filter_set)
+      def _handle_transliterate(
+          self,
+          text: icu.Replaceable,
+          pos: icu.UTransPosition,
+          incremental: bool,
+      ) -> None:
+          # Implement the transliteration algorithm here.
+          cursor = pos.start
+          in_backtick = False
+          while cursor < pos.limit:
+              c = text.char32_at(cursor)
+              char_len = icu.u16_length(c)
+              if c == 0x60:
+                  in_backtick = not in_backtick
+                  cursor += char_len
+                  continue
+              if not in_backtick and icu.u_isalpha(c) and icu.u_islower(c):
+                  upper = icu.u_toupper(c)
+                  if upper != c:
+                      text.handle_replace_between(cursor, cursor + char_len, chr(upper))
+                      char_len = icu.u16_length(upper)
+              cursor += char_len
+          pos.start = pos.limit
+
+  tl = TestTransliterator()
+  text = icu.UnicodeString("Subclasses must implement `_handle_transliterate()`, which defines their own transliteration algorithm.")
+  tl.transliterate(text)
+  # text: "SUBCLASSES MUST IMPLEMENT `_handle_transliterate()`, WHICH DEFINES THEIR OWN TRANSLITERATION ALGORITHM."
+  ```
+
 ## Installation
 
 ### Prerequisites
