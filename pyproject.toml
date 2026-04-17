@@ -153,3 +153,10 @@ warn_return_any = true
 check_untyped_defs = true
 verbosity = 0
 exclude = ["^src/third_party"]
+
+[tool.yamlfix]
+explicit_start = false
+whitelines = 1
+comments_whitelines = 1
+section_whitelines = 1
+line_length = 120
