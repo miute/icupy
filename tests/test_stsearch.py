@@ -107,7 +107,7 @@ def test_api() -> None:
     assert it.next() == 4
     assert it.next() == icu.USEARCH_DONE
 
-    assert list(it) == [0, 4]
+    assert list(it) == [(0, 4), (4, 8)]
 
     # int32_t icu::SearchIterator::preceding(
     #       int32_t position,
@@ -129,7 +129,7 @@ def test_api() -> None:
     assert it.previous() == 0
     assert it.previous() == icu.USEARCH_DONE
 
-    assert reversed(it) == [4, 0]
+    assert reversed(it) == [(4, 8), (0, 4)]
 
     assert it.get_offset() == 0
     it.set_offset(4)
