@@ -6,6 +6,8 @@
 ### Changed
 
 - **Breaking:** update return type of version information functions (#211)
+- **Breaking:** update `icupy.icu.SearchIterator.__next__()` to return tuple of start and end indices instead of start index of match (#224)
+- **Breaking:** update `icupy.icu.SearchIterator.__reversed__()` to return list of `(start, end)` tuples instead of list of start indices of matches (#224)
 - Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
 - Update return type of `icupy.icu.ResourceBundle.get_binary()` (#213)
 - Update return type of `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` (#215)
