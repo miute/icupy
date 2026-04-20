@@ -5,136 +5,136 @@
 
 ### Changed
 
-- **Breaking:** update return type of version information functions (#211)
-- **Breaking:** update `icupy.icu.SearchIterator.__next__()` to return tuple of start and end indices instead of start index of match (#224)
-- **Breaking:** update `icupy.icu.SearchIterator.__reversed__()` to return list of `(start, end)` tuples instead of list of start indices of matches (#224)
-- Update return type of `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` (#212)
-- Update return type of `icupy.icu.ResourceBundle.get_binary()` (#213)
-- Update return type of `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` (#215)
-- Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` (#221)
-- Bump pybind11 from 3.0.2 to 3.0.3 (#217)
+- **Breaking:** update version information APIs to return `UVersionInfo` instead of 4-tuple ([#211])
+- **Breaking:** update `icupy.icu.SearchIterator.__next__()` to return tuple of start and end indices instead of start index of match ([#224])
+- **Breaking:** update `icupy.icu.SearchIterator.__reversed__()` to return list of `(start, end)` tuples instead of list of start indices of matches ([#224])
+- Update `icupy.icu.RuleBasedBreakIterator.get_binary_rules()` to return `memoryview` instead of `bytes` ([#212])
+- Update `icupy.icu.ResourceBundle.get_binary()` to return `memoryview` instead of `bytes` ([#213])
+- Update `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` to return `memoryview` instead of `ConstChar16Ptr` ([#215])
+- Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
+- Bump pybind11 from 3.0.2 to 3.0.3 ([#217])
 
 ### Added
 
-- Add `icupy.icu.UVersionInfo` class and conversion function (#210)
-- Add helper functions for 16-bit code unit (#218)
+- Add `icupy.icu.UVersionInfo` class and conversion function ([#210])
+- Add helper functions for 16-bit code unit ([#218])
 
 ### Removed
 
-- Delete `icupy.icu.ConstChar16Ptr` class (#215)
-- Delete `icupy.icu.Transliterator.Token` class (#221)
+- Delete `icupy.icu.ConstChar16Ptr` class ([#215])
+- Delete `icupy.icu.Transliterator.Token` class ([#221])
 
 ### Fixed
 
-- Fix `UTransPosition` changes in `icupy.icu.Transliterator._handle_transliterate()` to propagate to the caller (#221)
+- Fix `UTransPosition` changes in `icupy.icu.Transliterator._handle_transliterate()` to propagate to the caller ([#221])
 
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26
 
 ### Changed
 
-- **Breaking:** update parameters of `icupy.icu.UnicodeString.__init__()` (#148)
-- **Breaking:** update parameters of `icupy.icu.UnicodeString.from_utf32()` (#199)
-- **Breaking:** update return type of `icupy.icu.UnicodeString.to_utf32()` (#199)
-- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` (#164)
-- **Breaking:** update parameters and return type of `icupy.icu.TimeZoneFormat.format()` and `.parse()` (#167)
-- **Breaking:** refactor `icupy.icu.RegexMatcher` callback API (#174, #175, #176, #183)
+- **Breaking:** update parameters of `icupy.icu.UnicodeString.__init__()` ([#148])
+- **Breaking:** update parameters of `icupy.icu.UnicodeString.from_utf32()` ([#199])
+- **Breaking:** update `icupy.icu.UnicodeString.to_utf32()` to return `bytes` instead of `str` ([#199])
+- **Breaking:** update `icupy.icu.UnicodeSet.__getitem__(index: int)` to return `str` instead of `UnicodeString` ([#164])
+- **Breaking:** update parameters and return type of `icupy.icu.TimeZoneFormat.format()` and `.parse()` to return tuple of result and time type, instead of just returning result ([#167])
+- **Breaking:** improve RegexMatcher callback API ([#174], [#175], [#176], [#183])
   - Rename `icupy.icu.URegexFindProgressCallbackPtr` to `icupy.icu.URegexFindProgressCallback`
   - Update parameters of `icupy.icu.RegexMatcher.set_find_progress_callback()`
   - Update parameters of `icupy.icu.URegexFindProgressCallback.__init__()`
-  - Update return type of `icupy.icu.RegexMatcher.get_find_progress_callback()`
+  - Update `icupy.icu.RegexMatcher.get_find_progress_callback()` to return `URegexFindProgressCallback` instead of `(URegexFindProgressCallbackPtr, ConstVoidPtr)`
   - Rename `icupy.icu.URegexMatchCallbackPtr` to `icupy.icu.URegexMatchCallback`
   - Update parameters of `icupy.icu.RegexMatcher.set_match_callback()`
   - Update parameters of `icupy.icu.URegexMatchCallback.__init__()`
-  - Update return type of `icupy.icu.RegexMatcher.get_match_callback()`
-- **Breaking:** refactor UBiDi callback API (#178, #183)
+  - Update `icupy.icu.RegexMatcher.get_match_callback()` to return `URegexMatchCallback` instead of `(URegexMatchCallbackPtr, ConstVoidPtr)`
+- **Breaking:** improve UBiDi callback API ([#178], [#183])
   - Rename `icupy.icu.UBiDiClassCallbackPtr` to `icupy.icu.UBiDiClassCallback`
-  - Update parameters and return type of `icupy.icu.ubidi_set_class_callback()`
+  - Update parameters and return type of `icupy.icu.ubidi_set_class_callback()` to return `UBiDiClassCallback` instead of `(UBiDiClassCallbackPtr, ConstVoidPtr)`
   - Update parameters of `icupy.icu.UBiDiClassCallback.__init__()`
-  - Update return type of  `icupy.icu.ubidi_get_class_callback()`
-- **Breaking:** refactor UConverter callback API (#180, #183)
+  - Update `icupy.icu.ubidi_get_class_callback()` to return `UBiDiClassCallback` instead of `(UBiDiClassCallbackPtr, ConstVoidPtr)`
+- **Breaking:** improve UConverter callback API ([#180], [#183])
   - Rename `icupy.icu.UConverterFromUCallbackPtr` to `icupy.icu.UConverterFromUCallback`
-  - Update parameters and return type of `icupy.icu.ucnv_set_from_u_call_back()`
+  - Update parameters and return type of `icupy.icu.ucnv_set_from_u_call_back()` to return `UConverterFromUCallback` instead of `(UConverterFromUCallbackPtr, ConstVoidPtr)`
   - Update parameters of `icupy.icu.UConverterFromUCallback.__init__()`
-  - Update return type of `icupy.icu.ucnv_get_from_u_call_back()`
+  - Update `icupy.icu.ucnv_get_from_u_call_back()` to return `UConverterFromUCallback` instead of `(UConverterFromUCallbackPtr, ConstVoidPtr)`
   - Rename `icupy.icu.UConverterToUCallbackPtr` to `icupy.icu.UConverterToUCallback`
-  - Update parameters and return type of `icupy.icu.ucnv_set_to_u_call_back()`
+  - Update parameters and return type of `icupy.icu.ucnv_set_to_u_call_back()` to return `UConverterToUCallback` instead of `(UConverterToUCallbackPtr, ConstVoidPtr)`
   - Update parameters of `icupy.icu.UConverterToUCallback.__init__()`
-  - Update return type of `icupy.icu.ucnv_get_to_u_call_back()`
-- **Breaking:** refactor `ucpmap_get_range()` (#182)
+  - Update `icupy.icu.ucnv_get_to_u_call_back()` to return `UConverterToUCallback` instead of `(UConverterToUCallbackPtr, ConstVoidPtr)`
+- **Breaking:** improve `ucpmap_get_range()` ([#182])
   - Rename `icupy.icu.UCPMapValueFilterPtr` to `icupy.icu.UCPMapValueFilter`
   - Update parameters of `icupy.icu.ucpmap_get_range()`
   - Update parameters of `icupy.icu.UCPMapValueFilter.__init__()`
-- **Breaking:** remove trailing underscores from parameter names in several APIs (#187)
-- Mark previously deprecated API as stable again (#198)
-- Deprecate `icupy.icu.ConstVoidPtr.to_object()`; use `.value()` instead (#159)
-- Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead (#200)
-- Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__(index: int)` instead (#200)
-- Improve type checking (#154)
-- Update docstring (#196)
-- Bump pybind11 from 3.0.1 to 3.0.2 (#197)
+- **Breaking:** remove trailing underscores from parameters in several APIs ([#187])
+- Mark previously deprecated APIs as stable again ([#198])
+- Deprecate `icupy.icu.ConstVoidPtr.to_object()`; use `.value()` instead ([#159])
+- Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead ([#200])
+- Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__(index: int)` instead ([#200])
+- Improve type checking ([#154])
+- Update docstring ([#196])
+- Bump pybind11 from 3.0.1 to 3.0.2 ([#197])
 
 ### Added
 
-- Add support for [ICU 78.3] (#170, #205)
-- Add `error_code` attribute to `icupy.icu.ICUError` (#162)
+- Add support for [ICU 78.3] ([#170], [#205])
+- Add `error_code` attribute to `icupy.icu.ICUError` ([#162])
 
 ### Fixed
 
-- Fix UnicodeDecodeError in UConverter From Unicode callback function (#180)
-- Add missing functions (#148, #202)
-- Add missing enums (#203)
-- Fix return type of comparison operator for `icupy.icu.UnicodeSet` (#165)
+- Fix UnicodeDecodeError in UConverter From Unicode callback function ([#180])
+- Add missing functions ([#148], [#202])
+- Add missing enums ([#203])
+- Fix comparison operators for `icupy.icu.UnicodeSet` to return `bool` instead of `int` ([#165])
 
 <!-- 2025-04-06/2025-11-02 -->
 ## [0.22.0] - 2025-11-02
 
 ### Changed
 
-- **Breaking:** update return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` (#135)
-- Bump pybind11 from 2.13.6 to 3.0.1 (#122, #131)
+- **Breaking:** update `icupy.icu.UnicodeString.__getitem__(slice: slice)` to return `str` instead of `UnicodeString` ([#135])
+- Bump pybind11 from 2.13.6 to 3.0.1 ([#122], [#131])
 
 ### Added
 
-- Add support for Python 3.14 (#132)
-- Add support for [ICU 78.1] (#134)
+- Add support for Python 3.14 ([#132])
+- Add support for [ICU 78.1] ([#134])
 
 ### Removed
 
-- **Breaking:** drop support for CMake old than 3.15 (#115)
-- **Breaking:** drop support for Python 3.9 (#130)
-- Remove `icupy.icu.MeasureUnit.create_milligram_of_glucose_per_deciliter()`; use `.create_milligram_ofglucose_per_deciliter()` instead (#134)
-- Remove `icupy.icu.MeasureUnit.get_milligram_of_glucose_per_deciliter()`; use `.get_milligram_ofglucose_per_deciliter()` instead (#134)
+- **Breaking:** drop support for CMake old than 3.15 ([#115])
+- **Breaking:** drop support for Python 3.9 ([#130])
+- Remove `icupy.icu.MeasureUnit.create_milligram_of_glucose_per_deciliter()`; use `.create_milligram_ofglucose_per_deciliter()` instead ([#134])
+- Remove `icupy.icu.MeasureUnit.get_milligram_of_glucose_per_deciliter()`; use `.get_milligram_ofglucose_per_deciliter()` instead ([#134])
 
 ### Fixed
 
-- Fix UnicodeDecodeError in `icupy.icu.UnicodeString.__getitem__(index: int)` (#135)
-- Fix IndexError message when index is negative (#136)
+- Fix UnicodeDecodeError in `icupy.icu.UnicodeString.__getitem__(index: int)` ([#135])
+- Fix IndexError message when index is negative ([#136])
 
 <!-- /2025-03-15 -->
 ## [0.21.0] - 2025-03-15
 
 ### Added
 
-- Add support for [ICU 77.1] (#107)
+- Add support for [ICU 77.1] ([#107])
 
 <!-- 2024-10-18/2024-10-26 -->
 ## [0.20.0] - 2024-10-26
 
 ### Changed
 
-- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(index: int)` (#93)
+- **Breaking:** update `icupy.icu.UnicodeSet.__getitem__(index: int)` to return `str` instead of `int` ([#93])
 - Bump pybind11 from 2.12.0 to 2.13.6
 
 ### Added
 
 - Add support for Python 3.13
-- Add support for [ICU 76.1] (#93)
+- Add support for [ICU 76.1] ([#93])
 
 ### Removed
 
 - **Breaking:** drop support for Python 3.8
-- **Breaking:** remove `icupy.icu.UnicodeSet.__getitem__(slice: slice)` (#93)
+- **Breaking:** remove `icupy.icu.UnicodeSet.__getitem__(slice: slice)` ([#93])
 
 <!-- /2024-05-02 -->
 ## [0.19.0] - 2024-05-02
@@ -146,7 +146,7 @@
 ### Added
 
 - Add support for [ICU 74.2]
-- Add support for [ICU 75.1] (#73)
+- Add support for [ICU 75.1] ([#73])
 
 <!-- 2023-10-12/2023-11-01 -->
 ## [0.18.0] - 2023-11-01
@@ -211,14 +211,14 @@
 
 ### Changed
 
-- **Breaking:** update return type of `icupy.icu.UnicodeSet.__getitem__(slice: slice)` (c0ad903)
+- **Breaking:** update `icupy.icu.UnicodeSet.__getitem__(slice: slice)` to return `UnicodeSet` instead of `list[int]` (c0ad903)
 - **Breaking:** update parameters of `icupy.icu.CollationKey.__init__()` (f585245)
-- **Breaking:** update return type of `icupy.icu.CollationKey.get_byte_array()` (f585245)
-- **Breaking:** update return type of `icupy.icu.ResourceBundle.get_binary()` (532667d)
-- **Breaking:** update return type of `icupy.icu.RuleBasedCollator.get_sort_key()` (6b13e2a)
-- **Breaking:** update parameters and return type of `icupy.icu.Collator.get_bound()` (056a18d)
-- **Breaking:** update return type of functions that takes `UVersionInfo` as an output parameter (b6b5d28)
-- **Breaking:** update return type of `icupy.icu.UnicodeString.__getitem__(slice: slice)` (eea7135)
+- **Breaking:** update `icupy.icu.CollationKey.get_byte_array()` to return `bytes` instead of `list[int]` (f585245)
+- **Breaking:** update `icupy.icu.ResourceBundle.get_binary()` to return `bytes` instead of `list[int]` (532667d)
+- **Breaking:** update `icupy.icu.RuleBasedCollator.get_sort_key()` to return `bytes` instead of `list[int]` (6b13e2a)
+- **Breaking:** update parameters and return type of `icupy.icu.Collator.get_bound()`; `list[int]` → `bytes` (056a18d)
+- **Breaking:** update `icupy.icu.UnicodeString.__getitem__(slice: slice)` to return `UnicodeString` instead of `str` (eea7135)
+- Update return type of functions that takes `UVersionInfo` as output parameter; `list` → `tuple` (b6b5d28)
 - Improve `icupy.icu.UTextVector` (aeb1d4c, 01a19e4)
 - Refactor `icupy.icu.UnicodeStringVector` (5e3bd6e)
 - Bump pybind11 from 2.9.2 to 2.10.0
@@ -249,8 +249,8 @@
 
 ### Added
 
-- Enable the creation of subclasses of `icupy.icu.SearchIterator` (83da181, 34e91eb)
-- Enable the creation of subclasses of `icupy.icu.Transliterator` (3499f54)
+- Enable creation of subclasses of `icupy.icu.SearchIterator` (83da181, 34e91eb)
+- Enable creation of subclasses of `icupy.icu.Transliterator` (3499f54)
 - Add `.__hash__()` to several APIs (97b0e6c)
 - Add `icupy.icu.UnicodeString.handle_replace_between()` (24a4935)
 
@@ -264,7 +264,7 @@
 ### Changed
 
 - Change locale parameter from `Locale` to `Locale | str` in several APIs (d686d3e, dafa93e)
-- Update return type of `icupy.icu.RuleBasedCollator.clone_binary()` (d95f4ee)
+- Update `icupy.icu.RuleBasedCollator.clone_binary()` to return `bytes` instead of `list[int]` (d95f4ee)
 
 ### Added
 
@@ -326,3 +326,48 @@ Initial release.
 [0.21.0]: https://github.com/miute/icupy/releases/tag/v0.21.0
 [0.22.0]: https://github.com/miute/icupy/releases/tag/v0.22.0
 [0.23.0]: https://github.com/miute/icupy/releases/tag/v0.23.0
+
+[#73]: https://github.com/miute/icupy/pull/73
+[#93]: https://github.com/miute/icupy/pull/93
+[#107]: https://github.com/miute/icupy/pull/107
+[#115]: https://github.com/miute/icupy/pull/115
+[#122]: https://github.com/miute/icupy/pull/122
+[#130]: https://github.com/miute/icupy/pull/130
+[#131]: https://github.com/miute/icupy/pull/131
+[#132]: https://github.com/miute/icupy/pull/132
+[#134]: https://github.com/miute/icupy/pull/134
+[#135]: https://github.com/miute/icupy/pull/135
+[#136]: https://github.com/miute/icupy/pull/136
+[#148]: https://github.com/miute/icupy/pull/148
+[#154]: https://github.com/miute/icupy/pull/154
+[#159]: https://github.com/miute/icupy/pull/159
+[#162]: https://github.com/miute/icupy/pull/162
+[#164]: https://github.com/miute/icupy/pull/164
+[#165]: https://github.com/miute/icupy/pull/165
+[#167]: https://github.com/miute/icupy/pull/167
+[#170]: https://github.com/miute/icupy/pull/170
+[#174]: https://github.com/miute/icupy/pull/174
+[#175]: https://github.com/miute/icupy/pull/175
+[#176]: https://github.com/miute/icupy/pull/176
+[#178]: https://github.com/miute/icupy/pull/178
+[#180]: https://github.com/miute/icupy/pull/180
+[#182]: https://github.com/miute/icupy/pull/182
+[#183]: https://github.com/miute/icupy/pull/183
+[#187]: https://github.com/miute/icupy/pull/187
+[#196]: https://github.com/miute/icupy/pull/196
+[#197]: https://github.com/miute/icupy/pull/197
+[#198]: https://github.com/miute/icupy/pull/198
+[#199]: https://github.com/miute/icupy/pull/199
+[#200]: https://github.com/miute/icupy/pull/200
+[#202]: https://github.com/miute/icupy/pull/202
+[#203]: https://github.com/miute/icupy/pull/203
+[#205]: https://github.com/miute/icupy/pull/205
+[#210]: https://github.com/miute/icupy/pull/210
+[#211]: https://github.com/miute/icupy/pull/211
+[#212]: https://github.com/miute/icupy/pull/212
+[#213]: https://github.com/miute/icupy/pull/213
+[#215]: https://github.com/miute/icupy/pull/215
+[#217]: https://github.com/miute/icupy/pull/217
+[#218]: https://github.com/miute/icupy/pull/218
+[#221]: https://github.com/miute/icupy/pull/221
+[#224]: https://github.com/miute/icupy/pull/224
