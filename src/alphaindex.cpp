@@ -236,10 +236,17 @@ Alphabetic Indexes that will also use them.
     return result;
   });
 
-  ai.def("get_record_data", [](const AlphabeticIndex &self) {
-    return reinterpret_cast<icupy::ConstVoidPtr *>(
-        const_cast<void *>(self.getRecordData()));
-  });
+  ai.def(
+      "get_record_data",
+      [](const AlphabeticIndex &self) -> std::optional<icupy::ConstVoidPtr *> {
+        auto data = self.getRecordData();
+        if (data == nullptr) {
+          return std::nullopt;
+        }
+        return reinterpret_cast<icupy::ConstVoidPtr *>(
+            const_cast<void *>(data));
+      },
+      py::return_value_policy::reference);
 
   ai.def("get_record_name", &AlphabeticIndex::getRecordName);
 
