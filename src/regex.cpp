@@ -1,6 +1,6 @@
+#include "context.hpp"
 #include "uregex.hpp"
 #include "utextvec.hpp"
-#include "voidptr.hpp"
 #include <memory>
 #include <optional>
 #include <pybind11/operators.h>
@@ -531,7 +531,7 @@ void init_regex(py::module &m) {
           ...     return True if max_calls < 0 else calls < max_calls
           ...
           >>> info: dict[str, int] = {}
-          >>> context = icu.ConstVoidPtr(info)
+          >>> context = icu.UserContext(info)
           >>> callback = icu.URegexFindProgressCallback(progress_callback, context)
           >>> matcher.set_find_progress_callback(callback)
           >>> matcher.find(0)
@@ -581,7 +581,7 @@ void init_regex(py::module &m) {
           ...     return True if max_calls < 0 else calls < max_calls
           ...
           >>> info: dict[str, int] = {}
-          >>> context = icu.ConstVoidPtr(info)
+          >>> context = icu.UserContext(info)
           >>> callback = icu.URegexMatchCallback(matching_callback, context)
           >>> matcher.set_match_callback(callback)
           >>> matcher.matches(0)

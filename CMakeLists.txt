@@ -35,6 +35,7 @@ python_add_library(
     src/casemap.cpp
     src/coleitr.cpp
     src/compactdecimalformat.cpp
+    src/context.cpp
     src/currpinf.cpp
     src/currunit.cpp
     src/datefmt.cpp
@@ -108,9 +109,9 @@ python_add_library(
     src/ubrk.cpp
     src/ucal.cpp
     src/uchar.cpp
-    src/ucnv.cpp
     src/ucnv_cb.cpp
     src/ucnv_err.cpp
+    src/ucnv.cpp
     src/ucol.cpp
     src/ucpmap.cpp
     src/ucsdet.cpp
@@ -156,7 +157,6 @@ python_add_library(
     src/utrans.cpp
     src/utypes.cpp
     src/uversion.cpp
-    src/voidptr.cpp
     WITH_SOABI
 )
 

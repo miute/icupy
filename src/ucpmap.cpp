@@ -119,7 +119,7 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
     )doc");
 
   vf.def(py::init([](const icupy::ValueFilterFunction &action,
-                     std::optional<const icupy::ConstVoidPtr *> context) {
+                     std::optional<const icupy::UserContext *> context) {
            return std::make_unique<icupy::UCPMapValueFilterPtr>(
                action, context.value_or(nullptr));
          }),
@@ -136,12 +136,12 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
   vf.def(
       "context",
       [](const icupy::UCPMapValueFilterPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
         }
-        return reinterpret_cast<const icupy::ConstVoidPtr *>(pair->second);
+        return reinterpret_cast<const icupy::UserContext *>(pair->second);
       },
       py::return_value_policy::reference,
       R"doc(
@@ -213,7 +213,7 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
           ...
           >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
           >>> eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
-          >>> context = icu.ConstVoidPtr(eaw_map)
+          >>> context = icu.UserContext(eaw_map)
           >>> action = icu.UCPMapValueFilter(my_filter, context)
           >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
           >>> start = 0

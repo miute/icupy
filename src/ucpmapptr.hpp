@@ -1,8 +1,8 @@
 #ifndef ICUPY_UCPMAPPTR_HPP
 #define ICUPY_UCPMAPPTR_HPP
 
+#include "context.hpp"
 #include "main.hpp"
-#include "voidptr.hpp"
 #include <functional>
 #include <unicode/ucpmap.h>
 
@@ -13,7 +13,7 @@ using ValueFilterArgs = uint32_t(py::object &, uint32_t);
 using ValueFilterFunction = std::function<ValueFilterArgs>;
 
 using ValueFilterAndContextPair =
-    std::pair<const ValueFilterFunction, const ConstVoidPtr *>;
+    std::pair<const ValueFilterFunction, const UserContext *>;
 
 using SharedValueFilterAndContextPair =
     std::shared_ptr<ValueFilterAndContextPair>;
@@ -42,7 +42,7 @@ private:
 class UCPMapValueFilterPtr {
 public:
   UCPMapValueFilterPtr(const ValueFilterFunction &filter,
-                       const ConstVoidPtr *context) {
+                       const UserContext *context) {
     action_and_context_ =
         std::make_shared<ValueFilterAndContextPair>(filter, context);
   }

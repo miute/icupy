@@ -1,5 +1,5 @@
 #include "uregex.hpp"
-#include "voidptr.hpp"
+#include "context.hpp"
 #include <optional>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
@@ -131,7 +131,7 @@ See Also:
            callback function.
            )doc")
       .def(py::init([](const icupy::FindProgressCallbackFunction &action,
-                       std::optional<const icupy::ConstVoidPtr *> &context) {
+                       std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::URegexFindProgressCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
@@ -158,7 +158,7 @@ See Also:
   rfcb.def(
       "context",
       [](const icupy::URegexFindProgressCallbackPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
@@ -187,7 +187,7 @@ See Also:
            function.
            )doc")
       .def(py::init([](const icupy::MatchCallbackFunction &action,
-                       std::optional<const icupy::ConstVoidPtr *> &context) {
+                       std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::URegexMatchCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
@@ -211,7 +211,7 @@ See Also:
   rmcb.def(
       "context",
       [](const icupy::URegexMatchCallbackPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;

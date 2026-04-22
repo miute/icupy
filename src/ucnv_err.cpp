@@ -67,9 +67,9 @@ void UConverterFromUCallbackPtr::callback(const void *native_context,
         "UConverterFromUCallback: callback function is not set or invalid");
   }
   auto &action = std::get<FromUCallbackFunction>(variant);
-  const ConstVoidPtr *context = nullptr;
+  const UserContext *context = nullptr;
   if (pair->second) {
-    context = reinterpret_cast<const ConstVoidPtr *>(pair->second);
+    context = reinterpret_cast<const UserContext *>(pair->second);
   }
   auto object = context ? context->value() : py::none();
   auto py_code_units = u16string_to_pystr(std::u16string(code_units, length));
@@ -84,7 +84,7 @@ void UConverterFromUCallbackPtr::callback(const void *native_context,
 //
 class UConverterFromUCallbackEscapePtr : public UConverterFromUCallbackPtr {
 public:
-  UConverterFromUCallbackEscapePtr(const ConstVoidPtr *context)
+  UConverterFromUCallbackEscapePtr(const UserContext *context)
       : UConverterFromUCallbackPtr(UCNV_FROM_U_CALLBACK_ESCAPE, context) {}
 };
 
@@ -93,7 +93,7 @@ public:
 //
 class UConverterFromUCallbackSkipPtr : public UConverterFromUCallbackPtr {
 public:
-  UConverterFromUCallbackSkipPtr(const ConstVoidPtr *context)
+  UConverterFromUCallbackSkipPtr(const UserContext *context)
       : UConverterFromUCallbackPtr(UCNV_FROM_U_CALLBACK_SKIP, context) {}
 };
 
@@ -102,7 +102,7 @@ public:
 //
 class UConverterFromUCallbackStopPtr : public UConverterFromUCallbackPtr {
 public:
-  UConverterFromUCallbackStopPtr(const ConstVoidPtr *context)
+  UConverterFromUCallbackStopPtr(const UserContext *context)
       : UConverterFromUCallbackPtr(UCNV_FROM_U_CALLBACK_STOP, context) {}
 };
 
@@ -111,7 +111,7 @@ public:
 //
 class UConverterFromUCallbackSubstitutePtr : public UConverterFromUCallbackPtr {
 public:
-  UConverterFromUCallbackSubstitutePtr(const ConstVoidPtr *context)
+  UConverterFromUCallbackSubstitutePtr(const UserContext *context)
       : UConverterFromUCallbackPtr(UCNV_FROM_U_CALLBACK_SUBSTITUTE, context) {}
 };
 
@@ -134,9 +134,9 @@ void UConverterToUCallbackPtr::callback(const void *native_context,
         "UConverterToUCallback: callback function is not set or invalid");
   }
   auto &action = std::get<ToUCallbackFunction>(variant);
-  const ConstVoidPtr *context = nullptr;
+  const UserContext *context = nullptr;
   if (pair->second) {
-    context = reinterpret_cast<const ConstVoidPtr *>(pair->second);
+    context = reinterpret_cast<const UserContext *>(pair->second);
   }
   auto object = context ? context->value() : py::none();
   auto status = icu::ErrorCode();
@@ -150,7 +150,7 @@ void UConverterToUCallbackPtr::callback(const void *native_context,
 //
 class UConverterToUCallbackEscapePtr : public UConverterToUCallbackPtr {
 public:
-  UConverterToUCallbackEscapePtr(const ConstVoidPtr *context)
+  UConverterToUCallbackEscapePtr(const UserContext *context)
       : UConverterToUCallbackPtr(UCNV_TO_U_CALLBACK_ESCAPE, context) {}
 };
 
@@ -159,7 +159,7 @@ public:
 //
 class UConverterToUCallbackSkipPtr : public UConverterToUCallbackPtr {
 public:
-  UConverterToUCallbackSkipPtr(const ConstVoidPtr *context)
+  UConverterToUCallbackSkipPtr(const UserContext *context)
       : UConverterToUCallbackPtr(UCNV_TO_U_CALLBACK_SKIP, context) {}
 };
 
@@ -168,7 +168,7 @@ public:
 //
 class UConverterToUCallbackStopPtr : public UConverterToUCallbackPtr {
 public:
-  UConverterToUCallbackStopPtr(const ConstVoidPtr *context)
+  UConverterToUCallbackStopPtr(const UserContext *context)
       : UConverterToUCallbackPtr(UCNV_TO_U_CALLBACK_STOP, context) {}
 };
 
@@ -177,7 +177,7 @@ public:
 //
 class UConverterToUCallbackSubstitutePtr : public UConverterToUCallbackPtr {
 public:
-  UConverterToUCallbackSubstitutePtr(const ConstVoidPtr *context)
+  UConverterToUCallbackSubstitutePtr(const UserContext *context)
       : UConverterToUCallbackPtr(UCNV_TO_U_CALLBACK_SUBSTITUTE, context) {}
 };
 
@@ -308,7 +308,7 @@ See Also:
       )doc");
 
   fucb.def(py::init([](const icupy::FromUCallbackFunction &action,
-                       std::optional<const icupy::ConstVoidPtr *> &context) {
+                       std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::UConverterFromUCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
@@ -324,13 +324,13 @@ See Also:
   fucb.def(
       "context",
       [](const icupy::UConverterFromUCallbackPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr ||
             !self.is_cpp_function()) {
           return std::nullopt;
         }
-        return reinterpret_cast<const icupy::ConstVoidPtr *>(pair->second);
+        return reinterpret_cast<const icupy::UserContext *>(pair->second);
       },
       py::return_value_policy::reference,
       R"doc(
@@ -367,7 +367,7 @@ See Also:
           >>> from icupy import icu
           >>> from icupy.utils import gc
           >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)
+          ...     context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)
           ...     action = icu.UConverterFromUCallbackEscape(context)
           ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
           ...     s = icu.UnicodeString("A€B")
@@ -377,7 +377,7 @@ See Also:
       )doc");
 
   fucb_esc.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterFromUCallbackEscapePtr>(
             context.value_or(nullptr));
       }),
@@ -427,7 +427,7 @@ See Also:
       )doc");
 
   fucb_skip.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterFromUCallbackSkipPtr>(
             context.value_or(nullptr));
       }),
@@ -474,7 +474,7 @@ See Also:
       )doc");
 
   fucb_stop.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterFromUCallbackStopPtr>(
             context.value_or(nullptr));
       }),
@@ -523,7 +523,7 @@ See Also:
       )doc");
 
   fucb_sub.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterFromUCallbackSubstitutePtr>(
             context.value_or(nullptr));
       }),
@@ -559,7 +559,7 @@ See Also:
       )doc");
 
   tucb.def(py::init([](const icupy::ToUCallbackFunction &action,
-                       std::optional<const icupy::ConstVoidPtr *> &context) {
+                       std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::UConverterToUCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
@@ -575,13 +575,13 @@ See Also:
   tucb.def(
       "context",
       [](const icupy::UConverterToUCallbackPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr ||
             !self.is_cpp_function()) {
           return std::nullopt;
         }
-        return reinterpret_cast<const icupy::ConstVoidPtr *>(pair->second);
+        return reinterpret_cast<const icupy::UserContext *>(pair->second);
       },
       py::return_value_policy::reference,
       R"doc(
@@ -616,12 +616,11 @@ See Also:
           :func:`ucnv_set_to_u_call_back`
       )doc");
 
-  tucb_esc.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
-        return std::make_unique<icupy::UConverterToUCallbackEscapePtr>(
-            context.value_or(nullptr));
-      }),
-      py::arg("context") = std::nullopt, R"doc(
+  tucb_esc.def(py::init([](std::optional<const icupy::UserContext *> &context) {
+                 return std::make_unique<icupy::UConverterToUCallbackEscapePtr>(
+                     context.value_or(nullptr));
+               }),
+               py::arg("context") = std::nullopt, R"doc(
       Initialize the ``UConverterToUCallbackEscape`` instance with
       :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function and the specified
       user context.
@@ -658,7 +657,7 @@ See Also:
       )doc");
 
   tucb_skip.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterToUCallbackSkipPtr>(
             context.value_or(nullptr));
       }),
@@ -694,7 +693,7 @@ See Also:
       )doc");
 
   tucb_stop.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterToUCallbackStopPtr>(
             context.value_or(nullptr));
       }),
@@ -728,7 +727,7 @@ See Also:
       )doc");
 
   tucb_sub.def(
-      py::init([](std::optional<const icupy::ConstVoidPtr *> &context) {
+      py::init([](std::optional<const icupy::UserContext *> &context) {
         return std::make_unique<icupy::UConverterToUCallbackSubstitutePtr>(
             context.value_or(nullptr));
       }),

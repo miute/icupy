@@ -1,6 +1,6 @@
+#include "context.hpp"
 #include "main.hpp"
 #include "ubidiptr.hpp"
-#include "voidptr.hpp"
 #include <optional>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
@@ -299,7 +299,7 @@ the Bidi algorithm.
           function.
           )doc")
       .def(py::init([](const icupy::ClassCallbackFunction &action,
-                       std::optional<const icupy::ConstVoidPtr *> &context) {
+                       std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::UBiDiClassCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
@@ -323,7 +323,7 @@ the Bidi algorithm.
   bccb.def(
       "context",
       [](const icupy::UBiDiClassCallbackPtr &self)
-          -> std::optional<const icupy::ConstVoidPtr *> {
+          -> std::optional<const icupy::UserContext *> {
         auto pair = self.context();
         if (pair == nullptr || pair->second == nullptr) {
           return std::nullopt;
@@ -688,7 +688,7 @@ the Bidi algorithm.
           ...     custom_classes: dict[str, icu.UCharDirection] = {
           ...         "default": icu.UCharDirection(value),
           ...     }
-          ...     context = icu.ConstVoidPtr(custom_classes)
+          ...     context = icu.UserContext(custom_classes)
           ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
           ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
           ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER

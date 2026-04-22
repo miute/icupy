@@ -12,12 +12,14 @@
 - Update `icupy.icu.ResourceBundle.get_binary()` to return `memoryview` instead of `bytes` ([#213])
 - Update `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` to return `memoryview` instead of `ConstChar16Ptr` ([#215])
 - Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
+- Deprecate `icupy.icu.ConstVoidPtr`; use `icupy.icu.UserContext` instead ([#227])
 - Bump pybind11 from 3.0.2 to 3.0.3 ([#217])
 
 ### Added
 
 - Add `icupy.icu.UVersionInfo` class and conversion function ([#210])
 - Add helper functions for 16-bit code unit ([#218])
+- Add `icupy.icu.UserContext` to replace `icupy.icu.ConstVoidPtr` ([#227])
 
 ### Removed
 
@@ -373,3 +375,4 @@ Initial release.
 [#221]: https://github.com/miute/icupy/pull/221
 [#224]: https://github.com/miute/icupy/pull/224
 [#226]: https://github.com/miute/icupy/pull/226
+[#227]: https://github.com/miute/icupy/pull/227

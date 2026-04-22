@@ -50,7 +50,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from Unicode to codepage
   from icupy import icu
   cnv = icu.ucnv_open("iso8859-1")
-  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_C)  # \uXXXX
+  context = icu.UserContext(icu.UCNV_ESCAPE_C)  # \uXXXX
   action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
   old_action = icu.ucnv_set_from_u_call_back(cnv, action)
   s = icu.UnicodeString("A€B")
@@ -61,7 +61,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from codepage to Unicode
   from icupy import icu
   cnv = icu.ucnv_open("Shift-JIS")
-  context = icu.ConstVoidPtr(icu.UCNV_ESCAPE_XML_HEX)  # &#xXXXX;
+  context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)  # &#xXXXX;
   action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
   old_action = icu.ucnv_set_to_u_call_back(cnv, action)
   src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
@@ -195,7 +195,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       return True if max_calls < 0 else calls < max_calls
 
   info = {}
-  context = icu.ConstVoidPtr(info)
+  context = icu.UserContext(info)
   callback = icu.URegexFindProgressCallback(progress_callback, context)
   matcher.set_find_progress_callback(callback)
   matcher.find(0)  # → False

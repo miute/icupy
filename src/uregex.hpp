@@ -7,14 +7,14 @@
 
 namespace icupy {
 
-class ConstVoidPtr;
+class UserContext;
 
 using FindProgressCallbackArgs = bool(py::object &, int64_t);
 
 using FindProgressCallbackFunction = std::function<FindProgressCallbackArgs>;
 
 using FindProgressCallbackAndContextPair =
-    std::pair<const FindProgressCallbackFunction, const ConstVoidPtr *>;
+    std::pair<const FindProgressCallbackFunction, const UserContext *>;
 
 using SharedFindProgressCallbackAndContextPair =
     std::shared_ptr<FindProgressCallbackAndContextPair>;
@@ -24,7 +24,7 @@ using MatchCallbackArgs = bool(py::object &, int32_t);
 using MatchCallbackFunction = std::function<MatchCallbackArgs>;
 
 using MatchCallbackAndContextPair =
-    std::pair<const MatchCallbackFunction, const ConstVoidPtr *>;
+    std::pair<const MatchCallbackFunction, const UserContext *>;
 
 using SharedMatchCallbackAndContextPair =
     std::shared_ptr<MatchCallbackAndContextPair>;
@@ -38,7 +38,7 @@ public:
 
   URegexFindProgressCallbackPtr(
       const std::function<FindProgressCallbackArgs> &action,
-      const ConstVoidPtr *context) {
+      const UserContext *context) {
     action_and_context_ =
         std::make_shared<FindProgressCallbackAndContextPair>(action, context);
   };
@@ -75,7 +75,7 @@ public:
   URegexMatchCallbackPtr() {};
 
   URegexMatchCallbackPtr(const std::function<MatchCallbackArgs> &action,
-                         const ConstVoidPtr *context) {
+                         const UserContext *context) {
     action_and_context_ =
         std::make_shared<MatchCallbackAndContextPair>(action, context);
   };
