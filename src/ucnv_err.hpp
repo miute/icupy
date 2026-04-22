@@ -1,8 +1,8 @@
 #ifndef ICUPY_UCNV_ERR_HPP
 #define ICUPY_UCNV_ERR_HPP
 
+#include "context.hpp"
 #include "main.hpp"
-#include "voidptr.hpp"
 #include <functional>
 #include <unicode/ucnv.h>
 
@@ -65,13 +65,13 @@ private:
 class UConverterFromUCallbackPtr {
 public:
   UConverterFromUCallbackPtr(const FromUCallbackFunction &action,
-                             const ConstVoidPtr *context) {
+                             const UserContext *context) {
     action_and_context_ =
         std::make_shared<FromUCallbackAndContextPair>(action, context);
   }
 
   UConverterFromUCallbackPtr(UConverterFromUCallback action,
-                             const ConstVoidPtr *context) {
+                             const UserContext *context) {
     action_and_context_ = std::make_shared<FromUCallbackAndContextPair>(
         action, context ? context->data() : nullptr);
   }
@@ -141,13 +141,13 @@ private:
 class UConverterToUCallbackPtr {
 public:
   UConverterToUCallbackPtr(const ToUCallbackFunction &action,
-                           const ConstVoidPtr *context) {
+                           const UserContext *context) {
     action_and_context_ =
         std::make_shared<ToUCallbackAndContextPair>(action, context);
   }
 
   UConverterToUCallbackPtr(UConverterToUCallback action,
-                           const ConstVoidPtr *context) {
+                           const UserContext *context) {
     action_and_context_ = std::make_shared<ToUCallbackAndContextPair>(
         action, context ? context->data() : nullptr);
   }

@@ -111,7 +111,7 @@ def test_add_record() -> None:
     assert index.get_bucket_record_count() == 2
     assert index.next_record() is True
     result = index.get_record_data()
-    assert isinstance(result, icu.ConstVoidPtr)
+    assert isinstance(result, icu.UserContext)
     assert result.value() == obj4
     result = index.get_record_name()
     assert isinstance(result, icu.UnicodeString)
@@ -119,7 +119,7 @@ def test_add_record() -> None:
 
     assert index.next_record() is True
     result = index.get_record_data()
-    assert isinstance(result, icu.ConstVoidPtr)
+    assert isinstance(result, icu.UserContext)
     assert result.value() == obj3
     result = index.get_record_name()
     assert isinstance(result, icu.UnicodeString)

@@ -15,6 +15,7 @@ void init_caniter(py::module &m);
 void init_casemap(py::module &m);
 void init_coleitr(py::module &m);
 void init_compactdecimalformat(py::module &m);
+void init_context(py::module &m);
 void init_currpinf(py::module &m);
 void init_currunit(py::module &m);
 void init_datefmt(py::module &m);
@@ -87,9 +88,9 @@ void init_ubiditransform(py::module &m);
 void init_ubrk(py::module &m);
 void init_ucal(py::module &m);
 void init_uchar(py::module &m);
-void init_ucnv(py::module &m);
 void init_ucnv_cb(py::module &m);
 void init_ucnv_err(py::module &m);
+void init_ucnv(py::module &m);
 void init_ucol(py::module &m);
 void init_ucpmap(py::module &m);
 void init_ucsdet(py::module &m);
@@ -136,7 +137,6 @@ void init_utmscale(py::module &m);
 void init_utrans(py::module &m);
 void init_utypes(py::module &m);
 void init_uversion(py::module &m);
-void init_voidptr(py::module &m);
 
 namespace icupy {
 
@@ -266,7 +266,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_utypes(m);    // UErrorCode
   init_errorcode(m); // icu::ErrorCode
 
-  init_voidptr(m); // ConstVoidPtr
+  init_context(m); // icupy::UserContext
 
   //
   // C APIs

@@ -1,5 +1,5 @@
+#include "context.hpp"
 #include "main.hpp"
-#include "voidptr.hpp"
 #include <optional>
 #include <pybind11/stl.h>
 #include <unicode/alphaindex.h>
@@ -156,7 +156,7 @@ Alphabetic Indexes that will also use them.
   ai.def(
       "add_record",
       [](AlphabeticIndex &self, const icupy::UnicodeStringVariant &name,
-         std::optional<icupy::ConstVoidPtr *> &data) -> AlphabeticIndex & {
+         std::optional<icupy::UserContext *> &data) -> AlphabeticIndex & {
         ErrorCode error_code;
         auto &result = self.addRecord(icupy::to_unistr(name),
                                       data.value_or(nullptr), error_code);
@@ -238,13 +238,12 @@ Alphabetic Indexes that will also use them.
 
   ai.def(
       "get_record_data",
-      [](const AlphabeticIndex &self) -> std::optional<icupy::ConstVoidPtr *> {
+      [](const AlphabeticIndex &self) -> std::optional<icupy::UserContext *> {
         auto data = self.getRecordData();
         if (data == nullptr) {
           return std::nullopt;
         }
-        return reinterpret_cast<icupy::ConstVoidPtr *>(
-            const_cast<void *>(data));
+        return reinterpret_cast<icupy::UserContext *>(const_cast<void *>(data));
       },
       py::return_value_policy::reference);
 

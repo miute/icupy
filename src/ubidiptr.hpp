@@ -7,7 +7,7 @@
 
 namespace icupy {
 
-class ConstVoidPtr;
+class UserContext;
 class UBiDiClassCallbackPtr;
 
 using ClassCallbackArgs = UCharDirection(py::object &, UChar32);
@@ -15,7 +15,7 @@ using ClassCallbackArgs = UCharDirection(py::object &, UChar32);
 using ClassCallbackFunction = std::function<ClassCallbackArgs>;
 
 using ClassCallbackAndContextPair =
-    std::pair<const ClassCallbackFunction, const ConstVoidPtr *>;
+    std::pair<const ClassCallbackFunction, const UserContext *>;
 
 using SharedClassCallbackAndContextPair =
     std::shared_ptr<ClassCallbackAndContextPair>;
@@ -59,7 +59,7 @@ public:
   UBiDiClassCallbackPtr() {}
 
   UBiDiClassCallbackPtr(const std::function<ClassCallbackArgs> &action,
-                        const ConstVoidPtr *context) {
+                        const UserContext *context) {
     action_and_context_ =
         std::make_shared<ClassCallbackAndContextPair>(action, context);
   }

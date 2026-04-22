@@ -355,7 +355,7 @@ def test_set_class_callback() -> None:
         assert isinstance(old_fn4, icu.UBiDiClassCallback)
         assert bool(old_fn4)
         old_context4 = old_fn4.context()
-        assert isinstance(old_context4, icu.ConstVoidPtr)
+        assert isinstance(old_context4, icu.UserContext)
         assert old_context4.value() == char_from_bidi_class
 
         assert icu.ubidi_get_customized_class(bidi, 0x52) == icu.UCharDirection.U_RIGHT_TO_LEFT

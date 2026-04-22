@@ -668,7 +668,7 @@ def test_set_find_progress_callback() -> None:
     assert isinstance(callback2a, icu.URegexFindProgressCallback)
     assert bool(callback2a) is True
     context2a = callback2a.context()
-    assert isinstance(context2a, icu.ConstVoidPtr)
+    assert isinstance(context2a, icu.UserContext)
     assert context2a.value() == result2
 
     result1.clear()
@@ -774,7 +774,7 @@ def test_set_match_callback() -> None:
     assert isinstance(callback2a, icu.URegexMatchCallback)
     assert bool(callback2a) is True
     context2a = callback2a.context()
-    assert isinstance(context2a, icu.ConstVoidPtr)
+    assert isinstance(context2a, icu.UserContext)
     assert context2a.value() == result2
 
     result1.clear()
