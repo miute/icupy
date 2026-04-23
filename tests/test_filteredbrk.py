@@ -21,11 +21,11 @@ def test_break_iterator_adopt_text() -> None:
     fbi.adopt_text(it)
     assert fbi.first() == 0
     assert fbi.next() == 11
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE
 
     # fbi.adopt_text(None)
     # assert fbi.first() == 0
-    # assert fbi.next() == icu.BreakIterator.DONE
+    # assert fbi.next() == icu.UBRK_DONE
 
 
 def test_break_iterator_api() -> None:
@@ -50,7 +50,7 @@ def test_break_iterator_api() -> None:
     assert fbi.current() == 6
     assert fbi.next() == 11
     assert fbi.current() == 11
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE
     assert fbi.current() == 11
 
     assert fbi.first() == 0
@@ -242,11 +242,11 @@ def test_filtered_break_iterator_builder_56() -> None:
     assert fbi.next() == 84
     assert fbi.next() == 90
     assert fbi.next() == 278
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE
 
     text2 = icu.UnicodeString()
     fbi.set_text(text2)
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE
 
     # [2]
     # void icu::BreakIterator::setText(
@@ -258,7 +258,7 @@ def test_filtered_break_iterator_builder_56() -> None:
     assert fbi.next() == 84
     assert fbi.next() == 90
     assert fbi.next() == 278
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE
     icu.utext_close(ut)
 
 
@@ -296,4 +296,4 @@ def test_filtered_break_iterator_builder_60() -> None:
     assert fbi.next() == 84
     assert fbi.next() == 90
     assert fbi.next() == 278
-    assert fbi.next() == icu.BreakIterator.DONE
+    assert fbi.next() == icu.UBRK_DONE

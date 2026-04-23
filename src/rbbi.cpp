@@ -60,7 +60,7 @@ void init_rbbi(py::module &m) {
           ... )
           >>> bi.set_text(src)
           >>> start = bi.first()
-          >>> while (end := bi.next()) != icu.BreakIterator.DONE:
+          >>> while (end := bi.next()) != icu.UBRK_DONE:
           ...     print(src[start:end])
           ...     start = end
           ...
@@ -74,9 +74,9 @@ void init_rbbi(py::module &m) {
           >>> bi = icu.BreakIterator.create_word_instance(icu.ULOC_US)
           >>> src = icu.UnicodeString("Alice was beginning to get very tired of sitting by her sister on the bank.")
           >>> bi.set_text(src)
-          >>> result: list[str] = []
+          >>> result = []
           >>> start = bi.first()
-          >>> while (end := bi.next()) != icu.BreakIterator.DONE:
+          >>> while (end := bi.next()) != icu.UBRK_DONE:
           ...     if bi.get_rule_status() != icu.UBRK_WORD_NONE:
           ...         result.append(src[start:end])
           ...     start = end
@@ -85,12 +85,19 @@ void init_rbbi(py::module &m) {
           ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
       )doc");
 
+  // TODO: Remove `BreakIterator.DONE` in the future release.
   py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator",
-                                           py::arithmetic())
+                                           py::arithmetic(), R"doc(
+Enum constants for text boundary analysis.
+      )doc")
       .value("DONE", BreakIterator::DONE, R"doc(
              DONE is returned by :meth:`~BreakIterator.previous` and
              :meth:`~BreakIterator.next` after all valid boundaries have been
              returned.
+
+             .. deprecated:: 0.24
+
+                Use :attr:`UBRK_DONE` instead.
              )doc")
       .export_values();
 
@@ -315,7 +322,7 @@ void init_rbbi(py::module &m) {
       offset, and return the current character index of the text.
 
       The value returned is always greater than the offset or the value
-      ``BreakIterator.DONE``.
+      :attr:`UBRK_DONE`.
       )doc");
 
   bi.def_static(
@@ -463,7 +470,7 @@ void init_rbbi(py::module &m) {
          R"doc(
       Set the iterator position to the nth boundary from the current boundary,
       and return the current character index of the text or
-      ``BreakIterator.DONE`` if all boundaries have been returned.
+      :attr:`UBRK_DONE` if all boundaries have been returned.
 
       If *n* is negative, move to the previous boundary; if *n* is positive,
       move to the following boundary.
@@ -471,7 +478,7 @@ void init_rbbi(py::module &m) {
       .def("next", py::overload_cast<>(&BreakIterator::next), R"doc(
       Advance the iterator to the boundary following the current boundary,
       and return the current character index of the text or
-      ``BreakIterator.DONE`` if all boundaries have been returned.
+      :attr:`UBRK_DONE` if all boundaries have been returned.
       )doc");
 
   bi.def("preceding", &BreakIterator::preceding, py::arg("offset"), R"doc(
@@ -479,13 +486,13 @@ void init_rbbi(py::module &m) {
       offset, and return the current character index of the text.
 
       The value returned is always smaller than the offset or the value
-      ``BreakIterator.DONE``.
+      :attr:`UBRK_DONE`.
       )doc");
 
   bi.def("previous", &BreakIterator::previous, R"doc(
       Set the iterator position to the boundary preceding the current boundary,
       and return the current character index of the text or
-      ``BreakIterator.DONE`` if all boundaries have been returned.
+      :attr:`UBRK_DONE` if all boundaries have been returned.
       )doc");
 
   // FIXME: Implement "BreakIterator& BreakIterator::refreshInputText(
