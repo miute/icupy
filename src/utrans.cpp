@@ -35,10 +35,9 @@ operating in the reverse direction.
   //
   py::class_<UTransPosition> tp(m, "UTransPosition");
 
-  tp.def(py::init<>())
-      .def(py::init<int32_t, int32_t, int32_t, int32_t>(),
-           py::arg("context_start"), py::arg("context_limit"), py::arg("start"),
-           py::arg("limit"));
+  tp.def(py::init<int32_t, int32_t, int32_t, int32_t>(),
+         py::arg("context_start") = 0, py::arg("context_limit") = 0,
+         py::arg("start") = 0, py::arg("limit") = 0);
 
   tp.def("__repr__", [](const UTransPosition &self) {
     std::stringstream ss;
