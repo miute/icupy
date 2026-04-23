@@ -133,7 +133,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   bi.set_text(src)
   result = []
   start = bi.first()
-  while (end := bi.next()) != icu.BreakIterator.DONE:
+  while (end := bi.next()) != icu.UBRK_DONE:
       if bi.get_rule_status() != icu.UBRK_WORD_NONE:
           result.append(src[start:end])
       start = end

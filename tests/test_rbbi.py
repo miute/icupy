@@ -16,11 +16,11 @@ def test_adopt_text() -> None:
     assert bi.next() == 4
     assert bi.next() == 8
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     # bi.adopt_text(None)
     # assert bi.first() == 0
-    # assert bi.next() == icu.BreakIterator.DONE
+    # assert bi.next() == icu.UBRK_DONE
 
 
 def test_clone() -> None:
@@ -68,7 +68,7 @@ def test_create_character_instance() -> None:
     assert bi.next() == 10
     assert bi.next() == 11
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     assert list(bi) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     assert reversed(bi) == [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
@@ -96,7 +96,7 @@ def test_create_line_instance() -> None:
     assert bi.next() == 4
     assert bi.next() == 8
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     assert list(bi) == [4, 8, 12]
     assert reversed(bi) == [12, 8, 4]
@@ -122,7 +122,7 @@ def test_create_sentence_instance() -> None:
 
     assert bi.first() == 0
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     assert list(bi) == [12]
     assert reversed(bi) == [12]
@@ -151,7 +151,7 @@ def test_create_title_instance() -> None:
     assert bi.next() == 4
     assert bi.next() == 8
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     assert list(bi) == [4, 8, 12]
     assert reversed(bi) == [12, 8, 4]
@@ -182,7 +182,7 @@ def test_create_word_instance() -> None:
     assert bi.next() == 8
     assert bi.next() == 11
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
     assert list(bi) == [3, 4, 7, 8, 11, 12]
     assert reversed(bi) == [12, 11, 8, 7, 4, 3]
@@ -209,7 +209,7 @@ def test_following() -> None:
     assert bi.following(7) == 8
     assert bi.following(8) == 11
     assert bi.following(11) == 12
-    assert bi.following(12) == icu.BreakIterator.DONE
+    assert bi.following(12) == icu.UBRK_DONE
 
 
 def test_get_available_locales() -> None:
@@ -328,7 +328,7 @@ def test_get_rule_status() -> None:
     assert bi.get_rule_status() == icu.UWordBreak.UBRK_WORD_LETTER
     assert bi.next() == 12
     assert bi.get_rule_status() == icu.UWordBreak.UBRK_WORD_NONE
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 52, reason="ICU4C<52")
@@ -501,11 +501,11 @@ def test_next() -> None:
     assert bi.first() == 0
     assert bi.next(3) == 7
     assert bi.next(3) == 12
-    assert bi.next(3) == icu.BreakIterator.DONE
+    assert bi.next(3) == icu.UBRK_DONE
     assert bi.current() == 12
     assert bi.next(-3) == 7
     assert bi.next(-3) == 0
-    assert bi.next(-3) == icu.BreakIterator.DONE
+    assert bi.next(-3) == icu.UBRK_DONE
     assert bi.current() == 0
 
     # [2]
@@ -517,7 +517,7 @@ def test_next() -> None:
     assert bi.next() == 8
     assert bi.next() == 11
     assert bi.next() == 12
-    assert bi.next() == icu.BreakIterator.DONE
+    assert bi.next() == icu.UBRK_DONE
 
 
 def test_operator() -> None:
@@ -563,7 +563,7 @@ def test_preceding() -> None:
     assert bi.preceding(7) == 4
     assert bi.preceding(4) == 3
     assert bi.preceding(3) == 0
-    assert bi.preceding(0) == icu.BreakIterator.DONE
+    assert bi.preceding(0) == icu.UBRK_DONE
 
 
 def test_previous() -> None:
@@ -579,7 +579,7 @@ def test_previous() -> None:
     assert bi.previous() == 4
     assert bi.previous() == 3
     assert bi.previous() == 0
-    assert bi.previous() == icu.BreakIterator.DONE
+    assert bi.previous() == icu.UBRK_DONE
 
 
 def test_rule_based_break_iterator() -> None:
@@ -609,7 +609,7 @@ def test_rule_based_break_iterator() -> None:
     assert bi3.next() == 2
     assert bi3.next() == 3
     assert bi3.next() == 4
-    assert bi3.next() == icu.BreakIterator.DONE
+    assert bi3.next() == icu.UBRK_DONE
     assert bi3.current() == 4
 
     bi3a = icu.RuleBasedBreakIterator(
@@ -625,7 +625,7 @@ def test_rule_based_break_iterator() -> None:
     assert bi3a.next() == 2
     assert bi3a.next() == 3
     assert bi3a.next() == 4
-    assert bi3a.next() == icu.BreakIterator.DONE
+    assert bi3a.next() == icu.UBRK_DONE
     assert bi3a.current() == 4
     assert bi3 == bi3a
 
@@ -644,7 +644,7 @@ def test_rule_based_break_iterator() -> None:
     assert bi4.next() == 2
     assert bi4.next() == 3
     assert bi4.next() == 4
-    assert bi4.next() == icu.BreakIterator.DONE
+    assert bi4.next() == icu.UBRK_DONE
     assert bi4.current() == 4
 
     # [2]
@@ -658,7 +658,7 @@ def test_rule_based_break_iterator() -> None:
     assert bi2.next() == 2
     assert bi2.next() == 3
     assert bi2.next() == 4
-    assert bi2.next() == icu.BreakIterator.DONE
+    assert bi2.next() == icu.UBRK_DONE
     assert bi2.current() == 4
 
     # [5]

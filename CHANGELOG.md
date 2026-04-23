@@ -13,6 +13,7 @@
 - Update `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` to return `memoryview` instead of `ConstChar16Ptr` ([#215])
 - Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
 - Deprecate `icupy.icu.ConstVoidPtr`; use `icupy.icu.UserContext` instead ([#227])
+- Deprecate `icupy.icu.BreakIterator.BreakIterator.DONE` and `icupy.icu.BreakIterator.DONE`; use `UBRK_DONE` instead ([#229])
 - Bump pybind11 from 3.0.2 to 3.0.3 ([#217])
 
 ### Added
@@ -376,3 +377,4 @@ Initial release.
 [#224]: https://github.com/miute/icupy/pull/224
 [#226]: https://github.com/miute/icupy/pull/226
 [#227]: https://github.com/miute/icupy/pull/227
+[#229]: https://github.com/miute/icupy/pull/229
