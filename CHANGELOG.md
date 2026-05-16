@@ -32,6 +32,7 @@
 
 - Fix `UTransPosition` changes in `icupy.icu.Transliterator._handle_transliterate()` to propagate to the caller ([#221])
 - Fix return value ownership of `icupy.icu.AlphabeticIndex.get_record_data()` ([#226])
+- Fix return value ownership of `icupy.icu.SearchIterator.get_break_iterator()` ([#232])
 
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26
@@ -380,3 +381,4 @@ Initial release.
 [#227]: https://github.com/miute/icupy/pull/227
 [#229]: https://github.com/miute/icupy/pull/229
 [#231]: https://github.com/miute/icupy/pull/231
+[#232]: https://github.com/miute/icupy/pull/232
