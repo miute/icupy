@@ -35,37 +35,43 @@ void init_errorcode(py::module &m) {
   });
 
   ec.def("__str__", &ErrorCode::errorName, R"doc(
-      Return a string representation of the ``UErrorCode``.
+      Return a string representation of the :class:`UErrorCode`.
+
+      This is equivalent to calling :attr:`.error_name`.
       )doc");
 
   ec.def_property_readonly("error_name", &ErrorCode::errorName, R"doc(
-      str: The name of the ``UErrorCode``, e.g. "U_ZERO_ERROR".
+      str: Return a string representation of the :class:`UErrorCode`.
+
+      .. seealso::
+
+         :meth:`.__str__`
       )doc");
 
   ec.def("get", &ErrorCode::get, R"doc(
-      Return the ``UErrorCode``.
+      Return the :class:`UErrorCode`.
       )doc");
 
   ec.def(
       "is_failure",
       [](const ErrorCode &self) -> py::bool_ { return self.isFailure(); },
       R"doc(
-      Return ``True`` if the ``UErrorCode`` indicates a failure.
+      Return ``True`` if the :class:`UErrorCode` indicates failure.
       )doc");
 
   ec.def(
       "is_success",
       [](const ErrorCode &self) -> py::bool_ { return self.isSuccess(); },
       R"doc(
-      Return ``True`` if the ``UErrorCode`` indicates success.
+      Return ``True`` if the :class:`UErrorCode` indicates success.
       )doc");
 
   ec.def("reset", &ErrorCode::reset, R"doc(
-      Return the ``UErrorCode`` value and reset it to
+      Return the :class:`UErrorCode` value and reset it to
       :attr:`~UErrorCode.U_ZERO_ERROR`.
       )doc");
 
   ec.def("set", &ErrorCode::set, py::arg("value"), R"doc(
-      Set the ``UErrorCode`` value.
+      Set the :class:`UErrorCode` value.
       )doc");
 }

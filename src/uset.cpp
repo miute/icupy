@@ -68,18 +68,18 @@ with each other) and the string that is processed. For a set with strings:
 
 .. note::
 
-    If it is important to get the same boundaries whether iterating forward
-    or backward through a string, then either only :meth:`UnicodeSet.span`
-    should be used and the boundaries cached for backward operation, or an ICU
-    :class:`BreakIterator` could be used.
+   If it is important to get the same boundaries whether iterating forward
+   or backward through a string, then either only :meth:`UnicodeSet.span`
+   should be used and the boundaries cached for backward operation, or an ICU
+   :class:`BreakIterator` could be used.
 
 .. note::
 
-    Unpaired surrogates are treated like surrogate code points. Similarly, set
-    strings match only on code point boundaries, never in the middle of a
-    surrogate pair. Illegal UTF-8 sequences are treated like U+FFFD. When
-    processing UTF-8 strings, malformed set strings (strings with unpaired
-    surrogates which cannot be converted to UTF-8) are ignored.
+   Unpaired surrogates are treated like surrogate code points. Similarly, set
+   strings match only on code point boundaries, never in the middle of a
+   surrogate pair. Illegal UTF-8 sequences are treated like U+FFFD. When
+   processing UTF-8 strings, malformed set strings (strings with unpaired
+   surrogates which cannot be converted to UTF-8) are ignored.
       )doc")
       .value("USET_SPAN_NOT_CONTAINED", USET_SPAN_NOT_CONTAINED, R"doc(
              Continues a :meth:`UnicodeSet.span` while there is no set element
@@ -143,14 +143,15 @@ with each other) and the string that is processed. For a set with strings:
   py::class_<icupy::ConstUSetPtr>(m, "ImmutableUSet", R"doc(
     Immutable USet structure.
 
-    See Also:
-        :class:`USet`
-        :func:`u_get_binary_property_set`
-        :func:`uspoof_get_allowed_chars`
-        :func:`uspoof_get_check_result_numerics`
-        :func:`uspoof_get_inclusion_set`
-        :func:`uspoof_get_recommended_set`
-        :meth:`UnicodeSet.from_uset`
+    .. seealso::
+
+       :class:`USet`
+       :func:`u_get_binary_property_set`
+       :func:`uspoof_get_allowed_chars`
+       :func:`uspoof_get_check_result_numerics`
+       :func:`uspoof_get_inclusion_set`
+       :func:`uspoof_get_recommended_set`
+       :meth:`UnicodeSet.from_uset`
     )doc");
 
   //
@@ -159,12 +160,13 @@ with each other) and the string that is processed. For a set with strings:
   py::class_<icupy::USetPtr>(m, "USet", R"doc(
     USet structure.
 
-    See Also:
-        :class:`ImmutableUSet`
-        :func:`ucnv_get_unicode_set`
-        :func:`ulocdata_get_exemplar_set`
-        :meth:`UnicodeSet.from_uset`
-        :meth:`UnicodeSet.to_uset`
+    .. seealso::
+
+       :class:`ImmutableUSet`
+       :func:`ucnv_get_unicode_set`
+       :func:`ulocdata_get_exemplar_set`
+       :meth:`UnicodeSet.from_uset`
+       :meth:`UnicodeSet.to_uset`
     )doc");
 
   //

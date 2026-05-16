@@ -7,11 +7,16 @@ void init_ustring(py::module &m) {
       [](const std::u16string &s, int32_t length) {
         return u_countChar32(s.data(), length);
       },
-      py::arg("s"), py::arg("length") = -1);
+      py::arg("s"), py::arg("length") = -1, R"doc(
+      Return the number of code points in the string *s* with the specified
+      *length*.
+      )doc");
 
   m.def(
       "u_strlen", [](const std::u16string &s) { return u_strlen(s.data()); },
-      py::arg("s"));
+      py::arg("s"), R"doc(
+      Return the length of the NUL-terminated string *s* in code units.
+      )doc");
 
   m.def(
       "u_unescape",
@@ -22,5 +27,7 @@ void init_ustring(py::module &m) {
         u_unescape(src_data, result.data(), dest_capacity);
         return result;
       },
-      py::arg("src"));
+      py::arg("src"), R"doc(
+      Return the unescaped form of the string *src*.
+      )doc");
 }

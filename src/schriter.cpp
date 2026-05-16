@@ -13,8 +13,9 @@ void init_schriter(py::module &m) {
       m, "ForwardCharacterIterator", R"doc(
       Abstract class that defines an API for forward-only iteration on text objects.
 
-      See Also:
-          :class:`CharacterIterator`
+      .. seealso::
+
+         :class:`CharacterIterator`
       )doc");
 
   //
@@ -66,8 +67,9 @@ void init_schriter(py::module &m) {
       This is an interface for forward and backward iteration and random access
       into a text object.
 
-      See Also:
-          :class:`UCharCharacterIterator`
+      .. seealso::
+
+         :class:`UCharCharacterIterator`
       )doc");
 
   //
@@ -169,8 +171,9 @@ Origin enumeration for the :meth:`CharacterIterator.move` and
       Subclass of :class:`CharacterIterator` that iterates over the characters
       (code units or code points) in a ``char16_t`` array.
 
-      See Also:
-          :class:`StringCharacterIterator`
+      .. seealso::
+
+         :class:`StringCharacterIterator`
       )doc");
 
   uci.def("__copy__", &UCharCharacterIterator::clone);

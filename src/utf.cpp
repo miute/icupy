@@ -135,12 +135,15 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      See Also:
-          :func:`u16_back_n`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      *i* is the offset within the string and must satisfy *start* < *i*.
+
+      .. seealso::
+
+         :func:`u16_back_n`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -165,13 +168,18 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      See Also:
-          :func:`u16_back_1`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
-          :meth:`UnicodeString.move_index32`
+      *i* is the offset within the string and must satisfy *start* < *i*.
+
+      *n* is the number of code points to skip.
+
+      .. seealso::
+
+         :func:`u16_back_1`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
+         :meth:`UnicodeString.move_index32`
       )doc");
 
   m.def(
@@ -200,14 +208,16 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *i* < *limit*.
+      *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* can be negative for a NULL-terminated string.
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
 
-      See Also:
-          :func:`u16_fwd_n`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      .. seealso::
+
+         :func:`u16_fwd_n`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -236,15 +246,19 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *i* < *limit*.
+      *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* can be negative for a NULL-terminated string.
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
 
-      See Also:
-          :func:`u16_fwd_1`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
-          :meth:`UnicodeString.move_index32`
+      *n* is the number of code points to skip.
+
+      .. seealso::
+
+         :func:`u16_fwd_1`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
+         :meth:`UnicodeString.move_index32`
       )doc");
 
   m.def(
@@ -278,15 +292,20 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i* < *limit*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      *limit* can be negative for a NULL-terminated string.
+      *i* is the offset within the string and must satisfy
+      *start* < *i* < *limit*.
 
-      See Also:
-          :func:`u16_get_or_fffd`
-          :meth:`Replaceable.char32_at`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
+
+      .. seealso::
+
+         :func:`u16_get_or_fffd`
+         :meth:`Replaceable.char32_at`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -319,14 +338,19 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i* < *limit*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      *limit* can be negative for a NULL-terminated string.
+      *i* is the offset within the string and must satisfy
+      *start* < *i* < *limit*.
 
-      See Also:
-          :func:`u16_get`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
+
+      .. seealso::
+
+         :func:`u16_get`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -341,10 +365,18 @@ void init_utf(py::module &m) {
       The result is undefined if the input values are not lead and trail
       surrogates.
 
-      Example:
-          >>> from icupy import icu
-          >>> chr(icu.u16_get_supplementary(0xD83E, 0xDEE0))
-          '🫠'  # U+1FAE0 (U+D83E U+DEE0)
+      .. seealso::
+
+         :func:`u16_lead`
+         :func:`u16_trail`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> chr(icu.u16_get_supplementary(0xD83E, 0xDEE0))
+         '🫠'  # U+1FAE0 (U+D83E U+DEE0)
       )doc");
 
   m.def(
@@ -353,8 +385,9 @@ void init_utf(py::module &m) {
       Return ``True`` if this code unit is a lead surrogate (U+D800..U+DBFF);
       ``False`` otherwise.
 
-      See Also:
-          :func:`u16_is_trail`
+      .. seealso::
+
+         :func:`u16_is_trail`
       )doc");
 
   m.def(
@@ -371,9 +404,10 @@ void init_utf(py::module &m) {
       Return ``True`` if this code unit is a surrogate (U+D800..U+DFFF);
       ``False`` otherwise.
 
-      See Also:
-          :func:`u16_is_surrogate_lead`
-          :func:`u16_is_surrogate_trail`
+      .. seealso::
+
+         :func:`u16_is_surrogate_lead`
+         :func:`u16_is_surrogate_trail`
       )doc");
 
   m.def(
@@ -383,8 +417,9 @@ void init_utf(py::module &m) {
       Return ``True`` if this surrogate code unit is a lead surrogate;
       ``False`` otherwise.
 
-      See Also:
-          :func:`u16_is_surrogate`
+      .. seealso::
+
+         :func:`u16_is_surrogate`
       )doc");
 
   m.def(
@@ -394,8 +429,9 @@ void init_utf(py::module &m) {
       Return ``True`` if this surrogate code unit is a trail surrogate;
       ``False`` otherwise.
 
-      See Also:
-          :func:`u16_is_surrogate`
+      .. seealso::
+
+         :func:`u16_is_surrogate`
       )doc");
 
   m.def(
@@ -404,8 +440,9 @@ void init_utf(py::module &m) {
       Return ``True`` if this code unit is a trail surrogate (U+DC00..U+DFFF);
       ``False`` otherwise.
 
-      See Also:
-          :func:`u16_is_lead`
+      .. seealso::
+
+         :func:`u16_is_lead`
       )doc");
 
   m.def(
@@ -417,10 +454,18 @@ void init_utf(py::module &m) {
       Return the lead surrogate (U+D800..U+DBFF) for a supplementary code point
       (U+10000..U+10FFFF).
 
-      Example:
-          >>> from icupy import icu
-          >>> chr(icu.u16_lead(ord("🫠")))  # U+1FAE0 (U+D83E U+DEE0)
-          '\ud83e'
+      .. seealso::
+
+         :func:`u16_get_supplementary`
+         :func:`u16_trail`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> chr(icu.u16_lead(ord("🫠")))  # U+1FAE0 (U+D83E U+DEE0)
+         '\ud83e'
       )doc");
 
   m.def(
@@ -460,14 +505,16 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *i* < *limit*.
+      *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* can be negative for a NULL-terminated string.
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
 
-      See Also:
-          :func:`u16_next_or_fffd`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      .. seealso::
+
+         :func:`u16_next_or_fffd`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -500,14 +547,16 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *i* < *limit*.
+      *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* can be negative for a NULL-terminated string.
+      *limit* is the string length; for NUL-terminated string, *limit* can be
+      a negative value.
 
-      See Also:
-          :func:`u16_next`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      .. seealso::
+
+         :func:`u16_next`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -537,12 +586,15 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      See Also:
-          :func:`u16_prev_or_fffd`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      *i* is the offset within the string and must satisfy *start* < *i*.
+
+      .. seealso::
+
+         :func:`u16_prev_or_fffd`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -572,12 +624,15 @@ void init_utf(py::module &m) {
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *i* must be *start* < *i*.
+      *start* is the starting offset of the string, which is usually 0.
 
-      See Also:
-          :func:`u16_prev`
-          :meth:`UnicodeString.get_buffer`
-          :meth:`UnicodeString.get_terminated_buffer`
+      *i* is the offset within the string and must satisfy *start* < *i*.
+
+      .. seealso::
+
+         :func:`u16_prev`
+         :meth:`UnicodeString.get_buffer`
+         :meth:`UnicodeString.get_terminated_buffer`
       )doc");
 
   m.def(
@@ -589,9 +644,17 @@ void init_utf(py::module &m) {
       Return the trail surrogate (U+DC00..U+DFFF) for a supplementary code point
       (U+10000..U+10FFFF).
 
-      Example:
-          >>> from icupy import icu
-          >>> chr(icu.u16_trail(ord("🫠")))  # U+1FAE0 (U+D83E U+DEE0)
-          '\udee0'
+      .. seealso::
+
+         :func:`u16_get_supplementary`
+         :func:`u16_lead`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> chr(icu.u16_trail(ord("🫠")))  # U+1FAE0 (U+D83E U+DEE0)
+         '\udee0'
       )doc");
 }

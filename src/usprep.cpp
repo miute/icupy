@@ -83,10 +83,11 @@ Enums for the standard StringPrep profile types supported by
        UStringPrepProfile structure for the StingPrep framework as defined
        in RFC 3454.
 
-       See Also:
-           :func:`usprep_close`
-           :func:`usprep_open`
-           :func:`usprep_open_by_type`
+       .. seealso::
+
+          :func:`usprep_close`
+          :func:`usprep_open`
+          :func:`usprep_open_by_type`
        )doc");
 
   //

@@ -13,9 +13,10 @@ void init_dtfmtsym(py::module &m) {
       Public class for encapsulating localizable date and time format data
       (including time zone data).
 
-      See Also:
-          :class:`DateFormat`
-          :class:`SimpleDateFormat`
+      .. seealso::
+
+         :class:`DateFormat`
+         :class:`SimpleDateFormat`
       )doc");
 
   //

@@ -22,8 +22,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       m2, "FormattedNumberRange", R"doc(
       Result of a number range formatting operation.
 
-      See Also:
-          :class:`LocalizedNumberRangeFormatter`
+      .. seealso::
+
+         :class:`LocalizedNumberRangeFormatter`
       )doc");
 
   //);
@@ -37,8 +38,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       Abstract base class for specifying settings related to number range
       formatting.
 
-      See Also:
-          :class:`LocalizedNumberRangeFormatter`
+      .. seealso::
+
+         :class:`LocalizedNumberRangeFormatter`
       )doc");
 
   //
@@ -50,9 +52,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
            R"doc(
       :class:`NumberRangeFormatter` that has a locale associated with it.
 
-      See Also:
-          :class:`NumberRangeFormatter`
-          :class:`UnlocalizedNumberRangeFormatter`
+      .. seealso::
+
+         :class:`NumberRangeFormatter`
       )doc");
 
   //
@@ -64,8 +66,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       Abstract base class for specifying settings related to number range
       formatting.
 
-      See Also:
-          :class:`UnlocalizedNumberRangeFormatter`
+      .. seealso::
+
+         :class:`UnlocalizedNumberRangeFormatter`
       )doc");
 
   //
@@ -79,9 +82,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
 
       In order to format, a locale must be specified.
 
-      See Also:
-          :class:`NumberRangeFormatter`
-          :class:`LocalizedNumberRangeFormatter`
+      .. seealso::
+
+         :class:`NumberRangeFormatter`
       )doc");
 
   //
@@ -90,25 +93,27 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   py::class_<NumberRangeFormatter> nrf(m2, "NumberRangeFormatter", R"doc(
       Formatter for localized number, currency, and unit ranges.
 
-      See Also:
-          :class:`NumberFormatter`
+      .. seealso::
 
-      Examples:
-          .. code-block:: python
+         :class:`NumberFormatter`
 
-              from icupy import icu
-              from icupy.icu import number
-              first = number.NumberFormatter.with_().unit(icu.MeasureUnit.create_meter())
-              second = number.NumberFormatter.with_().unit(icu.MeasureUnit.create_kilometer())
-              fmt = (
-                  number.NumberRangeFormatter.with_()
-                  .identity_fallback(icu.UNUM_IDENTITY_FALLBACK_APPROXIMATELY_OR_SINGLE_VALUE)
-                  .number_formatter_first(first)
-                  .number_formatter_second(second)
-                  .locale("en-GB")
-              )
-              fmtval = fmt.format_formattable_range(icu.Formattable(750), icu.Formattable(1.2))
-              fmtval.to_string()  # "750 m - 1.2 km"
+      .. rubric:: Examples
+
+      .. code-block:: python
+
+         from icupy import icu
+         from icupy.icu import number
+         first = number.NumberFormatter.with_().unit(icu.MeasureUnit.create_meter())
+         second = number.NumberFormatter.with_().unit(icu.MeasureUnit.create_kilometer())
+         fmt = (
+             number.NumberRangeFormatter.with_()
+             .identity_fallback(icu.UNUM_IDENTITY_FALLBACK_APPROXIMATELY_OR_SINGLE_VALUE)
+             .number_formatter_first(first)
+             .number_formatter_second(second)
+             .locale("en-GB")
+         )
+         fmtval = fmt.format_formattable_range(icu.Formattable(750), icu.Formattable(1.2))
+         fmtval.to_string()  # "750 m - 1.2 km"
       )doc");
 
   //
@@ -228,7 +233,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
   // class icu::number::NumberRangeFormatter
   //
   nrf.def_static("with_", &NumberRangeFormatter::with, R"doc(
-      Create a new :class:`UnlocalizedNumberRangeFormatter` object without
+      Create a new :class:`UnlocalizedNumberRangeFormatter` instance without
       locale.
       )doc");
 
@@ -238,7 +243,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return NumberRangeFormatter::withLocale(icupy::to_locale(locale));
       },
       py::arg("locale"), R"doc(
-      Create a new :class:`LocalizedNumberRangeFormatter` object associated
+      Create a new :class:`LocalizedNumberRangeFormatter` instance associated
       with the specified *locale*.
       )doc");
 
@@ -253,9 +258,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nrfs_lnrf.def(
@@ -265,9 +270,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       py::arg("memo"), R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nrfs_lnrf.def(
@@ -276,11 +281,12 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -309,10 +315,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Set the :class:`~icupy.icu.UErrorCode` if an error occurred in the
-      fluent chain.
-
-      Preserves older error codes in the *out_error_code*.
+      Copy the internal :class:`UErrorCode` to *out_error_code* and return
+      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      otherwise.
       )doc");
 
   nrfs_lnrf.def(
@@ -398,9 +403,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nrfs_unrf.def(
@@ -411,9 +416,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nrfs_unrf.def(
@@ -422,11 +427,12 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -455,10 +461,9 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Set the :class:`~icupy.icu.UErrorCode` if an error occurred in the
-      fluent chain.
-
-      Preserves older error codes in the *out_error_code*.
+      Copy the internal :class:`UErrorCode` to *out_error_code* and return
+      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      otherwise.
       )doc");
 
   nrfs_unrf.def(

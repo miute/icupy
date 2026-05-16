@@ -12,15 +12,16 @@ void init_format(py::module &m) {
   py::class_<Format, UObject> fmt(m, "Format", R"doc(
       Base class for all formats.
 
-      See Also:
-          :class:`DateFormat`
-          :class:`DateIntervalFormat`
-          :class:`MeasureFormat`
-          :class:`MessageFormat`
-          :class:`NumberFormat`
-          :class:`PluralFormat`
-          :class:`SelectFormat`
-          :class:`TimeZoneFormat`
+      .. seealso::
+
+         :class:`DateFormat`
+         :class:`DateIntervalFormat`
+         :class:`MeasureFormat`
+         :class:`MessageFormat`
+         :class:`NumberFormat`
+         :class:`PluralFormat`
+         :class:`SelectFormat`
+         :class:`TimeZoneFormat`
       )doc");
 
   fmt.def("__copy__", &Format::clone);

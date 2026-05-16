@@ -84,9 +84,9 @@ void init_context(py::module &m) {
                                                           R"doc(
       Alias of :class:`UserContext` for backward compatibility.
 
-      .. deprecated:: 0.24
-          ``ConstVoidPtr`` is deprecated and will be removed in future
-          releases. Use :class:`UserContext` instead.
+      .. version-deprecated:: 0.24
+         ``ConstVoidPtr`` is deprecated and will be removed in future
+         releases. Use :class:`UserContext` instead.
       )doc");
 
   cvp.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
@@ -96,7 +96,7 @@ void init_context(py::module &m) {
   cvp.def("to_object", &icupy::ConstVoidPtr::to_object, R"doc(
       Return the value associated with this object.
 
-      .. deprecated:: 0.23
-          Use :meth:`.value` instead.
+      .. version-deprecated:: 0.23
+         Use :meth:`.value` instead.
       )doc");
 }

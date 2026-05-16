@@ -229,6 +229,8 @@ Underlying code depends on them having these numbers.
   // enum UCollationResult
   //
   py::enum_<UCollationResult>(m, "UCollationResult", py::arithmetic(), R"doc(
+Enum returned by :meth:`Collator.compare` method.
+
 :attr:`UCOL_LESS` is returned if source string is compared to be less than
 target string in the :meth:`Collator.compare` method.
 

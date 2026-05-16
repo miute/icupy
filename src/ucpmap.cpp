@@ -102,21 +102,23 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
   // struct UCPMap
   //
   py::class_<icupy::UCPMapPtr>(m, "UCPMap", R"doc(
-    Abstract map from Unicode code points [U+0000, U+10FFFF] to integer values.
+      Abstract map from Unicode code points [U+0000, U+10FFFF] to integer values.
 
-    See Also:
-        :func:`u_get_int_property_map`
+    .. seealso::
+
+       :func:`u_get_int_property_map`
     )doc");
 
   //
   // UCPMapValueFilter
   //
   py::class_<icupy::UCPMapValueFilterPtr> vf(m, "UCPMapValueFilter", R"doc(
-    Wrapper class for a callback function that modify map data value.
+      Wrapper class for a callback function that modify map data value.
 
-    See Also:
-        :func:`ucpmap_get_range`
-    )doc");
+      .. seealso::
+
+         :func:`ucpmap_get_range`
+      )doc");
 
   vf.def(py::init([](const icupy::ValueFilterFunction &action,
                      std::optional<const icupy::UserContext *> context) {
@@ -124,14 +126,14 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
                action, context.value_or(nullptr));
          }),
          py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-         Initialize the ``UCPMapValueFilter`` instance with the specified
-         callback function and the user context.
+      Initialize the ``UCPMapValueFilter`` instance with the specified
+      callback function and the user context.
 
-         .. important::
+      .. important::
 
-             *action* and *context* must outlive the ``UCPMapValueFilter``
-             object.
-         )doc");
+         *action* and *context* must outlive the ``UCPMapValueFilter``
+         object.
+      )doc");
 
   vf.def(
       "context",
@@ -159,8 +161,9 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
 
       *c* must be between 0 and 0x10FFFF.
 
-      See Also:
-          :func:`u_get_int_property_map`
+      .. seealso::
+
+         :func:`u_get_int_property_map`
       )doc");
 
   m.def(
@@ -185,47 +188,53 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       the same property value as the code point starting at *start*
       as a tuple ``(end, value)``.
 
-      See Also:
-          :func:`u_get_int_property_map`
+      .. seealso::
 
-      Examples:
-          Basic usage:
+         :func:`u_get_int_property_map`
 
-          >>> from icupy import icu
-          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
-          >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
-          >>> start = 0
-          >>> while start <= 0x10fff:
-          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0)
-          ...     if end < 0:
-          ...         break
-          ...     result.append((start, end, icu.UEastAsianWidth(value)))
-          ...     start = end + 1
-          ...
-          >>> [x for x in result if x[2] == icu.U_EA_FULLWIDTH]
-          [(12288, 12288, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65281, 65376, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65504, 65510, <UEastAsianWidth.U_EA_FULLWIDTH: 3>)]
+      .. rubric:: Examples
 
-          Using custom filter:
+      Basic usage:
 
-          >>> from icupy import icu
-          >>> def my_filter(new_map: dict[int, int], value: int) -> int:
-          ...     return new_map.get(value, value)
-          ...
-          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
-          >>> eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
-          >>> context = icu.UserContext(eaw_map)
-          >>> action = icu.UCPMapValueFilter(my_filter, context)
-          >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
-          >>> start = 0
-          >>> while start <= 0x10fff:
-          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0, action)
-          ...     if end < 0:
-          ...         break
-          ...     result.append((start, end, icu.UEastAsianWidth(value)))
-          ...     start = end + 1
-          ...
-          >>> len([x for x in result if x[2] == icu.U_EA_FULLWIDTH])
-          173
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
+         >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+         >>> start = 0
+         >>> while start <= 0x10fff:
+         ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0)
+         ...     if end < 0:
+         ...         break
+         ...     result.append((start, end, icu.UEastAsianWidth(value)))
+         ...     start = end + 1
+
+         >>> [x for x in result if x[2] == icu.U_EA_FULLWIDTH]
+         [(12288, 12288, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65281, 65376, <UEastAsianWidth.U_EA_FULLWIDTH: 3>), (65504, 65510, <UEastAsianWidth.U_EA_FULLWIDTH: 3>)]
+
+      Using custom filter:
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> def my_filter(new_map: dict[int, int], value: int) -> int:
+         ...     return new_map.get(value, value)
+
+         >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
+         >>> eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
+         >>> context = icu.UserContext(eaw_map)
+         >>> action = icu.UCPMapValueFilter(my_filter, context)
+         >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+         >>> start = 0
+         >>> while start <= 0x10fff:
+         ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0, action)
+         ...     if end < 0:
+         ...         break
+         ...     result.append((start, end, icu.UEastAsianWidth(value)))
+         ...     start = end + 1
+
+         >>> len([x for x in result if x[2] == icu.U_EA_FULLWIDTH])
+         173
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 }

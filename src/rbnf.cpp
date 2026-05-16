@@ -27,10 +27,10 @@ void init_rbnf(py::module &m) {
 
              .. warning::
 
-                 The same resource contains rule sets for a variety of different
-                 numbering systems. You need to call
-                 :meth:`RuleBasedNumberFormat.set_default_rule_set` on the
-                 formatter to choose the actual numbering system.
+                The same resource contains rule sets for a variety of different
+                numbering systems. You need to call
+                :meth:`RuleBasedNumberFormat.set_default_rule_set` on the
+                formatter to choose the actual numbering system.
              )doc")
       .export_values();
 

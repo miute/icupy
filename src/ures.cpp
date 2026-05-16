@@ -23,8 +23,9 @@ void init_ures(py::module &m) {
   py::enum_<UResType>(m, "UResType", py::arithmetic(), R"doc(
 Numeric constants for types of resource items.
 
-See Also:
-    :meth:`ResourceBundle.get_type`
+.. seealso::
+
+   :meth:`ResourceBundle.get_type`
       )doc")
       .value("URES_NONE", URES_NONE, R"doc(
              Resource type constant for "no resource".
@@ -97,11 +98,12 @@ See Also:
   py::class_<icupy::UResourceBundlePtr>(m, "UResourceBundle", R"doc(
        UResourceBundle structure.
 
-       See Also:
-           :func:`ures_close`
-           :func:`ures_open`
-           :func:`ures_open_direct`
-           :meth:`ResourceBundle.__init__`
+       .. seealso::
+
+          :func:`ures_close`
+          :func:`ures_open`
+          :func:`ures_open_direct`
+          :meth:`ResourceBundle.__init__`
        )doc");
 
   //

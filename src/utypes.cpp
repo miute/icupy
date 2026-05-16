@@ -9,9 +9,10 @@ Standard ICU4C error code type.
 
 The error code is used by ICU4C functions to report errors.
 
-See Also:
-    :class:`ErrorCode`
-    :class:`ICUError`
+.. seealso::
+
+   :class:`ErrorCode`
+   :class:`ICUError`
       )doc")
       .value("U_USING_FALLBACK_WARNING", U_USING_FALLBACK_WARNING, R"doc(
              A resource bundle lookup returned a fallback result (not an
@@ -551,15 +552,21 @@ See Also:
   //
   // Functions
   //
-  m.def("u_error_name", &u_errorName, py::arg("code"));
+  m.def("u_error_name", &u_errorName, py::arg("code"), R"doc(
+      Return a string representation of the :class:`UErrorCode`.
+      )doc");
 
   m.def(
       "u_failure", [](UErrorCode code) -> py::bool_ { return U_FAILURE(code); },
-      py::arg("code"));
+      py::arg("code"), R"doc(
+      Return ``True`` if the :class:`UErrorCode` indicates failure.
+      )doc");
 
   m.def(
       "u_success", [](UErrorCode code) -> py::bool_ { return U_SUCCESS(code); },
-      py::arg("code"));
+      py::arg("code"), R"doc(
+      Return ``True`` if the :class:`UErrorCode` indicates success.
+      )doc");
 
   m.attr("U_MILLIS_PER_DAY") = U_MILLIS_PER_DAY;
   m.attr("U_MILLIS_PER_HOUR") = U_MILLIS_PER_HOUR;

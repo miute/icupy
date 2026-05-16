@@ -61,8 +61,8 @@ the docs of each option for details.
 
 .. note::
 
-    This enum specifies the strategy for grouping sizes. To set which character
-    to use as the grouping separator, use the "symbols" setter.
+   This enum specifies the strategy for grouping sizes. To set which character
+   to use as the grouping separator, use the "symbols" setter.
       )doc")
       .value("UNUM_GROUPING_OFF", UNUM_GROUPING_OFF, R"doc(
              Do not display grouping separators in any locale.
@@ -220,11 +220,11 @@ by locale.
 
              .. note::
 
-                 Since CLDR defines the accounting format in the monetary
-                 context only, this option falls back to the
-                 :attr:`UNUM_SIGN_AUTO` sign display strategy when formatting
-                 without a currency unit. This limitation may be lifted in the
-                 future.
+                Since CLDR defines the accounting format in the monetary
+                context only, this option falls back to the
+                :attr:`UNUM_SIGN_AUTO` sign display strategy when formatting
+                without a currency unit. This limitation may be lifted in the
+                future.
              )doc")
       .value("UNUM_SIGN_ACCOUNTING_ALWAYS", UNUM_SIGN_ACCOUNTING_ALWAYS, R"doc(
              Use the locale-dependent accounting format on negative numbers,

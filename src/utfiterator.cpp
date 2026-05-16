@@ -22,11 +22,12 @@ When a validating UTFIterator encounters an ill-formed code unit sequence, then
 :meth:`header.UnsafeCodeUnits.code_point` is a value according to this
 parameter.
 
-See Also:
-    :class:`header.CodeUnits`
-    :class:`header.UTFStringCodePointsFFFD`
-    :class:`header.UTFStringCodePointsNegative`
-    :class:`header.UTFStringCodePointsSurrogate`
+.. seealso::
+
+   :class:`header.CodeUnits`
+   :class:`header.UTFStringCodePointsFFFD`
+   :class:`header.UTFStringCodePointsNegative`
+   :class:`header.UTFStringCodePointsSurrogate`
       )doc")
       .value("UTF_BEHAVIOR_NEGATIVE", UTF_BEHAVIOR_NEGATIVE, R"doc(
              Returns a negative value (-1 = :attr:`U_SENTINEL`) instead of

@@ -30,10 +30,11 @@ void init_ubiditransform(py::module &m) {
 UBiDiMirroring indicates whether or not characters with the "mirrored" property
 in RTL runs should be replaced with their mirror-image counterparts.
 
-See Also:
-    :func:`ubidi_set_reordering_options`
-    :func:`ubidi_write_reordered`
-    :func:`ubidi_write_reverse`
+.. seealso::
+
+   :func:`ubidi_set_reordering_options`
+   :func:`ubidi_write_reordered`
+   :func:`ubidi_write_reverse`
       )doc")
       .value("UBIDI_MIRRORING_OFF", UBIDI_MIRRORING_OFF, R"doc(
              Constant indicating that character mirroring should not be
@@ -80,9 +81,10 @@ of input and output text order:
   UBiDi engine; it implies character mirroring, Arabic shaping, and - if the
   input/output base directions mismatch - string reverse operations.
 
-See Also:
-    :func:`ubidi_set_inverse`
-    :func:`ubidi_set_reordering_mode`
+.. seealso::
+
+   :func:`ubidi_set_inverse`
+   :func:`ubidi_set_reordering_mode`
       )doc")
       .value("UBIDI_LOGICAL", UBIDI_LOGICAL, R"doc(
              Constant indicating a logical order.
@@ -103,9 +105,10 @@ See Also:
     UBiDiTransform structure that stores information used by the layout
     transformation engine.
 
-    See Also:
-        :func:`ubiditransform_close`
-        :func:`ubiditransform_open`
+    .. seealso::
+
+       :func:`ubiditransform_close`
+       :func:`ubiditransform_open`
     )doc");
 
   //

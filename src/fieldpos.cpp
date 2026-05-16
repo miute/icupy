@@ -16,21 +16,27 @@ void init_fieldpos(py::module &m) {
       Fields are identified by constants, whose names are typically defined in
       various enumeration types ending with Field.
 
-      See Also:
-          :class:`UDateFormatField`
-          :class:`UListFormatterField`
-          :class:`UNumberFormatFields`
-          :class:`URelativeDateTimeFormatterField`
+      .. seealso::
 
-      Example:
-          Retrieve a specific field of a date:
+         :class:`FieldPositionIterator`
+         :class:`UDateFormatField`
+         :class:`UListFormatterField`
+         :class:`UNumberFormatFields`
+         :class:`URelativeDateTimeFormatterField`
+         :meth:`Format.format`
 
-          >>> from icupy import icu
-          >>> fmt = icu.DateFormat.create_date_instance(icu.DateFormat.LONG, icu.Locale.get_france())
-          >>> dest = icu.UnicodeString()
-          >>> pos = icu.FieldPosition(icu.UDAT_YEAR_FIELD)
-          >>> dest = fmt.format(icu.Calendar.get_now(), dest, pos)
-          >>> print(dest[pos.get_begin_index():pos.get_end_index()])
+      .. rubric:: Example
+
+      Retrieve a specific field of a date:
+
+      .. code-block:: python
+
+         from icupy import icu
+         fmt = icu.DateFormat.create_date_instance(icu.DateFormat.LONG, icu.Locale.get_france())
+         dest = icu.UnicodeString()
+         pos = icu.FieldPosition(icu.UDAT_YEAR_FIELD)
+         dest = fmt.format(icu.Calendar.get_now(), dest, pos)
+         print(dest[pos.get_begin_index():pos.get_end_index()])
       )doc");
 
   //
@@ -58,9 +64,9 @@ void init_fieldpos(py::module &m) {
       )doc");
 
   fp.def("__copy__", &FieldPosition::clone, R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   fp.def(
@@ -69,9 +75,9 @@ void init_fieldpos(py::module &m) {
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   fp.def(
@@ -103,11 +109,12 @@ void init_fieldpos(py::module &m) {
   });
 
   fp.def("clone", &FieldPosition::clone, R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 
   fp.def("get_begin_index", &FieldPosition::getBeginIndex, R"doc(

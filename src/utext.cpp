@@ -118,16 +118,17 @@ void init_utext(py::module &m) {
   py::class_<icupy::UTextPtr> utp(m, "UText", R"doc(
     UText structure.
 
-    See Also:
-        :class:`UTextVector`
-        :func:`utext_clone`
-        :func:`utext_close`
-        :func:`utext_open_character_iterator`
-        :func:`utext_open_const_unicode_string`
-        :func:`utext_open_replaceable`
-        :func:`utext_open_uchars`
-        :func:`utext_open_unicode_string`
-        :func:`utext_open_utf8`
+    .. seealso::
+
+       :class:`UTextVector`
+       :func:`utext_clone`
+       :func:`utext_close`
+       :func:`utext_open_character_iterator`
+       :func:`utext_open_const_unicode_string`
+       :func:`utext_open_replaceable`
+       :func:`utext_open_uchars`
+       :func:`utext_open_unicode_string`
+       :func:`utext_open_utf8`
     )doc");
 
   utp.def(

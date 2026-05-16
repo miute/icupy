@@ -52,9 +52,10 @@ output, even when the pair is between two single, text-quoting apostrophes.
                                                    py::arithmetic(), R"doc(
 Enum constants for :meth:`MessagePattern.validate_argument_name`.
 
-Warning:
-    ``UMessagePatternArgName`` is not standard. Do not use the fully qualified
-    name as this name may change in the future.
+.. warning::
+
+   ``UMessagePatternArgName`` is not standard. Do not use the fully qualified
+   name as this name may change in the future.
   )doc")
       .value("UMSGPAT_ARG_NAME_NOT_NUMBER", UMSGPAT_ARG_NAME_NOT_NUMBER, R"doc(
              Return value from :meth:`MessagePattern.validate_argument_name`

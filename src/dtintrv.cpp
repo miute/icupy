@@ -13,8 +13,9 @@ void init_dtintrv(py::module &m) {
 
       This is a pair of ``UDate`` values from the start date to the end date.
 
-      See Also:
-          :class:`DateIntervalFormat`
+      .. seealso::
+
+         :class:`DateIntervalFormat`
       )doc");
 
   di.def(py::init<UDate, UDate>(), py::arg("from_date"), py::arg("to_date"))

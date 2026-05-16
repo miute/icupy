@@ -46,43 +46,49 @@ void init_rbbi(py::module &m) {
       For more information, see the ICU User Guide:
       `Boundary Analysis <https://unicode-org.github.io/icu/userguide/boundaryanalysis/>`__.
 
-      See Also:
-          :class:`RuleBasedBreakIterator`
+      .. seealso::
 
-      Examples:
-          BreakIterator for sentence-breaks:
+         :class:`RuleBasedBreakIterator`
 
-          >>> from icupy import icu
-          >>> bi = icu.BreakIterator.create_sentence_instance(icu.ULOC_US)
-          >>> src = icu.UnicodeString(
-          ...     "Alice was beginning to get very tired of sitting by her sister on the bank. "
-          ...     "She had nothing to do. The book had no pictures or conversations in it."
-          ... )
-          >>> bi.set_text(src)
-          >>> start = bi.first()
-          >>> while (end := bi.next()) != icu.UBRK_DONE:
-          ...     print(src[start:end])
-          ...     start = end
-          ...
-          Alice was beginning to get very tired of sitting by her sister on the bank.
-          She had nothing to do.
-          The book had no pictures or conversations in it.
+      .. rubric:: Examples
 
-          BreakIterator for word-breaks:
+      BreakIterator for sentence-breaks:
 
-          >>> from icupy import icu
-          >>> bi = icu.BreakIterator.create_word_instance(icu.ULOC_US)
-          >>> src = icu.UnicodeString("Alice was beginning to get very tired of sitting by her sister on the bank.")
-          >>> bi.set_text(src)
-          >>> result = []
-          >>> start = bi.first()
-          >>> while (end := bi.next()) != icu.UBRK_DONE:
-          ...     if bi.get_rule_status() != icu.UBRK_WORD_NONE:
-          ...         result.append(src[start:end])
-          ...     start = end
-          ...
-          >>> result
-          ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> bi = icu.BreakIterator.create_sentence_instance(icu.ULOC_US)
+         >>> src = icu.UnicodeString(
+         ...     "Alice was beginning to get very tired of sitting by her sister on the bank. "
+         ...     "She had nothing to do. The book had no pictures or conversations in it."
+         ... )
+         >>> bi.set_text(src)
+         >>> start = bi.first()
+         >>> while (end := bi.next()) != icu.UBRK_DONE:
+         ...     print(src[start:end])
+         ...     start = end
+
+         Alice was beginning to get very tired of sitting by her sister on the bank.
+         She had nothing to do.
+         The book had no pictures or conversations in it.
+
+      BreakIterator for word-breaks:
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> bi = icu.BreakIterator.create_word_instance(icu.ULOC_US)
+         >>> src = icu.UnicodeString("Alice was beginning to get very tired of sitting by her sister on the bank.")
+         >>> bi.set_text(src)
+         >>> result = []
+         >>> start = bi.first()
+         >>> while (end := bi.next()) != icu.UBRK_DONE:
+         ...     if bi.get_rule_status() != icu.UBRK_WORD_NONE:
+         ...         result.append(src[start:end])
+         ...     start = end
+
+         >>> result
+         ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
       )doc");
 
   // TODO: Remove `BreakIterator.DONE` in the future release.
@@ -95,17 +101,16 @@ Enum constants for text boundary analysis.
              :meth:`~BreakIterator.next` after all valid boundaries have been
              returned.
 
-             .. deprecated:: 0.24
-
+             .. version-deprecated:: 0.24
                 Use :attr:`UBRK_DONE` instead.
              )doc")
       .export_values();
 
   bi.def("__copy__", &BreakIterator::clone,
          R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   bi.def(
@@ -115,9 +120,9 @@ Enum constants for text boundary analysis.
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   bi.def(
@@ -136,7 +141,13 @@ Enum constants for text boundary analysis.
         return self;
       },
       R"doc(
-      Return an iterator object.
+      Return the iterator object.
+
+      The text boundary is reset to the start.
+
+      .. seealso::
+
+         :meth:`.__next__`
       )doc");
 
   bi.def(
@@ -159,6 +170,10 @@ Enum constants for text boundary analysis.
       },
       R"doc(
       Return the next boundary from the iterator.
+
+      .. seealso::
+
+         :meth:`.next`
       )doc");
 
   bi.def(
@@ -187,26 +202,28 @@ Enum constants for text boundary analysis.
 
       .. note::
 
-          An instance of ``CharacterIterator`` will be copied: changes made to
-          the iterator object after passing it to ``BreakIterator`` will not be
-          reflected.
+         An instance of ``CharacterIterator`` will be copied: changes made to
+         the iterator object after passing it to ``BreakIterator`` will not be
+         reflected.
 
       .. note::
 
-          :meth:`.set_text` provides similar functionality to this function,
-          and is more efficient.
+         :meth:`.set_text` provides similar functionality to this function,
+         and is more efficient.
 
-      See Also:
-          :meth:`.set_text`
+      .. seealso::
+
+         :meth:`.set_text`
       )doc");
 
   bi.def("clone", &BreakIterator::clone,
          R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 
   bi.def_static(
@@ -221,9 +238,9 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::arg("where"), R"doc(
-      Create a ``BreakIterator`` for character-breaks using specified locale.
+      Create a new ``BreakIterator`` instance for character-breaks using the
+      specified locale.
 
-      Return an instance of a ``BreakIterator`` implementing character breaks.
       Character breaks are boundaries of combining character sequences.
       )doc");
 
@@ -239,12 +256,12 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::arg("where"), R"doc(
-      Create a ``BreakIterator`` for line-breaks using specified locale.
+      Create a new ``BreakIterator`` instance for line-breaks using the
+      specified locale.
 
-      Return an instance of a ``BreakIterator`` implementing line breaks.
       Line breaks are logically possible line breaks, actual line breaks are
-      usually determined based on display width. LineBreak is useful for word
-      wrapping text.
+      usually determined based on display width. Line breaks are useful for
+      word wrapping text.
       )doc");
 
   bi.def_static(
@@ -259,9 +276,8 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::arg("where"), R"doc(
-      Create a ``BreakIterator`` for sentence-breaks using specified locale.
-
-      Return an instance of a ``BreakIterator`` implementing sentence breaks.
+      Create a new ``BreakIterator`` instance for sentence-breaks using the
+      specified locale.
       )doc");
 
   bi.def_static(
@@ -276,17 +292,15 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::arg("where"), R"doc(
-      Create a ``BreakIterator`` for title-casing breaks using the specified
-      locale.
-
-      Return an instance of a ``BreakIterator`` implementing title breaks.
+      Create a new ``BreakIterator`` instance for title-casing breaks using the
+      specified locale.
 
       The iterator returned locates title boundaries as described for
       Unicode 3.2 only. For Unicode 4.0 and above title boundary iteration,
       please use a word boundary iterator. See :meth:`.create_word_instance`.
 
-      .. deprecated:: ICU64
-          Use :meth:`.create_word_instance` instead.
+      .. version-deprecated:: ICU64
+         Use :meth:`.create_word_instance` instead.
       )doc");
 
   bi.def_static(
@@ -301,10 +315,10 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::arg("where"), R"doc(
-      Create a ``BreakIterator`` for word-breaks using the given locale.
+      Create a new ``BreakIterator`` instance for word-breaks using the
+      specified locale.
 
-      Return an instance of a ``BreakIterator`` implementing word breaks.
-      WordBreak is useful for word selection (ex. double click).
+      Word breaks are useful for word selection (ex. double click).
       )doc");
 
   bi.def("current", &BreakIterator::current, R"doc(
@@ -337,7 +351,7 @@ Enum constants for text boundary analysis.
         return result;
       },
       py::return_value_policy::reference, R"doc(
-      Return the set of locales for which break iterators are installed.
+      Return a list of locales where break iterators are installed.
       )doc");
 
   bi.def_static(
@@ -351,8 +365,10 @@ Enum constants for text boundary analysis.
         },
         py::arg("object_locale"), py::arg("display_locale"), py::arg("name"),
         R"doc(
-      Return name of the object for the desired locale, in the desired
-      language.
+      Copy *object_locale* to *name* in a format suitable for display in the
+      locale specified by *display_locale*, and return *name* itself.
+
+      *object_locale* must be obtained from :meth:`.get_available_locales`.
       )doc")
       .def_static(
           "get_display_name",
@@ -362,8 +378,10 @@ Enum constants for text boundary analysis.
                 icupy::to_locale(object_locale), name);
           },
           py::arg("object_locale"), py::arg("name"), R"doc(
-      Return name of the object for the desired locale, in the language of the
-      default locale.
+      Copy *object_locale* to *name* in a format suitable for display in the
+      default locale, and return *name* itself.
+
+      *object_locale* must be obtained from :meth:`.get_available_locales`.
       )doc");
 
   bi.def(
@@ -388,10 +406,11 @@ Enum constants for text boundary analysis.
       For break iterator types that do not support a rule status, a default
       value of 0 is returned.
 
-      See Also:
-          :class:`ULineBreakTag`
-          :class:`USentenceBreakTag`
-          :class:`UWordBreak`
+      .. seealso::
+
+         :class:`ULineBreakTag`
+         :class:`USentenceBreakTag`
+         :class:`UWordBreak`
       )doc");
 
   bi.def(
@@ -415,10 +434,11 @@ Enum constants for text boundary analysis.
       For break iterator types that do not support rule status, no values are
       returned.
 
-      See Also:
-          :class:`ULineBreakTag`
-          :class:`USentenceBreakTag`
-          :class:`UWordBreak`
+      .. seealso::
+
+         :class:`ULineBreakTag`
+         :class:`USentenceBreakTag`
+         :class:`UWordBreak`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
 
@@ -511,7 +531,7 @@ Enum constants for text boundary analysis.
 
       .. important::
 
-          *text* must outlive the break iterator object.
+         *text* must outlive the break iterator object.
       )doc")
       .def(
           "set_text",
@@ -529,10 +549,10 @@ Enum constants for text boundary analysis.
 
       .. important::
 
-          This function makes a shallow clone of the specified :class:`UText`.
-          The caller can immediately close or reuse the :class:`UText` passed
-          as a parameter, but the underlying text itself must outlive the break
-          iterator object.
+         This function makes a shallow clone of the specified :class:`UText`.
+         The caller can immediately close or reuse the :class:`UText` passed
+         as a parameter, but the underlying text itself must outlive the break
+         iterator object.
       )doc");
 
   // TODO: Implement "static UBool BreakIterator::unregister(URegistryKey key,
@@ -545,6 +565,10 @@ Enum constants for text boundary analysis.
       m, "RuleBasedBreakIterator", R"doc(
       Subclass of :class:`BreakIterator` that determines text boundaries based
       on a rule set.
+
+      Instances of this class are mainly created using factory methods such as
+      :meth:`BreakIterator.create_word_instance` and
+      :meth:`BreakIterator.create_line_instance`.
 
       For more information, see the ICU User Guide:
       `Break Rules <https://unicode-org.github.io/icu/userguide/boundaryanalysis/break-rules.html>`__.
@@ -595,33 +619,34 @@ Enum constants for text boundary analysis.
 
       .. important::
 
-          *compiled_rules* must outlive the break iterator object.
+         *compiled_rules* must outlive the break iterator object.
 
       .. note::
 
-          The compiled rules are not compatible across different major versions
-          of ICU. The compiled rules are compatible only between machines with
-          the same byte ordering (little or big endian) and the same base
-          character set family (ASCII or EBCDIC).
+         The compiled rules are not compatible across different major versions
+         of ICU. The compiled rules are compatible only between machines with
+         the same byte ordering (little or big endian) and the same base
+         character set family (ASCII or EBCDIC).
 
       .. seealso::
 
-          :meth:`.get_binary_rules`
+         :meth:`.get_binary_rules`
       )doc");
 
   rbbi.def("__hash__", &RuleBasedBreakIterator::hashCode, R"doc(
-      Return the hash value of this object.
+      Return a hash value of this instance.
 
-      This is equivalent to :meth:`hash_code`.
+      This is equivalent to calling :meth:`.hash_code`.
       )doc");
 
   rbbi.def("clone", &RuleBasedBreakIterator::clone,
            R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`~BreakIterator.__copy__`
-          :meth:`~BreakIterator.__deepcopy__`
+      .. seealso::
+
+         :meth:`~BreakIterator.__copy__`
+         :meth:`~BreakIterator.__deepcopy__`
       )doc");
 
   rbbi.def(
@@ -638,10 +663,10 @@ Enum constants for text boundary analysis.
 
       .. note::
 
-          The compiled rules are not compatible across different major versions
-          of ICU. The compiled rules are compatible only between machines with
-          the same byte ordering (little or big endian) and the same base
-          character set family (ASCII or EBCDIC).
+         The compiled rules are not compatible across different major versions
+         of ICU. The compiled rules are compatible only between machines with
+         the same byte ordering (little or big endian) and the same base
+         character set family (ASCII or EBCDIC).
       )doc");
 
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules, R"doc(
@@ -649,10 +674,11 @@ Enum constants for text boundary analysis.
       )doc");
 
   rbbi.def("hash_code", &RuleBasedBreakIterator::hashCode, R"doc(
-      Return a hash code for this :class:`BreakIterator`.
+      Return a hash code for this instance.
 
-      See Also:
-          :meth:`.__hash__`
+      .. seealso::
+
+         :meth:`.__hash__`
       )doc");
 
   // FIXME: Implement "BreakIterator& refreshInputText(UText *input,
