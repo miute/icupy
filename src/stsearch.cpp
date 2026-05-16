@@ -304,6 +304,7 @@ void init_stsearch(py::module &m) {
       [](const SearchIterator &self) -> std::optional<const BreakIterator *> {
         return self.getBreakIterator();
       },
+      py::return_value_policy::reference,
       R"doc(
       Return the break iterator used by this search iterator.
 
