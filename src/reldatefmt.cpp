@@ -150,8 +150,9 @@ e.g., "in 5 days" or "in 3 months"
       Immutable class containing the result of a relative datetime formatting
       operation.
 
-      See Also:
-          :class:`RelativeDateTimeFormatter`
+      .. seealso::
+
+         :class:`RelativeDateTimeFormatter`
       )doc");
 
   frdt.def(py::init<>());
@@ -164,39 +165,40 @@ e.g., "in 5 days" or "in 3 months"
       m, "RelativeDateTimeFormatter", R"doc(
       Format relative dates and times.
 
-      Examples:
-          Appends "in 1 day":
+      .. rubric:: Examples
 
-          .. code-block:: python
+      Appends "in 1 day":
 
-              from icupy import icu
-              fmt = icu.RelativeDateTimeFormatter(icu.ULOC_US)
-              dest = icu.UnicodeString()
-              fmt.format(1, icu.UDAT_DIRECTION_NEXT, icu.UDAT_RELATIVE_DAYS, dest)
+      .. code-block:: python
 
-          Appends "in 3 days":
+         from icupy import icu
+         fmt = icu.RelativeDateTimeFormatter(icu.ULOC_US)
+         dest = icu.UnicodeString()
+         fmt.format(1, icu.UDAT_DIRECTION_NEXT, icu.UDAT_RELATIVE_DAYS, dest)
 
-          .. code-block:: python
+      Appends "in 3 days":
 
-              fmt.format(3, icu.UDAT_DIRECTION_NEXT, icu.UDAT_RELATIVE_DAYS, dest)
+      .. code-block:: python
 
-          Appends "last Sunday":
+         fmt.format(3, icu.UDAT_DIRECTION_NEXT, icu.UDAT_RELATIVE_DAYS, dest)
 
-          .. code-block:: python
+      Appends "last Sunday":
 
-              fmt.format(icu.UDAT_DIRECTION_LAST, icu.UDAT_ABSOLUTE_SUNDAY, dest)
+      .. code-block:: python
 
-          Appends "Sunday":
+         fmt.format(icu.UDAT_DIRECTION_LAST, icu.UDAT_ABSOLUTE_SUNDAY, dest)
 
-          .. code-block:: python
+      Appends "Sunday":
 
-              fmt.format(icu.UDAT_DIRECTION_PLAIN, icu.UDAT_ABSOLUTE_SUNDAY, dest)
+      .. code-block:: python
 
-          Appends "yesterday":
+         fmt.format(icu.UDAT_DIRECTION_PLAIN, icu.UDAT_ABSOLUTE_SUNDAY, dest)
 
-          .. code-block:: python
+      Appends "yesterday":
 
-              fmt.format(icu.UDAT_DIRECTION_LAST, icu.UDAT_ABSOLUTE_DAY, dest)
+      .. code-block:: python
+
+         fmt.format(icu.UDAT_DIRECTION_LAST, icu.UDAT_ABSOLUTE_DAY, dest)
       )doc");
 
   rdtf.def(

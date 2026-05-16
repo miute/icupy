@@ -20,8 +20,9 @@ void init_regex(py::module &m) {
       For more information, see the ICU User Guide:
       `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
 
-      See Also:
-          :class:`RegexPattern`
+      .. seealso::
+
+         :class:`RegexPattern`
       )doc");
 
   //
@@ -33,8 +34,9 @@ void init_regex(py::module &m) {
       For more information, see the ICU User Guide:
       `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
 
-      See Also:
-          :class:`RegexMatcher`
+      .. seealso::
+
+         :class:`RegexMatcher`
       )doc");
 
   //
@@ -223,8 +225,9 @@ void init_regex(py::module &m) {
       R"doc(
       Return the find progress callback function for this ``RegexMatcher``.
 
-      See Also:
-          :meth:`.set_find_progress_callback`
+      .. seealso::
+
+         :meth:`.set_find_progress_callback`
       )doc");
 
   rm.def(
@@ -259,8 +262,9 @@ void init_regex(py::module &m) {
       R"doc(
       Return the callback function for this ``RegexMatcher``.
 
-      See Also:
-          :meth:`.set_match_callback`
+      .. seealso::
+
+         :meth:`.set_match_callback`
       )doc");
 
   rm.def("get_stack_limit", &RegexMatcher::getStackLimit);
@@ -512,38 +516,40 @@ void init_regex(py::module &m) {
 
       .. important::
 
-          *callback* must outlive the ``RegexMatcher`` object.
+         *callback* must outlive the ``RegexMatcher`` object.
 
-      See Also:
-          :meth:`.get_find_progress_callback`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
-          >>> matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
-          >>> def progress_callback(options: dict[str, int], match_index: int) -> bool:
-          ...     if not isinstance(options, dict):
-          ...         return False
-          ...     calls = options.get("numCalls", 0) + 1
-          ...     options["numCalls"] = calls
-          ...     options["lastIndex"] = match_index
-          ...     max_calls = options.get("maxCalls", -1)
-          ...     return True if max_calls < 0 else calls < max_calls
-          ...
-          >>> info: dict[str, int] = {}
-          >>> context = icu.UserContext(info)
-          >>> callback = icu.URegexFindProgressCallback(progress_callback, context)
-          >>> matcher.set_find_progress_callback(callback)
-          >>> matcher.find(0)
-          False
-          >>> info
-          {'numCalls': 18, 'lastIndex': 18}
-          >>> info.clear()
-          >>> info["maxCalls"] = 5
-          >>> matcher.find(0)
-          icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
-          >>> info
-          {'maxCalls': 5, 'numCalls': 5, 'lastIndex': 5}
+         :meth:`.get_find_progress_callback`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> def progress_callback(options: dict[str, int], match_index: int) -> bool:
+         ...     if not isinstance(options, dict):
+         ...         return False
+         ...     calls = options.get("numCalls", 0) + 1
+         ...     options["numCalls"] = calls
+         ...     options["lastIndex"] = match_index
+         ...     max_calls = options.get("maxCalls", -1)
+         ...     return True if max_calls < 0 else calls < max_calls
+
+         >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
+         >>> matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
+         >>> info = {}
+         >>> context = icu.UserContext(info)
+         >>> callback = icu.URegexFindProgressCallback(progress_callback, context)
+         >>> matcher.set_find_progress_callback(callback)
+         >>> matcher.find(0)  # False
+         >>> info
+         {'numCalls': 18, 'lastIndex': 18}
+         >>> info.clear()
+         >>> info["maxCalls"] = 5
+         >>> matcher.find(0)  # icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
+         >>> info
+         {'maxCalls': 5, 'numCalls': 5, 'lastIndex': 5}
       )doc");
 
   rm.def(
@@ -562,38 +568,40 @@ void init_regex(py::module &m) {
 
       .. important::
 
-          *callback* must outlive the ``RegexMatcher`` object.
+         *callback* must outlive the ``RegexMatcher`` object.
 
-      See Also:
-          :meth:`.get_match_callback`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
-          >>> matcher = icu.RegexMatcher("((.)+\\2)+x", src, 0)
-          >>> def matching_callback(options: dict[str, int], steps: int) -> bool:
-          ...     if not isinstance(options, dict):
-          ...         return False
-          ...     calls = options.get("numCalls", 0) + 1
-          ...     options["numCalls"] = calls
-          ...     options["lastSteps"] = steps
-          ...     max_calls = options.get("maxCalls", -1)
-          ...     return True if max_calls < 0 else calls < max_calls
-          ...
-          >>> info: dict[str, int] = {}
-          >>> context = icu.UserContext(info)
-          >>> callback = icu.URegexMatchCallback(matching_callback, context)
-          >>> matcher.set_match_callback(callback)
-          >>> matcher.matches(0)
-          False
-          >>> info
-          {'numCalls': 16, 'lastSteps': 16}
-          >>> info.clear()
-          >>> info["maxCalls"] = 5
-          >>> matcher.matches(0)
-          icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
-          >>> info
-          {'maxCalls': 5, 'numCalls': 5, 'lastSteps': 5}
+         :meth:`.get_match_callback`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> def matching_callback(options: dict[str, int], steps: int) -> bool:
+         ...     if not isinstance(options, dict):
+         ...         return False
+         ...     calls = options.get("numCalls", 0) + 1
+         ...     options["numCalls"] = calls
+         ...     options["lastSteps"] = steps
+         ...     max_calls = options.get("maxCalls", -1)
+         ...     return True if max_calls < 0 else calls < max_calls
+
+         >>> src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaaaaaab")
+         >>> matcher = icu.RegexMatcher("((.)+\\2)+x", src, 0)
+         >>> info = {}
+         >>> context = icu.UserContext(info)
+         >>> callback = icu.URegexMatchCallback(matching_callback, context)
+         >>> matcher.set_match_callback(callback)
+         >>> matcher.matches(0)  # False
+         >>> info
+         {'numCalls': 16, 'lastSteps': 16}
+         >>> info.clear()
+         >>> info["maxCalls"] = 5
+         >>> matcher.matches(0)  # icupy.icu.ICUError: U_REGEX_STOPPED_BY_CALLER
+         >>> info
+         {'maxCalls': 5, 'numCalls': 5, 'lastSteps': 5}
       )doc");
 
   rm.def(

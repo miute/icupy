@@ -17,18 +17,22 @@ void init_tblcoll(py::module &m) {
   py::class_<Collator, UObject> coll(m, "Collator", R"doc(
       Perform locale-sensitive string comparison.
 
-      See Also:
-          :class:`RuleBasedCollator`
+      .. seealso::
 
-      Example:
-          Natural sort (human-friendly sorting):
+         :class:`RuleBasedCollator`
 
-          >>> from icupy import icu
-          >>> coll = icu.Collator.create_instance(icu.ULOC_US)
-          >>> coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
-          >>> data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
-          >>> sorted(data, key=coll.get_sort_key)
-          ['file1.txt', 'file2.txt', 'file3.txt', 'file10.txt', 'file20.txt']
+      .. rubric:: Example
+
+      Natural sort (human-friendly sorting):
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> coll = icu.Collator.create_instance(icu.ULOC_US)
+         >>> coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
+         >>> data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
+         >>> sorted(data, key=coll.get_sort_key)
+         ['file1.txt', 'file2.txt', 'file3.txt', 'file10.txt', 'file20.txt']
       )doc");
 
   //
@@ -63,8 +67,9 @@ For example, "ä" == "ä".
 :class:`UCollationStrength` is also used to determine the strength of sort keys
 generated from :class:`Collator` objects.
 
-See Also:
-    :class:`UColAttributeValue`
+.. seealso::
+
+   :class:`UColAttributeValue`
       )doc")
       .value("PRIMARY", Collator::PRIMARY)
       .value("SECONDARY", Collator::SECONDARY)
@@ -78,7 +83,10 @@ See Also:
   //
   py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult",
                                          py::arithmetic(), R"doc(
-Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
+Enum returned by :meth:`Collator.compare` method.
+
+.. version-deprecated:: ICU2.6
+   Use :class:`UCollationResult` instead.
       )doc")
       .value("LESS", Collator::LESS)
       .value("EQUAL", Collator::EQUAL)
@@ -89,18 +97,18 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
   // class icu::Collator
   //
   coll.def("__copy__", &Collator::clone, R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   coll.def(
       "__deepcopy__",
       [](const Collator &self, py::dict & /* memo */) { return self.clone(); },
       py::arg("memo"), R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   coll.def(
@@ -111,9 +119,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       )doc");
 
   coll.def("__hash__", &Collator::hashCode, R"doc(
-      Return the hash value of this object.
+      Return a hash value of this instance.
 
-      This is equivalent to :meth:`hash_code`.
+      This is equivalent to calling :meth:`.hash_code`.
       )doc");
 
   coll.def(
@@ -124,11 +132,12 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       )doc");
 
   coll.def("clone", &Collator::clone, R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 
   coll.def(
@@ -240,7 +249,7 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
             return result;
           },
           py::arg("loc"), R"doc(
-      Create the ``Collator`` object for the desired locale.
+      Create a new ``Collator`` instance with the specified locale.
       )doc")
       .def_static(
           "create_instance",
@@ -253,7 +262,7 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
             return result;
           },
           R"doc(
-      Create the ``Collator`` object for the current default locale.
+      Create a new ``Collator`` instance with the current default locale.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
@@ -294,8 +303,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       py::arg("attr"), R"doc(
       Return the value of the specified attribute.
 
-      See Also:
-          :meth:`.set_attribute`
+      .. seealso::
+
+         :meth:`.set_attribute`
       )doc");
 
   coll.def_static(
@@ -310,11 +320,11 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
         return result;
       },
       py::return_value_policy::reference, R"doc(
-      Return the set of locales for which collations are installed.
+      Return a list of locales where the collation is installed.
 
       .. note::
 
-          This does not include locales supported by registered collators.
+         This does not include locales supported by registered collators.
       )doc");
 
   coll.def_static(
@@ -359,7 +369,8 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
           },
           py::arg("source"), py::arg("source_length"), py::arg("key"), R"doc(
       Transform the string (up to the specified length) into a series of
-      characters that can be compared with :meth:`CollationKey.compare_to`.
+      characters that can be compared with :meth:`CollationKey.compare_to`,
+      store it in *key*, and return *key* itself.
       )doc")
       .def(
           "get_collation_key",
@@ -375,7 +386,8 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
           },
           py::arg("source"), py::arg("key"), R"doc(
       Transform the string into a series of characters that can be compared
-      with :meth:`CollationKey.compare_to`.
+      with :meth:`CollationKey.compare_to`, store it in *key*, and return *key*
+      itself.
       )doc");
 
   coll.def_static(
@@ -389,8 +401,10 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
           },
           py::arg("object_locale"), py::arg("display_locale"), py::arg("name"),
           R"doc(
-      Return the object name for the desired locale, in the desired
-      language.
+      Copy *object_locale* to *name* in a format suitable for display in the
+      locale specified by *display_locale*, and return *name* itself.
+
+      *object_locale* must be obtained from :meth:`.get_available_locales`.
       )doc")
       .def_static(
           "get_display_name",
@@ -400,8 +414,10 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
                                             name);
           },
           py::arg("object_locale"), py::arg("name"), R"doc(
-      Return the object name for the desired locale, in the language of the
-      default locale.
+      Copy *object_locale* to *name* in a format suitable for display in the
+      default locale, and return *name* itself.
+
+      *object_locale* must be obtained from :meth:`.get_available_locales`.
       )doc");
 
   coll.def_static(
@@ -423,11 +439,12 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       Return the reorder codes that are grouped with the specified reorder
       code.
 
-      See Also:
-          :class:`UColReorderCode`
-          :class:`UScriptCode`
-          :meth:`.get_reorder_codes`
-          :meth:`.set_reorder_codes`
+      .. seealso::
+
+         :class:`UColReorderCode`
+         :class:`UScriptCode`
+         :meth:`.get_reorder_codes`
+         :meth:`.set_reorder_codes`
       )doc");
 
   coll.def_static(
@@ -503,8 +520,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       Return the maximum reordering group whose characters are affected by
       :attr:`~UColAttribute.UCOL_ALTERNATE_HANDLING`.
 
-      See Also:
-          :meth:`.set_max_variable`
+      .. seealso::
+
+         :meth:`.set_max_variable`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
@@ -524,11 +542,12 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       R"doc(
       Return the reordering codes for this collator.
 
-      See Also:
-          :class:`UColReorderCode`
-          :class:`UScriptCode`
-          :meth:`.get_equivalent_reorder_codes`
-          :meth:`.set_reorder_codes`
+      .. seealso::
+
+         :class:`UColReorderCode`
+         :class:`UScriptCode`
+         :meth:`.get_equivalent_reorder_codes`
+         :meth:`.set_reorder_codes`
       )doc");
 
   coll.def(
@@ -545,7 +564,7 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
                              result_length);
           },
           py::arg("source"), py::arg("source_length"), R"doc(
-      Return the sort key as an array of bytes from a ``str``.
+      Return the sort key as ``bytes`` from a string.
       )doc")
       .def(
           "get_sort_key",
@@ -559,7 +578,12 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
                              result_length);
           },
           py::arg("source"), R"doc(
-      Return the sort key as an array of bytes from a :class:`UnicodeString`.
+      Return the sort key as ``bytes`` from a string.
+
+      .. note::
+
+         The returned sort key can be used as ``key`` parameter for
+         :py:func:`sorted` or :py:meth:`list.sort`.
       )doc");
 
   coll.def(
@@ -640,10 +664,11 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       )doc");
 
   coll.def("hash_code", &Collator::hashCode, R"doc(
-      Return the hash code for the collation object.
+      Return a hash code for this instance.
 
-      See Also:
-          :meth:`.__hash__`
+      .. seealso::
+
+         :meth:`.__hash__`
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
@@ -701,8 +726,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       py::arg("attr"), py::arg("value"), R"doc(
       Set the *value* of the specified attribute.
 
-      See Also:
-          :meth:`.get_attribute`
+      .. seealso::
+
+         :meth:`.get_attribute`
       )doc");
 
   coll.def(
@@ -723,8 +749,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
       attribute is set to :attr:`~UColAttributeValue.UCOL_NON_IGNORABLE`, then
       the variable top has no effect.
 
-      See Also:
-          :meth:`.get_max_variable`
+      .. seealso::
+
+         :meth:`.get_max_variable`
       )doc");
 
   coll.def(
@@ -743,11 +770,12 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
 
       The reordering codes are a combination of script codes and reorder codes.
 
-      See Also:
-          :class:`UColReorderCode`
-          :class:`UScriptCode`
-          :meth:`.get_equivalent_reorder_codes`
-          :meth:`.get_reorder_codes`
+      .. seealso::
+
+         :class:`UColReorderCode`
+         :class:`UScriptCode`
+         :meth:`.get_equivalent_reorder_codes`
+         :meth:`.get_reorder_codes`
       )doc");
 
   // TODO: Implement "static UBool icu::Collator::unregister(URegistryKey key,
@@ -772,7 +800,9 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
             }
             return result;
           }),
-          py::arg("rules"))
+          py::arg("rules"), R"doc(
+      Initialize a ``RuleBasedCollator`` instance with the specified rules.
+      )doc")
       .def(py::init([](const icupy::UnicodeStringVariant &rules,
                        Collator::ECollationStrength collation_strength) {
              ErrorCode error_code;
@@ -783,7 +813,10 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
              }
              return result;
            }),
-           py::arg("rules"), py::arg("collation_strength"))
+           py::arg("rules"), py::arg("collation_strength"), R"doc(
+      Initialize a ``RuleBasedCollator`` instance with the specified rules and
+      collation strength.
+      )doc")
       .def(py::init([](const icupy::UnicodeStringVariant &rules,
                        UColAttributeValue decomposition_mode) {
              ErrorCode error_code;
@@ -794,7 +827,10 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
              }
              return result;
            }),
-           py::arg("rules"), py::arg("decomposition_mode"))
+           py::arg("rules"), py::arg("decomposition_mode"), R"doc(
+      Initialize a ``RuleBasedCollator`` instance with the specified rules and
+      decomposition mode.
+      )doc")
       .def(py::init([](const icupy::UnicodeStringVariant &rules,
                        Collator::ECollationStrength collation_strength,
                        UColAttributeValue decomposition_mode) {
@@ -808,8 +844,14 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
              return result;
            }),
            py::arg("rules"), py::arg("collation_strength"),
-           py::arg("decomposition_mode"))
-      .def(py::init<const RuleBasedCollator &>(), py::arg("other"))
+           py::arg("decomposition_mode"), R"doc(
+      Initialize a ``RuleBasedCollator`` instance with the specified rules,
+      collation strength, and decomposition mode.
+      )doc")
+      .def(py::init<const RuleBasedCollator &>(), py::arg("other"), R"doc(
+      Initialize a ``RuleBasedCollator`` instance from another
+      ``RuleBasedCollator``.
+      )doc")
       .def(py::init([](const py::buffer &bin, int32_t length,
                        const RuleBasedCollator *base) {
              auto info = bin.request();
@@ -825,36 +867,74 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
              }
              return result;
            }),
-           py::keep_alive<1, 2>(), py::keep_alive<1, 4>(), py::arg("bin"),
-           py::arg("length"), py::arg("base").none(false));
+           py::arg("bin"), py::arg("length"), py::arg("base").none(false),
+           R"doc(
+      Initialize a ``RuleBasedCollator`` instance using a binary image and a base
+      collator for searching untailored characters.
 
-  rbc.def("__copy__", &RuleBasedCollator::clone);
+      .. important::
+
+         *bin* must outlive the collator object.
+
+      .. seealso::
+
+         :meth:`.clone_binary`
+      )doc");
+
+  rbc.def("__copy__", &RuleBasedCollator::clone, R"doc(
+      Return a copy of this instance.
+
+      This is equivalent to calling :meth:`.clone`.
+      )doc");
 
   rbc.def(
       "__deepcopy__",
       [](const RuleBasedCollator &self, py::dict & /* memo */) {
         return self.clone();
       },
-      py::arg("memo"));
+      py::arg("memo"), R"doc(
+      Return a copy of this instance.
 
-  rbc.def("clone", &RuleBasedCollator::clone);
+      This is equivalent to calling :meth:`.clone`.
+      )doc");
 
-  rbc.def("clone_binary", [](const RuleBasedCollator &self) {
-    ErrorCode error_code;
-    const auto capacity = self.cloneBinary(nullptr, 0, error_code);
-    std::vector<uint8_t> buffer(capacity, 0);
-    error_code.reset();
-    self.cloneBinary(buffer.data(), capacity, error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return py::bytes(reinterpret_cast<char *>(buffer.data()), capacity);
-  });
+  rbc.def("clone", &RuleBasedCollator::clone, R"doc(
+      Return a copy of this instance.
+
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
+      )doc");
+
+  rbc.def(
+      "clone_binary",
+      [](const RuleBasedCollator &self) {
+        ErrorCode error_code;
+        const auto capacity = self.cloneBinary(nullptr, 0, error_code);
+        std::vector<uint8_t> buffer(capacity, 0);
+        error_code.reset();
+        self.cloneBinary(buffer.data(), capacity, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return py::bytes(reinterpret_cast<char *>(buffer.data()), capacity);
+      },
+      R"doc(
+      Return a binary image of this collator.
+
+      .. seealso::
+
+         :meth:`.__init__`
+      )doc");
 
   rbc.def("create_collation_element_iterator",
           py::overload_cast<const CharacterIterator &>(
               &RuleBasedCollator::createCollationElementIterator, py::const_),
-          py::arg("source"))
+          py::arg("source"), R"doc(
+      Return a new collation element iterator with the specified character
+      iterator.
+      )doc")
       .def(
           "create_collation_element_iterator",
           [](const RuleBasedCollator &self,
@@ -862,12 +942,19 @@ Deprecated: ICU 2.6. Use :class:`UCollationResult` instead.
             return self.createCollationElementIterator(
                 icupy::to_unistr(source));
           },
-          py::arg("source"));
+          py::arg("source"), R"doc(
+      Return a new collation element iterator with the specified string.
+      )doc");
 
   rbc.def("get_rules",
-          py::overload_cast<>(&RuleBasedCollator::getRules, py::const_))
+          py::overload_cast<>(&RuleBasedCollator::getRules, py::const_), R"doc(
+      Return the tailoring rules for this collator.
+      )doc")
       .def("get_rules",
            py::overload_cast<UColRuleOption, UnicodeString &>(
                &RuleBasedCollator::getRules, py::const_),
-           py::arg("delta"), py::arg("buffer"));
+           py::arg("delta"), py::arg("buffer"), R"doc(
+      Copy the tailoring rules for this collator to *buffer* with the specified
+      rule type.
+      )doc");
 }

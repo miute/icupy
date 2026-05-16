@@ -25,12 +25,14 @@ void init_ucnv_cb(py::module &m) {
       Write out the specified output bytes to the target byte buffer or to
       converter internal buffers.
 
-      Important:
-          ONLY used by From Unicode callback functions.
+      .. important::
 
-      See Also:
-          :class:`UConverterFromUCallback`
-          :func:`ucnv_cb_from_u_write_sub`
+         ONLY used by From-Unicode callback functions.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
+         :func:`ucnv_cb_from_u_write_sub`
       )doc")
       .def(
           "ucnv_cb_from_uwrite_bytes",
@@ -50,8 +52,12 @@ void init_ucnv_cb(py::module &m) {
           },
           py::arg("args").none(false), py::arg("source"), py::arg("length"),
           py::arg("offset_index"), R"doc(
-      Note:
-          Use :func:`ucnv_cb_from_u_write_bytes` instead.
+      Write out the specified output bytes to the target byte buffer or to
+      converter internal buffers.
+
+      .. note::
+
+         Use :func:`ucnv_cb_from_u_write_bytes` instead.
       )doc");
 
   m.def(
@@ -66,12 +72,14 @@ void init_ucnv_cb(py::module &m) {
        py::arg("args").none(false), py::arg("offset_index"), R"doc(
       Write out the correct substitution character sequence to the target.
 
-      Important:
-          ONLY used by From Unicode callback functions.
+      .. important::
 
-      See Also:
-          :class:`UConverterFromUCallback`
-          :func:`ucnv_cb_from_u_write_bytes`
+         ONLY used by From-Unicode callback functions.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
+         :func:`ucnv_cb_from_u_write_bytes`
       )doc")
       .def(
           "ucnv_cb_from_uwrite_sub",
@@ -83,8 +91,11 @@ void init_ucnv_cb(py::module &m) {
             }
           },
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Note:
-          Use :func:`ucnv_cb_from_u_write_sub` instead.
+      Write out the correct substitution character sequence to the target.
+
+      .. note::
+
+         Use :func:`ucnv_cb_from_u_write_sub` instead.
       )doc");
 
   m.def(
@@ -99,12 +110,14 @@ void init_ucnv_cb(py::module &m) {
        py::arg("args").none(false), py::arg("offset_index"), R"doc(
       Write out the Unicode substitution character (U+FFFD).
 
-      Important:
-          ONLY used by To Unicode callback functions.
+      .. important::
 
-      See Also:
-          :class:`UConverterToUCallback`
-          :func:`ucnv_cb_to_u_write_uchars`
+         ONLY used by To-Unicode callback functions.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
+         :func:`ucnv_cb_to_u_write_uchars`
       )doc")
       .def(
           "ucnv_cb_to_uwrite_sub",
@@ -116,8 +129,11 @@ void init_ucnv_cb(py::module &m) {
             }
           },
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Note:
-          Use :func:`ucnv_cb_to_u_write_sub` instead.
+      Write out the Unicode substitution character (U+FFFD).
+
+      .. note::
+
+         Use :func:`ucnv_cb_to_u_write_sub` instead.
       )doc");
 
   m.def(
@@ -135,12 +151,14 @@ void init_ucnv_cb(py::module &m) {
        py::arg("offset_index"), R"doc(
       Write out the specified characters to the target ``UChar`` buffer.
 
-      Important:
-          ONLY used by To Unicode callback functions.
+      .. important::
 
-      See Also:
-          :class:`UConverterToUCallback`
-          :func:`ucnv_cb_to_u_write_sub`
+         ONLY used by To-Unicode callback functions.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
+         :func:`ucnv_cb_to_u_write_sub`
       )doc")
       .def(
           "ucnv_cb_to_uwrite_uchars",
@@ -155,7 +173,10 @@ void init_ucnv_cb(py::module &m) {
           },
           py::arg("args").none(false), py::arg("source"), py::arg("length"),
           py::arg("offset_index"), R"doc(
-      Note:
-          Use :func:`ucnv_cb_to_u_write_uchars` instead.
+      Write out the specified characters to the target ``UChar`` buffer.
+
+      .. note::
+
+         Use :func:`ucnv_cb_to_u_write_uchars` instead.
       )doc");
 }

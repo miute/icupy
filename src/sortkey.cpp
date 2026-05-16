@@ -19,6 +19,10 @@ void init_sortkey(py::module &m) {
       faster. If you are not going to comparing strings multiple times, then
       using the :class:`Collator` object is generally faster, since it only
       processes as much of the string as needed to make a comparison.
+
+      .. seealso::
+
+         :meth:`Collator.get_collation_key`
       )doc");
 
   ck.def(py::init<>(), R"doc(
@@ -56,9 +60,9 @@ void init_sortkey(py::module &m) {
       )doc");
 
   ck.def("__hash__", &CollationKey::hashCode, R"doc(
-      Return the hash value of this object.
+      Return a hash value of this instance.
 
-      This is equivalent to :meth:`hash_code`.
+      This is equivalent to calling :meth:`.hash_code`.
       )doc");
 
   ck.def(
@@ -100,8 +104,9 @@ void init_sortkey(py::module &m) {
   ck.def("hash_code", &CollationKey::hashCode, R"doc(
       Return an integer that is unique to the collation key.
 
-      See Also:
-          :meth:`.__hash__`
+      .. seealso::
+
+         :meth:`.__hash__`
       )doc");
 
   ck.def(

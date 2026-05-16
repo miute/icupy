@@ -270,10 +270,10 @@ Useful constant for days of week.
 
 .. note::
 
-    Calendar day-of-week is 1-based. Clients who create locale resources for
-    the field of first-day-of-week should be aware of this. For instance, in US
-    locale, first-day-of-week is set to 1, i.e., UCAL_SUNDAY.
-    Possible days of the week in a UCalendar.
+   Calendar day-of-week is 1-based. Clients who create locale resources for
+   the field of first-day-of-week should be aware of this. For instance, in US
+   locale, first-day-of-week is set to 1, i.e., UCAL_SUNDAY.
+   Possible days of the week in a UCalendar.
       )doc")
       .value("UCAL_SUNDAY", UCAL_SUNDAY, R"doc(
              Sunday.
@@ -352,7 +352,7 @@ Possible months in a UCalendar.
 
 .. note::
 
-    Calendar month is 0-based.
+   Calendar month is 0-based.
       )doc")
       .value("UCAL_JANUARY", UCAL_JANUARY, R"doc(
              January.

@@ -10,15 +10,18 @@ void init_uversion(py::module &m) {
   py::class_<icupy::VersionInfo> vi(m, "UVersionInfo", R"doc(
       Array of four unsigned 8-bit integers for the ICU API version.
 
-      See Also:
-          :func:`u_version_to_string`
+      .. seealso::
+
+         :func:`u_version_to_string`
       )doc");
 
   vi.def_property(
       "buildlevel", [](const icupy::VersionInfo &self) { return self.data[3]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[3] = value; },
       R"doc(
-      int: Get/Set the build level version number.
+      int: Get or set the build level version number.
+
+      The version number must be between 0 and 255.
 
       This is equivalent to ``self[3]``.
       )doc");
@@ -27,7 +30,9 @@ void init_uversion(py::module &m) {
       "major", [](const icupy::VersionInfo &self) { return self.data[0]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[0] = value; },
       R"doc(
-      int: Get/Set the major version number.
+      int: Get or set the major version number.
+
+      The version number must be between 0 and 255.
 
       This is equivalent to ``self[0]``.
       )doc");
@@ -36,7 +41,9 @@ void init_uversion(py::module &m) {
       "minor", [](const icupy::VersionInfo &self) { return self.data[1]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[1] = value; },
       R"doc(
-      int: Get/Set the minor version number.
+      int: Get or set the minor version number.
+
+      The version number must be between 0 and 255.
 
       This is equivalent to ``self[1]``.
       )doc");
@@ -45,7 +52,9 @@ void init_uversion(py::module &m) {
       "patchlevel", [](const icupy::VersionInfo &self) { return self.data[2]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[2] = value; },
       R"doc(
-      int: Get/Set the patchlevel version number.
+      int: Get or set the patchlevel version number.
+
+      The version number must be between 0 and 255.
 
       This is equivalent to ``self[2]``.
       )doc");
@@ -53,10 +62,10 @@ void init_uversion(py::module &m) {
   vi.def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), py::arg("major") = 0,
          py::arg("minor") = 0, py::arg("patchlevel") = 0,
          py::arg("buildlevel") = 0, R"doc(
-      Initialize a ``UVersionInfo`` instance with the specified *major*,
-      *minor*, *patchlevel*, and *buildlevel* values.
+      Initialize a ``UVersionInfo`` instance with the specified version
+      numbers.
 
-      The values must be between 0 and 255.
+      Each number must be between 0 and 255.
       )doc");
 
   vi.def(
@@ -67,7 +76,7 @@ void init_uversion(py::module &m) {
                             std::begin(other));
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` == *other*.
+      Return *self* == *other*.
       )doc")
       .def(
           "__eq__",
@@ -76,7 +85,7 @@ void init_uversion(py::module &m) {
                               std::begin(other.data));
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` == *other*.
+      Return *self* == *other*.
       )doc");
 
   vi.def(
@@ -93,7 +102,7 @@ void init_uversion(py::module &m) {
         return self.data[actual_index];
       },
       py::arg("index"), R"doc(
-      Return the value at offset *index*.
+      Return the version number at offset *index*.
       )doc");
 
   vi.def(
@@ -105,7 +114,7 @@ void init_uversion(py::module &m) {
               std::end(other));
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` >= *other*.
+      Return *self* >= *other*.
       )doc")
       .def(
           "__ge__",
@@ -115,7 +124,7 @@ void init_uversion(py::module &m) {
                 std::begin(other.data), std::end(other.data));
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` >= *other*.
+      Return *self* >= *other*.
       )doc");
 
   vi.def(
@@ -127,7 +136,7 @@ void init_uversion(py::module &m) {
               std::end(self.data));
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` > *other*.
+      Return *self* > *other*.
       )doc")
       .def(
           "__gt__",
@@ -137,7 +146,7 @@ void init_uversion(py::module &m) {
                 std::begin(self.data), std::end(self.data));
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` > *other*.
+      Return *self* > *other*.
       )doc");
 
   vi.def(
@@ -147,16 +156,24 @@ void init_uversion(py::module &m) {
                self.data[3];
       },
       R"doc(
-      Return ``major`` << 24 | ``minor`` << 16 | ``patchlevel`` << 8 |
-      ``buildlevel``.
+      Return a numerical representation of this version information.
 
-      Example:
-          >>> from icupy import icu
-          >>> vi = icu.UVersionInfo(1, 3, 31, 2)
-          >>> int(vi)
-          16981762
-          >>> vi.major << 24 | vi.minor << 16 | vi.patchlevel << 8 | vi.buildlevel
-          16981762
+      Numerical representation is:
+
+      .. code-block:: python
+
+         major << 24 | minor << 16 | patchlevel << 8 | buildlevel
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> vi = icu.UVersionInfo(1, 3, 31, 2)
+         >>> int(vi)
+         16981762
+         >>> vi.major << 24 | vi.minor << 16 | vi.patchlevel << 8 | vi.buildlevel
+         16981762
       )doc");
 
   vi.def(
@@ -168,7 +185,7 @@ void init_uversion(py::module &m) {
               std::end(self.data));
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` <= *other*.
+      Return *self* <= *other*.
       )doc")
       .def(
           "__le__",
@@ -178,7 +195,7 @@ void init_uversion(py::module &m) {
                 std::begin(self.data), std::end(self.data));
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` <= *other*.
+      Return *self* <= *other*.
       )doc");
 
   vi.def(
@@ -197,7 +214,7 @@ void init_uversion(py::module &m) {
               std::end(other));
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` < *other*.
+      Return *self* < *other*.
       )doc")
       .def(
           "__lt__",
@@ -207,7 +224,7 @@ void init_uversion(py::module &m) {
                 std::begin(other.data), std::end(other.data));
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Return ``self`` < *other*.
+      Return *self* < *other*.
       )doc");
 
   vi.def("__repr__", [](const icupy::VersionInfo &self) {
@@ -237,7 +254,9 @@ void init_uversion(py::module &m) {
         self.data[actual_index] = value;
       },
       py::arg("index"), py::arg("value"), R"doc(
-      Set the *value* at offset *index*.
+      Replace the version number at offset *index* with *value*.
+
+      *value* must be between 0 and 255.
       )doc");
 
   vi.def(
@@ -253,7 +272,19 @@ void init_uversion(py::module &m) {
         return ss.str();
       },
       R"doc(
-      Return a dot-separated decimal version string.
+      Return a string representation of this version information.
+
+      .. seealso::
+
+         :func:`u_version_to_string`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> str(icu.UVersionInfo(1, 3, 31, 2))
+         '1.3.31.2'
       )doc");
 
   //
@@ -278,12 +309,23 @@ void init_uversion(py::module &m) {
         return icupy::VersionInfo(version_array);
       },
       py::arg("version_string"), R"doc(
-      Parse a string with dotted-decimal version information and return the
-      result.
+      Parse a string with dotted-decimal version information and return it.
 
       *version_string* is a dot-separated decimal string with up to four
       non-negative numeric fields, where the value of each field is between
       0 and 255.
+
+      .. seealso::
+
+         :func:`u_version_to_string`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> icu.u_version_from_string("1.3.31.2")
+         UVersionInfo(1, 3, 31, 2)
       )doc");
 
   m.def(
@@ -295,8 +337,22 @@ void init_uversion(py::module &m) {
          return std::string(buf);
        },
        py::arg("version_array"), R"doc(
-      Convert a sequence of numbers into a dot-separated decimal string, and
-      return the result.
+      Convert a sequence of four numbers into a dot-separated decimal
+      string and return it.
+
+      Each number must be between 0 and 255.
+
+      .. seealso::
+
+         :func:`u_version_from_string`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> icu.u_version_to_string([1, 3, 31, 2])
+         '1.3.31.2'
       )doc")
       .def(
           "u_version_to_string",
@@ -307,8 +363,20 @@ void init_uversion(py::module &m) {
             return std::string(buf);
           },
           py::arg("version_array"), R"doc(
-      Convert the :class:`UVersionInfo` to a dot-separated decimal string, and
-      return the result.
+      Convert the :class:`UVersionInfo` to a dot-separated decimal string and
+      return it.
+
+      .. seealso::
+
+         :func:`u_version_from_string`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> icu.u_version_to_string(icu.UVersionInfo(1, 3, 31, 2))
+         '1.3.31.2'
       )doc");
 
   m.attr("U_MAX_VERSION_LENGTH") = U_MAX_VERSION_LENGTH;

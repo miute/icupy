@@ -63,90 +63,90 @@ void init_translit(py::module &m) {
 
         .. code-block:: python
 
-            # Recreating the compound transliterator in Python
-            from icupy import icu
-            class CompoundTransliterator(icu.Transliterator):
-                def __init__(self, compound_id: str, direction: icu.UTransDirection) -> None:
-                    icu.Transliterator.__init__(self, "")
-                    self._trans: list[icu.Transliterator] = []
-                    global_filter = self._parse_compound_id(compound_id, direction)
-                    self.adopt_filter(global_filter)
-                    new_id = ";".join(str(x.get_id()) for x in self._trans)
-                    self._set_id(new_id)
-                    new_context_length = max(x.get_maximum_context_length() for x in self._trans)
-                    self._set_maximum_context_length(new_context_length)
-                def _handle_transliterate(
-                    self,
-                    text: icu.Replaceable,
-                    pos: icu.UTransPosition,
-                    incremental: bool,
-                ) -> None:
-                    compound_limit = pos.limit
-                    compound_start = pos.start
-                    delta = 0
-                    for tl in self._trans:
-                        pos.start = compound_start
-                        limit = pos.limit
-                        if pos.start == pos.limit:
-                            break
-                        tl.filtered_transliterate(text, pos, incremental)
-                        if not incremental and pos.start != pos.limit:
-                            pos.start = pos.limit
-                        delta += pos.limit - limit
-                        if incremental:
-                            pos.limit = pos.start
-                    compound_limit += delta
-                    pos.limit = compound_limit
-                def _parse_compound_id(
-                    self,
-                    compound_id: str,
-                    direction: icu.UTransDirection,
-                ) -> icu.UnicodeSet | None:
-                    # Split IDs in the "ID;ID;..." format into single IDs, and
-                    # create a list of transliterator objects from the single IDs.
-                    global_filter: icu.UnicodeSet | None = None
-                    for i, single in enumerate(filter(None, map(str.strip, compound_id.split(";")))):
-                        if i == 0 and single.startswith("[") and single.endswith("]"):
-                            # Use the initial single ID as a global filter.
-                            pos = icu.ParsePosition()
-                            global_filter = icu.UnicodeSet(single, pos, icu.USET_IGNORE_SPACE)
-                        else:
-                            tl = self._create_basic_instance(single)
-                            if tl is None:
-                                continue
-                            self._trans.append(tl)
-                    if len(self._trans) == 0:
-                        tl = self._create_basic_instance("Any-Null")
-                        self._trans.append(tl)
-                    if direction == icu.UTRANS_REVERSE:
-                        self._trans.reverse()
-                    return global_filter
-                def count_elements(self) -> int:
-                    return len(self._trans)
-                def get_element(self, index: int) -> icu.Transliterator:
-                    return self._trans[index]
-                def to_rules(
-                    self,
-                    result: icu.UnicodeString,
-                    escape_unprintable: bool,
-                ) -> icu.UnicodeString:
-                    result.truncate(0)
-                    for tl in self._trans:
-                        if len(result) > 0:
-                            result.append("\n")
-                        result.append("::")
-                        tid = tl.get_id()
-                        if not escape_unprintable:
-                            result.append(tid)
-                        else:
-                            tmp = str(tid)
-                            result.append(tmp.encode("unicode_escape").decode())
-                        result.append(";")
-                    return result
+           # Recreating the compound transliterator in Python
+           from icupy import icu
+           class CompoundTransliterator(icu.Transliterator):
+               def __init__(self, compound_id: str, direction: icu.UTransDirection) -> None:
+                   icu.Transliterator.__init__(self, "")
+                   self._trans: list[icu.Transliterator] = []
+                   global_filter = self._parse_compound_id(compound_id, direction)
+                   self.adopt_filter(global_filter)
+                   new_id = ";".join(str(x.get_id()) for x in self._trans)
+                   self._set_id(new_id)
+                   new_context_length = max(x.get_maximum_context_length() for x in self._trans)
+                   self._set_maximum_context_length(new_context_length)
+               def _handle_transliterate(
+                   self,
+                   text: icu.Replaceable,
+                   pos: icu.UTransPosition,
+                   incremental: bool,
+               ) -> None:
+                   compound_limit = pos.limit
+                   compound_start = pos.start
+                   delta = 0
+                   for tl in self._trans:
+                       pos.start = compound_start
+                       limit = pos.limit
+                       if pos.start == pos.limit:
+                           break
+                       tl.filtered_transliterate(text, pos, incremental)
+                       if not incremental and pos.start != pos.limit:
+                           pos.start = pos.limit
+                       delta += pos.limit - limit
+                       if incremental:
+                           pos.limit = pos.start
+                   compound_limit += delta
+                   pos.limit = compound_limit
+               def _parse_compound_id(
+                   self,
+                   compound_id: str,
+                   direction: icu.UTransDirection,
+               ) -> icu.UnicodeSet | None:
+                   # Split IDs in the "ID;ID;..." format into single IDs, and
+                   # create a list of transliterator objects from the single IDs.
+                   global_filter: icu.UnicodeSet | None = None
+                   for i, single in enumerate(filter(None, map(str.strip, compound_id.split(";")))):
+                       if i == 0 and single.startswith("[") and single.endswith("]"):
+                           # Use the initial single ID as a global filter.
+                           pos = icu.ParsePosition()
+                           global_filter = icu.UnicodeSet(single, pos, icu.USET_IGNORE_SPACE)
+                       else:
+                           tl = self._create_basic_instance(single)
+                           if tl is None:
+                               continue
+                           self._trans.append(tl)
+                   if len(self._trans) == 0:
+                       tl = self._create_basic_instance("Any-Null")
+                       self._trans.append(tl)
+                   if direction == icu.UTRANS_REVERSE:
+                       self._trans.reverse()
+                   return global_filter
+               def count_elements(self) -> int:
+                   return len(self._trans)
+               def get_element(self, index: int) -> icu.Transliterator:
+                   return self._trans[index]
+               def to_rules(
+                   self,
+                   result: icu.UnicodeString,
+                   escape_unprintable: bool,
+               ) -> icu.UnicodeString:
+                   result.truncate(0)
+                   for tl in self._trans:
+                       if len(result) > 0:
+                           result.append("\n")
+                       result.append("::")
+                       tid = tl.get_id()
+                       if not escape_unprintable:
+                           result.append(tid)
+                       else:
+                           tmp = str(tid)
+                           result.append(tmp.encode("unicode_escape").decode())
+                       result.append(";")
+                   return result
 
-            tl = CompoundTransliterator("[:Latin:]; NFKD; Lower; Latin-Katakana;", icu.UTRANS_FORWARD)
-            text = icu.UnicodeString("Natsume Sōseki")
-            tl.transliterate(text)
+           tl = CompoundTransliterator("[:Latin:]; NFKD; Lower; Latin-Katakana;", icu.UTRANS_FORWARD)
+           text = icu.UnicodeString("Natsume Sōseki")
+           tl.transliterate(text)
 
       For more information, see the ICU User Guide: `General Transforms
       <https://unicode-org.github.io/icu/userguide/transforms/general/>`__ and
@@ -179,13 +179,13 @@ void init_translit(py::module &m) {
 
       .. note::
 
-          An instance of :class:`UnicodeFilter` will be copied: changes made to
-          the filter object after passing it to ``Transliterator`` will not be
-          reflected.
+         An instance of :class:`UnicodeFilter` will be copied: changes made to
+         the filter object after passing it to ``Transliterator`` will not be
+         reflected.
 
       .. seealso::
 
-          :meth:`.adopt_filter`
+         :meth:`.adopt_filter`
       )doc")
       .def(py::init([](const PyTransliterator &other) {
              return std::make_unique<PyTransliterator>(other);
@@ -196,9 +196,9 @@ void init_translit(py::module &m) {
 
   tl.def("__copy__", &Transliterator::clone,
          R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   tl.def(
@@ -208,9 +208,9 @@ void init_translit(py::module &m) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   tl.def(
@@ -226,31 +226,35 @@ void init_translit(py::module &m) {
 
       If *adopted_filter* is ``None``, no filtering is applied.
 
-      Note:
-          An instance of :class:`UnicodeFilter` will be copied: changes made to
-          the filter object after passing it to ``Transliterator`` will not be
-          reflected.
+      .. note::
 
-      See Also:
-          :meth:`.get_filter`
-          :meth:`.orphan_filter`
+         An instance of :class:`UnicodeFilter` will be copied: changes made to
+         the filter object after passing it to ``Transliterator`` will not be
+         reflected.
+
+      .. seealso::
+
+         :meth:`.get_filter`
+         :meth:`.orphan_filter`
       )doc");
 
   tl.def("clone", &Transliterator::clone,
          R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 
   tl.def_static("count_available_sources",
                 &Transliterator::countAvailableSources, R"doc(
       Return the number of registered source specifiers.
 
-      See Also:
-          :meth:`.get_available_source`
+      .. seealso::
+
+         :meth:`.get_available_source`
       )doc");
 
   tl.def_static(
@@ -262,8 +266,9 @@ void init_translit(py::module &m) {
       Return the number of registered target specifiers for the specified
       source specifier.
 
-      See Also:
-          :meth:`.get_available_target`
+      .. seealso::
+
+         :meth:`.get_available_target`
       )doc");
 
   tl.def_static(
@@ -277,21 +282,26 @@ void init_translit(py::module &m) {
       Return the number of registered variant specifiers for the specified
       source-target pair specifiers.
 
-      See Also:
-          :meth:`.get_available_variant`
+      .. seealso::
+
+         :meth:`.get_available_variant`
       )doc");
 
   tl.def("count_elements", &Transliterator::countElements, R"doc(
       Return the number of elements that make up this transliterator.
 
-      See Also:
-          :meth:`.get_element`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> tl = icu.Transliterator.create_instance("NFD;Jamo-Latin;Latin-Greek", icu.UTRANS_FORWARD)
-          >>> tl.count_elements()
-          3
+         :meth:`.get_element`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> tl = icu.Transliterator.create_instance("NFD;Jamo-Latin;Latin-Greek", icu.UTRANS_FORWARD)
+         >>> tl.count_elements()
+         3
       )doc");
 
   tl.def_static(
@@ -303,13 +313,14 @@ void init_translit(py::module &m) {
                                                      canon.value_or(nullptr));
       },
       py::arg("id"), py::arg("canon") = std::nullopt, R"doc(
-      Create a transliterator object with the specified basic ID and canonical
-      ID.
+      Create a new transliterator instance with the specified basic ID and
+      canonical ID.
 
       *id* must contain only the forward direction source, target, and variant.
 
-      Important:
-          *canon* must outlive the returned transliterator object.
+      .. important::
+
+         *canon* must outlive the returned transliterator object.
       )doc");
 
   tl.def_static(
@@ -328,7 +339,7 @@ void init_translit(py::module &m) {
       },
       py::arg("id"), py::arg("rules"), py::arg("dir"), py::arg("parse_error"),
       R"doc(
-      Create a transliterator object with the specified rule string.
+      Create a new transliterator instance with the specified rule string.
 
       If the rule string contains only rules, it is a rule-based
       transliterator;
@@ -336,8 +347,9 @@ void init_translit(py::module &m) {
       if it contains an ID block that is parsed as empty for the specified
       direction, it is a null transliterator.
 
-      See Also:
-          :meth:`.to_rules`
+      .. seealso::
+
+         :meth:`.to_rules`
       )doc");
 
   tl.def_static(
@@ -352,7 +364,7 @@ void init_translit(py::module &m) {
           return result;
         },
         py::arg("id"), py::arg("dir"), R"doc(
-      Create a transliterator object with the specified ID.
+      Create a new transliterator instance with the specified ID.
 
       .. seealso::
 
@@ -371,7 +383,7 @@ void init_translit(py::module &m) {
             return result;
           },
           py::arg("id"), py::arg("dir"), py::arg("parse_error"), R"doc(
-      Create a transliterator object with the specified ID.
+      Create a new transliterator instance with the specified ID.
 
       If an error occurs while parsing the rules string, the offset into the
       rules string at which the error occurred will be saved into the
@@ -409,9 +421,10 @@ void init_translit(py::module &m) {
       This method is intended for subclasses that require the task to be
       delegated to another translator.
 
-      See Also:
-          :meth:`._handle_transliterate`
-          :meth:`.transliterate`
+      .. seealso::
+
+         :meth:`._handle_transliterate`
+         :meth:`.transliterate`
       )doc");
 
   tl.def("finish_transliteration", &Transliterator::finishTransliteration,
@@ -422,8 +435,9 @@ void init_translit(py::module &m) {
       The client should call this method last, after calling the
       :meth:`.transliterate` method one or more times.
 
-      See Also:
-          :meth:`.transliterate`
+      .. seealso::
+
+         :meth:`.transliterate`
       )doc");
 
   tl.def_static(
@@ -444,8 +458,9 @@ void init_translit(py::module &m) {
                 py::arg("index"), py::arg("result"), R"doc(
       Return the registered source specifier for the specified index.
 
-      See Also:
-          :meth:`.count_available_sources`
+      .. seealso::
+
+         :meth:`.count_available_sources`
       )doc");
 
   tl.def_static(
@@ -459,8 +474,9 @@ void init_translit(py::module &m) {
       Return the registered target specifier for the specified index and source
       specifier.
 
-      See Also:
-          :meth:`.count_available_targets`
+      .. seealso::
+
+         :meth:`.count_available_targets`
       )doc");
 
   tl.def_static(
@@ -476,8 +492,9 @@ void init_translit(py::module &m) {
       Return the registered variant specifier for the specified index, source
       specifier, and target specifier.
 
-      See Also:
-          :meth:`.count_available_variants`
+      .. seealso::
+
+         :meth:`.count_available_variants`
       )doc");
 
   tl.def_static(
@@ -489,7 +506,8 @@ void init_translit(py::module &m) {
               icupy::to_unistr(id), icupy::to_locale(in_locale), result);
         },
         py::arg("id"), py::arg("in_locale"), py::arg("result"), R"doc(
-      Return a human-readable name for the specified ID and locale.
+      Copy *id* to *result* in a format suitable for display in the locale
+      specified by *in_locale*.
       )doc")
       .def_static(
           "get_display_name",
@@ -498,7 +516,8 @@ void init_translit(py::module &m) {
             return Transliterator::getDisplayName(icupy::to_unistr(id), result);
           },
           py::arg("id"), py::arg("result"), R"doc(
-      Return a human-readable name for the specified ID and the default locale.
+      Copy *id* to *result* in a format suitable for display in the default
+      locale.
       )doc");
 
   tl.def(
@@ -514,8 +533,9 @@ void init_translit(py::module &m) {
       py::return_value_policy::reference, py::arg("index"), R"doc(
       Return the element at the specified index.
 
-      See Also:
-          :meth:`.count_elements`
+      .. seealso::
+
+         :meth:`.count_elements`
       )doc");
 
   tl.def(
@@ -527,29 +547,33 @@ void init_translit(py::module &m) {
       Return the filter used by this transliterator, or ``None`` if no filter
       is applied.
 
-      See Also:
-          :meth:`.adopt_filter`
-          :meth:`.orphan_filter`
+      .. seealso::
+
+         :meth:`.adopt_filter`
+         :meth:`.orphan_filter`
       )doc");
 
   tl.def("get_id", &Transliterator::getID, R"doc(
       Return a programmatic identifier for this transliterator.
 
-      See Also:
-          :meth:`._set_id`
+      .. seealso::
+
+         :meth:`._set_id`
       )doc");
 
   tl.def("get_maximum_context_length", &Transliterator::getMaximumContextLength,
          R"doc(
       Return the maximum context length required by this transliterator.
 
-      Note:
-          The default implementation provided by transliterator returns 0.
-          Subclasses that use the preceding context should override this method
-          to return the correct value.
+      .. note::
 
-      See Also:
-          :meth:`._set_maximum_context_length`
+         The default implementation provided by transliterator returns 0.
+         Subclasses that use the preceding context should override this method
+         to return the correct value.
+
+      .. seealso::
+
+         :meth:`._set_maximum_context_length`
       )doc");
 
   tl.def("get_source_set", &Transliterator::getSourceSet, py::arg("result"),
@@ -557,16 +581,18 @@ void init_translit(py::module &m) {
       Return the set of all characters in the input text that may be modified
       by this transliterator.
 
-      Note:
-          The default implementation returns the empty set.
-          Subclasses can override :meth:`.handle_get_source_set` as needed to
-          return a more precise result.
-          In any case, the returned results is an approximation and is intended
-          for use in tests, tools, or utilities.
+      .. note::
 
-      See Also:
-          :meth:`.get_target_set`
-          :meth:`.handle_get_source_set`
+         The default implementation returns the empty set.
+         Subclasses can override :meth:`.handle_get_source_set` as needed to
+         return a more precise result.
+         In any case, the returned results is an approximation and is intended
+         for use in tests, tools, or utilities.
+
+      .. seealso::
+
+         :meth:`.get_target_set`
+         :meth:`.handle_get_source_set`
       )doc");
 
   tl.def("get_target_set", &Transliterator::getTargetSet, py::arg("result"),
@@ -574,16 +600,18 @@ void init_translit(py::module &m) {
       Return the set of all characters that this transliterator may generate as
       replacement text.
 
-      Note:
-          The default implementation returns the empty set.
-          Subclasses can override this method as needed to return a more
-          precise results.
-          In any case, the returned results are approximate values and are
-          intended for use in tests, tools, or utilities that require such meta
-          information.
+      .. note::
 
-      See Also:
-          :meth:`.get_source_set`
+         The default implementation returns the empty set.
+         Subclasses can override this method as needed to return a more
+         precise results.
+         In any case, the returned results are approximate values and are
+         intended for use in tests, tools, or utilities that require such meta
+         information.
+
+      .. seealso::
+
+         :meth:`.get_source_set`
       )doc");
 
   tl.def("handle_get_source_set", &Transliterator::handleGetSourceSet,
@@ -592,13 +620,15 @@ void init_translit(py::module &m) {
       modified in the input text by this transliterator, ignoring the effect of
       this object's filter.
 
-      Note:
-          In the default implementation, this method is called from
-          :meth:`.get_source_set` and returns the empty set. Subclasses that
-          wish to implement this method should override it.
+      .. note::
 
-      See Also:
-          :meth:`.get_source_set`
+         In the default implementation, this method is called from
+         :meth:`.get_source_set` and returns the empty set. Subclasses that
+         wish to implement this method should override it.
+
+      .. seealso::
+
+         :meth:`.get_source_set`
       )doc");
 
   tl.def(
@@ -610,17 +640,19 @@ void init_translit(py::module &m) {
       py::arg("text"), py::arg("pos"), py::arg("incremental"), R"doc(
       Framework method that performs the actual transliteration in subclasses.
 
-      Important:
-          Subclasses must implement the abstract method
-          :meth:`._handle_transliterate`, which defines their own
-          transliteration algorithm.
+      .. important::
 
-      Note:
-          Directly calling this method will transliterate the range
-          [*pos.start*, *pos.limit*) without applying the filter. In end-user
-          code, call :meth:`.transliterate` instead of this method. In subclass
-          code or wrapping transliterators, call
-          :meth:`.filtered_transliterate` instead of this method.
+         Subclasses must implement the abstract method
+         :meth:`._handle_transliterate`, which defines their own
+         transliteration algorithm.
+
+      .. note::
+
+         Directly calling this method will transliterate the range
+         [*pos.start*, *pos.limit*) without applying the filter. In end-user
+         code, call :meth:`.transliterate` instead of this method. In subclass
+         code or wrapping transliterators, call
+         :meth:`.filtered_transliterate` instead of this method.
 
       This method handles both incremental and non-incremental transliteration.
       Let *original_start* denote the value of *pos.start* upon entry.
@@ -660,9 +692,10 @@ void init_translit(py::module &m) {
       Return the filter used by this transliterator and disassociate it from
       this transliterator.
 
-      See Also:
-          :meth:`.adopt_filter`
-          :meth:`.get_filter`
+      .. seealso::
+
+         :meth:`.adopt_filter`
+         :meth:`.get_filter`
       )doc");
 
   tl.def_static(
@@ -678,8 +711,9 @@ void init_translit(py::module &m) {
       This is typically used to create shorter, more memorable aliases for long
       compound IDs.
 
-      See Also:
-          :meth:`.create_instance`
+      .. seealso::
+
+         :meth:`.create_instance`
       )doc");
 
   // FIXME: Implement "static void registerFactory(const UnicodeString &id,
@@ -694,8 +728,8 @@ void init_translit(py::module &m) {
       py::arg("adopted_obj").none(false), R"doc(
       Register a transliterator object.
 
-      .. deprecated:: 0.24
-          Do not use this method. It may be removed in a future release.
+      .. version-deprecated:: 0.24
+         Do not use this method. It may be removed in a future release.
       )doc");
 
   tl.def(
@@ -706,12 +740,14 @@ void init_translit(py::module &m) {
       py::arg("id"), R"doc(
       Change the ID of this transliterator.
 
-      Note:
-          Subclasses shouldn't do this, unless the underlying script behavior
-          has changed.
+      .. note::
 
-      See Also:
-          :meth:`.get_id`
+         Subclasses shouldn't do this, unless the underlying script behavior
+         has changed.
+
+      .. seealso::
+
+         :meth:`.get_id`
       )doc");
 
   tl.def("_set_maximum_context_length",
@@ -719,8 +755,9 @@ void init_translit(py::module &m) {
          py::arg("max_context_length"), R"doc(
       Change the maximum context length required by this transliterator.
 
-      See Also:
-          :meth:`.get_maximum_context_length`
+      .. seealso::
+
+         :meth:`.get_maximum_context_length`
       )doc");
 
   tl.def(
@@ -735,9 +772,10 @@ void init_translit(py::module &m) {
       If *escape_unprintable* is ``True``, unprintable characters in the rules
       string will be escaped with Unicode escape sequences.
 
-      See Also:
-          :meth:`.create_from_rules`
-          :meth:`UnicodeMatcher.to_pattern`
+      .. seealso::
+
+         :meth:`.create_from_rules`
+         :meth:`UnicodeMatcher.to_pattern`
       )doc");
 
   tl.def("transliterate",
@@ -786,9 +824,10 @@ void init_translit(py::module &m) {
       method.
 
       .. seealso::
-          :class:`UTransPosition`
-          :meth:`._handle_transliterate`
-          :meth:`.finish_transliteration`
+
+         :class:`UTransPosition`
+         :meth:`._handle_transliterate`
+         :meth:`.finish_transliteration`
       )doc")
       .def(
           "transliterate",
@@ -804,10 +843,6 @@ void init_translit(py::module &m) {
       Transliterate the portion of the text buffer that can be unambiguously
       transliterated, where a new character has been inserted via keyboard
       event for example.
-
-      This is a convenience method; see
-      ``transliterate(self: Transliterator, text: Replaceable, index: UTransPosition, insertion: UnicodeString | str)``
-      for details.
       )doc")
       .def(
           "transliterate",
@@ -822,10 +857,6 @@ void init_translit(py::module &m) {
           py::arg("text"), py::arg("index"), R"doc(
       Transliterate the portion of the text buffer that can be unambiguously
       transliterated.
-
-      This is a convenience method; see
-      ``transliterate(self: Transliterator, text: Replaceable, index: UTransPosition, insertion: UnicodeString | str)``
-      for details.
       )doc");
 
   // TODO: Deprecate Transliterator.register_instance().
@@ -837,7 +868,7 @@ void init_translit(py::module &m) {
       py::arg("id"), R"doc(
       Unregister a transliterator object.
 
-      .. deprecated:: 0.24
-          Do not use this method. It may be removed in a future release.
+      .. version-deprecated:: 0.24
+         Do not use this method. It may be removed in a future release.
       )doc");
 }

@@ -44,10 +44,9 @@ narrow is "3h"; formatting "3 hours 17 minutes" as numeric give "3:17"
 
       .. important::
 
-          Use :class:`number.NumberFormatter` and
-          :class:`number.NumberRangeFormatter`
-          instead of this class for new code. Although not deprecated, this
-          class is provided for backwards compatibility only.
+         Use :class:`number.NumberFormatter` instead of this class for new
+         code. Although not deprecated, this class is provided for backwards
+         compatibility only.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)

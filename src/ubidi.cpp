@@ -111,9 +111,10 @@ void init_ubidi(py::module &m) {
                                  R"doc(
 UBiDiReorderingMode values indicate which variant of the Bidi algorithm to use.
 
-See Also:
-    :func:`ubidi_set_inverse`
-    :func:`ubidi_set_reordering_mode`
+.. seealso::
+
+   :func:`ubidi_set_inverse`
+   :func:`ubidi_set_reordering_mode`
       )doc")
       .value("UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT, R"doc(
              Regular Logical to Visual Bidi algorithm according to Unicode.
@@ -286,32 +287,33 @@ the Bidi algorithm.
   // UBiDiClassCallback
   //
   py::class_<icupy::UBiDiClassCallbackPtr> bccb(m, "UBiDiClassCallback", R"doc(
-    Wrapper class for a callback function that override the default Bidi class
-    values with custom values.
+      Wrapper class for a callback function that override the default Bidi
+      class values with custom values.
 
-    See Also:
-        :func:`ubidi_get_class_callback`
-        :func:`ubidi_set_class_callback`
+      .. seealso::
+
+         :func:`ubidi_get_class_callback`
+         :func:`ubidi_set_class_callback`
     )doc");
 
   bccb.def(py::init<>(), R"doc(
-          Initialize the ``UBiDiClassCallback`` instance without a callback
-          function.
-          )doc")
+      Initialize the ``UBiDiClassCallback`` instance without a callback
+      function.
+      )doc")
       .def(py::init([](const icupy::ClassCallbackFunction &action,
                        std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::UBiDiClassCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``UBiDiClassCallback`` instance with the specified
-           callback function and the user context.
+      Initialize the ``UBiDiClassCallback`` instance with the specified
+      callback function and the user context.
 
-           .. important::
+      .. important::
 
-               *action* and *context* must outlive the ``UBiDiClassCallback``
-               object.
-           )doc");
+         *action* and *context* must outlive the ``UBiDiClassCallback``
+         object.
+      )doc");
 
   bccb.def(
       "__bool__",
@@ -341,10 +343,11 @@ the Bidi algorithm.
   py::class_<icupy::UBiDiPtr>(m, "UBiDi", R"doc(
   UBiDi structure.
 
-  See Also:
-      :func:`ubidi_close`
-      :func:`ubidi_open_sized`
-      :func:`ubidi_open`
+  .. seealso::
+
+     :func:`ubidi_close`
+     :func:`ubidi_open_sized`
+     :func:`ubidi_open`
   )doc");
 
   //
@@ -390,8 +393,9 @@ the Bidi algorithm.
       py::arg("bidi"), R"doc(
       Return the callback function for this ``UBiDi``.
 
-      See Also:
-          :func:`ubidi_set_class_callback`
+      .. seealso::
+
+         :func:`ubidi_set_class_callback`
       )doc");
 
   m.def(
@@ -402,9 +406,10 @@ the Bidi algorithm.
       py::arg("bidi"), py::arg("c"), R"doc(
       Return the Bidi class for the specified code point.
 
-      See Also:
-          :class:`UBiDiClassCallback`
-          :func:`ubidi_set_class_callback`
+      .. seealso::
+
+         :class:`UBiDiClassCallback`
+         :func:`ubidi_set_class_callback`
       )doc");
 
   m.def(
@@ -666,41 +671,45 @@ the Bidi algorithm.
 
       .. important::
 
-          *new_fn* must outlive the ``UBiDi`` object.
+         *new_fn* must outlive the ``UBiDi`` object.
 
-      See Also:
-          :func:`ubidi_get_class_callback`
-          :func:`ubidi_get_customized_class`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> def class_callback(options: dict[str, icu.UCharDirection], c: int) -> icu.UCharDirection:
-          ...     if icu.u_isdigit(c):
-          ...         return icu.U_LEFT_TO_RIGHT
-          ...     return options["default"]
-          ...
-          >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
-          ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
-          ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
-          ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
-          ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
-          ...     custom_classes: dict[str, icu.UCharDirection] = {
-          ...         "default": icu.UCharDirection(value),
-          ...     }
-          ...     context = icu.UserContext(custom_classes)
-          ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
-          ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
-          ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
-          ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
-          ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
-          ...
-          <UCharDirection.U_EUROPEAN_NUMBER: 2>
-          <UCharDirection.U_ARABIC_NUMBER: 5>
-          <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
-          <UCharDirection.U_LEFT_TO_RIGHT: 0>
-          <UCharDirection.U_LEFT_TO_RIGHT: 0>
-          <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
+         :func:`ubidi_get_class_callback`
+         :func:`ubidi_get_customized_class`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> def class_callback(options: dict[str, icu.UCharDirection], c: int) -> icu.UCharDirection:
+         ...     if icu.u_isdigit(c):
+         ...         return icu.U_LEFT_TO_RIGHT
+         ...     return options["default"]
+
+         >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
+         ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
+         ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
+         ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
+         ...     value = icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS) + 1
+         ...     custom_classes: dict[str, icu.UCharDirection] = {
+         ...         "default": icu.UCharDirection(value),
+         ...     }
+         ...     context = icu.UserContext(custom_classes)
+         ...     new_fn = icu.UBiDiClassCallback(class_callback, context)
+         ...     old_fn = icu.ubidi_set_class_callback(bidi, new_fn)
+         ...     icu.ubidi_get_customized_class(bidi, 0x31)  # U_EUROPEAN_NUMBER
+         ...     icu.ubidi_get_customized_class(bidi, 0x661)  # U_ARABIC_NUMBER
+         ...     icu.ubidi_get_customized_class(bidi, 0x2c)  # U_COMMON_NUMBER_SEPARATOR
+         ...
+         <UCharDirection.U_EUROPEAN_NUMBER: 2>
+         <UCharDirection.U_ARABIC_NUMBER: 5>
+         <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
+         <UCharDirection.U_LEFT_TO_RIGHT: 0>
+         <UCharDirection.U_LEFT_TO_RIGHT: 0>
+         <UCharDirection.U_COMMON_NUMBER_SEPARATOR: 6>
       )doc");
 
   m.def(

@@ -16,8 +16,9 @@ void init_timezone(py::module &m) {
   py::class_<TimeZone, UObject> tz(m, "TimeZone", R"doc(
       Representation of a time zone.
 
-      See Also:
-          :class:`BasicTimeZone`
+      .. seealso::
+
+         :class:`BasicTimeZone`
       )doc");
 
   //
@@ -26,10 +27,11 @@ void init_timezone(py::module &m) {
   py::class_<BasicTimeZone, TimeZone> btz(m, "BasicTimeZone", R"doc(
       Abstract class extending :class:`TimeZone`.
 
-      See Also:
-          :class:`RuleBasedTimeZone`
-          :class:`SimpleTimeZone`
-          :class:`VTimeZone`
+      .. seealso::
+
+         :class:`RuleBasedTimeZone`
+         :class:`SimpleTimeZone`
+         :class:`VTimeZone`
       )doc");
 
   //

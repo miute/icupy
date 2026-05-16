@@ -30,15 +30,15 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
       grouping separators, sign display, and rounding. It is not capable of
       currencies, compact notation, or units.
 
-      Example:
+      .. rubric:: Example
 
       .. code-block:: python
 
-          from icupy import icu
-          from icupy.icu import number
-          fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy("de-CH", icu.UNUM_GROUPING_ON_ALIGNED)
-          fmtval = fmt.format_int64(1234567)
-          fmtval.to_string()  # "1'234'567"
+         from icupy import icu
+         from icupy.icu import number
+         fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy("de-CH", icu.UNUM_GROUPING_ON_ALIGNED)
+         fmtval = fmt.format_int64(1234567)
+         fmtval.to_string()  # "1'234'567"
       )doc");
 
   //
@@ -59,7 +59,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         return result;
       },
       py::arg("value"), R"doc(
-      Create a ``SimpleNumber`` for an integer.
+      Create a new ``SimpleNumber`` instance for an integer.
       )doc");
 
   sn.def(
@@ -152,7 +152,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
 
       .. note::
 
-          This does not support accounting sign notation.
+         This does not support accounting sign notation.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM < 76)
@@ -233,7 +233,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
 
       .. important::
 
-          *symbols* must outlive the ``SimpleNumberFormatter`` object.
+         *symbols* must outlive the ``SimpleNumberFormatter`` object.
       )doc");
 
   fmt.def(
@@ -251,9 +251,9 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
 
       .. important::
 
-          The :class:`SimpleNumber` argument is consumed. A new
-          :class:`SimpleNumber` object should be created for every formatting
-          operation.
+         The :class:`SimpleNumber` argument is consumed. A new
+         :class:`SimpleNumber` object should be created for every formatting
+         operation.
       )doc");
 
   fmt.def(

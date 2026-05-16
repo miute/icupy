@@ -40,9 +40,10 @@ void init_ucsdet(py::module &m) {
     Opaque structure representing a match that was identified from a
     charset detection operation.
 
-    See Also:
-        :func:`ucsdet_detect`
-        :func:`ucsdet_detect_all`
+    .. seealso::
+
+       :func:`ucsdet_detect`
+       :func:`ucsdet_detect_all`
     )doc");
 
   //
@@ -51,9 +52,10 @@ void init_ucsdet(py::module &m) {
   py::class_<icupy::UCharsetDetectorPtr>(m, "UCharsetDetector", R"doc(
     UCharsetDetector structure representing a charset detector.
 
-    See Also:
-        :func:`ucsdet_close`
-        :func:`ucsdet_open`
+    .. seealso::
+
+       :func:`ucsdet_close`
+       :func:`ucsdet_open`
     )doc");
 
   //

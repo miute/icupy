@@ -13,9 +13,10 @@ void init_measunit(py::module &m) {
   py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(), R"doc(
 Enumeration for SI and binary prefixes, e.g. "kilo-", "nano-", "mebi-".
 
-See Also:
-    :func:`umeas_get_prefix_base`
-    :func:`umeas_get_prefix_power`
+.. seealso::
+
+   :func:`umeas_get_prefix_base`
+   :func:`umeas_get_prefix_power`
       )doc")
       .value("UMEASURE_PREFIX_ONE", UMEASURE_PREFIX_ONE, R"doc(
              The absence of an SI or binary prefix.
@@ -151,9 +152,10 @@ cannot set the power or prefix of a compound unit.
 
       A unit is coupled with a numeric amount to produce a :class:`Measure`.
 
-      See Also:
-          :class:`CurrencyUnit`
-          :class:`TimeUnit`
+      .. seealso::
+
+         :class:`CurrencyUnit`
+         :class:`TimeUnit`
       )doc");
 
   mu.def(py::init<const MeasureUnit &>(), py::arg("other"));
@@ -3296,14 +3298,16 @@ cannot set the power or prefix of a compound unit.
       R"doc(
       Return the current SI or binary prefix of this SINGLE unit.
 
-      Note:
-          Only works on SINGLE units. If this is a COMPOUND or MIXED unit, an
-          error will occur. For more information, see
-          :class:`UMeasureUnitComplexity`.
+      .. note::
 
-      See Also:
-          :func:`umeas_get_prefix_base`
-          :func:`umeas_get_prefix_power`
+         Only works on SINGLE units. If this is a COMPOUND or MIXED unit, an
+         error will occur. For more information, see
+         :class:`UMeasureUnitComplexity`.
+
+      .. seealso::
+
+         :func:`umeas_get_prefix_base`
+         :func:`umeas_get_prefix_power`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 

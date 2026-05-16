@@ -17,10 +17,11 @@ Enum for specifying which platform a converter ID refers to.
 
 The use of platform/CCSID is not recommended.
 
-See Also:
-    :func:`ucnv_get_ccsid`
-    :func:`ucnv_get_platform`
-    :func:`ucnv_open_ccsid`
+.. seealso::
+
+   :func:`ucnv_get_ccsid`
+   :func:`ucnv_get_platform`
+   :func:`ucnv_open_ccsid`
       )doc")
       .value("UCNV_UNKNOWN", UCNV_UNKNOWN)
       .value("UCNV_IBM", UCNV_IBM)
@@ -32,8 +33,9 @@ See Also:
   py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(), R"doc(
 Enum for specifying basic types of converters.
 
-See Also:
-    :func:`ucnv_get_type`
+.. seealso::
+
+   :func:`ucnv_get_type`
       )doc")
       .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
       .value("UCNV_SBCS", UCNV_SBCS)
@@ -114,8 +116,9 @@ Selectors for Unicode sets that can be returned by
       py::arg("cnv"), R"doc(
       Return a copy of the unicode converter.
 
-      See Also:
-          :func:`ucnv_close`
+      .. seealso::
+
+         :func:`ucnv_close`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
@@ -126,11 +129,12 @@ Selectors for Unicode sets that can be returned by
       Delete the unicode converter and releases resources associated with just
       this instance.
 
-      See Also:
-          :func:`ucnv_clone`
-          :func:`ucnv_open_ccsid`
-          :func:`ucnv_open_package`
-          :func:`ucnv_open`
+      .. seealso::
+
+         :func:`ucnv_clone`
+         :func:`ucnv_open_ccsid`
+         :func:`ucnv_open_package`
+         :func:`ucnv_open`
       )doc");
 
   m.def("ucnv_compare_names", &ucnv_compareNames, py::arg("name1"),
@@ -139,7 +143,7 @@ Selectors for Unicode sets that can be returned by
 
       The comparison is case-insensitive, ignores leading zeroes if they are
       not followed by further digits, and ignores all but letters and digits.
-      Thus the strings "UTF-8", "utf_8", "u*T@f08" and "Utf 8" are exactly
+      Thus the strings "UTF-8", "utf_8", "u*T\@f08" and "Utf 8" are exactly
       equivalent. See section 1.4, Charset Alias Matching in Unicode Technical
       Standard #22 at http://www.unicode.org/reports/tr22/.
       )doc");
@@ -157,22 +161,25 @@ Selectors for Unicode sets that can be returned by
       py::arg("alias"), R"doc(
       Return the number of aliases for the specified converter or alias name.
 
-      See Also:
-          :func:`ucnv_get_alias`
+      .. seealso::
+
+         :func:`ucnv_get_alias`
       )doc");
 
   m.def("ucnv_count_available", &ucnv_countAvailable, R"doc(
       Return the number of available converters.
 
-      See Also:
-          :func:`ucnv_get_available_name`
+      .. seealso::
+
+         :func:`ucnv_get_available_name`
       )doc");
 
   m.def("ucnv_count_standards", &ucnv_countStandards, R"doc(
       Return the number of standards associated to converter names.
 
-      See Also:
-          :func:`ucnv_get_standard`
+      .. seealso::
+
+         :func:`ucnv_get_standard`
       )doc");
 
   m.def(
@@ -232,8 +239,9 @@ Selectors for Unicode sets that can be returned by
       py::arg("alias"), py::arg("n"), R"doc(
       Return the name of the alias at the specified index of alias list.
 
-      See Also:
-          :func:`ucnv_count_aliases`
+      .. seealso::
+
+         :func:`ucnv_count_aliases`
       )doc");
 
   m.def(
@@ -261,8 +269,9 @@ Selectors for Unicode sets that can be returned by
       Return the canonical converter name of the specified converter from a
       list of all available converters.
 
-      See Also:
-          :func:`ucnv_count_available`
+      .. seealso::
+
+         :func:`ucnv_count_available`
       )doc");
 
   m.def(
@@ -280,8 +289,9 @@ Selectors for Unicode sets that can be returned by
       py::arg("alias"), py::arg("standard"), R"doc(
       Return the internal canonical converter name of the tagged alias.
 
-      See Also:
-          :func:`ucnv_get_standard_name`
+      .. seealso::
+
+         :func:`ucnv_get_standard_name`
       )doc");
 
   m.def(
@@ -297,23 +307,26 @@ Selectors for Unicode sets that can be returned by
       py::arg("converter"), R"doc(
       Return a codepage number associated with the converter.
 
-      Important:
-          The use of CCSIDs is not recommended because it is limited to only
-          two platforms in principle and only one
-          (:attr:`~UConverterPlatform.UCNV_IBM`) in the current ICU converter
-          API. Also, CCSIDs are insufficient to identify IBM Unicode conversion
-          tables precisely. For more details see :func:`ucnv_open_ccsid`.
+      .. important::
 
-      See Also:
-          :func:`ucnv_get_platform`
-          :func:`ucnv_open_ccsid`
+         The use of CCSIDs is not recommended because it is limited to only
+         two platforms in principle and only one
+         (:attr:`~UConverterPlatform.UCNV_IBM`) in the current ICU converter
+         API. Also, CCSIDs are insufficient to identify IBM Unicode conversion
+         tables precisely. For more details see :func:`ucnv_open_ccsid`.
+
+      .. seealso::
+
+         :func:`ucnv_get_platform`
+         :func:`ucnv_open_ccsid`
       )doc");
 
   m.def("ucnv_get_default_name", &ucnv_getDefaultName, R"doc(
       Return the current default converter name.
 
-      See Also:
-          :func:`ucnv_set_default_name`
+      .. seealso::
+
+         :func:`ucnv_set_default_name`
       )doc");
 
   m.def(
@@ -333,14 +346,15 @@ Selectors for Unicode sets that can be returned by
         return result;
       },
       py::arg("converter"), py::arg("display_locale"), R"doc(
-      Return the display name of the converter passed in based on the locale
-      passed in.
+      Return the name for the converter in a format suitable for display in the
+      locale specified by *display_locale*.
 
       If the locale does not contain a display name, return the internal ASCII
       name.
 
-      See Also:
-          :func:`ucnv_get_name`
+      .. seealso::
+
+         :func:`ucnv_get_name`
       )doc");
 
   m.def(
@@ -360,10 +374,11 @@ Selectors for Unicode sets that can be returned by
        },
        py::arg("converter"),
        R"doc(
-      Return the current From Unicode callback function.
+      Return the current From-Unicode callback function.
 
-      See Also:
-          :func:`ucnv_set_from_u_call_back`
+      .. seealso::
+
+         :func:`ucnv_set_from_u_call_back`
       )doc")
       .def(
           "ucnv_get_from_ucall_back",
@@ -383,8 +398,11 @@ Selectors for Unicode sets that can be returned by
           },
           py::arg("converter"),
           R"doc(
-      Note:
-          Use :func:`ucnv_get_from_u_call_back` instead.
+      Return the current From-Unicode callback function.
+
+      .. note::
+
+         Use :func:`ucnv_get_from_u_call_back` instead.
       )doc");
 
   m.def(
@@ -400,8 +418,9 @@ Selectors for Unicode sets that can be returned by
       py::arg("converter"), R"doc(
       Return the internal, canonical name of the converter.
 
-      See Also:
-          :func:`ucnv_get_display_name`
+      .. seealso::
+
+         :func:`ucnv_get_display_name`
       )doc");
 
   m.def(
@@ -431,8 +450,9 @@ Selectors for Unicode sets that can be returned by
       py::arg("n"), R"doc(
       Return the name of the standard at the specified index of standard list.
 
-      See Also:
-          :func:`ucnv_count_standards`
+      .. seealso::
+
+         :func:`ucnv_count_standards`
       )doc");
 
   m.def(
@@ -466,9 +486,10 @@ Selectors for Unicode sets that can be returned by
       py::arg("converter"), R"doc(
       Return the substitution characters.
 
-      See Also:
-          :func:`ucnv_set_subst_chars`
-          :func:`ucnv_set_subst_string`
+      .. seealso::
+
+         :func:`ucnv_set_subst_chars`
+         :func:`ucnv_set_subst_string`
       )doc");
 
   m.def(
@@ -488,10 +509,11 @@ Selectors for Unicode sets that can be returned by
        },
        py::arg("converter"),
        R"doc(
-      Return the current To Unicode callback function.
+      Return the current To-Unicode callback function.
 
-      See Also:
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :func:`ucnv_set_to_u_call_back`
       )doc")
       .def(
           "ucnv_get_to_ucall_back",
@@ -510,8 +532,11 @@ Selectors for Unicode sets that can be returned by
           },
           py::arg("converter"),
           R"doc(
-      Note:
-          Use :func:`ucnv_get_to_u_call_back` instead.
+      Return the current To-Unicode callback function.
+
+      .. note::
+
+         Use :func:`ucnv_get_to_u_call_back` instead.
       )doc");
 
   m.def(
@@ -537,8 +562,9 @@ Selectors for Unicode sets that can be returned by
       Return the set of Unicode code points that can be converted by an ICU
       converter.
 
-      See Also:
-          :meth:`UnicodeSet.from_uset`
+      .. seealso::
+
+         :meth:`UnicodeSet.from_uset`
       )doc");
 
   m.def(
@@ -576,10 +602,12 @@ Selectors for Unicode sets that can be returned by
         return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("converter_name"), R"doc(
-      Create a ``UConverter`` object with the name of a coded character set.
+      Create a new ``UConverter`` instance with the name of a coded character
+      set.
 
-      See Also:
-          :func:`ucnv_close`
+      .. seealso::
+
+         :func:`ucnv_close`
       )doc");
 
   m.def(
@@ -593,7 +621,7 @@ Selectors for Unicode sets that can be returned by
         return std::make_unique<icupy::UEnumerationPtr>(p);
       },
       R"doc(
-      Return a ``UEnumeration`` to enumerate all of the canonical converter
+      Create a new ``UEnumeration`` to enumerate all of the canonical converter
       names, as per the alias file, regardless of the ability to open each
       converter.
       )doc");
@@ -609,13 +637,15 @@ Selectors for Unicode sets that can be returned by
         return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("codepage"), py::arg("platform"), R"doc(
-      Create a ``UConverter`` object from a CCSID number and platform pair.
+      Create a new ``UConverter`` instance from a CCSID number and platform
+      pair.
 
       Currently, the only *platform* supported in the ICU converter API is
       :attr:`~UConverterPlatform.UCNV_IBM`.
 
-      See Also:
-          :func:`ucnv_close`
+      .. seealso::
+
+         :func:`ucnv_close`
       )doc");
 
   m.def(
@@ -630,10 +660,12 @@ Selectors for Unicode sets that can be returned by
         return std::make_unique<icupy::UConverterPtr>(p);
       },
       py::arg("package_name"), py::arg("converter_name"), R"doc(
-      Create a ``UConverter`` object from a package name and converter name.
+      Create a new ``UConverter`` instance from a package name and converter
+      name.
 
-      See Also:
-          :func:`ucnv_close`
+      .. seealso::
+
+         :func:`ucnv_close`
       )doc");
 
   m.def(
@@ -648,7 +680,7 @@ Selectors for Unicode sets that can be returned by
         return std::make_unique<icupy::UEnumerationPtr>(p);
       },
       py::arg("conv_name"), py::arg("standard"), R"doc(
-      Return a new ``UEnumeration`` for enumerating all the alias names for
+      Create a new ``UEnumeration`` for enumerating all the alias names for
       the specified converter that are recognized by a standard.
       )doc");
 
@@ -692,10 +724,11 @@ Selectors for Unicode sets that can be returned by
       py::arg("name"), R"doc(
       Set the default converter name.
 
-      Important:
-          This function is not thread safe.
-          DO NOT call this function when ANY ICU function is being used from
-          more than one thread.
+      .. important::
+
+         This function is not thread safe.
+         DO NOT call this function when ANY ICU function is being used from
+         more than one thread.
       )doc");
 
   m.def(
@@ -745,42 +778,47 @@ Selectors for Unicode sets that can be returned by
          return icupy::UConverterFromUCallbackPtr(old_action, old_context);
        },
        py::arg("converter"), py::arg("new_action"), R"doc(
-      Set the new From Unicode callback function to be used when this
+      Set the new From-Unicode callback function to be used when this
       converter finds an illegal or invalid Unicode sequence, and return
       the old callback function.
 
-      Important:
-          *new_action* must outlive the ``UConverter`` object.
+      .. important::
 
-      See Also:
-          :func:`ucnv_get_from_u_call_back`
-          :meth:`UnicodeString.extract`
+         *new_action* must outlive the ``UConverter`` object.
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> def from_unicode_cb(
-          ...     options: object,
-          ...     args: icu.UConverterFromUnicodeArgs,
-          ...     code_units: str,
-          ...     length: int,
-          ...     code_point: int,
-          ...     reason: icu.UConverterCallbackReason,
-          ...     error_code: icu.ErrorCode,
-          ... ) -> None:
-          ...     _ = options, length, code_point  # unused
-          ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
-          ...         error_code.set(icu.U_ZERO_ERROR)
-          ...         source = "".join(f"\\u{ord(c):04X}" for c in code_units)
-          ...         icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
-          ...
-          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     action = icu.UConverterFromUCallback(from_unicode_cb)
-          ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-          ...     s = icu.UnicodeString("A€B")
-          ...     s.extract(cnv)
-          ...
-          b'A\\u20ACB'
+      .. seealso::
+
+         :func:`ucnv_get_from_u_call_back`
+         :meth:`UnicodeString.extract`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> def from_unicode_cb(
+         ...     options: object,
+         ...     args: icu.UConverterFromUnicodeArgs,
+         ...     code_units: str,
+         ...     length: int,
+         ...     code_point: int,
+         ...     reason: icu.UConverterCallbackReason,
+         ...     error_code: icu.ErrorCode,
+         ... ) -> None:
+         ...     _ = options, length, code_point  # unused
+         ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+         ...         error_code.set(icu.U_ZERO_ERROR)
+         ...         source = "".join(f"\\u{ord(c):04x}" for c in code_units)
+         ...         icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
+
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterFromUCallback(from_unicode_cb)
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         b'A\\u20acB'
       )doc")
       .def(
           "ucnv_set_from_ucall_back",
@@ -816,8 +854,13 @@ Selectors for Unicode sets that can be returned by
             return icupy::UConverterFromUCallbackPtr(old_action, old_context);
           },
           py::arg("converter"), py::arg("new_action"), R"doc(
-      Note:
-          Use :func:`ucnv_set_from_u_call_back` instead.
+      Set the new From-Unicode callback function to be used when this
+      converter finds an illegal or invalid Unicode sequence, and return
+      the old callback function.
+
+      .. note::
+
+         Use :func:`ucnv_set_from_u_call_back` instead.
       )doc");
 
   m.def(
@@ -845,9 +888,10 @@ Selectors for Unicode sets that can be returned by
       substitution characters may be supported. The newer
       :func:`ucnv_set_subst_string` relaxes these limitations.
 
-      See Also:
-          :func:`ucnv_get_subst_chars`
-          :func:`ucnv_set_subst_string`
+      .. seealso::
+
+         :func:`ucnv_get_subst_chars`
+         :func:`ucnv_set_subst_string`
       )doc");
 
   m.def(
@@ -876,9 +920,10 @@ Selectors for Unicode sets that can be returned by
       stateful charsets by converting on the fly at the point of substitution
       rather than setting a fixed byte sequence.
 
-      See Also:
-          :func:`ucnv_get_subst_chars`
-          :func:`ucnv_set_subst_chars`
+      .. seealso::
+
+         :func:`ucnv_get_subst_chars`
+         :func:`ucnv_set_subst_chars`
       )doc");
 
   m.def(
@@ -913,42 +958,47 @@ Selectors for Unicode sets that can be returned by
          return icupy::UConverterToUCallbackPtr(old_action, old_context);
        },
        py::arg("converter"), py::arg("new_action"), R"doc(
-      Set the new To Unicode callback function to be used when this
+      Set the new To-Unicode callback function to be used when this
       converter finds an illegal or invalid codepage sequence, and return
       the old callback function.
 
-      Important:
-          *new_action* must outlive the ``UConverter`` object.
+      .. important::
 
-      See Also:
-          :func:`ucnv_get_to_u_call_back`
-          :meth:`UnicodeString.__init__`
+         *new_action* must outlive the ``UConverter`` object.
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> def to_unicode_cb(
-          ...     options: object,
-          ...     args: icu.UConverterToUnicodeArgs,
-          ...     code_units: bytes,
-          ...     length: int,
-          ...     reason: icu.UConverterCallbackReason,
-          ...     error_code: icu.ErrorCode,
-          ... ) -> None:
-          ...     _= options, length  # unused
-          ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
-          ...         error_code.set(icu.U_ZERO_ERROR)
-          ...         source = "".join(f"%{b:02X}" for b in code_units)
-          ...         icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
-          ...
-          >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
-          ...     action = icu.UConverterToUCallback(to_unicode_cb)
-          ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
-          ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
-          ...     s = icu.UnicodeString(src, -1, cnv)
-          ...     str(s)
-          ...
-          'a%EB%40b'
+      .. seealso::
+
+         :func:`ucnv_get_to_u_call_back`
+         :meth:`UnicodeString.__init__`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> def to_unicode_cb(
+         ...     options: object,
+         ...     args: icu.UConverterToUnicodeArgs,
+         ...     code_units: bytes,
+         ...     length: int,
+         ...     reason: icu.UConverterCallbackReason,
+         ...     error_code: icu.ErrorCode,
+         ... ) -> None:
+         ...     _ = options, length  # unused
+         ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+         ...         error_code.set(icu.U_ZERO_ERROR)
+         ...         source = "".join(f"%{b:02X}" for b in code_units)
+         ...         icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
+
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterToUCallback(to_unicode_cb)
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...     str(s)
+         ...
+         'a%EB%40b'
       )doc")
       .def(
           "ucnv_set_to_ucall_back",
@@ -982,8 +1032,13 @@ Selectors for Unicode sets that can be returned by
             return icupy::UConverterToUCallbackPtr(old_action, old_context);
           },
           py::arg("converter"), py::arg("new_action"), R"doc(
-      Note:
-          Use :func:`ucnv_set_to_u_call_back` instead.
+      Set the new To-Unicode callback function to be used when this
+      converter finds an illegal or invalid codepage sequence, and return
+      the old callback function.
+
+      .. note::
+
+         Use :func:`ucnv_set_to_u_call_back` instead.
       )doc");
 
   m.def(
@@ -995,8 +1050,9 @@ Selectors for Unicode sets that can be returned by
       Return ``True`` if the converter uses fallback mappings, ``False``
       otherwise.
 
-      See Also:
-          :func:`ucnv_set_fallback`
+      .. seealso::
+
+         :func:`ucnv_set_fallback`
       )doc");
 
   m.attr("UCNV_LOCALE_OPTION_STRING") = UCNV_LOCALE_OPTION_STRING;

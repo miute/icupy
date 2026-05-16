@@ -55,8 +55,9 @@ void init_uregex(py::module &m) {
   py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic(), R"doc(
 Constants for Regular Expression Match Modes.
 
-See Also:
-    :meth:`RegexMatcher.__init__`
+.. seealso::
+
+   :meth:`RegexMatcher.__init__`
       )doc")
       .value("UREGEX_CANON_EQ", UREGEX_CANON_EQ, R"doc(
              Forces normalization of pattern and strings.
@@ -99,9 +100,11 @@ See Also:
 
              If set, uses the Unicode TR 29 definition of word boundaries.
 
-             Warning: Unicode word boundaries are quite
-             different from traditional regular expression word boundaries. See
-             http://unicode.org/reports/tr29/#Word_Boundaries
+             .. warning::
+
+                Unicode word boundaries are quite different from traditional
+                regular expression word boundaries.
+                See http://unicode.org/reports/tr29/#Word_Boundaries
              )doc")
       .value("UREGEX_ERROR_ON_UNKNOWN_ESCAPES", UREGEX_ERROR_ON_UNKNOWN_ESCAPES,
              R"doc(
@@ -121,29 +124,30 @@ See Also:
       m, "URegexFindProgressCallback", R"doc(
       Wrapper class for a regular expression find callback function.
 
-      See Also:
-          :meth:`RegexMatcher.get_find_progress_callback`
-          :meth:`RegexMatcher.set_find_progress_callback`
+      .. seealso::
+
+         :meth:`RegexMatcher.get_find_progress_callback`
+         :meth:`RegexMatcher.set_find_progress_callback`
       )doc");
 
   rfcb.def(py::init<>(), R"doc(
-           Initialize the ``URegexFindProgressCallback`` instance without a
-           callback function.
-           )doc")
+      Initialize the ``URegexFindProgressCallback`` instance without a
+      callback function.
+      )doc")
       .def(py::init([](const icupy::FindProgressCallbackFunction &action,
                        std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::URegexFindProgressCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``URegexFindProgressCallback`` instance with the
-           specified callback function and the user context.
+      Initialize the ``URegexFindProgressCallback`` instance with the
+      specified callback function and the user context.
 
-           .. important::
+      .. important::
 
-               *action* and *context* must outlive the
-               ``URegexFindProgressCallback`` object.
-           )doc");
+         *action* and *context* must outlive the
+         ``URegexFindProgressCallback`` object.
+      )doc");
 
   rfcb.def(
       "__bool__",
@@ -177,29 +181,30 @@ See Also:
                                                  R"doc(
       Wrapper class for a regular expression matching callback function.
 
-      See Also:
-          :meth:`RegexMatcher.get_match_callback`
-          :meth:`RegexMatcher.set_match_callback`
+      .. seealso::
+
+         :meth:`RegexMatcher.get_match_callback`
+         :meth:`RegexMatcher.set_match_callback`
       )doc");
 
   rmcb.def(py::init<>(), R"doc(
-           Initialize the ``URegexMatchCallback`` instance without a callback
-           function.
-           )doc")
+      Initialize the ``URegexMatchCallback`` instance without a callback
+      function.
+      )doc")
       .def(py::init([](const icupy::MatchCallbackFunction &action,
                        std::optional<const icupy::UserContext *> &context) {
              return std::make_unique<icupy::URegexMatchCallbackPtr>(
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-           Initialize the ``URegexMatchCallback`` instance with the specified
-           callback function and the user context.
+      Initialize the ``URegexMatchCallback`` instance with the specified
+      callback function and the user context.
 
-           .. important::
+      .. important::
 
-               *action* and *context* must outlive the ``URegexMatchCallback``
-               object.
-           )doc");
+         *action* and *context* must outlive the ``URegexMatchCallback``
+         object.
+      )doc");
 
   rmcb.def(
       "__bool__",

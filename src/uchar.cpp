@@ -21,8 +21,9 @@ void init_uchar(py::module &m) {
                                     py::arithmetic(), R"doc(
 Bidi Paired Bracket Type constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_BIDI_PAIRED_BRACKET_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_BIDI_PAIRED_BRACKET_TYPE`
       )doc")
       .value("U_BPT_NONE", U_BPT_NONE, R"doc(
              Not a paired bracket.
@@ -744,8 +745,9 @@ or an "extended" name that gives each Unicode code point a unique name.
                                 R"doc(
 Decomposition Type constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_DECOMPOSITION_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_DECOMPOSITION_TYPE`
       )doc")
       .value("U_DT_NONE", U_DT_NONE)
       .value("U_DT_CANONICAL", U_DT_CANONICAL)
@@ -777,8 +779,9 @@ See Also:
   py::enum_<UEastAsianWidth>(m, "UEastAsianWidth", py::arithmetic(), R"doc(
 East Asian Width constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_EAST_ASIAN_WIDTH`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_EAST_ASIAN_WIDTH`
       )doc")
       .value("U_EA_NEUTRAL", U_EA_NEUTRAL)
       .value("U_EA_AMBIGUOUS", U_EA_AMBIGUOUS)
@@ -799,8 +802,9 @@ See Also:
                                    R"doc(
 Grapheme Cluster Break constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_GRAPHEME_CLUSTER_BREAK`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_GRAPHEME_CLUSTER_BREAK`
       )doc")
       .value("U_GCB_OTHER", U_GCB_OTHER)
       .value("U_GCB_CONTROL", U_GCB_CONTROL)
@@ -837,8 +841,9 @@ See Also:
                                  R"doc(
 Hangul Syllable Type constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_HANGUL_SYLLABLE_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_HANGUL_SYLLABLE_TYPE`
       )doc")
       .value("U_HST_NOT_APPLICABLE", U_HST_NOT_APPLICABLE)
       .value("U_HST_LEADING_JAMO", U_HST_LEADING_JAMO)
@@ -861,8 +866,9 @@ Identifier Status constants.
 
 See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.
 
-See Also:
-    :attr:`~UProperty.UCHAR_IDENTIFIER_STATUS`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_IDENTIFIER_STATUS`
       )doc")
       .value("U_ID_STATUS_RESTRICTED", U_ID_STATUS_RESTRICTED)
       .value("U_ID_STATUS_ALLOWED", U_ID_STATUS_ALLOWED)
@@ -876,8 +882,9 @@ Identifier Type constants.
 
 See https://www.unicode.org/reports/tr39/#Identifier_Status_and_Type.
 
-See Also:
-    :attr:`~UProperty.UCHAR_IDENTIFIER_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_IDENTIFIER_TYPE`
       )doc")
       .value("U_ID_TYPE_NOT_CHARACTER", U_ID_TYPE_NOT_CHARACTER)
       .value("U_ID_TYPE_DEPRECATED", U_ID_TYPE_DEPRECATED)
@@ -902,8 +909,9 @@ See Also:
                                  R"doc(
 Indic Conjunct Break constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_INDIC_CONJUNCT_BREAK`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_INDIC_CONJUNCT_BREAK`
       )doc")
       .value("U_INCB_NONE", U_INCB_NONE)
       .value("U_INCB_CONSONANT", U_INCB_CONSONANT)
@@ -920,8 +928,9 @@ See Also:
                                       py::arithmetic(), R"doc(
 Indic Positional Category constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_INDIC_POSITIONAL_CATEGORY`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_INDIC_POSITIONAL_CATEGORY`
       )doc")
       .value("U_INPC_NA", U_INPC_NA)
       .value("U_INPC_BOTTOM", U_INPC_BOTTOM)
@@ -952,8 +961,9 @@ See Also:
                                     py::arithmetic(), R"doc(
 Indic Syllabic Category constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_INDIC_SYLLABIC_CATEGORY`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_INDIC_SYLLABIC_CATEGORY`
       )doc")
       .value("U_INSC_OTHER", U_INSC_OTHER)
       .value("U_INSC_AVAGRAHA", U_INSC_AVAGRAHA)
@@ -1006,8 +1016,9 @@ See Also:
   py::enum_<UJoiningGroup>(m, "UJoiningGroup", py::arithmetic(), R"doc(
 Joining Group constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_JOINING_GROUP`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_JOINING_GROUP`
       )doc")
       .value("U_JG_NO_JOINING_GROUP", U_JG_NO_JOINING_GROUP)
       .value("U_JG_AIN", U_JG_AIN)
@@ -1144,8 +1155,9 @@ See Also:
   py::enum_<UJoiningType>(m, "UJoiningType", py::arithmetic(), R"doc(
 Joining Type constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_JOINING_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_JOINING_TYPE`
       )doc")
       .value("U_JT_NON_JOINING", U_JT_NON_JOINING)
       .value("U_JT_JOIN_CAUSING", U_JT_JOIN_CAUSING)
@@ -1165,8 +1177,9 @@ See Also:
   py::enum_<ULineBreak>(m, "ULineBreak", py::arithmetic(), R"doc(
 Line Break constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_LINE_BREAK`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_LINE_BREAK`
       )doc")
       .value("U_LB_UNKNOWN", U_LB_UNKNOWN)
       .value("U_LB_AMBIGUOUS", U_LB_AMBIGUOUS)
@@ -1244,8 +1257,9 @@ See Also:
   py::enum_<UNumericType>(m, "UNumericType", py::arithmetic(), R"doc(
 Numeric Type constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_NUMERIC_TYPE`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_NUMERIC_TYPE`
       )doc")
       .value("U_NT_NONE", U_NT_NONE)
       .value("U_NT_DECIMAL", U_NT_DECIMAL)
@@ -1275,12 +1289,13 @@ For details about the properties see UAX #44: Unicode Character Database
 
 .. important::
 
-    If ICU is built with UCD files from Unicode versions below,
-    e.g., 3.2, then properties marked with "new in Unicode 3.2" are not or not
-    fully available. Check :func:`u_get_unicode_version` to be sure.
+   If ICU is built with UCD files from Unicode versions below,
+   e.g., 3.2, then properties marked with "new in Unicode 3.2" are not or not
+   fully available. Check :func:`u_get_unicode_version` to be sure.
 
-See Also:
-    :func:`u_get_int_property_value`
+.. seealso::
+
+   :func:`u_get_int_property_value`
       )doc")
       .value("UCHAR_ALPHABETIC", UCHAR_ALPHABETIC, R"doc(
              Binary property Alphabetic.
@@ -2102,8 +2117,9 @@ where i=1, 2,...
   py::enum_<USentenceBreak>(m, "USentenceBreak", py::arithmetic(), R"doc(
 Sentence Break constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_SENTENCE_BREAK`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_SENTENCE_BREAK`
       )doc")
       .value("U_SB_OTHER", U_SB_OTHER)
       .value("U_SB_ATERM", U_SB_ATERM)
@@ -2134,8 +2150,9 @@ See Also:
                                   R"doc(
 Vertical Orientation constants.
 
-See Also:
-    :attr:`~UProperty.UCHAR_VERTICAL_ORIENTATION`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_VERTICAL_ORIENTATION`
       )doc")
       .value("U_VO_ROTATED", U_VO_ROTATED)
       .value("U_VO_TRANSFORMED_ROTATED", U_VO_TRANSFORMED_ROTATED)
@@ -2153,8 +2170,9 @@ Word Break constants.
 (:class:`UWordBreak` is a pre-existing enum type in ubrk.h for word break
 status tags.)
 
-See Also:
-    :attr:`~UProperty.UCHAR_WORD_BREAK`
+.. seealso::
+
+   :attr:`~UProperty.UCHAR_WORD_BREAK`
       )doc")
       .value("U_WB_OTHER", U_WB_OTHER)
       .value("U_WB_ALETTER", U_WB_ALETTER)
@@ -2339,9 +2357,10 @@ See Also:
       *property* must be between :attr:`~UProperty.UCHAR_INT_START` and
       :attr:`~UProperty.UCHAR_INT_LIMIT` - 1.
 
-      See Also:
-          :func:`ucpmap_get`
-          :func:`ucpmap_get_range`
+      .. seealso::
+
+         :func:`ucpmap_get`
+         :func:`ucpmap_get_range`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 

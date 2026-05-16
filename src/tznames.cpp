@@ -55,22 +55,25 @@ void init_tznames(py::module &m) {
 
       .. note::
 
-          The methods of this class assume that the time zone ID is already
-          canonicalized. For example, calling a method with the time zone ID
-          "America/Indiana/Indianapolis" may not return the correct result
-          because it is not canonicalized (the canonicalized ID for this time
-          zone is "America/Indianapolis"). For ICU's canonicalized time zone
-          IDs, refer to :meth:`TimeZone.get_canonical_id`.
+         The methods of this class assume that the time zone ID is already
+         canonicalized. For example, calling a method with the time zone ID
+         "America/Indiana/Indianapolis" may not return the correct result
+         because it is not canonicalized (the canonicalized ID for this time
+         zone is "America/Indianapolis"). For ICU's canonicalized time zone
+         IDs, refer to :meth:`TimeZone.get_canonical_id`.
 
-      Example:
-          >>> from icupy import icu
-          >>> tzn = icu.TimeZoneNames.create_instance(icu.ULOC_US)
-          >>> tzid = "America/Los_Angeles"
-          >>> result = icu.UnicodeString()
-          >>> tzn.get_display_name(tzid, icu.UTZNM_LONG_STANDARD, 0, result)
-          UnicodeString('Pacific Standard Time', text_length=21)
-          >>> tzn.get_display_name(tzid, icu.UTZNM_SHORT_STANDARD, 0, result)
-          UnicodeString('PST', text_length=3)
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> tzn = icu.TimeZoneNames.create_instance(icu.ULOC_US)
+         >>> tzid = "America/Los_Angeles"
+         >>> result = icu.UnicodeString()
+         >>> tzn.get_display_name(tzid, icu.UTZNM_LONG_STANDARD, 0, result)
+         UnicodeString('Pacific Standard Time', text_length=21)
+         >>> tzn.get_display_name(tzid, icu.UTZNM_SHORT_STANDARD, 0, result)
+         UnicodeString('PST', text_length=3)
       )doc");
 
   tzn.def("__copy__", &TimeZoneNames::clone);

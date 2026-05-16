@@ -18,8 +18,8 @@ formatted number should be returned.
 
 .. important::
 
-    These constants are provided for backwards compatibility only. Please
-    use the :class:`UNumberFormatFields` instead.
+   These constants are provided for backwards compatibility only. Please
+   use the :class:`UNumberFormatFields` instead.
       )doc")
       .value("INTEGER_FIELD", NumberFormat::kIntegerField)
       .value("FRACTION_FIELD", NumberFormat::kFractionField)

@@ -50,23 +50,24 @@ void init_formattedvalue(py::module &m) {
       Changing the constraint while in the middle of iterating over a
       :class:`FormattedValue` does not generally have well-defined behavior.
 
-      Example:
-          To loop over only the number-related fields:
+      .. rubric:: Example
 
-          .. code-block:: python
+      To loop over only the number-related fields:
 
-              from icupy import icu
-              fmt = (
-                  icu.number.NumberFormatter.with_()
-                  .notation(icu.number.Notation.compact_short())
-                  .unit(icu.MeasureUnit.get_kelvin())
-                  .locale(icu.ULOC_US)
-              )
-              fmtval = fmt.format_double(65000)
-              cfpos = icu.ConstrainedFieldPosition()
-              cfpos.constrain_category(icu.UFIELD_CATEGORY_NUMBER)
-              while fmtval.next_position(cfpos):
-                  pass  # do something with cfpos
+      .. code-block:: python
+
+         from icupy import icu
+         fmt = (
+             icu.number.NumberFormatter.with_()
+             .notation(icu.number.Notation.compact_short())
+             .unit(icu.MeasureUnit.get_kelvin())
+             .locale(icu.ULOC_US)
+         )
+         fmtval = fmt.format_double(65000)
+         cfpos = icu.ConstrainedFieldPosition()
+         cfpos.constrain_category(icu.UFIELD_CATEGORY_NUMBER)
+         while fmtval.next_position(cfpos):
+             pass  # do something with cfpos
       )doc");
 
   cfp.def("constrain_field", &ConstrainedFieldPosition::constrainField,
@@ -82,15 +83,24 @@ void init_formattedvalue(py::module &m) {
       Changing the constraint while in the middle of iterating over a
       :class:`FormattedValue` does not generally have well-defined behavior.
 
-      Example:
-          To loop over only the number-related fields:
+      .. rubric:: Example
 
-          .. code-block:: python
+      To loop over only the number-related fields:
 
-              cfpos = icu.ConstrainedFieldPosition()
-              cfpos.constrain_field(icu.UFIELD_CATEGORY_NUMBER, icu.UNUM_INTEGER_FIELD)
-              while fmtval.next_position(cfpos):
-                  pass  # do something with cfpos
+      .. code-block:: python
+
+         from icupy import icu
+         fmt = (
+             icu.number.NumberFormatter.with_()
+             .notation(icu.number.Notation.compact_short())
+             .unit(icu.MeasureUnit.get_kelvin())
+             .locale(icu.ULOC_US)
+         )
+         fmtval = fmt.format_double(65000)
+         cfpos = icu.ConstrainedFieldPosition()
+         cfpos.constrain_field(icu.UFIELD_CATEGORY_NUMBER, icu.UNUM_INTEGER_FIELD)
+         while fmtval.next_position(cfpos):
+             pass  # do something with cfpos
       )doc");
 
   cfp.def("get_category", &ConstrainedFieldPosition::getCategory, R"doc(
@@ -167,12 +177,13 @@ void init_formattedvalue(py::module &m) {
   py::class_<FormattedValue> fv(m, "FormattedValue", R"doc(
       Abstract formatted value: a string with associated field attributes.
 
-      See Also:
-          :class:`FormattedDateInterval`
-          :class:`FormattedList`
-          :class:`FormattedRelativeDateTime`
-          :class:`number.FormattedNumber`
-          :class:`number.FormattedNumberRange`
+      .. seealso::
+
+         :class:`FormattedDateInterval`
+         :class:`FormattedList`
+         :class:`FormattedRelativeDateTime`
+         :class:`number.FormattedNumber`
+         :class:`number.FormattedNumberRange`
       )doc");
 
   fv.def(
@@ -206,18 +217,21 @@ void init_formattedvalue(py::module &m) {
       This allows you to identify the positions of specific types of
       substrings, such as the month or decimal separator.
 
-      Example:
-          >>> from icupy import icu
-          >>> fmt = (
-          ...     icu.number.NumberFormatter.with_()
-          ...     .notation(icu.number.Notation.compact_short())
-          ...     .unit(icu.MeasureUnit.get_kelvin())
-          ...     .locale(icu.ULOC_US)
-          ... )
-          >>> fmtval = fmt.format_double(65000)
-          >>> cfpos = icu.ConstrainedFieldPosition()
-          >>> while fmtval.next_position(cfpos):
-          ...     pass  # do something with cfpos
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         from icupy import icu
+         fmt = (
+             icu.number.NumberFormatter.with_()
+             .notation(icu.number.Notation.compact_short())
+             .unit(icu.MeasureUnit.get_kelvin())
+             .locale(icu.ULOC_US)
+         )
+         fmtval = fmt.format_double(65000)
+         cfpos = icu.ConstrainedFieldPosition()
+         while fmtval.next_position(cfpos):
+             pass  # do something with cfpos
       )doc");
 
   fv.def(
@@ -246,8 +260,10 @@ void init_formattedvalue(py::module &m) {
         return result;
       },
       R"doc(
-      .. deprecated:: 0.23
-          Use :meth:`.to_string` instead.
+      Return the formatted string as a temporary :class:`UnicodeString`.
+
+      .. version-deprecated:: 0.23
+         Use :meth:`.to_string` instead.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 }

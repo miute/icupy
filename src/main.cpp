@@ -152,6 +152,10 @@ ICUError::ICUError(UErrorCode error_code) { error_code_.set(error_code); }
 } // namespace icupy
 
 PYBIND11_MODULE(MODULE_NAME, m) {
+  m.doc() = R"doc(
+      Python Binding for ICU4C.
+      )doc";
+
   //
   // exception icupy::ICUError
   //
@@ -178,17 +182,27 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   // namespace icu::number
   //
   auto number = m.def_submodule("number");
+  number.doc() = R"doc(
+      Python Binding for ICU4C: Number Formatters.
+      )doc";
 
   //
   // namespace U_HEADER_ONLY_NAMESPACE
   //
   auto header = m.def_submodule("header");
+  header.doc() = R"doc(
+      Python Binding for ICU4C: Iterators.
+      )doc";
 
   //
   // class icu::UMemory
   //
   py::class_<UMemory>(m, "UMemory", R"doc(
       Common ICU base class.
+
+      .. seealso::
+
+         :class:`UObject`
       )doc");
 
   //
@@ -204,9 +218,16 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::class_<Locale, UObject> loc(m, "Locale", R"doc(
       Representation of a specific geographic, political, or cultural region.
 
-      See Also:
-          :class:`LocaleBuilder`
-          :class:`LocaleMatcher`
+      For more information, see the LDML spec, Part 1:
+      `Unicode Language and Locale Identifiers
+      <https://www.unicode.org/reports/tr35/#unicode-language-and-locale-identifiers>`__
+      and the ICU User Guide: `Locale
+      <https://unicode-org.github.io/icu/userguide/locale/#locale>`__.
+
+      .. seealso::
+
+         :class:`LocaleBuilder`
+         :class:`LocaleMatcher`
       )doc");
 
   //
@@ -214,6 +235,10 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   py::class_<Replaceable, UObject> rep(m, "Replaceable", R"doc(
       Abstract base class for :class:`UnicodeString`.
+
+      .. seealso::
+
+         :class:`UnicodeString`
       )doc");
 
   //
@@ -223,9 +248,13 @@ PYBIND11_MODULE(MODULE_NAME, m) {
       String class that stores Unicode characters directly and provides similar
       functionality as the Java String and StringBuffer/StringBuilder classes.
 
-      See Also:
-          :class:`StringCharacterIterator`
-          :class:`UnicodeStringAppendable`
+      For more information, see the ICU User Guide: `Strings
+      <https://unicode-org.github.io/icu/userguide/strings/#strings-in-icu>`__.
+
+      .. seealso::
+
+         :class:`StringCharacterIterator`
+         :class:`UnicodeStringAppendable`
       )doc");
 
   //
@@ -372,14 +401,14 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
       .. important::
 
-          Use :class:`number.NumberFormatter` and
-          :class:`number.NumberRangeFormatter`
-          instead of this class for new code. Although not deprecated, this
-          class is provided for backwards compatibility only.
+         Use :class:`number.NumberFormatter` instead of this class for new
+         code. Although not deprecated, this class is provided for backwards
+         compatibility only.
 
-      See Also:
-          :class:`DecimalFormat`
-          :class:`RuleBasedNumberFormat`
+      .. seealso::
+
+         :class:`DecimalFormat`
+         :class:`RuleBasedNumberFormat`
       )doc");
 
   //
@@ -390,13 +419,13 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
       .. important::
 
-          Use :class:`number.NumberFormatter` and
-          :class:`number.NumberRangeFormatter`
-          instead of this class for new code. Although not deprecated, this
-          class is provided for backwards compatibility only.
+         Use :class:`number.NumberFormatter` instead of this class for new
+         code. Although not deprecated, this class is provided for backwards
+         compatibility only.
 
-      See Also:
-          :class:`CompactDecimalFormat`
+      .. seealso::
+
+         :class:`CompactDecimalFormat`
       )doc");
 
   init_numfmt(m, numfmt); // icu::NumberFormat

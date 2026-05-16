@@ -99,14 +99,14 @@ void init_udat(py::module &m) {
 
              .. note::
 
-                 Time formats that use 'S' can display a maximum of three
-                 significant digits for fractional seconds, corresponding to
-                 millisecond resolution and a fractional seconds sub-pattern of
-                 SSS. If the sub-pattern is S or SS, the fractional seconds
-                 value will be truncated (not rounded) to the number of display
-                 places specified. If the fractional seconds sub-pattern is
-                 longer than SSS, the additional display places will be filled
-                 with zeros.
+                Time formats that use 'S' can display a maximum of three
+                significant digits for fractional seconds, corresponding to
+                millisecond resolution and a fractional seconds sub-pattern of
+                SSS. If the sub-pattern is S or SS, the fractional seconds
+                value will be truncated (not rounded) to the number of display
+                places specified. If the fractional seconds sub-pattern is
+                longer than SSS, the additional display places will be filled
+                with zeros.
              )doc")
       .value("UDAT_DAY_OF_WEEK_FIELD", UDAT_DAY_OF_WEEK_FIELD, R"doc(
              :class:`FieldPosition` selector for 'E' field alignment,

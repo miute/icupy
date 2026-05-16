@@ -98,9 +98,10 @@ void init_ulocdata(py::module &m) {
   py::class_<icupy::ULocaleDataPtr>(m, "ULocaleData", R"doc(
     ULocaleData structure.
 
-    See Also:
-        :func:`ulocdata_close`
-        :func:`ulocdata_open`
+    .. seealso::
+
+       :func:`ulocdata_close`
+       :func:`ulocdata_open`
     )doc");
 
   //

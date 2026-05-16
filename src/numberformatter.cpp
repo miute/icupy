@@ -27,27 +27,33 @@ void init_numberformatter(py::module &, py::module &m2) {
   py::class_<NumberFormatter> nf(m2, "NumberFormatter", R"doc(
       All-in-one formatter for localized numbers, currencies, and units.
 
-      Examples:
-          Basic usage:
+      .. seealso::
 
-          .. code-block:: python
+         :class:`LocalizedNumberFormatter`
+         :class:`UnlocalizedNumberFormatter`
 
-              from icupy import icu
-              from icupy.icu import number
-              fmt = number.NumberFormatter.with_locale(icu.ULOC_US)
-              fmt.format_double(1.234).to_string()  # "1.234" in en-US
+      .. rubric:: Examples
 
-          Custom notation, unit, and rounding precision:
+      Basic usage:
 
-          .. code-block:: python
+      .. code-block:: python
 
-              template = (
-                  number.NumberFormatter.with_()
-                  .notation(number.Notation.compact_short())
-                  .unit(icu.CurrencyUnit("EUR"))
-                  .precision(number.Precision.max_significant_digits(2))
-              )
-              template.locale(icu.ULOC_US).format_int(1234).to_string()  # "€1.2K" in en-US
+         from icupy import icu
+         from icupy.icu import number
+         fmt = number.NumberFormatter.with_locale(icu.ULOC_US)
+         fmt.format_double(1.234).to_string()  # "1.234" in en-US
+
+      Custom notation, unit, and rounding precision:
+
+      .. code-block:: python
+
+         template = (
+             number.NumberFormatter.with_()
+             .notation(number.Notation.compact_short())
+             .unit(icu.CurrencyUnit("EUR"))
+             .precision(number.Precision.max_significant_digits(2))
+         )
+         template.locale(icu.ULOC_US).format_int(1234).to_string()  # "€1.2K" in en-US
       )doc");
 
   //
@@ -57,6 +63,10 @@ void init_numberformatter(py::module &, py::module &m2) {
   py::class_<FormattedNumber, UMemory, FormattedValue> fn(m2, "FormattedNumber",
                                                           R"doc(
       Result of a number formatting operation.
+
+      .. seealso::
+
+         :class:`LocalizedNumberFormatter`
       )doc");
 #else
   py::class_<FormattedNumber, UMemory> fn(m2, "FormattedNumber"
@@ -80,8 +90,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       Define the notation style used when formatting numbers with
       :class:`NumberFormatter`.
 
-      See Also:
-          :class:`ScientificNotation`
+      .. seealso::
+
+         :class:`ScientificNotation`
       )doc");
 
   //
@@ -100,10 +111,11 @@ void init_numberformatter(py::module &, py::module &m2) {
       Define the rounding precision used when formatting numbers with
       :class:`NumberFormatter`.
 
-      See Also:
-          :class:`CurrencyPrecision`
-          :class:`FractionPrecision`
-          :class:`IncrementPrecision`
+      .. seealso::
+
+         :class:`CurrencyPrecision`
+         :class:`FractionPrecision`
+         :class:`IncrementPrecision`
       )doc");
 
   //
@@ -148,8 +160,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       m2, "_LocalizedNumberFormatterSettings", R"doc(
       Abstract base class for specifying settings related to number formatting.
 
-      See Also:
-          :class:`LocalizedNumberFormatter`
+      .. seealso::
+
+         :class:`LocalizedNumberFormatter`
       )doc");
 
   //
@@ -159,8 +172,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       m2, "_UnlocalizedNumberFormatterSettings", R"doc(
       Abstract base class for specifying settings related to number formatting.
 
-      See Also:
-          :class:`UnlocalizedNumberFormatter`
+      .. seealso::
+
+         :class:`UnlocalizedNumberFormatter`
       )doc");
 
   //
@@ -171,9 +185,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       lnf(m2, "LocalizedNumberFormatter", R"doc(
       :class:`NumberFormatter` that has a locale associated with it.
 
-      See Also:
-          :class:`NumberFormatter`
-          :class:`UnlocalizedNumberFormatter`
+      .. seealso::
+
+         :class:`NumberFormatter`
       )doc");
 
   //
@@ -186,9 +200,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       In order to format numbers, a locale must be specified.
 
-      See Also:
-          :class:`LocalizedNumberFormatter`
-          :class:`NumberFormatter`
+      .. seealso::
+
+         :class:`NumberFormatter`
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
@@ -199,7 +213,8 @@ void init_numberformatter(py::module &, py::module &m2) {
          R"doc(
       Associate a currency with this rounding precision.
 
-      .. attention::
+      .. note::
+
          Calling this method is not required, because the currency specified
          ``unit()`` is automatically applied to currency rounding precisions.
          However, this method enables you to override that automatic
@@ -327,7 +342,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. code-block:: python
 
-          with_significant_digits(1, max_significant_digits, UNUM_ROUNDING_PRIORITY_STRICT)
+         with_significant_digits(1, max_significant_digits, UNUM_ROUNDING_PRIORITY_STRICT)
       )doc");
 
   fp.def("with_min_digits", &FractionPrecision::withMinDigits,
@@ -345,7 +360,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. code-block:: python
 
-          with_significant_digits(1, min_significant_digits, UNUM_ROUNDING_PRIORITY_RELAXED)
+         with_significant_digits(1, min_significant_digits, UNUM_ROUNDING_PRIORITY_RELAXED)
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
@@ -473,9 +488,10 @@ void init_numberformatter(py::module &, py::module &m2) {
       :class:`~icupy.icu.Format`.
 
       .. important::
+
          This API is not intended to be used other than for enabling API
          compatibility. For number formatting, use :meth:`.format_decimal`,
-         :meth:`.format_double`, and :meth:`.format_int` instead.
+         :meth:`.format_double`, or :meth:`.format_int` instead.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
@@ -504,7 +520,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return result;
       },
       py::arg("skeleton"), R"doc(
-      Create a new :class:`UnlocalizedNumberFormatter` object with the
+      Create a new :class:`UnlocalizedNumberFormatter` instance with the
       specified skeleton string.
 
       For more information, see the ICU User Guide:
@@ -525,7 +541,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return result;
       },
       py::arg("skeleton"), py::arg("perror"), R"doc(
-      Create a new :class:`UnlocalizedNumberFormatter` object with the
+      Create a new :class:`UnlocalizedNumberFormatter` instance with the
       specified skeleton string.
 
       If an error occurs while parsing the skeleton string, the offset into the
@@ -538,7 +554,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
   nf.def_static("with_", &NumberFormatter::with, R"doc(
-      Create a new :class:`UnlocalizedNumberFormatter` object without locale.
+      Create a new :class:`UnlocalizedNumberFormatter` instance without locale.
       )doc");
 
   nf.def_static(
@@ -547,7 +563,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return NumberFormatter::withLocale(icupy::to_locale(locale));
       },
       py::arg("locale"), R"doc(
-      Create a new :class:`LocalizedNumberFormatter` object associated with
+      Create a new :class:`LocalizedNumberFormatter` instance associated with
       the specified *locale*.
       )doc");
 
@@ -561,9 +577,9 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nfs_lnf.def(
@@ -573,9 +589,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nfs_lnf.def(
@@ -584,11 +600,12 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -599,10 +616,9 @@ void init_numberformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Set the :class:`~icupy.icu.UErrorCode` if an error occurred in the
-      fluent chain.
-
-      Preserves older error codes in the *out_error_code*.
+      Copy the internal :class:`UErrorCode` to *out_error_code* and return
+      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      otherwise.
       )doc");
 
   nfs_lnf.def(
@@ -694,12 +710,13 @@ void init_numberformatter(py::module &, py::module &m2) {
       If a per-unit is specified without a primary unit via unit, the behavior
       is undefined.
 
-      Example:
-          To format "3 m/s", pass METER as the unit and SECOND as the unit per:
+      .. rubric:: Example
 
-          .. code-block:: python
+      To format "3 m/s", pass METER as the unit and SECOND as the unit per:
 
-              NumberFormatter.with_().unit(MeasureUnit.get_meter()).per_unit(MeasureUnit.get_second())
+      .. code-block:: python
+
+         NumberFormatter.with_().unit(MeasureUnit.get_meter()).per_unit(MeasureUnit.get_second())
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
 
@@ -796,22 +813,22 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. note::
 
-          :class:`~icupy.icu.DecimalFormatSymbols` automatically chooses the
-          best numbering system based on the locale. In the examples above, the
-          first three are using the Latin numbering system, and the fourth is
-          using the Myanmar numbering system.
+         :class:`~icupy.icu.DecimalFormatSymbols` automatically chooses the
+         best numbering system based on the locale. In the examples above, the
+         first three are using the Latin numbering system, and the fourth is
+         using the Myanmar numbering system.
 
       .. note::
 
-          An instance of :class:`~icupy.icu.DecimalFormatSymbols` will be
-          copied: changes made to the symbols object after passing it into the
-          fluent chain will not be seen.
+         An instance of :class:`~icupy.icu.DecimalFormatSymbols` will be
+         copied: changes made to the symbols object after passing it into the
+         fluent chain will not be seen.
 
       .. note::
 
-          Calling this method will override any previously specified
-          :class:`~icupy.icu.DecimalFormatSymbols` or
-          :class:`~icupy.icu.NumberingSystem`.
+         Calling this method will override any previously specified
+         :class:`~icupy.icu.DecimalFormatSymbols` or
+         :class:`~icupy.icu.NumberingSystem`.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
@@ -852,9 +869,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. note::
 
-          If the :meth:`.usage` is set, the output unit will be changed to
-          produce localised units, according to usage, locale and unit. See
-          :meth:`FormattedNumber.get_output_unit`.
+         If the :meth:`.usage` is set, the output unit will be changed to
+         produce localised units, according to usage, locale and unit. See
+         :meth:`FormattedNumber.get_output_unit`.
       )doc");
 
   nfs_lnf.def(
@@ -888,10 +905,10 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. code-block:: python
 
-          NumberFormatter.with_().usage("person").unit(MeasureUnit.get_meter()).locale("en-US")
+         NumberFormatter.with_().usage("person").unit(MeasureUnit.get_meter()).locale("en-US")
 
-          # When formatting 0.25, the output will be "10 inches".
-          # When formatting 1.50, the output will be "4 feet and 11 inches".
+         # When formatting 0.25, the output will be "10 inches".
+         # When formatting 1.50, the output will be "4 feet and 11 inches".
 
       The input unit specified via :meth:`.unit` determines the type of
       measurement being formatted (e.g. "length" when the unit is "foot"). The
@@ -928,9 +945,9 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nfs_unf.def(
@@ -941,9 +958,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      This is equivalent to :meth:`.clone`.
+      This is equivalent to calling :meth:`.clone`.
       )doc");
 
   nfs_unf.def(
@@ -952,11 +969,12 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this object.
+      Return a copy of this instance.
 
-      See Also:
-          :meth:`.__copy__`
-          :meth:`.__deepcopy__`
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -967,10 +985,9 @@ void init_numberformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Set the :class:`~icupy.icu.UErrorCode` if an error occurred in the
-      fluent chain.
-
-      Preserves older error codes in the *out_error_code*.
+      Copy the internal :class:`UErrorCode` to *out_error_code* and return
+      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      otherwise.
       )doc");
 
   nfs_unf.def(
@@ -1062,12 +1079,13 @@ void init_numberformatter(py::module &, py::module &m2) {
       If a per-unit is specified without a primary unit via unit, the behavior
       is undefined.
 
-      Example:
-          To format "3 m/s", pass METER as the unit and SECOND as the unit per:
+      .. rubric:: Example
 
-          .. code-block:: python
+      To format "3 m/s", pass METER as the unit and SECOND as the unit per:
 
-              NumberFormatter.with_().unit(MeasureUnit.get_meter()).per_unit(MeasureUnit.get_second())
+      .. code-block:: python
+
+         NumberFormatter.with_().unit(MeasureUnit.get_meter()).per_unit(MeasureUnit.get_second())
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 61)
 
@@ -1164,22 +1182,22 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. note::
 
-          :class:`~icupy.icu.DecimalFormatSymbols` automatically chooses the
-          best numbering system based on the locale. In the examples above, the
-          first three are using the Latin numbering system, and the fourth is
-          using the Myanmar numbering system.
+         :class:`~icupy.icu.DecimalFormatSymbols` automatically chooses the
+         best numbering system based on the locale. In the examples above, the
+         first three are using the Latin numbering system, and the fourth is
+         using the Myanmar numbering system.
 
       .. note::
 
-          An instance of :class:`~icupy.icu.DecimalFormatSymbols` will be
-          copied: changes made to the symbols object after passing it into the
-          fluent chain will not be seen.
+         An instance of :class:`~icupy.icu.DecimalFormatSymbols` will be
+         copied: changes made to the symbols object after passing it into the
+         fluent chain will not be seen.
 
       .. note::
 
-          Calling this method will override any previously specified
-          :class:`~icupy.icu.DecimalFormatSymbols` or
-          :class:`~icupy.icu.NumberingSystem`.
+         Calling this method will override any previously specified
+         :class:`~icupy.icu.DecimalFormatSymbols` or
+         :class:`~icupy.icu.NumberingSystem`.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
@@ -1220,9 +1238,9 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. note::
 
-          If the :meth:`.usage` is set, the output unit will be changed to
-          produce localised units, according to usage, locale and unit. See
-          :meth:`FormattedNumber.get_output_unit`.
+         If the :meth:`.usage` is set, the output unit will be changed to
+         produce localised units, according to usage, locale and unit. See
+         :meth:`FormattedNumber.get_output_unit`.
       )doc");
 
   nfs_unf.def(
@@ -1256,10 +1274,10 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. code-block:: python
 
-          NumberFormatter.with_().usage("person").unit(MeasureUnit.get_meter()).locale("en-US")
+         NumberFormatter.with_().usage("person").unit(MeasureUnit.get_meter()).locale("en-US")
 
-          # When formatting 0.25, the output will be "10 inches".
-          # When formatting 1.50, the output will be "4 feet and 11 inches".
+         # When formatting 0.25, the output will be "10 inches".
+         # When formatting 1.50, the output will be "4 feet and 11 inches".
 
       The input unit specified via :meth:`.unit` determines the type of
       measurement being formatted (e.g. "length" when the unit is "foot"). The
@@ -1332,16 +1350,16 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. note::
 
-          When compact notation is specified without an explicit rounding
-          precision, numbers are rounded off to the closest integer after
-          scaling the number by the corresponding power of 10, but with a digit
-          shown after the decimal separator if there is only one digit before
-          the decimal separator. The default compact notation rounding precision
-          is equivalent to:
+         When compact notation is specified without an explicit rounding
+         precision, numbers are rounded off to the closest integer after
+         scaling the number by the corresponding power of 10, but with a digit
+         shown after the decimal separator if there is only one digit before
+         the decimal separator. The default compact notation rounding precision
+         is equivalent to:
 
-          .. code-block:: python
+         .. code-block:: python
 
-              Precision.integer().with_min_digits(2)
+            Precision.integer().with_min_digits(2)
       )doc");
 
   no.def_static("engineering", &Notation::engineering, R"doc(
@@ -1474,7 +1492,7 @@ void init_numberformatter(py::module &, py::module &m2) {
 
       .. code-block::
 
-          Precision.increment(new BigDecimal("0.50"))
+         Precision.increment(new BigDecimal("0.50"))
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
 
@@ -1505,6 +1523,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       Do not perform rounding (display numbers to their full precision).
 
       .. note::
+
          If you are formatting doubles, see the performance note in
          :meth:`.unlimited`.
       )doc");
@@ -1535,6 +1554,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       Do not perform rounding (display numbers to their full precision).
 
       .. note::
+
          If you are formatting doubles, see the performance note in
          :meth:`.unlimited`.
       )doc");
@@ -1553,6 +1573,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       Show all available digits to full precision.
 
       .. note::
+
          When formatting a double, this method, along with
          :meth:`.min_fraction` and :meth:`.min_significant_digits`, will
          trigger complex algorithm similar to Dragon4 to determine the

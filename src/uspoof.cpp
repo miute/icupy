@@ -39,9 +39,10 @@ void init_uspoof(py::module &m) {
 Constants from UAX #39 for use in :func:`uspoof_set_restriction_level`, and
 for returned identifier restriction levels in check results.
 
-See Also:
-    :func:`uspoof_set_restriction_level`
-    :func:`uspoof_check`
+.. seealso::
+
+   :func:`uspoof_set_restriction_level`
+   :func:`uspoof_check`
       )doc")
       .value("USPOOF_ASCII", USPOOF_ASCII, R"doc(
              All characters in the string are in the identifier profile and
@@ -226,12 +227,13 @@ be performed, and to report results from the check function.
   py::class_<icupy::USpoofCheckerPtr>(m, "USpoofChecker", R"doc(
     USpoofChecker structure.
 
-    See Also:
-        :func:`uspoof_clone`
-        :func:`uspoof_close`
-        :func:`uspoof_open_from_serialized`
-        :func:`uspoof_open_from_source`
-        :func:`uspoof_open`
+    .. seealso::
+
+       :func:`uspoof_clone`
+       :func:`uspoof_close`
+       :func:`uspoof_open_from_serialized`
+       :func:`uspoof_open_from_source`
+       :func:`uspoof_open`
     )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
@@ -241,8 +243,9 @@ be performed, and to report results from the check function.
   py::class_<icupy::USpoofCheckResultPtr>(m, "USpoofCheckResult", R"doc(
     USpoofCheckResult structure.
 
-    See Also:
-        :func:`uspoof_open_check_result`
+    .. seealso::
+
+       :func:`uspoof_open_check_result`
     )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
 

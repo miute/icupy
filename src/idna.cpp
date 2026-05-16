@@ -21,8 +21,9 @@ void init_idna(py::module &m) {
 
       0 if no errors. See UIDNA_ERROR\_... constants.
 
-      See Also:
-          :class:`UIDNAError`
+      .. seealso::
+
+         :class:`UIDNAError`
       )doc");
 
   info.def(
@@ -56,22 +57,27 @@ void init_idna(py::module &m) {
   py::class_<IDNA, UObject> idna(m, "IDNA", R"doc(
       Abstract base class for IDNA processing.
 
-      See http://www.unicode.org/reports/tr46/ and
-      http://www.ietf.org/rfc/rfc3490.txt
+      For more information, see http://www.unicode.org/reports/tr46/ and
+      http://www.ietf.org/rfc/rfc3490.txt.
 
-      The IDNA class is not intended for public subclassing.
+      .. note::
 
-      Example:
-          >>> from icupy import icu
-          >>> uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ)
-          >>> dest = icu.UnicodeString()
-          >>> info = icu.IDNAInfo()
-          >>> uts46.name_to_ascii("a\u200cb.com", dest, info)  # a + ZERO WIDTH NON-JOINER + b.com
-          UnicodeString('xn--ab-j1t.com', text_length=14)
-          >>> bool(info.get_errors() & icu.UIDNA_ERROR_BIDI)
-          False
-          >>> bool(info.get_errors() & icu.UIDNA_ERROR_CONTEXTJ)
-          True
+         The IDNA class is not intended for public subclassing.
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ)
+         >>> dest = icu.UnicodeString()
+         >>> info = icu.IDNAInfo()
+         >>> uts46.name_to_ascii("a\u200cb.com", dest, info)  # a + ZERO WIDTH NON-JOINER + b.com
+         UnicodeString('xn--ab-j1t.com', text_length=14)
+         >>> bool(info.get_errors() & icu.UIDNA_ERROR_BIDI)
+         False
+         >>> bool(info.get_errors() & icu.UIDNA_ERROR_CONTEXTJ)
+         True
       )doc");
 
   //
@@ -88,14 +94,16 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("options"), R"doc(
-      Create a ``IDNA`` object which implements UTS #46.
+      Create a new ``IDNA`` instance which implements UTS #46.
 
       *options* is a bit set to modify the processing and error checking.
-      These should include :attr:`UIDNA_NONTRANSITIONAL_TO_ASCII` |
-      :attr:`UIDNA_NONTRANSITIONAL_TO_UNICODE`.
+      It should include
+      :attr:`~UIDNAOption.UIDNA_NONTRANSITIONAL_TO_ASCII` |
+      :attr:`~UIDNAOption.UIDNA_NONTRANSITIONAL_TO_UNICODE`.
 
-      See Also:
-          :class:`UIDNAOption`
+      .. seealso::
+
+         :class:`UIDNAOption`
       )doc");
 
   idna.def(
@@ -111,7 +119,8 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("label"), py::arg("dest"), py::arg("info"), R"doc(
-      Convert a single domain name label into its ASCII form for DNS lookup.
+      Convert a single domain name label into its ASCII form for DNS lookup,
+      copy the result to *dest*, and return *dest* itself.
 
       If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
       ``True`` and the result might not be an ASCII string. The label might be
@@ -151,7 +160,8 @@ void init_idna(py::module &m) {
       },
       py::arg("label"), py::arg("dest"), py::arg("info"), R"doc(
       Convert a single domain name label into its Unicode form for
-      human-readable display.
+      human-readable display, copy the result to *dest*, and return *dest*
+      itself.
 
       If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
       ``True``. The label might be modified according to the types of errors.
@@ -189,7 +199,8 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("dest"), py::arg("info"), R"doc(
-      Convert a whole domain name into its ASCII form for DNS lookup.
+      Convert a whole domain name into its ASCII form for DNS lookup,
+      copy the result to *dest*, and return *dest* itself.
 
       If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
       ``True`` and the result might not be an ASCII string. The domain name
@@ -229,7 +240,7 @@ void init_idna(py::module &m) {
       },
       py::arg("name"), py::arg("dest"), py::arg("info"), R"doc(
       Convert a whole domain name into its Unicode form for human-readable
-      display.
+      display, copy the result to *dest*, and return *dest* itself.
 
       If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
       ``True``. The domain name might be modified according to the types of

@@ -15,8 +15,9 @@ void init_datefmt(py::module &m) {
       their internal representations to textual form and back again in a
       language-independent manner.
 
-      See Also:
-          :class:`SimpleDateFormat`
+      .. seealso::
+
+         :class:`SimpleDateFormat`
       )doc");
 
   //

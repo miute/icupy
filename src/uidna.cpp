@@ -8,9 +8,10 @@ void init_uidna(py::module &m) {
   py::enum_<decltype(UIDNA_DEFAULT)>(m, "UIDNAOption", py::arithmetic(), R"doc(
 Bit set to modify the :class:`IDNA` processing and error checking.
 
-Warning:
-    ``UIDNAOption`` is not standard. Do not use the fully qualified name as
-    this name may change in the future.
+.. warning::
+
+   ``UIDNAOption`` is not standard. Do not use the fully qualified name as
+   this name may change in the future.
       )doc")
       .value("UIDNA_DEFAULT", UIDNA_DEFAULT, R"doc(
              Default options value: UTS #46 nontransitional processing.
@@ -104,9 +105,10 @@ Warning:
                                                R"doc(
 Bit set indicating :class:`IDNA` processing errors.
 
-Warning:
-    ``UIDNAError`` is not standard. Do not use the fully qualified name as
-    this name may change in the future.
+.. warning::
+
+   ``UIDNAError`` is not standard. Do not use the fully qualified name as
+   this name may change in the future.
       )doc")
       .value("UIDNA_ERROR_EMPTY_LABEL", UIDNA_ERROR_EMPTY_LABEL, R"doc(
              A non-final domain name label (or the whole domain name) is empty.

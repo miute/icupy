@@ -58,73 +58,75 @@ void init_stsearch(py::module &m) {
       Abstract base class that provides methods to search for a pattern within
       a text string.
 
-      Note:
-          Subclasses must implement the following abstract methods:
-          :meth:`.get_offset`, :meth:`._handle_next`,
-          :meth:`._handle_prev`, and :meth:`.set_offset`.
+      .. note::
 
-      See Also:
-          :class:`StringSearch`
+         Subclasses must implement the following abstract methods:
+         :meth:`.get_offset`, :meth:`._handle_next`,
+         :meth:`._handle_prev`, and :meth:`.set_offset`.
 
-      Example:
+      .. seealso::
 
-          .. code-block:: python
+         :class:`StringSearch`
 
-              # Search iterator using regular expressions
-              from icupy import icu
-              class RegexSearch(icu.SearchIterator):
-                  def __init__(
-                      self,
-                      regexp: icu.UnicodeString | str,
-                      text: icu.UnicodeString,
-                      flags: int = 0,
-                  ) -> None:
-                      icu.SearchIterator.__init__(self, text)
-                      self._matcher = icu.RegexMatcher(regexp, text, flags)
-                      self._offset = 0
-                  def _handle_next(self, position: int) -> int:
-                      # Forward search logic
-                      if not self._matcher.find(position):
-                          self._set_match_not_found()
-                          return icu.USEARCH_DONE
-                      start = self._matcher.start()
-                      end = self._matcher.end()
-                      self._set_match_start(start)
-                      self._set_match_length(end - start)
-                      self._offset = end
-                      return start
-                  def _handle_prev(self, position: int) -> int:
-                      # Backward search logic
-                      last_start = icu.USEARCH_DONE
-                      last_length = 0
-                      # The RegexMatcher does not support backward searches,
-                      # so it performs a full search.
-                      self._matcher.reset()
-                      while self._matcher.find():
-                          start = self._matcher.start()
-                          end = self._matcher.end()
-                          if end > position:
-                              break
-                          last_start = start
-                          last_length = end - start
-                      if last_start == icu.USEARCH_DONE:
-                          self._set_match_not_found()
-                      else:
-                          self._set_match_start(last_start)
-                          self._set_match_length(last_length)
-                          self._offset = last_start
-                      return last_start
-                  def get_offset(self) -> int:
-                      return self._offset
-                  def set_offset(self, position: int) -> None:
-                      if position < 0 or position > len(self.get_text()):
-                          raise icu.ICUError(icu.U_INDEX_OUTOFBOUNDS_ERROR)
-                      self._offset = position
+      .. rubric:: Example
 
-              text = icu.UnicodeString("Apple 123 Banana 456 Cherry 789")
-              it = RegexSearch("\\d+", text)
-              [text[start:end] for start, end in it]  # ['123', '456', '789']
-              [text[start:end] for start, end in reversed(it)]  # ['789', '456', '123']
+      .. code-block:: python
+
+         # Search iterator using regular expressions
+         from icupy import icu
+         class RegexSearch(icu.SearchIterator):
+             def __init__(
+                 self,
+                 regexp: icu.UnicodeString | str,
+                 text: icu.UnicodeString,
+                 flags: int = 0,
+             ) -> None:
+                 icu.SearchIterator.__init__(self, text)
+                 self._matcher = icu.RegexMatcher(regexp, text, flags)
+                 self._offset = 0
+             def _handle_next(self, position: int) -> int:
+                 # Forward search logic
+                 if not self._matcher.find(position):
+                     self._set_match_not_found()
+                     return icu.USEARCH_DONE
+                 start = self._matcher.start()
+                 end = self._matcher.end()
+                 self._set_match_start(start)
+                 self._set_match_length(end - start)
+                 self._offset = end
+                 return start
+             def _handle_prev(self, position: int) -> int:
+                 # Backward search logic
+                 last_start = icu.USEARCH_DONE
+                 last_length = 0
+                 # The RegexMatcher does not support backward searches,
+                 # so it performs a full search.
+                 self._matcher.reset()
+                 while self._matcher.find():
+                     start = self._matcher.start()
+                     end = self._matcher.end()
+                     if end > position:
+                         break
+                     last_start = start
+                     last_length = end - start
+                 if last_start == icu.USEARCH_DONE:
+                     self._set_match_not_found()
+                 else:
+                     self._set_match_start(last_start)
+                     self._set_match_length(last_length)
+                     self._offset = last_start
+                 return last_start
+             def get_offset(self) -> int:
+                 return self._offset
+             def set_offset(self, position: int) -> None:
+                 if position < 0 or position > len(self.get_text()):
+                     raise icu.ICUError(icu.U_INDEX_OUTOFBOUNDS_ERROR)
+                 self._offset = position
+
+         text = icu.UnicodeString("Apple 123 Banana 456 Cherry 789")
+         it = RegexSearch("\\d+", text)
+         [text[start:end] for start, end in it]  # ['123', '456', '789']
+         [text[start:end] for start, end in reversed(it)]  # ['789', '456', '123']
       )doc");
 
   si.def(py::init<const PySearchIterator &>(), py::arg("other"), R"doc(
@@ -135,7 +137,7 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-          Only available in subclasses.
+         Only available in subclasses.
       )doc")
       .def(py::init([](const icupy::UnicodeStringVariant &text,
                        std::optional<BreakIterator *> &breakiter) {
@@ -148,7 +150,11 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-          Only available in subclasses.
+         Only available in subclasses.
+
+      .. important::
+
+         *breakiter* must outlive the search iterator object.
       )doc")
       .def(py::init([](CharacterIterator &text,
                        std::optional<BreakIterator *> &breakiter) {
@@ -161,7 +167,11 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-          Only available in subclasses.
+         Only available in subclasses.
+
+      .. important::
+
+         *breakiter* must outlive the search iterator object.
       )doc");
 
   si.def(
@@ -180,10 +190,13 @@ void init_stsearch(py::module &m) {
         return self;
       },
       R"doc(
-      Return an iterator object.
+      Return the iterator object.
 
-      See Also:
-          :meth:`.__next__`
+      The iterator is reset to the beginning.
+
+      .. seealso::
+
+         :meth:`.__next__`
       )doc");
 
   si.def(
@@ -235,9 +248,10 @@ void init_stsearch(py::module &m) {
       R"doc(
       Return a reversed iterator object.
 
-      See Also:
-          :meth:`.__iter__`
-          :meth:`.__next__`
+      .. seealso::
+
+         :meth:`.__iter__`
+         :meth:`.__next__`
       )doc");
 
   si.def(
@@ -280,8 +294,9 @@ void init_stsearch(py::module &m) {
          R"doc(
       Return the value of the specified search attribute.
 
-      See Also:
-          :meth:`.set_attribute`
+      .. seealso::
+
+         :meth:`.set_attribute`
       )doc");
 
   si.def(
@@ -292,58 +307,65 @@ void init_stsearch(py::module &m) {
       R"doc(
       Return the break iterator used by this search iterator.
 
-      See Also:
-          :meth:`.set_break_iterator`
+      .. seealso::
+
+         :meth:`.set_break_iterator`
       )doc");
 
   si.def("get_matched_length", &SearchIterator::getMatchedLength, R"doc(
       Return the length of the matched text.
 
-      Note:
-          This call returns a valid result only if one of the calls to
-          :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
-          has completed successfully.
+      .. note::
 
-      See Also:
-          :meth:`.first`
-          :meth:`.get_matched_start`
-          :meth:`.get_matched_text`
-          :meth:`.last`
-          :meth:`.next`
-          :meth:`.previous`
+         This call returns a valid result only if one of the calls to
+         :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
+         has completed successfully.
+
+      .. seealso::
+
+         :meth:`.first`
+         :meth:`.get_matched_start`
+         :meth:`.get_matched_text`
+         :meth:`.last`
+         :meth:`.next`
+         :meth:`.previous`
       )doc");
 
   si.def("get_matched_start", &SearchIterator::getMatchedStart, R"doc(
       Return the starting index of the matched text.
 
-      Note:
-          This call returns a valid result only if one of the calls to
-          :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
-          has completed successfully.
+      .. note::
 
-      See Also:
-          :meth:`.first`
-          :meth:`.get_matched_length`
-          :meth:`.get_matched_text`
-          :meth:`.last`
-          :meth:`.next`
-          :meth:`.previous`
+         This call returns a valid result only if one of the calls to
+         :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
+         has completed successfully.
+
+      .. seealso::
+
+         :meth:`.first`
+         :meth:`.get_matched_length`
+         :meth:`.get_matched_text`
+         :meth:`.last`
+         :meth:`.next`
+         :meth:`.previous`
       )doc");
 
   si.def("get_matched_text", &SearchIterator::getMatchedText, py::arg("result"),
          R"doc(
       Copy the matched text into *result*.
 
-      Note:
-          This call returns a valid result only if one of the calls to
-          :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
-          has completed successfully.
+      .. note::
 
-      See Also:
-          :meth:`.first`
-          :meth:`.last`
-          :meth:`.next`
-          :meth:`.previous`
+         This call returns a valid result only if one of the calls to
+         :meth:`.first`, :meth:`.next`, :meth:`.previous`, or :meth:`.last`
+         has completed successfully.
+
+      .. seealso::
+
+         :meth:`.first`
+         :meth:`.last`
+         :meth:`.next`
+         :meth:`.previous`
       )doc");
 
   // for docstring only
@@ -355,13 +377,15 @@ void init_stsearch(py::module &m) {
       If the iteration has passed the end of the text (or the beginning, in the
       case of a reverse search), return :attr:`USEARCH_DONE`.
 
-      Important:
-          Subclasses must implement the following abstract methods:
-          :meth:`.get_offset`, :meth:`._handle_next`,
-          :meth:`._handle_prev`, and :meth:`.set_offset`.
+      .. important::
 
-      See Also:
-           :meth:`.set_offset`
+         Subclasses must implement the following abstract methods:
+         :meth:`.get_offset`, :meth:`._handle_next`,
+         :meth:`._handle_prev`, and :meth:`.set_offset`.
+
+      .. seealso::
+
+         :meth:`.set_offset`
       )doc");
 
   si.def(
@@ -372,8 +396,9 @@ void init_stsearch(py::module &m) {
       R"doc(
       Return the text being searched.
 
-      See Also:
-          :meth:`.set_text`
+      .. seealso::
+
+         :meth:`.set_text`
       )doc");
 
   // for docstring only
@@ -395,16 +420,18 @@ void init_stsearch(py::module &m) {
       argument. If no match is found, it must return :attr:`USEARCH_DONE` and
       call :meth:`._set_match_not_found`.
 
-      Important:
-          Subclasses must implement the following abstract methods:
-          :meth:`.get_offset`, :meth:`._handle_next`,
-          :meth:`._handle_prev`, and :meth:`.set_offset`.
+      .. important::
 
-      See Also:
-          :meth:`._handle_prev`
-          :meth:`._set_match_length`
-          :meth:`._set_match_not_found`
-          :meth:`._set_match_start`
+         Subclasses must implement the following abstract methods:
+         :meth:`.get_offset`, :meth:`._handle_next`,
+         :meth:`._handle_prev`, and :meth:`.set_offset`.
+
+      .. seealso::
+
+         :meth:`._handle_prev`
+         :meth:`._set_match_length`
+         :meth:`._set_match_not_found`
+         :meth:`._set_match_start`
       )doc");
 
   // for docstring only
@@ -426,16 +453,18 @@ void init_stsearch(py::module &m) {
       argument. If no match is found, it must return :attr:`USEARCH_DONE` and
       call :meth:`._set_match_not_found`.
 
-      Important:
-          Subclasses must implement the following abstract methods:
-          :meth:`.get_offset`, :meth:`._handle_next`,
-          :meth:`._handle_prev`, and :meth:`.set_offset`.
+      .. important::
 
-      See Also:
-          :meth:`._handle_next`
-          :meth:`._set_match_length`
-          :meth:`._set_match_not_found`
-          :meth:`._set_match_start`
+         Subclasses must implement the following abstract methods:
+         :meth:`.get_offset`, :meth:`._handle_next`,
+         :meth:`._handle_prev`, and :meth:`.set_offset`.
+
+      .. seealso::
+
+         :meth:`._handle_next`
+         :meth:`._set_match_length`
+         :meth:`._set_match_not_found`
+         :meth:`._set_match_start`
       )doc");
 
   si.def(
@@ -527,8 +556,9 @@ void init_stsearch(py::module &m) {
       py::arg("attribute"), py::arg("value"), R"doc(
       Set the specified search attribute to the specified value.
 
-      See Also:
-          :meth:`.get_attribute`
+      .. seealso::
+
+         :meth:`.get_attribute`
       )doc");
 
   si.def(
@@ -549,37 +579,45 @@ void init_stsearch(py::module &m) {
       rejected and the search continues for another match. If *breakiter* is
       `None`, no breaks are detected.
 
-      See Also:
-          :meth:`.get_break_iterator`
+      .. important::
+
+         *breakiter* must outlive the search iterator object.
+
+      .. seealso::
+
+         :meth:`.get_break_iterator`
       )doc");
 
   si.def("_set_match_length", &PySearchIterator::setMatchLength,
          py::arg("length"), R"doc(
       Set the length of the matched text.
 
-      Important:
-          :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-          must call :meth:`._set_match_length` whenever a match is found within
-          the target text.
+      .. important::
+
+         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
+         must call :meth:`._set_match_length` whenever a match is found within
+         the target text.
       )doc");
 
   si.def("_set_match_not_found", &PySearchIterator::setMatchNotFound, R"doc(
       Set the state of the search iterator to indicate that no match was found.
 
-      Important:
-          :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-          must call :meth:`._set_match_not_found` if a match is not found
-          within the target text.
+      .. important::
+
+         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
+         must call :meth:`._set_match_not_found` if a match is not found
+         within the target text.
       )doc");
 
   si.def("_set_match_start", &PySearchIterator::setMatchStart,
          py::arg("position"), R"doc(
       Set the starting index of the matched text.
 
-      Important:
-          :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-          must call :meth:`._set_match_start` whenever a match is found within
-          the target text.
+      .. important::
+
+         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
+         must call :meth:`._set_match_start` whenever a match is found within
+         the target text.
       )doc");
 
   // for docstring only
@@ -593,13 +631,15 @@ void init_stsearch(py::module &m) {
       py::arg("position"), R"doc(
       Set the current index in the text being searched to *position*.
 
-      Important:
-          Subclasses must implement the following abstract methods:
-          :meth:`.get_offset`, :meth:`._handle_next`,
-          :meth:`._handle_prev`, and :meth:`.set_offset`.
+      .. important::
 
-      See Also:
-          :meth:`.get_offset`
+         Subclasses must implement the following abstract methods:
+         :meth:`.get_offset`, :meth:`._handle_next`,
+         :meth:`._handle_prev`, and :meth:`.set_offset`.
+
+      .. seealso::
+
+         :meth:`.get_offset`
       )doc");
 
   si.def(
@@ -614,11 +654,11 @@ void init_stsearch(py::module &m) {
         py::arg("text"), R"doc(
       Set the text to be searched.
 
-      The iteration is reset to the start.
+      The iterator is reset to the beginning.
 
       .. seealso::
 
-          :meth:`.get_text`
+         :meth:`.get_text`
       )doc")
       .def(
           "set_text",
@@ -632,17 +672,39 @@ void init_stsearch(py::module &m) {
           py::arg("text"), R"doc(
       Set the text to be searched.
 
-      The iteration is reset to the start.
+      The iterator is reset to the beginning.
 
       .. seealso::
 
-          :meth:`.get_text`
+         :meth:`.get_text`
       )doc");
 
   //
   // class icu::StringSearch
   //
-  py::class_<StringSearch, SearchIterator> ss(m, "StringSearch");
+  py::class_<StringSearch, SearchIterator> ss(m, "StringSearch", R"doc(
+      :class:`SearchIterator` that provides language-sensitive text searching
+      based on the comparison rules defined in :class:`RuleBasedCollator`.
+
+      .. seealso::
+
+         :class:`RuleBasedCollator`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         from icupy import icu
+         text = icu.UnicodeString("I went to a CAFE yesterday. The café was nice.")
+         pattern = icu.UnicodeString("cafe")
+         search = icu.StringSearch(pattern, text, icu.ULOC_US)
+         [text[start:end] for start, end in search]  # []
+         coll = search.get_collator()
+         coll.set_attribute(icu.UCOL_STRENGTH, icu.UCOL_SECONDARY)
+         [text[start:end] for start, end in search]  # ['CAFE']
+         coll.set_attribute(icu.UCOL_STRENGTH, icu.UCOL_PRIMARY)
+         [text[start:end] for start, end in search]  # ['CAFE', 'café']
+      )doc");
 
   ss.def(
         // [1] StringSearch::StringSearch
@@ -661,7 +723,22 @@ void init_stsearch(py::module &m) {
           return result;
         }),
         py::arg("pattern"), py::arg("text"), py::arg("locale"),
-        py::arg("breakiter") = std::nullopt)
+        py::arg("breakiter") = std::nullopt, R"doc(
+      Initialize a ``StringSearch`` instance with the specified pattern, text,
+      locale, and break iterator.
+
+      *locale* defines language-sensitive comparison rules used to determine
+      whether the pattern and the target text match.
+
+      *breakiter* is used to constrain matches. Any matches in the target text
+      whose start and end indices are not recognized as boundaries by the
+      :class:`BreakIterator` are ignored. If *breakiter* is ``None``, no breaks
+      are detected.
+
+      .. important::
+
+         *breakiter* must outlive the ``StringSearch`` object.
+      )doc")
       .def(
           // [2] StringSearch::StringSearch
           py::init([](const icupy::UnicodeStringVariant &pattern,
@@ -678,7 +755,22 @@ void init_stsearch(py::module &m) {
             return result;
           }),
           py::arg("pattern"), py::arg("text"), py::arg("coll").none(false),
-          py::arg("breakiter") = std::nullopt)
+          py::arg("breakiter") = std::nullopt, R"doc(
+      Initialize a ``StringSearch`` instance with the specified pattern, text,
+      collator, and break iterator.
+
+      *coll* defines the collation rules used to determine whether the pattern
+      and the target text match.
+
+      *breakiter* is used to constrain matches. Any matches in the target text
+      whose start and end indices are not recognized as boundaries by the
+      :class:`BreakIterator` are ignored. If *breakiter* is ``None``, no breaks
+      are detected.
+
+      .. important::
+
+         *coll* and *breakiter* must outlive the ``StringSearch`` object.
+      )doc")
       .def(
           // [3] StringSearch::StringSearch
           py::init([](const icupy::UnicodeStringVariant &pattern,
@@ -695,7 +787,22 @@ void init_stsearch(py::module &m) {
             return result;
           }),
           py::arg("pattern"), py::arg("text"), py::arg("locale"),
-          py::arg("breakiter") = std::nullopt)
+          py::arg("breakiter") = std::nullopt, R"doc(
+      Initialize a ``StringSearch`` instance with the specified pattern, text,
+      locale, and break iterator.
+
+      *locale* defines language-sensitive comparison rules used to determine
+      whether the pattern and the target text match.
+
+      *breakiter* is used to constrain matches. Any matches in the target text
+      whose start and end indices are not recognized as boundaries by the
+      :class:`BreakIterator` are ignored. If *breakiter* is ``None``, no breaks
+      are detected.
+
+      .. important::
+
+         *breakiter* must outlive the ``StringSearch`` object.
+      )doc")
       .def(
           // [4] StringSearch::StringSearch
           py::init([](const icupy::UnicodeStringVariant &pattern,
@@ -711,30 +818,84 @@ void init_stsearch(py::module &m) {
             return result;
           }),
           py::arg("pattern"), py::arg("text"), py::arg("coll").none(false),
-          py::arg("breakiter") = std::nullopt)
+          py::arg("breakiter") = std::nullopt, R"doc(
+      Initialize a ``StringSearch`` instance with the specified pattern, text,
+      collator, and break iterator.
+
+      *coll* defines the collation rules used to determine whether the pattern
+      and the target text match.
+
+      *breakiter* is used to constrain matches. Any matches in the target text
+      whose start and end indices are not recognized as boundaries by the
+      :class:`BreakIterator` are ignored. If *breakiter* is ``None``, no breaks
+      are detected.
+
+      .. important::
+
+         *coll* and *breakiter* must outlive the ``StringSearch`` object.
+      )doc")
       .def(
           // [5] StringSearch::StringSearch
-          py::init<const StringSearch &>(), py::arg("other"));
+          py::init<const StringSearch &>(), py::arg("other"), R"doc(
+      Initialize a ``StringSearch`` instance from another ``StringSearch``.
+      )doc");
 
-  ss.def("__copy__", &StringSearch::clone);
+  ss.def("__copy__", &StringSearch::clone, R"doc(
+      Return a copy of this instance.
+
+      This is equivalent to calling :meth:`.clone`.
+      )doc");
 
   ss.def(
       "__deepcopy__",
       [](const StringSearch &self, py::dict & /* memo */) {
         return self.clone();
       },
-      py::arg("memo"));
+      py::arg("memo"), R"doc(
+      Return a copy of this instance.
 
-  ss.def("clone", &StringSearch::clone);
+      This is equivalent to calling :meth:`.clone`.
+      )doc");
+
+  ss.def("clone", &StringSearch::clone, R"doc(
+      Return a copy of this instance.
+
+      .. seealso::
+
+         :meth:`.__copy__`
+         :meth:`.__deepcopy__`
+      )doc");
 
   ss.def("get_collator", &StringSearch::getCollator,
-         py::return_value_policy::reference);
+         py::return_value_policy::reference, R"doc(
+      Return the collator used by this search iterator.
 
-  ss.def("get_offset", &StringSearch::getOffset);
+      .. seealso::
 
-  ss.def("get_pattern", &StringSearch::getPattern);
+         :meth:`.set_collator`
+      )doc");
 
-  ss.def("safe_clone", &StringSearch::safeClone);
+  ss.def("get_offset", &StringSearch::getOffset, R"doc(
+      Return the current index in the text being searched.
+
+      If the iteration has passed the end of the text (or the beginning, in the
+      case of a reverse search), return :attr:`USEARCH_DONE`.
+
+      .. seealso::
+
+         :meth:`.set_offset`
+      )doc");
+
+  ss.def("get_pattern", &StringSearch::getPattern, R"doc(
+      Return the search pattern used by this search iterator.
+      )doc");
+
+  ss.def("safe_clone", &StringSearch::safeClone, R"doc(
+      Return a copy of this instance.
+
+      Note that all data will be replicated, except for the user-specified
+      collator and the break iterator.
+      )doc");
 
   ss.def(
       "set_collator",
@@ -745,7 +906,19 @@ void init_stsearch(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("coll").none(false));
+      py::arg("coll").none(false), R"doc(
+      Set the collator used by this search iterator.
+
+      The iterator's position will not be changed by this method.
+
+      .. important::
+
+         *coll* must outlive the ``StringSearch`` object.
+
+      .. seealso::
+
+         :meth:`.get_collator`
+      )doc");
 
   ss.def(
       "set_offset",
@@ -756,7 +929,13 @@ void init_stsearch(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("position"));
+      py::arg("position"), R"doc(
+      Set the current index in the text being searched to *position*.
+
+      .. seealso::
+
+         :meth:`.get_offset`
+      )doc");
 
   ss.def(
       "set_pattern",
@@ -767,8 +946,13 @@ void init_stsearch(py::module &m) {
           throw icupy::ICUError(error_code);
         }
       },
-      py::arg("pattern"));
+      py::arg("pattern"), R"doc(
+      Set the search pattern used by this search iterator.
 
+      The iterator's position will not be changed by this method.
+      )doc");
+
+  // TODO: Remove SearchIterator.DONE in the future releases.
   si.def_property_readonly_static(
       "DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
 }

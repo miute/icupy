@@ -241,11 +241,14 @@ any chained callbacks.
   py::class_<icupy::UConverterPtr>(m, "UConverter", R"doc(
       UConverter structure.
 
-      See Also:
-          :func:`ucnv_close`
-          :func:`ucnv_open_ccsid`
-          :func:`ucnv_open_package`
-          :func:`ucnv_open`
+      .. seealso::
+
+         :func:`ucnv_close`
+         :func:`ucnv_open`
+         :func:`ucnv_open_ccsid`
+         :func:`ucnv_open_package`
+         :meth:`UnicodeString.__init__`
+         :meth:`UnicodeString.extract`
       )doc");
 
   //
@@ -253,10 +256,11 @@ any chained callbacks.
   //
   py::class_<UConverterFromUnicodeArgs> fua(m, "UConverterFromUnicodeArgs",
                                             R"doc(
-Structure for the From Unicode callback function parameter.
+Structure for the From-Unicode callback function parameter.
 
-See Also:
-    :class:`UConverterFromUCallback`
+.. seealso::
+
+   :class:`UConverterFromUCallback`
       )doc");
 
   fua.def_property_readonly(
@@ -274,10 +278,11 @@ See Also:
   //
   py::class_<UConverterToUnicodeArgs> fta(m, "UConverterToUnicodeArgs",
                                           R"doc(
-Structure for the To Unicode callback function parameter.
+Structure for the To-Unicode callback function parameter.
 
-See Also:
-    :class:`UConverterToUCallback`
+.. seealso::
+
+   :class:`UConverterToUCallback`
       )doc");
 
   fta.def_property_readonly(
@@ -298,13 +303,14 @@ See Also:
       Wrapper class for error callback function in the unicode to codepage
       direction.
 
-      See Also:
-          :class:`UConverterFromUCallbackEscape`
-          :class:`UConverterFromUCallbackSkip`
-          :class:`UConverterFromUCallbackStop`
-          :class:`UConverterFromUCallbackSubstitute`
-          :func:`ucnv_get_from_u_call_back`
-          :func:`ucnv_set_from_u_call_back`
+      .. seealso::
+
+         :class:`UConverterFromUCallbackEscape`
+         :class:`UConverterFromUCallbackSkip`
+         :class:`UConverterFromUCallbackStop`
+         :class:`UConverterFromUCallbackSubstitute`
+         :func:`ucnv_get_from_u_call_back`
+         :func:`ucnv_set_from_u_call_back`
       )doc");
 
   fucb.def(py::init([](const icupy::FromUCallbackFunction &action,
@@ -316,9 +322,10 @@ See Also:
       Initialize the ``UConverterFromUCallback`` instance with the specified
       callback function and the user context.
 
-      Important:
-          *action* and *context* must outlive the ``UConverterFromUCallback``
-          object.
+      .. important::
+
+         *action* and *context* must outlive the ``UConverterFromUCallback``
+         object.
       )doc");
 
   fucb.def(
@@ -357,23 +364,27 @@ See Also:
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal codepoints.
 
-      See Also:
-          :class:`UConverterFromUCallbackSkip`
-          :class:`UConverterFromUCallbackStop`
-          :class:`UConverterFromUCallbackSubstitute`
-          :func:`ucnv_set_from_u_call_back`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)
-          ...     action = icu.UConverterFromUCallbackEscape(context)
-          ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-          ...     s = icu.UnicodeString("A€B")
-          ...     s.extract(cnv)
-          ...
-          b'A&#x20AC;B'
+         :class:`UConverterFromUCallbackSkip`
+         :class:`UConverterFromUCallbackStop`
+         :class:`UConverterFromUCallbackSubstitute`
+         :func:`ucnv_set_from_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)
+         ...     action = icu.UConverterFromUCallbackEscape(context)
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         b'A&#x20AC;B'
       )doc");
 
   fucb_esc.def(
@@ -394,8 +405,9 @@ See Also:
       :attr:`UCNV_ESCAPE_XML_HEX`,
       or ``None``.
 
-      Important:
-        *context* must outlive the ``UConverterFromUCallbackEscape`` object.
+      .. important::
+
+         *context* must outlive the ``UConverterFromUCallbackEscape`` object.
       )doc");
 
   //
@@ -408,22 +420,26 @@ See Also:
 
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      See Also:
-          :class:`UConverterFromUCallbackEscape`
-          :class:`UConverterFromUCallbackStop`
-          :class:`UConverterFromUCallbackSubstitute`
-          :func:`ucnv_set_from_u_call_back`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     action = icu.UConverterFromUCallbackSkip()
-          ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-          ...     s = icu.UnicodeString("A€B")
-          ...     s.extract(cnv)
-          ...
-          b'AB'
+         :class:`UConverterFromUCallbackEscape`
+         :class:`UConverterFromUCallbackStop`
+         :class:`UConverterFromUCallbackSubstitute`
+         :func:`ucnv_set_from_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterFromUCallbackSkip()
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         b'AB'
       )doc");
 
   fucb_skip.def(
@@ -440,9 +456,10 @@ See Also:
       :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
       or ``None``.
 
-      Important:
-          *context* must outlive the ``UConverterFromUCallbackSkip``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterFromUCallbackSkip``
+         object.
       )doc");
 
   //
@@ -455,22 +472,26 @@ See Also:
 
       Stop at the ILLEGAL SEQUENCE.
 
-      See Also:
-          :class:`UConverterFromUCallbackEscape`
-          :class:`UConverterFromUCallbackSkip`
-          :class:`UConverterFromUCallbackSubstitute`
-          :func:`ucnv_set_from_u_call_back`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     action = icu.UConverterFromUCallbackStop()
-          ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-          ...     s = icu.UnicodeString("A€B")
-          ...     s.extract(cnv)
-          ...
-          icupy.icu.ICUError: U_INVALID_CHAR_FOUND
+         :class:`UConverterFromUCallbackEscape`
+         :class:`UConverterFromUCallbackSkip`
+         :class:`UConverterFromUCallbackSubstitute`
+         :func:`ucnv_set_from_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterFromUCallbackStop()
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         icupy.icu.ICUError: U_INVALID_CHAR_FOUND
       )doc");
 
   fucb_stop.def(
@@ -483,9 +504,10 @@ See Also:
       :func:`UCNV_FROM_U_CALLBACK_STOP` callback function and the specified
       user context.
 
-      Important:
-          *context* must outlive the ``UConverterFromUCallbackStop``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterFromUCallbackStop``
+         object.
       )doc");
 
   //
@@ -500,26 +522,30 @@ See Also:
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
       substitution string for the converter.
 
-      See Also:
-          :class:`UConverterFromUCallbackEscape`
-          :class:`UConverterFromUCallbackSkip`
-          :class:`UConverterFromUCallbackStop`
-          :func:`ucnv_get_subst_chars`
-          :func:`ucnv_set_from_u_call_back`
-          :func:`ucnv_set_subst_chars`
-          :func:`ucnv_set_subst_string`
+      .. seealso::
 
-      Example:
-          >>> from icupy import icu
-          >>> from icupy.utils import gc
-          >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
-          ...     icu.ucnv_set_subst_string(cnv, "?")
-          ...     action = icu.UConverterFromUCallbackSubstitute()
-          ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-          ...     s = icu.UnicodeString("A€B")
-          ...     s.extract(cnv)
-          ...
-          b'A?B'
+         :class:`UConverterFromUCallbackEscape`
+         :class:`UConverterFromUCallbackSkip`
+         :class:`UConverterFromUCallbackStop`
+         :func:`ucnv_get_subst_chars`
+         :func:`ucnv_set_from_u_call_back`
+         :func:`ucnv_set_subst_chars`
+         :func:`ucnv_set_subst_string`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     icu.ucnv_set_subst_string(cnv, "?")
+         ...     action = icu.UConverterFromUCallbackSubstitute()
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         b'A?B'
       )doc");
 
   fucb_sub.def(
@@ -536,9 +562,10 @@ See Also:
       :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
       or ``None``.
 
-      Important:
-          *context* must outlive the ``UConverterFromUCallbackSubstitute``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterFromUCallbackSubstitute``
+         object.
       )doc");
 
   //
@@ -549,13 +576,14 @@ See Also:
       Wrapper class for error callback function in the codepage to unicode
       direction.
 
-      See Also:
-          :class:`UConverterToUCallbackEscape`
-          :class:`UConverterToUCallbackSkip`
-          :class:`UConverterToUCallbackStop`
-          :class:`UConverterToUCallbackSubstitute`
-          :func:`ucnv_get_to_u_call_back`
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :class:`UConverterToUCallbackEscape`
+         :class:`UConverterToUCallbackSkip`
+         :class:`UConverterToUCallbackStop`
+         :class:`UConverterToUCallbackSubstitute`
+         :func:`ucnv_get_to_u_call_back`
+         :func:`ucnv_set_to_u_call_back`
       )doc");
 
   tucb.def(py::init([](const icupy::ToUCallbackFunction &action,
@@ -567,9 +595,10 @@ See Also:
       Initialize the ``UConverterToUCallback`` instance with the specified
       callback function and the user context.
 
-      Important:
-          *action* and *context* must outlive the ``UConverterToUCallback``
-          object.
+      .. important::
+
+         *action* and *context* must outlive the ``UConverterToUCallback``
+         object.
       )doc");
 
   tucb.def(
@@ -609,11 +638,12 @@ See Also:
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal bytes.
 
-      See Also:
-          :class:`UConverterToUCallbackSkip`
-          :class:`UConverterToUCallbackStop`
-          :class:`UConverterToUCallbackSubstitute`
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :class:`UConverterToUCallbackSkip`
+         :class:`UConverterToUCallbackStop`
+         :class:`UConverterToUCallbackSubstitute`
+         :func:`ucnv_set_to_u_call_back`
       )doc");
 
   tucb_esc.def(py::init([](std::optional<const icupy::UserContext *> &context) {
@@ -634,9 +664,10 @@ See Also:
       :attr:`UCNV_ESCAPE_UNICODE`,
       or ``None``.
 
-      Important:
-          *context* must outlive the ``UConverterToUCallbackEscape``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterToUCallbackEscape``
+         object.
       )doc");
 
   //
@@ -649,11 +680,12 @@ See Also:
 
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      See Also:
-          :class:`UConverterToUCallbackEscape`
-          :class:`UConverterToUCallbackStop`
-          :class:`UConverterToUCallbackSubstitute`
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :class:`UConverterToUCallbackEscape`
+         :class:`UConverterToUCallbackStop`
+         :class:`UConverterToUCallbackSubstitute`
+         :func:`ucnv_set_to_u_call_back`
       )doc");
 
   tucb_skip.def(
@@ -670,9 +702,10 @@ See Also:
       :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
       or ``None``.
 
-      Important:
-          *context* must outlive the ``UConverterToUCallbackSkip``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterToUCallbackSkip``
+         object.
       )doc");
 
   //
@@ -685,11 +718,12 @@ See Also:
 
       Stop at the ILLEGAL SEQUENCE.
 
-      See Also:
-          :class:`UConverterToUCallbackEscape`
-          :class:`UConverterToUCallbackSkip`
-          :class:`UConverterToUCallbackSubstitute`
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :class:`UConverterToUCallbackEscape`
+         :class:`UConverterToUCallbackSkip`
+         :class:`UConverterToUCallbackSubstitute`
+         :func:`ucnv_set_to_u_call_back`
       )doc");
 
   tucb_stop.def(
@@ -702,9 +736,10 @@ See Also:
       :func:`UCNV_TO_U_CALLBACK_STOP` callback function and the specified user
       context.
 
-      Important:
-          *context* must outlive the ``UConverterToUCallbackStop``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterToUCallbackStop``
+         object.
       )doc");
 
   //
@@ -719,11 +754,12 @@ See Also:
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
       substitution character, U+FFFD.
 
-      See Also:
-          :class:`UConverterToUCallbackEscape`
-          :class:`UConverterToUCallbackSkip`
-          :class:`UConverterToUCallbackStop`
-          :func:`ucnv_set_to_u_call_back`
+      .. seealso::
+
+         :class:`UConverterToUCallbackEscape`
+         :class:`UConverterToUCallbackSkip`
+         :class:`UConverterToUCallbackStop`
+         :func:`ucnv_set_to_u_call_back`
       )doc");
 
   tucb_sub.def(
@@ -740,9 +776,10 @@ See Also:
       :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
       or ``None``.
 
-      Important:
-          *context* must outlive the ``UConverterToUCallbackSubstitute``
-          object.
+      .. important::
+
+         *context* must outlive the ``UConverterToUCallbackSubstitute``
+         object.
       )doc");
 
   //
@@ -769,12 +806,15 @@ See Also:
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal codepoints.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterFromUCallbackEscape` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterFromUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterFromUCallbackEscape` instead.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
       )doc");
 
   m.def(
@@ -797,12 +837,15 @@ See Also:
       py::arg("error_code"), R"doc(
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterFromUCallbackSkip` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterFromUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterFromUCallbackSkip` instead.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
       )doc");
 
   m.def(
@@ -825,12 +868,15 @@ See Also:
       py::arg("error_code"), R"doc(
       Stop at the ILLEGAL SEQUENCE.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterFromUCallbackStop` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterFromUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterFromUCallbackStop` instead.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
       )doc");
 
   m.def(
@@ -854,15 +900,18 @@ See Also:
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
       substitution string for the converter.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterFromUCallbackSubstitute` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterFromUCallback`
-          :func:`ucnv_get_subst_chars`
-          :func:`ucnv_set_subst_chars`
-          :func:`ucnv_set_subst_string`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterFromUCallbackSubstitute` instead.
+
+      .. seealso::
+
+         :class:`UConverterFromUCallback`
+         :func:`ucnv_get_subst_chars`
+         :func:`ucnv_set_subst_chars`
+         :func:`ucnv_set_subst_string`
       )doc");
 
   m.def(
@@ -884,12 +933,15 @@ See Also:
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal bytes.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterToUCallbackEscape` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterToUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterToUCallbackEscape` instead.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
       )doc");
 
   m.def(
@@ -910,12 +962,15 @@ See Also:
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterToUCallbackSkip` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterToUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterToUCallbackSkip` instead.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
       )doc");
 
   m.def(
@@ -936,12 +991,15 @@ See Also:
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Stop at the ILLEGAL SEQUENCE.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterToUCallbackStop` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterToUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterToUCallbackStop` instead.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
       )doc");
 
   m.def(
@@ -964,12 +1022,15 @@ See Also:
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
       substitution character, U+FFFD.
 
-      Caution:
-          This function has overhead;
-          use :class:`UConverterToUCallbackSubstitute` instead.
+      .. note::
 
-      See Also:
-          :class:`UConverterToUCallback`
+         The Python implementation of this function incurs overhead.
+         For improved performance, consider using
+         :class:`UConverterToUCallbackSubstitute` instead.
+
+      .. seealso::
+
+         :class:`UConverterToUCallback`
       )doc");
 
   //
