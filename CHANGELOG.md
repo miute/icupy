@@ -15,7 +15,7 @@
 - Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
 - Deprecate `icupy.icu.ConstVoidPtr`; use `icupy.icu.UserContext` instead ([#227])
 - Deprecate `icupy.icu.BreakIterator.BreakIterator.DONE` and `icupy.icu.BreakIterator.DONE`; use `UBRK_DONE` instead ([#229])
-- Bump pybind11 from 3.0.2 to 3.0.3 ([#217])
+- Bump pybind11 from 3.0.2 to 3.0.4 ([#217], [#234])
 
 ### Added
 
@@ -382,3 +382,4 @@ Initial release.
 [#229]: https://github.com/miute/icupy/pull/229
 [#231]: https://github.com/miute/icupy/pull/231
 [#232]: https://github.com/miute/icupy/pull/232
+[#234]: https://github.com/miute/icupy/pull/234
