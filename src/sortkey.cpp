@@ -53,10 +53,55 @@ void init_sortkey(py::module &m) {
   ck.def(
       "__eq__",
       [](const CollationKey &self, const CollationKey &other) {
-        return self == other;
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result == UCOL_EQUAL;
       },
       py::is_operator(), py::arg("other"), R"doc(
       Return *self* == *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
+      )doc");
+
+  ck.def(
+      "__ge__",
+      [](const CollationKey &self, const CollationKey &other) {
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result == UCOL_GREATER || result == UCOL_EQUAL;
+      },
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* >= *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
+      )doc");
+
+  ck.def(
+      "__gt__",
+      [](const CollationKey &self, const CollationKey &other) {
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result == UCOL_GREATER;
+      },
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* > *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
       )doc");
 
   ck.def("__hash__", &CollationKey::hashCode, R"doc(
@@ -66,12 +111,57 @@ void init_sortkey(py::module &m) {
       )doc");
 
   ck.def(
+      "__le__",
+      [](const CollationKey &self, const CollationKey &other) {
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result == UCOL_LESS || result == UCOL_EQUAL;
+      },
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* <= *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
+      )doc");
+
+  ck.def(
+      "__lt__",
+      [](const CollationKey &self, const CollationKey &other) {
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result == UCOL_LESS;
+      },
+      py::is_operator(), py::arg("other"), R"doc(
+      Return *self* < *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
+      )doc");
+
+  ck.def(
       "__ne__",
       [](const CollationKey &self, const CollationKey &other) {
-        return self != other;
+        ErrorCode error_code;
+        auto result = self.compareTo(other, error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result != UCOL_EQUAL;
       },
       py::is_operator(), py::arg("other"), R"doc(
       Return *self* != *other*.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
       )doc");
 
   ck.def(
@@ -88,6 +178,10 @@ void init_sortkey(py::module &m) {
       Return :attr:`~UCollationResult.UCOL_LESS` if *self* < *target*,
       :attr:`~UCollationResult.UCOL_GREATER` if *self* > *target*, and
       :attr:`~UCollationResult.UCOL_EQUAL` otherwise.
+
+      .. note::
+
+         Only bitwise comparisons are performed.
       )doc");
 
   ck.def(
