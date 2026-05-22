@@ -306,13 +306,20 @@ string.
       )doc");
 
   us.def(
-      "__add__",
-      [](UnicodeString &self, const icupy::UnicodeStringVariant &other) {
-        return self + icupy::to_unistr(other);
-      },
-      py::is_operator(), py::arg("other"), R"doc(
+        "__add__",
+        [](UnicodeString &self, const icupy::UnicodeStringVariant &other) {
+          return self + icupy::to_unistr(other);
+        },
+        py::is_operator(), py::arg("other"), R"doc(
       Concatenate this ``UnicodeString`` with the string *other* and return the
       result as a new ``UnicodeString`` instance.
+      )doc")
+      .def(
+          "__add__",
+          [](UnicodeString &self, UChar32 other) { return self + other; },
+          py::is_operator(), py::arg("other"), R"doc(
+      Concatenate this ``UnicodeString`` with the code point *other* and return
+      the result as a new ``UnicodeString`` instance.
       )doc");
 
   us.def(

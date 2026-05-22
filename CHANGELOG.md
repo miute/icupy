@@ -13,6 +13,7 @@
 - Update `icupy.icu.UnicodeString.get_buffer()` and `.get_terminated_buffer()` to return `memoryview` instead of `ConstChar16Ptr` ([#215])
 - Update docstring ([#231])
 - Add rich comparison operators for `icupy.icu.CollationKey` ([#235])
+- Add `icupy.icu.UnicodeString.__add__()` overload for code point ([#236])
 - Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
 - Deprecate `icupy.icu.ConstVoidPtr`; use `icupy.icu.UserContext` instead ([#227])
 - Deprecate `icupy.icu.BreakIterator.BreakIterator.DONE` and `icupy.icu.BreakIterator.DONE`; use `UBRK_DONE` instead ([#229])
@@ -385,3 +386,4 @@ Initial release.
 [#232]: https://github.com/miute/icupy/pull/232
 [#234]: https://github.com/miute/icupy/pull/234
 [#235]: https://github.com/miute/icupy/pull/235
+[#236]: https://github.com/miute/icupy/pull/236
