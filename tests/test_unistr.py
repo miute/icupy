@@ -1532,6 +1532,13 @@ def test_operator() -> None:
     assert isinstance(test6, icu.UnicodeString)
     assert test6 == test1
 
+    # UnicodeString.__add__(other: int)
+    test6 = icu.UnicodeString("a") + 0x20402
+    assert isinstance(test6, icu.UnicodeString)
+    assert test6 == "a\U00020402"
+    test6 = test6 + 0x62
+    assert test6 == "a\U00020402b"
+
     # UnicodeString &icu::UnicodeString::operator+=(UChar32 ch)
     # UnicodeString &icu::UnicodeString::operator+=(char16_t ch)
     # UnicodeString.__iadd__(other: int)
