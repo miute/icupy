@@ -131,6 +131,14 @@ match.
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
   //
+  // class icu::SymbolTable
+  //
+  // TODO: Implement a Python wrapper for SymbolTable.
+  py::class_<SymbolTable>(m, "SymbolTable", R"doc(
+      Abstract base class for symbol tables used in UnicodeSet pattern parsing.
+      )doc");
+
+  //
   // class icu::UnicodeSet
   //
   py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())

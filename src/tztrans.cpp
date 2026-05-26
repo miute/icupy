@@ -12,7 +12,7 @@ void init_tztrans(py::module &m) {
   py::class_<TimeZoneTransition, UObject> tzt(m, "TimeZoneTransition");
 
   tzt.def(py::init<UDate, const TimeZoneRule &, const TimeZoneRule &>(),
-          py::arg("time"), py::arg("from"), py::arg("to"))
+          py::arg("time"), py::arg("from_"), py::arg("to"))
       .def(py::init<>())
       .def(py::init<const TimeZoneTransition &>(), py::arg("other"));
 
@@ -68,7 +68,7 @@ void init_tztrans(py::module &m) {
   tzt.def("get_to", &TimeZoneTransition::getTo,
           py::return_value_policy::reference);
 
-  tzt.def("set_from", &TimeZoneTransition::setFrom, py::arg("from"));
+  tzt.def("set_from", &TimeZoneTransition::setFrom, py::arg("from_"));
 
   tzt.def("set_time", &TimeZoneTransition::setTime, py::arg("time"));
 
