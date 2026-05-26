@@ -2112,15 +2112,22 @@ string.
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 
   us.def("temp_sub_string", &UnicodeString::tempSubString, py::arg("start") = 0,
-         py::arg("length") = INT32_MAX, R"doc(
+         py::arg("length") = INT32_MAX, py::keep_alive<0, 1>(), R"doc(
       Return a temporary ``UnicodeString`` that is a substring
       *self[start:start + length]* of this ``UnicodeString``.
+
+      .. version-deprecated:: 0.24
+         Do not use this method. It may be removed in a future release.
       )doc");
 
   us.def("temp_sub_string_between", &UnicodeString::tempSubStringBetween,
-         py::arg("start") = 0, py::arg("limit") = INT32_MAX, R"doc(
+         py::arg("start") = 0, py::arg("limit") = INT32_MAX,
+         py::keep_alive<0, 1>(), R"doc(
       Return a temporary ``UnicodeString`` that is a substring
       *self[start:limit]* of this ``UnicodeString``.
+
+      .. version-deprecated:: 0.24
+         Do not use this method. It may be removed in a future release.
       )doc");
 
   us.def(
