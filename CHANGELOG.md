@@ -35,6 +35,7 @@
 - Fix `UTransPosition` changes in `icupy.icu.Transliterator._handle_transliterate()` to propagate to the caller ([#221])
 - Fix return value ownership of `icupy.icu.AlphabeticIndex.get_record_data()` ([#226])
 - Fix return value ownership of `icupy.icu.SearchIterator.get_break_iterator()` ([#232])
+- Fix a build issue with pybind11-stubgen ([#237])
 
 <!-- 2025-11-11/2026-03-26 -->
 ## [0.23.0] - 2026-03-26
@@ -387,3 +388,4 @@ Initial release.
 [#234]: https://github.com/miute/icupy/pull/234
 [#235]: https://github.com/miute/icupy/pull/235
 [#236]: https://github.com/miute/icupy/pull/236
+[#237]: https://github.com/miute/icupy/pull/237
