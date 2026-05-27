@@ -35,6 +35,11 @@ def test_formatted_number_62() -> None:
     assert isinstance(result, icu.UnicodeString)
     assert result == "65K K"
 
+    # FormattedNumber.__str__(self) -> str
+    result = str(num)
+    assert isinstance(result, str)
+    assert result == "65K K"
+
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 64, reason="ICU4C<64")
 def test_formatted_number_64() -> None:

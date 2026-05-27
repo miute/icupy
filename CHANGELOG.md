@@ -14,6 +14,7 @@
 - Update docstring ([#231])
 - Add rich comparison operators for `icupy.icu.CollationKey` ([#235])
 - Add `icupy.icu.UnicodeString.__add__()` overload for code point ([#236])
+- Add `icupy.icu.FormattedValue.__str__()` ([#239])
 - Deprecate `icupy.icu.Transliterator.register_instance()` and `.unregister()` ([#221])
 - Deprecate `icupy.icu.ConstVoidPtr`; use `icupy.icu.UserContext` instead ([#227])
 - Deprecate `icupy.icu.BreakIterator.BreakIterator.DONE` and `icupy.icu.BreakIterator.DONE`; use `UBRK_DONE` instead ([#229])
@@ -391,3 +392,4 @@ Initial release.
 [#236]: https://github.com/miute/icupy/pull/236
 [#237]: https://github.com/miute/icupy/pull/237
 [#238]: https://github.com/miute/icupy/pull/238
+[#239]: https://github.com/miute/icupy/pull/239
