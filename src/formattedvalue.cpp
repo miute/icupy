@@ -187,6 +187,28 @@ void init_formattedvalue(py::module &m) {
       )doc");
 
   fv.def(
+      "__str__",
+      [](const FormattedValue &self) {
+        ErrorCode error_code;
+        auto str = self.toString(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        std::string result;
+        str.toUTF8String(result);
+        return result;
+      },
+      R"doc(
+      Return a string representation of this instance.
+
+      This is equivalent to calling ``to_string().to_utf8_string()``.
+
+      .. seealso::
+
+         :meth:`.to_string`
+      )doc");
+
+  fv.def(
       "append_to",
       [](FormattedValue &self, Appendable &appendable) -> Appendable & {
         ErrorCode error_code;
@@ -246,6 +268,10 @@ void init_formattedvalue(py::module &m) {
       },
       R"doc(
       Return the formatted string as a self-contained :class:`UnicodeString`.
+
+      .. seealso::
+
+         :meth:`.__str__`
       )doc");
 
   // TODO: Deprecate FormattedValue.to_temp_string().
