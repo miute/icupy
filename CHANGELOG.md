@@ -1,7 +1,7 @@
 # Changelog
 
-<!-- 2026-03-27/ -->
-## Unreleased
+<!-- 2026-03-27/2026-05-28 -->
+## [0.24.0] - 2026-05-28
 
 ### Changed
 
@@ -78,6 +78,7 @@
   - Update parameters of `icupy.icu.UCPMapValueFilter.__init__()`
 - **Breaking:** remove trailing underscores from parameters in several APIs ([#187])
 - Mark previously deprecated APIs as stable again ([#198])
+- Add `error_code` attribute to `icupy.icu.ICUError` ([#162])
 - Deprecate `icupy.icu.ConstVoidPtr.to_object()`; use `.value()` instead ([#159])
 - Deprecate `icupy.icu.FormattedValue.to_temp_string()`; use `.to_string()` instead ([#200])
 - Deprecate `.get_buffer()` and `.get_terminated_buffer()` in `icupy.icu.UnicodeString`; use `.__getitem__(index: int)` instead ([#200])
@@ -88,7 +89,6 @@
 ### Added
 
 - Add support for [ICU 78.3] ([#170], [#205])
-- Add `error_code` attribute to `icupy.icu.ICUError` ([#162])
 
 ### Fixed
 
@@ -337,6 +337,7 @@ Initial release.
 [0.21.0]: https://github.com/miute/icupy/releases/tag/v0.21.0
 [0.22.0]: https://github.com/miute/icupy/releases/tag/v0.22.0
 [0.23.0]: https://github.com/miute/icupy/releases/tag/v0.23.0
+[0.24.0]: https://github.com/miute/icupy/releases/tag/v0.24.0
 
 [#73]: https://github.com/miute/icupy/pull/73
 [#93]: https://github.com/miute/icupy/pull/93
