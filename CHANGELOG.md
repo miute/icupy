@@ -1,5 +1,12 @@
 # Changelog
 
+<!-- 2026-05-31/ -->
+## Unreleased
+
+### Changed
+
+- **Breaking:** rename the module `icupy.icu.NoUnit` to `icupy.icu.nounit` ([#242])
+
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
 
@@ -394,3 +401,4 @@ Initial release.
 [#237]: https://github.com/miute/icupy/pull/237
 [#238]: https://github.com/miute/icupy/pull/238
 [#239]: https://github.com/miute/icupy/pull/239
+[#242]: https://github.com/miute/icupy/pull/242

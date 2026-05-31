@@ -525,15 +525,15 @@ def test_localized_number_formatter_to_format() -> None:
 def test_no_unit() -> None:
     fmt = icu.number.NumberFormatter.with_locale(icu.Locale.get_us())
 
-    unit = icu.NoUnit.base()
+    unit = icu.nounit.base()
     assert isinstance(unit, icu.MeasureUnit)
     assert fmt.unit(unit).format_int(1).to_string() == "1"
 
-    unit = icu.NoUnit.percent()
+    unit = icu.nounit.percent()
     assert isinstance(unit, icu.MeasureUnit)
     assert fmt.unit(unit).format_int(1).to_string() == "1%"
 
-    unit = icu.NoUnit.permille()
+    unit = icu.nounit.permille()
     assert isinstance(unit, icu.MeasureUnit)
     assert fmt.unit(unit).format_int(1).to_string() == "1\u2030"  # 1‰
 
