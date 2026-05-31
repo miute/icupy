@@ -51,7 +51,7 @@ void init_measure(py::module &m);
 void init_messagepattern(py::module &m);
 void init_msgfmt(py::module &m);
 void init_normalizer2(py::module &m);
-void init_nounit(py::module &m);
+void init_nounit(py::module &m, py::module &m2);
 void init_numberformatter(py::module &m, py::module &m2);
 void init_numberrangeformatter(py::module &m, py::module &m2);
 void init_numfmt(py::module &m, py::class_<NumberFormat, Format> &nf);
@@ -183,7 +183,15 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   auto number = m.def_submodule("number");
   number.doc() = R"doc(
-      Python Binding for ICU4C: Number Formatters.
+      Number Formatters.
+      )doc";
+
+  //
+  // namespace icu::NoUnit
+  //
+  auto nounit = m.def_submodule("nounit");
+  nounit.doc() = R"doc(
+      Dimensionless Units.
       )doc";
 
   //
@@ -191,7 +199,7 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   //
   auto header = m.def_submodule("header");
   header.doc() = R"doc(
-      Python Binding for ICU4C: Iterators.
+      Iterators for Unicode Code Points.
       )doc";
 
   //
@@ -376,11 +384,11 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_gregocal(m); // icu::Calendar, icu::GregorianCalendar
 
-  init_measunit(m); // icu::MeasureUnit
-  init_currunit(m); // icu::CurrencyUnit
-  init_tmunit(m);   // icu::TimeUnit
-  init_nounit(m);   // icu::NoUnit
-  init_measure(m);  // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
+  init_measunit(m);       // icu::MeasureUnit
+  init_currunit(m);       // icu::CurrencyUnit
+  init_tmunit(m);         // icu::TimeUnit
+  init_nounit(m, nounit); // icu::NoUnit
+  init_measure(m); // icu::Measure, icu::CurrencyAmount, icu::TimeUnitAmount
 
   init_currpinf(m);     // icu::CurrencyPluralInfo
   init_dtintrv(m);      // icu::DateInterval
