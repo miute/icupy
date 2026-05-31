@@ -37,18 +37,22 @@ void init_fieldpos(py::module &m) {
          pos = icu.FieldPosition(icu.UDAT_YEAR_FIELD)
          dest = fmt.format(icu.Calendar.get_now(), dest, pos)
          print(dest[pos.get_begin_index():pos.get_end_index()])
+
+      .. rubric:: Attributes
+
+      .. autoattribute:: FieldPosition.DONT_CARE
+
+         ``DONT_CARE`` indicates that the caller does not need to specify
+         a field.
       )doc");
 
   //
   // enum icu::FieldPosition::DONT_CARE
   //
-  py::enum_<decltype(FieldPosition::DONT_CARE)>(fp, "FieldPosition",
-                                                py::arithmetic())
-      .value("DONT_CARE", FieldPosition::DONT_CARE, R"doc(
-             DONT_CARE may be specified as the field to indicate that the
-             caller doesn't need to specify a field.
-             )doc")
-      .export_values();
+  fp.def_property_readonly_static("DONT_CARE",
+                                  [](const py::object & /* self */) -> int32_t {
+                                    return FieldPosition::DONT_CARE;
+                                  });
 
   //
   // class icu::FieldPosition
@@ -58,6 +62,9 @@ void init_fieldpos(py::module &m) {
       )doc")
       .def(py::init<int32_t>(), py::arg("field"), R"doc(
       Initialize a ``FieldPosition`` instance with the specified field.
+
+      If the caller does not need to specify a field, :attr:`.DONT_CARE` can be
+      specified.
       )doc")
       .def(py::init<const FieldPosition &>(), py::arg("other"), R"doc(
       Initialize a ``FieldPosition`` instance from another ``FieldPosition``.

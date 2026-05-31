@@ -75,6 +75,16 @@ match.
   //
   py::class_<UnicodeSet, UnicodeFilter> us(m, "UnicodeSet", R"doc(
       Mutable set of Unicode characters and multicharacter strings.
+
+      .. rubric:: Attributes
+
+      .. autoattribute:: UnicodeSet.MIN_VALUE
+
+         Minimum value that can be stored in ``UnicodeSet``.
+
+      .. autoattribute:: UnicodeSet.MAX_VALUE
+
+         Maximum value that can be stored in ``UnicodeSet``.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 76)
@@ -141,14 +151,15 @@ match.
   //
   // class icu::UnicodeSet
   //
-  py::enum_<decltype(UnicodeSet::MIN_VALUE)>(us, "UnicodeSet", py::arithmetic())
-      .value("MIN_VALUE", UnicodeSet::MIN_VALUE, R"doc(
-             Minimum value that can be stored in a UnicodeSet.
-             )doc")
-      .value("MAX_VALUE", UnicodeSet::MAX_VALUE, R"doc(
-             Maximum value that can be stored in a UnicodeSet.
-             )doc")
-      .export_values();
+  us.def_property_readonly_static("MIN_VALUE",
+                                  [](const py::object & /* self */) -> int32_t {
+                                    return UnicodeSet::MIN_VALUE;
+                                  });
+
+  us.def_property_readonly_static("MAX_VALUE",
+                                  [](const py::object & /* self */) -> int32_t {
+                                    return UnicodeSet::MAX_VALUE;
+                                  });
 
   us.def(py::init<>())
       .def(py::init<UChar32, UChar32>(), py::arg("start"), py::arg("end"))

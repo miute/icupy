@@ -16,19 +16,22 @@ void init_schriter(py::module &m) {
       .. seealso::
 
          :class:`CharacterIterator`
+
+      .. rubric:: Attributes
+
+      .. autoattribute:: ForwardCharacterIterator.DONE
+
+         ``DONE`` indicates that the iteration over the source string has been
+         finished.
       )doc");
 
   //
   // enum icu::ForwardCharacterIterator::DONE
   //
-  py::enum_<decltype(ForwardCharacterIterator::DONE)>(
-      fci, "ForwardCharacterIterator", py::arithmetic())
-      .value("DONE", ForwardCharacterIterator::DONE, R"doc(
-             Value returned by most of :class:`ForwardCharacterIterator`'s
-             functions when the iterator has reached the limits of its
-             iteration.
-             )doc")
-      .export_values();
+  fci.def_property_readonly_static(
+      "DONE", [](const py::object & /* self */) -> int32_t {
+        return ForwardCharacterIterator::DONE;
+      });
 
   //
   // class icu::ForwardCharacterIterator
