@@ -17,18 +17,27 @@ void init_coleitr(py::module &m) {
       .. seealso::
 
          :meth:`RuleBasedCollator.create_collation_element_iterator`
+
+      .. rubric:: Attributes
+
+      .. autoattribute:: CollationElementIterator.NULLORDER
+
+         ``NULLORDER`` indicates that the iteration over the source string
+         has been finished.
+
+         .. seealso::
+
+            :meth:`.next`
+            :meth:`.previous`
       )doc");
 
   //
   // enum icu::CollationElementIterator::NULLORDER
   //
-  py::enum_<decltype(CollationElementIterator::NULLORDER)>(
-      cei, "CollationElementIterator", py::arithmetic())
-      .value("NULLORDER", CollationElementIterator::NULLORDER, R"doc(
-             ``NULLORDER`` indicates that the iteration over the source string
-             has been finished.
-             )doc")
-      .export_values();
+  cei.def_property_readonly_static(
+      "NULLORDER", [](const py::object & /* self */) -> int32_t {
+        return CollationElementIterator::NULLORDER;
+      });
 
   //
   // class icu::CollationElementIterator

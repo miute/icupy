@@ -89,22 +89,23 @@ void init_rbbi(py::module &m) {
 
          >>> result
          ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
+
+      .. rubric:: Attributes
+
+      .. autoattribute:: BreakIterator.DONE
+
+         ``DONE`` indicates that the analysis of all text boundaries has been
+         finished.
+
+         .. note::
+
+            Use :attr:`UBRK_DONE` instead.
       )doc");
 
-  // TODO: Remove `BreakIterator.DONE` in the future release.
-  py::enum_<decltype(BreakIterator::DONE)>(bi, "BreakIterator",
-                                           py::arithmetic(), R"doc(
-Enum constants for text boundary analysis.
-      )doc")
-      .value("DONE", BreakIterator::DONE, R"doc(
-             DONE is returned by :meth:`~BreakIterator.previous` and
-             :meth:`~BreakIterator.next` after all valid boundaries have been
-             returned.
-
-             .. version-deprecated:: 0.24
-                Use :attr:`UBRK_DONE` instead.
-             )doc")
-      .export_values();
+  bi.def_property_readonly_static("DONE",
+                                  [](const py::object & /* self */) -> int32_t {
+                                    return BreakIterator::DONE;
+                                  });
 
   bi.def("__copy__", &BreakIterator::clone,
          R"doc(
