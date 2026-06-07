@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/rbnf.h>
 
@@ -9,8 +10,9 @@ void init_rbnf(py::module &m) {
   //
   // enum icu::URBNFRuleSetTag
   //
-  py::enum_<URBNFRuleSetTag>(m, "URBNFRuleSetTag", py::arithmetic(),
-                             "Tags for the predefined rulesets.")
+  py::native_enum<URBNFRuleSetTag>(m, "URBNFRuleSetTag", "enum.IntEnum", R"doc(
+Tags for the predefined rulesets.
+      )doc")
       .value("URBNF_SPELLOUT", URBNF_SPELLOUT, R"doc(
              Requests predefined ruleset for spelling out numeric values in
              words.
@@ -32,7 +34,8 @@ void init_rbnf(py::module &m) {
                 :meth:`RuleBasedNumberFormat.set_default_rule_set` on the
                 formatter to choose the actual numbering system.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::RuleBasedNumberFormat

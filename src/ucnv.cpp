@@ -3,6 +3,7 @@
 #include "usetptr.hpp"
 #include <memory>
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -11,8 +12,8 @@ void init_ucnv(py::module &m) {
   //
   // enum UConverterPlatform
   //
-  py::enum_<UConverterPlatform>(m, "UConverterPlatform", py::arithmetic(),
-                                R"doc(
+  py::native_enum<UConverterPlatform>(m, "UConverterPlatform", "enum.IntEnum",
+                                      R"doc(
 Enum for specifying which platform a converter ID refers to.
 
 The use of platform/CCSID is not recommended.
@@ -23,65 +24,67 @@ The use of platform/CCSID is not recommended.
    :func:`ucnv_get_platform`
    :func:`ucnv_open_ccsid`
       )doc")
-      .value("UCNV_UNKNOWN", UCNV_UNKNOWN)
-      .value("UCNV_IBM", UCNV_IBM)
-      .export_values();
+      .value("UCNV_UNKNOWN", UCNV_UNKNOWN, "")
+      .value("UCNV_IBM", UCNV_IBM, "")
+      .export_values()
+      .finalize();
 
   //
   // enum UConverterType
   //
-  py::enum_<UConverterType>(m, "UConverterType", py::arithmetic(), R"doc(
+  py::native_enum<UConverterType>(m, "UConverterType", "enum.IntEnum", R"doc(
 Enum for specifying basic types of converters.
 
 .. seealso::
 
    :func:`ucnv_get_type`
       )doc")
-      .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER)
-      .value("UCNV_SBCS", UCNV_SBCS)
-      .value("UCNV_DBCS", UCNV_DBCS)
-      .value("UCNV_MBCS", UCNV_MBCS)
-      .value("UCNV_LATIN_1", UCNV_LATIN_1)
-      .value("UCNV_UTF8", UCNV_UTF8)
-      .value("UCNV_UTF16_BIG_ENDIAN", UCNV_UTF16_BigEndian)
-      .value("UCNV_UTF16_LITTLE_ENDIAN", UCNV_UTF16_LittleEndian)
-      .value("UCNV_UTF32_BIG_ENDIAN", UCNV_UTF32_BigEndian)
-      .value("UCNV_UTF32_LITTLE_ENDIAN", UCNV_UTF32_LittleEndian)
-      .value("UCNV_EBCDIC_STATEFUL", UCNV_EBCDIC_STATEFUL)
-      .value("UCNV_ISO_2022", UCNV_ISO_2022)
-      .value("UCNV_LMBCS_1", UCNV_LMBCS_1)
-      .value("UCNV_LMBCS_2", UCNV_LMBCS_2)
-      .value("UCNV_LMBCS_3", UCNV_LMBCS_3)
-      .value("UCNV_LMBCS_4", UCNV_LMBCS_4)
-      .value("UCNV_LMBCS_5", UCNV_LMBCS_5)
-      .value("UCNV_LMBCS_6", UCNV_LMBCS_6)
-      .value("UCNV_LMBCS_8", UCNV_LMBCS_8)
-      .value("UCNV_LMBCS_11", UCNV_LMBCS_11)
-      .value("UCNV_LMBCS_16", UCNV_LMBCS_16)
-      .value("UCNV_LMBCS_17", UCNV_LMBCS_17)
-      .value("UCNV_LMBCS_18", UCNV_LMBCS_18)
-      .value("UCNV_LMBCS_19", UCNV_LMBCS_19)
-      .value("UCNV_LMBCS_LAST", UCNV_LMBCS_LAST)
-      .value("UCNV_HZ", UCNV_HZ)
-      .value("UCNV_SCSU", UCNV_SCSU)
-      .value("UCNV_ISCII", UCNV_ISCII)
-      .value("UCNV_US_ASCII", UCNV_US_ASCII)
-      .value("UCNV_UTF7", UCNV_UTF7)
-      .value("UCNV_BOCU1", UCNV_BOCU1)
-      .value("UCNV_UTF16", UCNV_UTF16)
-      .value("UCNV_UTF32", UCNV_UTF32)
-      .value("UCNV_CESU8", UCNV_CESU8)
-      .value("UCNV_IMAP_MAILBOX", UCNV_IMAP_MAILBOX)
-      .value("UCNV_COMPOUND_TEXT", UCNV_COMPOUND_TEXT)
+      .value("UCNV_UNSUPPORTED_CONVERTER", UCNV_UNSUPPORTED_CONVERTER, "")
+      .value("UCNV_SBCS", UCNV_SBCS, "")
+      .value("UCNV_DBCS", UCNV_DBCS, "")
+      .value("UCNV_MBCS", UCNV_MBCS, "")
+      .value("UCNV_LATIN_1", UCNV_LATIN_1, "")
+      .value("UCNV_UTF8", UCNV_UTF8, "")
+      .value("UCNV_UTF16_BIG_ENDIAN", UCNV_UTF16_BigEndian, "")
+      .value("UCNV_UTF16_LITTLE_ENDIAN", UCNV_UTF16_LittleEndian, "")
+      .value("UCNV_UTF32_BIG_ENDIAN", UCNV_UTF32_BigEndian, "")
+      .value("UCNV_UTF32_LITTLE_ENDIAN", UCNV_UTF32_LittleEndian, "")
+      .value("UCNV_EBCDIC_STATEFUL", UCNV_EBCDIC_STATEFUL, "")
+      .value("UCNV_ISO_2022", UCNV_ISO_2022, "")
+      .value("UCNV_LMBCS_1", UCNV_LMBCS_1, "")
+      .value("UCNV_LMBCS_2", UCNV_LMBCS_2, "")
+      .value("UCNV_LMBCS_3", UCNV_LMBCS_3, "")
+      .value("UCNV_LMBCS_4", UCNV_LMBCS_4, "")
+      .value("UCNV_LMBCS_5", UCNV_LMBCS_5, "")
+      .value("UCNV_LMBCS_6", UCNV_LMBCS_6, "")
+      .value("UCNV_LMBCS_8", UCNV_LMBCS_8, "")
+      .value("UCNV_LMBCS_11", UCNV_LMBCS_11, "")
+      .value("UCNV_LMBCS_16", UCNV_LMBCS_16, "")
+      .value("UCNV_LMBCS_17", UCNV_LMBCS_17, "")
+      .value("UCNV_LMBCS_18", UCNV_LMBCS_18, "")
+      .value("UCNV_LMBCS_19", UCNV_LMBCS_19, "")
+      .value("UCNV_LMBCS_LAST", UCNV_LMBCS_LAST, "")
+      .value("UCNV_HZ", UCNV_HZ, "")
+      .value("UCNV_SCSU", UCNV_SCSU, "")
+      .value("UCNV_ISCII", UCNV_ISCII, "")
+      .value("UCNV_US_ASCII", UCNV_US_ASCII, "")
+      .value("UCNV_UTF7", UCNV_UTF7, "")
+      .value("UCNV_BOCU1", UCNV_BOCU1, "")
+      .value("UCNV_UTF16", UCNV_UTF16, "")
+      .value("UCNV_UTF32", UCNV_UTF32, "")
+      .value("UCNV_CESU8", UCNV_CESU8, "")
+      .value("UCNV_IMAP_MAILBOX", UCNV_IMAP_MAILBOX, "")
+      .value("UCNV_COMPOUND_TEXT", UCNV_COMPOUND_TEXT, "")
       .value("UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES",
-             UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES)
-      .export_values();
+             UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES, "")
+      .export_values()
+      .finalize();
 
   //
   // enum UConverterUnicodeSet
   //
-  py::enum_<UConverterUnicodeSet>(m, "UConverterUnicodeSet", py::arithmetic(),
-                                  R"doc(
+  py::native_enum<UConverterUnicodeSet>(m, "UConverterUnicodeSet",
+                                        "enum.IntEnum", R"doc(
 Selectors for Unicode sets that can be returned by
 :func:`ucnv_get_unicode_set`.
       )doc")
@@ -97,7 +100,8 @@ Selectors for Unicode sets that can be returned by
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // Functions

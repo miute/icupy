@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "usetptr.hpp"
+#include <pybind11/native_enum.h>
 
 namespace icupy {
 
@@ -27,7 +28,8 @@ void init_uset(py::module &m) {
   //
   // enum USetSpanCondition
   //
-  py::enum_<USetSpanCondition>(m, "USetSpanCondition", py::arithmetic(), R"doc(
+  py::native_enum<USetSpanCondition>(m, "USetSpanCondition", "enum.IntEnum",
+                                     R"doc(
 Argument values for whether :meth:`UnicodeSet.span` and similar functions
 continue while the current character is contained vs. not contained in the set.
 
@@ -135,7 +137,8 @@ with each other) and the string that is processed. For a set with strings:
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // const struct USet

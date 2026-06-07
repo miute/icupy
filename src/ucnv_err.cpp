@@ -1,5 +1,6 @@
 #include "ucnv_err.hpp"
 #include <pybind11/functional.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 namespace icupy {
@@ -187,8 +188,8 @@ void init_ucnv_err(py::module &m) {
   //
   // enum UConverterCallbackReason
   //
-  py::enum_<UConverterCallbackReason>(m, "UConverterCallbackReason",
-                                      py::arithmetic(), R"doc(
+  py::native_enum<UConverterCallbackReason>(m, "UConverterCallbackReason",
+                                            "enum.IntEnum", R"doc(
 Process condition code to be used with the callbacks.
 
 Codes which are greater than :attr:`UCNV_IRREGULAR` should be passed on to
@@ -233,7 +234,8 @@ any chained callbacks.
       .value("UCNV_CLONE", UCNV_CLONE, R"doc(
              Called when :func:`ucnv_safe_clone` is called on the converter.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UConverter

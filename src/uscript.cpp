@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/uscript.h>
 
@@ -8,7 +9,7 @@ void init_uscript(py::module &m) {
   //
   // enum UScriptCode
   //
-  py::enum_<UScriptCode>(m, "UScriptCode", py::arithmetic(), R"doc(
+  py::native_enum<UScriptCode>(m, "UScriptCode", "enum.IntEnum", R"doc(
 Constants for ISO 15924 script codes.
 
 The current set of script code constants supports at least all scripts that are
@@ -33,7 +34,7 @@ property value aliases, to ensure that their script names are stable and match
 the names of the constants. Script codes like Latf and Aran that are not
 subject to separate encoding may be added at any time.
       )doc")
-      .value("USCRIPT_INVALID_CODE", USCRIPT_INVALID_CODE)
+      .value("USCRIPT_INVALID_CODE", USCRIPT_INVALID_CODE, "")
       .value("USCRIPT_COMMON", USCRIPT_COMMON, R"doc(
              Zyyy
              )doc")
@@ -158,7 +159,10 @@ subject to separate encoding may be added at any time.
              Cans; Canadian_Aboriginal script.
              )doc")
       .value("USCRIPT_UCAS", USCRIPT_UCAS, R"doc(
-             Cans (alias)
+             Cans; Canadian_Aboriginal script.
+
+             :attr:`USCRIPT_UCAS` is same as
+             :attr:`USCRIPT_CANADIAN_ABORIGINAL`.
              )doc")
       .value("USCRIPT_YI", USCRIPT_YI, R"doc(
              Yiii
@@ -296,7 +300,9 @@ subject to separate encoding may be added at any time.
              Mand
              )doc")
       .value("USCRIPT_MANDAEAN", USCRIPT_MANDAEAN, R"doc(
-             Mand (alias)
+             Mand
+
+             :attr:`USCRIPT_MANDAEAN` is same as :attr:`USCRIPT_MANDAIC`.
              )doc")
       .value("USCRIPT_MAYAN_HIEROGLYPHS", USCRIPT_MAYAN_HIEROGLYPHS, R"doc(
              Maya
@@ -306,7 +312,10 @@ subject to separate encoding may be added at any time.
              Mero
              )doc")
       .value("USCRIPT_MEROITIC", USCRIPT_MEROITIC, R"doc(
-             Mero (alias)
+             Mero
+
+             :attr:`USCRIPT_MEROITIC` is same as
+             :attr:`USCRIPT_MEROITIC_HIEROGLYPHS`.
              )doc")
       .value("USCRIPT_NKO", USCRIPT_NKO, R"doc(
              Nkoo
@@ -329,7 +338,9 @@ subject to separate encoding may be added at any time.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 52)
       .value("USCRIPT_PHONETIC_POLLARD", USCRIPT_PHONETIC_POLLARD, R"doc(
-             Plrd (alias)
+             Plrd
+
+             :attr:`USCRIPT_PHONETIC_POLLARD` is same as :attr:`USCRIPT_MIAO`.
              )doc")
       .value("USCRIPT_RONGORONGO", USCRIPT_RONGORONGO, R"doc(
              Roro
@@ -464,7 +475,10 @@ subject to separate encoding may be added at any time.
              Dupl
              )doc")
       .value("USCRIPT_DUPLOYAN_SHORTAND", USCRIPT_DUPLOYAN_SHORTAND, R"doc(
-             Deprecated: ICU 54 Typo, use USCRIPT_DUPLOYAN.
+             Dupl
+
+             :attr:`USCRIPT_DUPLOYAN_SHORTAND` is a typo.
+             Use :attr:`USCRIPT_DUPLOYAN` instead.
              )doc")
       .value("USCRIPT_ELBASAN", USCRIPT_ELBASAN, R"doc(
              Elba
@@ -499,7 +513,9 @@ subject to separate encoding may be added at any time.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
       .value("USCRIPT_SINDHI", USCRIPT_SINDHI, R"doc(
-             Sind (alias)
+             Sind
+
+             :attr:`USCRIPT_SINDHI` is same as :attr:`USCRIPT_KHUDAWADI`.
              )doc")
       .value("USCRIPT_WARANG_CITI", USCRIPT_WARANG_CITI, R"doc(
              Wara
@@ -738,13 +754,14 @@ subject to separate encoding may be added at any time.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
   // enum UScriptUsage
   //
-  py::enum_<UScriptUsage>(m, "UScriptUsage", py::arithmetic(), R"doc(
+  py::native_enum<UScriptUsage>(m, "UScriptUsage", "enum.IntEnum", R"doc(
 Script usage constants.
 
 See UAX #31 Unicode Identifier and Pattern Syntax.
@@ -768,7 +785,8 @@ http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_fr
       .value("USCRIPT_USAGE_RECOMMENDED", USCRIPT_USAGE_RECOMMENDED, R"doc(
              Recommended script.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   //

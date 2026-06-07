@@ -3,6 +3,7 @@
 #include "ubidiptr.hpp"
 #include <optional>
 #include <pybind11/functional.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -61,12 +62,11 @@ void init_ubidi(py::module &m) {
   //
   // enum UBiDiDirection
   //
-  py::enum_<UBiDiDirection>(
-      m, "UBiDiDirection", py::arithmetic(),
-      "UBiDiDirection values indicate the text direction.")
+  py::native_enum<UBiDiDirection>(m, "UBiDiDirection", "enum.IntEnum", R"doc(
+UBiDiDirection values indicate the text direction.
+      )doc")
       .value("UBIDI_LTR", UBIDI_LTR, R"doc(
              Left-to-right text.
-             This is a 0 value.
 
              - As return value for :func:`ubidi_get_direction`, it means that the
                source string contains no right-to-left
@@ -78,7 +78,6 @@ void init_ubidi(py::module &m) {
              )doc")
       .value("UBIDI_RTL", UBIDI_RTL, R"doc(
              Right-to-left text.
-             This is a 1 value.
 
              - As return value for :func:`ubidi_get_direction`, it means that the
                source string contains no left-to-right
@@ -102,13 +101,14 @@ void init_ubidi(py::module &m) {
              the source string is missing or empty,
              or contains neither left-to-right nor right-to-left characters.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UBiDiReorderingMode
   //
-  py::enum_<UBiDiReorderingMode>(m, "UBiDiReorderingMode", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UBiDiReorderingMode>(m, "UBiDiReorderingMode", "enum.IntEnum",
+                                       R"doc(
 UBiDiReorderingMode values indicate which variant of the Bidi algorithm to use.
 
 .. seealso::
@@ -118,8 +118,6 @@ UBiDiReorderingMode values indicate which variant of the Bidi algorithm to use.
       )doc")
       .value("UBIDI_REORDER_DEFAULT", UBIDI_REORDER_DEFAULT, R"doc(
              Regular Logical to Visual Bidi algorithm according to Unicode.
-
-             This is a 0 value.
              )doc")
       .value("UBIDI_REORDER_NUMBERS_SPECIAL", UBIDI_REORDER_NUMBERS_SPECIAL,
              R"doc(
@@ -159,13 +157,14 @@ UBiDiReorderingMode values indicate which variant of the Bidi algorithm to use.
              Inverse Bidi (Visual to Logical) algorithm for the
              :attr:`~UBIDI_REORDER_NUMBERS_SPECIAL` Bidi algorithm.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UBiDiReorderingOption
   //
-  py::enum_<UBiDiReorderingOption>(m, "UBiDiReorderingOption", py::arithmetic(),
-                                   R"doc(
+  py::native_enum<UBiDiReorderingOption>(m, "UBiDiReorderingOption",
+                                         "enum.IntEnum", R"doc(
 UBiDiReorderingOption values indicate which options are specified to affect
 the Bidi algorithm.
       )doc")
@@ -281,7 +280,8 @@ the Bidi algorithm.
              :func:`ubidi_set_para` so that later paragraphs may be concatenated to
              previous paragraphs on the right.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // UBiDiClassCallback

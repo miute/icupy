@@ -2,6 +2,7 @@
 #include "usetptr.hpp"
 #include <memory>
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
@@ -16,7 +17,7 @@ void init_uniset(py::module &m, py::module &h) {
   //
   // enum icu::UMatchDegree
   //
-  py::enum_<UMatchDegree>(m, "UMatchDegree", py::arithmetic(), R"doc(
+  py::native_enum<UMatchDegree>(m, "UMatchDegree", "enum.IntEnum", R"doc(
 Constants returned by :meth:`UnicodeMatcher.matches` indicating the degree of
 match.
 )doc")
@@ -46,7 +47,8 @@ match.
              if the given text matches, and it is known that additional
              characters would not alter the extent of the match.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::UnicodeFunctor

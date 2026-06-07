@@ -2,6 +2,7 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/decimfmt.h>
 #include <unicode/reldatefmt.h>
@@ -14,8 +15,10 @@ void init_reldatefmt(py::module &m) {
   //
   // enum UDateAbsoluteUnit
   //
-  py::enum_<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", py::arithmetic(),
-                               "Represent an absolute unit.")
+  py::native_enum<UDateAbsoluteUnit>(m, "UDateAbsoluteUnit", "enum.IntEnum",
+                                     R"doc(
+Represent an absolute unit.
+      )doc")
       .value("UDAT_ABSOLUTE_SUNDAY", UDAT_ABSOLUTE_SUNDAY, R"doc(
              Sunday.
              )doc")
@@ -69,12 +72,13 @@ void init_reldatefmt(py::module &m) {
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UDateDirection
   //
-  py::enum_<UDateDirection>(m, "UDateDirection", py::arithmetic(), R"doc(
+  py::native_enum<UDateDirection>(m, "UDateDirection", "enum.IntEnum", R"doc(
 Represent a direction for an absolute unit e.g., "Next Tuesday" or
 "Last Tuesday".
       )doc")
@@ -104,12 +108,14 @@ Represent a direction for an absolute unit e.g., "Next Tuesday" or
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UDateRelativeUnit
   //
-  py::enum_<UDateRelativeUnit>(m, "UDateRelativeUnit", py::arithmetic(), R"doc(
+  py::native_enum<UDateRelativeUnit>(m, "UDateRelativeUnit", "enum.IntEnum",
+                                     R"doc(
 Represent the unit for formatting a relative date.
 
 e.g., "in 5 days" or "in 3 months"
@@ -139,7 +145,8 @@ e.g., "in 5 days" or "in 3 months"
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   //

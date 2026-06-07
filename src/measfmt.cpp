@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/measfmt.h>
 #include <unicode/measunit.h>
@@ -11,8 +12,8 @@ void init_measfmt(py::module &m) {
   //
   // enum UMeasureFormatWidth
   //
-  py::enum_<UMeasureFormatWidth>(m, "UMeasureFormatWidth", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UMeasureFormatWidth>(m, "UMeasureFormatWidth", "enum.IntEnum",
+                                       R"doc(
 Constants for various widths.
 
 There are 4 widths: Wide, Short, Narrow, Numeric. For example, for English,
@@ -33,7 +34,8 @@ narrow is "3h"; formatting "3 hours 17 minutes" as numeric give "3:17"
 
              For example, format "5 hours, 37 minutes" as "5:37".
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   //

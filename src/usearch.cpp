@@ -1,13 +1,15 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/usearch.h>
 
 void init_usearch(py::module &m) {
   //
   // enum USearchAttribute
   //
-  py::enum_<USearchAttribute>(m, "USearchAttribute", py::arithmetic(), R"doc(
+  py::native_enum<USearchAttribute>(m, "USearchAttribute", "enum.IntEnum",
+                                    R"doc(
 Enum constants for the text searching attributes.
-)doc")
+      )doc")
       .value("USEARCH_OVERLAP", USEARCH_OVERLAP, R"doc(
              Option for overlapping matches.
              )doc")
@@ -24,15 +26,16 @@ Enum constants for the text searching attributes.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum USearchAttributeValue
   //
-  py::enum_<USearchAttributeValue>(m, "USearchAttributeValue", py::arithmetic(),
-                                   R"doc(
+  py::native_enum<USearchAttributeValue>(m, "USearchAttributeValue",
+                                         "enum.IntEnum", R"doc(
 Enum constants for the text searching attribute values.
-)doc")
+      )doc")
       .value("USEARCH_DEFAULT", USEARCH_DEFAULT, R"doc(
              Default value for any :class:`USearchAttribute`.
              )doc")
@@ -93,7 +96,8 @@ Enum constants for the text searching attribute values.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   m.attr("USEARCH_DONE") = USEARCH_DONE;
 }

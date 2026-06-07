@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/numfmt.h>
 
@@ -9,8 +10,8 @@ void init_numfmt(py::module & /* m */, py::class_<NumberFormat, Format> &nf) {
   //
   // enum icu::NumberFormat::EAlignmentFields
   //
-  py::enum_<NumberFormat::EAlignmentFields>(nf, "EAlignmentFields",
-                                            py::arithmetic(), R"doc(
+  py::native_enum<NumberFormat::EAlignmentFields>(nf, "EAlignmentFields",
+                                                  "enum.IntEnum", R"doc(
 Alignment Field constants used to construct a :class:`FieldPosition` object.
 
 Signifies that the position of the integer part or fraction part of a
@@ -21,28 +22,31 @@ formatted number should be returned.
    These constants are provided for backwards compatibility only. Please
    use the :class:`UNumberFormatFields` instead.
       )doc")
-      .value("INTEGER_FIELD", NumberFormat::kIntegerField)
-      .value("FRACTION_FIELD", NumberFormat::kFractionField)
-      .value("DECIMAL_SEPARATOR_FIELD", NumberFormat::kDecimalSeparatorField)
-      .value("EXPONENT_SYMBOL_FIELD", NumberFormat::kExponentSymbolField)
-      .value("EXPONENT_SIGN_FIELD", NumberFormat::kExponentSignField)
-      .value("EXPONENT_FIELD", NumberFormat::kExponentField)
-      .value("GROUPING_SEPARATOR_FIELD", NumberFormat::kGroupingSeparatorField)
-      .value("CURRENCY_FIELD", NumberFormat::kCurrencyField)
-      .value("PERCENT_FIELD", NumberFormat::kPercentField)
-      .value("PERMILL_FIELD", NumberFormat::kPermillField)
-      .value("SIGN_FIELD", NumberFormat::kSignField)
+      .value("INTEGER_FIELD", NumberFormat::kIntegerField, "")
+      .value("FRACTION_FIELD", NumberFormat::kFractionField, "")
+      .value("DECIMAL_SEPARATOR_FIELD", NumberFormat::kDecimalSeparatorField,
+             "")
+      .value("EXPONENT_SYMBOL_FIELD", NumberFormat::kExponentSymbolField, "")
+      .value("EXPONENT_SIGN_FIELD", NumberFormat::kExponentSignField, "")
+      .value("EXPONENT_FIELD", NumberFormat::kExponentField, "")
+      .value("GROUPING_SEPARATOR_FIELD", NumberFormat::kGroupingSeparatorField,
+             "")
+      .value("CURRENCY_FIELD", NumberFormat::kCurrencyField, "")
+      .value("PERCENT_FIELD", NumberFormat::kPercentField, "")
+      .value("PERMILL_FIELD", NumberFormat::kPermillField, "")
+      .value("SIGN_FIELD", NumberFormat::kSignField, "")
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-      .value("MEASURE_UNIT_FIELD", NumberFormat::kMeasureUnitField)
-      .value("COMPACT_FIELD", NumberFormat::kCompactField)
+      .value("MEASURE_UNIT_FIELD", NumberFormat::kMeasureUnitField, "")
+      .value("COMPACT_FIELD", NumberFormat::kCompactField, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum icu::NumberFormat::ERoundingMode
   //
-  py::enum_<NumberFormat::ERoundingMode>(nf, "ERoundingMode", py::arithmetic(),
-                                         R"doc(
+  py::native_enum<NumberFormat::ERoundingMode>(nf, "ERoundingMode",
+                                               "enum.IntEnum", R"doc(
 Rounding mode.
 
 For more detail on rounding modes, see:
@@ -87,7 +91,8 @@ rounding-modes
              Rounds ties toward -∞.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::NumberFormat

@@ -2,6 +2,7 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
@@ -15,9 +16,10 @@ void init_tzfmt(py::module &m) {
   //
   // enum UTimeZoneFormatGMTOffsetPatternType
   //
-  py::enum_<UTimeZoneFormatGMTOffsetPatternType>(
-      m, "UTimeZoneFormatGMTOffsetPatternType", py::arithmetic(),
-      "Constants for GMT offset pattern types.")
+  py::native_enum<UTimeZoneFormatGMTOffsetPatternType>(
+      m, "UTimeZoneFormatGMTOffsetPatternType", "enum.IntEnum", R"doc(
+Constants for GMT offset pattern types.
+      )doc")
       .value("UTZFMT_PAT_POSITIVE_HM", UTZFMT_PAT_POSITIVE_HM, R"doc(
              Positive offset with hours and minutes fields.
              )doc")
@@ -38,13 +40,14 @@ void init_tzfmt(py::module &m) {
              Negative offset with hours field.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UTimeZoneFormatParseOption
   //
-  py::enum_<UTimeZoneFormatParseOption>(m, "UTimeZoneFormatParseOption",
-                                        py::arithmetic(), R"doc(
+  py::native_enum<UTimeZoneFormatParseOption>(m, "UTimeZoneFormatParseOption",
+                                              "enum.IntEnum", R"doc(
 Constants for parse option flags, used for specifying optional parse behavior.
       )doc")
       .value("UTZFMT_PARSE_OPTION_NONE", UTZFMT_PARSE_OPTION_NONE, R"doc(
@@ -66,13 +69,14 @@ Constants for parse option flags, used for specifying optional parse behavior.
              currently used by the :class:`TimeZoneFormat`.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UTimeZoneFormatStyle
   //
-  py::enum_<UTimeZoneFormatStyle>(m, "UTimeZoneFormatStyle", py::arithmetic(),
-                                  R"doc(
+  py::native_enum<UTimeZoneFormatStyle>(m, "UTimeZoneFormatStyle",
+                                        "enum.IntEnum", R"doc(
 Constants for time zone display format style used by format/parse APIs in
 :class:`TimeZoneFormat`.
       )doc")
@@ -190,13 +194,14 @@ Constants for time zone display format style used by format/parse APIs in
              Exemplar location, such as "Los Angeles" and "Paris".
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UTimeZoneFormatTimeType
   //
-  py::enum_<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType",
-                                     py::arithmetic(), R"doc(
+  py::native_enum<UTimeZoneFormatTimeType>(m, "UTimeZoneFormatTimeType",
+                                           "enum.IntEnum", R"doc(
 Constants for time types used by :class:`TimeZoneFormat` APIs for receiving
 time type (standard time, daylight time or unknown).
       )doc")
@@ -209,7 +214,8 @@ time type (standard time, daylight time or unknown).
       .value("UTZFMT_TIME_TYPE_DAYLIGHT", UTZFMT_TIME_TYPE_DAYLIGHT, R"doc(
              Daylight saving time.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::TimeZoneFormat

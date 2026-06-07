@@ -1,11 +1,13 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/uidna.h>
 
 void init_uidna(py::module &m) {
   //
   // enum UIDNAOption
   //
-  py::enum_<decltype(UIDNA_DEFAULT)>(m, "UIDNAOption", py::arithmetic(), R"doc(
+  py::native_enum<decltype(UIDNA_DEFAULT)>(m, "UIDNAOption", "enum.IntEnum",
+                                           R"doc(
 Bit set to modify the :class:`IDNA` processing and error checking.
 
 .. warning::
@@ -95,14 +97,14 @@ Bit set to modify the :class:`IDNA` processing and error checking.
              does not require the CONTEXTO check.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UIDNAError
   //
-  py::enum_<decltype(UIDNA_ERROR_EMPTY_LABEL)>(m, "UIDNAError",
-                                               py::arithmetic(),
-                                               R"doc(
+  py::native_enum<decltype(UIDNA_ERROR_EMPTY_LABEL)>(m, "UIDNAError",
+                                                     "enum.IntEnum", R"doc(
 Bit set indicating :class:`IDNA` processing errors.
 
 .. warning::
@@ -190,5 +192,6 @@ Bit set indicating :class:`IDNA` processing errors.
              Arabic-Indic Digits (U+06Fx).
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .export_values();
+      .export_values()
+      .finalize();
 }

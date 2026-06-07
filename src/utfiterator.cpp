@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/utfiterator.h>
 
@@ -12,8 +13,8 @@ void init_utfiterator(py::module &m, py::module &h) {
   //
   // enum UTFIllFormedBehavior
   //
-  py::enum_<UTFIllFormedBehavior>(m, "UTFIllFormedBehavior", py::arithmetic(),
-                                  R"doc(
+  py::native_enum<UTFIllFormedBehavior>(m, "UTFIllFormedBehavior",
+                                        "enum.IntEnum", R"doc(
 Some defined behaviors for handling ill-formed Unicode strings.
 
 This is a template parameter for UTFIterator and related classes.
@@ -46,7 +47,8 @@ parameter.
              - UTF-32: Returns the surrogate code point, or U+FFFD if out of
                range.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // template<typename CP32>

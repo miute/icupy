@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/rbtz.h>
@@ -62,7 +63,8 @@ void init_timezone(py::module &m) {
   //
   // enum icu::TimeZone::EDisplayType
   //
-  py::enum_<TimeZone::EDisplayType>(tz, "EDisplayType", py::arithmetic(), R"doc(
+  py::native_enum<TimeZone::EDisplayType>(tz, "EDisplayType", "enum.IntEnum",
+                                          R"doc(
 Enum for use with :meth:`TimeZone.get_display_name`.
       )doc")
       .value("SHORT", TimeZone::EDisplayType::SHORT, R"doc(
@@ -93,7 +95,8 @@ Enum for use with :meth:`TimeZone.get_display_name`.
              Selector for long display name derived from the time zone's
              fallback name.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::TimeZone
@@ -599,7 +602,8 @@ Enum for use with :meth:`TimeZone.get_display_name`.
   //
   // enum icu::SimpleTimeZone::TimeMode
   //
-  py::enum_<SimpleTimeZone::TimeMode>(stz, "TimeMode", py::arithmetic(), R"doc(
+  py::native_enum<SimpleTimeZone::TimeMode>(stz, "TimeMode", "enum.IntEnum",
+                                            R"doc(
 TimeMode is used, together with a millisecond offset after midnight, to specify
 a rule transition time.
 
@@ -609,10 +613,11 @@ local standard time, and some at a specific UTC time. Although it might seem
 that all times could be converted to wall time, thus eliminating the need for
 this parameter, this is not the case.
       )doc")
-      .value("WALL_TIME", SimpleTimeZone::TimeMode::WALL_TIME)
-      .value("STANDARD_TIME", SimpleTimeZone::TimeMode::STANDARD_TIME)
-      .value("UTC_TIME", SimpleTimeZone::TimeMode::UTC_TIME)
-      .export_values();
+      .value("WALL_TIME", SimpleTimeZone::TimeMode::WALL_TIME, "")
+      .value("STANDARD_TIME", SimpleTimeZone::TimeMode::STANDARD_TIME, "")
+      .value("UTC_TIME", SimpleTimeZone::TimeMode::UTC_TIME, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::SimpleTimeZone

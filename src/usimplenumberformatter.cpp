@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 73)
+#include <pybind11/native_enum.h>
 #include <unicode/usimplenumberformatter.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 
@@ -9,7 +10,8 @@ void init_usimplenumberformatter(py::module &m) {
   //
   // enum USimpleNumberSign
   //
-  py::enum_<USimpleNumberSign>(m, "USimpleNumberSign", py::arithmetic(), R"doc(
+  py::native_enum<USimpleNumberSign>(m, "USimpleNumberSign", "enum.IntEnum",
+                                     R"doc(
 Explicit sign option for a :class:`~icupy.icu.number.SimpleNumber`.
       )doc")
       .value("UNUM_SIMPLE_NUMBER_PLUS_SIGN", UNUM_SIMPLE_NUMBER_PLUS_SIGN,
@@ -23,6 +25,7 @@ Explicit sign option for a :class:`~icupy.icu.number.SimpleNumber`.
              R"doc(
              Render a minus sign.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
 }

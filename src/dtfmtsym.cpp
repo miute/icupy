@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/dtfmtsym.h>
@@ -22,27 +23,30 @@ void init_dtfmtsym(py::module &m) {
   //
   // enum icu::DateFormatSymbols::DtContextType
   //
-  py::enum_<DateFormatSymbols::DtContextType>(
-      dfs, "DtContextType", py::arithmetic(),
-      "Selector for date formatting context.")
-      .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT)
-      .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE)
+  py::native_enum<DateFormatSymbols::DtContextType>(dfs, "DtContextType",
+                                                    "enum.IntEnum", R"doc(
+Selector for date formatting context.
+      )doc")
+      .value("FORMAT", DateFormatSymbols::DtContextType::FORMAT, "")
+      .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE, "")
       .value("DT_CONTEXT_COUNT",
              DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT, R"doc(
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum icu::DateFormatSymbols::DtWidthType
   //
-  py::enum_<DateFormatSymbols::DtWidthType>(
-      dfs, "DtWidthType", py::arithmetic(),
-      "Selector for date formatting width.")
-      .value("ABBREVIATED", DateFormatSymbols::DtWidthType::ABBREVIATED)
-      .value("WIDE", DateFormatSymbols::DtWidthType::WIDE)
-      .value("NARROW", DateFormatSymbols::DtWidthType::NARROW)
+  py::native_enum<DateFormatSymbols::DtWidthType>(dfs, "DtWidthType",
+                                                  "enum.IntEnum", R"doc(
+Selector for date formatting width.
+      )doc")
+      .value("ABBREVIATED", DateFormatSymbols::DtWidthType::ABBREVIATED, "")
+      .value("WIDE", DateFormatSymbols::DtWidthType::WIDE, "")
+      .value("NARROW", DateFormatSymbols::DtWidthType::NARROW, "")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("SHORT", DateFormatSymbols::DtWidthType::SHORT, R"doc(
              Short width is currently only supported for weekday names.
@@ -53,7 +57,8 @@ void init_dtfmtsym(py::module &m) {
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::DateFormatSymbols

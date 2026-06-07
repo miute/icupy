@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <sstream>
 #include <unicode/utrans.h>
 
@@ -6,7 +7,7 @@ void init_utrans(py::module &m) {
   //
   // enum UTransDirection
   //
-  py::enum_<UTransDirection>(m, "UTransDirection", py::arithmetic(), R"doc(
+  py::native_enum<UTransDirection>(m, "UTransDirection", "enum.IntEnum", R"doc(
 Direction constant indicating the direction in a transliterator, e.g., the
 forward or reverse rules of a RuleBasedTransliterator.
 
@@ -28,7 +29,8 @@ operating in the reverse direction.
              For a transliterator opened using a rule, it means reverse
              direction rules, e.g., "A < B".
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UTransPosition

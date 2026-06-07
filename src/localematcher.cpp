@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/localematcher.h>
 
@@ -14,7 +15,8 @@ void init_localematcher(py::module &m) {
   //
   // enum ULocMatchDemotion
   //
-  py::enum_<ULocMatchDemotion>(m, "ULocMatchDemotion", py::arithmetic(), R"doc(
+  py::native_enum<ULocMatchDemotion>(m, "ULocMatchDemotion", "enum.IntEnum",
+                                     R"doc(
 :class:`~LocaleMatcher.Builder` option for whether all desired locales are
 treated equally or earlier ones are preferred.
       )doc")
@@ -45,14 +47,15 @@ treated equally or earlier ones are preferred.
                   (As of CLDR 35 there is no such case, but this is possible in
                   future versions of the data.)
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
   // enum ULocMatchDirection
   //
-  py::enum_<ULocMatchDirection>(m, "ULocMatchDirection", py::arithmetic(),
-                                R"doc(
+  py::native_enum<ULocMatchDirection>(m, "ULocMatchDirection", "enum.IntEnum",
+                                      R"doc(
 :class:`~LocaleMatcher.Builder` option for whether to include or ignore
 one-way (fallback) match data.
 
@@ -76,14 +79,15 @@ original UI language, we want to use it, but not if it is merely a fallback.
              Locale matching limited to two-way matches including e.g.
              Danish↔Norwegian but ignoring one-way matches.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //
   // enum ULocMatchFavorSubtag
   //
-  py::enum_<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag", py::arithmetic(),
-                                  R"doc(
+  py::native_enum<ULocMatchFavorSubtag>(m, "ULocMatchFavorSubtag",
+                                        "enum.IntEnum", R"doc(
 :class:`~LocaleMatcher.Builder` option for whether the language subtag or the
 script subtag is most important.
       )doc")
@@ -95,7 +99,8 @@ script subtag is most important.
              Makes script differences matter relatively more than language
              differences.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::LocaleMatcher

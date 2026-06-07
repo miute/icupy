@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
+#include <pybind11/native_enum.h>
 #include <unicode/uformattedvalue.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -8,7 +9,7 @@ void init_uformattedvalue(py::module &m) {
   //
   // enum UFieldCategory
   //
-  py::enum_<UFieldCategory>(m, "UFieldCategory", py::arithmetic(), R"doc(
+  py::native_enum<UFieldCategory>(m, "UFieldCategory", "enum.IntEnum", R"doc(
 All possible field categories in ICU.
 
 Every entry in this enum corresponds to another enum that exists in ICU.
@@ -50,6 +51,7 @@ are private-use and will not be used by ICU in the future.
              Category for spans in a number range.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 }

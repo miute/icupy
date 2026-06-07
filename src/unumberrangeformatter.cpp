@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
+#include <pybind11/native_enum.h>
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
 #include <unicode/unumberrangeformatter.h>
 #else
@@ -12,9 +13,10 @@ void init_unumberrangeformatter(py::module &m) {
   //
   // enum UNumberRangeCollapse
   //
-  py::enum_<UNumberRangeCollapse>(
-      m, "UNumberRangeCollapse", py::arithmetic(),
-      "Define how to merge fields that are identical across the range sign.")
+  py::native_enum<UNumberRangeCollapse>(m, "UNumberRangeCollapse",
+                                        "enum.IntEnum", R"doc(
+Define how to merge fields that are identical across the range sign.
+        )doc")
       .value("UNUM_RANGE_COLLAPSE_AUTO", UNUM_RANGE_COLLAPSE_AUTO, R"doc(
              Use locale data and heuristics to determine how much of the
              string to collapse.
@@ -42,13 +44,14 @@ void init_unumberrangeformatter(py::module &m) {
              May introduce ambiguity on the magnitude of the number. Example:
              "3.2 – 5.3 thousand kilograms"
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberRangeIdentityFallback
   //
-  py::enum_<UNumberRangeIdentityFallback>(m, "UNumberRangeIdentityFallback",
-                                          py::arithmetic(), R"doc(
+  py::native_enum<UNumberRangeIdentityFallback>(
+      m, "UNumberRangeIdentityFallback", "enum.IntEnum", R"doc(
 Define the behavior when the two numbers in the range are identical after
 rounding.
 
@@ -82,13 +85,14 @@ lower and upper BigDecimals via :class:`number.FormattedNumber`.
              Use the range pattern always, even if the inputs are the same.
              Example (with RangeCollapse.NONE): "$5 – $5"
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberRangeIdentityResult
   //
-  py::enum_<UNumberRangeIdentityResult>(m, "UNumberRangeIdentityResult",
-                                        py::arithmetic(), R"doc(
+  py::native_enum<UNumberRangeIdentityResult>(m, "UNumberRangeIdentityResult",
+                                              "enum.IntEnum", R"doc(
 Used in the result class :class:`~number.FormattedNumberRange` to indicate to
 the user whether the numbers formatted in the range were equal or not, and
 whether or not the identity fallback was applied.
@@ -108,6 +112,7 @@ whether or not the identity fallback was applied.
              Used to indicate that the two numbers in the range were not
              equal, even after rounding rules were applied.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 }

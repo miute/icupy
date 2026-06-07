@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/ucol.h>
 
@@ -6,7 +7,7 @@ void init_ucol(py::module &m) {
   //
   // enum UColAttribute
   //
-  py::enum_<UColAttribute>(m, "UColAttribute", py::arithmetic(), R"doc(
+  py::native_enum<UColAttribute>(m, "UColAttribute", "enum.IntEnum", R"doc(
 Attributes that collation service understands.
 
 All the attributes can take :attr:`~UColAttributeValue.UCOL_DEFAULT` value,
@@ -81,7 +82,23 @@ as well as the values specific to each one.
              :attr:`~UColAttributeValue.UCOL_ON`.
              )doc")
       .value("UCOL_DECOMPOSITION_MODE", UCOL_DECOMPOSITION_MODE, R"doc(
-             An alias for UCOL_NORMALIZATION_MODE attribute.
+             :attr:`UCOL_DECOMPOSITION_MODE` is same as
+             :attr:`UCOL_NORMALIZATION_MODE`.
+
+             Controls whether the normalization check and necessary
+             normalizations are performed.
+
+             When set to :attr:`~UColAttributeValue.UCOL_OFF` no normalization
+             check is performed. The correctness of the result is guaranteed
+             only if the input data is in so-called FCD form (see users manual
+             for more info). When set to :attr:`~UColAttributeValue.UCOL_ON`,
+             an incremental check is performed to see whether the input data is
+             in the FCD form. If the data is not in the FCD form, incremental
+             NFD normalization is performed. The default setting in a Collator
+             object depends on the locale data loaded from the resources. For
+             many locales, the default is :attr:`~UColAttributeValue.UCOL_OFF`,
+             but for others, such as "hi" "vi', or "bn", \* the default could be
+             :attr:`~UColAttributeValue.UCOL_ON`.
              )doc")
       .value("UCOL_STRENGTH", UCOL_STRENGTH, R"doc(
              The strength attribute.
@@ -127,13 +144,14 @@ as well as the values specific to each one.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UColAttributeValue
   //
-  py::enum_<UColAttributeValue>(m, "UColAttributeValue", py::arithmetic(),
-                                R"doc(
+  py::native_enum<UColAttributeValue>(m, "UColAttributeValue", "enum.IntEnum",
+                                      R"doc(
 Enum containing attribute values for controlling collation behavior.
 
 Here are all the allowable values. Not every attribute can take every value.
@@ -153,18 +171,24 @@ value to the predefined value for that locale.
              Tertiary collation strength.
              )doc")
       .value("UCOL_DEFAULT_STRENGTH", UCOL_DEFAULT_STRENGTH, R"doc(
-             Default collation strength.
+             :attr:`UCOL_DEFAULT_STRENGTH` is same as :attr:`UCOL_TERTIARY`.
+
+             Default collation strength (tertiary).
              )doc")
-      .value("UCOL_CE_STRENGTH_LIMIT", UCOL_CE_STRENGTH_LIMIT)
+      .value("UCOL_CE_STRENGTH_LIMIT", UCOL_CE_STRENGTH_LIMIT, "")
       .value("UCOL_QUATERNARY", UCOL_QUATERNARY, R"doc(
-             Quaternary collation strength.
+             :attr:`UCOL_QUATERNARY` is same as :attr:`UCOL_CE_STRENGTH_LIMIT`.
+
+             :attr:`UCOL_QUATERNARY`: quaternary collation strength.
              )doc")
       .value("UCOL_IDENTICAL", UCOL_IDENTICAL, R"doc(
              Identical collation strength.
              )doc")
       .value("UCOL_STRENGTH_LIMIT", UCOL_STRENGTH_LIMIT)
       .value("UCOL_OFF", UCOL_OFF, R"doc(
-             Turn the feature off - works for
+             :attr:`UCOL_STRENGTH_LIMIT` is same as :attr:`UCOL_OFF`.
+
+             :attr:`UCOL_OFF`: turn the feature off - works for
              :attr:`~UColAttribute.UCOL_FRENCH_COLLATION`,
              :attr:`~UColAttribute.UCOL_CASE_LEVEL`,
              :attr:`~UColAttribute.UCOL_HIRAGANA_QUATERNARY_MODE`, and
@@ -198,12 +222,13 @@ value to the predefined value for that locale.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UColBoundMode
   //
-  py::enum_<UColBoundMode>(m, "UColBoundMode", py::arithmetic(), R"doc(
+  py::native_enum<UColBoundMode>(m, "UColBoundMode", "enum.IntEnum", R"doc(
 Enum that is taken by :meth:`Collator.get_bound`. See below for explanation do
 not change the values assigned to the members of this enum.
 
@@ -223,12 +248,14 @@ Underlying code depends on them having these numbers.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCollationResult
   //
-  py::enum_<UCollationResult>(m, "UCollationResult", py::arithmetic(), R"doc(
+  py::native_enum<UCollationResult>(m, "UCollationResult", "enum.IntEnum",
+                                    R"doc(
 Enum returned by :meth:`Collator.compare` method.
 
 :attr:`UCOL_LESS` is returned if source string is compared to be less than
@@ -249,12 +276,13 @@ than target string in the :meth:`Collator.compare` method.
       .value("UCOL_LESS", UCOL_LESS, R"doc(
              string a < string b
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UColReorderCode
   //
-  py::enum_<UColReorderCode>(m, "UColReorderCode", py::arithmetic(), R"doc(
+  py::native_enum<UColReorderCode>(m, "UColReorderCode", "enum.IntEnum", R"doc(
 Enum containing the codes for reordering segments of the collation table that
 are not script codes.
 
@@ -269,7 +297,15 @@ These reordering codes are to be used in conjunction with the script codes.
              codes.
              )doc")
       .value("UCOL_REORDER_CODE_OTHERS", UCOL_REORDER_CODE_OTHERS, R"doc(
-             A special reordering code that is used to specify all other codes
+             :attr:`UCOL_REORDER_CODE_OTHERS` is same as
+             :attr:`UCOL_REORDER_CODE_NONE`.
+
+             :attr:`UCOL_REORDER_CODE_NONE`:
+             a special reordering code that is used to specify no reordering
+             codes.
+
+             :attr:`UCOL_REORDER_CODE_OTHERS`:
+             a special reordering code that is used to specify all other codes
              used for reordering except for the codes listed as
              UColReorderCode values and those listed explicitly in a
              reordering.
@@ -280,8 +316,15 @@ These reordering codes are to be used in conjunction with the script codes.
              This is equivalent to the rule value "space".
              )doc")
       .value("UCOL_REORDER_CODE_FIRST", UCOL_REORDER_CODE_FIRST, R"doc(
-             The first entry in the enumeration of reordering groups.
+             :attr:`UCOL_REORDER_CODE_FIRST` is same as
+             :attr:`UCOL_REORDER_CODE_SPACE`.
 
+             :attr:`UCOL_REORDER_CODE_SPACE`:
+             characters with the space property.
+             This is equivalent to the rule value "space".
+
+             :attr:`UCOL_REORDER_CODE_FIRST`:
+             the first entry in the enumeration of reordering groups.
              This is intended for use in range checking and enumeration of the
              reorder codes.
              )doc")
@@ -310,12 +353,13 @@ These reordering codes are to be used in conjunction with the script codes.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UColRuleOption
   //
-  py::enum_<UColRuleOption>(m, "UColRuleOption", py::arithmetic(), R"doc(
+  py::native_enum<UColRuleOption>(m, "UColRuleOption", "enum.IntEnum", R"doc(
 Options for retrieving the rule string.
       )doc")
       .value("UCOL_TAILORING_ONLY", UCOL_TAILORING_ONLY, R"doc(
@@ -332,5 +376,6 @@ Options for retrieving the rule string.
              removed from the data. See
              https://unicode-org.github.io/icu/userguide/collation/customization#building-on-existing-locales
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 }

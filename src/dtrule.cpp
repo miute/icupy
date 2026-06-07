@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <sstream>
 #include <unicode/dtrule.h>
@@ -17,8 +18,10 @@ void init_dtrule(py::module &m) {
   //
   // enum icu::DateTimeRule::DateRuleType
   //
-  py::enum_<DateTimeRule::DateRuleType>(dtr, "DateRuleType", py::arithmetic(),
-                                        "Date rule type constants.")
+  py::native_enum<DateTimeRule::DateRuleType>(dtr, "DateRuleType",
+                                              "enum.IntEnum", R"doc(
+Date rule type constants.
+      )doc")
       .value("DOM", DateTimeRule::DateRuleType::DOM, R"doc(
              The exact day of month, for example, March 11.
              )doc")
@@ -34,13 +37,16 @@ void init_dtrule(py::module &m) {
              The last occurrence of the day of week on or before the day of
              month, for example, first Sunday on or before March 14.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum icu::DateTimeRule::TimeRuleType
   //
-  py::enum_<DateTimeRule::TimeRuleType>(dtr, "TimeRuleType", py::arithmetic(),
-                                        "Time rule type constants.")
+  py::native_enum<DateTimeRule::TimeRuleType>(dtr, "TimeRuleType",
+                                              "enum.IntEnum", R"doc(
+Time rule type constants.
+      )doc")
       .value("WALL_TIME", DateTimeRule::TimeRuleType::WALL_TIME, R"doc(
              The local wall clock time.
              )doc")
@@ -50,7 +56,8 @@ void init_dtrule(py::module &m) {
       .value("UTC_TIME", DateTimeRule::TimeRuleType::UTC_TIME, R"doc(
              The UTC time.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::DateTimeRule

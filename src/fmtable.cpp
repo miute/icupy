@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
@@ -14,7 +15,7 @@ void init_fmtable(py::module &m, py::class_<Formattable, UObject> &fmt) {
   //
   // enum icu::Formattable::ISDATE
   //
-  py::enum_<Formattable::ISDATE>(fmt, "ISDATE", py::arithmetic(), R"doc(
+  py::native_enum<Formattable::ISDATE>(fmt, "ISDATE", "enum.IntEnum", R"doc(
 This enum is only used to let callers distinguish between the
 ``Formattable(UDate)`` constructor and the ``Formattable(double)`` constructor;
 the compiler cannot distinguish the signatures, since ``UDate`` is currently
@@ -24,12 +25,13 @@ If ``UDate`` is changed later to be a bonafide class or struct, then we no
 longer need this enum.
       )doc")
       .value("IS_DATE", Formattable::ISDATE::kIsDate)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum icu::Formattable::Type
   //
-  py::enum_<Formattable::Type>(fmt, "Type", py::arithmetic(), R"doc(
+  py::native_enum<Formattable::Type>(fmt, "Type", "enum.IntEnum", R"doc(
 Selector for flavor of data type contained within a Formattable object.
 
 Formattable is a union of several different types, and at any time contains
@@ -70,7 +72,8 @@ exactly one type.
 
              Use :meth:`Formattable.get_object` to retrieve the value.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::Formattable

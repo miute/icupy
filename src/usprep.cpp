@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include "usprepptr.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -22,8 +23,8 @@ void init_usprep(py::module &m) {
   //
   // enum UStringPrepProfileType
   //
-  py::enum_<UStringPrepProfileType>(m, "UStringPrepProfileType",
-                                    py::arithmetic(), R"doc(
+  py::native_enum<UStringPrepProfileType>(m, "UStringPrepProfileType",
+                                          "enum.IntEnum", R"doc(
 Enums for the standard StringPrep profile types supported by
 :func:`usprep_open_by_type`.
       )doc")
@@ -74,7 +75,8 @@ Enums for the standard StringPrep profile types supported by
              RFC4518 LDAP for case ignore, numeric and stored prefix matching
              rules.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UStringPrepProfile

@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+#include <pybind11/native_enum.h>
 #include <unicode/udisplaycontext.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
@@ -8,7 +9,7 @@ void init_udisplaycontext(py::module &m) {
   //
   // enum UDisplayContext
   //
-  py::enum_<UDisplayContext>(m, "UDisplayContext", py::arithmetic(), R"doc(
+  py::native_enum<UDisplayContext>(m, "UDisplayContext", "enum.IntEnum", R"doc(
 Display context settings.
 
 Note, the specific numeric values are internal and may change.
@@ -108,13 +109,14 @@ Note, the specific numeric values are internal and may change.
              available.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UDisplayContextType
   //
-  py::enum_<UDisplayContextType>(m, "UDisplayContextType", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UDisplayContextType>(m, "UDisplayContextType", "enum.IntEnum",
+                                       R"doc(
 Display context types, for getting values of a particular setting.
 
 Note, the specific numeric values are internal and may change.
@@ -149,7 +151,8 @@ Note, the specific numeric values are internal and may change.
              :attr:`~UDisplayContext.UDISPCTX_NO_SUBSTITUTE`.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
-      .export_values();
+      .export_values()
+      .finalize();
 
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

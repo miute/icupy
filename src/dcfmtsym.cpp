@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/dcfmtsym.h>
@@ -18,9 +19,10 @@ void init_dcfmtsym(py::module &m) {
   //
   // enum icu::DecimalFormatSymbols::ENumberFormatSymbol
   //
-  py::enum_<DecimalFormatSymbols::ENumberFormatSymbol>(
-      dfs, "ENumberFormatSymbol", py::arithmetic(),
-      "Constants for specifying a number format symbol.")
+  py::native_enum<DecimalFormatSymbols::ENumberFormatSymbol>(
+      dfs, "ENumberFormatSymbol", "enum.IntEnum", R"doc(
+Constants for specifying a number format symbol.
+      )doc")
       .value("DECIMAL_SEPARATOR_SYMBOL",
              DecimalFormatSymbols::kDecimalSeparatorSymbol, R"doc(
              The decimal separator.
@@ -123,7 +125,8 @@ void init_dcfmtsym(py::module &m) {
              R"doc(
              Count symbol constants.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::DecimalFormatSymbols

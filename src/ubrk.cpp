@@ -1,12 +1,15 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/ubrk.h>
 
 void init_ubrk(py::module &m) {
   //
   // enum UBreakIteratorType
   //
-  py::enum_<UBreakIteratorType>(m, "UBreakIteratorType", py::arithmetic(),
-                                "The possible types of text boundaries.")
+  py::native_enum<UBreakIteratorType>(m, "UBreakIteratorType", "enum.IntEnum",
+                                      R"doc(
+The possible types of text boundaries.
+      )doc")
       .value("UBRK_CHARACTER", UBRK_CHARACTER, R"doc(
              Character breaks.
              )doc")
@@ -19,12 +22,13 @@ void init_ubrk(py::module &m) {
       .value("UBRK_SENTENCE", UBRK_SENTENCE, R"doc(
              Sentence breaks.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum ULineBreakTag
   //
-  py::enum_<ULineBreakTag>(m, "ULineBreakTag", py::arithmetic(), R"doc(
+  py::native_enum<ULineBreakTag>(m, "ULineBreakTag", "enum.IntEnum", R"doc(
 Enum constants for the line break tags returned by
 :meth:`BreakIterator.get_rule_status`.
 
@@ -44,17 +48,25 @@ The numeric values of all of these constants are stable (will not change).
              Upper bound for soft line breaks.
              )doc")
       .value("UBRK_LINE_HARD", UBRK_LINE_HARD, R"doc(
-             Tag value for a hard, or mandatory line break.
+             :attr:`UBRK_LINE_HARD` is same as :attr:`UBRK_LINE_SOFT_LIMIT`.
+
+             :attr:`UBRK_LINE_SOFT_LIMIT`:
+             upper bound for soft line breaks.
+
+             :attr:`UBRK_LINE_HARD`:
+             tag value for a hard, or mandatory line break.
              )doc")
       .value("UBRK_LINE_HARD_LIMIT", UBRK_LINE_HARD_LIMIT, R"doc(
              Upper bound for hard line breaks.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum USentenceBreakTag
   //
-  py::enum_<USentenceBreakTag>(m, "USentenceBreakTag", py::arithmetic(), R"doc(
+  py::native_enum<USentenceBreakTag>(m, "USentenceBreakTag", "enum.IntEnum",
+                                     R"doc(
 Enum constants for the sentence break tags returned by
 :meth:`BreakIterator.get_rule_status`.
 
@@ -74,19 +86,27 @@ The numeric values of all of these constants are stable (will not change).
              Upper bound for tags for sentences ended by sentence terminators.
              )doc")
       .value("UBRK_SENTENCE_SEP", UBRK_SENTENCE_SEP, R"doc(
-             Tag value for for sentences that do not contain an ending sentence
+             :attr:`UBRK_SENTENCE_SEP` is same as
+             :attr:`UBRK_SENTENCE_TERM_LIMIT`.
+
+             :attr:`UBRK_SENTENCE_SEP`:
+             tag value for for sentences that do not contain an ending sentence
              terminator ('.', '?', '!', etc.) character, but are ended only by
              a hard separator (CR, LF, PS, etc.) or end of input.
+
+             :attr:`UBRK_SENTENCE_TERM_LIMIT`:
+             upper bound for tags for sentences ended by sentence terminators.
              )doc")
       .value("UBRK_SENTENCE_SEP_LIMIT", UBRK_SENTENCE_SEP_LIMIT, R"doc(
              Upper bound for tags for sentences ended by a separator.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UWordBreak
   //
-  py::enum_<UWordBreak>(m, "UWordBreak", py::arithmetic(), R"doc(
+  py::native_enum<UWordBreak>(m, "UWordBreak", "enum.IntEnum", R"doc(
 Enum constants for the word break tags returned by
 :meth:`BreakIterator.get_rule_status`.
 
@@ -107,31 +127,57 @@ The numeric values of all of these constants are stable (will not change).
              Upper bound for tags for uncategorized words.
              )doc")
       .value("UBRK_WORD_NUMBER", UBRK_WORD_NUMBER, R"doc(
-             Tag value for words that appear to be numbers, lower limit.
+             :attr:`UBRK_WORD_NUMBER` is same as :attr:`UBRK_WORD_NONE_LIMIT`.
+
+             :attr:`UBRK_WORD_NUMBER`:
+             tag value for words that appear to be numbers, lower limit.
+
+             :attr:`UBRK_WORD_NONE_LIMIT`:
+             upper bound for tags for uncategorized words.
              )doc")
       .value("UBRK_WORD_NUMBER_LIMIT", UBRK_WORD_NUMBER_LIMIT, R"doc(
              Tag value for words that appear to be numbers, upper limit.
              )doc")
       .value("UBRK_WORD_LETTER", UBRK_WORD_LETTER, R"doc(
-             Tag value for words that contain letters, excluding hiragana,
+             :attr:`UBRK_WORD_LETTER` is same as
+             :attr:`UBRK_WORD_NUMBER_LIMIT`.
+
+             :attr:`UBRK_WORD_LETTER`:
+             tag value for words that contain letters, excluding hiragana,
              katakana or ideographic characters, lower limit.
+
+             :attr:`UBRK_WORD_NUMBER_LIMIT`:
+             upper bound for tags for words that appear to be numbers.
              )doc")
       .value("UBRK_WORD_LETTER_LIMIT", UBRK_WORD_LETTER_LIMIT, R"doc(
              Tag value for words containing letters, upper limit.
              )doc")
       .value("UBRK_WORD_KANA", UBRK_WORD_KANA, R"doc(
-             Tag value for words containing kana characters, lower limit.
+             :attr:`UBRK_WORD_KANA` is same as :attr:`UBRK_WORD_LETTER_LIMIT`.
+
+             :attr:`UBRK_WORD_KANA`:
+             tag value for words containing kana characters, lower limit.
+
+             :attr:`UBRK_WORD_LETTER_LIMIT`:
+             upper bound for tags for words that contain letters.
              )doc")
       .value("UBRK_WORD_KANA_LIMIT", UBRK_WORD_KANA_LIMIT, R"doc(
              Tag value for words containing kana characters, upper limit.
              )doc")
       .value("UBRK_WORD_IDEO", UBRK_WORD_IDEO, R"doc(
-             Tag value for words containing ideographic characters, lower limit.
+             :attr:`UBRK_WORD_IDEO` is same as :attr:`UBRK_WORD_KANA_LIMIT`.
+
+             :attr:`UBRK_WORD_IDEO`:
+             tag value for words containing ideographic characters, lower limit.
+
+             :attr:`UBRK_WORD_KANA_LIMIT`:
+             upper bound for tags for words that contain kana characters.
              )doc")
       .value("UBRK_WORD_IDEO_LIMIT", UBRK_WORD_IDEO_LIMIT, R"doc(
              Tag value for words containing ideographic characters, upper limit.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   m.attr("UBRK_DONE") = UBRK_DONE;
 }

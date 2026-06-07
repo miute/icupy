@@ -2,6 +2,7 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
 #include "ucpmapptr.hpp"
 #include <pybind11/functional.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -46,7 +47,8 @@ void init_ucpmap(py::module &m) {
   //
   // enum UCPMapRangeOption
   //
-  py::enum_<UCPMapRangeOption>(m, "UCPMapRangeOption", py::arithmetic(), R"doc(
+  py::native_enum<UCPMapRangeOption>(m, "UCPMapRangeOption", "enum.IntEnum",
+                                     R"doc(
 Selectors for how :func:`ucpmap_get_range` etc.
 
 Should report value ranges overlapping with surrogates. Most users
@@ -96,7 +98,8 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
              surrogates, but those values are not to be
              associated with the lead surrogate code points.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UCPMap
