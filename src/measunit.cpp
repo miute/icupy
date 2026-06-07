@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/measunit.h>
 #include <unicode/strenum.h>
@@ -10,7 +11,7 @@ void init_measunit(py::module &m) {
   //
   // enum UMeasurePrefix
   //
-  py::enum_<UMeasurePrefix>(m, "UMeasurePrefix", py::arithmetic(), R"doc(
+  py::native_enum<UMeasurePrefix>(m, "UMeasurePrefix", "enum.IntEnum", R"doc(
 Enumeration for SI and binary prefixes, e.g. "kilo-", "nano-", "mebi-".
 
 .. seealso::
@@ -26,98 +27,99 @@ Enumeration for SI and binary prefixes, e.g. "kilo-", "nano-", "mebi-".
              :func:`umeas_get_prefix_power` to obtain meaningful values.
              )doc")
       .value("UMEASURE_PREFIX_YOTTA", UMEASURE_PREFIX_YOTTA, R"doc(
-             SI prefix: yotta, 10^24.
+             SI prefix: yotta, 10\*\*24.
              )doc")
       .value("UMEASURE_PREFIX_ZETTA", UMEASURE_PREFIX_ZETTA, R"doc(
-             SI prefix: zetta, 10^21.
+             SI prefix: zetta, 10\*\*21.
              )doc")
       .value("UMEASURE_PREFIX_EXA", UMEASURE_PREFIX_EXA, R"doc(
-             SI prefix: exa, 10^18.
+             SI prefix: exa, 10\*\*18.
              )doc")
       .value("UMEASURE_PREFIX_PETA", UMEASURE_PREFIX_PETA, R"doc(
-             SI prefix: peta, 10^15.
+             SI prefix: peta, 10\*\*15.
              )doc")
       .value("UMEASURE_PREFIX_TERA", UMEASURE_PREFIX_TERA, R"doc(
-             SI prefix: tera, 10^12.
+             SI prefix: tera, 10\*\*12.
              )doc")
       .value("UMEASURE_PREFIX_GIGA", UMEASURE_PREFIX_GIGA, R"doc(
-             SI prefix: giga, 10^9.
+             SI prefix: giga, 10\*\*9.
              )doc")
       .value("UMEASURE_PREFIX_MEGA", UMEASURE_PREFIX_MEGA, R"doc(
-             SI prefix: mega, 10^6.
+             SI prefix: mega, 10\*\*6.
              )doc")
       .value("UMEASURE_PREFIX_KILO", UMEASURE_PREFIX_KILO, R"doc(
-             SI prefix: kilo, 10^3.
+             SI prefix: kilo, 10\*\*3.
              )doc")
       .value("UMEASURE_PREFIX_HECTO", UMEASURE_PREFIX_HECTO, R"doc(
-             SI prefix: hecto, 10^2.
+             SI prefix: hecto, 10\*\*2.
              )doc")
       .value("UMEASURE_PREFIX_DEKA", UMEASURE_PREFIX_DEKA, R"doc(
-             SI prefix: deka, 10^1.
+             SI prefix: deka, 10\*\*1.
              )doc")
       .value("UMEASURE_PREFIX_DECI", UMEASURE_PREFIX_DECI, R"doc(
-             SI prefix: deci, 10^-1.
+             SI prefix: deci, 10\*\*-1.
              )doc")
       .value("UMEASURE_PREFIX_CENTI", UMEASURE_PREFIX_CENTI, R"doc(
-             SI prefix: centi, 10^-2.
+             SI prefix: centi, 10\*\*-2.
              )doc")
       .value("UMEASURE_PREFIX_MILLI", UMEASURE_PREFIX_MILLI, R"doc(
-             SI prefix: milli, 10^-3.
+             SI prefix: milli, 10\*\*-3.
              )doc")
       .value("UMEASURE_PREFIX_MICRO", UMEASURE_PREFIX_MICRO, R"doc(
-             SI prefix: micro, 10^-6.
+             SI prefix: micro, 10\*\*-6.
              )doc")
       .value("UMEASURE_PREFIX_NANO", UMEASURE_PREFIX_NANO, R"doc(
-             SI prefix: nano, 10^-9.
+             SI prefix: nano, 10\*\*-9.
              )doc")
       .value("UMEASURE_PREFIX_PICO", UMEASURE_PREFIX_PICO, R"doc(
-             SI prefix: pico, 10^-12.
+             SI prefix: pico, 10\*\*-12.
              )doc")
       .value("UMEASURE_PREFIX_FEMTO", UMEASURE_PREFIX_FEMTO, R"doc(
-             SI prefix: femto, 10^-15.
+             SI prefix: femto, 10\*\*-15.
              )doc")
       .value("UMEASURE_PREFIX_ATTO", UMEASURE_PREFIX_ATTO, R"doc(
-             SI prefix: atto, 10^-18.
+             SI prefix: atto, 10\*\*-18.
              )doc")
       .value("UMEASURE_PREFIX_ZEPTO", UMEASURE_PREFIX_ZEPTO, R"doc(
-             SI prefix: zepto, 10^-21.
+             SI prefix: zepto, 10\*\*-21.
              )doc")
       .value("UMEASURE_PREFIX_YOCTO", UMEASURE_PREFIX_YOCTO, R"doc(
-             SI prefix: yocto, 10^-24.
+             SI prefix: yocto, 10\*\*-24.
              )doc")
       .value("UMEASURE_PREFIX_KIBI", UMEASURE_PREFIX_KIBI, R"doc(
-             Binary prefix: kibi, 1024^1.
+             Binary prefix: kibi, 1024\*\*1.
              )doc")
       .value("UMEASURE_PREFIX_MEBI", UMEASURE_PREFIX_MEBI, R"doc(
-             Binary prefix: mebi, 1024^2.
+             Binary prefix: mebi, 1024\*\*2.
              )doc")
       .value("UMEASURE_PREFIX_GIBI", UMEASURE_PREFIX_GIBI, R"doc(
-             Binary prefix: gibi, 1024^3.
+             Binary prefix: gibi, 1024\*\*3.
              )doc")
       .value("UMEASURE_PREFIX_TEBI", UMEASURE_PREFIX_TEBI, R"doc(
-             Binary prefix: tebi, 1024^4.
+             Binary prefix: tebi, 1024\*\*4.
              )doc")
       .value("UMEASURE_PREFIX_PEBI", UMEASURE_PREFIX_PEBI, R"doc(
-             Binary prefix: pebi, 1024^5.
+             Binary prefix: pebi, 1024\*\*5.
              )doc")
       .value("UMEASURE_PREFIX_EXBI", UMEASURE_PREFIX_EXBI, R"doc(
-             Binary prefix: exbi, 1024^6.
+             Binary prefix: exbi, 1024\*\*6.
              )doc")
       .value("UMEASURE_PREFIX_ZEBI", UMEASURE_PREFIX_ZEBI, R"doc(
-             Binary prefix: zebi, 1024^7.
+             Binary prefix: zebi, 1024\*\*7.
              )doc")
       .value("UMEASURE_PREFIX_YOBI", UMEASURE_PREFIX_YOBI, R"doc(
-             Binary prefix: yobi, 1024^8.
+             Binary prefix: yobi, 1024\*\*8.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
   // enum UMeasureUnitComplexity
   //
-  py::enum_<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity",
-                                    py::arithmetic(), R"doc(
+  py::native_enum<UMeasureUnitComplexity>(m, "UMeasureUnitComplexity",
+                                          "enum.IntEnum", R"doc(
 Enumeration for unit complexity.
 
 There are three levels:
@@ -141,7 +143,8 @@ cannot set the power or prefix of a compound unit.
       .value("UMEASURE_UNIT_MIXED", UMEASURE_UNIT_MIXED, R"doc(
              A mixed unit, like hour+minute.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //

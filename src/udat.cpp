@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/udat.h>
 
 void init_udat(py::module &m) {
@@ -6,8 +7,8 @@ void init_udat(py::module &m) {
   //
   // enum UDateFormatBooleanAttribute
   //
-  py::enum_<UDateFormatBooleanAttribute>(m, "UDateFormatBooleanAttribute",
-                                         py::arithmetic(), R"doc(
+  py::native_enum<UDateFormatBooleanAttribute>(m, "UDateFormatBooleanAttribute",
+                                               "enum.IntEnum", R"doc(
 :class:`DateFormat` boolean attributes.
       )doc")
       .value("UDAT_PARSE_ALLOW_WHITESPACE", UDAT_PARSE_ALLOW_WHITESPACE, R"doc(
@@ -38,13 +39,15 @@ void init_udat(py::module &m) {
              e.g. Accepting "September" for a month pattern of MMM ("Sep")
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
 
   //
   // enum UDateFormatField
   //
-  py::enum_<UDateFormatField>(m, "UDateFormatField", py::arithmetic(), R"doc(
+  py::native_enum<UDateFormatField>(m, "UDateFormatField", "enum.IntEnum",
+                                    R"doc(
 :class:`FieldPosition` selector for format fields defined by
 :class:`DateFormat`.
       )doc")
@@ -283,14 +286,17 @@ void init_udat(py::module &m) {
              available.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   //
   // enum UDateFormatHourCycle
   //
-  py::enum_<UDateFormatHourCycle>(m, "UDateFormatHourCycle", py::arithmetic(),
-                                  "Hour Cycle.")
+  py::native_enum<UDateFormatHourCycle>(m, "UDateFormatHourCycle",
+                                        "enum.IntEnum", R"doc(
+Hour Cycle.
+      )doc")
       .value("UDAT_HOUR_CYCLE_11", UDAT_HOUR_CYCLE_11, R"doc(
              Hour in am/pm (0~11)
              )doc")
@@ -303,14 +309,17 @@ void init_udat(py::module &m) {
       .value("UDAT_HOUR_CYCLE_24", UDAT_HOUR_CYCLE_24, R"doc(
              Hour in day (1~24)
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   //
   // enum UDateFormatStyle
   //
-  py::enum_<UDateFormatStyle>(m, "UDateFormatStyle", py::arithmetic(),
-                              "Possible date/time format styles.")
+  py::native_enum<UDateFormatStyle>(m, "UDateFormatStyle", "enum.IntEnum",
+                                    R"doc(
+Possible date/time format styles.
+      )doc")
       .value("UDAT_FULL", UDAT_FULL, R"doc(
              Full style.
              )doc")
@@ -324,15 +333,17 @@ void init_udat(py::module &m) {
              Short style.
              )doc")
       .value("UDAT_DEFAULT", UDAT_DEFAULT, R"doc(
-             Default style.
+             :attr:`UDAT_DEFAULT` is same as :attr:`UDAT_MEDIUM`.
+
+             Default style (medium).
              )doc")
       .value("UDAT_RELATIVE", UDAT_RELATIVE, R"doc(
              Bitfield for relative date.
              )doc")
-      .value("UDAT_FULL_RELATIVE", UDAT_FULL_RELATIVE)
-      .value("UDAT_LONG_RELATIVE", UDAT_LONG_RELATIVE)
-      .value("UDAT_MEDIUM_RELATIVE", UDAT_MEDIUM_RELATIVE)
-      .value("UDAT_SHORT_RELATIVE", UDAT_SHORT_RELATIVE)
+      .value("UDAT_FULL_RELATIVE", UDAT_FULL_RELATIVE, "")
+      .value("UDAT_LONG_RELATIVE", UDAT_LONG_RELATIVE, "")
+      .value("UDAT_MEDIUM_RELATIVE", UDAT_MEDIUM_RELATIVE, "")
+      .value("UDAT_SHORT_RELATIVE", UDAT_SHORT_RELATIVE, "")
       .value("UDAT_NONE", UDAT_NONE, R"doc(
              No style.
              )doc")
@@ -342,13 +353,17 @@ void init_udat(py::module &m) {
              Use the pattern given in the parameter to ``udat_open()``.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UDateFormatSymbolType
   //
-  py::enum_<UDateFormatSymbolType>(m, "UDateFormatSymbolType", py::arithmetic(),
-                                   "Possible types of date format symbols.")
+  py::native_enum<UDateFormatSymbolType>(m, "UDateFormatSymbolType",
+                                         "enum.IntEnum",
+                                         R"doc(
+Possible types of date format symbols.
+      )doc")
       .value("UDAT_ERAS", UDAT_ERAS, R"doc(
              The era names, for example AD.
              )doc")
@@ -384,8 +399,8 @@ void init_udat(py::module &m) {
       .value("UDAT_STANDALONE_MONTHS", UDAT_STANDALONE_MONTHS, R"doc(
              Standalone context versions of months.
              )doc")
-      .value("UDAT_STANDALONE_SHORT_MONTHS", UDAT_STANDALONE_SHORT_MONTHS)
-      .value("UDAT_STANDALONE_NARROW_MONTHS", UDAT_STANDALONE_NARROW_MONTHS)
+      .value("UDAT_STANDALONE_SHORT_MONTHS", UDAT_STANDALONE_SHORT_MONTHS, "")
+      .value("UDAT_STANDALONE_NARROW_MONTHS", UDAT_STANDALONE_NARROW_MONTHS, "")
       .value("UDAT_STANDALONE_WEEKDAYS", UDAT_STANDALONE_WEEKDAYS, R"doc(
              The CLDR-style stand-alone "wide" weekday names.
              )doc")
@@ -410,7 +425,8 @@ void init_udat(py::module &m) {
       .value("UDAT_STANDALONE_QUARTERS", UDAT_STANDALONE_QUARTERS, R"doc(
              Standalone context versions of quarters.
              )doc")
-      .value("UDAT_STANDALONE_SHORT_QUARTERS", UDAT_STANDALONE_SHORT_QUARTERS)
+      .value("UDAT_STANDALONE_SHORT_QUARTERS", UDAT_STANDALONE_SHORT_QUARTERS,
+             "")
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("UDAT_SHORTER_WEEKDAYS", UDAT_SHORTER_WEEKDAYS, R"doc(
              The CLDR-style short weekday names, e.g. "Su", "Mo", etc.
@@ -474,7 +490,8 @@ void init_udat(py::module &m) {
              "Post Meridiem".
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
-      .export_values();
+      .export_values()
+      .finalize();
 
   // Skeletons for dates
   m.attr("UDAT_ABBR_MONTH_DAY") = UDAT_ABBR_MONTH_DAY;

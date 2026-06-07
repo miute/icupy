@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/utmscale.h>
 
 using namespace icu;
@@ -7,7 +8,7 @@ void init_utmscale(py::module &m) {
   //
   // enum UDateTimeScale
   //
-  py::enum_<UDateTimeScale>(m, "UDateTimeScale", py::arithmetic(), R"doc(
+  py::native_enum<UDateTimeScale>(m, "UDateTimeScale", "enum.IntEnum", R"doc(
 UDateTimeScale values are used to specify the time scale used for conversion
 into or out if the universal time scale.
 )doc")
@@ -58,12 +59,13 @@ into or out if the universal time scale.
              Deprecated: ICU 59 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UTimeScaleValue
   //
-  py::enum_<UTimeScaleValue>(m, "UTimeScaleValue", py::arithmetic(), R"doc(
+  py::native_enum<UTimeScaleValue>(m, "UTimeScaleValue", "enum.IntEnum", R"doc(
 UTimeScaleValue values are used to specify the time scale values to
 :func:`utmscale_get_time_scale_value`.
 )doc")
@@ -92,7 +94,8 @@ UTimeScaleValue values are used to specify the time scale values to
              Deprecated: ICU 59 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // Functions

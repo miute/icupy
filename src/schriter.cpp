@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/schriter.h>
@@ -78,14 +79,16 @@ void init_schriter(py::module &m) {
   //
   // enum icu::CharacterIterator::EOrigin
   //
-  py::enum_<CharacterIterator::EOrigin>(ci, "EOrigin", py::arithmetic(), R"doc(
+  py::native_enum<CharacterIterator::EOrigin>(ci, "EOrigin", "enum.IntEnum",
+                                              R"doc(
 Origin enumeration for the :meth:`CharacterIterator.move` and
 :meth:`CharacterIterator.move32` functions.
       )doc")
-      .value("START", CharacterIterator::kStart)
-      .value("CURRENT", CharacterIterator::kCurrent)
-      .value("END", CharacterIterator::kEnd)
-      .export_values();
+      .value("START", CharacterIterator::kStart, "")
+      .value("CURRENT", CharacterIterator::kCurrent, "")
+      .value("END", CharacterIterator::kEnd, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::CharacterIterator

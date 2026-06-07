@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/tmunit.h>
 
 using namespace icu;
@@ -14,17 +15,20 @@ void init_tmunit(py::module &m) {
   //
   // enum icu::TimeUnit::UTimeUnitFields
   //
-  py::enum_<TimeUnit::UTimeUnitFields>(
-      tu, "UTimeUnitFields", py::arithmetic(),
-      "Constants for all the time units we supported.")
-      .value("UTIMEUNIT_YEAR", TimeUnit::UTIMEUNIT_YEAR)
-      .value("UTIMEUNIT_MONTH", TimeUnit::UTIMEUNIT_MONTH)
-      .value("UTIMEUNIT_DAY", TimeUnit::UTIMEUNIT_DAY)
-      .value("UTIMEUNIT_WEEK", TimeUnit::UTIMEUNIT_WEEK)
-      .value("UTIMEUNIT_HOUR", TimeUnit::UTIMEUNIT_HOUR)
-      .value("UTIMEUNIT_MINUTE", TimeUnit::UTIMEUNIT_MINUTE)
-      .value("UTIMEUNIT_SECOND", TimeUnit::UTIMEUNIT_SECOND)
-      .export_values();
+  py::native_enum<TimeUnit::UTimeUnitFields>(tu, "UTimeUnitFields",
+                                             "enum.IntEnum",
+                                             R"doc(
+Constants for all the time units we supported.
+      )doc")
+      .value("UTIMEUNIT_YEAR", TimeUnit::UTIMEUNIT_YEAR, "")
+      .value("UTIMEUNIT_MONTH", TimeUnit::UTIMEUNIT_MONTH, "")
+      .value("UTIMEUNIT_DAY", TimeUnit::UTIMEUNIT_DAY, "")
+      .value("UTIMEUNIT_WEEK", TimeUnit::UTIMEUNIT_WEEK, "")
+      .value("UTIMEUNIT_HOUR", TimeUnit::UTIMEUNIT_HOUR, "")
+      .value("UTIMEUNIT_MINUTE", TimeUnit::UTIMEUNIT_MINUTE, "")
+      .value("UTIMEUNIT_SECOND", TimeUnit::UTIMEUNIT_SECOND, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::TimeUnit

@@ -1,5 +1,6 @@
 #include "main.hpp"
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+#include <pybind11/native_enum.h>
 #include <unicode/upluralrules.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
@@ -8,7 +9,7 @@ void init_upluralrules(py::module &m) {
   //
   // enum UPluralType
   //
-  py::enum_<UPluralType>(m, "UPluralType", py::arithmetic(), R"doc(
+  py::native_enum<UPluralType>(m, "UPluralType", "enum.IntEnum", R"doc(
 Type of PluralRules.
       )doc")
       .value("UPLURAL_TYPE_CARDINAL", UPLURAL_TYPE_CARDINAL, R"doc(
@@ -18,6 +19,7 @@ Type of PluralRules.
              Plural rules for ordinal numbers: 1st file, 2nd file, 3rd file,
              4th file, etc.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 }

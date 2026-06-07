@@ -2,6 +2,7 @@
 #include "uresptr.hpp"
 #include <memory>
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -20,7 +21,7 @@ void init_ures(py::module &m) {
   //
   // enum UResType
   //
-  py::enum_<UResType>(m, "UResType", py::arithmetic(), R"doc(
+  py::native_enum<UResType>(m, "UResType", "enum.IntEnum", R"doc(
 Numeric constants for types of resource items.
 
 .. seealso::
@@ -59,28 +60,60 @@ Numeric constants for types of resource items.
              Resource type constant for vectors of 32-bit integers.
              )doc")
       .value("RES_NONE", RES_NONE, R"doc(
-             Deprecated: ICU 2.6 Use the URES_NONE constant instead.
+             Resource type constant for "no resource".
+
+             :attr:`RES_NONE` is deprecated since ICU 2.6. Use
+             :attr:`URES_NONE` instead.
              )doc")
       .value("RES_STRING", RES_STRING, R"doc(
-             Deprecated: ICU 2.6 Use the URES_STRING constant instead.
+             Resource type constant for 16-bit Unicode strings.
+
+             :attr:`RES_STRING` is deprecated since ICU 2.6. Use
+             :attr:`URES_STRING` instead.
              )doc")
       .value("RES_BINARY", RES_BINARY, R"doc(
-             Deprecated: ICU 2.6 Use the URES_BINARY constant instead.
+             Resource type constant for binary data.
+
+             :attr:`RES_BINARY` is deprecated since ICU 2.6. Use
+             :attr:`URES_BINARY` instead.
              )doc")
       .value("RES_TABLE", RES_TABLE, R"doc(
-             Deprecated: ICU 2.6 Use the URES_TABLE constant instead.
+             Resource type constant for tables of key-value pairs.
+
+             :attr:`RES_TABLE` is deprecated since ICU 2.6. Use
+             :attr:`URES_TABLE` instead.
              )doc")
       .value("RES_ALIAS", RES_ALIAS, R"doc(
-             Deprecated: ICU 2.6 Use the URES_ALIAS constant instead.
+             Resource type constant for aliases; internally stores a string
+             which identifies the actual resource storing the data (can be in
+             a different resource bundle).
+
+             Resolved internally before delivering the actual resource
+             through the API.
+
+             :attr:`RES_ALIAS` is deprecated since ICU 2.6. Use
+             :attr:`URES_ALIAS` instead.
              )doc")
       .value("RES_INT", RES_INT, R"doc(
-             Deprecated: ICU 2.6 Use the URES_INT constant instead.
+             Resource type constant for a single 28-bit integer, interpreted
+             as signed or unsigned by the :meth:`ResourceBundle.get_int` or
+             :meth:`ResourceBundle.get_uint` function.
+
+             :attr:`RES_INT` is deprecated since ICU 2.6. Use :attr:`URES_INT`
+             instead.
              )doc")
       .value("RES_ARRAY", RES_ARRAY, R"doc(
-             Deprecated: ICU 2.6 Use the URES_ARRAY constant instead.
+             Resource type constant for arrays of resources.
+
+             :attr:`RES_ARRAY` is deprecated since ICU 2.6. Use
+             :attr:`URES_ARRAY` instead.
              )doc")
       .value("RES_INT_VECTOR", RES_INT_VECTOR, R"doc(
-             Deprecated: ICU 2.6 Use the URES_INT_VECTOR constant instead.
+             Resource type constant for vectors of 32-bit integers.
+
+             :attr:`RES_INT_VECTOR` is deprecated since ICU 2.6. Use
+             :attr:`URES_INT_VECTOR`
+             instead.
              )doc")
       .value("RES_RESERVED", RES_RESERVED,
              R"doc(
@@ -90,7 +123,8 @@ Numeric constants for types of resource items.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UResourceBundle

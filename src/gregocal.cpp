@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
@@ -507,12 +508,13 @@ void init_gregocal(py::module &m) {
   //
   // enum icu::GregorianCalendar::EEras
   //
-  py::enum_<GregorianCalendar::EEras>(gc, "EEras", py::arithmetic(), R"doc(
+  py::native_enum<GregorianCalendar::EEras>(gc, "EEras", "enum.IntEnum", R"doc(
 Useful constants for :class:`GregorianCalendar` and :class:`TimeZone`.
       )doc")
-      .value("BC", GregorianCalendar::EEras::BC)
-      .value("AD", GregorianCalendar::EEras::AD)
-      .export_values();
+      .value("BC", GregorianCalendar::EEras::BC, "")
+      .value("AD", GregorianCalendar::EEras::AD, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::GregorianCalendar

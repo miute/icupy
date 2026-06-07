@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/currpinf.h>
 #include <unicode/decimfmt.h>
@@ -14,13 +15,16 @@ void init_decimfmt(py::module & /* m */,
   //
   // enum icu::DecimalFormat::EPadPosition
   //
-  py::enum_<DecimalFormat::EPadPosition>(df, "EPadPosition", py::arithmetic(),
-                                         "Pad position.")
-      .value("PAD_BEFORE_PREFIX", DecimalFormat::kPadBeforePrefix)
-      .value("PAD_AFTER_PREFIX", DecimalFormat::kPadAfterPrefix)
-      .value("PAD_BEFORE_SUFFIX", DecimalFormat::kPadBeforeSuffix)
-      .value("PAD_AFTER_SUFFIX", DecimalFormat::kPadAfterSuffix)
-      .export_values();
+  py::native_enum<DecimalFormat::EPadPosition>(df, "EPadPosition",
+                                               "enum.IntEnum", R"doc(
+Pad position.
+      )doc")
+      .value("PAD_BEFORE_PREFIX", DecimalFormat::kPadBeforePrefix, "")
+      .value("PAD_AFTER_PREFIX", DecimalFormat::kPadAfterPrefix, "")
+      .value("PAD_BEFORE_SUFFIX", DecimalFormat::kPadBeforeSuffix, "")
+      .value("PAD_AFTER_SUFFIX", DecimalFormat::kPadAfterSuffix, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::DecimalFormat

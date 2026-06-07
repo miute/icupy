@@ -1,12 +1,13 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/ucurr.h>
 
 void init_ucurr(py::module &m) {
   //
   // enum UCurrCurrencyType
   //
-  py::enum_<UCurrCurrencyType>(m, "UCurrCurrencyType", py::arithmetic(),
-                               R"doc(
+  py::native_enum<UCurrCurrencyType>(m, "UCurrCurrencyType", "enum.IntEnum",
+                                     R"doc(
 Selector constants for ``ucurr_openCurrencies()``.
       )doc")
       .value("UCURR_ALL", UCURR_ALL, R"doc(
@@ -37,13 +38,14 @@ Selector constants for ``ucurr_openCurrencies()``.
 
              These codes are in general public use.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   //
   // enum UCurrencyUsage
   //
-  py::enum_<UCurrencyUsage>(m, "UCurrencyUsage", py::arithmetic(), R"doc(
+  py::native_enum<UCurrencyUsage>(m, "UCurrencyUsage", "enum.IntEnum", R"doc(
 Currency Usage used for Decimal Format.
       )doc")
       .value("UCURR_USAGE_STANDARD", UCURR_USAGE_STANDARD, R"doc(
@@ -55,13 +57,14 @@ Currency Usage used for Decimal Format.
              A setting to specify currency usage which determines currency
              digit and rounding for cash usage, for example: "50 NT$".
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
   //
   // enum UCurrNameStyle
   //
-  py::enum_<UCurrNameStyle>(m, "UCurrNameStyle", py::arithmetic(), R"doc(
+  py::native_enum<UCurrNameStyle>(m, "UCurrNameStyle", "enum.IntEnum", R"doc(
 Selector constants for ``ucurr_getName()``.
       )doc")
       .value("UCURR_SYMBOL_NAME", UCURR_SYMBOL_NAME, R"doc(
@@ -99,5 +102,6 @@ Selector constants for ``ucurr_getName()``.
              not necessarily as widely used as the regular symbol.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
-      .export_values();
+      .export_values()
+      .finalize();
 }

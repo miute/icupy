@@ -1,35 +1,43 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/unum.h>
 
 void init_unum(py::module &m) {
   //
   // enum UCurrencySpacing
   //
-  py::enum_<UCurrencySpacing>(m, "UCurrencySpacing", py::arithmetic(),
-                              "Constants for specifying currency spacing.")
-      .value("UNUM_CURRENCY_MATCH", UNUM_CURRENCY_MATCH)
-      .value("UNUM_CURRENCY_SURROUNDING_MATCH", UNUM_CURRENCY_SURROUNDING_MATCH)
-      .value("UNUM_CURRENCY_INSERT", UNUM_CURRENCY_INSERT)
-      .export_values();
+  py::native_enum<UCurrencySpacing>(m, "UCurrencySpacing", "enum.IntEnum",
+                                    R"doc(
+Constants for specifying currency spacing.
+      )doc")
+      .value("UNUM_CURRENCY_MATCH", UNUM_CURRENCY_MATCH, "")
+      .value("UNUM_CURRENCY_SURROUNDING_MATCH", UNUM_CURRENCY_SURROUNDING_MATCH,
+             "")
+      .value("UNUM_CURRENCY_INSERT", UNUM_CURRENCY_INSERT, "")
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   //
   // enum UNumberCompactStyle
   //
-  py::enum_<UNumberCompactStyle>(
-      m, "UNumberCompactStyle", py::arithmetic(),
-      "Constants for specifying short or long format.")
-      .value("UNUM_SHORT", UNUM_SHORT)
-      .value("UNUM_LONG", UNUM_LONG)
-      .export_values();
+  py::native_enum<UNumberCompactStyle>(m, "UNumberCompactStyle", "enum.IntEnum",
+                                       R"doc(
+Constants for specifying short or long format.
+      )doc")
+      .value("UNUM_SHORT", UNUM_SHORT, "")
+      .value("UNUM_LONG", UNUM_LONG, "")
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   //
   // enum UNumberFormatAttribute
   //
-  py::enum_<UNumberFormatAttribute>(
-      m, "UNumberFormatAttribute", py::arithmetic(),
-      "Possible :class:`NumberFormat` numeric attributes.")
+  py::native_enum<UNumberFormatAttribute>(m, "UNumberFormatAttribute",
+                                          "enum.IntEnum", R"doc(
+Possible :class:`NumberFormat` numeric attributes.
+      )doc")
       .value("UNUM_PARSE_INT_ONLY", UNUM_PARSE_INT_ONLY, R"doc(
              Parse integers only.
              )doc")
@@ -172,31 +180,32 @@ void init_unum(py::module &m) {
              :class:`number.NumberFormatter`.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   //
   // enum UNumberFormatFields
   //
-  py::enum_<UNumberFormatFields>(m, "UNumberFormatFields", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UNumberFormatFields>(m, "UNumberFormatFields", "enum.IntEnum",
+                                       R"doc(
 :class:`FieldPosition` selector for format fields defined by
 :class:`NumberFormat`.
       )doc")
-      .value("UNUM_INTEGER_FIELD", UNUM_INTEGER_FIELD)
-      .value("UNUM_FRACTION_FIELD", UNUM_FRACTION_FIELD)
-      .value("UNUM_DECIMAL_SEPARATOR_FIELD", UNUM_DECIMAL_SEPARATOR_FIELD)
-      .value("UNUM_EXPONENT_SYMBOL_FIELD", UNUM_EXPONENT_SYMBOL_FIELD)
-      .value("UNUM_EXPONENT_SIGN_FIELD", UNUM_EXPONENT_SIGN_FIELD)
-      .value("UNUM_EXPONENT_FIELD", UNUM_EXPONENT_FIELD)
-      .value("UNUM_GROUPING_SEPARATOR_FIELD", UNUM_GROUPING_SEPARATOR_FIELD)
-      .value("UNUM_CURRENCY_FIELD", UNUM_CURRENCY_FIELD)
-      .value("UNUM_PERCENT_FIELD", UNUM_PERCENT_FIELD)
-      .value("UNUM_PERMILL_FIELD", UNUM_PERMILL_FIELD)
-      .value("UNUM_SIGN_FIELD", UNUM_SIGN_FIELD)
+      .value("UNUM_INTEGER_FIELD", UNUM_INTEGER_FIELD, "")
+      .value("UNUM_FRACTION_FIELD", UNUM_FRACTION_FIELD, "")
+      .value("UNUM_DECIMAL_SEPARATOR_FIELD", UNUM_DECIMAL_SEPARATOR_FIELD, "")
+      .value("UNUM_EXPONENT_SYMBOL_FIELD", UNUM_EXPONENT_SYMBOL_FIELD, "")
+      .value("UNUM_EXPONENT_SIGN_FIELD", UNUM_EXPONENT_SIGN_FIELD, "")
+      .value("UNUM_EXPONENT_FIELD", UNUM_EXPONENT_FIELD, "")
+      .value("UNUM_GROUPING_SEPARATOR_FIELD", UNUM_GROUPING_SEPARATOR_FIELD, "")
+      .value("UNUM_CURRENCY_FIELD", UNUM_CURRENCY_FIELD, "")
+      .value("UNUM_PERCENT_FIELD", UNUM_PERCENT_FIELD, "")
+      .value("UNUM_PERMILL_FIELD", UNUM_PERMILL_FIELD, "")
+      .value("UNUM_SIGN_FIELD", UNUM_SIGN_FIELD, "")
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-      .value("UNUM_MEASURE_UNIT_FIELD", UNUM_MEASURE_UNIT_FIELD)
-      .value("UNUM_COMPACT_FIELD", UNUM_COMPACT_FIELD)
+      .value("UNUM_MEASURE_UNIT_FIELD", UNUM_MEASURE_UNIT_FIELD, "")
+      .value("UNUM_COMPACT_FIELD", UNUM_COMPACT_FIELD, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 #if (U_ICU_VERSION_MAJOR_NUM >= 71)
       .value("UNUM_APPROXIMATELY_SIGN_FIELD", UNUM_APPROXIMATELY_SIGN_FIELD,
@@ -205,15 +214,16 @@ void init_unum(py::module &m) {
              generic SIGN field.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 71)
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
   //
   // enum UNumberFormatMinimumGroupingDigits
   //
-  py::enum_<UNumberFormatMinimumGroupingDigits>(
-      m, "UNumberFormatMinimumGroupingDigits", py::arithmetic(), R"doc(
+  py::native_enum<UNumberFormatMinimumGroupingDigits>(
+      m, "UNumberFormatMinimumGroupingDigits", "enum.IntEnum", R"doc(
 Selectors with special numeric values to use locale default minimum grouping
 digits for the :class:`DecimalFormat.set_minimum_grouping_digits` method.
 
@@ -229,40 +239,43 @@ Do not use these constants with the :class:`number.NumberFormatter` API.
              on values smaller than 10000 (such that there is a minimum of two
              digits before the first separator).
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
   //
   // enum UNumberFormatPadPosition
   //
-  py::enum_<UNumberFormatPadPosition>(m, "UNumberFormatPadPosition",
-                                      py::arithmetic(),
-                                      "Possible number format pad positions.")
-      .value("UNUM_PAD_BEFORE_PREFIX", UNUM_PAD_BEFORE_PREFIX)
-      .value("UNUM_PAD_AFTER_PREFIX", UNUM_PAD_AFTER_PREFIX)
-      .value("UNUM_PAD_BEFORE_SUFFIX", UNUM_PAD_BEFORE_SUFFIX)
-      .value("UNUM_PAD_AFTER_SUFFIX", UNUM_PAD_AFTER_SUFFIX)
-      .export_values();
+  py::native_enum<UNumberFormatPadPosition>(m, "UNumberFormatPadPosition",
+                                            "enum.IntEnum", R"doc(
+Possible number format pad positions.
+      )doc")
+      .value("UNUM_PAD_BEFORE_PREFIX", UNUM_PAD_BEFORE_PREFIX, "")
+      .value("UNUM_PAD_AFTER_PREFIX", UNUM_PAD_AFTER_PREFIX, "")
+      .value("UNUM_PAD_BEFORE_SUFFIX", UNUM_PAD_BEFORE_SUFFIX, "")
+      .value("UNUM_PAD_AFTER_SUFFIX", UNUM_PAD_AFTER_SUFFIX, "")
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberFormatRoundingMode
   //
-  py::enum_<UNumberFormatRoundingMode>(m, "UNumberFormatRoundingMode",
-                                       py::arithmetic(), R"doc(
+  py::native_enum<UNumberFormatRoundingMode>(m, "UNumberFormatRoundingMode",
+                                             "enum.IntEnum", R"doc(
 Possible number format rounding modes.
 
 For more detail on rounding modes, see:
 https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
       )doc")
-      .value("UNUM_ROUND_CEILING", UNUM_ROUND_CEILING)
-      .value("UNUM_ROUND_FLOOR", UNUM_ROUND_FLOOR)
-      .value("UNUM_ROUND_DOWN", UNUM_ROUND_DOWN)
-      .value("UNUM_ROUND_UP", UNUM_ROUND_UP)
+      .value("UNUM_ROUND_CEILING", UNUM_ROUND_CEILING, "")
+      .value("UNUM_ROUND_FLOOR", UNUM_ROUND_FLOOR, "")
+      .value("UNUM_ROUND_DOWN", UNUM_ROUND_DOWN, "")
+      .value("UNUM_ROUND_UP", UNUM_ROUND_UP, "")
       .value("UNUM_ROUND_HALFEVEN", UNUM_ROUND_HALFEVEN, R"doc(
              Half-even rounding.
              )doc")
-      .value("UNUM_ROUND_HALFDOWN", UNUM_ROUND_HALFDOWN)
-      .value("UNUM_ROUND_HALFUP", UNUM_ROUND_HALFUP)
+      .value("UNUM_ROUND_HALFDOWN", UNUM_ROUND_HALFDOWN, "")
+      .value("UNUM_ROUND_HALFUP", UNUM_ROUND_HALFUP, "")
       .value("UNUM_ROUND_UNNECESSARY", UNUM_ROUND_UNNECESSARY, R"doc(
              UNUM_ROUND_UNNECESSARY reports an error if formatted result is
              not exact.
@@ -278,13 +291,16 @@ https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
              Rounds ties toward -∞.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberFormatStyle
   //
-  py::enum_<UNumberFormatStyle>(m, "UNumberFormatStyle", py::arithmetic(),
-                                "Possible number format styles.")
+  py::native_enum<UNumberFormatStyle>(m, "UNumberFormatStyle", "enum.IntEnum",
+                                      R"doc(
+Possible number format styles.
+      )doc")
       .value("UNUM_PATTERN_DECIMAL", UNUM_PATTERN_DECIMAL, R"doc(
              Decimal format defined by a pattern string.
              )doc")
@@ -379,14 +395,16 @@ https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
       .value("UNUM_IGNORE", UNUM_IGNORE, R"doc(
              Alias for :attr:`UNUM_PATTERN_DECIMAL`.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberFormatSymbol
   //
-  py::enum_<UNumberFormatSymbol>(
-      m, "UNumberFormatSymbol", py::arithmetic(),
-      "Constants for specifying a number format symbol.")
+  py::native_enum<UNumberFormatSymbol>(m, "UNumberFormatSymbol", "enum.IntEnum",
+                                       R"doc(
+Constants for specifying a number format symbol.
+      )doc")
       .value("UNUM_DECIMAL_SEPARATOR_SYMBOL", UNUM_DECIMAL_SEPARATOR_SYMBOL,
              R"doc(
              The decimal separator.
@@ -480,14 +498,16 @@ https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
              Multiplication sign.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNumberFormatTextAttribute
   //
-  py::enum_<UNumberFormatTextAttribute>(
-      m, "UNumberFormatTextAttribute", py::arithmetic(),
-      "Possible :class:`NumberFormat` text attributes.")
+  py::native_enum<UNumberFormatTextAttribute>(m, "UNumberFormatTextAttribute",
+                                              "enum.IntEnum", R"doc(
+Possible :class:`NumberFormat` text attributes.
+      )doc")
       .value("UNUM_POSITIVE_PREFIX", UNUM_POSITIVE_PREFIX, R"doc(
              Positive prefix.
              )doc")
@@ -526,5 +546,6 @@ https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
              the CLDR LDML spec for more information about RBNF rulesets:
              http://www.unicode.org/reports/tr35/tr35-numbers.html#Rule-Based_Number_Formatting
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 }

@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
+#include <pybind11/native_enum.h>
 #include <unicode/ureldatefmt.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
@@ -9,8 +10,8 @@ void init_ureldatefmt(py::module &m) {
   //
   // UDateRelativeDateTimeFormatterStyle
   //
-  py::enum_<UDateRelativeDateTimeFormatterStyle>(
-      m, "UDateRelativeDateTimeFormatterStyle", py::arithmetic(), R"doc(
+  py::native_enum<UDateRelativeDateTimeFormatterStyle>(
+      m, "UDateRelativeDateTimeFormatterStyle", "enum.IntEnum", R"doc(
 Formatting style for :class:`RelativeDateTimeFormatter`.
       )doc")
       .value("UDAT_STYLE_LONG", UDAT_STYLE_LONG, R"doc(
@@ -26,15 +27,16 @@ Formatting style for :class:`RelativeDateTimeFormatter`.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   //
   // enum URelativeDateTimeFormatterField
   //
-  py::enum_<URelativeDateTimeFormatterField>(
-      m, "URelativeDateTimeFormatterField", py::arithmetic(), R"doc(
+  py::native_enum<URelativeDateTimeFormatterField>(
+      m, "URelativeDateTimeFormatterField", "enum.IntEnum", R"doc(
 :class:`FieldPosition` selector for format fields defined by
 :class:`RelativeDateTimeFormatter`.
       )doc")
@@ -44,15 +46,16 @@ Formatting style for :class:`RelativeDateTimeFormatter`.
       .value("UDAT_REL_NUMERIC_FIELD", UDAT_REL_NUMERIC_FIELD, R"doc(
              Represent a number quantity, like "3" in "3 days ago".
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 57)
   //
   // enum URelativeDateTimeUnit
   //
-  py::enum_<URelativeDateTimeUnit>(m, "URelativeDateTimeUnit", py::arithmetic(),
-                                   R"doc(
+  py::native_enum<URelativeDateTimeUnit>(m, "URelativeDateTimeUnit",
+                                         "enum.IntEnum", R"doc(
 Represent the unit for formatting a relative date.
 
 e.g. "in 5 days" or "next year"
@@ -121,6 +124,7 @@ e.g. "in 5 days" or "next year"
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
 }

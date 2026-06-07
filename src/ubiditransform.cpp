@@ -2,6 +2,7 @@
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 58)
 #include "ubiditransformptr.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/ushape.h>
 
 using namespace icu;
@@ -26,7 +27,7 @@ void init_ubiditransform(py::module &m) {
   //
   // enum UBiDiMirroring
   //
-  py::enum_<UBiDiMirroring>(m, "UBiDiMirroring", py::arithmetic(), R"doc(
+  py::native_enum<UBiDiMirroring>(m, "UBiDiMirroring", "enum.IntEnum", R"doc(
 UBiDiMirroring indicates whether or not characters with the "mirrored" property
 in RTL runs should be replaced with their mirror-image counterparts.
 
@@ -49,12 +50,13 @@ in RTL runs should be replaced with their mirror-image counterparts.
              :func:`ubidi_write_reverse` with the
              :attr:`UBIDI_DO_MIRRORING` option bit set.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UBiDiOrder
   //
-  py::enum_<UBiDiOrder>(m, "UBiDiOrder", py::arithmetic(), R"doc(
+  py::native_enum<UBiDiOrder>(m, "UBiDiOrder", "enum.IntEnum", R"doc(
 UBiDiOrder indicates the order of text.
 
 This bidi transformation engine supports all possible combinations (4 in total)
@@ -96,7 +98,8 @@ of input and output text order:
 
              This is a default for output text.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct UBiDiTransform

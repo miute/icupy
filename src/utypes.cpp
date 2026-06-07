@@ -1,10 +1,11 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 
 void init_utypes(py::module &m) {
   //
   // enum UErrorCode
   //
-  py::enum_<UErrorCode>(m, "UErrorCode", py::arithmetic(), R"doc(
+  py::native_enum<UErrorCode>(m, "UErrorCode", "enum.IntEnum", R"doc(
 Standard ICU4C error code type.
 
 The error code is used by ICU4C functions to report errors.
@@ -19,7 +20,15 @@ The error code is used by ICU4C functions to report errors.
              error).
              )doc")
       .value("U_ERROR_WARNING_START", U_ERROR_WARNING_START, R"doc(
-             Start of information results (semantically successful).
+             :attr:`U_ERROR_WARNING_START` is same as
+             :attr:`U_USING_FALLBACK_WARNING`.
+
+             :attr:`U_USING_FALLBACK_WARNING`:
+             a resource bundle lookup returned a fallback result (not an
+             error).
+
+             :attr:`U_ERROR_WARNING_START`:
+             start of information results (semantically successful).
              )doc")
       .value("U_USING_DEFAULT_WARNING", U_USING_DEFAULT_WARNING, R"doc(
              A resource bundle lookup returned a result from the root locale
@@ -183,7 +192,14 @@ The error code is used by ICU4C functions to report errors.
              Missing '$' or duplicate variable name.
              )doc")
       .value("U_PARSE_ERROR_START", U_PARSE_ERROR_START, R"doc(
-             Start of Transliterator errors.
+             :attr:`U_PARSE_ERROR_START` is same as
+             :attr:`U_BAD_VARIABLE_DEFINITION`.
+
+             :attr:`U_BAD_VARIABLE_DEFINITION`:
+             missing '$' or duplicate variable name.
+
+             :attr:`U_PARSE_ERROR_START`:
+             start of Transliterator errors.
              )doc")
       .value("U_MALFORMED_RULE", U_MALFORMED_RULE, R"doc(
              Elements of a rule are misplaced.
@@ -303,7 +319,14 @@ The error code is used by ICU4C functions to report errors.
              Syntax error in format pattern.
              )doc")
       .value("U_FMT_PARSE_ERROR_START", U_FMT_PARSE_ERROR_START, R"doc(
-             Start of format library errors.
+             :attr:`U_FMT_PARSE_ERROR_START` is same as
+             :attr:`U_UNEXPECTED_TOKEN`.
+
+             :attr:`U_UNEXPECTED_TOKEN`:
+             syntax error in format pattern.
+
+             :attr:`U_FMT_PARSE_ERROR_START`:
+             start of format library errors.
              )doc")
       .value("U_MULTIPLE_DECIMAL_SEPARATORS", U_MULTIPLE_DECIMAL_SEPARATORS,
              R"doc(
@@ -311,8 +334,10 @@ The error code is used by ICU4C functions to report errors.
              )doc")
       .value("U_MULTIPLE_DECIMAL_SEPERATORS", U_MULTIPLE_DECIMAL_SEPERATORS,
              R"doc(
-             Typo: kept for backward compatibility. Use
-             U_MULTIPLE_DECIMAL_SEPARATORS.
+             More than one decimal separator in number pattern.
+
+             :attr:`U_MULTIPLE_DECIMAL_SEPERATORS` is a typo.
+             Use :attr:`U_MULTIPLE_DECIMAL_SEPARATORS` instead.
              )doc")
       .value("U_MULTIPLE_EXPONENTIAL_SYMBOLS", U_MULTIPLE_EXPONENTIAL_SYMBOLS,
              R"doc(
@@ -389,7 +414,13 @@ The error code is used by ICU4C functions to report errors.
              An internal error (bug) was detected.
              )doc")
       .value("U_BRK_ERROR_START", U_BRK_ERROR_START, R"doc(
-             Start of codes indicating Break Iterator failures.
+             :attr:`U_BRK_ERROR_START` is same as :attr:`U_BRK_INTERNAL_ERROR`.
+
+             :attr:`U_BRK_INTERNAL_ERROR`:
+             an internal error (bug) was detected.
+
+             :attr:`U_BRK_ERROR_START`:
+             start of codes indicating Break Iterator failures.
              )doc")
       .value("U_BRK_HEX_DIGITS_EXPECTED", U_BRK_HEX_DIGITS_EXPECTED, R"doc(
              Hex digits expected as part of a escaped char in a rule.
@@ -439,7 +470,14 @@ The error code is used by ICU4C functions to report errors.
              An internal error (bug) was detected.
              )doc")
       .value("U_REGEX_ERROR_START", U_REGEX_ERROR_START, R"doc(
-             Start of codes indicating Regexp failures.
+             :attr:`U_REGEX_ERROR_START` is same as
+             :attr:`U_REGEX_INTERNAL_ERROR`.
+
+             :attr:`U_REGEX_INTERNAL_ERROR`:
+             an internal error (bug) was detected.
+
+             :attr:`U_REGEX_ERROR_START`:
+             start of codes indicating regexp failures.
              )doc")
       .value("U_REGEX_RULE_SYNTAX", U_REGEX_RULE_SYNTAX, R"doc(
              Syntax error in regexp pattern.
@@ -512,29 +550,36 @@ The error code is used by ICU4C functions to report errors.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .value("U_IDNA_PROHIBITED_ERROR", U_IDNA_PROHIBITED_ERROR)
-      .value("U_IDNA_ERROR_START", U_IDNA_ERROR_START)
-      .value("U_IDNA_UNASSIGNED_ERROR", U_IDNA_UNASSIGNED_ERROR)
-      .value("U_IDNA_CHECK_BIDI_ERROR", U_IDNA_CHECK_BIDI_ERROR)
-      .value("U_IDNA_STD3_ASCII_RULES_ERROR", U_IDNA_STD3_ASCII_RULES_ERROR)
-      .value("U_IDNA_ACE_PREFIX_ERROR", U_IDNA_ACE_PREFIX_ERROR)
-      .value("U_IDNA_VERIFICATION_ERROR", U_IDNA_VERIFICATION_ERROR)
-      .value("U_IDNA_LABEL_TOO_LONG_ERROR", U_IDNA_LABEL_TOO_LONG_ERROR)
-      .value("U_IDNA_ZERO_LENGTH_LABEL_ERROR", U_IDNA_ZERO_LENGTH_LABEL_ERROR)
+      .value("U_IDNA_PROHIBITED_ERROR", U_IDNA_PROHIBITED_ERROR, "")
+      .value("U_IDNA_ERROR_START", U_IDNA_ERROR_START, "")
+      .value("U_IDNA_UNASSIGNED_ERROR", U_IDNA_UNASSIGNED_ERROR, "")
+      .value("U_IDNA_CHECK_BIDI_ERROR", U_IDNA_CHECK_BIDI_ERROR, "")
+      .value("U_IDNA_STD3_ASCII_RULES_ERROR", U_IDNA_STD3_ASCII_RULES_ERROR, "")
+      .value("U_IDNA_ACE_PREFIX_ERROR", U_IDNA_ACE_PREFIX_ERROR, "")
+      .value("U_IDNA_VERIFICATION_ERROR", U_IDNA_VERIFICATION_ERROR, "")
+      .value("U_IDNA_LABEL_TOO_LONG_ERROR", U_IDNA_LABEL_TOO_LONG_ERROR, "")
+      .value("U_IDNA_ZERO_LENGTH_LABEL_ERROR", U_IDNA_ZERO_LENGTH_LABEL_ERROR,
+             "")
       .value("U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR",
-             U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR)
+             U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR, "")
       .value("U_IDNA_ERROR_LIMIT", U_IDNA_ERROR_LIMIT, R"doc(
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .value("U_STRINGPREP_PROHIBITED_ERROR", U_STRINGPREP_PROHIBITED_ERROR)
-      .value("U_STRINGPREP_UNASSIGNED_ERROR", U_STRINGPREP_UNASSIGNED_ERROR)
-      .value("U_STRINGPREP_CHECK_BIDI_ERROR", U_STRINGPREP_CHECK_BIDI_ERROR)
+      .value("U_STRINGPREP_PROHIBITED_ERROR", U_STRINGPREP_PROHIBITED_ERROR, "")
+      .value("U_STRINGPREP_UNASSIGNED_ERROR", U_STRINGPREP_UNASSIGNED_ERROR, "")
+      .value("U_STRINGPREP_CHECK_BIDI_ERROR", U_STRINGPREP_CHECK_BIDI_ERROR, "")
       .value("U_PLUGIN_ERROR_START", U_PLUGIN_ERROR_START, R"doc(
              Start of codes indicating plugin failures.
              )doc")
       .value("U_PLUGIN_TOO_HIGH", U_PLUGIN_TOO_HIGH, R"doc(
-             The plugin's level is too high to be loaded right now.
+             :attr:`U_PLUGIN_TOO_HIGH` is same as :attr:`U_PLUGIN_ERROR_START`.
+
+             :attr:`U_PLUGIN_TOO_HIGH`:
+             the plugin's level is too high to be loaded right now.
+
+             :attr:`U_PLUGIN_ERROR_START`:
+             start of codes indicating plugin failures.
              )doc")
       .value("U_PLUGIN_DIDNT_SET_LEVEL", U_PLUGIN_DIDNT_SET_LEVEL, R"doc(
              The plugin didn't call uplug_setPlugLevel in response to a QUERY.
@@ -544,10 +589,22 @@ The error code is used by ICU4C functions to report errors.
              see ICU ticket #12420.
              )doc")
       .value("U_ERROR_LIMIT", U_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             :attr:`U_ERROR_LIMIT` is same as :attr:`U_PLUGIN_ERROR_LIMIT`.
+
+             :attr:`U_PLUGIN_ERROR_LIMIT`:
+             one more than the highest normal plug-in error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
+
+             :attr:`U_ERROR_LIMIT`:
+             one more than the highest normal error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // Functions

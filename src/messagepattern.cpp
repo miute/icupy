@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/messagepattern.h>
@@ -11,8 +12,8 @@ void init_messagepattern(py::module &m) {
   //
   // enum UMessagePatternApostropheMode
   //
-  py::enum_<UMessagePatternApostropheMode>(m, "UMessagePatternApostropheMode",
-                                           py::arithmetic(), R"doc(
+  py::native_enum<UMessagePatternApostropheMode>(
+      m, "UMessagePatternApostropheMode", "enum.IntEnum", R"doc(
 Mode for when an apostrophe starts quoted literal text for
 :class:`MessageFormat` output.
 
@@ -43,13 +44,14 @@ output, even when the pair is between two single, text-quoting apostrophes.
 
              This is the behavior of ICU 4.6 and earlier, and of the JDK.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UMessagePatternArgName
   //
-  py::enum_<decltype(UMSGPAT_ARG_NAME_NOT_NUMBER)>(m, "UMessagePatternArgName",
-                                                   py::arithmetic(), R"doc(
+  py::native_enum<decltype(UMSGPAT_ARG_NAME_NOT_NUMBER)>(
+      m, "UMessagePatternArgName", "enum.IntEnum", R"doc(
 Enum constants for :meth:`MessagePattern.validate_argument_name`.
 
 .. warning::
@@ -70,13 +72,14 @@ Enum constants for :meth:`MessagePattern.validate_argument_name`.
              ASCII digits but there is a leading zero or the number is too
              large.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UMessagePatternArgType
   //
-  py::enum_<UMessagePatternArgType>(m, "UMessagePatternArgType",
-                                    py::arithmetic(), R"doc(
+  py::native_enum<UMessagePatternArgType>(m, "UMessagePatternArgType",
+                                          "enum.IntEnum", R"doc(
 Argument type constants.
 
 Returned by :meth:`MessagePattern.Part.get_arg_type` for ARG_START and
@@ -119,13 +122,14 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
              style parts sequence and semantics as :attr:`UMSGPAT_ARG_TYPE_PLURAL`.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UMessagePatternPartType
   //
-  py::enum_<UMessagePatternPartType>(m, "UMessagePatternPartType",
-                                     py::arithmetic(), R"doc(
+  py::native_enum<UMessagePatternPartType>(m, "UMessagePatternPartType",
+                                           "enum.IntEnum", R"doc(
 :class:`MessagePattern.Part` type constants.
       )doc")
       .value("UMSGPAT_PART_TYPE_MSG_START", UMSGPAT_PART_TYPE_MSG_START, R"doc(
@@ -226,7 +230,8 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
              The part value is an index into an internal array of numeric
              values; use :meth:`MessagePattern.get_numeric_value`.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::MessagePattern

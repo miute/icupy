@@ -1,25 +1,30 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/ucal.h>
 
 void init_ucal(py::module &m) {
   //
   // enum UCalendarAMPMs
   //
-  py::enum_<UCalendarAMPMs>(m, "UCalendarAMPMs", py::arithmetic(),
-                            "Possible AM/PM values in a UCalendar.")
+  py::native_enum<UCalendarAMPMs>(m, "UCalendarAMPMs", "enum.IntEnum", R"doc(
+Possible AM/PM values in a UCalendar.
+      )doc")
       .value("UCAL_AM", UCAL_AM, R"doc(
              AM.
              )doc")
       .value("UCAL_PM", UCAL_PM, R"doc(
              PM.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarAttribute
   //
-  py::enum_<UCalendarAttribute>(m, "UCalendarAttribute", py::arithmetic(),
-                                "Types of UCalendar attributes.")
+  py::native_enum<UCalendarAttribute>(m, "UCalendarAttribute", "enum.IntEnum",
+                                      R"doc(
+Types of UCalendar attributes.
+      )doc")
       .value("UCAL_LENIENT", UCAL_LENIENT, R"doc(
              Lenient parsing.
              )doc")
@@ -42,13 +47,16 @@ void init_ucal(py::module &m) {
              offset transitions.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarDateFields
   //
-  py::enum_<UCalendarDateFields>(m, "UCalendarDateFields", py::arithmetic(),
-                                 "Possible fields in a UCalendar.")
+  py::native_enum<UCalendarDateFields>(m, "UCalendarDateFields", "enum.IntEnum",
+                                       R"doc(
+Possible fields in a UCalendar.
+      )doc")
       .value("UCAL_ERA", UCAL_ERA,
              R"doc(
              Field number indicating the era, e.g., AD or BC in the Gregorian
@@ -256,16 +264,18 @@ void init_ucal(py::module &m) {
       .value("UCAL_DAY_OF_MONTH", UCAL_DAY_OF_MONTH, R"doc(
              Field number indicating the day of the month.
 
-             This is a synonym for :attr:`UCAL_DATE`. The first day of the
-             month has value 1.
+             The first day of the month has value 1.
+
+             :attr:`UCAL_DAY_OF_MONTH` is same as :attr:`UCAL_DATE`.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarDaysOfWeek
   //
-  py::enum_<UCalendarDaysOfWeek>(m, "UCalendarDaysOfWeek", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UCalendarDaysOfWeek>(m, "UCalendarDaysOfWeek", "enum.IntEnum",
+                                       R"doc(
 Useful constant for days of week.
 
 .. note::
@@ -296,14 +306,16 @@ Useful constant for days of week.
       .value("UCAL_SATURDAY", UCAL_SATURDAY, R"doc(
              Saturday.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarDisplayNameType
   //
-  py::enum_<UCalendarDisplayNameType>(
-      m, "UCalendarDisplayNameType", py::arithmetic(),
-      "Possible formats for a UCalendar's display name.")
+  py::native_enum<UCalendarDisplayNameType>(m, "UCalendarDisplayNameType",
+                                            "enum.IntEnum", R"doc(
+Possible formats for a UCalendar's display name.
+      )doc")
       .value("UCAL_STANDARD", UCAL_STANDARD, R"doc(
              Standard display name.
              )doc")
@@ -317,13 +329,16 @@ Useful constant for days of week.
              R"doc(
              Short daylight savings display name.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarLimitType
   //
-  py::enum_<UCalendarLimitType>(m, "UCalendarLimitType", py::arithmetic(),
-                                "Possible limit values for a UCalendar.")
+  py::native_enum<UCalendarLimitType>(m, "UCalendarLimitType", "enum.IntEnum",
+                                      R"doc(
+Possible limit values for a UCalendar.
+      )doc")
       .value("UCAL_MINIMUM", UCAL_MINIMUM, R"doc(
              Minimum value.
              )doc")
@@ -342,12 +357,13 @@ Useful constant for days of week.
       .value("UCAL_ACTUAL_MAXIMUM", UCAL_ACTUAL_MAXIMUM, R"doc(
              Actual maximum value.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarMonths
   //
-  py::enum_<UCalendarMonths>(m, "UCalendarMonths", py::arithmetic(), R"doc(
+  py::native_enum<UCalendarMonths>(m, "UCalendarMonths", "enum.IntEnum", R"doc(
 Possible months in a UCalendar.
 
 .. note::
@@ -397,32 +413,37 @@ Possible months in a UCalendar.
              Although the Gregorian calendar does not use this value, lunar
              calendars do.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UCalendarType
   //
-  py::enum_<UCalendarType>(m, "UCalendarType", py::arithmetic(),
-                           "Possible types of UCalendar.")
+  py::native_enum<UCalendarType>(m, "UCalendarType", "enum.IntEnum", R"doc(
+Possible types of UCalendar.
+      )doc")
       .value("UCAL_TRADITIONAL", UCAL_TRADITIONAL, R"doc(
              Despite the name, :attr:`UCAL_TRADITIONAL` designates the locale's
              default calendar, which may be the Gregorian calendar or some
              other calendar.
              )doc")
       .value("UCAL_DEFAULT", UCAL_DEFAULT, R"doc(
-             A better name for :attr:`UCAL_TRADITIONAL`.
+             The locale's default calendar.
+
+             Use :attr:`UCAL_DEFAULT` instead of :attr:`UCAL_TRADITIONAL`.
              )doc")
       .value("UCAL_GREGORIAN", UCAL_GREGORIAN, R"doc(
-             Unambiguously designates the Gregorian calendar for the locale.
+             The Gregorian calendar for the locale.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   //
   // enum UCalendarWallTimeOption
   //
-  py::enum_<UCalendarWallTimeOption>(m, "UCalendarWallTimeOption",
-                                     py::arithmetic(), R"doc(
+  py::native_enum<UCalendarWallTimeOption>(m, "UCalendarWallTimeOption",
+                                           "enum.IntEnum", R"doc(
 Options for handling ambiguous wall time at time zone offset transitions.
       )doc")
       .value("UCAL_WALLTIME_LAST", UCAL_WALLTIME_LAST, R"doc(
@@ -446,15 +467,17 @@ Options for handling ambiguous wall time at time zone offset transitions.
              This option is valid for
              :attr:`~UCalendarAttribute.UCAL_SKIPPED_WALL_TIME`.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
   //
   // enum UCalendarWeekdayType
   //
-  py::enum_<UCalendarWeekdayType>(
-      m, "UCalendarWeekdayType", py::arithmetic(),
-      "Weekday types, as returned by :meth:`Calendar.get_day_of_week_type`.")
+  py::native_enum<UCalendarWeekdayType>(m, "UCalendarWeekdayType",
+                                        "enum.IntEnum", R"doc(
+Weekday types, as returned by :meth:`Calendar.get_day_of_week_type`.
+      )doc")
       .value("UCAL_WEEKDAY", UCAL_WEEKDAY, R"doc(
              Designates a full weekday (no part of the day is included in the
              weekend).
@@ -477,13 +500,14 @@ Options for handling ambiguous wall time at time zone offset transitions.
              Call :meth:`Calendar.get_weekend_transition` to get the time of
              transition.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum USystemTimeZoneType
   //
-  py::enum_<USystemTimeZoneType>(m, "USystemTimeZoneType", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<USystemTimeZoneType>(m, "USystemTimeZoneType", "enum.IntEnum",
+                                       R"doc(
 System time zone type constants used by filtering zones in
 :meth:`TimeZone.create_time_zone_id_enumeration`.
       )doc")
@@ -497,14 +521,15 @@ System time zone type constants used by filtering zones in
              UCAL_ZONE_TYPE_CANONICAL_LOCATION, R"doc(
              Canonical system zones associated with actual locations.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   //
   // enum UTimeZoneLocalOption
   //
-  py::enum_<UTimeZoneLocalOption>(m, "UTimeZoneLocalOption", py::arithmetic(),
-                                  R"doc(
+  py::native_enum<UTimeZoneLocalOption>(m, "UTimeZoneLocalOption",
+                                        "enum.IntEnum", R"doc(
 Options used by :meth:`BasicTimeZone.get_offset_from_local` to specify how to
 interpret an input time when it does not exist, or when it is ambiguous, around
 a time zone transition.
@@ -551,16 +576,18 @@ a time zone transition.
              When both sides of a time zone transition are standard time, or
              daylight saving time, the local time after the transition is used.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
   //
   // enum UTimeZoneTransitionType
   //
-  py::enum_<UTimeZoneTransitionType>(
-      m, "UTimeZoneTransitionType", py::arithmetic(),
-      "Time zone transition types for ``ucal_getTimeZoneTransitionDate()``.")
+  py::native_enum<UTimeZoneTransitionType>(m, "UTimeZoneTransitionType",
+                                           "enum.IntEnum", R"doc(
+  Time zone transition types for ``ucal_getTimeZoneTransitionDate()``.
+  )doc")
       .value("UCAL_TZ_TRANSITION_NEXT", UCAL_TZ_TRANSITION_NEXT, R"doc(
              Get the next transition after the current date, i.e. excludes
              the current date.
@@ -579,7 +606,8 @@ a time zone transition.
              Get the previous transition on or before the current date, i.e.
              may include the current date.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 50)
 
   m.attr("UCAL_UNKNOWN_ZONE_ID") = UCAL_UNKNOWN_ZONE_ID;

@@ -2,6 +2,7 @@
 #include "ulocdataptr.hpp"
 #include "usetptr.hpp"
 #include "uversion.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -23,9 +24,10 @@ void init_ulocdata(py::module &m) {
   //
   // enum ULocaleDataDelimiterType
   //
-  py::enum_<ULocaleDataDelimiterType>(m, "ULocaleDataDelimiterType",
-                                      py::arithmetic(),
-                                      "The possible types of delimiters.")
+  py::native_enum<ULocaleDataDelimiterType>(m, "ULocaleDataDelimiterType",
+                                            "enum.IntEnum", R"doc(
+The possible types of delimiters.
+      )doc")
       .value("ULOCDATA_QUOTATION_START", ULOCDATA_QUOTATION_START, R"doc(
              Quotation start.
              )doc")
@@ -44,14 +46,16 @@ void init_ulocdata(py::module &m) {
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum ULocaleDataExemplarSetType
   //
-  py::enum_<ULocaleDataExemplarSetType>(
-      m, "ULocaleDataExemplarSetType", py::arithmetic(),
-      "The possible types of exemplar character sets.")
+  py::native_enum<ULocaleDataExemplarSetType>(m, "ULocaleDataExemplarSetType",
+                                              "enum.IntEnum", R"doc(
+The possible types of exemplar character sets.
+      )doc")
       .value("ULOCDATA_ES_STANDARD", ULOCDATA_ES_STANDARD, R"doc(
              Basic set.
              )doc")
@@ -68,14 +72,16 @@ void init_ulocdata(py::module &m) {
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UMeasurementSystem
   //
-  py::enum_<UMeasurementSystem>(
-      m, "UMeasurementSystem", py::arithmetic(),
-      "Enumeration for representing the measurement systems.")
+  py::native_enum<UMeasurementSystem>(m, "UMeasurementSystem", "enum.IntEnum",
+                                      R"doc(
+Enumeration for representing the measurement systems.
+      )doc")
       .value("UMS_SI", UMS_SI, R"doc(
              Measurement system specified by SI otherwise known as Metric
              system.
@@ -90,7 +96,8 @@ void init_ulocdata(py::module &m) {
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct ULocaleData

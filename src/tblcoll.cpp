@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "uversion.hpp"
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/chariter.h>
@@ -38,8 +39,8 @@ void init_tblcoll(py::module &m) {
   //
   // enum icu::Collator::ECollationStrength
   //
-  py::enum_<Collator::ECollationStrength>(coll, "ECollationStrength",
-                                          py::arithmetic(), R"doc(
+  py::native_enum<Collator::ECollationStrength>(coll, "ECollationStrength",
+                                                "enum.IntEnum", R"doc(
 Base letter represent a primary difference.
 
 Set comparison level to :attr:`PRIMARY` to ignore secondary and tertiary
@@ -71,27 +72,29 @@ generated from :class:`Collator` objects.
 
    :class:`UColAttributeValue`
       )doc")
-      .value("PRIMARY", Collator::PRIMARY)
-      .value("SECONDARY", Collator::SECONDARY)
-      .value("TERTIARY", Collator::TERTIARY)
-      .value("QUATERNARY", Collator::QUATERNARY)
-      .value("IDENTICAL", Collator::IDENTICAL)
-      .export_values();
+      .value("PRIMARY", Collator::PRIMARY, "")
+      .value("SECONDARY", Collator::SECONDARY, "")
+      .value("TERTIARY", Collator::TERTIARY, "")
+      .value("QUATERNARY", Collator::QUATERNARY, "")
+      .value("IDENTICAL", Collator::IDENTICAL, "")
+      .export_values()
+      .finalize();
 
   //
   // enum icu::Collator::EComparisonResult
   //
-  py::enum_<Collator::EComparisonResult>(coll, "EComparisonResult",
-                                         py::arithmetic(), R"doc(
+  py::native_enum<Collator::EComparisonResult>(coll, "EComparisonResult",
+                                               "enum.IntEnum", R"doc(
 Enum returned by :meth:`Collator.compare` method.
 
 .. version-deprecated:: ICU2.6
    Use :class:`UCollationResult` instead.
       )doc")
-      .value("LESS", Collator::LESS)
-      .value("EQUAL", Collator::EQUAL)
-      .value("GREATER", Collator::GREATER)
-      .export_values();
+      .value("LESS", Collator::LESS, "")
+      .value("EQUAL", Collator::EQUAL, "")
+      .value("GREATER", Collator::GREATER, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::Collator

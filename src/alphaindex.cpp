@@ -1,6 +1,7 @@
 #include "context.hpp"
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/alphaindex.h>
 #include <unicode/tblcoll.h>
@@ -17,8 +18,8 @@ void init_alphaindex(py::module &m) {
   //
   // enum UAlphabeticIndexLabelType
   //
-  py::enum_<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType",
-                                       py::arithmetic(), R"doc(
+  py::native_enum<UAlphabeticIndexLabelType>(m, "UAlphabeticIndexLabelType",
+                                             "enum.IntEnum", R"doc(
 Constants for Alphabetic Index Label Types.
 
 The form of these enum constants anticipates having a plain C API for
@@ -51,7 +52,8 @@ Alphabetic Indexes that will also use them.
              after all of the bucket labels in this
              index.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::AlphabeticIndex

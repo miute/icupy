@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 50)
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <unicode/strenum.h>
@@ -14,8 +15,10 @@ void init_tznames(py::module &m) {
   //
   // enum UTimeZoneNameType
   //
-  py::enum_<UTimeZoneNameType>(m, "UTimeZoneNameType", py::arithmetic(),
-                               "Constants for time zone display name types.")
+  py::native_enum<UTimeZoneNameType>(m, "UTimeZoneNameType", "enum.IntEnum",
+                                     R"doc(
+Constants for time zone display name types.
+      )doc")
       .value("UTZNM_UNKNOWN", UTZNM_UNKNOWN, R"doc(
              Unknown display name type.
              )doc")
@@ -44,7 +47,8 @@ void init_tznames(py::module &m) {
              Exemplar location name, such as "Los Angeles".
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::TimeZoneNames

@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
+#include <pybind11/native_enum.h>
 #if (U_ICU_VERSION_MAJOR_NUM >= 62)
 #include <unicode/unumberformatter.h>
 #else
@@ -13,8 +14,8 @@ void init_unumberformatter(py::module &m) {
   //
   // enum UNumberDecimalSeparatorDisplay
   //
-  py::enum_<UNumberDecimalSeparatorDisplay>(m, "UNumberDecimalSeparatorDisplay",
-                                            py::arithmetic(), R"doc(
+  py::native_enum<UNumberDecimalSeparatorDisplay>(
+      m, "UNumberDecimalSeparatorDisplay", "enum.IntEnum", R"doc(
 Enum declaring how to render the decimal separator.
 
 - AUTO: "1", "1.1"
@@ -31,14 +32,15 @@ Enum declaring how to render the decimal separator.
              Always show the decimal separator, even if there are no digits
              to display after the separator.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
   //
   // enum UNumberGroupingStrategy
   //
-  py::enum_<UNumberGroupingStrategy>(m, "UNumberGroupingStrategy",
-                                     py::arithmetic(), R"doc(
+  py::native_enum<UNumberGroupingStrategy>(m, "UNumberGroupingStrategy",
+                                           "enum.IntEnum", R"doc(
 Enum declaring the strategy for when and how to display grouping separators
 (i.e., the separator, often a comma or period, after every 2-3 powers of ten).
 
@@ -112,15 +114,16 @@ the docs of each option for details.
 
              Do not use locale data for determining the grouping strategy.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   //
   // enum UNumberRoundingPriority
   //
-  py::enum_<UNumberRoundingPriority>(m, "UNumberRoundingPriority",
-                                     py::arithmetic(), R"doc(
+  py::native_enum<UNumberRoundingPriority>(m, "UNumberRoundingPriority",
+                                           "enum.IntEnum", R"doc(
 Enum declaring how to resolve conflicts between maximum fraction digits and
 maximum significant digits.
 
@@ -168,14 +171,15 @@ Note that this larger number caused the two modes to favor the opposite result.
              Favor adherence to all rounding constraints by producing lower
              precision.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
   //
   // enum UNumberSignDisplay
   //
-  py::enum_<UNumberSignDisplay>(m, "UNumberSignDisplay", py::arithmetic(),
-                                R"doc(
+  py::native_enum<UNumberSignDisplay>(m, "UNumberSignDisplay", "enum.IntEnum",
+                                      R"doc(
 Enum declaring how to denote positive and negative numbers.
 
 Example outputs when formatting 123, 0, and -123 in *en-US*:
@@ -262,14 +266,15 @@ by locale.
              negative zero.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
-      .export_values();
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 69)
   //
   // enum UNumberTrailingZeroDisplay
   //
-  py::enum_<UNumberTrailingZeroDisplay>(m, "UNumberTrailingZeroDisplay",
-                                        py::arithmetic(), R"doc(
+  py::native_enum<UNumberTrailingZeroDisplay>(m, "UNumberTrailingZeroDisplay",
+                                              "enum.IntEnum", R"doc(
 Enum declaring how to render trailing zeros.
 
 - AUTO: 0.90, 1.00, 1.10
@@ -284,13 +289,15 @@ Enum declaring how to render trailing zeros.
              Same as :attr:`UNUM_TRAILING_ZERO_AUTO`, but hide trailing zeros
              after the decimal separator if they are all zero.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 
   //
   // enum UNumberUnitWidth
   //
-  py::enum_<UNumberUnitWidth>(m, "UNumberUnitWidth", py::arithmetic(), R"doc(
+  py::native_enum<UNumberUnitWidth>(m, "UNumberUnitWidth", "enum.IntEnum",
+                                    R"doc(
 Enum declaring how to render units, including currencies.
 
 Example outputs when formatting 123 USD and 123 meters in *en-CA*:
@@ -371,6 +378,7 @@ This enum is similar to :class:`UMeasureFormatWidth`.
              measure units, the behavior is equivalent to not specifying the
              unit at all.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 }

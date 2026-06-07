@@ -1,12 +1,13 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/unorm2.h>
 
 void init_unorm2(py::module &m) {
   //
   // enum UNormalization2Mode
   //
-  py::enum_<UNormalization2Mode>(m, "UNormalization2Mode", py::arithmetic(),
-                                 R"doc(
+  py::native_enum<UNormalization2Mode>(m, "UNormalization2Mode", "enum.IntEnum",
+                                       R"doc(
 Constants for normalization modes.
 
 For details about standard Unicode normalization forms and about the
@@ -49,13 +50,14 @@ http://www.unicode.org/unicode/reports/tr15/
              useful for processing. Not a standard Unicode normalization form.
              For details see http://www.unicode.org/notes/tn5/#FCC
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum UNormalizationCheckResult
   //
-  py::enum_<UNormalizationCheckResult>(m, "UNormalizationCheckResult",
-                                       py::arithmetic(), R"doc(
+  py::native_enum<UNormalizationCheckResult>(m, "UNormalizationCheckResult",
+                                             "enum.IntEnum", R"doc(
 Result values for normalization quick check functions.
 
 For details see
@@ -74,5 +76,6 @@ http://www.unicode.org/reports/tr15/#Detecting_Normalization_Forms
              FCC, when a backward-combining character is found for which the
              surrounding text would have to be analyzed further.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 }

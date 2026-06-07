@@ -1,11 +1,12 @@
 #include "main.hpp"
+#include <pybind11/native_enum.h>
 #include <unicode/uloc.h>
 
 void init_uloc(py::module &m) {
   //
   // enum UAcceptResult
   //
-  py::enum_<UAcceptResult>(m, "UAcceptResult", py::arithmetic(), R"doc(
+  py::native_enum<UAcceptResult>(m, "UAcceptResult", "enum.IntEnum", R"doc(
 Output values which uloc_acceptLanguage()
 writes to the `outResult` parameter.
       )doc")
@@ -21,26 +22,29 @@ writes to the `outResult` parameter.
              For example, the Accept-Language list includes 'ja_JP' and is
              matched with available locale 'ja'.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // enum ULayoutType
   //
-  py::enum_<ULayoutType>(m, "ULayoutType", py::arithmetic(), R"doc(
+  py::native_enum<ULayoutType>(m, "ULayoutType", "enum.IntEnum", R"doc(
 Enums for the return value for the character and line orientation functions.
       )doc")
-      .value("ULOC_LAYOUT_LTR", ULOC_LAYOUT_LTR)
-      .value("ULOC_LAYOUT_RTL", ULOC_LAYOUT_RTL)
-      .value("ULOC_LAYOUT_TTB", ULOC_LAYOUT_TTB)
-      .value("ULOC_LAYOUT_BTT", ULOC_LAYOUT_BTT)
-      .value("ULOC_LAYOUT_UNKNOWN", ULOC_LAYOUT_UNKNOWN)
-      .export_values();
+      .value("ULOC_LAYOUT_LTR", ULOC_LAYOUT_LTR, "")
+      .value("ULOC_LAYOUT_RTL", ULOC_LAYOUT_RTL, "")
+      .value("ULOC_LAYOUT_TTB", ULOC_LAYOUT_TTB, "")
+      .value("ULOC_LAYOUT_BTT", ULOC_LAYOUT_BTT, "")
+      .value("ULOC_LAYOUT_UNKNOWN", ULOC_LAYOUT_UNKNOWN, "")
+      .export_values()
+      .finalize();
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   //
   // enum ULocAvailableType
   //
-  py::enum_<ULocAvailableType>(m, "ULocAvailableType", py::arithmetic(), R"doc(
+  py::native_enum<ULocAvailableType>(m, "ULocAvailableType", "enum.IntEnum",
+                                     R"doc(
 Types for ``uloc_getAvailableByType`` and ``uloc_countAvailableByType``.
       )doc")
       .value("ULOC_AVAILABLE_DEFAULT", ULOC_AVAILABLE_DEFAULT, R"doc(
@@ -68,14 +72,15 @@ Types for ``uloc_getAvailableByType`` and ``uloc_countAvailableByType``.
              The union of the locales in ULOC_AVAILABLE_DEFAULT and
              ULOC_AVAILABLE_ONLY_LEGACY_ALIASES.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
 
   //
   // enum ULocDataLocaleType
   //
-  py::enum_<ULocDataLocaleType>(m, "ULocDataLocaleType", py::arithmetic(),
-                                R"doc(
+  py::native_enum<ULocDataLocaleType>(m, "ULocDataLocaleType", "enum.IntEnum",
+                                      R"doc(
 Constants for ``.get_locale()``.
 
 Allow user to select whether she wants information on requested, valid or
@@ -99,7 +104,8 @@ that locale (although it may be empty).
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   m.attr("ULOC_CANADA") = ULOC_CANADA;
   m.attr("ULOC_CANADA_FRENCH") = ULOC_CANADA_FRENCH;

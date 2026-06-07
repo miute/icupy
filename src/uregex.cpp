@@ -2,6 +2,7 @@
 #include "context.hpp"
 #include <optional>
 #include <pybind11/functional.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 namespace icupy {
@@ -52,7 +53,7 @@ void init_uregex(py::module &m) {
   //
   // enum URegexpFlag
   //
-  py::enum_<URegexpFlag>(m, "URegexpFlag", py::arithmetic(), R"doc(
+  py::native_enum<URegexpFlag>(m, "URegexpFlag", "enum.IntEnum", R"doc(
 Constants for Regular Expression Match Modes.
 
 .. seealso::
@@ -115,7 +116,8 @@ Constants for Regular Expression Match Modes.
              special meaning. If this flag is not set, these escaped letters
              represent themselves.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // URegexFindProgressCallback

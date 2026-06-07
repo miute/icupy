@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <memory>
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <sstream>
@@ -100,17 +101,22 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   //
   // enum icu::UnicodeString::EInvariant
   //
-  py::enum_<UnicodeString::EInvariant>(us, "EInvariant", py::arithmetic(),
-                                       R"doc(
+  py::native_enum<UnicodeString::EInvariant>(us, "EInvariant", "enum.IntEnum",
+                                             R"doc(
 Constant to be used in the ``UnicodeString(src, text_length, inv)``
 constructor which constructs a Unicode string from an invariant-character
 string.
       )doc")
       .value("INVARIANT", UnicodeString::kInvariant, R"doc(
-             Use the :attr:`US_INV` instead of the full qualification for this
-             value.
+             All characters in a string are invariant characters.
+
+             .. note::
+
+                Use the :attr:`US_INV` instead of the full qualification for
+                this value.
       )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // class icu::UnicodeString

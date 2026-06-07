@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
+#include <pybind11/native_enum.h>
 #include <unicode/uregion.h>
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
@@ -9,7 +10,7 @@ void init_uregion(py::module &m) {
   //
   // enum URegionType
   //
-  py::enum_<URegionType>(m, "URegionType", py::arithmetic(), R"doc(
+  py::native_enum<URegionType>(m, "URegionType", "enum.IntEnum", R"doc(
 URegionType is an enumeration defining the different types of regions.
       )doc")
       .value("URGN_UNKNOWN", URGN_UNKNOWN, R"doc(
@@ -41,6 +42,7 @@ URegionType is an enumeration defining the different types of regions.
              Deprecated: ICU 58 The numeric value may change over time,
              see ICU ticket #12420.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

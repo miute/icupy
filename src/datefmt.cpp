@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include <unicode/basictz.h>
 #include <unicode/datefmt.h>
@@ -23,7 +24,7 @@ void init_datefmt(py::module &m) {
   //
   // enum icu::DateFormat::EStyle
   //
-  py::enum_<DateFormat::EStyle>(df, "EStyle", py::arithmetic(), R"doc(
+  py::native_enum<DateFormat::EStyle>(df, "EStyle", "enum.IntEnum", R"doc(
 Constants for various style patterns.
 
 These reflect the order of items in the DateTimePatterns resource.
@@ -31,21 +32,22 @@ There are 4 time patterns, 4 date patterns, the default date-time pattern, and
 4 date-time patterns. Each block of 4 values in the resource occurs in the
 order full, long, medium, short.
       )doc")
-      .value("NONE", DateFormat::EStyle::kNone)
-      .value("FULL", DateFormat::EStyle::kFull)
-      .value("LONG", DateFormat::EStyle::kLong)
-      .value("MEDIUM", DateFormat::EStyle::kMedium)
-      .value("SHORT", DateFormat::EStyle::kShort)
-      .value("DATE_OFFSET", DateFormat::EStyle::kDateOffset)
-      .value("DATE_TIME", DateFormat::EStyle::kDateTime)
-      .value("DATE_TIME_OFFSET", DateFormat::EStyle::kDateTimeOffset)
-      .value("RELATIVE", DateFormat::EStyle::kRelative)
-      .value("FULL_RELATIVE", DateFormat::EStyle::kFullRelative)
-      .value("LONG_RELATIVE", DateFormat::EStyle::kLongRelative)
-      .value("MEDIUM_RELATIVE", DateFormat::EStyle::kMediumRelative)
-      .value("SHORT_RELATIVE", DateFormat::EStyle::kShortRelative)
-      .value("DEFAULT", DateFormat::EStyle::kDefault)
-      .export_values();
+      .value("NONE", DateFormat::EStyle::kNone, "")
+      .value("FULL", DateFormat::EStyle::kFull, "")
+      .value("LONG", DateFormat::EStyle::kLong, "")
+      .value("MEDIUM", DateFormat::EStyle::kMedium, "")
+      .value("SHORT", DateFormat::EStyle::kShort, "")
+      .value("DATE_OFFSET", DateFormat::EStyle::kDateOffset, "")
+      .value("DATE_TIME", DateFormat::EStyle::kDateTime, "")
+      .value("DATE_TIME_OFFSET", DateFormat::EStyle::kDateTimeOffset, "")
+      .value("RELATIVE", DateFormat::EStyle::kRelative, "")
+      .value("FULL_RELATIVE", DateFormat::EStyle::kFullRelative, "")
+      .value("LONG_RELATIVE", DateFormat::EStyle::kLongRelative, "")
+      .value("MEDIUM_RELATIVE", DateFormat::EStyle::kMediumRelative, "")
+      .value("SHORT_RELATIVE", DateFormat::EStyle::kShortRelative, "")
+      .value("DEFAULT", DateFormat::EStyle::kDefault, "")
+      .export_values()
+      .finalize();
 
   //
   // class icu::DateFormat

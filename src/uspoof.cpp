@@ -2,6 +2,7 @@
 #include "usetptr.hpp"
 #include "uspoofptr.hpp"
 #include <optional>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 
 using namespace icu;
@@ -35,7 +36,8 @@ void init_uspoof(py::module &m) {
   //
   // enum URestrictionLevel
   //
-  py::enum_<URestrictionLevel>(m, "URestrictionLevel", py::arithmetic(), R"doc(
+  py::native_enum<URestrictionLevel>(m, "URestrictionLevel", "enum.IntEnum",
+                                     R"doc(
 Constants from UAX #39 for use in :func:`uspoof_set_restriction_level`, and
 for returned identifier restriction levels in check results.
 
@@ -92,13 +94,14 @@ for returned identifier restriction levels in check results.
              value of :func:`uspoof_check`.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
-      .export_values();
+      .export_values()
+      .finalize();
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 
   //
   // enum USpoofChecks
   //
-  py::enum_<USpoofChecks>(m, "USpoofChecks", py::arithmetic(), R"doc(
+  py::native_enum<USpoofChecks>(m, "USpoofChecks", "enum.IntEnum", R"doc(
 Enum for the kinds of checks that :class:`USpoofChecker` can perform.
 
 These enum values are used both to select the set of checks that will
@@ -155,7 +158,18 @@ be performed, and to report results from the check function.
              :func:`uspoof_check`.
              )doc")
       .value("USPOOF_SINGLE_SCRIPT", USPOOF_SINGLE_SCRIPT, R"doc(
-             Deprecated: ICU 51 Use :attr:`USPOOF_RESTRICTION_LEVEL` instead.
+             Check that an identifier is no looser than the specified
+             RestrictionLevel.
+
+             The default if :func:`uspoof_set_restriction_level` is not called
+             is :attr:`URestrictionLevel.USPOOF_HIGHLY_RESTRICTIVE`.
+
+             If :attr:`USPOOF_AUX_INFO` is enabled the actual restriction level
+             of the identifier being tested will also be returned by
+             :func:`uspoof_check`.
+
+             :attr:`USPOOF_SINGLE_SCRIPT` is deprecated since ICU 51.
+             Use :attr:`USPOOF_RESTRICTION_LEVEL` instead.
              )doc")
       .value("USPOOF_INVISIBLE", USPOOF_INVISIBLE, R"doc(
              Check an identifier for the presence of invisible characters,
@@ -219,7 +233,8 @@ be performed, and to report results from the check function.
              :attr:`USPOOF_ALL_CHECKS`) will be zero when an identifier
              passes all checks.
              )doc")
-      .export_values();
+      .export_values()
+      .finalize();
 
   //
   // struct USpoofChecker
