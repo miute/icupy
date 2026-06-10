@@ -96,6 +96,7 @@ python_add_library(
     src/strenum.cpp
     src/stringoptions.cpp
     src/stsearch.cpp
+    src/symtable.cpp
     src/tblcoll.cpp
     src/timezone.cpp
     src/tmunit.cpp
