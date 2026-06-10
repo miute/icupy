@@ -5,6 +5,48 @@ import pytest
 from icupy import icu
 
 
+# from icu/source/test/intltest/usettest.cpp: TokenSymbolTable
+class _TestSymbolTable(icu.SymbolTable):
+    def __init__(self) -> None:
+        super().__init__()
+        self._symbols: dict[icu.UnicodeString, icu.UnicodeString] = {}
+        self.num_calls: dict[str, int] = {
+            "lookup": 0,
+            "lookup_matcher": 0,
+            "parse_reference": 0,
+        }
+
+    def add(self, var: str, value: str) -> None:
+        self._symbols[icu.UnicodeString(var)] = icu.UnicodeString(value)
+
+    def lookup(self, s: icu.UnicodeString) -> icu.UnicodeString | None:
+        self.num_calls["lookup"] += 1
+        return self._symbols.get(s)
+
+    def lookup_matcher(self, ch: int) -> icu.UnicodeFunctor | None:
+        _ = ch
+        self.num_calls["lookup_matcher"] += 1
+        return None
+
+    def parse_reference(
+        self, text: icu.UnicodeString, pos: icu.ParsePosition, limit: int
+    ) -> icu.UnicodeString:
+        self.num_calls["parse_reference"] += 1
+        start = pos.get_index()
+        i = start
+        result = icu.UnicodeString()
+        while i < limit:
+            c = text.char_at(i)
+            if (i == start and not icu.u_is_id_start(c)) or not icu.u_is_id_part(c):
+                break
+            i += 1
+        if i == start:
+            return result
+        pos.set_index(i)
+        text.extract_between(start, i, result)
+        return result
+
+
 def test_add() -> None:
     test1 = icu.UnicodeSet()
     assert test1.size() == 0
@@ -240,12 +282,34 @@ def test_apply_pattern() -> None:
         test1.apply_pattern(icu.UnicodeString(), pos, options, None)
     assert exc_info.value.args[0] == icu.UErrorCode.U_MALFORMED_SET
 
+    # with SymbolTable
+    symbols = _TestSymbolTable()
+    symbols.add("VOWEL", "[aeiouAEIOU]")
+    symbols.add("DIGIT", "[0-9]")
+    assert symbols.num_calls["lookup"] == 0
+    assert symbols.num_calls["lookup_matcher"] == 0
+    assert symbols.num_calls["parse_reference"] == 0
+
+    test1a = icu.UnicodeSet()
+    pattern = "[$VOWEL $DIGIT xyz]"
+    pos = icu.ParsePosition()
+    options = icu.USET_IGNORE_SPACE
+    test1a.apply_pattern(pattern, pos, options, symbols)
+    assert symbols.num_calls["lookup"] > 0
+    assert symbols.num_calls["lookup_matcher"] > 0
+    assert symbols.num_calls["parse_reference"] > 0
+    assert test1a.contains("a")
+    assert test1a.contains("5")
+    assert test1a.contains("x")
+    assert not test1a.contains("b")
+
     # [2]
     # UnicodeSet &icu::UnicodeSet::applyPattern(
     #       const UnicodeString &pattern,
     #       UErrorCode &status
     # )
     test2 = icu.UnicodeSet()
+    pattern = icu.UnicodeString("[a-z{ab}]")
     result = test2.apply_pattern(pattern)
     assert isinstance(result, icu.UnicodeSet)
     assert id(result) == id(test2)
@@ -1032,6 +1096,26 @@ def test_unicode_set() -> None:
     assert pos.get_index() == 11
     assert test6a.size() == 10
     assert test6a.contains(0x30, 0x39)
+
+    # with SymbolTable
+    symbols = _TestSymbolTable()
+    symbols.add("VOWEL", "[aeiouAEIOU]")
+    symbols.add("DIGIT", "[0-9]")
+    assert symbols.num_calls["lookup"] == 0
+    assert symbols.num_calls["lookup_matcher"] == 0
+    assert symbols.num_calls["parse_reference"] == 0
+
+    pattern = "[$VOWEL $DIGIT xyz]"
+    pos = icu.ParsePosition()
+    options = icu.USET_IGNORE_SPACE
+    test6b = icu.UnicodeSet(pattern, pos, options, symbols)
+    assert symbols.num_calls["lookup"] > 0
+    assert symbols.num_calls["lookup_matcher"] > 0
+    assert symbols.num_calls["parse_reference"] > 0
+    assert test6b.contains("a")
+    assert test6b.contains("5")
+    assert test6b.contains("x")
+    assert not test6b.contains("b")
 
     # [7]
     # icu::UnicodeSet::UnicodeSet(const UnicodeSet &o)

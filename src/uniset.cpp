@@ -13,6 +13,15 @@
 
 using namespace icu;
 
+void init_unifunctor(py::module &m) {
+  //
+  // class icu::UnicodeFunctor
+  //
+  py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor", R"doc(
+      Abstract base class for :class:`UnicodeFilter`.
+      )doc");
+}
+
 void init_uniset(py::module &m, py::module &h) {
   //
   // enum icu::UMatchDegree
@@ -49,13 +58,6 @@ match.
              )doc")
       .export_values()
       .finalize();
-
-  //
-  // class icu::UnicodeFunctor
-  //
-  py::class_<UnicodeFunctor, UObject>(m, "UnicodeFunctor", R"doc(
-      Abstract base class for :class:`UnicodeFilter`.
-      )doc");
 
   //
   // class icu::UnicodeMatcher
@@ -141,14 +143,6 @@ match.
       },
       py::keep_alive<0, 1>());
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
-
-  //
-  // class icu::SymbolTable
-  //
-  // TODO: Implement a Python wrapper for SymbolTable.
-  py::class_<SymbolTable>(m, "SymbolTable", R"doc(
-      Abstract base class for symbol tables used in UnicodeSet pattern parsing.
-      )doc");
 
   //
   // class icu::UnicodeSet

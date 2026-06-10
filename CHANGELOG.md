@@ -9,6 +9,10 @@
 - Replace anonymous enum members within a class with class attributes ([#243])
 - Change the base class of the enums from `pybind11_object` to `enum.IntEnum` ([#245])
 
+### Added
+
+- Add `icupy.icu.SymbolTable` class; `UnicodeSet.__init__()` and `UnicodeSet.apply_pattern()` now support `SymbolTable` ([#246])
+
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
 
@@ -406,3 +410,4 @@ Initial release.
 [#242]: https://github.com/miute/icupy/pull/242
 [#243]: https://github.com/miute/icupy/pull/243
 [#245]: https://github.com/miute/icupy/pull/245
+[#246]: https://github.com/miute/icupy/pull/246

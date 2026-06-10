@@ -75,6 +75,7 @@ void init_sortkey(py::module &m);
 void init_strenum(py::module &m);
 void init_stringoptions(py::module &m);
 void init_stsearch(py::module &m);
+void init_symtable(py::module &m);
 void init_tblcoll(py::module &m);
 void init_timezone(py::module &m);
 void init_tmunit(py::module &m);
@@ -107,6 +108,7 @@ void init_uldnames(py::module &m);
 void init_ulistformatter(py::module &m);
 void init_uloc(py::module &m);
 void init_ulocdata(py::module &m);
+void init_unifunctor(py::module &m);
 void init_uniset(py::module &m, py::module &h);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                  py::class_<UnicodeString, Replaceable> &us);
@@ -316,6 +318,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_uset(m);           // Uset
   init_ucpmap(m);         // UCPMap
   init_uchar(m);          // u_getBinaryPropertySet(), u_getIntPropertyMap()
+  init_unifunctor(m);     // icu::UnicodeFunctor
+  init_symtable(m);       // icu::SymbolTable
   init_uniset(m, header); // icu::UnicodeSet
 
   init_strenum(m);  // icu::StringEnumeration
