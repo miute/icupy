@@ -50,7 +50,7 @@ void init_symtable(py::module &m) {
 
       .. seealso::
 
-         :meth:`UnicodeSet.__init__`,
+         :meth:`UnicodeSet.__init__`
          :meth:`UnicodeSet.apply_pattern`
 
       .. rubric:: Example
