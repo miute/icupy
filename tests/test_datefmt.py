@@ -122,7 +122,12 @@ def test_create_instance() -> None:
         icu.DateFormat.DEFAULT, icu.Locale.get_default()
     )
     assert isinstance(fmt1b, icu.DateFormat)
-    assert fmt1 == fmt1a == fmt1b
+
+    fmt1c = icu.DateFormat.create_date_instance(
+        icu.DateFormat.DEFAULT, str(icu.Locale.get_default())
+    )
+    assert isinstance(fmt1c, icu.DateFormat)
+    assert fmt1 == fmt1a == fmt1b == fmt1c
 
     # static DateFormat *icu::DateFormat::createDateTimeInstance(
     #       EStyle dateStyle = kDefault,
@@ -146,7 +151,14 @@ def test_create_instance() -> None:
         icu.Locale.get_default(),
     )
     assert isinstance(fmt2c, icu.DateFormat)
-    assert fmt2 == fmt2a == fmt2b == fmt2c
+
+    fmt2d = icu.DateFormat.create_date_time_instance(
+        icu.DateFormat.DEFAULT,
+        icu.DateFormat.DEFAULT,
+        str(icu.Locale.get_default()),
+    )
+    assert isinstance(fmt2d, icu.DateFormat)
+    assert fmt2 == fmt2a == fmt2b == fmt2c == fmt2d
 
     # static DateFormat *icu::DateFormat::createInstance(void)
     fmt3 = icu.DateFormat.create_instance()
@@ -171,8 +183,12 @@ def test_create_instance() -> None:
     fmt4b = icu.DateFormat.create_time_instance(
         icu.DateFormat.DEFAULT, icu.Locale.get_default()
     )
-    assert isinstance(fmt4b, icu.DateFormat)
-    assert fmt4 == fmt4a == fmt4b
+
+    fmt4c = icu.DateFormat.create_time_instance(
+        icu.DateFormat.DEFAULT, str(icu.Locale.get_default())
+    )
+    assert isinstance(fmt4c, icu.DateFormat)
+    assert fmt4 == fmt4a == fmt4b == fmt4c
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 55, reason="ICU4C<55")

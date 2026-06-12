@@ -64,17 +64,38 @@ order full, long, medium, short.
 
   df.def("clone", &DateFormat::clone);
 
-  df.def_static("create_date_instance", &DateFormat::createDateInstance,
-                py::arg("style") = DateFormat::kDefault,
-                py::arg_v("locale", Locale::getDefault(),
-                          "icupy.icu.Locale.get_default()"));
+  df.def_static(
+      "create_date_instance",
+      [](DateFormat::EStyle style,
+         std::optional<const icupy::LocaleVariant> &locale) {
+        return DateFormat::createDateInstance(
+            style,
+            locale ? icupy::to_locale(locale.value()) : Locale::getDefault());
+      },
+      py::arg("style") = DateFormat::kDefault, py::arg("locale") = std::nullopt,
+      R"doc(
+      Create a new date formatter with the specified date style and locale.
 
-  df.def_static("create_date_time_instance",
-                &DateFormat::createDateTimeInstance,
-                py::arg("date_style") = DateFormat::kDefault,
-                py::arg("time_style") = DateFormat::kDefault,
-                py::arg_v("locale", Locale::getDefault(),
-                          "icupy.icu.Locale.get_default()"));
+      *locale* is not specified, the current default locale is used.
+      )doc");
+
+  df.def_static(
+      "create_date_time_instance",
+      [](DateFormat::EStyle date_style, DateFormat::EStyle time_style,
+         std::optional<const icupy::LocaleVariant> &locale) {
+        return DateFormat::createDateTimeInstance(
+            date_style, time_style,
+            locale ? icupy::to_locale(locale.value()) : Locale::getDefault());
+      },
+      py::arg("date_style") = DateFormat::kDefault,
+      py::arg("time_style") = DateFormat::kDefault,
+      py::arg("locale") = std::nullopt,
+      R"doc(
+      Create a new date-time formatter with the specified date-time styles and
+      locale.
+
+      *locale* is not specified, the current default locale is used.
+      )doc");
 
   df.def_static("create_instance", &DateFormat::createInstance);
 
@@ -110,10 +131,20 @@ order full, long, medium, short.
           py::arg("skeleton"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
 
-  df.def_static("create_time_instance", &DateFormat::createTimeInstance,
-                py::arg("style") = DateFormat::kDefault,
-                py::arg_v("locale", Locale::getDefault(),
-                          "icupy.icu.Locale.get_default()"));
+  df.def_static(
+      "create_time_instance",
+      [](DateFormat::EStyle style,
+         std::optional<const icupy::LocaleVariant> &locale) {
+        return DateFormat::createTimeInstance(
+            style,
+            locale ? icupy::to_locale(locale.value()) : Locale::getDefault());
+      },
+      py::arg("style") = DateFormat::kDefault, py::arg("locale") = std::nullopt,
+      R"doc(
+      Create a new time formatter with the specified time style and locale.
+
+      *locale* is not specified, the current default locale is used.
+      )doc");
 
   df.def_static(
       "get_available_locales",

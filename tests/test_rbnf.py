@@ -439,6 +439,14 @@ def test_get_rule_set_display_name() -> None:
     assert isinstance(result, icu.UnicodeString)
     assert result in ["%main", "Main", "leMain", "das Main"]
 
+    result = fmt.get_rule_set_display_name("%main", icu.Locale.get_default())
+    assert isinstance(result, icu.UnicodeString)
+    assert result in ["%main", "Main", "leMain", "das Main"]
+
+    result = fmt.get_rule_set_display_name("%main", str(icu.Locale.get_default()))
+    assert isinstance(result, icu.UnicodeString)
+    assert result in ["%main", "Main", "leMain", "das Main"]
+
     result = fmt.get_rule_set_display_name(icu.UnicodeString("%main"), icu.Locale("de_DE_FOO"))
     assert isinstance(result, icu.UnicodeString)
     assert result == "das Main"
@@ -461,6 +469,14 @@ def test_get_rule_set_display_name() -> None:
     #       const Locale &locale = Locale::getDefault()
     # )
     result = fmt.get_rule_set_display_name(0)
+    assert isinstance(result, icu.UnicodeString)
+    assert result in ["%main", "Main", "leMain", "das Main"]
+
+    result = fmt.get_rule_set_display_name(0, icu.Locale.get_default())
+    assert isinstance(result, icu.UnicodeString)
+    assert result in ["%main", "Main", "leMain", "das Main"]
+
+    result = fmt.get_rule_set_display_name(0, str(icu.Locale.get_default()))
     assert isinstance(result, icu.UnicodeString)
     assert result in ["%main", "Main", "leMain", "das Main"]
 
