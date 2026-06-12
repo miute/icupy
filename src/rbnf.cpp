@@ -305,22 +305,32 @@ Tags for the predefined rulesets.
           "get_rule_set_display_name",
           [](RuleBasedNumberFormat &self,
              const icupy::UnicodeStringVariant &rule_set_name,
-             const icupy::LocaleVariant &locale) {
-            return self.getRuleSetDisplayName(icupy::to_unistr(rule_set_name),
-                                              icupy::to_locale(locale));
+             std::optional<const icupy::LocaleVariant> &locale) {
+            return self.getRuleSetDisplayName(
+                icupy::to_unistr(rule_set_name),
+                locale ? icupy::to_locale(locale.value())
+                       : Locale::getDefault());
           },
-          py::arg("rule_set_name"),
-          py::arg_v("locale", Locale::getDefault(),
-                    "icupy.icu.Locale.get_default()"))
+          py::arg("rule_set_name"), py::arg("locale") = std::nullopt, R"doc(
+      Return the display name of the specified rule set for the specified
+      locale.
+
+      *locale* is not specified, the current default locale is used.
+      )doc")
       .def(
           "get_rule_set_display_name",
           [](RuleBasedNumberFormat &self, int32_t index,
-             const icupy::LocaleVariant &locale) {
-            return self.getRuleSetDisplayName(index, icupy::to_locale(locale));
+             std::optional<const icupy::LocaleVariant> &locale) {
+            return self.getRuleSetDisplayName(
+                index, locale ? icupy::to_locale(locale.value())
+                              : Locale::getDefault());
           },
-          py::arg("index"),
-          py::arg_v("locale", Locale::getDefault(),
-                    "icupy.icu.Locale.get_default()"));
+          py::arg("index"), py::arg("locale") = std::nullopt, R"doc(
+      Return the display name of the rule set with the specified index for the
+      specified locale.
+
+      *locale* is not specified, the current default locale is used.
+      )doc");
 
   rbnf.def(
       "get_rule_set_display_name_locale",
