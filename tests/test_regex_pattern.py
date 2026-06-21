@@ -296,6 +296,22 @@ def test_split() -> None:
         _ = pattern.split(src1, dest1, 0)
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
+    dest1 = icu.UnicodeStringList(10)
+    result = pattern.split(src1, dest1)
+    assert result == 3
+    assert dest1[0] == "foo"
+    assert dest1[1] == "bar"
+    assert dest1[2] == "baz"
+
+    result = pattern.split(src1, dest1, 2)
+    assert result == 2
+    assert dest1[0] == "foo"
+    assert dest1[1] == "bar baz"
+
+    with pytest.raises(icu.ICUError) as exc_info:
+        _ = pattern.split(src1, dest1, 0)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
     # [2]
     # int32_t icu::RegexPattern::split(
     #       UText *input,

@@ -131,6 +131,7 @@ python_add_library(
     src/ulocdata.cpp
     src/uniset.cpp
     src/unistr.cpp
+    src/unistrlist.cpp
     src/unistrvec.cpp
     src/unorm2.cpp
     src/unounclass.cpp
