@@ -39,7 +39,11 @@ UnicodeStringList &
 UnicodeStringList::extend(const std::list<std::u16string> &iterable) {
   strings_.reserve(strings_.size() + iterable.size());
   for (const auto &value : iterable) {
-    strings_.push_back(value);
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+    strings_.emplace_back(value);
+#else
+    strings_.emplace_back(value.data(), static_cast<int32_t>(value.size()));
+#endif
   }
   return *this;
 }

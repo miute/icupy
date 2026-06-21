@@ -23,8 +23,17 @@ public:
   UnicodeStringList(const std::list<icu::UnicodeString> &iterable)
       : strings_(iterable.cbegin(), iterable.cend()) {}
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
   UnicodeStringList(const std::list<std::u16string> &iterable)
       : strings_(iterable.cbegin(), iterable.cend()) {}
+#else
+  UnicodeStringList(const std::list<std::u16string> &iterable) {
+    strings_.reserve(iterable.size());
+    for (const auto &value : iterable) {
+      strings_.emplace_back(value.data(), static_cast<int32_t>(value.size()));
+    }
+  }
+#endif
 
   UnicodeStringList(const UnicodeStringList &other)
       : strings_(other.strings_) {}
@@ -35,7 +44,13 @@ public:
 
   void append(const icu::UnicodeString &value) { strings_.push_back(value); }
 
-  void append(const std::u16string &value) { strings_.push_back(value); }
+  void append(const std::u16string &value) {
+#if (U_ICU_VERSION_MAJOR_NUM >= 76)
+    strings_.emplace_back(value);
+#else
+    strings_.emplace_back(value.data(), static_cast<int32_t>(value.size()));
+#endif
+  }
 
   icu::UnicodeString &at(std::size_t index) { return strings_.at(index); }
 
