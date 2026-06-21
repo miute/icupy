@@ -184,5 +184,11 @@ tests/**/*.txt
 coverage*.info
 htmlcov-cpp/
 
-# VSCode
+# VSCode settings
 .vscode/
+
+# clangd settings
+.clangd
+
+# Sphinx documentation
+docs/
