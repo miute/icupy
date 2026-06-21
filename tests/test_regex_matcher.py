@@ -1,3 +1,5 @@
+import string
+
 import pytest
 
 from icupy import icu
@@ -190,7 +192,7 @@ def test_append_tail() -> None:
 
 def test_end() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
-    src = icu.UnicodeString("0123456789")
+    src = icu.UnicodeString(string.digits)
     matcher = icu.RegexMatcher(regexp, src, 0)
 
     matcher.looking_at(0)
@@ -253,7 +255,7 @@ def test_find() -> None:
 
 def test_group() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
-    src = icu.UnicodeString("0123456789")
+    src = icu.UnicodeString(string.digits)
     matcher = icu.RegexMatcher(regexp, src, 0)
 
     # int32_t icu::RegexMatcher::groupCount()
@@ -267,7 +269,7 @@ def test_group() -> None:
     # )
     result = matcher.group(0)
     assert isinstance(result, icu.UnicodeString)
-    assert result == "0123456789"
+    assert result == string.digits
     assert matcher.group(1) == "234567"
     assert matcher.group(2) == "45"
     assert matcher.group(3) == "89"
@@ -282,7 +284,7 @@ def test_group() -> None:
     dest, group_len = matcher.group(0, None)
     assert icu.utext_get_native_index(dest) == 0
     assert group_len == 10
-    assert icu.utext_extract(dest, 0, 10) == "0123456789"
+    assert icu.utext_extract(dest, 0, 10) == string.digits
 
     result, group_len = matcher.group(1, dest)
     assert result == dest
@@ -305,7 +307,7 @@ def test_group() -> None:
     # UnicodeString icu::RegexMatcher::group(UErrorCode &status)
     result = matcher.group()
     assert isinstance(result, icu.UnicodeString)
-    assert result == "0123456789"
+    assert result == string.digits
 
     # [4]
     # UText *icu::RegexMatcher::group(
@@ -316,13 +318,13 @@ def test_group() -> None:
     dest, group_len = matcher.group(None)
     assert icu.utext_get_native_index(dest) == 0
     assert group_len == 10
-    assert icu.utext_extract(dest, 0, 10) == "0123456789"
+    assert icu.utext_extract(dest, 0, 10) == string.digits
 
     result, group_len = matcher.group(dest)
     assert result == dest
     assert icu.utext_get_native_index(dest) == 0
     assert group_len == 10
-    assert icu.utext_extract(dest, 0, 10) == "0123456789"
+    assert icu.utext_extract(dest, 0, 10) == string.digits
     icu.utext_close(dest)
 
 
@@ -825,6 +827,22 @@ def test_split() -> None:
         _ = matcher.split(src1, dest1, 0)
     assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
 
+    dest1 = icu.UnicodeStringList(10)
+    result = matcher.split(src1, dest1)
+    assert result == 3
+    assert dest1[0] == "foo"
+    assert dest1[1] == "bar"
+    assert dest1[2] == "baz"
+
+    result = matcher.split(src1, dest1, 2)
+    assert result == 2
+    assert dest1[0] == "foo"
+    assert dest1[1] == "bar baz"
+
+    with pytest.raises(icu.ICUError) as exc_info:
+        _ = matcher.split(src1, dest1, 0)
+    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
+
     # [2]
     # int32_t icu::RegexMatcher::split(
     #       UText *input,
@@ -860,7 +878,7 @@ def test_split() -> None:
 
 def test_start() -> None:
     regexp = icu.UnicodeString("01(23(45)67)(.*)")
-    src = icu.UnicodeString("0123456789")
+    src = icu.UnicodeString(string.digits)
     matcher = icu.RegexMatcher(regexp, src, 0)
 
     matcher.looking_at(0)

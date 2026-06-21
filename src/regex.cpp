@@ -1,4 +1,5 @@
 #include "context.hpp"
+#include "unistrlist.hpp"
 #include "uregex.hpp"
 #include "utextvec.hpp"
 #include <memory>
@@ -644,6 +645,22 @@ void init_regex(py::module &m) {
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
+          [](RegexMatcher &self, const UnicodeString &input,
+             icupy::UnicodeStringList &dest, int32_t dest_capacity) {
+            if (dest_capacity == -1) {
+              dest_capacity = static_cast<int32_t>(dest.size());
+            }
+            ErrorCode error_code;
+            auto result =
+                self.split(input, dest.data(), dest_capacity, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
+      .def(
+          "split",
           [](RegexMatcher &self, icupy::UTextPtr &input,
              icupy::UTextVector &dest, int32_t dest_capacity) {
             if (dest_capacity == -1) {
@@ -921,6 +938,22 @@ void init_regex(py::module &m) {
           return result;
         },
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
+      .def(
+          "split",
+          [](const RegexPattern &self, const UnicodeString &input,
+             icupy::UnicodeStringList &dest, int32_t dest_capacity) {
+            if (dest_capacity == -1) {
+              dest_capacity = static_cast<int32_t>(dest.size());
+            }
+            ErrorCode error_code;
+            auto result =
+                self.split(input, dest.data(), dest_capacity, error_code);
+            if (error_code.isFailure()) {
+              throw icupy::ICUError(error_code);
+            }
+            return result;
+          },
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
           [](const RegexPattern &self, icupy::UTextPtr &input,

@@ -112,6 +112,7 @@ void init_unifunctor(py::module &m);
 void init_uniset(py::module &m, py::module &h);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                  py::class_<UnicodeString, Replaceable> &us);
+void init_unistrlist(py::module &m);
 void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
 void init_unounclass(py::module &m);
@@ -379,7 +380,11 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   // C++ APIs
   //
   init_appendable(m);     // icu::Appendable
-  init_formattedvalue(m); // icu::FormattedValue
+  init_formattedvalue(m); // icu::FormattedValue, icu::ConstrainedFieldPosition
+
+  init_sortkey(m);    // icu::CollationKey
+  init_tblcoll(m);    // icu::RuleBasedCollator, icu::Collator
+  init_unistrlist(m); // icupy::UnicodeStringList
 
   init_dtrule(m);   // icu::DateTimeRule
   init_tzrule(m);   // icu::TimeZoneRule
@@ -483,7 +488,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_region(m);        // icu::Region
   init_reldatefmt(m);    // icu::RelativeDateTimeFormatter
   init_resbund(m);       // icu::ResourceBundle
-  init_sortkey(m);       // icu::CollationKey
 
   init_filteredbrk(m); // icu::FilteredBreakIteratorBuilder
 
@@ -492,7 +496,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
 
   init_usetiter(m);    // icu::UnicodeSetIterator
   init_normalizer2(m); // icu::Normalizer2, icu::FilteredNormalizer2
-  init_tblcoll(m);     // icu::RuleBasedCollator
   init_stsearch(m);    // icu::StringSearch
   init_translit(m);    // icu::Transliterator
 
