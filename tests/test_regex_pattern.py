@@ -280,22 +280,6 @@ def test_split() -> None:
     #       int32_t destCapacity,
     #       UErrorCode &status
     # )
-    dest1 = icu.UnicodeStringVector(10)
-    result = pattern.split(src1, dest1)
-    assert result == 3
-    assert dest1[0] == "foo"
-    assert dest1[1] == "bar"
-    assert dest1[2] == "baz"
-
-    result = pattern.split(src1, dest1, 2)
-    assert result == 2
-    assert dest1[0] == "foo"
-    assert dest1[1] == "bar baz"
-
-    with pytest.raises(icu.ICUError) as exc_info:
-        _ = pattern.split(src1, dest1, 0)
-    assert exc_info.value.args[0] == icu.UErrorCode.U_ILLEGAL_ARGUMENT_ERROR
-
     dest1 = icu.UnicodeStringList(10)
     result = pattern.split(src1, dest1)
     assert result == 3
@@ -320,7 +304,7 @@ def test_split() -> None:
     #       UErrorCode &status
     # )
     src2 = icu.utext_open_const_unicode_string(None, src1)
-    out = icu.UnicodeStringVector(10)
+    out = icu.UnicodeStringList(10)
     dest2 = icu.UTextVector(out)
     result = pattern.split(src2, dest2)
     assert result == 3

@@ -12,7 +12,6 @@
 #include <unicode/locid.h>
 #include <unicode/unistr.h>
 #include <variant>
-#include <vector>
 
 namespace py = pybind11;
 
@@ -30,8 +29,6 @@ using CharPtrVariant = std::variant<std::string, py::bytes>;
 using LocaleVariant = std::variant<icu::Locale, std::string>;
 
 using UnicodeStringVariant = std::variant<icu::UnicodeString, std::u16string>;
-
-using UnicodeStringVector = std::vector<icu::UnicodeString>;
 
 struct CharPtr {
   CharPtrVariant value;
@@ -104,7 +101,5 @@ private:
 };
 
 } // namespace icupy
-
-PYBIND11_MAKE_OPAQUE(icupy::UnicodeStringVector);
 
 #endif // ICUPY_MAIN_HPP

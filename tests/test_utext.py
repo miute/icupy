@@ -608,7 +608,7 @@ def test_utext_vector2() -> None:
 def test_utext_vector2_2() -> None:
     # [2]´
     # UTextVector(iterable: list[UnicodeString])
-    src = icu.UnicodeStringVector(3)
+    src = icu.UnicodeStringList(3)
     src[0].set_to("a")
     src[1].set_to("b")
     src[2].set_to("c")

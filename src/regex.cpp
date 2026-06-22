@@ -630,7 +630,7 @@ void init_regex(py::module &m) {
   rm.def(
         "split",
         [](RegexMatcher &self, const UnicodeString &input,
-           icupy::UnicodeStringVector &dest, int32_t dest_capacity) {
+           icupy::UnicodeStringList &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
             dest_capacity = static_cast<int32_t>(dest.size());
           }
@@ -643,22 +643,6 @@ void init_regex(py::module &m) {
           return result;
         },
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
-      .def(
-          "split",
-          [](RegexMatcher &self, const UnicodeString &input,
-             icupy::UnicodeStringList &dest, int32_t dest_capacity) {
-            if (dest_capacity == -1) {
-              dest_capacity = static_cast<int32_t>(dest.size());
-            }
-            ErrorCode error_code;
-            auto result =
-                self.split(input, dest.data(), dest_capacity, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
           [](RegexMatcher &self, icupy::UTextPtr &input,
@@ -925,7 +909,7 @@ void init_regex(py::module &m) {
   rp.def(
         "split",
         [](const RegexPattern &self, const UnicodeString &input,
-           icupy::UnicodeStringVector &dest, int32_t dest_capacity) {
+           icupy::UnicodeStringList &dest, int32_t dest_capacity) {
           if (dest_capacity == -1) {
             dest_capacity = static_cast<int32_t>(dest.size());
           }
@@ -938,22 +922,6 @@ void init_regex(py::module &m) {
           return result;
         },
         py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
-      .def(
-          "split",
-          [](const RegexPattern &self, const UnicodeString &input,
-             icupy::UnicodeStringList &dest, int32_t dest_capacity) {
-            if (dest_capacity == -1) {
-              dest_capacity = static_cast<int32_t>(dest.size());
-            }
-            ErrorCode error_code;
-            auto result =
-                self.split(input, dest.data(), dest_capacity, error_code);
-            if (error_code.isFailure()) {
-              throw icupy::ICUError(error_code);
-            }
-            return result;
-          },
-          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1)
       .def(
           "split",
           [](const RegexPattern &self, icupy::UTextPtr &input,
