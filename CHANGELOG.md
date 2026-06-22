@@ -6,6 +6,7 @@
 ### Changed
 
 - **Breaking:** rename the module `icupy.icu.NoUnit` to `icupy.icu.nounit` ([#242])
+- **Breaking:** rename `icupy.icu.UnicodeStringVector` to `icupy.icu.UnicodeStringList` ([#249], [#250])
 - Replace anonymous enum members within a class with class attributes ([#243])
 - Change the base class of the enums from `pybind11_object` to `enum.IntEnum` ([#245])
 - Change the default value of the `locale` parameter in the factory methods of `icupy.icu.DateFormat` and in `icupy.icu.RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
@@ -413,3 +414,5 @@ Initial release.
 [#245]: https://github.com/miute/icupy/pull/245
 [#246]: https://github.com/miute/icupy/pull/246
 [#247]: https://github.com/miute/icupy/pull/247
+[#249]: https://github.com/miute/icupy/pull/249
+[#250]: https://github.com/miute/icupy/pull/250

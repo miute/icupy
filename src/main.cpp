@@ -113,7 +113,6 @@ void init_uniset(py::module &m, py::module &h);
 void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
                  py::class_<UnicodeString, Replaceable> &us);
 void init_unistrlist(py::module &m);
-void init_unistrvec(py::module &m, py::class_<icupy::UnicodeStringVector> &usv);
 void init_unorm2(py::module &m);
 void init_unounclass(py::module &m);
 void init_unum(py::module &m);
@@ -297,11 +296,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
       spec, Part 3: `Language Plural Rules
       <https://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules>`__.
       )doc");
-
-  //
-  // class icupy::UnicodeStringVector
-  //
-  py::class_<icupy::UnicodeStringVector> usv(m, "UnicodeStringVector");
 
   init_utypes(m);    // UErrorCode
   init_errorcode(m); // icu::ErrorCode
@@ -502,7 +496,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   init_alphaindex(m); // icu::AlphabeticIndex
 
   init_unistr(m, rep, us); // icu::UnicodeString
-  init_unistrvec(m, usv);  // icupy::UnicodeStringVector
 
   init_utfiterator(m, header);
 
