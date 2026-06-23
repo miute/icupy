@@ -1505,6 +1505,10 @@ def test_operator() -> None:
     assert test1a[2:4] == "\ude01b"
     assert test1a[3:4] == "b"
 
+    assert test1a[::3] == "ab"
+    assert test1a[-1::-1] == "b\ude01\ud83da"
+    assert test1a[-4::-2] == "a"
+
     # UnicodeString &icu::UnicodeString::operator+=(
     #       const UnicodeString &srcText
     # )
