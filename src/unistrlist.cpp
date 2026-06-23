@@ -278,7 +278,7 @@ void init_unistrlist(py::module &m) {
             }
             std::list<std::size_t> indices(slice_length);
             auto it = indices.begin();
-            for (std::size_t n = 0; n < slice_length; ++n, start += step) {
+            for (py::ssize_t n = 0; n < slice_length; ++n, start += step) {
               *it++ = start;
             }
             if (step > 0) {
@@ -320,7 +320,7 @@ void init_unistrlist(py::module &m) {
             }
             auto result =
                 std::make_unique<icupy::UnicodeStringList>(slice_length);
-            for (std::size_t n = 0; n < slice_length; ++n, start += step) {
+            for (py::ssize_t n = 0; n < slice_length; ++n, start += step) {
               (*result)[n] = self[start];
             }
             return result;
@@ -421,7 +421,7 @@ void init_unistrlist(py::module &m) {
                                     " to extended slice of size " +
                                     std::to_string(slice_length));
             }
-            std::size_t n = 0;
+            py::ssize_t n = 0;
             for (; n < slice_length && n < values.size(); ++n, start += step) {
               self[start] = values[n];
             }

@@ -186,12 +186,12 @@ void init_utext(py::module &m) {
       .def(
           "__delitem__",
           [](icupy::UTextVector &self, const py::slice &index) {
-            size_t start, stop, step, slice_length;
+            py::ssize_t start, stop, step, slice_length;
             if (!index.compute(self.size(), &start, &stop, &step,
                                &slice_length)) {
               throw py::error_already_set();
             }
-            for (size_t n = 0; n < slice_length; ++n) {
+            for (py::ssize_t n = 0; n < slice_length; ++n) {
               self.remove(
                   static_cast<int32_t>(start + (slice_length - n - 1) * step));
             }

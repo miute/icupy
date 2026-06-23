@@ -402,13 +402,13 @@ string.
       .def(
           "__getitem__",
           [](const UnicodeString &self, const py::slice &slice) {
-            size_t start, stop, step, slice_length;
+            py::ssize_t start, stop, step, slice_length;
             if (!slice.compute(self.length(), &start, &stop, &step,
                                &slice_length)) {
               throw py::error_already_set();
             }
             PyObject *result = nullptr;
-            for (size_t n = 0; n < slice_length; ++n) {
+            for (py::ssize_t n = 0; n < slice_length; ++n) {
               auto p = PyUnicode_FromOrdinal(self[static_cast<int32_t>(start)]);
               if (result) {
                 PyUnicode_Append(&result, p);
