@@ -237,8 +237,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
     # *U_UNSUPPORTED_ERROR in ICU 69*
@@ -286,8 +286,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
     # [5]
@@ -310,8 +310,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
     append_to.remove()
@@ -321,8 +321,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
     # *NotImplemented*
@@ -359,8 +359,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
     append_to.remove()
@@ -369,8 +369,8 @@ def test_format() -> None:
     assert id(result) == id(append_to)
     assert result in (
         "At 4:42 PM on November 23, there was a disturbance in the Force on planet 7.",
-        "At 4:42\u202fPM on November 23, "
-        "there was a disturbance in the Force on planet 7.",  # ICU>=72
+        # ICU>=72
+        "At 4:42\u202fPM on November 23, there was a disturbance in the Force on planet 7.",
     )
 
 
