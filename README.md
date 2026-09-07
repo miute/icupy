@@ -34,6 +34,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
     ```python
     from icupy import icu
+
     try:
         pass  # Call ICU API here...
     except icu.ICUError as e:
@@ -49,6 +50,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   # from Unicode to codepage
   from icupy import icu
+
   cnv = icu.ucnv_open("iso8859-1")
   context = icu.UserContext(icu.UCNV_ESCAPE_C)  # \uXXXX
   action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
@@ -60,6 +62,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   # from codepage to Unicode
   from icupy import icu
+
   cnv = icu.ucnv_open("Shift-JIS")
   context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)  # &#xXXXX;
   action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
@@ -76,6 +79,8 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from Unicode to codepage
   from icupy import icu
   from icupy.utils import gc
+
+
   def from_unicode_cb(
       options: object,
       args: icu.UConverterFromUnicodeArgs,
@@ -91,6 +96,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
           source = "".join(f"\\u{ord(c):04x}" for c in code_units)
           icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
 
+
   with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
       action = icu.UConverterFromUCallback(from_unicode_cb)
       old_action = icu.ucnv_set_from_u_call_back(cnv, action)
@@ -102,6 +108,8 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   # from codepage to Unicode
   from icupy import icu
   from icupy.utils import gc
+
+
   def to_unicode_cb(
       options: object,
       args: icu.UConverterToUnicodeArgs,
@@ -116,6 +124,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
           source = "".join(f"%{b:02X}" for b in code_units)
           icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
 
+
   with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
       action = icu.UConverterToUCallback(to_unicode_cb)
       old_action = icu.ucnv_set_to_u_call_back(cnv, action)
@@ -128,8 +137,11 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   ```python
   from icupy import icu
+
   bi = icu.BreakIterator.create_word_instance("en_US")
-  src = icu.UnicodeString("Alice was beginning to get very tired of sitting by her sister on the bank.")
+  src = icu.UnicodeString(
+      "Alice was beginning to get very tired of sitting by her sister on the bank."
+  )
   bi.set_text(src)
   result = []
   start = bi.first()
@@ -145,6 +157,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   ```python
   from icupy import icu
+
   coll = icu.Collator.create_instance("en_US")
   coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
   data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
@@ -156,7 +169,10 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   ```python
   from icupy import icu
-  uts46 = icu.IDNA.create_uts46_instance(icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ)
+
+  uts46 = icu.IDNA.create_uts46_instance(
+      icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ
+  )
   dest = icu.UnicodeString()
   info = icu.IDNAInfo()
   # a + ZERO WIDTH NON-JOINER + b.com
@@ -170,6 +186,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   from icupy import icu
   from icupy.icu import number
+
   template = (
       number.NumberFormatter.with_()
       .notation(number.Notation.compact_short())
@@ -183,8 +200,11 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   ```python
   from icupy import icu
+
   src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
   matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
+
+
   def progress_callback(options: dict[str, int], match_index: int) -> bool:
       if not isinstance(options, dict):
           return False
@@ -193,6 +213,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       options["lastIndex"] = match_index
       max_calls = options.get("maxCalls", -1)
       return True if max_calls < 0 else calls < max_calls
+
 
   info = {}
   context = icu.UserContext(info)
@@ -211,7 +232,10 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   from icupy import icu
   from icupy.icu import number
-  fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy("de-CH", icu.UNUM_GROUPING_ON_ALIGNED)
+
+  fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
+      "de-CH", icu.UNUM_GROUPING_ON_ALIGNED
+  )
   fmtval = fmt.format_int64(1234567)
   fmtval.to_string()  # → "1'234'567"
   ```
@@ -221,9 +245,12 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ```python
   # Uppercase letters while skipping text enclosed in backticks
   from icupy import icu
+
+
   class TestTransliterator(icu.Transliterator):
       def __init__(self, filter_set: icu.UnicodeSet | None = None) -> None:
           icu.Transliterator.__init__(self, "Any-UpperWithoutCode", filter_set)
+
       def _handle_transliterate(
           self,
           text: icu.Replaceable,
@@ -248,8 +275,11 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
               cursor += char_len
           pos.start = pos.limit
 
+
   tl = TestTransliterator()
-  text = icu.UnicodeString("Subclasses must implement `_handle_transliterate()`, which defines their own transliteration algorithm.")
+  text = icu.UnicodeString(
+      "Subclasses must implement `_handle_transliterate()`, which defines their own transliteration algorithm."
+  )
   tl.transliterate(text)
   # text: "SUBCLASSES MUST IMPLEMENT `_handle_transliterate()`, WHICH DEFINES THEIR OWN TRANSLITERATION ALGORITHM."
   ```
@@ -404,6 +434,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
    ```python
    import icupy.icu as icu
+
    # or
    from icupy import icu
    ```
