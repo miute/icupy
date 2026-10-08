@@ -1,3 +1,5 @@
+import string
+
 import pytest
 
 from icupy import icu
@@ -192,10 +194,10 @@ def test_numbering_system() -> None:
     #       const UnicodeString &description,
     #       UErrorCode &status
     # )
-    ns3 = icu.NumberingSystem.create_instance(10, False, icu.UnicodeString("0123456789"))
+    ns3 = icu.NumberingSystem.create_instance(10, False, icu.UnicodeString(string.digits))
     assert isinstance(ns3, icu.NumberingSystem)
 
-    ns4 = icu.NumberingSystem.create_instance(10, False, "0123456789")
+    ns4 = icu.NumberingSystem.create_instance(10, False, string.digits)
     assert isinstance(ns4, icu.NumberingSystem)
 
     # [3]
@@ -227,7 +229,7 @@ def test_numbering_system() -> None:
     # UnicodeString icu::NumberingSystem::getDescription()
     result = ns7.get_description()
     assert isinstance(result, icu.UnicodeString)
-    assert result == "0123456789"
+    assert result == string.digits
 
     # const char *icu::NumberingSystem::getName()
     result = ns7.get_name()

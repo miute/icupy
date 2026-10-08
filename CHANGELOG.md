@@ -15,6 +15,10 @@
 
 - Add `icupy.icu.SymbolTable` class; `UnicodeSet.__init__()` and `UnicodeSet.apply_pattern()` now support `SymbolTable` ([#246])
 
+### Removed
+
+- **Breaking:** drop support for Python 3.10 ([#258])
+
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
 
@@ -416,3 +420,4 @@ Initial release.
 [#247]: https://github.com/miute/icupy/pull/247
 [#249]: https://github.com/miute/icupy/pull/249
 [#250]: https://github.com/miute/icupy/pull/250
+[#258]: https://github.com/miute/icupy/pull/258

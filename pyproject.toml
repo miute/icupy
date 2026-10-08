@@ -1,16 +1,12 @@
-[build-system]
-requires = ["scikit-build-core>=0.10"]
-build-backend = "scikit_build_core.build"
-
 [project]
 name = "icupy"
 version = "0.25.0.dev1"
-requires-python = ">=3.10"
 description = "Python bindings for ICU4C"
-authors = [{ name = "Tetsuya Miura", email = "miute.dev@gmail.com" }]
 readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.11"
 license = "MIT"
-keywords = ["icu4c", "unicode", "binding"]
+authors = [{ name = "Tetsuya Miura", email = "miute.dev@gmail.com" }]
+keywords = ["binding", "icu4c", "unicode"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -18,7 +14,6 @@ classifiers = [
   "Operating System :: POSIX",
   "Programming Language :: C++",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -30,43 +25,23 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-ICU = "https://icu.unicode.org/home"
-Download = "https://github.com/miute/icupy/releases"
-Source = "https://github.com/miute/icupy"
 Changelog = "https://github.com/miute/icupy/blob/main/CHANGELOG.md"
+Download = "https://github.com/miute/icupy/releases"
+ICU = "https://icu.unicode.org/home"
+Source = "https://github.com/miute/icupy"
 
 [dependency-groups]
 dev = ["pytest>=8.3.5"]
-
-[tool.scikit-build]
-minimum-version = "build-system.requires"
-cmake.version = ">=3.15"
-ninja.version = ">=1.11"
-ninja.make-fallback = false
-wheel.license-files = ["LICENSE"]
-sdist.exclude = ["*"]
-sdist.include = [
-  "/CHANGELOG*",
-  "/CMakeLists.txt",
-  "/LICENSE*",
-  "/pyproject.toml",
-  "/README*",
-  "/src/icupy/**/*.py",
-  "/src/*.cpp",
-  "/src/*.hpp",
-  "/src/third_party/pybind11/include/",
-  "/src/third_party/pybind11/tools/",
-  "/src/third_party/pybind11/CMakeLists.txt",
-  "/src/third_party/pybind11/LICEN[CS]E*",
-  "/src/third_party/pybind11/README*",
+docs = [
+  "myst-parser>=4.0.1",
+  "sphinx>=8.1.3",
+  "sphinx-copybutton>=0.5.2",
+  "sphinx-rtd-theme>=3.1.0",
 ]
 
-[tool.uv]
-package = false
-
-[tool.pytest.ini_options]
-addopts = ["--tb=short", "-ra", "--color=yes"]
-testpaths = ["tests"]
+[build-system]
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
 
 [tool.coverage.run]
 source = ["icupy"]
@@ -74,8 +49,18 @@ source = ["icupy"]
 [tool.coverage.paths]
 source = ["src/icupy", "*/icupy"]
 
+[tool.mypy]
+warn_unused_configs = true
+warn_return_any = true
+check_untyped_defs = true
+verbosity = 0
+exclude = ["^src/third_party"]
+
+[tool.pytest.ini_options]
+addopts = ["--tb=short", "-ra", "--color=yes"]
+testpaths = ["tests"]
+
 [tool.ruff]
-target-version = "py310"
 src = ["src", "tests"]
 extend-exclude = ["src/third_party"]
 line-length = 96
@@ -108,7 +93,7 @@ extend-select = [
   "UP",   # pyupgrade (UP)
   "YTT",  # flake8-2020 (YTT)
 ]
-extend-ignore = [
+ignore = [
   "PLR0915", # Too many statements ({statements} > {max_statements})
 ]
 
@@ -127,32 +112,31 @@ extend-ignore = [
 [tool.ruff.format]
 line-ending = "lf"
 
-[tool.black]
-line-length = 96
-target-version = ["py310", "py311", "py312", "py313"]
-extend-exclude = """
-^src/third_party
-"""
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+cmake.version = ">=3.15"
+ninja.version = ">=1.11"
+ninja.make-fallback = false
+wheel.license-files = ["LICENSE"]
+sdist.exclude = ["*"]
+sdist.include = [
+  "/CHANGELOG*",
+  "/CMakeLists.txt",
+  "/LICENSE*",
+  "/pyproject.toml",
+  "/README*",
+  "/src/icupy/**/*.py",
+  "/src/*.cpp",
+  "/src/*.hpp",
+  "/src/third_party/pybind11/include/",
+  "/src/third_party/pybind11/tools/",
+  "/src/third_party/pybind11/CMakeLists.txt",
+  "/src/third_party/pybind11/LICEN[CS]E*",
+  "/src/third_party/pybind11/README*",
+]
 
-[tool.isort]
-line_length = 96
-multi_line_output = 5
-include_trailing_comma = true
-use_parentheses = true
-ensure_newline_before_comments = true
-extend_skip = ["src/third_party"]
-
-[tool.flake8]
-max-line-length = 96
-ignore = ["E203", "F824", "W503"]
-exclude = ["src/third_party"]
-
-[tool.mypy]
-warn_unused_configs = true
-warn_return_any = true
-check_untyped_defs = true
-verbosity = 0
-exclude = ["^src/third_party"]
+[tool.uv]
+package = false
 
 [tool.yamlfix]
 explicit_start = false
