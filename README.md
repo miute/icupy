@@ -288,7 +288,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
 ### Prerequisites
 
-- [Python](https://www.python.org/) >=3.10
+- [Python](https://www.python.org/) >=3.11
 - [ICU4C](https://github.com/unicode-org/icu/releases) [(ICU - The International Components for Unicode)](https://icu.unicode.org/) (>=70 recommended)
 - C++17 compatible compiler (see [Supported Compilers](https://github.com/pybind/pybind11#supported-platforms--compilers))
 - [CMake](https://cmake.org/) >=3.15
@@ -299,7 +299,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 
   Install the following dependencies:
 
-  - [Python](https://www.python.org/downloads/) >=3.10
+  - [Python](https://www.python.org/downloads/) >=3.11
   - [Pre-built ICU4C binary package](https://github.com/unicode-org/icu/releases) (>=70 recommended)
   - C++17 compatible compiler. Visual Studio 2022 or newer recommended
   - [CMake](https://cmake.org/download/) >=3.15
@@ -433,10 +433,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 2. **Using icupy**
 
    ```python
-   import icupy.icu as icu
-
-   # or
-   from icupy import icu
+   from icupy import icu  # or 'import icupy.icu as icu'
    ```
 
 ## License

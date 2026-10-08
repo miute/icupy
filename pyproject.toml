@@ -3,7 +3,7 @@ name = "icupy"
 version = "0.25.0.dev1"
 description = "Python bindings for ICU4C"
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Tetsuya Miura", email = "miute.dev@gmail.com" }]
 keywords = ["binding", "icu4c", "unicode"]
@@ -14,7 +14,6 @@ classifiers = [
   "Operating System :: POSIX",
   "Programming Language :: C++",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
