@@ -1,4 +1,5 @@
 import copy
+import string
 
 import pytest
 
@@ -81,7 +82,7 @@ def test_add_all() -> None:
     #
     # [2]
     # UnicodeSet &icu::UnicodeSet::addAll(const UnicodeString &s)
-    result = test1.add_all(test2).add_all(icu.UnicodeString("0123456789"))
+    result = test1.add_all(test2).add_all(icu.UnicodeString(string.digits))
     assert isinstance(result, icu.UnicodeSet)
     assert id(result) == id(test1)
     assert test1.size() == 2 + 10  # [0-9\u00DF{ab}]
@@ -548,10 +549,10 @@ def test_contains_all() -> None:
 
     # [2]
     # UBool icu::UnicodeSet::containsAll(const UnicodeString &s)
-    assert test1.contains_all(icu.UnicodeString("0123456789")) is True
+    assert test1.contains_all(icu.UnicodeString(string.digits)) is True
     assert test1.contains_all(icu.UnicodeString("/0123456789:")) is False
 
-    assert test1.contains_all("0123456789") is True
+    assert test1.contains_all(string.digits) is True
     assert test1.contains_all("/0123456789:") is False
 
 
