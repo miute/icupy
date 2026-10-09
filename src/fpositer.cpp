@@ -35,8 +35,7 @@ void init_fpositer(py::module &m) {
       Initialize a ``FieldPositionIterator`` instance as an empty iterator.
       )doc")
       .def(py::init<const FieldPositionIterator &>(), py::arg("other"), R"doc(
-      Initialize a ``FieldPositionIterator`` instance from another
-      ``FieldPositionIterator``.
+      Initialize a ``FieldPositionIterator`` instance from a copy of *other*.
       )doc");
 
   fpi.def(
@@ -61,7 +60,7 @@ void init_fpositer(py::module &m) {
         return self.next(fp);
       },
       py::arg("fp"), R"doc(
-      Iterate to the next field and return ``True`` if there is a next field,
+      Iterate to the next field; return ``True`` if the next field exists,
       ``False`` otherwise.
       )doc");
 }

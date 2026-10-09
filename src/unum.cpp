@@ -264,8 +264,8 @@ Possible number format pad positions.
                                              "enum.IntEnum", R"doc(
 Possible number format rounding modes.
 
-For more detail on rounding modes, see:
-https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes
+For more detail, see the `ICU User Guide: Rounding Modes
+<https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
       )doc")
       .value("UNUM_ROUND_CEILING", UNUM_ROUND_CEILING, "")
       .value("UNUM_ROUND_FLOOR", UNUM_ROUND_FLOOR, "")

@@ -37,41 +37,48 @@ void init_fieldpos(py::module &m) {
          pos = icu.FieldPosition(icu.UDAT_YEAR_FIELD)
          dest = fmt.format(icu.Calendar.get_now(), dest, pos)
          print(dest[pos.get_begin_index():pos.get_end_index()])
-
-      .. rubric:: Attributes
-
-      .. autoattribute:: FieldPosition.DONT_CARE
-
-         ``DONT_CARE`` indicates that the caller does not need to specify
-         a field.
       )doc");
 
   //
   // enum icu::FieldPosition::DONT_CARE
   //
-  fp.def_property_readonly_static("DONT_CARE",
-                                  [](const py::object & /* self */) -> int32_t {
-                                    return FieldPosition::DONT_CARE;
-                                  });
+  fp.def_property_readonly_static(
+      "DONT_CARE",
+      [](const py::object & /* self */) -> int32_t {
+        return FieldPosition::DONT_CARE;
+      },
+      R"doc(
+      ``DONT_CARE`` indicates that the caller does not need to specify a
+      field.
+      )doc");
 
   //
   // class icu::FieldPosition
   //
   fp.def(py::init<>(), R"doc(
-      Initialize a ``FieldPosition`` instance with a non-specified field.
+      Initialize a ``FieldPosition`` instance with no specified field.
       )doc")
       .def(py::init<int32_t>(), py::arg("field"), R"doc(
       Initialize a ``FieldPosition`` instance with the specified field.
 
-      If the caller does not need to specify a field, :attr:`.DONT_CARE` can be
-      specified.
+      *field* is an identifier that specifies a field in the formatted output.
+      Typically, this is a constant whose name ends with _FIELD. If field
+      specification is not necessary, :attr:`.DONT_CARE` can be specified.
+
+      .. seealso::
+
+         :class:`NumberFormat.EAlignmentFields`
+         :class:`UDateFormatField`
+         :class:`UListFormatterField`
+         :class:`UNumberFormatFields`
+         :class:`URelativeDateTimeFormatterField`
       )doc")
       .def(py::init<const FieldPosition &>(), py::arg("other"), R"doc(
-      Initialize a ``FieldPosition`` instance from another ``FieldPosition``.
+      Initialize a ``FieldPosition`` instance from a copy of *other*.
       )doc");
 
   fp.def("__copy__", &FieldPosition::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -82,7 +89,7 @@ void init_fieldpos(py::module &m) {
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -116,7 +123,7 @@ void init_fieldpos(py::module &m) {
   });
 
   fp.def("clone", &FieldPosition::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -140,16 +147,22 @@ void init_fieldpos(py::module &m) {
   fp.def("set_begin_index", &FieldPosition::setBeginIndex, py::arg("bi"), R"doc(
       Set the begin index.
 
-      For use by subclasses of :class:`Format`.
+      .. note::
+
+         For use by subclasses of :class:`Format`.
       )doc");
 
   fp.def("set_end_index", &FieldPosition::setEndIndex, py::arg("ei"), R"doc(
       Set the end index.
 
-      For use by subclasses of :class:`Format`.
+      .. note::
+
+         For use by subclasses of :class:`Format`.
       )doc");
 
   fp.def("set_field", &FieldPosition::setField, py::arg("f"), R"doc(
       Set the field.
+
+      *f* is a new field identifier.
       )doc");
 }

@@ -148,20 +148,19 @@ void init_unistrlist(py::module &m) {
       Initialize a ``UnicodeStringList`` instance as an empty list.
       )doc")
       .def(py::init<std::size_t>(), py::arg("size"), R"doc(
-      Initialize a ``UnicodeStringList`` instance with the specified *size*.
+      Initialize a ``UnicodeStringList`` instance with the specified size.
 
-      The list will be filled with the empty string.
+      The list will be filled with empty string objects.
       )doc")
       .def(py::init<const icupy::UnicodeStringList &>(), py::arg("other"),
            R"doc(
-      Initialize a ``UnicodeStringList`` instance from another
-      ``UnicodeStringList``.
+      Initialize a ``UnicodeStringList`` instance from a copy of *other*.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``UnicodeStringList``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *other* will be copied:
+         changes made to objects after they are passed to
+         ``__init__()`` will not be reflected.
       )doc")
       .def(py::init<const std::list<UnicodeString> &>(), py::arg("iterable"),
            R"doc(
@@ -170,9 +169,9 @@ void init_unistrlist(py::module &m) {
 
       .. note::
 
-         Each :class:`UnicodeString` in *iterable* will be copied: changes
-         made to the string object after passing it to ``UnicodeStringList``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *iterable* will be copied:
+         changes made to objects after they are passed to
+         ``__init__()`` will not be reflected.
       )doc")
       .def(py::init<const std::list<std::u16string> &>(), py::arg("iterable"),
            R"doc(
@@ -193,14 +192,15 @@ void init_unistrlist(py::module &m) {
            return result;
          },
          py::arg("other"), R"doc(
-      Concatenate this ``UnicodeStringList`` with the contents of *other* and
-      return the result as a new ``UnicodeStringList``.
+      Return the result of concatenating this string list with *other* as a new
+      string list.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``__add__()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in this string list and in *other*
+         will be copied:
+         changes made to objects after they are passed to
+         ``__add__()`` will not be reflected.
       )doc")
       .def(
           "__add__",
@@ -215,14 +215,15 @@ void init_unistrlist(py::module &m) {
             return result;
           },
           py::arg("other"), R"doc(
-      Concatenate this ``UnicodeStringList`` with the contents of *other* and
-      return the result as a new ``UnicodeStringList``.
+      Return the result of concatenating this string list with *other* as a new
+      string list.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``__add__()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in this string list and in *other*
+         will be copied:
+         changes made to objects after they are passed to
+         ``__add__()`` will not be reflected.
       )doc")
       .def(
           "__add__",
@@ -237,8 +238,14 @@ void init_unistrlist(py::module &m) {
             return result;
           },
           py::arg("other"), R"doc(
-      Concatenate this ``UnicodeStringList`` with the contents of *other* and
-      return the result as a new ``UnicodeStringList``.
+      Return the result of concatenating this string list with *other* as a new
+      string list.
+
+      .. note::
+
+         Each :class:`UnicodeString` object in this string list will be copied:
+         changes made to objects after they are passed to ``__add__()`` will
+         not be reflected.
       )doc");
 
   usl.def(
@@ -248,7 +255,8 @@ void init_unistrlist(py::module &m) {
         return self.count(value) > 0;
       },
       py::arg("value"), R"doc(
-      Return ``True`` if *value* is in the list, ``False`` otherwise.
+      Return ``True`` if the specified string is in the string list, ``False``
+      otherwise.
       )doc");
 
   usl.def(
@@ -266,7 +274,7 @@ void init_unistrlist(py::module &m) {
            self.erase(self.begin() + actual_index);
          },
          py::arg("index"), R"doc(
-      Remove the item at the specified *index* from the list.
+      Remove the item at the specified index from the string list.
       )doc")
       .def(
           "__delitem__",
@@ -289,8 +297,7 @@ void init_unistrlist(py::module &m) {
             }
           },
           py::arg("slice"), R"doc(
-      Remove the items at the specified *range(start, stop, step)* from the
-      list.
+      Remove items within the specified range from the string list.
       )doc");
 
   usl.def(
@@ -308,7 +315,7 @@ void init_unistrlist(py::module &m) {
            return self[actual_index];
          },
          py::return_value_policy::reference_internal, py::arg("index"), R"doc(
-      Return the item at the specified *index*.
+      Return the item at the specified index in the string list.
       )doc")
       .def(
           "__getitem__",
@@ -326,46 +333,49 @@ void init_unistrlist(py::module &m) {
             return result;
           },
           py::arg("slice"), R"doc(
-      Return a new ``UnicodeStringList`` containing the items at the
-      specified *range(start, stop, step)*.
+      Return a new string list containing the items within the specified range
+      of the string list.
+
+      .. note::
+
+         Each :class:`UnicodeString` object in this string list will be copied:
+         changes made to objects after they are passed to
+         ``__getitem__()`` will not be reflected.
       )doc");
 
   usl.def("__iadd__",
           py::overload_cast<const icupy::UnicodeStringList &>(
               &icupy::UnicodeStringList::extend),
           py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``__iadd__()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *other* will be copied:
+         changes made to objects after they are passed to
+         ``__iadd__()`` will not be reflected.
       )doc")
       .def("__iadd__",
            py::overload_cast<const std::list<UnicodeString> &>(
                &icupy::UnicodeStringList::extend),
            py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``__iadd__()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *other* will be copied:
+         changes made to objects after they are passed to
+         ``__iadd__()`` will not be reflected.
       )doc")
       .def("__iadd__",
            py::overload_cast<const std::list<std::u16string> &>(
                &icupy::UnicodeStringList::extend),
            py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
       )doc");
 
   usl.def("__len__", &icupy::UnicodeStringList::size, R"doc(
-      Return the number of items in the list.
+      Return the number of items in the string list.
       )doc");
 
   usl.def("__repr__", [](const icupy::UnicodeStringList &self) {
@@ -399,13 +409,17 @@ void init_unistrlist(py::module &m) {
            self[actual_index] = icupy::to_unistr(value);
          },
          py::arg("index"), py::arg("value").none(false), R"doc(
-      Set the item at the specified *index* to *value*.
+      Set the specified item at the specified index in the string list.
+
+      *index* is the index of the item to be replaced.
+
+      *value* is the new item to be replaced.
 
       .. note::
 
-         An instance of :class:`UnicodeString` will be copied: changes made to
-         the string object after passing it to ``__setitem__()`` will not be
-         reflected.
+         An instance of :class:`UnicodeString` will be copied:
+         changes made to the object after it is passed to
+         ``__setitem__()`` will not be reflected.
       )doc")
       .def(
           "__setitem__",
@@ -433,105 +447,112 @@ void init_unistrlist(py::module &m) {
             }
           },
           py::arg("slice"), py::arg("values"), R"doc(
-      Set the items at the specified *range(start, stop, step)* to *values*.
+      Set the specified item in the specified range of the string list.
+
+      *slice* is the range of indices to be replaced.
+
+      *values* is the sequence of new items to be replaced.
 
       .. note::
 
-         Each :class:`UnicodeString` in *values* will be copied: changes
-         made to the string object after passing it to ``__setitem__()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *values* will be copied:
+         changes made to objects after they are passed to
+         ``__setitem__()`` will not be reflected.
       )doc");
 
   usl.def("append",
           py::overload_cast<const icupy::UnicodeStringVariant &>(
               &icupy::UnicodeStringList::append),
           py::arg("value"), R"doc(
-      Append a new item to the end of the list.
+      Append the specified item to the end of the string list.
 
       .. note::
 
-         An instance of :class:`UnicodeString` will be copied: changes made to
-         the string object after passing it to ``append()`` will not be
-         reflected.
+         An instance of :class:`UnicodeString` will be copied:
+         changes made to the object after it is passed to
+         ``append()`` will not be reflected.
       )doc");
 
   usl.def("clear", &icupy::UnicodeStringList::clear, R"doc(
-      Remove all items from the list.
+      Remove all items from the string list.
       )doc");
 
   usl.def("count", &icupy::UnicodeStringList::count, py::arg("value"), R"doc(
-      Return the number of occurrences of *value* in the list.
+      Return the number of occurrences of the specified item in the string
+      list.
       )doc");
 
   usl.def("extend",
           py::overload_cast<const icupy::UnicodeStringList &>(
               &icupy::UnicodeStringList::extend),
           py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``extend()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *other* will be copied:
+         changes made to objects after they are passed to
+         ``extend()`` will not be reflected.
       )doc")
       .def("extend",
            py::overload_cast<const std::list<UnicodeString> &>(
                &icupy::UnicodeStringList::extend),
            py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
 
       .. note::
 
-         Each :class:`UnicodeString` in *other* will be copied: changes
-         made to the string object after passing it to ``extend()``
-         will not be reflected.
+         Each :class:`UnicodeString` object in *other* will be copied:
+         changes made to objects after they are passed to
+         ``extend()`` will not be reflected.
       )doc")
       .def("extend",
            py::overload_cast<const std::list<std::u16string> &>(
                &icupy::UnicodeStringList::extend),
            py::arg("other"), R"doc(
-      Extend this ``UnicodeStringList`` with the contents of *other* and
-      return this ``UnicodeStringList`` itself.
+      Extend this string list with *other* and return the string list itself.
       )doc");
 
   usl.def("index", &icupy::UnicodeStringList::index, py::arg("value"),
           py::arg("start") = 0, py::arg("stop") = -1, R"doc(
-      Return the index of the first occurrence of *value* in the list.
+      Return the index of the first occurrence of the specified item in the
+      string list.
 
-      Raise :class:`ValueError` if *value* is not found in the list.
+      Raise :class:`ValueError` if *value* is not found in the string list.
       )doc");
 
   usl.def("insert",
           py::overload_cast<int32_t, const icupy::UnicodeStringVariant &>(
               &icupy::UnicodeStringList::insert),
           py::arg("index"), py::arg("value"), R"doc(
-      Insert a new item at the specified *index*.
+      Insert a new item at the specified index.
+
+      *index* is the index of the new item to be inserted.
+
+      *value* is the new item to be inserted.
 
       .. note::
 
-         An instance of :class:`UnicodeString` will be copied: changes made to
-         the string object after passing it to ``insert()`` will not be
-         reflected.
+         An instance of :class:`UnicodeString` will be copied:
+         changes made to the object after it is passed to
+         ``insert()`` will not be reflected.
       )doc");
 
   usl.def("pop", py::overload_cast<int32_t>(&icupy::UnicodeStringList::pop),
           py::arg("index") = -1, R"doc(
-      Remove the item at the pecified *index* and return it.
+      Remove the item at the specified index and return it.
 
       If *index* is not specified, the last item is removed.
       )doc");
 
   usl.def("remove", &icupy::UnicodeStringList::remove, py::arg("value"), R"doc(
-      Remove the first occurrence of *value* in the list.
+      Remove the first occurrence of *value* in the string list.
 
-      Raise :class:`ValueError` if *value* is not found in the list.
+      Raise :class:`ValueError` if *value* is not found in the string list.
       )doc");
 
   usl.def("reverse", &icupy::UnicodeStringList::reverse, R"doc(
-      Reverse the order of the elements in the list.
+      Reverse the order of the elements in the string list in place.
       )doc");
 
   usl.def(
@@ -540,6 +561,13 @@ void init_unistrlist(py::module &m) {
          bool reverse) { self.sort(coll.value_or(nullptr), reverse); },
       py::kw_only(), py::arg("coll") = std::nullopt, py::arg("reverse") = false,
       R"doc(
-      Sort the elements of the list in place.
+      Sort the elements of the string list in place.
+
+      *coll* is a collator object to be used for sorting. If *coll* is
+      ``None``, a bitwise comparison of :class:`UnicodeString` objects will be
+      used.
+
+      If *reverse* is ``True``, the list elements are sorted as if each
+      comparison were reversed.
       )doc");
 }

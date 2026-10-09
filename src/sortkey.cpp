@@ -45,9 +45,22 @@ void init_sortkey(py::module &m) {
            py::arg("values"), py::arg("count") = -1, R"doc(
       Initialize a ``CollationKey`` instance with the specified collation key
       values.
+
+      *values* is the collation key values.
+
+      *count* is the length of *values* in bytes; if -1, the length is the
+      total length of *values*.
+
+      .. important::
+
+         *values* must outlive this collation key object.
+
+      .. seealso::
+
+         :meth:`.get_byte_array`
       )doc")
       .def(py::init<CollationKey &>(), py::arg("other"), R"doc(
-      Initialize a ``CollationKey`` instance from another ``CollationKey``.
+      Initialize a ``CollationKey`` instance from a copy of *other*.
       )doc");
 
   ck.def(
@@ -105,7 +118,7 @@ void init_sortkey(py::module &m) {
       )doc");
 
   ck.def("__hash__", &CollationKey::hashCode, R"doc(
-      Return a hash value of this instance.
+      Return a hash value of this collation key.
 
       This is equivalent to calling :meth:`.hash_code`.
       )doc");
@@ -193,6 +206,10 @@ void init_sortkey(py::module &m) {
       },
       R"doc(
       Return the collation key values.
+
+      .. seealso::
+
+         :meth:`.__init__`
       )doc");
 
   ck.def("hash_code", &CollationKey::hashCode, R"doc(
@@ -207,6 +224,6 @@ void init_sortkey(py::module &m) {
       "is_bogus",
       [](const CollationKey &self) -> py::bool_ { return self.isBogus(); },
       R"doc(
-      Return ``True`` if the key is in an invalid, ``False`` otherwise.
+      Return ``True`` if the collation key is invalid, ``False`` otherwise.
       )doc");
 }

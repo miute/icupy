@@ -39,8 +39,10 @@ URegionType is an enumeration defining the different types of regions.
              changing its name.
              )doc")
       .value("URGN_LIMIT", URGN_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`URegionType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

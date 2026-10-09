@@ -14,8 +14,11 @@ Status return values from :meth:`DateTimePatternGenerator.add_pattern`.
       .value("UDATPG_BASE_CONFLICT", UDATPG_BASE_CONFLICT, "")
       .value("UDATPG_CONFLICT", UDATPG_CONFLICT, "")
       .value("UDATPG_CONFLICT_COUNT", UDATPG_CONFLICT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateTimePatternConflict`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -51,8 +54,11 @@ overlap because some fields are merged for the date/time pattern generator.
              "")
       .value("UDATPG_ZONE_FIELD", UDATPG_ZONE_FIELD, "")
       .value("UDATPG_FIELD_COUNT", UDATPG_FIELD_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateTimePatternField`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

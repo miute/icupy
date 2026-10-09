@@ -56,8 +56,10 @@ into or out if the universal time scale.
              (microseconds resolution).
              )doc")
       .value("UDTS_MAX_SCALE", UDTS_MAX_SCALE, R"doc(
-             Deprecated: ICU 59 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateTimeScale` value.
+
+             .. version-deprecated:: ICU59
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -91,8 +93,14 @@ UTimeScaleValue values are used to specify the time scale values to
              The constant used to select the maximum to value for a time scale.
              )doc")
       .value("UTSV_MAX_SCALE_VALUE", UTSV_MAX_SCALE_VALUE, R"doc(
-             Deprecated: ICU 59 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UTimeScaleValue` value.
+
+             .. seealso::
+
+                :func:`utmscale_get_time_scale_value`
+
+             .. version-deprecated:: ICU59
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

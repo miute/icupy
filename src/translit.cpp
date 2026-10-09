@@ -67,7 +67,7 @@ void init_translit(py::module &m) {
            from icupy import icu
            class CompoundTransliterator(icu.Transliterator):
                def __init__(self, compound_id: str, direction: icu.UTransDirection) -> None:
-                   icu.Transliterator.__init__(self, "")
+                   super().__init__("")
                    self._trans: list[icu.Transliterator] = []
                    global_filter = self._parse_compound_id(compound_id, direction)
                    self.adopt_filter(global_filter)
@@ -146,9 +146,9 @@ void init_translit(py::module &m) {
 
            tl = CompoundTransliterator("[:Latin:]; NFKD; Lower; Latin-Katakana;", icu.UTRANS_FORWARD)
            text = icu.UnicodeString("Natsume Sōseki")
-           tl.transliterate(text)
+           tl.transliterate(text)  # → "ナツメ ソーセキ" (Natsume Sōseki in Katakana)
 
-      For more information, see the ICU User Guide: `General Transforms
+      For more information, see the `ICU User Guide: General Transforms
       <https://unicode-org.github.io/icu/userguide/transforms/general/>`__ and
       the C++ API reference: `icu::Transliterator
       <https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1Transliterator.html#details>`__.
@@ -172,9 +172,12 @@ void init_translit(py::module &m) {
       Initialize a ``Transliterator`` instance with the specified ID and
       filter.
 
-      Any character for which ``adopted_filter.contains()`` returns ``False``
-      will not be altered by this transliterator.
+      *id* is the ID of the transliterator to be created.
 
+      *adopted_filter* is a filter that determines which characters are to be
+      transliterated.
+      Any character for which *adopted_filter.contains()* returns ``False``
+      will not be altered by this transliterator.
       If *adopted_filter* is ``None``, no filtering is applied.
 
       .. note::
@@ -191,12 +194,12 @@ void init_translit(py::module &m) {
              return std::make_unique<PyTransliterator>(other);
            }),
            py::arg("other"), R"doc(
-      Initialize a ``Transliterator`` instance from another ``Transliterator``.
+      Initialize a ``Transliterator`` instance from a copy of *other*.
       )doc");
 
   tl.def("__copy__", &Transliterator::clone,
          R"doc(
-      Return a copy of this instance.
+      Return a copy of this transliterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -208,7 +211,7 @@ void init_translit(py::module &m) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this transliterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -221,9 +224,10 @@ void init_translit(py::module &m) {
       py::arg("adopted_filter"), R"doc(
       Change the filter used by this transliterator.
 
-      Any character for which ``adopted_filter.contains()`` returns ``False``
+      *adopted_filter* is a filter that determines which characters are to be
+      transliterated.
+      Any character for which *adopted_filter.contains()* returns ``False``
       will not be altered by this transliterator.
-
       If *adopted_filter* is ``None``, no filtering is applied.
 
       .. note::
@@ -240,7 +244,7 @@ void init_translit(py::module &m) {
 
   tl.def("clone", &Transliterator::clone,
          R"doc(
-      Return a copy of this instance.
+      Return a copy of this transliterator.
 
       .. seealso::
 
@@ -266,8 +270,11 @@ void init_translit(py::module &m) {
       Return the number of registered target specifiers for the specified
       source specifier.
 
+      *source* must be obtained from :meth:`.get_available_source`.
+
       .. seealso::
 
+         :meth:`.get_available_source`
          :meth:`.get_available_target`
       )doc");
 
@@ -282,8 +289,14 @@ void init_translit(py::module &m) {
       Return the number of registered variant specifiers for the specified
       source-target pair specifiers.
 
+      *source* must be obtained from :meth:`.get_available_source`.
+
+      *target* must be obtained from :meth:`.get_available_target`.
+
       .. seealso::
 
+         :meth:`.get_available_source`
+         :meth:`.get_available_target`
          :meth:`.get_available_variant`
       )doc");
 
@@ -314,9 +327,13 @@ void init_translit(py::module &m) {
       },
       py::arg("id"), py::arg("canon") = std::nullopt, R"doc(
       Create a new transliterator instance with the specified basic ID and
-      canonical ID.
+      canonical ID; if a basic ID is invalid, return ``None``.
 
-      *id* must contain only the forward direction source, target, and variant.
+      *id* is a basic ID and must contain only the source, destination, and
+      variants in the forward direction.
+
+      *canon* is the canonical ID assigned to the transliterator; specify
+      ``None`` if not changing the ID.
 
       .. important::
 
@@ -347,6 +364,15 @@ void init_translit(py::module &m) {
       if it contains an ID block that is parsed as empty for the specified
       direction, it is a null transliterator.
 
+      *id* is the ID to be assigned to the transliterator.
+
+      *rules* is the rule string to be parsed.
+
+      *dir* is the direction of the transliterator to be created.
+
+      *parse_error* is a :class:`UParseError` object to receive the offset into
+      the rules string at which the error occurred.
+
       .. seealso::
 
          :meth:`.to_rules`
@@ -365,6 +391,10 @@ void init_translit(py::module &m) {
         },
         py::arg("id"), py::arg("dir"), R"doc(
       Create a new transliterator instance with the specified ID.
+
+      *id* is a valid ID and must be obtained from :meth:`.get_available_ids`.
+
+      *dir* is the direction of the transliterator to be created.
 
       .. seealso::
 
@@ -385,9 +415,16 @@ void init_translit(py::module &m) {
           py::arg("id"), py::arg("dir"), py::arg("parse_error"), R"doc(
       Create a new transliterator instance with the specified ID.
 
-      If an error occurs while parsing the rules string, the offset into the
-      rules string at which the error occurred will be saved into the
-      :class:`UParseError`.
+      *id* is a valid ID and must be obtained from :meth:`.get_available_ids`.
+
+      *dir* is the direction of the transliterator to be created.
+
+      *parse_error* is a :class:`UParseError` object to receive the offset into
+      the rules string at which the error occurred.
+
+      .. note::
+
+         *parse_error* is currently unused.
 
       .. seealso::
 
@@ -415,8 +452,17 @@ void init_translit(py::module &m) {
         self.filteredTransliterate(text, index, incremental);
       },
       py::arg("text"), py::arg("index"), py::arg("incremental"), R"doc(
-      Translate a text substring based on the specified index, taking the
+      Translate a substring of text based on the specified index, taking the
       filter into account.
+
+      *text* is the text to be transliterated.
+
+      *index* is a :class:`UTransPosition` object that specifies the
+      transliteration range.
+
+      If *incremental* is ``True``, then assume more characters may be inserted
+      at *index.limit*, and postpone processing to accommodate future
+      incoming characters.
 
       This method is intended for subclasses that require the task to be
       delegated to another translator.
@@ -431,6 +477,12 @@ void init_translit(py::module &m) {
          py::arg("text"), py::arg("index"), R"doc(
       Finish any pending transliterations that were waiting for more
       characters.
+
+      *text* is a buffer that holds both transliterated and untransliterated
+      text.
+
+      *index* is the :class:`UTransPosition` object that was previously passed
+      to :meth:`.transliterate`.
 
       The client should call this method last, after calling the
       :meth:`.transliterate` method one or more times.
@@ -456,7 +508,13 @@ void init_translit(py::module &m) {
 
   tl.def_static("get_available_source", &Transliterator::getAvailableSource,
                 py::arg("index"), py::arg("result"), R"doc(
-      Return the registered source specifier for the specified index.
+      Retrieve the registered source specifier for the specified index and
+      store it in *result*; return *result* itself.
+
+      *index* must be in the range [0, :meth:`.count_available_sources`).
+
+      *result* is a string object to receive the source specifier.
+      If *index* is out of range, *result* will be empty.
 
       .. seealso::
 
@@ -471,8 +529,15 @@ void init_translit(py::module &m) {
             index, icupy::to_unistr(source), result);
       },
       py::arg("index"), py::arg("source"), py::arg("result"), R"doc(
-      Return the registered target specifier for the specified index and source
-      specifier.
+      Retrieve the registered target specifier for the specified index and
+      source specifier, and store it in *result*; return *result* itself.
+
+      *index* must be in the range [0, :meth:`.count_available_targets`).
+
+      *source* must be obtained from :meth:`.get_available_source`.
+
+      *result* is a string object to receive the target specifier.
+      If *index* is out of range, *result* will be empty.
 
       .. seealso::
 
@@ -489,8 +554,17 @@ void init_translit(py::module &m) {
       },
       py::arg("index"), py::arg("source"), py::arg("target"), py::arg("result"),
       R"doc(
-      Return the registered variant specifier for the specified index, source
+      Retrieve the registered variant specifier for the specified index, source
       specifier, and target specifier.
+
+      *index* must be in the range [0, :meth:`.count_available_variants`).
+
+      *source* must be obtained from :meth:`.get_available_source`.
+
+      *target* must be obtained from :meth:`.get_available_target`.
+
+      *result* is a string object to receive the variant specifier.
+      If *index* is out of range, *result* will be empty.
 
       .. seealso::
 
@@ -506,8 +580,15 @@ void init_translit(py::module &m) {
               icupy::to_unistr(id), icupy::to_locale(in_locale), result);
         },
         py::arg("id"), py::arg("in_locale"), py::arg("result"), R"doc(
-      Copy *id* to *result* in a format suitable for display in the locale
-      specified by *in_locale*.
+      Retrieve the name of the transliterator specified by *id* in a format
+      suitable for display in the locale specified by *in_locale* and store it
+      in *result*; return *result* itself.
+
+      *id* must be obtained from :meth:`.get_available_ids`.
+
+      *in_locale* is the locale to be used to display the name.
+
+      *result* is a string object to receive the display name.
       )doc")
       .def_static(
           "get_display_name",
@@ -516,8 +597,13 @@ void init_translit(py::module &m) {
             return Transliterator::getDisplayName(icupy::to_unistr(id), result);
           },
           py::arg("id"), py::arg("result"), R"doc(
-      Copy *id* to *result* in a format suitable for display in the default
-      locale.
+      Retrieve the name of the transliterator specified by *id* in a format
+      suitable for display in the default locale and store it in *result*;
+      return *result* itself.
+
+      *id* must be obtained from :meth:`.get_available_ids`.
+
+      *result* is a string object to receive the display name.
       )doc");
 
   tl.def(
@@ -532,6 +618,8 @@ void init_translit(py::module &m) {
       },
       py::return_value_policy::reference, py::arg("index"), R"doc(
       Return the element at the specified index.
+
+      *index* must be in the range [0, :meth:`.count_elements`).
 
       .. seealso::
 
@@ -581,6 +669,8 @@ void init_translit(py::module &m) {
       Return the set of all characters in the input text that may be modified
       by this transliterator.
 
+      *result* is a set object to receive the source set.
+
       .. note::
 
          The default implementation returns the empty set.
@@ -599,6 +689,8 @@ void init_translit(py::module &m) {
          R"doc(
       Return the set of all characters that this transliterator may generate as
       replacement text.
+
+      *result* is a set object to receive the target set.
 
       .. note::
 
@@ -620,6 +712,8 @@ void init_translit(py::module &m) {
       modified in the input text by this transliterator, ignoring the effect of
       this object's filter.
 
+      *result* is a set object to receive the source set.
+
       .. note::
 
          In the default implementation, this method is called from
@@ -639,6 +733,17 @@ void init_translit(py::module &m) {
       },
       py::arg("text"), py::arg("pos"), py::arg("incremental"), R"doc(
       Framework method that performs the actual transliteration in subclasses.
+
+      *text* is a buffer to be transliterated which holds both transliterated
+      and untransliterated text.
+
+      *pos* is a :class:`UTransPosition` object that specifies the
+      transliteration range.
+
+      If *incremental* is ``True``, then assume more text may be inserted at
+      *pos.limit*, and act accordingly. Otherwise, transliterate all text
+      between *pos.start* and *pos.limit*, and move *pos.start* up to
+      *pos.limit*.
 
       .. important::
 
@@ -711,6 +816,10 @@ void init_translit(py::module &m) {
       This is typically used to create shorter, more memorable aliases for long
       compound IDs.
 
+      *alias_id* is the new ID being registered.
+
+      *real_id* is the existing ID to which the alias refers.
+
       .. seealso::
 
          :meth:`.create_instance`
@@ -767,7 +876,10 @@ void init_translit(py::module &m) {
         return self.toRules(result, escape_unprintable);
       },
       py::arg("result"), py::arg("escape_unprintable"), R"doc(
-      Return a rules string that can be used to create this transliterator.
+      Retrieve a rules string that can be used to create this transliterator
+      and store it in *result*; return *result* itself.
+
+      *result* is a string object to receive the rules string.
 
       If *escape_unprintable* is ``True``, unprintable characters in the rules
       string will be escaped with Unicode escape sequences.
@@ -783,13 +895,21 @@ void init_translit(py::module &m) {
                                           py::const_),
          py::arg("text"), R"doc(
       Transliterate the entire text.
+
+      *text* is a buffer to be transliterated.
       )doc")
       .def("transliterate",
            py::overload_cast<Replaceable &, int32_t, int32_t>(
                &Transliterator::transliterate, py::const_),
            py::arg("text"), py::arg("start"), py::arg("limit"), R"doc(
-      Transliterate a portion of the text [*start*, *limit*), and return the
-      new ending index.
+      Transliterate the portion of the text and return the new end index.
+
+      *text* is a buffer to be transliterated which holds both transliterated
+      and untransliterated text.
+
+      *start* is the start index of the substring to be transliterated.
+
+      *limit* is the end index of the substring to be transliterated.
       )doc")
       .def(
           "transliterate",
@@ -807,6 +927,15 @@ void init_translit(py::module &m) {
       Transliterate the portion of the text buffer that can be unambiguously
       transliterated, where new text has been inserted via keyboard event for
       example.
+
+      *text* is a buffer to be transliterated which holds both transliterated
+      and untransliterated text.
+
+      *index* is a :class:`UTransPosition` object that specifies the
+      transliteration range.
+
+      *insertion* is the text to be inserted and possibly transliterated into
+      the transliteration buffer at *index.limit*.
 
       *insertion* will be inserted into text at *index.limit*, advancing
       *index.limit* by *insertion.length()*. Then the transliterator will try
@@ -843,6 +972,15 @@ void init_translit(py::module &m) {
       Transliterate the portion of the text buffer that can be unambiguously
       transliterated, where a new character has been inserted via keyboard
       event for example.
+
+      *text* is a buffer to be transliterated which holds both transliterated
+      and untransliterated text.
+
+      *index* is a :class:`UTransPosition` object that specifies the
+      transliteration range.
+
+      *insertion* is a single character to be inserted and possibly
+      transliterated into the transliteration buffer at *index.limit*.
       )doc")
       .def(
           "transliterate",
@@ -857,6 +995,12 @@ void init_translit(py::module &m) {
           py::arg("text"), py::arg("index"), R"doc(
       Transliterate the portion of the text buffer that can be unambiguously
       transliterated.
+
+      *text* is a buffer to be transliterated which holds both transliterated
+      and untransliterated text.
+
+      *index* is a :class:`UTransPosition` object that specifies the
+      transliteration range.
       )doc");
 
   // TODO: Deprecate Transliterator.register_instance().

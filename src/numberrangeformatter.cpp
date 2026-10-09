@@ -198,8 +198,8 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       )doc")
       .def(py::init<const LocalizedNumberRangeFormatter &>(), py::arg("other"),
            R"doc(
-      Initialize a ``LocalizedNumberRangeFormatter`` instance from another
-      ``LocalizedNumberRangeFormatter``.
+      Initialize a ``LocalizedNumberRangeFormatter`` instance from a copy of
+      *other*.
       )doc");
 
   lnrf.def(
@@ -258,7 +258,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -270,7 +270,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -281,7 +281,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -315,9 +315,12 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Copy the internal :class:`UErrorCode` to *out_error_code* and return
-      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      Copy the internal :class:`UErrorCode` to *out_error_code*; return
+      ``True`` if :class:`UErrorCode` indicates a failure, ``False``
       otherwise.
+
+      If *out_error_code* already contains an error, its value will not be
+      changed.
       )doc");
 
   nrfs_lnrf.def(
@@ -403,7 +406,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -416,7 +419,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -427,7 +430,7 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberRangeFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -461,9 +464,12 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Copy the internal :class:`UErrorCode` to *out_error_code* and return
-      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      Copy the internal :class:`UErrorCode` to *out_error_code*; return
+      ``True`` if :class:`UErrorCode` indicates a failure, ``False``
       otherwise.
+
+      If *out_error_code* already contains an error, its value will not be
+      changed.
       )doc");
 
   nrfs_unrf.def(
@@ -548,8 +554,8 @@ void init_numberrangeformatter(py::module &, py::module &m2) {
       .def(py::init<const UnlocalizedNumberRangeFormatter &>(),
            py::arg("other"),
            R"doc(
-      Initialize a ``UnlocalizedNumberRangeFormatter`` instance from another
-      ``UnlocalizedNumberRangeFormatter``.
+      Initialize a ``UnlocalizedNumberRangeFormatter`` instance from a copy of
+      *other*.
       )doc");
 
   unrf.def(

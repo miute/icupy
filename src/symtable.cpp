@@ -96,22 +96,20 @@ void init_symtable(py::module &m) {
          us.contains("1")  # True
          us.contains("x")  # True
          us.contains("b")  # False
-
-      .. rubric:: Attributes
-
-      .. autoattribute:: SYMBOL_REF
-
-         The prefix character code for symbolic names.
-
-         When the parser encounters this character, it calls
-         :meth:`.parse_reference` with the position immediately following
-         ``SYMBOL_REF`` as an argument.
       )doc");
 
-  st.def_property_readonly_static("SYMBOL_REF",
-                                  [](const py::object & /* self */) -> int32_t {
-                                    return SymbolTable::SYMBOL_REF;
-                                  });
+  st.def_property_readonly_static(
+      "SYMBOL_REF",
+      [](const py::object & /* self */) -> int32_t {
+        return SymbolTable::SYMBOL_REF;
+      },
+      R"doc(
+      The prefix character code for symbolic names.
+
+      When the parser encounters this character, it calls
+      :meth:`.parse_reference` with the position immediately following
+      ``SYMBOL_REF`` as an argument.
+      )doc");
 
   st.def(py::init<>(), R"doc(
       Initialize a ``SymbolTable`` instance.
@@ -128,13 +126,14 @@ void init_symtable(py::module &m) {
       [](const SymbolTable &self, const UnicodeString &s)
           -> std::optional<const UnicodeString *> { return self.lookup(s); },
       py::arg("s"), R"doc(
-      Lookup the characters associated with the specified string *s* and return
-      it; otherwise, return ``None``.
+      Lookup the characters associated with the specified string and return it,
+      or ``None`` if not found.
+
+      *s* is the symbolic name to lookup.
 
       .. important::
 
-         The returned ``UnicodeString`` object must outlive the symbol table
-         object.
+         The returned text object must outlive this symbol table object.
       )doc");
 
   // for docstring only
@@ -147,13 +146,13 @@ void init_symtable(py::module &m) {
       },
       py::arg("ch"), R"doc(
       Lookup the :class:`UnicodeMatcher` associated with the specified
-      character *ch* and return it; otherwise, return ``None``.
+      character and return it, or ``None`` if not found.
 
       *ch* is a 32-bit code point from 0 to 0x10FFFF inclusive.
 
       .. important::
 
-         The returned ``UnicodeFunctor`` object must outlive the symbol table
+         The returned ``UnicodeFunctor`` object must outlive this symbol table
          object.
       )doc");
 
@@ -161,11 +160,16 @@ void init_symtable(py::module &m) {
   // pybind11 throws RuntimeError if not implemented in Python subclass
   st.def("parse_reference", &SymbolTable::parseReference, py::arg("text"),
          py::arg("pos"), py::arg("limit"), R"doc(
-      Parse a symbol reference name from the specified substring
-      *text[pos.get_index(), limit]* and return the parsed name; otherwise,
-      return the empty string.
+      Parse the symbol reference name from the specified string and return the
+      result.
 
-      The index of *pos* is updated to the index following the last parsed
-      character after parsing. If parsing fails, *pos* remains unchanged.
+      *text* is the text to parse for the name.
+
+      *pos* on entry, is the index of the first character to parse. This is
+      the character following the ``SYMBOL_REF`` character. On exit, it is the
+      index after the last parsed character. If the parse failed, *pos* is
+      unchanged on exit.
+
+      *limit* is the index after the last character to be parsed.
       )doc");
 }

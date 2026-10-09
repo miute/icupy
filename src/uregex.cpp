@@ -133,7 +133,7 @@ Constants for Regular Expression Match Modes.
       )doc");
 
   rfcb.def(py::init<>(), R"doc(
-      Initialize the ``URegexFindProgressCallback`` instance without a
+      Initialize a ``URegexFindProgressCallback`` instance without a
       callback function.
       )doc")
       .def(py::init([](const icupy::FindProgressCallbackFunction &action,
@@ -142,13 +142,12 @@ Constants for Regular Expression Match Modes.
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``URegexFindProgressCallback`` instance with the
+      Initialize a ``URegexFindProgressCallback`` instance with the
       specified callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the
-         ``URegexFindProgressCallback`` object.
+         *action* and *context* must outlive this callback container object.
       )doc");
 
   rfcb.def(
@@ -190,7 +189,7 @@ Constants for Regular Expression Match Modes.
       )doc");
 
   rmcb.def(py::init<>(), R"doc(
-      Initialize the ``URegexMatchCallback`` instance without a callback
+      Initialize a ``URegexMatchCallback`` instance without a callback
       function.
       )doc")
       .def(py::init([](const icupy::MatchCallbackFunction &action,
@@ -199,13 +198,12 @@ Constants for Regular Expression Match Modes.
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``URegexMatchCallback`` instance with the specified
+      Initialize a ``URegexMatchCallback`` instance with the specified
       callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the ``URegexMatchCallback``
-         object.
+         *action* and *context* must outlive this callback container object.
       )doc");
 
   rmcb.def(

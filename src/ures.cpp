@@ -115,13 +115,17 @@ Numeric constants for types of resource items.
              :attr:`URES_INT_VECTOR`
              instead.
              )doc")
-      .value("RES_RESERVED", RES_RESERVED,
-             R"doc(
-             Deprecated: ICU 2.6 Not used.
+      .value("RES_RESERVED", RES_RESERVED, R"doc(
+             Reserved.
+
+             .. version-deprecated:: ICU2.6
+                The value is not used.
              )doc")
       .value("URES_LIMIT", URES_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UResType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

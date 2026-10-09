@@ -69,8 +69,10 @@ Represent an absolute unit.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 65)
       .value("UDAT_ABSOLUTE_UNIT_COUNT", UDAT_ABSOLUTE_UNIT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateAbsoluteUnit` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -105,8 +107,10 @@ Represent a direction for an absolute unit e.g., "Next Tuesday" or
              Plain, which means the absence of a qualifier.
              )doc")
       .value("UDAT_DIRECTION_COUNT", UDAT_DIRECTION_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateDirection` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -142,8 +146,10 @@ e.g., "in 5 days" or "in 3 months"
              Years.
              )doc")
       .value("UDAT_RELATIVE_UNIT_COUNT", UDAT_RELATIVE_UNIT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDateRelativeUnit` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

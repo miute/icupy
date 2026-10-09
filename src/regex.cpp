@@ -18,8 +18,9 @@ void init_regex(py::module &m) {
       Provide regular expression matching, searching, and replacement
       operations.
 
-      For more information, see the ICU User Guide:
-      `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
+      For more information, see the
+      `ICU User Guide: Regular Expressions
+      <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
 
       .. seealso::
 
@@ -32,8 +33,9 @@ void init_regex(py::module &m) {
   py::class_<RegexPattern, UObject> rp(m, "RegexPattern", R"doc(
       Representation of a compiled regular expression.
 
-      For more information, see the ICU User Guide:
-      `Regular Expressions <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
+      For more information, see the
+      `ICU User Guide: Regular Expressions
+      <https://unicode-org.github.io/icu/userguide/strings/regexp.html>`__.
 
       .. seealso::
 
@@ -224,7 +226,7 @@ void init_regex(py::module &m) {
         return icupy::URegexFindProgressCallbackPtr(pair);
       },
       R"doc(
-      Return the find progress callback function for this ``RegexMatcher``.
+      Return the find progress callback function for this matcher.
 
       .. seealso::
 
@@ -261,7 +263,7 @@ void init_regex(py::module &m) {
         return icupy::URegexMatchCallbackPtr(pair);
       },
       R"doc(
-      Return the callback function for this ``RegexMatcher``.
+      Return the callback function for this matcher.
 
       .. seealso::
 
@@ -513,11 +515,11 @@ void init_regex(py::module &m) {
       },
       py::arg("callback"), R"doc(
       Set the find progress callback function to be used with this
-      ``RegexMatcher``.
+      matcher.
 
       .. important::
 
-         *callback* must outlive the ``RegexMatcher`` object.
+         *callback* must outlive this matcher object.
 
       .. seealso::
 
@@ -565,11 +567,11 @@ void init_regex(py::module &m) {
         }
       },
       py::arg("callback"), R"doc(
-      Set the callback function to be used with this ``RegexMatcher``.
+      Set the callback function to be used with this matcher.
 
       .. important::
 
-         *callback* must outlive the ``RegexMatcher`` object.
+         *callback* must outlive this matcher object.
 
       .. seealso::
 

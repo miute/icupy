@@ -271,8 +271,8 @@ Structure for the From-Unicode callback function parameter.
         return icupy::UConverterPtr(self.converter);
       },
       R"doc(
-      UConverter: Converter that is opened and to which this struct is passed
-          as an argument.
+      :class:`UConverter` that is opened and to which this struct is passed as
+      an argument.
       )doc");
 
   //
@@ -293,8 +293,8 @@ Structure for the To-Unicode callback function parameter.
         return icupy::UConverterPtr(self.converter);
       },
       R"doc(
-      UConverter: Converter that is opened and to which this struct is passed
-          as an argument.
+      :class:`UConverter` that is opened and to which this struct is passed as
+      an argument.
       )doc");
 
   //
@@ -321,13 +321,12 @@ Structure for the To-Unicode callback function parameter.
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallback`` instance with the specified
+      Initialize a ``UConverterFromUCallback`` instance with the specified
       callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the ``UConverterFromUCallback``
-         object.
+         *action* and *context* must outlive this callback container object.
       )doc");
 
   fucb.def(
@@ -395,7 +394,7 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallbackEscape`` instance with
+      Initialize a ``UConverterFromUCallbackEscape`` instance with
       :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function and the specified
       user context.
 
@@ -409,7 +408,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterFromUCallbackEscape`` object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -450,7 +449,7 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallbackSkip`` instance with
+      Initialize a ``UConverterFromUCallbackSkip`` instance with
       :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function and the specified
       user context.
 
@@ -460,8 +459,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterFromUCallbackSkip``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -502,14 +500,13 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallbackStop`` instance with
+      Initialize a ``UConverterFromUCallbackStop`` instance with
       :func:`UCNV_FROM_U_CALLBACK_STOP` callback function and the specified
       user context.
 
       .. important::
 
-         *context* must outlive the ``UConverterFromUCallbackStop``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -556,7 +553,7 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterFromUCallbackSubstitute`` instance
+      Initialize a ``UConverterFromUCallbackSubstitute`` instance
       with :func:`UCNV_FROM_U_CALLBACK_SUBSTITUTE` callback function and
       the specified user context.
 
@@ -566,7 +563,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterFromUCallbackSubstitute``
+         *context* must outlive this callback container object.
          object.
       )doc");
 
@@ -594,13 +591,12 @@ Structure for the To-Unicode callback function parameter.
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallback`` instance with the specified
+      Initialize a ``UConverterToUCallback`` instance with the specified
       callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the ``UConverterToUCallback``
-         object.
+         *action* and *context* must outlive this callback container object.
       )doc");
 
   tucb.def(
@@ -653,7 +649,7 @@ Structure for the To-Unicode callback function parameter.
                      context.value_or(nullptr));
                }),
                py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallbackEscape`` instance with
+      Initialize a ``UConverterToUCallbackEscape`` instance with
       :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function and the specified
       user context.
 
@@ -668,8 +664,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterToUCallbackEscape``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -696,7 +691,7 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallbackSkip`` instance with
+      Initialize a ``UConverterToUCallbackSkip`` instance with
       :func:`UCNV_TO_U_CALLBACK_SKIP` callback function and the specified user
       context.
 
@@ -706,8 +701,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterToUCallbackSkip``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -734,14 +728,13 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallbackStop`` instance with
+      Initialize a ``UConverterToUCallbackStop`` instance with
       :func:`UCNV_TO_U_CALLBACK_STOP` callback function and the specified user
       context.
 
       .. important::
 
-         *context* must outlive the ``UConverterToUCallbackStop``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //
@@ -770,7 +763,7 @@ Structure for the To-Unicode callback function parameter.
             context.value_or(nullptr));
       }),
       py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UConverterToUCallbackSubstitute`` instance
+      Initialize a ``UConverterToUCallbackSubstitute`` instance
       with :func:`UCNV_TO_U_CALLBACK_SUBSTITUTE` callback function and
       the specified user context.
 
@@ -780,8 +773,7 @@ Structure for the To-Unicode callback function parameter.
 
       .. important::
 
-         *context* must outlive the ``UConverterToUCallbackSubstitute``
-         object.
+         *context* must outlive this callback container object.
       )doc");
 
   //

@@ -102,9 +102,10 @@ void init_tzrule(py::module &m) {
   //
   py::class_<AnnualTimeZoneRule, TimeZoneRule> atzr(m, "AnnualTimeZoneRule");
 
-  atzr.def_property_readonly_static("MAX_YEAR", [](const py::object &) {
-    return AnnualTimeZoneRule::MAX_YEAR;
-  });
+  atzr.def_property_readonly_static("MAX_YEAR",
+                                    [](const py::object & /* self */) {
+                                      return AnnualTimeZoneRule::MAX_YEAR;
+                                    });
 
   atzr.def(py::init([](const icupy::UnicodeStringVariant &name,
                        int32_t raw_offset, int32_t dst_savings,

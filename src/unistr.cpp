@@ -18,7 +18,7 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
   // class icu::Replaceable
   //
   rep.def("__copy__", &Replaceable::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -29,19 +29,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
 
   rep.def("__len__", &Replaceable::length, R"doc(
-      Return the number of 16-bit code units in this instance.
+      Return the number of 16-bit code units in the text.
 
       This is equivalent to calling :meth:`.length`.
       )doc");
 
   rep.def("char32_at", &Replaceable::char32At, py::arg("offset"), R"doc(
-      Return the 32-bit code point at the specified *offset*.
+      Return the 32-bit code point at the specified offset.
 
       If *offset* points to the leading or trailing code unit of a surrogate
       pair, return the code point of the surrogate pair.
@@ -53,11 +53,11 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
         return self.charAt(offset);
       },
       py::arg("offset"), R"doc(
-      Return the 16-bit code unit at the specified *offset*.
+      Return the 16-bit code unit at the specified offset.
       )doc");
 
   rep.def("clone", &Replaceable::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -67,16 +67,31 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
 
   rep.def("copy", &Replaceable::copy, py::arg("start"), py::arg("limit"),
           py::arg("dest"), R"doc(
-      Copy the substring within the range [*start*, *limit*) of this
-      ``Replaceable`` to *dest*.
+      Copy a substring of this object, retaining the metadata.
 
-      *dest* must satisfy either *dest* <= *start* or *dest* >= *limit*.
+      *start* is the start index for copying, inclusive. It must be
+      [0, *limit*].
+
+      *limit* is the end index for copying, exclusive. It must be
+      [*start*, :meth:`.length`].
+
+      *dest* is the destination index. The characters from *start* to *limit-1*
+      will be copied to *dest*.
+
+      This method is used to duplicate or reorder substrings.
+
+      The destination index must not overlap with the source range.
       )doc");
 
   rep.def("extract_between", &Replaceable::extractBetween, py::arg("start"),
           py::arg("limit"), py::arg("target"), R"doc(
-      Copy the substring within the range [*start*, *limit*) of this
-      ``Replaceable`` to *target*.
+      Copy the specified range of this text to *target*.
+
+      *start* is the start index for copying, inclusive.
+
+      *limit* is the end index for copying, exclusive.
+
+      *target* is a string object to receive the copied substring.
       )doc");
 
   rep.def(
@@ -86,12 +101,19 @@ void init_unistr(py::module &m, py::class_<Replaceable, UObject> &rep,
         self.handleReplaceBetween(start, limit, icupy::to_unistr(text));
       },
       py::arg("start"), py::arg("limit"), py::arg("text"), R"doc(
-      Replace the substring within the range [*start*, *limit*) of this
-      ``Replaceable`` with *text*.
+      Replace the specified range of this text with the specified string.
+
+      *start* is the start index for replacement, inclusive. It must be
+      [0, *limit*].
+
+      *limit* is the end index for replacement, exclusive. It must be
+      [*start*, :meth:`.length`].
+
+      *text* is the string with which to replace the substring.
       )doc");
 
   rep.def("length", &Replaceable::length, R"doc(
-      Return the number of 16-bit code units in this ``Replaceable``.
+      Return the number of 16-bit code units in the text.
 
       .. seealso::
 
@@ -130,18 +152,22 @@ string.
           // [2] UnicodeString(int32_t capacity, UChar32 c, int32_t count)
           py::init<int32_t, UChar32, int32_t>(), py::arg("capacity"),
           py::arg("c"), py::arg("count"), R"doc(
-      Initialize a ``UnicodeString`` instance with a string consisting of the
-      code unit *c* repeated *count* times.
+      Initialize a ``UnicodeString`` instance using a string that repeats the
+      specified code point the specified count of times.
 
-      *capacity* is the number of char16_ts that this ``UnicodeString`` can
+      *capacity* is the number of ``char16_t`` that this ``UnicodeString`` can
       hold before resizing is required. If *count* is greater than 0 and
       *count* code points *c* occupy more space than *capacity*, *capacity* is
       adjusted accordingly.
+
+      *c* is the code point to repeat.
+
+      *count* is the number of times to repeat *c*.
       )doc")
       .def(
           // [4] UnicodeString(UChar32 ch)
           py::init<UChar32>(), py::arg("ch"), R"doc(
-      Initialize a ``UnicodeString`` instance with the single code point *ch*.
+      Initialize a ``UnicodeString`` instance with the specified code point.
       )doc")
       .def(
           // [10] UnicodeString(const S &text)
@@ -154,7 +180,7 @@ string.
 #endif
           }),
           py::arg("text"), R"doc(
-      Initialize a ``UnicodeString`` instance with the string literal *text*.
+      Initialize a ``UnicodeString`` instance with the specified string.
       )doc")
       .def(
           // [6] UnicodeString(const char16_t *text, int32_t textLength)
@@ -162,8 +188,11 @@ string.
             return std::make_unique<UnicodeString>(text.data(), text_length);
           }),
           py::arg("text"), py::arg("text_length"), R"doc(
-      Initialize a ``UnicodeString`` instance with the substring
-      *text[:text_length]* of *text*.
+      Initialize a ``UnicodeString`` instance with the specified string.
+
+      *text* is the string to be used for initialization.
+
+      *text_length* is the length of *text*.
       )doc")
       .def(
           // [16] UnicodeString(const char *codepageData)
@@ -173,8 +202,11 @@ string.
             return std::make_unique<UnicodeString>(codepage_data_text);
           }),
           py::arg("codepage_data"), R"doc(
-      Initialize a ``UnicodeString`` instance from NUL-terminated
-      codepage data *codepage_data* using the default converter.
+      Initialize a ``UnicodeString`` instance with the specified codepage data
+      using the default converter.
+
+      *codepage_data* is a NUL-terminated byte sequence encoded in the
+      platform's default codepage to be used for initialization.
       )doc")
       .def(
           // [18] UnicodeString(const char *codepageData, const char *codepage)
@@ -186,12 +218,15 @@ string.
                 codepage_data_text, codepage ? codepage->data() : nullptr);
           }),
           py::arg("codepage_data"), py::arg("codepage"), R"doc(
-      Initialize a ``UnicodeString`` instance from NUL-terminated
-      codepage data *codepage_data* using the converter specified by
-      *codepage*.
+      Initialize a ``UnicodeString`` instance with the specified codepage data
+      using the specified converter.
 
-      If *codepage* is ``None``, the default converter is used. If *codepage*
-      is an empty string (""), *codepage_data* must be an
+      *codepage_data* is a NUL-terminated byte sequence to be used for
+      initialization.
+
+      *codepage* is the name of the codepage to be used.
+      If *codepage* is ``None``, the default converter is used.
+      If *codepage* is an empty string (""), *codepage_data* must be an
       "invariant characters".
 
       .. note::
@@ -210,9 +245,13 @@ string.
                                                    data_length);
           }),
           py::arg("codepage_data"), py::arg("data_length"), R"doc(
-      Initialize a ``UnicodeString`` instance from the codepage data
-      *codepage_data* within the range [0, *data_length*) using the default
-      converter.
+      Initialize a ``UnicodeString`` instance with the specified codepage data
+      using the default converter.
+
+      *codepage_data* is a byte sequence to be used for initialization.
+
+      *data_length* is the length of *codepage_data*. If *data_length* is -1,
+      the length of *codepage_data* is determined by the NUL-terminator.
       )doc")
       .def(
           // [19] UnicodeString(const char *codepageData,
@@ -230,12 +269,17 @@ string.
           }),
           py::arg("codepage_data"), py::arg("data_length"), py::arg("codepage"),
           R"doc(
-      Initialize a ``UnicodeString`` instance from the codepage data
-      *codepage_data* within the range [0, *data_length*) using the converter
-      specified by *codepage*.
+      Initialize a ``UnicodeString`` instance with the specified codepage data
+      using the specified converter.
 
-      If *codepage* is ``None``, the default converter is used. If *codepage*
-      is an empty string (""), *codepage_data* must be an
+      *codepage_data* is a byte sequence to be used for initialization.
+
+      *data_length* is the length of *codepage_data*. If *data_length* is -1,
+      the length of *codepage_data* is determined by the NUL-terminator.
+
+      *codepage* is the name of the codepage to be used.
+      If *codepage* is ``None``, the default converter is used.
+      If *codepage* is an empty string (""), *codepage_data* must be an
       "invariant characters".
 
       .. note::
@@ -263,8 +307,16 @@ string.
             return result;
           }),
           py::arg("src"), py::arg("src_length"), py::arg("cnv"), R"doc(
-      Initialize a ``UnicodeString`` instance from the codepage data *src*
-      within the range [0, *src_length*) using the existing converter *cnv*.
+      Initialize a ``UnicodeString`` instance with the specified codepage data
+      using the specified converter.
+
+      *src* is a byte sequence to be used for initialization.
+
+      *src_length* is the length of *src*. If *src_length* is -1, the length of
+      *src* is determined by the NUL-terminator.
+
+      *cnv* is a converter object to be used for conversion, and
+      :func:`ucnv_reset_to_unicode` will be called.
 
       .. seealso::
 
@@ -280,25 +332,33 @@ string.
                                                    inv);
           }),
           py::arg("src"), py::arg("text_length"), py::arg("inv"), R"doc(
-      Initialize a ``UnicodeString`` instance with the substring
-      *src[:text_length]* of *src* as an invariant-character string.
+      Initialize a ``UnicodeString`` instance with the specified
+      invariant-character string.
 
-      .. note::
+      *src* is a string containing only invariant characters to be used for
+      initialization.
 
-         For *inv*, use :attr:`US_INV` instead of the fully qualified name.
+      *text_length* is the length of *src*. If *text_length* is -1, the length
+      of *src* is determined by the NUL-terminator.
+
+      *inv* is a signature-distinguishing parameter; use :attr:`US_INV`.
       )doc")
       .def(
           // [22] UnicodeString(const UnicodeString &that)
           py::init<const UnicodeString &>(), py::arg("other"), R"doc(
-      Initialize a ``UnicodeString`` instance from another ``UnicodeString``.
+      Initialize a ``UnicodeString`` instance from a copy of *other*.
       )doc")
       .def(
           // [24] UnicodeString(const UnicodeString &src,
           //                    int32_t srcStart)
           py::init<const UnicodeString &, int32_t>(), py::arg("src"),
           py::arg("src_start"), R"doc(
-      Initialize a ``UnicodeString`` instance from the substring
-      *src[src_start:]* of an existing ``UnicodeString`` object.
+      Initialize a ``UnicodeString`` instance with the specified string.
+
+      *src* is a string object to be copied.
+
+      *src_start* is the start index of *src*, inclusive.
+      A substring from *src_start* to the end of *src* is copied.
       )doc")
       .def(
           // [25] UnicodeString(const UnicodeString &src,
@@ -306,9 +366,13 @@ string.
           //                    int32_t srcLength)
           py::init<const UnicodeString &, int32_t, int32_t>(), py::arg("src"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Initialize a ``UnicodeString`` instance from the substring
-      *src[src_start:src_start + src_length]* of an existing
-      ``UnicodeString`` object.
+      Initialize a ``UnicodeString`` instance with the specified string.
+
+      *src* is a string object to be copied.
+
+      *src_start* is the start index of *src*, inclusive.
+
+      *src_length* is the length of *src* to be copied.
       )doc");
 
   us.def(
@@ -317,15 +381,15 @@ string.
           return self + icupy::to_unistr(other);
         },
         py::is_operator(), py::arg("other"), R"doc(
-      Concatenate this ``UnicodeString`` with the string *other* and return the
-      result as a new ``UnicodeString`` instance.
+      Concatenate this text with the specified string and return the result as
+      a new text.
       )doc")
       .def(
           "__add__",
           [](UnicodeString &self, UChar32 other) { return self + other; },
           py::is_operator(), py::arg("other"), R"doc(
-      Concatenate this ``UnicodeString`` with the code point *other* and return
-      the result as a new ``UnicodeString`` instance.
+      Concatenate this text with the specified code point and return the result
+      as a new text.
       )doc");
 
   us.def(
@@ -334,14 +398,14 @@ string.
         return self.indexOf(icupy::to_unistr(item)) >= 0;
       },
       py::arg("item"), R"doc(
-      Return ``True`` if *item* is a substring of this instance, ``False``
+      Return ``True`` if this text contains the specified string, ``False``
       otherwise.
 
       This is equivalent to :meth:`index_of` >= 0.
       )doc");
 
   us.def("__copy__", &UnicodeString::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -352,7 +416,7 @@ string.
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a deep copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -397,7 +461,7 @@ string.
           return py::str(PyUnicode_FromOrdinal(self[actual_index]));
         },
         py::arg("index"), R"doc(
-      Return the code unit at offset *index*.
+      Return the code unit at the specified index in the text.
       )doc")
       .def(
           "__getitem__",
@@ -420,7 +484,7 @@ string.
             return result ? py::str(result) : py::str();
           },
           py::arg("slice"), R"doc(
-      Return a set of code units in the *range(start, stop, step)*.
+      Return a set of code units within the specified range in the text.
       )doc");
 
   us.def(
@@ -436,7 +500,7 @@ string.
       )doc");
 
   us.def("__hash__", &UnicodeString::hashCode, R"doc(
-      Return a hash value of this instance.
+      Return a hash value of this object.
 
       This is equivalent to calling :meth:`.hash_code`.
       )doc");
@@ -446,8 +510,7 @@ string.
         [](UnicodeString &self, const icupy::UnicodeStringVariant &other)
             -> UnicodeString & { return self += icupy::to_unistr(other); },
         py::is_operator(), py::arg("other"), R"doc(
-      Append the string *other* to this ``UnicodeString`` and return the
-      ``UnicodeString`` itself.
+      Append the specified string to this text and return the text itself.
       )doc")
       .def(
           "__iadd__",
@@ -455,8 +518,7 @@ string.
             return self += other;
           },
           py::is_operator(), py::arg("other"), R"doc(
-      Append the code point *other* to this ``UnicodeString`` and return the
-      ``UnicodeString`` itself.
+      Append the specified code point to this text and return the text itself.
       )doc");
 
   us.def(
@@ -546,7 +608,11 @@ string.
         self.setCharAt(actual_index, icupy::to_char16(value));
       },
       py::arg("index"), py::arg("value"), R"doc(
-      Set the code unit at the specified *index* to *value*.
+      Set the specified code unit at the specified index in the text.
+
+      *index* is the index in the text where the code unit is to be set.
+
+      *value* is the code unit to be set.
 
       This is similar to calling :meth:`.set_char_at`.
       )doc");
@@ -559,7 +625,7 @@ string.
         return result;
       },
       R"doc(
-      Return a string representation of this instance.
+      Return a string representation of this object.
 
       This is equivalent to calling :meth:`.to_utf8_string`.
       )doc");
@@ -574,9 +640,14 @@ string.
         },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
         R"doc(
-      Append the substring *src_chars[src_start:src_start + src_length]*
-      of *src_chars* to this ``UnicodeString`` and return the ``UnicodeString``
-      itself.
+      Append the specified string to this text and return the text itself.
+
+      *src_chars* is a string to be appended.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars*;
+      can be set to -1 for a NUL-terminated string.
       )doc")
       .def(
           // [4] append(const UnicodeString &srcText)
@@ -586,8 +657,7 @@ string.
             return self.append(icupy::to_unistr(src_text));
           },
           py::arg("src_text"), R"doc(
-      Append the string *src_text* to this ``UnicodeString`` and return the
-      ``UnicodeString`` itself.
+      Append the specified string to this text and return the text itself.
       )doc")
       .def(
           // [5] append(const UnicodeString &srcText, int32_t srcStart,
@@ -599,9 +669,13 @@ string.
           },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           R"doc(
-      Append the substring *src_text[src_start:src_start + src_length]* of
-      *src_text* to this ``UnicodeString`` and return the ``UnicodeString``
-      itself.
+      Append the specified string to this text and return the text itself.
+
+      *src_text* is a string to be appended.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text*.
       )doc")
       .def(
           // [6] append(ConstChar16Ptr srcChars, int32_t srcLength)
@@ -611,8 +685,12 @@ string.
             return self.append(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Append the substring *src_chars[:src_length]* of *src_chars* to this
-      ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Append the specified string to this text and return the text itself.
+
+      *src_chars* is a string to be appended.
+
+      *src_length* is the length of *src_chars*;
+      can be set to -1 for a NUL-terminated string.
       )doc")
       .def(
           // [7] append(UChar32 srcChar)
@@ -621,8 +699,7 @@ string.
             return self.append(src_char);
           },
           py::arg("src_char"), R"doc(
-      Append the code point *src_char* to this ``UnicodeString`` and return the
-      ``UnicodeString`` itself.
+      Append the specified code point to this text and return the text itself.
       )doc");
 
   us.def(
@@ -633,10 +710,13 @@ string.
           return self.caseCompare(icupy::to_unistr(text), options);
         },
         py::arg("text"), py::arg("options"), R"doc(
-      Compare this ``UnicodeString`` with the string *text* case-insensitively
-      using full case folding; return a negative integer if this
-      ``UnicodeString`` is less than *text*, a positive integer if it is
-      greater than *text*, and 0 if they are equal.
+      Compare this text with the specified string case-insensitively using full
+      case folding;
+      return a negative integer if this text is less than specified string, a
+      positive integer if it is greater than specified string, and 0 if they
+      are equal.
+
+      *text* is a string to be compared.
 
       *options* is a bit set of the following values:
 
@@ -660,9 +740,14 @@ string.
           },
           py::arg("src_chars"), py::arg("src_length"), py::arg("options"),
           R"doc(
-      Compare this ``UnicodeString`` with the substring
-      *src_chars[:src_length]* of *src_chars* case-insensitively using full
-      case folding.
+      Compare this text with the specified string case-insensitively using full
+      case folding;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *src_chars* is a string to be compared.
+
+      *src_length* is the length of *src_chars* to be compared.
 
       *options* is a bit set of the following values:
 
@@ -690,10 +775,20 @@ string.
           py::arg("start"), py::arg("length"), py::arg("src_chars"),
           py::arg("src_start"), py::arg("src_length"), py::arg("options"),
           R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars*
-      case-insensitively using full case folding.
+      Compare the specified range of this text with the specified string
+      case-insensitively using full case folding;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars* to be compared.
 
       *options* is a bit set of the following values:
 
@@ -718,9 +813,16 @@ string.
           py::arg("start"), py::arg("length"), py::arg("src_chars"),
           py::arg("options"),
           R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *src_chars* case-insensitively using
-      full case folding.
+      Compare the specified range of this text with the specified string
+      case-insensitively using full case folding;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
 
       *options* is a bit set of the following values:
 
@@ -746,10 +848,20 @@ string.
           py::arg("start"), py::arg("length"), py::arg("src_text"),
           py::arg("src_start"), py::arg("src_length"), py::arg("options"),
           R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text*
-      case-insensitively using full case folding.
+      Compare the specified range of this text with the specified string
+      case-insensitively using full case folding;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_text* is a string to be compared.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text* to be compared.
 
       *options* is a bit set of the following values:
 
@@ -771,9 +883,16 @@ string.
               &UnicodeString::caseCompare, py::const_),
           py::arg("start"), py::arg("length"), py::arg("src_text"),
           py::arg("options"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *src_text* case-insensitively using
-      full case folding.
+      Compare the specified range of this text with the specified string
+      case-insensitively using full case folding;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_text* is a string to be compared.
 
       *options* is a bit set of the following values:
 
@@ -798,12 +917,21 @@ string.
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"),
       py::arg("src_start"), py::arg("src_limit"), py::arg("options"), R"doc(
-      Compare the substring *self[start:limit]* of this ``UnicodeString`` with
-      the substring *src_text[src_start:src_limit]* of *src_text*
-      case-insensitively using full case folding; return a negative integer if
-      the substring of this ``UnicodeString`` is less than the substring of
-      *src_text*, a positive integer if it is greater than the substring of
-      *src_text*, and 0 if they are equal.
+      Compare the specified range of this text with the specified string
+      case-insensitively using full case folding;
+      return a negative integer if a substring of this text is less than a
+      substring of the specified string, a positive integer if it is greater
+      than a substring of the specified string, and 0 if they are equal.
+
+      *start* is the start index of this text to be compared, inclusive.
+
+      *limit* is the end index of this text to be compared, exclusive.
+
+      *src_text* is the string to be compared.
+
+      *src_start* is the start index of *src_text* to be compared, inclusive.
+
+      *src_limit* is the end index of *src_text* to be compared, exclusive.
 
       *options* is a bit set of the following values:
 
@@ -819,7 +947,7 @@ string.
       )doc");
 
   us.def("clone", &UnicodeString::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -834,9 +962,10 @@ string.
           return self.compare(icupy::to_unistr(text));
         },
         py::arg("text"), R"doc(
-      Compare this ``UnicodeString`` with the string *text* bitwise; return a
-      negative integer if this ``UnicodeString`` is less than *text*, a
-      positive integer if it is greater than *text*, and 0 if they are equal.
+      Compare this text with the specified string bitwise;
+      return a negative integer if this text is less than the specified string,
+      a positive integer if it is greater than the specified string, and 0 if
+      they are equal.
       )doc")
       .def(
           // [2] compare(ConstChar16Ptr srcChars, int32_t srcLength)
@@ -846,8 +975,13 @@ string.
             return self.compare(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Compare this ``UnicodeString`` with the substring
-      *src_chars[:src_length]* of *src_chars* bitwise.
+      Compare this text with the specified string bitwise;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *src_chars* is a string to be compared.
+
+      *src_length* is the length of *src_chars*.
       )doc")
       .def(
           // [3] compare(int32_t start, int32_t length,
@@ -858,8 +992,16 @@ string.
             return self.compare(start, length, src_chars.data());
           },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *src_chars* bitwise.
+      Compare the specified range of this text with the specified string
+      bitwise;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
       )doc")
       .def(
           // [4] compare(int32_t start, int32_t length,
@@ -874,9 +1016,20 @@ string.
           },
           py::arg("start"), py::arg("length"), py::arg("src_chars"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars* bitwise.
+      Compare the specified range of this text with the specified string
+      bitwise;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars* to be compared.
       )doc")
       .def(
           // [5] compare(int32_t start, int32_t length,
@@ -887,9 +1040,20 @@ string.
                             int32_t>(&UnicodeString::compare, py::const_),
           py::arg("start"), py::arg("length"), py::arg("src_text"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text* bitwise.
+      Compare the specified range of this text with the specified string
+      bitwise;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_text* is a string to be compared.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text* to be compared.
       )doc")
       .def(
           // [6] compare(int32_t start, int32_t length,
@@ -898,8 +1062,16 @@ string.
           py::overload_cast<int32_t, int32_t, const UnicodeString &>(
               &UnicodeString::compare, py::const_),
           py::arg("start"), py::arg("length"), py::arg("text"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *text* bitwise.
+      Compare the specified range of this text with the specified string
+      bitwise;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *text* is a string to be compared.
       )doc");
 
   us.def(
@@ -912,12 +1084,21 @@ string.
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"),
       py::arg("src_start"), py::arg("src_limit"), R"doc(
-      Compare the substring *self[start:limit]* of this
-      ``UnicodeString`` with the substring *src_text[src_start:src_limit]* of
-      *src_text* bitwise; return a negative integer if the substring of this
-      ``UnicodeString`` is less than the substring of *src_text*, a positive
-      integer if it is greater than the substring of *src_text*, and 0 if they
-      are equal.
+      Compare the specified range of this text with the specified string
+      bitwise;
+      return a negative integer if a substring of this text is less than a
+      substring of the specified string, a positive integer if it is greater
+      than a substring of the specified string, and 0 if they are equal.
+
+      *start* is the start index of this text to be compared, inclusive.
+
+      *limit* is the end index of this text to be compared, exclusive.
+
+      *src_text* is the string to be compared.
+
+      *src_start* is the start index of *src_text* to be compared, inclusive.
+
+      *src_limit* is the end index of *src_text* to be compared, exclusive.
       )doc");
 
   us.def(
@@ -927,10 +1108,10 @@ string.
           return self.compareCodePointOrder(icupy::to_unistr(text));
         },
         py::arg("text"), R"doc(
-      Compare this ``UnicodeString`` with the string *text* in code point
-      order; return a negative integer if this ``UnicodeString`` is less than
-      *text*, a positive integer if it is greater than *text*, and 0 if they
-      are equal.
+      Compare this text with the specified string in code point order;
+      return a negative integer if this text is less than the specified string,
+      a positive integer if it is greater than the specified string, and 0 if
+      they are equal.
       )doc")
       .def(
           // [2] compareCodePointOrder(ConstChar16Ptr srcChars,
@@ -941,8 +1122,13 @@ string.
             return self.compareCodePointOrder(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Compare this ``UnicodeString`` with the substring
-      *src_chars[:src_length]* of *src_chars* in code point order.
+      Compare this text with the specified string in code point order;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *src_chars* is a string to be compared.
+
+      *src_length* is the length of *src_chars* to be compared.
       )doc")
       .def(
           // [3] compareCodePointOrder(int32_t start, int32_t length,
@@ -953,8 +1139,16 @@ string.
             return self.compareCodePointOrder(start, length, src_chars.data());
           },
           py::arg("start"), py::arg("length"), py::arg("src_chars"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *src_chars* in code point order.
+      Compare the specified range of this text with the specified string in
+      code point order;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
       )doc")
       .def(
           // [4] compareCodePointOrder(int32_t start, int32_t length,
@@ -969,10 +1163,20 @@ string.
           },
           py::arg("start"), py::arg("length"), py::arg("src_chars"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars* in code
-      point order.
+      Compare the specified range of this text with the specified string in
+      code point order;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_chars* is a string to be compared.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars* to be compared.
       )doc")
       .def(
           // [5] compareCodePointOrder(int32_t start, int32_t length,
@@ -981,8 +1185,16 @@ string.
           py::overload_cast<int32_t, int32_t, const UnicodeString &>(
               &UnicodeString::compareCodePointOrder, py::const_),
           py::arg("start"), py::arg("length"), py::arg("src_text"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the string *src_text* in code point order.
+      Compare the specified range of this text with the specified string in
+      code point order;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_text* is a string to be compared.
       )doc")
       .def(
           // [6] compareCodePointOrder(int32_t start, int32_t length,
@@ -994,10 +1206,20 @@ string.
                                      py::const_),
           py::arg("start"), py::arg("length"), py::arg("src_text"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Compare the substring *self[start:start + length]* of this
-      ``UnicodeString`` with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text* in code point
-      order.
+      Compare the specified range of this text with the specified string in
+      code point order;
+      return a negative integer, 0, or a positive integer indicating the
+      comparison result.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be compared.
+
+      *src_text* is a string to be compared.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text* to be compared.
       )doc");
 
   us.def(
@@ -1010,18 +1232,30 @@ string.
       },
       py::arg("start"), py::arg("limit"), py::arg("src_text"),
       py::arg("src_start"), py::arg("src_limit"), R"doc(
-      Compare the substring *self[start:limit]* of this
-      ``UnicodeString`` with the substring *src_text[src_start:src_limit]* of
-      *src_text* in code point order; return a negative integer if the
-      substring of this ``UnicodeString`` is less than the substring of
-      *src_text*, a positive integer if it is greater than the substring of
-      *src_text*, and 0 if they are equal.
+      Compare the specified range of this text with the specified string in
+      code point order;
+      return a negative integer if a substring of this text is less than a
+      substring of the specified string, a positive integer if it is greater
+      than a substring of the specified string, and 0 if they are equal.
+
+      *start* is the start index of this text to be compared, inclusive.
+
+      *limit* is the end index of this text to be compared, exclusive.
+
+      *src_text* is the string to be compared.
+
+      *src_start* is the start index of *src_text* to be compared, inclusive.
+
+      *src_limit* is the end index of *src_text* to be compared, exclusive.
       )doc");
 
   us.def("count_char32", &UnicodeString::countChar32, py::arg("start ") = 0,
          py::arg("length") = INT32_MAX, R"doc(
-      Return the number of code points within the substring
-      *self[start:start + length]* of this ``UnicodeString``.
+      Return the number of code points in the specified range of this text.
+
+      *start* is the start index of this text to be counted, inclusive.
+
+      *length* is the length of this text to be counted.
       )doc");
 
   us.def(
@@ -1034,9 +1268,14 @@ string.
         },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
         R"doc(
-      Return ``True`` if this ``UnicodeString`` ends with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars*, ``False``
+      Return ``True`` if this text ends with the specified string, ``False``
       otherwise.
+
+      *src_chars* is a string to be checked.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars* to be checked.
       )doc")
       .def(
           // [2] endsWith(const UnicodeString &srcText, int32_t srcStart,
@@ -1048,9 +1287,14 @@ string.
           },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           R"doc(
-      Return ``True`` if this ``UnicodeString`` ends with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text*, ``False``
+      Return ``True`` if this text ends with the specified string, ``False``
       otherwise.
+
+      *src_text* is a string to be checked.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text* to be checked.
       )doc")
       .def(
           // [3] endsWith(const UnicodeString &text)
@@ -1060,8 +1304,8 @@ string.
             return self.endsWith(icupy::to_unistr(src_text));
           },
           py::arg("src_text"), R"doc(
-      Return ``True`` if this ``UnicodeString`` ends with the string
-      *src_text*, ``False`` otherwise.
+      Return ``True`` if this text ends with the specified string, ``False``
+      otherwise.
       )doc")
       .def(
           // [4] endsWith(ConstChar16Ptr srcChars, int32_t srcLength)
@@ -1071,8 +1315,12 @@ string.
             return self.endsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Return ``True`` if this ``UnicodeString`` ends with the substring
-      *src_chars[:src_length]* of *src_chars*, ``False`` otherwise.
+      Return ``True`` if this text ends with the specified string, ``False``
+      otherwise.
+
+      *src_chars* is a string to be checked.
+
+      *src_length* is the length of *src_chars* to be checked.
       )doc");
 
   us.def(
@@ -1092,8 +1340,11 @@ string.
           return py::bytes(dest.data(), length);
         },
         py::arg("cnv"), R"doc(
-      Convert this ``UnicodeString`` to the codepage string using the existing
-      converter *cnv* and return the result.
+      Convert this text to the codepage string using the specified converter
+      and return the result.
+
+      *cnv* is a converter to be used for conversion, and
+      :func:`ucnv_reset_from_unicode` will be called.
 
       .. seealso::
 
@@ -1114,7 +1365,7 @@ string.
             return result;
           },
           R"doc(
-      Convert this ``UnicodeString`` to a UTF-8 string and return the result.
+      Convert this text to a UTF-8 string and return the result.
       )doc")
       .def(
           // [4] extract(int32_t start, int32_t length, UnicodeString &target)
@@ -1122,8 +1373,13 @@ string.
           py::overload_cast<int32_t, int32_t, UnicodeString &>(
               &UnicodeString::extract, py::const_),
           py::arg("start"), py::arg("length"), py::arg("target"), R"doc(
-      Copy the substring *self[start:start + length]* of this
-      ``UnicodeString`` into *target*.
+      Copy the specified range of this text into *target*.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be copied.
+
+      *target* is a string object to receive the copied substring.
       )doc")
       .def(
           // [5] extract(int32_t start, int32_t startLength, char *target,
@@ -1143,12 +1399,16 @@ string.
           },
           py::arg("start"), py::arg("start_length"), py::arg("codepage"),
           R"doc(
-      Convert the substring *self[start:start + start_length]* of this
-      ``UnicodeString`` to the codepage string specified by *codepage* and
-      return the result.
+      Convert the specified range of this text to the specified codepage string
+      and return the result.
 
-      If *codepage* is ``None``, the default converter is used. If *codepage*
-      is an empty string (""), all characters must be an
+      *start* is the start index of this text, inclusive.
+
+      *start_length* is the length of this text to be converted.
+
+      *codepage* is the name of the codepage to be used for conversion.
+      If *codepage* is ``None``, the default converter is used.
+      If *codepage* is an empty string (""), all characters must be an
       "invariant characters".
 
       .. note::
@@ -1174,17 +1434,17 @@ string.
             return py::bytes(target.data(), length);
           },
           py::arg("start"), py::arg("start_length"), py::arg("inv"), R"doc(
-      Convert the substring *self[start:start + start_length]* of this
-      ``UnicodeString`` to an invariant-character string using a simple
-      converter and return the result.
+      Copy the specified range of this text into the buffer and return it.
+
+      *start* is the start index of this text, inclusive.
+
+      *start_length* is the length of this text to be copied.
+
+      *inv* is a signature-distinguishing parameter; use :attr:`US_INV`.
 
       .. note::
 
          All characters must be an "invariant characters".
-
-      .. note::
-
-         For *inv*, use :attr:`US_INV` instead of the fully qualified name.
       )doc")
       .def(
           // [7] extract(int32_t start, int32_t startLength, char *target,
@@ -1202,9 +1462,12 @@ string.
             return py::bytes(target.data(), length);
           },
           py::arg("start"), py::arg("start_length"), R"doc(
-      Convert the substring *self[start:start + start_length]* of this
-      ``UnicodeString`` to the platform's default codepage and return
-      the result.
+      Convert the specified range of this text to the platform's default
+      codepage and return the result.
+
+      *start* is the start index of this text, inclusive.
+
+      *start_length* is the length of this text to be converted.
       )doc");
 
   us.def(
@@ -1220,8 +1483,11 @@ string.
           return result;
         },
         py::arg("start"), py::arg("limit"), R"doc(
-      Convert the substring *self[start:limit]* of this ``UnicodeString`` to a
-      UTF-8 string and return it.
+      Copy the specified range of this text into the buffer and return it.
+
+      *start* is the start index of this text to be copied, inclusive.
+
+      *limit* is the end index of this text to be copied, exclusive.
       )doc")
       .def(
           // [2] extractBetween(int32_t start, int32_t limit,
@@ -1230,13 +1496,22 @@ string.
           py::overload_cast<int32_t, int32_t, UnicodeString &>(
               &UnicodeString::extractBetween, py::const_),
           py::arg("start"), py::arg("limit"), py::arg("target"), R"doc(
-      Copy the substring *self[start:limit]* of this ``UnicodeString`` into
-      *target*.
+      Copy the specified range of this text into *target*.
+
+      *start* is the start index of this text to be copied, inclusive.
+
+      *limit* is the end index of this text to be copied, exclusive.
+
+      *target* is a string object to receive the copied substring.
       )doc");
 
   us.def("fast_copy_from", &UnicodeString::fastCopyFrom, py::arg("src"), R"doc(
-      Replace the contents of this ``UnicodeString`` with the contents of
-      *src* and return the ``UnicodeString`` itself.
+      Replace the contents of this text with the contents of *src* and return
+      the text itself.
+
+      .. important::
+
+         *src* must be outlive this text object.
       )doc");
 
   us.def(
@@ -1249,9 +1524,12 @@ string.
                                      icupy::to_unistr(new_text));
         },
         py::arg("old_text"), py::arg("new_text"), R"doc(
-      Replace all occurrences of the string *old_text* within this
-      ``UnicodeString`` with *new_text*, and return the ``UnicodeString``
-      itself.
+      Replace all occurrences of *old_text* in this text with *new_text* and
+      return the text itself.
+
+      *old_text* is a string to be replaced.
+
+      *new_text* is a string to replace with.
       )doc")
       .def(
           // [2] findAndReplace(int32_t start, int32_t length,
@@ -1267,9 +1545,16 @@ string.
           },
           py::arg("start"), py::arg("length"), py::arg("old_text"),
           py::arg("new_text"), R"doc(
-      Replace all occurrences of the string *old_text* within the substring
-      *self[start:start + length]* of this ``UnicodeString`` with *new_text*,
-      and return the ``UnicodeString`` itself.
+      Replace all occurrences of *old_text* in the specified range of this text
+      with *new_text* and return the text itself.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to consider.
+
+      *old_text* is a string to be replaced.
+
+      *new_text* is a string to replace with.
       )doc")
       .def(
           // [3] findAndReplace(int32_t start, int32_t length,
@@ -1288,15 +1573,28 @@ string.
           py::arg("start"), py::arg("length"), py::arg("old_text"),
           py::arg("old_start"), py::arg("old_length"), py::arg("new_text"),
           py::arg("new_start"), py::arg("new_length"), R"doc(
-      Replace all occurrences of the substring
-      *old_text[old_start:old_start + old_length]* of *old_text* within the
-      substring *self[start:start + length]* of this ``UnicodeString`` with the
-      substring *new_text[new_start:new_start + new_length]* of *new_text*, and
-      return the ``UnicodeString`` itself.
+      Replace all occurrences of *old_text* in the specified range of this text
+      with *new_text* and return the text itself.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to consider.
+
+      *old_text* is a string to be replaced.
+
+      *old_start* is the start index of *old_text* to be replaced.
+
+      *old_length* is the length of *old_text* to be replaced.
+
+      *new_text* is a string to replace with.
+
+      *new_start* is the start index of *new_text* to replace with.
+
+      *new_length* is the length of *new_text* to replace with.
       )doc");
 
   us.def("fold_case", &UnicodeString::foldCase, py::arg("options") = 0, R"doc(
-      Case-fold this ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Case-fold this text and return the text itself.
 
       *options* is either :attr:`U_FOLD_CASE_DEFAULT` or
       :attr:`U_FOLD_CASE_EXCLUDE_SPECIAL_I`.
@@ -1373,7 +1671,8 @@ string.
 
   us.def("get_char32_limit", &UnicodeString::getChar32Limit, py::arg("offset"),
          R"doc(
-      Adjust *offset* to the code point boundary following the code point.
+      Adjust the specified offset to the code point boundary following that
+      code point and return the result.
 
       If *offset* is behind the lead surrogate of a surrogate pair, *offset*
       is incremented by 1. Otherwise, nothing changes.
@@ -1381,7 +1680,8 @@ string.
 
   us.def("get_char32_start", &UnicodeString::getChar32Start, py::arg("offset"),
          R"doc(
-      Adjust *offset* to the code point boundary preceding the code point.
+      Adjust the specified offset to the code point boundary preceding that
+      code point and return the result.
 
       If *offset* points to the trail surrogate of a surrogate pair,
       *offset* is decremented by 1. Otherwise, nothing changes.
@@ -1417,7 +1717,7 @@ string.
       )doc");
 
   us.def("hash_code", &UnicodeString::hashCode, R"doc(
-      Return a hash code for this instance.
+      Return a hash code for this object.
 
       .. seealso::
 
@@ -1431,9 +1731,14 @@ string.
         return self.hasMoreChar32Than(start, length, number);
       },
       py::arg("start"), py::arg("length"), py::arg("number"), R"doc(
-      Return ``True`` if there are more than the specified *number* of code
-      points within the substring *self[start:start + length]* of this
-      ``UnicodeString``, ``False`` otherwise.
+      Return ``True`` if there are more than the specified number of code
+      points within the specified range of this text, ``False`` otherwise.
+
+      *start* is the start index of this text, inclusive.
+
+      *length* is the length of this text to be checked.
+
+      *number* is the number of code points in the substring to be checked.
       )doc");
 
   us.def(
@@ -1445,9 +1750,14 @@ string.
           return self.indexOf(src_chars.data(), src_length, start);
         },
         py::arg("src_chars"), py::arg("src_length"), py::arg("start"), R"doc(
-      Return the index of the first occurrence of the substring
-      *src_chars[:src_length]* of *src_chars* within the substring
-      *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is a string to search for.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1463,10 +1773,18 @@ string.
           },
           py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
           py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the first occurrence of the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is a string to search for.
+
+      *src_start* is the start index of *src_chars* to search for, inclusive.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1479,10 +1797,19 @@ string.
                             int32_t>(&UnicodeString::indexOf, py::const_),
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the first occurrence of the substring
-      *src_text[src_start:src_start + src_length]* of *src_text* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_text* is the string to search for.
+
+      *src_start* is the start index of *src_text* to search for,
+      inclusive.
+
+      *src_length* is the length of *src_text* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1494,8 +1821,8 @@ string.
             return self.indexOf(icupy::to_unistr(text));
           },
           py::arg("text"), R"doc(
-      Return the index of the first occurrence of the string *text* within this
-      ``UnicodeString``, or -1 if not found.
+      Return the index of the first occurrence of the specified string within
+      this text, or -1 if not found.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1507,8 +1834,12 @@ string.
             return self.indexOf(icupy::to_unistr(text), start);
           },
           py::arg("text"), py::arg("start"), R"doc(
-      Return the index of the first occurrence of the string *text* within the
-      substring *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *text* is the string to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1519,9 +1850,14 @@ string.
           py::overload_cast<const UnicodeString &, int32_t, int32_t>(
               &UnicodeString::indexOf, py::const_),
           py::arg("text"), py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the first occurrence of the string *text* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *text* is the string to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1535,10 +1871,16 @@ string.
           },
           py::arg("src_chars"), py::arg("src_length"), py::arg("start"),
           py::arg("length"), R"doc(
-      Return the index of the first occurrence of the substring
-      *src_chars[:src_length]* of *src_chars* within the substring
-      *self[start:start + length]* of this ``UnicodeString``, or -1 if not
-      found.
+      Return the index of the first occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is the string to search for.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1547,8 +1889,8 @@ string.
           "index_of",
           py::overload_cast<UChar32>(&UnicodeString::indexOf, py::const_),
           py::arg("c"), R"doc(
-      Return the index of the first occurrence of the code point *c* within
-      this ``UnicodeString``, or -1 if not found.
+      Return the index of the first occurrence of the specified code point
+      within this text, or -1 if not found.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1558,8 +1900,12 @@ string.
           py::overload_cast<UChar32, int32_t>(&UnicodeString::indexOf,
                                               py::const_),
           py::arg("c"), py::arg("start"), R"doc(
-      Return the index of the first occurrence of the code point *c* within the
-      substring *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the first occurrence of the specified code point
+      within the specified range of this text, or -1 if not found.
+
+      *c* is the code point to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1569,9 +1915,14 @@ string.
           py::overload_cast<UChar32, int32_t, int32_t>(&UnicodeString::indexOf,
                                                        py::const_),
           py::arg("c"), py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the first occurrence of the code point *c* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the first occurrence of the specified code point
+      within the specified range of this text, or -1 if not found.
+
+      *c* is the code point to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc");
@@ -1586,9 +1937,16 @@ string.
         },
         py::arg("start"), py::arg("src_chars"), py::arg("src_start"),
         py::arg("src_length"), R"doc(
-      Insert the substring *src_chars[src_start:src_start + src_length]* of
-      *src_chars* into this ``UnicodeString`` at the offset *start*, and return
-      the ``UnicodeString`` itself.
+      Insert the specified string at the specified offset in this text and
+      return the text itself.
+
+      *start* is the insertion offset for the text to be inserted.
+
+      *src_chars* is a string to be inserted.
+
+      *src_start* is the start index of *src_chars* to be inserted, inclusive.
+
+      *src_length* is the length of *src_chars* to be inserted.
       )doc")
       .def(
           // [3] insert(int32_t start, const UnicodeString &srcText)
@@ -1598,8 +1956,12 @@ string.
             return self.insert(start, icupy::to_unistr(src_text));
           },
           py::arg("start"), py::arg("src_text"), R"doc(
-      Insert the string *src_text* into this ``UnicodeString`` at the offset
-      *start*, and return the ``UnicodeString`` itself.
+      Insert the specified string at the specified offset in this text and
+      return the text itself.
+
+      *start* is the insertion offset for the text to be inserted.
+
+      *src_text* is a string to be inserted.
       )doc")
       .def(
           // [4] insert(int32_t start, const UnicodeString &srcText,
@@ -1609,9 +1971,16 @@ string.
               &UnicodeString::insert),
           py::arg("start"), py::arg("src_text"), py::arg("src_start"),
           py::arg("src_length"), R"doc(
-      Insert the substring *src_text[src_start:src_start + src_length]* of
-      *src_text* into this ``UnicodeString`` at the offset *start*, and return
-      the ``UnicodeString`` itself.
+      Insert the specified string at the specified offset in this text and
+      return the text itself.
+
+      *start* is the insertion offset for the text to be inserted.
+
+      *src_text* is a string to be inserted.
+
+      *src_start* is the start index of *src_text* to be inserted, inclusive.
+
+      *src_length* is the length of *src_text* to be inserted.
       )doc")
       .def(
           // [5] insert(int32_t start, ConstChar16Ptr srcChars,
@@ -1623,24 +1992,32 @@ string.
             return self.insert(start, src_chars.data(), src_length);
           },
           py::arg("start"), py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Insert the substring *src_chars[:src_length]* of *src_chars* into this
-      ``UnicodeString`` at the offset *start*, and return the ``UnicodeString``
-      itself.
+      Insert the specified string at the specified offset in this text and
+      return the text itself.
+
+      *start* is the insertion offset for the text to be inserted.
+
+      *src_chars* is a string to be inserted.
+
+      *src_length* is the length of *src_chars* to be inserted.
       )doc")
       .def(
           // [6] insert(int32_t start, UChar32 srcChar)
           "insert", py::overload_cast<int32_t, UChar32>(&UnicodeString::insert),
           py::arg("start"), py::arg("src_char"), R"doc(
-      Insert the code point *src_char* into this ``UnicodeString`` at the offset
-      *start*, and return the ``UnicodeString`` itself.
+      Insert the specified code point at the specified offset in this text and
+      return the text itself.
+
+      *start* is the insertion offset for the code point to be inserted.
+
+      *src_char* is a code point to be inserted.
       )doc");
 
   us.def(
       "is_bogus",
       [](const UnicodeString &self) -> py::bool_ { return self.isBogus(); },
       R"doc(
-      Return ``True`` if this ``UnicodeString`` is not valid, ``False``
-      otherwise.
+      Return ``True`` if this object is not valid, ``False`` otherwise.
 
       .. seealso::
 
@@ -1651,7 +2028,7 @@ string.
       "is_empty",
       [](const UnicodeString &self) -> py::bool_ { return self.isEmpty(); },
       R"doc(
-      Return ``True`` if this ``UnicodeString`` is empty, ``False`` otherwise.
+      Return ``True`` if this object is empty, ``False`` otherwise.
       )doc");
 
   us.def(
@@ -1663,9 +2040,14 @@ string.
           return self.lastIndexOf(src_chars.data(), src_length, start);
         },
         py::arg("src_chars"), py::arg("src_length"), py::arg("start"), R"doc(
-      Return the index of the last occurrence of the substring
-      *src_chars[:src_length]* of *src_chars* within the substring
-      *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is a string to search for.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1682,10 +2064,18 @@ string.
           },
           py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
           py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the last occurrence of the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is a string to search for.
+
+      *src_start* is the start index of *src_chars* to search for, inclusive.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1698,10 +2088,19 @@ string.
                             int32_t>(&UnicodeString::lastIndexOf, py::const_),
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the last occurrence of the substring
-      *src_text[src_start:src_start + src_length]* of *src_text* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_text* is the string to search for.
+
+      *src_start* is the start index of *src_text* to search for,
+      inclusive.
+
+      *src_length* is the length of *src_text* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1713,8 +2112,8 @@ string.
             return self.lastIndexOf(icupy::to_unistr(text));
           },
           py::arg("text"), R"doc(
-      Return the index of the last occurrence of the string *text* within this
-      ``UnicodeString``, or -1 if not found.
+      Return the index of the last occurrence of the specified string within
+      this text, or -1 if not found.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1726,8 +2125,12 @@ string.
             return self.lastIndexOf(icupy::to_unistr(text), start);
           },
           py::arg("text"), py::arg("start"), R"doc(
-      Return the index of the last occurrence of the string *text* within the
-      substring *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *text* is the string to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1738,9 +2141,14 @@ string.
           py::overload_cast<const UnicodeString &, int32_t, int32_t>(
               &UnicodeString::lastIndexOf, py::const_),
           py::arg("text"), py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the last occurrence of the string *text* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *text* is the string to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1755,10 +2163,16 @@ string.
           },
           py::arg("src_chars"), py::arg("src_length"), py::arg("start"),
           py::arg("length"), R"doc(
-      Return the index of the last occurrence of the substring
-      *src_chars[:src_length]* of *src_chars* within the substring
-      *self[start:start + length]* of this ``UnicodeString``, or -1 if not
-      found.
+      Return the index of the last occurrence of the specified string within
+      the specified range of this text, or -1 if not found.
+
+      *src_chars* is the string to search for.
+
+      *src_length* is the length of *src_chars* to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1767,8 +2181,8 @@ string.
           "last_index_of",
           py::overload_cast<UChar32>(&UnicodeString::lastIndexOf, py::const_),
           py::arg("c"), R"doc(
-      Return the index of the last occurrence of the code point *c* within
-      this ``UnicodeString``, or -1 if not found.
+      Return the index of the last occurrence of the specified code point
+      within this text, or -1 if not found.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1778,8 +2192,12 @@ string.
           py::overload_cast<UChar32, int32_t>(&UnicodeString::lastIndexOf,
                                               py::const_),
           py::arg("c"), py::arg("start"), R"doc(
-      Return the index of the last occurrence of the code point *c* within the
-      substring *self[start:]* of this ``UnicodeString``, or -1 if not found.
+      Return the index of the last occurrence of the specified code point
+      within the specified range of this text, or -1 if not found.
+
+      *c* is the code point to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
 
       The search is performed using a bitwise comparison.
       )doc")
@@ -1789,20 +2207,28 @@ string.
           py::overload_cast<UChar32, int32_t, int32_t>(
               &UnicodeString::lastIndexOf, py::const_),
           py::arg("c"), py::arg("start"), py::arg("length"), R"doc(
-      Return the index of the last occurrence of the code point *c* within the
-      substring *self[start:start + length]* of this ``UnicodeString``, or -1
-      if not found.
+      Return the index of the last occurrence of the specified code point
+      within the specified range of this text, or -1 if not found.
+
+      *c* is the code point to search for.
+
+      *start* is the start index of this text to be searched, inclusive.
+
+      *length* is the length of this text to be searched.
 
       The search is performed using a bitwise comparison.
       )doc");
 
   us.def("move_index32", &UnicodeString::moveIndex32, py::arg("index"),
          py::arg("delta"), R"doc(
-      Move *index* by *delta* code points and return the new index.
+      Move *index* of this text by *delta* code points and return the new
+      index.
 
+      *index* is the index of this text to be moved.
       If there are more than one code points, the input *index* must point to
       the first code unit of the code points.
 
+      *delta* is the number of code points to move.
       If *delta* < 0 then the index moves backward; if *delta* > 0 then it
       moves forward.
 
@@ -1817,9 +2243,11 @@ string.
       [](UnicodeString &self, int32_t target_length, uint16_t pad_char)
           -> py::bool_ { return self.padLeading(target_length, pad_char); },
       py::arg("target_length"), py::arg("pad_char") = 0x20, R"doc(
-      Pad this ``UnicodeString`` on the left with *pad_char* until it reaches
-      *target_length* in length, and return ``True`` if padding is performed,
-      ``False`` otherwise.
+      Pad the beginning of this text with the specified character until it
+      reaches the specified length;
+      return ``True`` if padding is performed, ``False`` otherwise.
+
+      *target_length* is the desired length of this text.
 
       *pad_char* is the character used for padding. The default value is Space
       (U+0020).
@@ -1830,9 +2258,11 @@ string.
       [](UnicodeString &self, int32_t target_length, uint16_t pad_char)
           -> py::bool_ { return self.padTrailing(target_length, pad_char); },
       py::arg("target_length"), py::arg("pad_char") = 0x20, R"doc(
-      Pad this ``UnicodeString`` on the right with *pad_char* until it reaches
-      *target_length* in length, and return ``True`` if padding is performed,
-      ``False`` otherwise.
+      Pad the end of this text with the specified character until it
+      reaches the specified length;
+      return ``True`` if padding is performed, ``False`` otherwise.
+
+      *target_length* is the desired length of this text.
 
       *pad_char* is the character used for padding. The default value is Space
       (U+0020).
@@ -1840,7 +2270,7 @@ string.
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
   us.def("push_back", &UnicodeString::push_back, py::arg("c"), R"doc(
-      Append the code unit *c* to this ``UnicodeString``.
+      Append the specified code unit to this text.
 
       .. seealso::
 
@@ -1849,8 +2279,8 @@ string.
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   us.def("remove", py::overload_cast<>(&UnicodeString::remove), R"doc(
-      Remove all characters from this ``UnicodeString``, clear the bogus flag,
-      and return the ``UnicodeString`` itself.
+      Remove all characters from this text, clear the bogus flag,
+      and return the text itself.
 
       .. seealso::
 
@@ -1859,14 +2289,22 @@ string.
       .def("remove",
            py::overload_cast<int32_t, int32_t>(&UnicodeString::remove),
            py::arg("start"), py::arg("length") = INT32_MAX, R"doc(
-      Remove the characters within the range [*start*, *start* + *length*) from
-      this ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Remove the characters from the specified range within this text and
+      return the text itself.
+
+      *start* is the start index of this text to be removed, inclusive.
+
+      *length* is the length of this text to be removed.
       )doc");
 
   us.def("remove_between", &UnicodeString::removeBetween, py::arg("start"),
          py::arg("limit") = INT32_MAX, R"doc(
-      Remove the characters within the range [*start*, *limit*) from this
-      ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Remove the characters from the specified range within this text and
+      return the text itself.
+
+      *start* is the start index of this text to be removed, inclusive.
+
+      *limit* is the end index of this text to be removed, exclusive.
       )doc");
 
   us.def(
@@ -1881,10 +2319,18 @@ string.
         },
         py::arg("start"), py::arg("length"), py::arg("src_chars"),
         py::arg("src_start"), py::arg("src_length"), R"doc(
-      Replace the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars*, and return
-      the ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *length* is the length of this text to be replaced.
+
+      *src_chars* is a string to replace with.
+
+      *src_start* is the start index of *src_chars* to replace with, inclusive.
+
+      *src_length* is the length of *src_chars* to replace with.
       )doc")
       .def(
           // [3] replace(int32_t start, int32_t length,
@@ -1895,9 +2341,14 @@ string.
             return self.replace(start, length, icupy::to_unistr(src_text));
           },
           py::arg("start"), py::arg("length"), py::arg("src_text"), R"doc(
-      Replace the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` with the string *src_text*, and return the
-      ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *length* is the length of this text to be replaced.
+
+      *src_text* is a string to replace with.
       )doc")
       .def(
           // [4] replace(int32_t start, int32_t length,
@@ -1908,10 +2359,18 @@ string.
                             int32_t>(&UnicodeString::replace),
           py::arg("start"), py::arg("length"), py::arg("src_text"),
           py::arg("src_start"), py::arg("src_length"), R"doc(
-      Replace the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text*, and return
-      the ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *length* is the length of this text to be replaced.
+
+      *src_text* is a string to replace with.
+
+      *src_start* is the start index of *src_text* to replace with, inclusive.
+
+      *src_length* is the length of *src_text* to replace with.
       )doc")
       .def(
           // [5] replace(int32_t start, int32_t length, ConstChar16Ptr srcChars,
@@ -1924,18 +2383,30 @@ string.
           },
           py::arg("start"), py::arg("length"), py::arg("src_chars"),
           py::arg("src_length"), R"doc(
-      Replace the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` with the substring *src_chars[:src_length]* of
-      *src_chars*, and return the ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *length* is the length of this text to be replaced.
+
+      *src_chars* is a string to replace with.
+
+      *src_length* is the length of *src_chars* to replace with.
       )doc")
       .def(
           // [6] replace(int32_t start, int32_t length, UChar32 srcChar)
           "replace",
           py::overload_cast<int32_t, int32_t, UChar32>(&UnicodeString::replace),
           py::arg("start"), py::arg("length"), py::arg("src_char"), R"doc(
-      Replace the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` with the code point *src_char*, and return the
-      ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified code point and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *length* is the length of this text to be replaced.
+
+      *src_char* is the code point to replace with.
       )doc");
 
   us.def(
@@ -1947,9 +2418,14 @@ string.
           return self.replaceBetween(start, limit, icupy::to_unistr(src_text));
         },
         py::arg("start"), py::arg("limit"), py::arg("src_text"), R"doc(
-      Replace the characters within the range [*start*, *limit*) of this
-      ``UnicodeString`` with the string *src_text*, and return the
-      ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *limit* is the end index of this text to be replaced, exclusive.
+
+      *src_text* is a string to replace with.
       )doc")
       .def(
           // [2] replaceBetween(int32_t start, int32_t limit,
@@ -1964,29 +2440,45 @@ string.
           },
           py::arg("start"), py::arg("limit"), py::arg("src_text"),
           py::arg("src_start"), py::arg("src_limit"), R"doc(
-      Replace the characters within the range [*start*, *limit*) of this
-      ``UnicodeString`` with the substring *src_text[src_start:src_limit]* of
-      *src_text*, and return the ``UnicodeString`` itself.
+      Replace the characters within the specified range of this text with the
+      specified string and return the text itself.
+
+      *start* is the start index of this text to be replaced, inclusive.
+
+      *limit* is the end index of this text to be replaced, exclusive.
+
+      *src_text* is a string to replace with.
+
+      *src_start* is the start index of *src_text* to replace with, inclusive.
+
+      *src_limit* is the end index of *src_text* to replace with, exclusive.
       )doc");
 
   us.def("retain_between", &UnicodeString::retainBetween, py::arg("start"),
          py::arg("limit") = INT32_MAX, R"doc(
-      Retain only the characters within the range [*start*, *limit*) from this
-      ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Retain only the characters within the specified range from this text and
+      return the text itself.
 
-      The characters before *start* and those after *limit* including *limit*
+      *start* is the start index of this text to be retained, inclusive.
+
+      *limit* is the end index of this text to be retained, exclusive.
+
+      The characters before *start* and the characters from *limit* to the end
       will be deleted.
       )doc");
 
   us.def("reverse",
          py::overload_cast<int32_t, int32_t>(&UnicodeString::reverse),
          py::arg("start"), py::arg("length"), R"doc(
-      Reverse the characters within the range [*start*, *start* + *length*) of
-      this ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Reverse the characters within the specified range of this text and return
+      the text itself.
+
+      *start* is the start index of this text to be reversed, inclusive.
+
+      *length* is the length of this text to be reversed.
       )doc")
       .def("reverse", py::overload_cast<>(&UnicodeString::reverse), R"doc(
-      Reverse the characters in this ``UnicodeString`` and return the
-      ``UnicodeString`` itself.
+      Reverse the characters in this text and return the text itself.
       )doc");
 
   us.def(
@@ -1995,8 +2487,12 @@ string.
         return self.setCharAt(offset, ch);
       },
       py::arg("offset"), py::arg("ch"), R"doc(
-      Set the code unit at the specified *offset* to *ch* and return this
-      ``UnicodeString`` itself.
+      Set the specified code unit at the specified index in the text and return
+      the text itself.
+
+      *offset* is the index in the text where the code unit is to be set.
+
+      *ch* is the code unit to be set.
 
       .. seealso::
 
@@ -2011,8 +2507,11 @@ string.
           return self.setTo(src_chars.data(), src_length);
         },
         py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Set this ``UnicodeString`` to the substring *src_chars[:src_length]* of
-      *src_chars* and return the ``UnicodeString`` itself.
+      Set the specified string to this text and return the text itself.
+
+      *src_chars* is a string to be set.
+
+      *src_length* is the length of *src_chars* to be set.
       )doc")
       .def(
           // [4] setTo(const UnicodeString &srcText)
@@ -2022,8 +2521,7 @@ string.
             return self.setTo(icupy::to_unistr(src_text));
           },
           py::arg("src_text"), R"doc(
-      Set this ``UnicodeString`` to the string *src_text* and return the
-      ``UnicodeString`` itself.
+      Set the specified string to this text and return the text itself.
       )doc")
       .def(
           // [5] setTo(const UnicodeString &srcText, int32_t srcStart)
@@ -2031,8 +2529,11 @@ string.
           py::overload_cast<const UnicodeString &, int32_t>(
               &UnicodeString::setTo),
           py::arg("src_text"), py::arg("src_start"), R"doc(
-      Set this ``UnicodeString`` to the substring *src_text[src_start:]* of
-      *src_text* and return the ``UnicodeString`` itself.
+      Set the specified string to this text and return the text itself.
+
+      *src_text* is a string to be set.
+
+      *src_start* is the start index of *src_text* to be set, inclusive.
       )doc")
       .def(
           // [6] setTo(const UnicodeString &srcText, int32_t srcStart, int32_t
@@ -2042,20 +2543,23 @@ string.
               &UnicodeString::setTo),
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           R"doc(
-      Set this ``UnicodeString`` to the substring
-      *src_text[src_start:src_length]* of *src_text* and return the
-      ``UnicodeString`` itself.
+      Set the specified string to this text and return the text itself.
+
+      *src_text* is a string to be set.
+
+      *src_start* is the start index of *src_text* to be set, inclusive.
+
+      *src_length* is the length of *src_text* to be set.
       )doc")
       .def(
           // [8] setTo(UChar32 srcChar)
           "set_to", py::overload_cast<UChar32>(&UnicodeString::setTo),
           py::arg("src_char"), R"doc(
-      Set this ``UnicodeString`` to the code point *src_char* and return the
-      ``UnicodeString`` itself.
+      Set the specified code point to this text and return the text itself.
       )doc");
 
   us.def("set_to_bogus", &UnicodeString::setToBogus, R"doc(
-      Set this ``UnicodeString`` to be invalid.
+      Set this object to be invalid.
 
       .. seealso::
 
@@ -2072,9 +2576,14 @@ string.
         },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
         R"doc(
-      Return ``True`` if this ``UnicodeString`` starts with the substring
-      *src_chars[src_start:src_start + src_length]* of *src_chars*, ``False``
+      Return ``True`` if this text starts with the specified string, ``False``
       otherwise.
+
+      *src_chars* is a string to be checked.
+
+      *src_start* is the start index of *src_chars*, inclusive.
+
+      *src_length* is the length of *src_chars* to be checked.
       )doc")
       .def(
           // [2] startsWith(const UnicodeString &srcText, int32_t srcStart,
@@ -2086,9 +2595,14 @@ string.
           },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
           R"doc(
-      Return ``True`` if this ``UnicodeString`` starts with the substring
-      *src_text[src_start:src_start + src_length]* of *src_text*, ``False``
+      Return ``True`` if this text starts with the specified string, ``False``
       otherwise.
+
+      *src_text* is a string to be checked.
+
+      *src_start* is the start index of *src_text*, inclusive.
+
+      *src_length* is the length of *src_text* to be checked.
       )doc")
       .def(
           // [3] startsWith(const UnicodeString &text)
@@ -2096,8 +2610,8 @@ string.
           [](const UnicodeString &self, const icupy::UnicodeStringVariant &text)
               -> py::bool_ { return self.startsWith(icupy::to_unistr(text)); },
           py::arg("text"), R"doc(
-      Return ``True`` if this ``UnicodeString`` starts with the string *text*,
-      ``False`` otherwise.
+      Return ``True`` if this text starts with the specified string, ``False``
+      otherwise.
       )doc")
       .def(
           // [4] startsWith(ConstChar16Ptr srcChars, int32_t srcLength)
@@ -2107,20 +2621,28 @@ string.
             return self.startsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
-      Return ``True`` if this ``UnicodeString`` starts with the substring
-      *src_chars[:src_length]* of *src_chars*, ``False`` otherwise.
+      Return ``True`` if this text starts with the specified string, ``False``
+      otherwise.
+
+      *src_chars* is a string to be checked.
+
+      *src_length* is the length of *src_chars* to be checked.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 56)
   us.def("swap", &UnicodeString::swap, py::arg("other"), R"doc(
-      Swap the contents of this ``UnicodeString`` with those of *other*.
+      Swap the contents of this text with the contents of *other*.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 56)
 
   us.def("temp_sub_string", &UnicodeString::tempSubString, py::arg("start") = 0,
          py::arg("length") = INT32_MAX, py::keep_alive<0, 1>(), R"doc(
-      Return a temporary ``UnicodeString`` that is a substring
-      *self[start:start + length]* of this ``UnicodeString``.
+      Create a temporary substring from the specified range within this text.
+
+      .. important::
+
+         This text object must outlive the returned text object, and it must
+         not be modified.
 
       .. version-deprecated:: 0.24
          Do not use this method. It may be removed in a future release.
@@ -2129,8 +2651,12 @@ string.
   us.def("temp_sub_string_between", &UnicodeString::tempSubStringBetween,
          py::arg("start") = 0, py::arg("limit") = INT32_MAX,
          py::keep_alive<0, 1>(), R"doc(
-      Return a temporary ``UnicodeString`` that is a substring
-      *self[start:limit]* of this ``UnicodeString``.
+      Create a temporary substring from the specified range within this text.
+
+      .. important::
+
+         This text object must outlive the returned text object, and it must
+         not be modified.
 
       .. version-deprecated:: 0.24
          Do not use this method. It may be removed in a future release.
@@ -2143,12 +2669,12 @@ string.
           return self.toLower(icupy::to_locale(locale));
         },
         py::arg("locale"), R"doc(
-      Convert this ``UnicodeString`` to lowercase according to the case mapping
-      rules of the specified *locale* and return the ``UnicodeString`` itself.
+      Convert this text to lowercase according to the case mapping rules of the
+      specified locale and return the text itself.
       )doc")
       .def("to_lower", py::overload_cast<>(&UnicodeString::toLower), R"doc(
-      Convert this ``UnicodeString`` to lowercase according to the case mapping
-      rules of the default locale and return the ``UnicodeString`` itself.
+      Convert this text to lowercase according to the case mapping rules of the
+      default locale and return the text itself.
       )doc");
 
   us.def(
@@ -2158,8 +2684,8 @@ string.
           return self.toTitle(title_iter.value_or(nullptr));
         },
         py::arg("title_iter") = std::nullopt, R"doc(
-      Convert this ``UnicodeString`` to titlecase using the default locale
-      and return the ``UnicodeString`` itself.
+      Convert this text to titlecase using the default locale and return the
+      text itself.
 
       *title_iter* is a break iterator used to find the first characters of
       titlecase words. If *title_iter* is ``None``, the standard titlecase
@@ -2173,12 +2699,14 @@ string.
                                 icupy::to_locale(locale));
           },
           py::arg("title_iter"), py::arg("locale"), R"doc(
-      Convert this ``UnicodeString`` to titlecase using the specified *locale*
-      and return the ``UnicodeString`` itself.
+      Convert this text to titlecase using the specified locale and return the
+      text itself.
 
       *title_iter* is a break iterator used to find the first characters of
       titlecase words. If *title_iter* is ``None``, the standard titlecase
       break iterator is used.
+
+      *locale* is the locale to be used for titlecasing.
       )doc")
       .def(
           "to_title",
@@ -2189,14 +2717,16 @@ string.
                                 icupy::to_locale(locale), options);
           },
           py::arg("title_iter"), py::arg("locale"), py::arg("options"), R"doc(
-      Convert this ``UnicodeString`` to titlecase using the specified *locale*
-      and *options*, and return the ``UnicodeString`` itself.
+      Convert this text to titlecase using the specified locale and casing
+      options, and return the text itself.
 
       *title_iter* is a break iterator used to find the first characters of
       titlecase words. If *title_iter* is ``None``, the standard titlecase
       break iterator is used.
 
-      *options* is a bit set of following values, usually 0:
+      *locale* is the locale to be used for titlecasing.
+
+      *options* is a bit set of following values and is usually 0:
       :attr:`U_TITLECASE_NO_LOWERCASE`,
       :attr:`U_TITLECASE_NO_BREAK_ADJUSTMENT`,
       :attr:`U_TITLECASE_ADJUST_TO_CASED`,
@@ -2211,12 +2741,12 @@ string.
           return self.toUpper(icupy::to_locale(locale));
         },
         py::arg("locale"), R"doc(
-      Convert this ``UnicodeString`` to uppercase according to the case mapping
-      rules of the specified *locale* and return the ``UnicodeString`` itself.
+      Convert this text to uppercase according to the case mapping rules of the
+      specified locale and return the text itself.
       )doc")
       .def("to_upper", py::overload_cast<>(&UnicodeString::toUpper), R"doc(
-      Convert this ``UnicodeString`` to uppercase according to the case mapping
-      rules of the default locale and return the ``UnicodeString`` itself.
+      Convert this text to uppercase according to the case mapping rules of the
+      default locale and return the text itself.
       )doc");
 
   us.def(
@@ -2234,7 +2764,7 @@ string.
                          length * sizeof(UChar32));
       },
       R"doc(
-      Convert this ``UnicodeString`` to UTF-32 and return the result.
+      Convert this text to a UTF-32 string and return the result.
 
       Unpaired surrogates are replaced with U+FFFD.
 
@@ -2253,9 +2783,11 @@ string.
         return py::bytes(result.data(), result.size());
       },
       R"doc(
-      Convert this ``UnicodeString`` to UTF-8 and return the result.
+      Convert this text to a UTF-8 string and return the result.
 
       Unpaired surrogates are replaced with U+FFFD.
+
+      This method is called by :meth:`.to_utf8_string`.
 
       .. seealso::
 
@@ -2272,7 +2804,7 @@ string.
         return result;
       },
       R"doc(
-      Convert this ``UnicodeString`` to a UTF-8 string and return the result.
+      Convert this text to a UTF-8 string and return the result.
 
       Unpaired surrogates are replaced with U+FFFD.
 
@@ -2285,8 +2817,8 @@ string.
       )doc");
 
   us.def("trim", &UnicodeString::trim, R"doc(
-      Trim leading and trailing whitespace characters from this
-      ``UnicodeString`` and return the ``UnicodeString`` itself.
+      Remove the leading and trailing whitespace characters from this text and
+      return the text itself.
       )doc");
 
   us.def(
@@ -2295,57 +2827,90 @@ string.
         return self.truncate(target_length);
       },
       py::arg("target_length"), R"doc(
-      Truncate this ``UnicodeString`` to the specified *target_length* and return
-      a boolean indicating whether the string was modified.
+      Truncate this text to the specified length; return ``True`` if the text
+      was modified, ``False`` otherwise.
       )doc");
 
   us.def("unescape", &UnicodeString::unescape, R"doc(
-      Unescape this ``UnicodeString`` and return the result.
+      Unescape this text and return the result.
+      If the escape sequence is ill-formed, the result will be an empty string.
+
+      The following escape sequences are recognized:
+
+      * ``\\uXXXX`` - 4-digit hexadecimal number
+      * ``\\UXXXXXXXX`` - 8-digit hexadecimal number
+      * ``\\xXX`` - 1-2 digit hexadecimal number
+      * ``\\ooo`` - 1-3-digit octal number
+      * ``\\cX`` - control character; X is masked with 0x1F
+
+      As well as the standard ANSI C escape sequences:
+
+      ``\\a`` => U+0007, ``\\b`` => U+0008, ``\\t`` => U+0009, ``\\n`` => U+000A,
+      ``\\v`` => U+000B, ``\\f`` => U+000C, ``\\r`` => U+000D, ``\\e`` => U+001B,
+      ``\\"`` => U+0022, ``\\'`` => U+0027, ``\\?`` => U+003F, ``\\\\`` => U+005C
+
+      Anything else following a backslash is generically escaped.
+
+      .. seealso::
+
+         :func:`u_unescape`
+         :meth:`.unescape_at`
       )doc");
 
   us.def("unescape_at", &UnicodeString::unescapeAt, py::arg("offset"), R"doc(
-      Unescape a single escape sequence at the specified *offset* in this
-      ``UnicodeString`` and return the represented character, or
-      :attr:`U_SENTINEL` if the *offset* is invalid.
+      Unescape a single escape sequence at the specified index in this text and
+      return the result.
+      If the escape sequence is ill-formed or the index is out of range,
+      :attr:`U_SENTINEL` is returned.
+
+      See :meth:`.unescape` for a listing of the recognized escape sequences.
+
+      .. seealso::
+
+         :func:`u_unescape`
+         :meth:`.unescape`
       )doc");
 
   us.def_property_readonly_static(
-      "SENTINEL", [](const py::object &) { return U_SENTINEL; });
+      "SENTINEL", [](const py::object & /* self */) { return U_SENTINEL; });
 
   us.def_property_readonly_static(
       "COMPARE_CODE_POINT_ORDER",
-      [](const py::object &) { return U_COMPARE_CODE_POINT_ORDER; });
-
-  us.def_property_readonly_static("FOLD_CASE_DEFAULT", [](const py::object &) {
-    return U_FOLD_CASE_DEFAULT;
-  });
+      [](const py::object & /* self */) { return U_COMPARE_CODE_POINT_ORDER; });
 
   us.def_property_readonly_static(
-      "FOLD_CASE_EXCLUDE_SPECIAL_I",
-      [](const py::object &) { return U_FOLD_CASE_EXCLUDE_SPECIAL_I; });
+      "FOLD_CASE_DEFAULT",
+      [](const py::object & /* self */) { return U_FOLD_CASE_DEFAULT; });
+
+  us.def_property_readonly_static("FOLD_CASE_EXCLUDE_SPECIAL_I",
+                                  [](const py::object & /* self */) {
+                                    return U_FOLD_CASE_EXCLUDE_SPECIAL_I;
+                                  });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
-  us.def_property_readonly_static(
-      "TITLECASE_ADJUST_TO_CASED",
-      [](const py::object &) { return U_TITLECASE_ADJUST_TO_CASED; });
+  us.def_property_readonly_static("TITLECASE_ADJUST_TO_CASED",
+                                  [](const py::object & /* self */) {
+                                    return U_TITLECASE_ADJUST_TO_CASED;
+                                  });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
-  us.def_property_readonly_static(
-      "TITLECASE_NO_BREAK_ADJUSTMENT",
-      [](const py::object &) { return U_TITLECASE_NO_BREAK_ADJUSTMENT; });
+  us.def_property_readonly_static("TITLECASE_NO_BREAK_ADJUSTMENT",
+                                  [](const py::object & /* self */) {
+                                    return U_TITLECASE_NO_BREAK_ADJUSTMENT;
+                                  });
 
   us.def_property_readonly_static(
       "TITLECASE_NO_LOWERCASE",
-      [](const py::object &) { return U_TITLECASE_NO_LOWERCASE; });
+      [](const py::object & /* self */) { return U_TITLECASE_NO_LOWERCASE; });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   us.def_property_readonly_static(
       "TITLECASE_SENTENCES",
-      [](const py::object &) { return U_TITLECASE_SENTENCES; });
+      [](const py::object & /* self */) { return U_TITLECASE_SENTENCES; });
 
   us.def_property_readonly_static(
       "TITLECASE_WHOLE_STRING",
-      [](const py::object &) { return U_TITLECASE_WHOLE_STRING; });
+      [](const py::object & /* self */) { return U_TITLECASE_WHOLE_STRING; });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
   m.attr("US_INV") = US_INV;

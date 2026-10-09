@@ -19,9 +19,9 @@ void init_uversion(py::module &m) {
       "buildlevel", [](const icupy::VersionInfo &self) { return self.data[3]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[3] = value; },
       R"doc(
-      int: Get or set the build level version number.
+      Get or set the build level version number.
 
-      The version number must be between 0 and 255.
+      The version number must be [0, 255].
 
       This is equivalent to ``self[3]``.
       )doc");
@@ -30,9 +30,9 @@ void init_uversion(py::module &m) {
       "major", [](const icupy::VersionInfo &self) { return self.data[0]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[0] = value; },
       R"doc(
-      int: Get or set the major version number.
+      Get or set the major version number.
 
-      The version number must be between 0 and 255.
+      The version number must be [0, 255].
 
       This is equivalent to ``self[0]``.
       )doc");
@@ -41,9 +41,9 @@ void init_uversion(py::module &m) {
       "minor", [](const icupy::VersionInfo &self) { return self.data[1]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[1] = value; },
       R"doc(
-      int: Get or set the minor version number.
+      Get or set the minor version number.
 
-      The version number must be between 0 and 255.
+      The version number must be [0, 255].
 
       This is equivalent to ``self[1]``.
       )doc");
@@ -52,9 +52,9 @@ void init_uversion(py::module &m) {
       "patchlevel", [](const icupy::VersionInfo &self) { return self.data[2]; },
       [](icupy::VersionInfo &self, uint8_t value) { self.data[2] = value; },
       R"doc(
-      int: Get or set the patchlevel version number.
+      Get or set the patchlevel version number.
 
-      The version number must be between 0 and 255.
+      The version number must be [0, 255].
 
       This is equivalent to ``self[2]``.
       )doc");
@@ -65,7 +65,7 @@ void init_uversion(py::module &m) {
       Initialize a ``UVersionInfo`` instance with the specified version
       numbers.
 
-      Each number must be between 0 and 255.
+      Each number must be [0, 255].
       )doc");
 
   vi.def(
@@ -102,7 +102,14 @@ void init_uversion(py::module &m) {
         return self.data[actual_index];
       },
       py::arg("index"), R"doc(
-      Return the version number at offset *index*.
+      Return the version number for the specified index.
+
+      .. seealso::
+
+         :attr:`.buildlevel`
+         :attr:`.major`
+         :attr:`.minor`
+         :attr:`.patchlevel`
       )doc");
 
   vi.def(
@@ -254,9 +261,19 @@ void init_uversion(py::module &m) {
         self.data[actual_index] = value;
       },
       py::arg("index"), py::arg("value"), R"doc(
-      Replace the version number at offset *index* with *value*.
+      Replace the version number at the specified index with the specified
+      value.
 
-      *value* must be between 0 and 255.
+      *index* is the index of the version information to be replaced.
+
+      *value* is the new version number. It must be [0, 255].
+
+      .. seealso::
+
+         :attr:`.buildlevel`
+         :attr:`.major`
+         :attr:`.minor`
+         :attr:`.patchlevel`
       )doc");
 
   vi.def(
@@ -309,11 +326,11 @@ void init_uversion(py::module &m) {
         return icupy::VersionInfo(version_array);
       },
       py::arg("version_string"), R"doc(
-      Parse a string with dotted-decimal version information and return it.
+      Parse a string with dotted-decimal version information and return the
+      result.
 
       *version_string* is a dot-separated decimal string with up to four
-      non-negative numeric fields, where the value of each field is between
-      0 and 255.
+      non-negative numeric fields, where the value of each field is [0, 255].
 
       .. seealso::
 
@@ -338,9 +355,9 @@ void init_uversion(py::module &m) {
        },
        py::arg("version_array"), R"doc(
       Convert a sequence of four numbers into a dot-separated decimal
-      string and return it.
+      string and return the result.
 
-      Each number must be between 0 and 255.
+      Each number must be [0, 255].
 
       .. seealso::
 
@@ -363,8 +380,8 @@ void init_uversion(py::module &m) {
             return std::string(buf);
           },
           py::arg("version_array"), R"doc(
-      Convert the :class:`UVersionInfo` to a dot-separated decimal string and
-      return it.
+      Convert the version information to a dot-separated decimal string and
+      return the result.
 
       .. seealso::
 

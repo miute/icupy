@@ -72,22 +72,20 @@ operating in the reverse direction.
   });
 
   tp.def_readwrite("context_limit", &UTransPosition::contextLimit, R"doc(
-      int: Get or set the ending index, exclusive, of the context to be
-      considered for a transliteration operation.
+      Get or set the end index, exclusive, of the context to be considered for
+      a transliteration operation.
       )doc");
 
   tp.def_readwrite("context_start", &UTransPosition::contextStart, R"doc(
-      int: Get or set the beginning index, inclusive, of the context to be
-      considered for a transliteration operation.
+      Get or set the start index, inclusive, of the context to be considered
+      for a transliteration operation.
       )doc");
 
   tp.def_readwrite("limit", &UTransPosition::limit, R"doc(
-      int: Get or set the ending index, exclusive, of the text to be
-      transliterated.
+      Get or set the end index, exclusive, of the text to be transliterated.
       )doc");
 
   tp.def_readwrite("start", &UTransPosition::start, R"doc(
-      int: Get or set the beginning index, inclusive, of the text to be
-      transliterated.
+      Get or set the start index, inclusive, of the text to be transliterated.
       )doc");
 }

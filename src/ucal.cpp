@@ -258,8 +258,11 @@ Possible fields in a UCalendar.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 73)
       .value("UCAL_FIELD_COUNT", UCAL_FIELD_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UCalendarDateFields`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCAL_DAY_OF_MONTH", UCAL_DAY_OF_MONTH, R"doc(
              Field number indicating the day of the month.

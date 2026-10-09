@@ -97,8 +97,10 @@ Selectors for Unicode sets that can be returned by
              mappings.
              )doc")
       .value("UCNV_SET_COUNT", UCNV_SET_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             Number of :class:`UConverterUnicodeSet` selectors.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -131,7 +133,7 @@ Selectors for Unicode sets that can be returned by
       [](icupy::UConverterPtr &converter) { ucnv_close(converter); },
       py::arg("converter"), R"doc(
       Delete the unicode converter and releases resources associated with just
-      this instance.
+      this converter.
 
       .. seealso::
 
@@ -745,9 +747,9 @@ Selectors for Unicode sets that can be returned by
 
       Regardless of this flag, the converter will always use fallbacks from
       Unicode Private Use code points, as well as reverse fallbacks (to
-      Unicode). For details see
-      `.ucm File Format <https://unicode-org.github.io/icu/userguide/conversion/data.html#ucm-file-format>`__
-      in the "Conversion Data" chapter of the ICU User Guide.
+      Unicode). For details, see the
+      `ICU User Guide, Conversion Data: .ucm File Format
+      <https://unicode-org.github.io/icu/userguide/conversion/data.html#ucm-file-format>`__.
       )doc");
 
   m.def(

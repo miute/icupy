@@ -14,13 +14,18 @@ def gc(thing: T, closer: Callable[[T], Any]) -> Generator[T, None, None]:
     """Return a context manager that calls `closer(thing)` when the block
     completes.
 
-    Example:
+    .. rubric:: Example
+
+    .. code-block:: python
+
         >>> from icupy import icu
         >>> from icupy.utils import gc
         >>> with gc(icu.ubidi_open(), icu.ubidi_close) as bidi:
         ...     pass
 
-        is equivalent to this:
+    is equivalent to this:
+
+    .. code-block:: python
 
         >>> from icupy import icu
         >>> bidi = icu.ubidi_open()

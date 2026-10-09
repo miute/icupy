@@ -420,8 +420,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
   lnf.def(py::init<const LocalizedNumberFormatter &>(), py::arg("other"), R"doc(
-      Initialize a ``LocalizedNumberFormatter`` instance from another
-      ``LocalizedNumberFormatter``.
+      Initialize a ``LocalizedNumberFormatter`` instance from a copy of *other*.
       )doc");
 
   lnf.def(
@@ -523,8 +522,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       Create a new :class:`UnlocalizedNumberFormatter` instance with the
       specified skeleton string.
 
-      For more information, see the ICU User Guide:
-      `Number Skeletons <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
+      For more information, see the
+      `ICU User Guide: Number Skeletons
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
@@ -548,8 +548,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       skeleton string at which the error occurred will be saved into the
       :class:`~icupy.icu.UParseError`.
 
-      For more information, see the ICU User Guide:
-      `Number Skeletons <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
+      For more information, see the
+      `ICU User Guide: Number Skeletons
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -577,7 +578,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -589,7 +590,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -600,7 +601,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<LocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -616,9 +617,12 @@ void init_numberformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Copy the internal :class:`UErrorCode` to *out_error_code* and return
-      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      Copy the internal :class:`UErrorCode` to *out_error_code*; return
+      ``True`` if :class:`UErrorCode` indicates a failure, ``False``
       otherwise.
+
+      If *out_error_code* already contains an error, its value will not be
+      changed.
       )doc");
 
   nfs_lnf.def(
@@ -757,8 +761,11 @@ void init_numberformatter(py::module &, py::module &m2) {
       - Half-down rounding mode with 2 fixed fraction digits: "1.23"
       - Half-up rounding mode with 2 fixed fraction digits: "1.24"
 
-      The default is HALF_EVEN. For more information, see the ICU User Guide:
-      `Rounding Modes <https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
+      The default is HALFEVEN.
+
+      For more information, see the
+      `ICU User Guide: Rounding Modes
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
       )doc");
 
   nfs_lnf.def(
@@ -848,8 +855,9 @@ void init_numberformatter(py::module &, py::module &m2) {
       A skeleton string is a locale-agnostic serialized form of a number
       formatter.
 
-      For more information, see the ICU User Guide:
-      `Number Skeletons <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
+      For more information, see the
+      `ICU User Guide: Number Skeletons
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
@@ -945,7 +953,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -958,7 +966,7 @@ void init_numberformatter(py::module &, py::module &m2) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -969,7 +977,7 @@ void init_numberformatter(py::module &, py::module &m2) {
         return std::unique_ptr<UnlocalizedNumberFormatter>(self.clone());
       },
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this object.
 
       .. seealso::
 
@@ -985,9 +993,12 @@ void init_numberformatter(py::module &, py::module &m2) {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Copy the internal :class:`UErrorCode` to *out_error_code* and return
-      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      Copy the internal :class:`UErrorCode` to *out_error_code*; return
+      ``True`` if :class:`UErrorCode` indicates a failure, ``False``
       otherwise.
+
+      If *out_error_code* already contains an error, its value will not be
+      changed.
       )doc");
 
   nfs_unf.def(
@@ -1126,8 +1137,11 @@ void init_numberformatter(py::module &, py::module &m2) {
       - Half-down rounding mode with 2 fixed fraction digits: "1.23"
       - Half-up rounding mode with 2 fixed fraction digits: "1.24"
 
-      The default is HALF_EVEN. For more information, see the ICU User Guide:
-      `Rounding Modes <https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
+      The default is HALFEVEN.
+
+      For more information, see the
+      `ICU User Guide: Rounding Modes
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
       )doc");
 
   nfs_unf.def(
@@ -1217,8 +1231,8 @@ void init_numberformatter(py::module &, py::module &m2) {
       A skeleton string is a locale-agnostic serialized form of a number
       formatter.
 
-      For more information, see the ICU User Guide:
-      `Number Skeletons <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
+      For more information, see the `ICU User Guide: Number Skeletons
+      <https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html>`__.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
 
@@ -1591,7 +1605,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   // class icu::number::Scale
   //
   sc.def(py::init<const Scale &>(), py::arg("other"), R"doc(
-      Initialize a ``Scale`` instance from another ``Scale``.
+      Initialize a ``Scale`` instance from a copy of *other*.
       )doc");
 
   sc.def_static(
@@ -1668,8 +1682,8 @@ void init_numberformatter(py::module &, py::module &m2) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
   unf.def(py::init<const UnlocalizedNumberFormatter &>(), py::arg("other"),
           R"doc(
-      Initialize a ``UnlocalizedNumberFormatter`` instance from another
-      ``UnlocalizedNumberFormatter``.
+      Initialize a ``UnlocalizedNumberFormatter`` instance from a copy of
+      *other*.
       )doc");
 
   unf.def(

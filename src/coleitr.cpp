@@ -17,34 +17,31 @@ void init_coleitr(py::module &m) {
       .. seealso::
 
          :meth:`RuleBasedCollator.create_collation_element_iterator`
-
-      .. rubric:: Attributes
-
-      .. autoattribute:: CollationElementIterator.NULLORDER
-
-         ``NULLORDER`` indicates that the iteration over the source string
-         has been finished.
-
-         .. seealso::
-
-            :meth:`.next`
-            :meth:`.previous`
       )doc");
 
   //
   // enum icu::CollationElementIterator::NULLORDER
   //
   cei.def_property_readonly_static(
-      "NULLORDER", [](const py::object & /* self */) -> int32_t {
+      "NULLORDER",
+      [](const py::object & /* self */) -> int32_t {
         return CollationElementIterator::NULLORDER;
-      });
+      },
+      R"doc(
+      ``NULLORDER`` indicates that the iteration over the source string
+      has been finished.
+
+      .. seealso::
+
+         :meth:`.next`
+         :meth:`.previous`
+      )doc");
 
   //
   // class icu::CollationElementIterator
   //
   cei.def(py::init<CollationElementIterator &>(), py::arg("other"), R"doc(
-      Initialize a ``CollationElementIterator`` instance from another
-      ``CollationElementIterator``.
+      Initialize a ``CollationElementIterator`` instance from a copy of *other*.
       )doc");
 
   cei.def(
@@ -103,7 +100,12 @@ void init_coleitr(py::module &m) {
           py::overload_cast<int32_t>(&CollationElementIterator::getMaxExpansion,
                                      py::const_),
           py::arg("order"), R"doc(
-      Return the maximum expansion for the specified collation order.
+      Return the maximum size of an expansion sequence that ends in the
+      specified comparison order; or 1 if no collation element occurs at the
+      end of any expansion sequence.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 
   cei.def("get_offset", &CollationElementIterator::getOffset, R"doc(
@@ -116,7 +118,11 @@ void init_coleitr(py::module &m) {
         return CollationElementIterator::isIgnorable(order);
       },
       py::arg("order"), R"doc(
-      Return whether the specified collation order is ignorable.
+      Return ``True`` if the specified collation order is ignorable, ``False``
+      otherwise.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 
   cei.def(
@@ -132,6 +138,10 @@ void init_coleitr(py::module &m) {
       R"doc(
       Return the collation order of the next character in the string, or
       :attr:`NULLORDER` if the end of the string is reached.
+
+      .. seealso::
+
+         :meth:`.__next__`
       )doc");
 
   cei.def(
@@ -152,6 +162,9 @@ void init_coleitr(py::module &m) {
   cei.def_static("primary_order", &CollationElementIterator::primaryOrder,
                  py::arg("order"), R"doc(
       Return the primary order for the specified collation order.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 
   cei.def("reset", &CollationElementIterator::reset, R"doc(
@@ -161,6 +174,9 @@ void init_coleitr(py::module &m) {
   cei.def_static("secondary_order", &CollationElementIterator::secondaryOrder,
                  py::arg("order"), R"doc(
       Return the secondary order for the specified collation order.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 
   cei.def(
@@ -174,7 +190,9 @@ void init_coleitr(py::module &m) {
       },
       py::arg("new_offset"),
       R"doc(
-      Sets the offset to the specified new offset in the source string.
+      Set the offset to the specified new offset in the source string.
+
+      *new_offset* is the new offset in the source string.
       )doc");
 
   cei.def(
@@ -188,6 +206,8 @@ void init_coleitr(py::module &m) {
          },
          py::arg("text"), R"doc(
       Set the source string.
+
+      *text* is the source string to set.
       )doc")
       .def(
           "set_text",
@@ -201,15 +221,23 @@ void init_coleitr(py::module &m) {
           },
           py::arg("text"), R"doc(
       Set the source string.
+
+      *text* is the source string to set.
       )doc");
 
   cei.def("strength_order", &CollationElementIterator::strengthOrder,
           py::arg("order"), R"doc(
       Return the comparison order for the specified collation order.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 
   cei.def_static("tertiary_order", &CollationElementIterator::tertiaryOrder,
                  py::arg("order"), R"doc(
       Return the tertiary order for the specified collation order.
+
+      *order* is the collation order returned by :meth:`.previous` or
+      :meth:`.next`.
       )doc");
 }
