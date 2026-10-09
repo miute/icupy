@@ -297,7 +297,7 @@ the Bidi algorithm.
     )doc");
 
   bccb.def(py::init<>(), R"doc(
-      Initialize the ``UBiDiClassCallback`` instance without a callback
+      Initialize a ``UBiDiClassCallback`` instance without a callback
       function.
       )doc")
       .def(py::init([](const icupy::ClassCallbackFunction &action,
@@ -306,13 +306,12 @@ the Bidi algorithm.
                  action, context.value_or(nullptr));
            }),
            py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UBiDiClassCallback`` instance with the specified
+      Initialize a ``UBiDiClassCallback`` instance with the specified
       callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the ``UBiDiClassCallback``
-         object.
+         *action* and *context* must outlive this callback container object.
       )doc");
 
   bccb.def(

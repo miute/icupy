@@ -98,11 +98,15 @@ that locale (although it may be empty).
              This is the most specific locale supported by ICU.
              )doc")
       .value("ULOC_REQUESTED_LOCALE", ULOC_REQUESTED_LOCALE, R"doc(
-             Deprecated: ICU 2.8
+             This is the requested locale.
+
+             .. version-deprecated:: ICU2.8
              )doc")
       .value("ULOC_DATA_LOCALE_TYPE_LIMIT", ULOC_DATA_LOCALE_TYPE_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`ULocDataLocaleType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

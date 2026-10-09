@@ -751,8 +751,15 @@ subject to separate encoding may be added at any time.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UScriptCode` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_SCRIPT`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time,
+                see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

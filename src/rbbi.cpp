@@ -43,8 +43,9 @@ void init_rbbi(py::module &m) {
       http://www.unicode.org/reports/tr14/ and
       http://www.unicode.org/reports/tr29/.
 
-      For more information, see the ICU User Guide:
-      `Boundary Analysis <https://unicode-org.github.io/icu/userguide/boundaryanalysis/>`__.
+      For more information, see the
+      `ICU User Guide: Boundary Analysis
+      <https://unicode-org.github.io/icu/userguide/boundaryanalysis/>`__.
 
       .. seealso::
 
@@ -89,27 +90,25 @@ void init_rbbi(py::module &m) {
 
          >>> result
          ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
-
-      .. rubric:: Attributes
-
-      .. autoattribute:: BreakIterator.DONE
-
-         ``DONE`` indicates that the analysis of all text boundaries has been
-         finished.
-
-         .. note::
-
-            Use :attr:`UBRK_DONE` instead.
       )doc");
 
-  bi.def_property_readonly_static("DONE",
-                                  [](const py::object & /* self */) -> int32_t {
-                                    return BreakIterator::DONE;
-                                  });
+  bi.def_property_readonly_static(
+      "DONE",
+      [](const py::object & /* self */) -> int32_t {
+        return BreakIterator::DONE;
+      },
+      R"doc(
+      ``DONE`` indicates that the analysis of all text boundaries has been
+      finished.
+
+      .. note::
+
+         Use :attr:`UBRK_DONE` instead.
+      )doc");
 
   bi.def("__copy__", &BreakIterator::clone,
          R"doc(
-      Return a copy of this instance.
+      Return a copy of this break iterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -121,7 +120,7 @@ void init_rbbi(py::module &m) {
       },
       py::arg("memo"),
       R"doc(
-      Return a copy of this instance.
+      Return a copy of this break iterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -219,7 +218,7 @@ void init_rbbi(py::module &m) {
 
   bi.def("clone", &BreakIterator::clone,
          R"doc(
-      Return a copy of this instance.
+      Return a copy of this break iterator.
 
       .. seealso::
 
@@ -328,13 +327,13 @@ void init_rbbi(py::module &m) {
       )doc");
 
   bi.def("first", &BreakIterator::first, R"doc(
-      Set the current iteration position to the beginning of the text,
-      and return the current character index of the text.
+      Set the current iteration position to the beginning of the text;
+      return the current character index of the text.
       )doc");
 
   bi.def("following", &BreakIterator::following, py::arg("offset"), R"doc(
       Advance the iterator to the first boundary following the specified
-      offset, and return the current character index of the text.
+      offset; return the current character index of the text.
 
       The value returned is always greater than the offset or the value
       :attr:`UBRK_DONE`.
@@ -366,10 +365,15 @@ void init_rbbi(py::module &m) {
         },
         py::arg("object_locale"), py::arg("display_locale"), py::arg("name"),
         R"doc(
-      Copy *object_locale* to *name* in a format suitable for display in the
-      locale specified by *display_locale*, and return *name* itself.
+      Retrieve the name of the locale specified by *object_locale* in a format
+      suitable for display in the locale specified by *display_locale* and
+      store it in *name*; return *name* itself.
 
       *object_locale* must be obtained from :meth:`.get_available_locales`.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *name* is a string object to receive the display name of *object_locale*.
       )doc")
       .def_static(
           "get_display_name",
@@ -379,10 +383,13 @@ void init_rbbi(py::module &m) {
                 icupy::to_locale(object_locale), name);
           },
           py::arg("object_locale"), py::arg("name"), R"doc(
-      Copy *object_locale* to *name* in a format suitable for display in the
-      default locale, and return *name* itself.
+      Retrieve the name of the locale specified by *object_locale* in a format
+      suitable for display in the default locale and store it in *name*; return
+      *name* itself.
 
       *object_locale* must be obtained from :meth:`.get_available_locales`.
+
+      *name* is a string object to receive the display name of *object_locale*.
       )doc");
 
   bi.def(
@@ -401,8 +408,9 @@ void init_rbbi(py::module &m) {
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 52)
   bi.def("get_rule_status", &BreakIterator::getRuleStatus, R"doc(
-      For RuleBasedBreakIterators, return the status tag from the break rule
-      that determined the boundary at the current iteration position.
+      For :class:`RuleBasedBreakIterator`, return the status tag from the
+      break rule that determined the boundary at the current iteration
+      position.
 
       For break iterator types that do not support a rule status, a default
       value of 0 is returned.
@@ -428,8 +436,8 @@ void init_rbbi(py::module &m) {
         return result;
       },
       R"doc(
-      For RuleBasedBreakIterators, return the status (tag) values from the
-      break rule(s) that determined the boundary at the current iteration
+      For :class:`RuleBasedBreakIterator`, return the status (tag) values from
+      the break rule(s) that determined the boundary at the current iteration
       position.
 
       For break iterator types that do not support rule status, no values are
@@ -483,36 +491,36 @@ void init_rbbi(py::module &m) {
 
   bi.def("last", &BreakIterator::last, R"doc(
       Set the iterator position to the index immediately BEYOND the last
-      character in the text being scanned,
-      and return the current character index of the text.
+      character in the text being scanned; return the current character index
+      of the text.
       )doc");
 
   bi.def("next", py::overload_cast<int32_t>(&BreakIterator::next), py::arg("n"),
          R"doc(
-      Set the iterator position to the nth boundary from the current boundary,
-      and return the current character index of the text or
+      Set the iterator position to the nth boundary from the current boundary;
+      return the current character index of the text or
       :attr:`UBRK_DONE` if all boundaries have been returned.
 
       If *n* is negative, move to the previous boundary; if *n* is positive,
       move to the following boundary.
       )doc")
       .def("next", py::overload_cast<>(&BreakIterator::next), R"doc(
-      Advance the iterator to the boundary following the current boundary,
-      and return the current character index of the text or
+      Advance the iterator to the boundary following the current boundary;
+      return the current character index of the text or
       :attr:`UBRK_DONE` if all boundaries have been returned.
       )doc");
 
   bi.def("preceding", &BreakIterator::preceding, py::arg("offset"), R"doc(
       Set the iterator position to the first boundary preceding the specified
-      offset, and return the current character index of the text.
+      offset; return the current character index of the text.
 
       The value returned is always smaller than the offset or the value
       :attr:`UBRK_DONE`.
       )doc");
 
   bi.def("previous", &BreakIterator::previous, R"doc(
-      Set the iterator position to the boundary preceding the current boundary,
-      and return the current character index of the text or
+      Set the iterator position to the boundary preceding the current boundary;
+      return the current character index of the text or
       :attr:`UBRK_DONE` if all boundaries have been returned.
       )doc");
 
@@ -532,7 +540,7 @@ void init_rbbi(py::module &m) {
 
       .. important::
 
-         *text* must outlive the break iterator object.
+         *text* must outlive this break iterator object.
       )doc")
       .def(
           "set_text",
@@ -552,7 +560,7 @@ void init_rbbi(py::module &m) {
 
          This function makes a shallow clone of the specified :class:`UText`.
          The caller can immediately close or reuse the :class:`UText` passed
-         as a parameter, but the underlying text itself must outlive the break
+         as a parameter, but the underlying text itself must outlive this break
          iterator object.
       )doc");
 
@@ -571,15 +579,15 @@ void init_rbbi(py::module &m) {
       :meth:`BreakIterator.create_word_instance` and
       :meth:`BreakIterator.create_line_instance`.
 
-      For more information, see the ICU User Guide:
-      `Break Rules <https://unicode-org.github.io/icu/userguide/boundaryanalysis/break-rules.html>`__.
+      For more information, see the
+      `ICU User Guide: Break Rules
+      <https://unicode-org.github.io/icu/userguide/boundaryanalysis/break-rules.html>`__.
       )doc");
 
   rbbi.def(
           // [2] RuleBasedBreakIterator::RuleBasedBreakIterator
           py::init<const RuleBasedBreakIterator &>(), py::arg("other"), R"doc(
-      Initialize a ``RuleBasedBreakIterator`` instance from another
-      ``RuleBasedBreakIterator``.
+      Initialize a ``RuleBasedBreakIterator`` instance from a copy of *other*.
       )doc")
       .def(
           // [3] RuleBasedBreakIterator::RuleBasedBreakIterator
@@ -597,9 +605,14 @@ void init_rbbi(py::module &m) {
       Initialize a ``RuleBasedBreakIterator`` instance from a set of rules
       specified as a string.
 
-      If an error occurs while parsing the rules string, the offset into the
-      rules string at which the error occurred will be saved into the
-      :class:`UParseError`.
+      *rules* is a set of rules for breaks.
+
+      If a syntax error occurs while parsing a rule string, *parse_error* will
+      record the offset within the rule string where the error occurred.
+
+      .. seealso::
+
+         :meth:`.get_rules`
       )doc")
       .def(
           // [4] RuleBasedBreakIterator::RuleBasedBreakIterator
@@ -618,9 +631,13 @@ void init_rbbi(py::module &m) {
       Initialize a ``RuleBasedBreakIterator`` instance from a set of
       precompiled binary rules.
 
+      *compiled_rules* is a set of precompiled binary rules for breaks.
+
+      *rule_length* is the length of *compiled_rules* in bytes.
+
       .. important::
 
-         *compiled_rules* must outlive the break iterator object.
+         *compiled_rules* must outlive this break iterator object.
 
       .. note::
 
@@ -635,14 +652,14 @@ void init_rbbi(py::module &m) {
       )doc");
 
   rbbi.def("__hash__", &RuleBasedBreakIterator::hashCode, R"doc(
-      Return a hash value of this instance.
+      Return a hash value of this break iterator.
 
       This is equivalent to calling :meth:`.hash_code`.
       )doc");
 
   rbbi.def("clone", &RuleBasedBreakIterator::clone,
            R"doc(
-      Return a copy of this instance.
+      Return a copy of this break iterator.
 
       .. seealso::
 
@@ -668,14 +685,22 @@ void init_rbbi(py::module &m) {
          of ICU. The compiled rules are compatible only between machines with
          the same byte ordering (little or big endian) and the same base
          character set family (ASCII or EBCDIC).
+
+      .. seealso::
+
+         :meth:`.__init__`
       )doc");
 
   rbbi.def("get_rules", &RuleBasedBreakIterator::getRules, R"doc(
       Return the description used to create this break iterator.
+
+      .. seealso::
+
+         :meth:`.__init__`
       )doc");
 
   rbbi.def("hash_code", &RuleBasedBreakIterator::hashCode, R"doc(
-      Return a hash code for this instance.
+      Return a hash code for this break iterator.
 
       .. seealso::
 

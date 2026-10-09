@@ -49,9 +49,9 @@ formatted number should be returned.
                                                "enum.IntEnum", R"doc(
 Rounding mode.
 
-For more detail on rounding modes, see:
-https://unicode-org.github.io/icu/userguide/format_parse/numbers/
-rounding-modes
+For more information, see the
+`ICU User Guide: Rounding Modes
+<https://unicode-org.github.io/icu/userguide/format_parse/numbers/rounding-modes>`__.
       )doc")
       .value("ROUND_CEILING", NumberFormat::kRoundCeiling, R"doc(
              Round towards positive infinity.

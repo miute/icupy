@@ -121,8 +121,18 @@ as well as the values specific to each one.
              )doc")
       .value("UCOL_HIRAGANA_QUATERNARY_MODE", UCOL_HIRAGANA_QUATERNARY_MODE,
              R"doc(
-             Deprecated: ICU 50 Implementation detail, cannot be set via API,
-             was removed from implementation.
+             When turned on, this attribute positions Hiragana before all
+             non-ignorables on quaternary level This is a sneaky way to produce
+             JIS sort order.
+
+             This attribute was an implementation detail of the CLDR Japanese
+             tailoring. Since ICU 50, this attribute is not settable any more
+             via API functions. Since CLDR 25/ICU 53, explicit quaternary
+             relations are used to achieve the same Japanese sort order.
+
+             .. version-deprecated:: ICU50
+                Implementation detail, cannot be set via API, was removed from
+                implementation.
              )doc")
       .value("UCOL_NUMERIC_COLLATION", UCOL_NUMERIC_COLLATION, R"doc(
              When turned on, this attribute makes substrings of digits sort
@@ -141,8 +151,10 @@ as well as the values specific to each one.
              signs, decimals, exponents, etc.
              )doc")
       .value("UCOL_ATTRIBUTE_COUNT", UCOL_ATTRIBUTE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UColAttribute` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -219,8 +231,11 @@ value to the predefined value for that locale.
              Upper case sorts before lower case.
              )doc")
       .value("UCOL_ATTRIBUTE_VALUE_COUNT", UCOL_ATTRIBUTE_VALUE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UColAttributeValue`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -245,8 +260,10 @@ Underlying code depends on them having these numbers.
              initial substring as the given string.
              )doc")
       .value("UCOL_BOUND_VALUE_COUNT", UCOL_BOUND_VALUE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UColBoundMode` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -350,8 +367,10 @@ These reordering codes are to be used in conjunction with the script codes.
              This is equivalent to the rule value "digit".
              )doc")
       .value("UCOL_REORDER_CODE_LIMIT", UCOL_REORDER_CODE_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UColReorderCode` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -373,8 +392,10 @@ Options for retrieving the rule string.
 
              The "UCA rules" are an *approximation* of the root collator's sort
              order. They are almost never used or useful at runtime and can be
-             removed from the data. See
-             https://unicode-org.github.io/icu/userguide/collation/customization#building-on-existing-locales
+             removed from the data. See the
+             `ICU User Guide, Collation Customization:
+             Building on Existing Locales
+             <https://unicode-org.github.io/icu/userguide/collation/customization#building-on-existing-locales>`__.
              )doc")
       .export_values()
       .finalize();

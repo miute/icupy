@@ -14,7 +14,7 @@ void init_formattedvalue(py::module &m) {
   //
   py::class_<ConstrainedFieldPosition, UMemory> cfp(
       m, "ConstrainedFieldPosition", R"doc(
-      Represent a span of a string containing a given field.
+      Represent a span of a string containing the specified field.
       )doc");
 
   cfp.def(py::init<>(), R"doc(
@@ -34,16 +34,18 @@ void init_formattedvalue(py::module &m) {
         return ss.str();
       },
       R"doc(
-      Return a string representation of the object.
+      Return a string representation of this object.
       )doc");
 
   cfp.def("constrain_category", &ConstrainedFieldPosition::constrainCategory,
           py::arg("category"), R"doc(
       Set a constraint on the field category.
 
+      *category* is the field category to modify when iterating.
+
       When this instance of ``ConstrainedFieldPosition`` is passed to
       :meth:`FormattedValue.next_position`, positions are skipped unless they
-      have the given category.
+      have the specified category.
 
       Any previously set constraints are cleared.
 
@@ -74,9 +76,13 @@ void init_formattedvalue(py::module &m) {
           py::arg("category"), py::arg("field"), R"doc(
       Set a constraint on the category and field.
 
+      *category* is the field category to modify when iterating.
+
+      *field* is the field to modify when iterating.
+
       When this instance of ``ConstrainedFieldPosition`` is passed to
       :meth:`FormattedValue.next_position`, positions are skipped unless they
-      have the given category and field.
+      have the specified category and field.
 
       Any previously set constraints are cleared.
 
@@ -124,18 +130,20 @@ void init_formattedvalue(py::module &m) {
 
       The initial value is zero.
 
-      Users of :class:`FormattedValue` should not need to call this method.
+      .. note::
+
+         Users should not need to call this method.
       )doc");
 
   cfp.def("get_limit", &ConstrainedFieldPosition::getLimit, R"doc(
-      Return the EXCLUSIVE end index stored for the current position.
+      Return the end index (exclusive) stored for the current position.
 
       The return value is well-defined only after
       :meth:`FormattedValue.next_position` returns ``True``.
       )doc");
 
   cfp.def("get_start", &ConstrainedFieldPosition::getStart, R"doc(
-      Return the INCLUSIVE start index for the current position.
+      Return the start index (inclusive) for the current position.
 
       The return value is well-defined only after
       :meth:`FormattedValue.next_position` returns ``True``.
@@ -146,12 +154,16 @@ void init_formattedvalue(py::module &m) {
       [](const ConstrainedFieldPosition &self, int32_t category, int32_t field)
           -> py::bool_ { return self.matchesField(category, field); },
       py::arg("category"), py::arg("field"), R"doc(
-      Determine whether a given field should be included given the constraints.
+      Return ``True`` if the constraint includes the specified category and
+      field, ``False`` otherwise.
+
+      *category* is the field category to test.
+
+      *field* is the field to test.
       )doc");
 
   cfp.def("reset", &ConstrainedFieldPosition::reset, R"doc(
-      Reset this ``ConstrainedFieldPosition`` to its initial state, as if it
-      were newly created:
+      Reset the constraint to its initial state, as if it were newly created:
 
       - Remove any constraints that may have been set on the instance.
       - Reset the iteration position.
@@ -162,13 +174,29 @@ void init_formattedvalue(py::module &m) {
           py::arg("context"), R"doc(
       Set an ``int64`` that :class:`FormattedValue` implementations may use for
       storage.
+
+      *context* is a new iteration context.
+
+      .. note::
+
+         Users should not need to call this method.
       )doc");
 
   cfp.def("set_state", &ConstrainedFieldPosition::setState, py::arg("category"),
           py::arg("field"), py::arg("start"), py::arg("limit"), R"doc(
       Set new values for the primary public getters.
 
-      Intended to be used by :class:`FormattedValue` implementations.
+      *category* is a new field category.
+
+      *field* is a new field.
+
+      *start* is a new start index (inclusive).
+
+      *limit* is a new end index (exclusive).
+
+      .. note::
+
+         Users should not need to call this method.
       )doc");
 
   //
@@ -199,7 +227,7 @@ void init_formattedvalue(py::module &m) {
         return result;
       },
       R"doc(
-      Return a string representation of this instance.
+      Return a string representation of this object.
 
       This is equivalent to calling ``to_string().to_utf8_string()``.
 
@@ -219,7 +247,8 @@ void init_formattedvalue(py::module &m) {
         return result;
       },
       py::arg("appendable"), R"doc(
-      Append the formatted string to *appendable*.
+      Append the formatted string to :class:`Appendable` specified by
+      *appendable*.
       )doc");
 
   fv.def(
@@ -234,10 +263,17 @@ void init_formattedvalue(py::module &m) {
         return result;
       },
       py::arg("cfpos"), R"doc(
-      Iterate through the field positions within ``FormattedValue``.
+      Iterate through the field positions within ``FormattedValue``;
+      return ``True`` if a new occurrence of that field is found, ``False``
+      otherwise or if an error occurs.
 
-      This allows you to identify the positions of specific types of
-      substrings, such as the month or decimal separator.
+      *cfpos* is used to represent the iteration state, and can be used to set
+      constraints that limit the iteration to specific category or field.
+
+      .. seealso::
+
+         :meth:`ConstrainedFieldPosition.constrain_category`
+         :meth:`ConstrainedFieldPosition.constrain_field`
 
       .. rubric:: Example
 

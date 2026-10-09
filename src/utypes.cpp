@@ -69,8 +69,11 @@ The error code is used by ICU4C functions to report errors.
              plugins may not load.
              )doc")
       .value("U_ERROR_WARNING_LIMIT", U_ERROR_WARNING_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UErrorCode` warning
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_ZERO_ERROR", U_ZERO_ERROR, R"doc(
              No error, no warning.
@@ -185,8 +188,10 @@ The error code is used by ICU4C functions to report errors.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
       .value("U_STANDARD_ERROR_LIMIT", U_STANDARD_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest standard error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_BAD_VARIABLE_DEFINITION", U_BAD_VARIABLE_DEFINITION, R"doc(
              Missing '$' or duplicate variable name.
@@ -312,8 +317,10 @@ The error code is used by ICU4C functions to report errors.
              A "&fn()" rule specifies an unknown transliterator.
              )doc")
       .value("U_PARSE_ERROR_LIMIT", U_PARSE_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal Transliterator error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_UNEXPECTED_TOKEN", U_UNEXPECTED_TOKEN, R"doc(
              Syntax error in format pattern.
@@ -407,8 +414,10 @@ The error code is used by ICU4C functions to report errors.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("U_FMT_PARSE_ERROR_LIMIT", U_FMT_PARSE_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal formatting API error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_BRK_INTERNAL_ERROR", U_BRK_INTERNAL_ERROR, R"doc(
              An internal error (bug) was detected.
@@ -463,8 +472,11 @@ The error code is used by ICU4C functions to report errors.
              The {nnn} tag on a rule is malformed.
              )doc")
       .value("U_BRK_ERROR_LIMIT", U_BRK_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`BreakIterator` error
+             code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_REGEX_INTERNAL_ERROR", U_REGEX_INTERNAL_ERROR, R"doc(
              An internal error (bug) was detected.
@@ -519,7 +531,10 @@ The error code is used by ICU4C functions to report errors.
              Regexps cannot have UnicodeSets containing strings.
              )doc")
       .value("U_REGEX_OCTAL_TOO_BIG", U_REGEX_OCTAL_TOO_BIG, R"doc(
-             Deprecated: ICU 54. This error cannot occur.
+             Octal character constants must be <= 0377.
+
+             .. version-deprecated:: ICU54
+                This error cannot occur.
              )doc")
       .value("U_REGEX_MISSING_CLOSE_BRACKET", U_REGEX_MISSING_CLOSE_BRACKET,
              R"doc(
@@ -547,8 +562,10 @@ The error code is used by ICU4C functions to report errors.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 55)
       .value("U_REGEX_ERROR_LIMIT", U_REGEX_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal regular expression error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_IDNA_PROHIBITED_ERROR", U_IDNA_PROHIBITED_ERROR, "")
       .value("U_IDNA_ERROR_START", U_IDNA_ERROR_START, "")
@@ -563,8 +580,10 @@ The error code is used by ICU4C functions to report errors.
       .value("U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR",
              U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR, "")
       .value("U_IDNA_ERROR_LIMIT", U_IDNA_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal IDNA error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_STRINGPREP_PROHIBITED_ERROR", U_STRINGPREP_PROHIBITED_ERROR, "")
       .value("U_STRINGPREP_UNASSIGNED_ERROR", U_STRINGPREP_UNASSIGNED_ERROR, "")
@@ -585,8 +604,10 @@ The error code is used by ICU4C functions to report errors.
              The plugin didn't call uplug_setPlugLevel in response to a QUERY.
              )doc")
       .value("U_PLUGIN_ERROR_LIMIT", U_PLUGIN_ERROR_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal plug-in error code.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_ERROR_LIMIT", U_ERROR_LIMIT, R"doc(
              :attr:`U_ERROR_LIMIT` is same as :attr:`U_PLUGIN_ERROR_LIMIT`.

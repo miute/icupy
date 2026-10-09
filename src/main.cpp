@@ -228,10 +228,10 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::class_<Locale, UObject> loc(m, "Locale", R"doc(
       Representation of a specific geographic, political, or cultural region.
 
-      For more information, see the LDML spec, Part 1:
-      `Unicode Language and Locale Identifiers
+      For more information, see the
+      `LDML spec, Part 1: Unicode Language and Locale Identifiers
       <https://www.unicode.org/reports/tr35/#unicode-language-and-locale-identifiers>`__
-      and the ICU User Guide: `Locale
+      and the `ICU User Guide: Locale
       <https://unicode-org.github.io/icu/userguide/locale/#locale>`__.
 
       .. seealso::
@@ -257,9 +257,6 @@ PYBIND11_MODULE(MODULE_NAME, m) {
   py::class_<UnicodeString, Replaceable> us(m, "UnicodeString", R"doc(
       String class that stores Unicode characters directly and provides similar
       functionality as the Java String and StringBuffer/StringBuilder classes.
-
-      For more information, see the ICU User Guide: `Strings
-      <https://unicode-org.github.io/icu/userguide/strings/#strings-in-icu>`__.
 
       .. seealso::
 
@@ -292,8 +289,8 @@ PYBIND11_MODULE(MODULE_NAME, m) {
       number.
       If none match, default rule(other) is returned.
 
-      For more information, details, and tips for writing rules, see the LDML
-      spec, Part 3: `Language Plural Rules
+      For more information, details, and tips for writing rules, see the
+      `LDML spec, Part 3: Language Plural Rules
       <https://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules>`__.
       )doc");
 

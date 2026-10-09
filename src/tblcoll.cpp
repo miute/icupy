@@ -100,7 +100,7 @@ Enum returned by :meth:`Collator.compare` method.
   // class icu::Collator
   //
   coll.def("__copy__", &Collator::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -109,7 +109,7 @@ Enum returned by :meth:`Collator.compare` method.
       "__deepcopy__",
       [](const Collator &self, py::dict & /* memo */) { return self.clone(); },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -122,7 +122,7 @@ Enum returned by :meth:`Collator.compare` method.
       )doc");
 
   coll.def("__hash__", &Collator::hashCode, R"doc(
-      Return a hash value of this instance.
+      Return a hash value of this collator.
 
       This is equivalent to calling :meth:`.hash_code`.
       )doc");
@@ -135,7 +135,7 @@ Enum returned by :meth:`Collator.compare` method.
       )doc");
 
   coll.def("clone", &Collator::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       .. seealso::
 
@@ -278,7 +278,7 @@ Enum returned by :meth:`Collator.compare` method.
       },
       py::arg("source"), py::arg("target"), R"doc(
       Return ``True`` if the strings are equal according to the collation
-      rules. ``False`` otherwise.
+      rules, ``False`` otherwise.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
 
@@ -290,7 +290,7 @@ Enum returned by :meth:`Collator.compare` method.
       },
       py::arg("source"), py::arg("target"), R"doc(
       Return ``True`` if the strings are equal according to the collation
-      rules. ``False`` otherwise.
+      rules, ``False`` otherwise.
       )doc");
 
   coll.def(
@@ -355,7 +355,22 @@ Enum returned by :meth:`Collator.compare` method.
       },
       py::arg("source"), py::arg("source_length"), py::arg("bound_type"),
       py::arg("no_of_levels"), R"doc(
-      Produce a bound for the specified sortkey and number of levels.
+      Produce a bound for the specified sortkey and number of levels, and
+      return the result.
+
+      *source* is the source sortkey.
+
+      *source_length* is the length of *source*; can be set to -1 for a
+      NUL-terminated string.
+
+      *bound_type* is the type of bound required.
+
+      *no_of_levels* is the number of levels required in the resulting bounds
+      (in most cases, the recommended value is 1).
+
+      .. seealso::
+
+         :meth:`.get_sort_key`
       )doc");
 
   coll.def(
@@ -371,9 +386,16 @@ Enum returned by :meth:`Collator.compare` method.
             return result;
           },
           py::arg("source"), py::arg("source_length"), py::arg("key"), R"doc(
-      Transform the string (up to the specified length) into a series of
-      characters that can be compared with :meth:`CollationKey.compare_to`,
-      store it in *key*, and return *key* itself.
+      Transform the specified string into a series of characters that can be
+      compared with :meth:`CollationKey.compare_to`, and store the result in
+      *key*; return *key* itself.
+
+      *source* is the source string to be transformed into a sort key.
+
+      *source_length* is the length of *source*.
+
+      *key* is a collation key object that stores the result of the
+      transformation.
       )doc")
       .def(
           "get_collation_key",
@@ -388,9 +410,14 @@ Enum returned by :meth:`Collator.compare` method.
             return result;
           },
           py::arg("source"), py::arg("key"), R"doc(
-      Transform the string into a series of characters that can be compared
-      with :meth:`CollationKey.compare_to`, store it in *key*, and return *key*
-      itself.
+      Transform the specified string into a series of characters that can be
+      compared with :meth:`CollationKey.compare_to`, and store the result in
+      *key*; return *key* itself.
+
+      *source* is the source string to be transformed into a sort key.
+
+      *key* is a collation key object that stores the result of the
+      transformation.
       )doc");
 
   coll.def_static(
@@ -404,10 +431,15 @@ Enum returned by :meth:`Collator.compare` method.
           },
           py::arg("object_locale"), py::arg("display_locale"), py::arg("name"),
           R"doc(
-      Copy *object_locale* to *name* in a format suitable for display in the
-      locale specified by *display_locale*, and return *name* itself.
+      Retrieve the name of the locale specified by *object_locale* in a format
+      suitable for display in the locale specified by *display_locale* and
+      store it in *name*; return *name* itself.
 
       *object_locale* must be obtained from :meth:`.get_available_locales`.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *name* is a string object to receive the display name of *object_locale*.
       )doc")
       .def_static(
           "get_display_name",
@@ -417,10 +449,13 @@ Enum returned by :meth:`Collator.compare` method.
                                             name);
           },
           py::arg("object_locale"), py::arg("name"), R"doc(
-      Copy *object_locale* to *name* in a format suitable for display in the
-      default locale, and return *name* itself.
+      Retrieve the name of the locale specified by *object_locale* in a format
+      suitable for display in the default locale and store it in *name*; return
+      *name* itself.
 
       *object_locale* must be obtained from :meth:`.get_available_locales`.
+
+      *name* is a string object to receive the display name of *object_locale*.
       )doc");
 
   coll.def_static(
@@ -468,6 +503,10 @@ Enum returned by :meth:`Collator.compare` method.
 
       A locale is defined as "available" if it physically exists within the
       collation locale data.
+
+      *keyword* must be obtained from :meth:`.get_keywords`.
+
+      *locale* is the requested locale.
       )doc");
 
   coll.def_static(
@@ -498,6 +537,8 @@ Enum returned by :meth:`Collator.compare` method.
       py::arg("keyword"), R"doc(
       Create a string enumeration of all currently used values for the
       specified keyword.
+
+      *keyword* must be obtained from :meth:`.get_keywords`.
       )doc");
 
   coll.def_static(
@@ -516,6 +557,14 @@ Enum returned by :meth:`Collator.compare` method.
       py::arg("keyword"), py::arg("locale"), py::arg("commonly_used"), R"doc(
       Create a string enumeration of all currently used values for the
       specified keyword and locale.
+
+      *keyword* currently supports only "collation".
+
+      *locale* is the requested locale.
+
+      If *commonly_used* is ``True``, returns only the values commonly used in
+      the specified locale, in preferred order. Otherwise, returns all values
+      available for the locale.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
@@ -568,6 +617,11 @@ Enum returned by :meth:`Collator.compare` method.
           },
           py::arg("source"), py::arg("source_length"), R"doc(
       Return the sort key as ``bytes`` from a string.
+
+      *source* is the source string to be transformed into a sort key.
+
+      *source_length* is the length of *source*; can be set to -1 for a
+      NUL-terminated string.
       )doc")
       .def(
           "get_sort_key",
@@ -582,6 +636,8 @@ Enum returned by :meth:`Collator.compare` method.
           },
           py::arg("source"), R"doc(
       Return the sort key as ``bytes`` from a string.
+
+      *source* is the source string to be transformed into a sort key.
 
       .. note::
 
@@ -667,7 +723,7 @@ Enum returned by :meth:`Collator.compare` method.
       )doc");
 
   coll.def("hash_code", &Collator::hashCode, R"doc(
-      Return a hash code for this instance.
+      Return a hash code for this collator.
 
       .. seealso::
 
@@ -727,7 +783,7 @@ Enum returned by :meth:`Collator.compare` method.
         }
       },
       py::arg("attr"), py::arg("value"), R"doc(
-      Set the *value* of the specified attribute.
+      Set the value of the specified attribute.
 
       .. seealso::
 
@@ -773,6 +829,11 @@ Enum returned by :meth:`Collator.compare` method.
 
       The reordering codes are a combination of script codes and reorder codes.
 
+      *reorder_codes* is an array of script codes in the new order. If an empty
+      array is specified, all reordering codes in the collator will be cleared.
+
+      *reorder_codes_length* is the length of *reorder_codes*.
+
       .. seealso::
 
          :class:`UColReorderCode`
@@ -790,8 +851,9 @@ Enum returned by :meth:`Collator.compare` method.
   py::class_<RuleBasedCollator, Collator> rbc(m, "RuleBasedCollator", R"doc(
       :class:`Collator` using data-driven tables.
 
-      For more information, see the ICU User Guide:
-      `Collation <https://unicode-org.github.io/icu/userguide/collation>`__.
+      For more information, see the
+      `ICU User Guide: Collation
+      <https://unicode-org.github.io/icu/userguide/collation>`__.
       )doc");
 
   rbc.def(py::init([](const icupy::UnicodeStringVariant &rules) {
@@ -852,8 +914,7 @@ Enum returned by :meth:`Collator.compare` method.
       collation strength, and decomposition mode.
       )doc")
       .def(py::init<const RuleBasedCollator &>(), py::arg("other"), R"doc(
-      Initialize a ``RuleBasedCollator`` instance from another
-      ``RuleBasedCollator``.
+      Initialize a ``RuleBasedCollator`` instance from a copy of *other*.
       )doc")
       .def(py::init([](const py::buffer &bin, int32_t length,
                        const RuleBasedCollator *base) {
@@ -877,7 +938,7 @@ Enum returned by :meth:`Collator.compare` method.
 
       .. important::
 
-         *bin* must outlive the collator object.
+         *bin* must outlive this collator object.
 
       .. seealso::
 
@@ -885,7 +946,7 @@ Enum returned by :meth:`Collator.compare` method.
       )doc");
 
   rbc.def("__copy__", &RuleBasedCollator::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -896,13 +957,13 @@ Enum returned by :meth:`Collator.compare` method.
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
 
   rbc.def("clone", &RuleBasedCollator::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this collator.
 
       .. seealso::
 
@@ -935,8 +996,7 @@ Enum returned by :meth:`Collator.compare` method.
           py::overload_cast<const CharacterIterator &>(
               &RuleBasedCollator::createCollationElementIterator, py::const_),
           py::arg("source"), R"doc(
-      Return a new collation element iterator with the specified character
-      iterator.
+      Return a new collation element iterator with the specified string.
       )doc")
       .def(
           "create_collation_element_iterator",
@@ -957,7 +1017,11 @@ Enum returned by :meth:`Collator.compare` method.
            py::overload_cast<UColRuleOption, UnicodeString &>(
                &RuleBasedCollator::getRules, py::const_),
            py::arg("delta"), py::arg("buffer"), R"doc(
-      Copy the tailoring rules for this collator to *buffer* with the specified
-      rule type.
+      Retrieve the tailoring rules with the specified rule type for this
+      collator.
+
+      *delta* is the rule type to be retrieved.
+
+      *buffer* is a string object to receive the tailoring rules.
       )doc");
 }

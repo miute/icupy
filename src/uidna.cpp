@@ -29,7 +29,15 @@ Bit set to modify the :class:`IDNA` processing and error checking.
              Before ICU 76, this constant did not set any of the options.
              )doc")
       .value("UIDNA_ALLOW_UNASSIGNED", UIDNA_ALLOW_UNASSIGNED, R"doc(
-             Deprecated: ICU 55 Use UTS #46 instead via class :class:`IDNA`.
+             Option to allow unassigned code points in domain names and labels.
+
+             For use in static worker and factory methods.
+
+             This option is ignored by the UTS46 implementation. (UTS #46
+             disallows unassigned code points.)
+
+             .. version-deprecated:: ICU55
+                Use UTS #46 instead via class :class:`IDNA`.
              )doc")
       .value("UIDNA_USE_STD3_RULES", UIDNA_USE_STD3_RULES, R"doc(
              Option to check whether the input conforms to the STD3 ASCII

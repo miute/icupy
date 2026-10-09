@@ -143,8 +143,12 @@ be performed, and to report results from the check function.
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("USPOOF_ANY_CASE", USPOOF_ANY_CASE, R"doc(
-             Deprecated: ICU 58 Any case confusable mappings were removed from
-             UTS 39; the corresponding ICU API was deprecated.
+             This flag is deprecated and no longer affects the behavior of
+             SpoofChecker.
+
+             .. version-deprecated:: ICU58
+                Any case confusable mappings were removed from UTS 39; the
+                corresponding ICU API was deprecated.
              )doc")
       .value("USPOOF_RESTRICTION_LEVEL", USPOOF_RESTRICTION_LEVEL, R"doc(
              Check that an identifier is no looser than the specified

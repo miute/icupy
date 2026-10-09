@@ -38,16 +38,19 @@ void init_casemap(py::module &m) {
       },
       py::arg("options"), py::arg("src"), py::arg("src_length") = -1,
       py::arg("edits") = std::nullopt, R"doc(
-      Case-fold the substring *src[:src_length]* of *src* without depending on
-      locale or context, and return the result.
+      Case-fold the specified string without depending on the locale or
+      context, and return the result.
 
-      *options* is a bit set of the following values, usually 0:
+      *options* is a bit set of the following values and is usually 0:
       :attr:`U_OMIT_UNCHANGED_TEXT`,
       :attr:`U_EDITS_NO_RESET`,
       :attr:`U_FOLD_CASE_DEFAULT`, and
       :attr:`U_FOLD_CASE_EXCLUDE_SPECIAL_I`.
 
-      *src_length* is the length of *src*, or -1 if *src* is NUL-terminated.
+      *src* is a string to be case-folded.
+
+      *src_length* is the length of *src*; can be set to -1 for a
+      NUL-terminated string.
 
       If *edits* is specified, the length of the string edit is recorded in
       *edits*.
@@ -76,17 +79,19 @@ void init_casemap(py::module &m) {
       },
       py::arg("locale"), py::arg("options"), py::arg("src"),
       py::arg("src_length") = -1, py::arg("edits") = std::nullopt, R"doc(
-      Convert the substring *src[:src_length]* of *src* to lowercase and return
-      the result.
+      Convert the specified string to lowercase and return the result.
 
       *locale* is a locale ID. If *locale* is an empty string, the root locale
-      is used; if *locale* is not specified, the default locale is used.
+      is used; if *locale* is ``None``, the default locale is used.
 
-      *options* is a bit set of the following values, usually 0:
+      *options* is a bit set of the following values and is usually 0:
       :attr:`U_OMIT_UNCHANGED_TEXT` and
       :attr:`U_EDITS_NO_RESET`.
 
-      *src_length* is the length of *src*, or -1 if *src* is NUL-terminated.
+      *src* is a string to be converted to lowercase.
+
+      *src_length* is the length of *src*; can be set to -1 for a
+      NUL-terminated string.
 
       If *edits* is specified, the length of the string edit is recorded in
       *edits*.
@@ -116,13 +121,12 @@ void init_casemap(py::module &m) {
       },
       py::arg("locale"), py::arg("options"), py::arg("iter"), py::arg("src"),
       py::arg("src_length") = -1, py::arg("edits") = std::nullopt, R"doc(
-      Convert the substring *src[:src_length]* of *src* to titlecase and return
-      the result.
+      Convert the specified string to titlecase and return the result.
 
       *locale* is a locale ID. If *locale* is an empty string, the root locale
-      is used; if *locale* is not specified, the default locale is used.
+      is used; if *locale* is ``None``, the default locale is used.
 
-      *options* is a bit set of the following values, usually 0:
+      *options* is a bit set of the following values and is usually 0:
       :attr:`U_OMIT_UNCHANGED_TEXT`,
       :attr:`U_EDITS_NO_RESET`,
       :attr:`U_TITLECASE_NO_LOWERCASE`,
@@ -135,7 +139,10 @@ void init_casemap(py::module &m) {
       specified, a break iterator for word boundaries in the default locale is
       used.
 
-      *src_length* is the length of *src*, or -1 if *src* is NUL-terminated.
+      *src* is a string to be converted to titlecase.
+
+      *src_length* is the length of *src*; can be set to -1 for a
+      NUL-terminated string.
 
       If *edits* is specified, the length of the string edit is recorded in
       *edits*.
@@ -164,17 +171,19 @@ void init_casemap(py::module &m) {
       },
       py::arg("locale"), py::arg("options"), py::arg("src"),
       py::arg("src_length") = -1, py::arg("edits") = std::nullopt, R"doc(
-      Convert the substring *src[:src_length]* of *src* to uppercase and return
-      the result.
+      Convert the specified string to uppercase and return the result.
 
       *locale* is a locale ID. If *locale* is an empty string, the root locale
-      is used; if *locale* is not specified, the default locale is used.
+      is used; if *locale* is ``None``, the default locale is used.
 
-      *options* is a bit set of the following values, usually 0:
+      *options* is a bit set of the following values and is usually 0:
       :attr:`U_OMIT_UNCHANGED_TEXT` and
       :attr:`U_EDITS_NO_RESET`.
 
-      *src_length* is the length of *src*, or -1 if *src* is NUL-terminated.
+      *src* is a string to be converted to uppercase.
+
+      *src_length* is the length of *src*; can be set to -1 for a
+      NUL-terminated string.
 
       If *edits* is specified, the length of the string edit is recorded in
       *edits*.

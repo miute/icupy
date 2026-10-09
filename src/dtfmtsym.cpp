@@ -31,8 +31,10 @@ Selector for date formatting context.
       .value("STANDALONE", DateFormatSymbols::DtContextType::STANDALONE, "")
       .value("DT_CONTEXT_COUNT",
              DateFormatSymbols::DtContextType::DT_CONTEXT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`DtContextType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -54,8 +56,10 @@ Selector for date formatting width.
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
       .value("DT_WIDTH_COUNT", DateFormatSymbols::DtWidthType::DT_WIDTH_COUNT,
              R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`DtWidthType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

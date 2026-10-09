@@ -17,22 +17,20 @@ void init_schriter(py::module &m) {
       .. seealso::
 
          :class:`CharacterIterator`
-
-      .. rubric:: Attributes
-
-      .. autoattribute:: ForwardCharacterIterator.DONE
-
-         ``DONE`` indicates that the iteration over the source string has been
-         finished.
       )doc");
 
   //
   // enum icu::ForwardCharacterIterator::DONE
   //
   fci.def_property_readonly_static(
-      "DONE", [](const py::object & /* self */) -> int32_t {
+      "DONE",
+      [](const py::object & /* self */) -> int32_t {
         return ForwardCharacterIterator::DONE;
-      });
+      },
+      R"doc(
+      ``DONE`` indicates that the iteration over the source string has been
+      finished.
+      )doc");
 
   //
   // class icu::ForwardCharacterIterator

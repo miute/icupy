@@ -81,7 +81,7 @@ void init_stsearch(py::module &m) {
                  text: icu.UnicodeString,
                  flags: int = 0,
              ) -> None:
-                 icu.SearchIterator.__init__(self, text)
+                 super().__init__(text)
                  self._matcher = icu.RegexMatcher(regexp, text, flags)
                  self._offset = 0
              def _handle_next(self, position: int) -> int:
@@ -130,10 +130,10 @@ void init_stsearch(py::module &m) {
       )doc");
 
   si.def(py::init<const PySearchIterator &>(), py::arg("other"), R"doc(
-      Initialize a ``SearchIterator`` instance from another ``SearchIterator``.
+      Initialize a ``SearchIterator`` instance from a copy of *other*.
       )doc")
       .def(py::init<>(), R"doc(
-      Initialize a ``SearchIterator`` instance with default values.
+      Initialize a ``SearchIterator`` instance with the default values.
 
       .. important::
 
@@ -148,13 +148,23 @@ void init_stsearch(py::module &m) {
       Initialize a ``SearchIterator`` instance with the specified text and
       break iterator.
 
+      *text* is the target text to be searched.
+
+      *breakiter* is a :class:`BreakIterator` used to restrict the positions
+      where matches are detected. If :meth:`.handle_next` or
+      :meth:`.handle_prev` finds a match, but the start or end index of that
+      match does not match the boundaries specified by the
+      :class:`BreakIterator`, the match is rejected, and :meth:`.handle_next`
+      or :meth:`.handle_prev` is called again;
+      If *breakiter* is ``None``, no break detection is attempted.
+
       .. important::
 
          Only available in subclasses.
 
       .. important::
 
-         *breakiter* must outlive the search iterator object.
+         *breakiter* must outlive this search iterator object.
       )doc")
       .def(py::init([](CharacterIterator &text,
                        std::optional<BreakIterator *> &breakiter) {
@@ -165,13 +175,23 @@ void init_stsearch(py::module &m) {
       Initialize a ``SearchIterator`` instance with the specified text and
       break iterator.
 
+      *text* is the target text to be searched.
+
+      *breakiter* is a :class:`BreakIterator` used to restrict the positions
+      where matches are detected. If :meth:`.handle_next` or
+      :meth:`.handle_prev` finds a match, but the start or end index of that
+      match does not match the boundaries specified by the
+      :class:`BreakIterator`, the match is rejected, and :meth:`.handle_next`
+      or :meth:`.handle_prev` is called again;
+      If *breakiter* is ``None``, no break detection is attempted.
+
       .. important::
 
          Only available in subclasses.
 
       .. important::
 
-         *breakiter* must outlive the search iterator object.
+         *breakiter* must outlive this search iterator object.
       )doc");
 
   si.def(
@@ -222,7 +242,7 @@ void init_stsearch(py::module &m) {
         return std::make_tuple(index, index + length);
       },
       R"doc(
-      Return a tuple of the starting and ending indices of the next match.
+      Return a tuple with the start and end indices of the next match.
       )doc");
 
   si.def(
@@ -265,8 +285,8 @@ void init_stsearch(py::module &m) {
         return result;
       },
       R"doc(
-      Return the character index of the first match; :attr:`USEARCH_DONE`
-      otherwise.
+      Return the index of the first occurrence of the search pattern in the
+      text, or :attr:`USEARCH_DONE` if no match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -283,8 +303,9 @@ void init_stsearch(py::module &m) {
         return result;
       },
       py::arg("position"), R"doc(
-      Return the character index of the first match following *position*;
-      :attr:`USEARCH_DONE` otherwise.
+      Return the index of the first occurrence of the search pattern starting
+      from the specified position in the text, or :attr:`USEARCH_DONE` if no
+      match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -314,7 +335,7 @@ void init_stsearch(py::module &m) {
       )doc");
 
   si.def("get_matched_length", &SearchIterator::getMatchedLength, R"doc(
-      Return the length of the matched text.
+      Return the length of the matched string.
 
       .. note::
 
@@ -333,7 +354,7 @@ void init_stsearch(py::module &m) {
       )doc");
 
   si.def("get_matched_start", &SearchIterator::getMatchedStart, R"doc(
-      Return the starting index of the matched text.
+      Return the start index of the matched string.
 
       .. note::
 
@@ -353,7 +374,9 @@ void init_stsearch(py::module &m) {
 
   si.def("get_matched_text", &SearchIterator::getMatchedText, py::arg("result"),
          R"doc(
-      Copy the matched text into *result*.
+      Copy the matched string into *result*.
+
+      *result* is a string object to receive the matched string.
 
       .. note::
 
@@ -395,7 +418,7 @@ void init_stsearch(py::module &m) {
         return self.getText();
       },
       R"doc(
-      Return the text being searched.
+      Return the text to be searched.
 
       .. seealso::
 
@@ -413,6 +436,9 @@ void init_stsearch(py::module &m) {
       py::arg("position"),
       R"doc(
       Framework method that performs the actual forward search in subclasses.
+
+      *position* is the index within the target text where the search should
+      start.
 
       If a match is found, the implementation must return an index indicating
       the start of the match, call :meth:`._set_match_start` with that index as
@@ -447,6 +473,9 @@ void init_stsearch(py::module &m) {
       R"doc(
       Framework method that performs the actual backward search in subclasses.
 
+      *position* is the index within the target text where the search should
+      start.
+
       If a match is found, the implementation must return an index indicating
       the start of the match, call :meth:`._set_match_start` with that index as
       an argument, and call :meth:`._set_match_length` with the number of
@@ -479,8 +508,8 @@ void init_stsearch(py::module &m) {
         return result;
       },
       R"doc(
-      Return the character index of the last match; :attr:`USEARCH_DONE`
-      otherwise.
+      Return the index of the last occurrence of the search pattern in the
+      text, or :attr:`USEARCH_DONE` if no match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -497,8 +526,9 @@ void init_stsearch(py::module &m) {
         return result;
       },
       R"doc(
-      Return the character index of the next match; :attr:`USEARCH_DONE`
-      otherwise.
+      Return the index of the first occurrence of the search pattern starting
+      from the current position in the text, or :attr:`USEARCH_DONE` if no
+      match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -515,8 +545,9 @@ void init_stsearch(py::module &m) {
         return result;
       },
       py::arg("position"), R"doc(
-      Return the character index of the first match preceding *position*;
-      :attr:`USEARCH_DONE` otherwise.
+      Return the index of the first occurrence of the search pattern backward
+      from the specified position in the text, or :attr:`USEARCH_DONE` if no
+      match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -533,8 +564,9 @@ void init_stsearch(py::module &m) {
         return result;
       },
       R"doc(
-      Return the character index of the previous match; :attr:`USEARCH_DONE`
-      otherwise.
+      Return the index of the first occurrence of the search pattern in the
+      text backward from the current position, or :attr:`USEARCH_DONE` if no
+      match is found.
 
       If a match is found, the iterator is adjusted so that the current index
       points to the position of the match.
@@ -578,11 +610,11 @@ void init_stsearch(py::module &m) {
       detected. If a match is found but its start or end index does not fall
       within the boundaries defined by ``BreakIterator``, that match is
       rejected and the search continues for another match. If *breakiter* is
-      `None`, no breaks are detected.
+      ``None``, no breaks are detected.
 
       .. important::
 
-         *breakiter* must outlive the search iterator object.
+         *breakiter* must outlive this search iterator object.
 
       .. seealso::
 
@@ -591,34 +623,35 @@ void init_stsearch(py::module &m) {
 
   si.def("_set_match_length", &PySearchIterator::setMatchLength,
          py::arg("length"), R"doc(
-      Set the length of the matched text.
+      Set the length of the currently matched string to be searched.
 
       .. important::
 
-         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-         must call :meth:`._set_match_length` whenever a match is found within
-         the target text.
+         :meth:`._handle_next` and :meth:`._handle_prev` of subclasses must
+         call :meth:`._set_match_length` whenever a match is found in the text
+         to be searched.
       )doc");
 
   si.def("_set_match_not_found", &PySearchIterator::setMatchNotFound, R"doc(
-      Set the state of the search iterator to indicate that no match was found.
+      Set the state of the search iterator to indicate that matched string was
+      not found.
 
       .. important::
 
-         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-         must call :meth:`._set_match_not_found` if a match is not found
-         within the target text.
+         :meth:`._handle_next` and :meth:`._handle_prev` of subclasses must
+         call :meth:`._set_match_not_found` if a match is not found in the text
+         to be searched.
       )doc");
 
   si.def("_set_match_start", &PySearchIterator::setMatchStart,
          py::arg("position"), R"doc(
-      Set the starting index of the matched text.
+      Set the start index of the currently matched string to be searched.
 
       .. important::
 
-         :meth:`._handle_next` and :meth:`._handle_prev` of the subclasses
-         must call :meth:`._set_match_start` whenever a match is found within
-         the target text.
+         :meth:`._handle_next` and :meth:`._handle_prev` of subclasses must
+         call :meth:`._set_match_start` whenever a match is found in the text
+         to be searched.
       )doc");
 
   // for docstring only
@@ -630,7 +663,8 @@ void init_stsearch(py::module &m) {
         self.setOffset(position, error_code);
       },
       py::arg("position"), R"doc(
-      Set the current index in the text being searched to *position*.
+      Set the current index in the searched text to the specified index, and
+      clear any affected states.
 
       .. important::
 
@@ -728,6 +762,10 @@ void init_stsearch(py::module &m) {
       Initialize a ``StringSearch`` instance with the specified pattern, text,
       locale, and break iterator.
 
+      *pattern* is the string that this instance will search for.
+
+      *text* is the target text to be searched.
+
       *locale* defines language-sensitive comparison rules used to determine
       whether the pattern and the target text match.
 
@@ -738,7 +776,7 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-         *breakiter* must outlive the ``StringSearch`` object.
+         *breakiter* must outlive this search iterator object.
       )doc")
       .def(
           // [2] StringSearch::StringSearch
@@ -760,6 +798,10 @@ void init_stsearch(py::module &m) {
       Initialize a ``StringSearch`` instance with the specified pattern, text,
       collator, and break iterator.
 
+      *pattern* is the string that this instance will search for.
+
+      *text* is the target text to be searched.
+
       *coll* defines the collation rules used to determine whether the pattern
       and the target text match.
 
@@ -770,7 +812,7 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-         *coll* and *breakiter* must outlive the ``StringSearch`` object.
+         *coll* and *breakiter* must outlive this search iterator object.
       )doc")
       .def(
           // [3] StringSearch::StringSearch
@@ -792,6 +834,10 @@ void init_stsearch(py::module &m) {
       Initialize a ``StringSearch`` instance with the specified pattern, text,
       locale, and break iterator.
 
+      *pattern* is the string that this instance will search for.
+
+      *text* is the target text to be searched.
+
       *locale* defines language-sensitive comparison rules used to determine
       whether the pattern and the target text match.
 
@@ -802,7 +848,7 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-         *breakiter* must outlive the ``StringSearch`` object.
+         *breakiter* must outlive this search iterator object.
       )doc")
       .def(
           // [4] StringSearch::StringSearch
@@ -823,6 +869,10 @@ void init_stsearch(py::module &m) {
       Initialize a ``StringSearch`` instance with the specified pattern, text,
       collator, and break iterator.
 
+      *pattern* is the string that this instance will search for.
+
+      *text* is the target text to be searched.
+
       *coll* defines the collation rules used to determine whether the pattern
       and the target text match.
 
@@ -833,16 +883,16 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-         *coll* and *breakiter* must outlive the ``StringSearch`` object.
+         *coll* and *breakiter* must outlive this search iterator object.
       )doc")
       .def(
           // [5] StringSearch::StringSearch
           py::init<const StringSearch &>(), py::arg("other"), R"doc(
-      Initialize a ``StringSearch`` instance from another ``StringSearch``.
+      Initialize a ``StringSearch`` instance from a copy of *other*.
       )doc");
 
   ss.def("__copy__", &StringSearch::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this search iterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -853,13 +903,13 @@ void init_stsearch(py::module &m) {
         return self.clone();
       },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this search iterator.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
 
   ss.def("clone", &StringSearch::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this search iterator.
 
       .. seealso::
 
@@ -892,10 +942,12 @@ void init_stsearch(py::module &m) {
       )doc");
 
   ss.def("safe_clone", &StringSearch::safeClone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this search iterator.
 
-      Note that all data will be replicated, except for the user-specified
-      collator and the break iterator.
+      .. note::
+
+         All data will be replicated, except for the user-specified collator
+         and the break iterator.
       )doc");
 
   ss.def(
@@ -914,7 +966,7 @@ void init_stsearch(py::module &m) {
 
       .. important::
 
-         *coll* must outlive the ``StringSearch`` object.
+         *coll* must outlive this search iterator object.
 
       .. seealso::
 
@@ -931,7 +983,8 @@ void init_stsearch(py::module &m) {
         }
       },
       py::arg("position"), R"doc(
-      Set the current index in the text being searched to *position*.
+      Set the current index in the searched text to the specified index, and
+      clear any affected states.
 
       .. seealso::
 
@@ -955,5 +1008,6 @@ void init_stsearch(py::module &m) {
 
   // TODO: Remove SearchIterator.DONE in the future releases.
   si.def_property_readonly_static(
-      "DONE", [](const py::object &) -> int32_t { return USEARCH_DONE; });
+      "DONE",
+      [](const py::object & /* self */) -> int32_t { return USEARCH_DONE; });
 }

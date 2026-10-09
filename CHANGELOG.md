@@ -10,6 +10,7 @@
 - Replace anonymous enum members within a class with class attributes ([#243])
 - Change the base class of the enums from `pybind11_object` to `enum.IntEnum` ([#245])
 - Change the default value of the `locale` parameter in the factory methods of `icupy.icu.DateFormat` and in `icupy.icu.RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
+- Update docstring ([#259])
 
 ### Added
 
@@ -421,3 +422,4 @@ Initial release.
 [#249]: https://github.com/miute/icupy/pull/249
 [#250]: https://github.com/miute/icupy/pull/250
 [#258]: https://github.com/miute/icupy/pull/258
+[#259]: https://github.com/miute/icupy/pull/259

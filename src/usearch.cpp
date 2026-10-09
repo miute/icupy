@@ -14,7 +14,19 @@ Enum constants for the text searching attributes.
              Option for overlapping matches.
              )doc")
       .value("USEARCH_CANONICAL_MATCH", USEARCH_CANONICAL_MATCH, R"doc(
-             Deprecated: ICU 53
+             Option for canonical matches; option 1 in header documentation.
+
+             The default value will be
+             :attr:`~USearchAttributeValue.USEARCH_OFF`. Note: Setting this
+             option to :attr:`~USearchAttributeValue.USEARCH_ON` currently has
+             no effect on search behavior, and this option is deprecated.
+             Instead, to control canonical match behavior, you must set
+             :attr:`~UColAttribute.UCOL_NORMALIZATION_MODE` appropriately (to
+             :attr:`~UColAttributeValue.UCOL_OFF` or
+             :attr:`~UColAttributeValue.UCOL_ON`) in the :class:`Collator`
+             used by the :class:`StringSearch` object.
+
+             .. version-deprecated:: ICU53
              )doc")
       .value("USEARCH_ELEMENT_COMPARISON", USEARCH_ELEMENT_COMPARISON, R"doc(
              Option to control how collation elements are compared.
@@ -23,8 +35,10 @@ Enum constants for the text searching attributes.
              :attr:`~USearchAttributeValue.USEARCH_STANDARD_ELEMENT_COMPARISON`.
              )doc")
       .value("USEARCH_ATTRIBUTE_COUNT", USEARCH_ATTRIBUTE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`USearchAttribute` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -93,8 +107,11 @@ Enum constants for the text searching attribute values.
              )doc")
       .value("USEARCH_ATTRIBUTE_VALUE_COUNT", USEARCH_ATTRIBUTE_VALUE_COUNT,
              R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`USearchAttributeValue`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

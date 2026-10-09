@@ -132,11 +132,11 @@ script subtag is most important.
   // class icu::LocaleMatcher::Builder
   //
   py::class_<Builder, UMemory> lmb(lm, "Builder", R"doc(
-      LocaleMatcher builder.
+      :class:`LocaleMatcher` builder.
 
       .. seealso::
 
-         :meth:`LocaleMatcher`
+         :class:`LocaleMatcher`
       )doc");
 
   //
@@ -166,8 +166,10 @@ script subtag is most important.
           return result;
         },
         py::return_value_policy::reference, py::arg("desired_locale"), R"doc(
-      Return the best matching locale from the supported locales for the
-      specified desired locale.
+      Return the best matching locale from this matcher's supported locales for
+      the specified desired locale.
+
+      *desired_locale* is the desired locale, typically the user's language.
       )doc")
       .def(
           "get_best_match",
@@ -184,8 +186,11 @@ script subtag is most important.
             return result;
           },
           py::return_value_policy::reference, py::arg("desired_locales"), R"doc(
-      Return the best matching locale from the supported locales for the
-      specified list of desired locales.
+      Return the best matching locale from this matcher's supported locales for
+      the specified list of desired locales.
+
+      *desired_locales* is a list of desired locales, typically in descending
+      order of the user's language preferences.
       )doc");
 
   lm.def(
@@ -200,8 +205,8 @@ script subtag is most important.
         return result;
       },
       py::return_value_policy::reference, py::arg("desired_locale_list"), R"doc(
-      Return the best matching locale from the supported locales for the
-      specified Accept-Language string.
+      Parse the Accept-Language string as desired locales and return the best
+      matching locale from these locales and this matcher's supported locales.
 
       *desired_locale_list* is an Accept-Language string, such as
       "af, en, fr;q=0.9". For more information, see
@@ -232,8 +237,10 @@ script subtag is most important.
           return result;
         },
         py::arg("desired_locale"), R"doc(
-      Return the best matching pair from the desired locale and the supported
-      locales for the specified desired locale.
+      Return the best matching pair from the desired locale and this matcher's
+      supported locales.
+
+      *desired_locale* is the desired locale, typically the user's language.
 
       .. important::
 
@@ -255,8 +262,11 @@ script subtag is most important.
             return result;
           },
           py::arg("desired_locales"), R"doc(
-      Return the best matching pair from the desired locales and the supported
-      locales for the specified list of desired locales.
+      Return the best matching pair from the desired locales and this matcher's
+      supported locales.
+
+      *desired_locales* is a list of desired locales, typically in descending
+      order of the user's language preferences.
 
       .. important::
 
@@ -278,8 +288,16 @@ script subtag is most important.
         return result;
       },
       py::arg("desired"), py::arg("supported"), R"doc(
-      Return ``True`` if the desired locale matches the supported locale, or
+      Return ``True`` if the desired locale matches the supported locale,
       ``False`` otherwise.
+
+      *desired* is the desired locale.
+
+      *supported* is the supported locale.
+
+      This method is influenced by :class:`Builder` options such as
+      :meth:`.Builder.set_direction`, :meth:`.Builder.set_favor_subtag`, and
+      :meth:`.Builder.set_max_distance`.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
@@ -296,7 +314,9 @@ script subtag is most important.
         return self.addSupportedLocale(icupy::to_locale(locale));
       },
       py::arg("locale"), R"doc(
-      Add a supported locale and return the builder itself.
+      Add the supported locale to this builder and return the builder itself.
+
+      *locale* is the supported locale.
       )doc");
 
   lmb.def(
@@ -320,9 +340,12 @@ script subtag is most important.
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
-      Copy the internal :class:`UErrorCode` to *out_error_code* and return
-      ``True`` if :class:`UErrorCode` indicates a failure, or ``False``
+      Copy the internal :class:`UErrorCode` to *out_error_code*; return
+      ``True`` if :class:`UErrorCode` indicates a failure, ``False``
       otherwise.
+
+      If *out_error_code* already contains an error, its value will not be
+      changed.
       )doc");
 
   lmb.def(
@@ -337,7 +360,7 @@ script subtag is most important.
         return self.setDefaultLocale(default_locale ? &locale : nullptr);
       },
       py::arg("default_locale"), R"doc(
-      Set the default locale and return the builder itself.
+      Set the default locale for this builder and return the builder itself.
 
       If *default_locale* is ``None``, the first supported locale is used as
       the default locale.
@@ -345,18 +368,26 @@ script subtag is most important.
 
   lmb.def("set_demotion_per_desired_locale",
           &Builder::setDemotionPerDesiredLocale, py::arg("demotion"), R"doc(
-      Set the demotion for each desired locale and return the builder itself.
+      Set the demotion for each desired locale for this builder and return the
+      builder itself.
+
+      The default is REGION.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 67)
   lmb.def("set_direction", &Builder::setDirection, py::arg("direction"), R"doc(
-      Set the direction and return the builder itself.
+      Set the matching direction for this builder and return the builder
+      itself.
+
+      The default is WITH_ONE_WAY.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   lmb.def("set_favor_subtag", &Builder::setFavorSubtag, py::arg("subtag"),
           R"doc(
-      Set the favor subtag and return the builder itself.
+      Set the favor subtag for this builder and return the builder itself.
+
+      The default is LANGUAGE.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 68)
@@ -368,18 +399,29 @@ script subtag is most important.
                                    icupy::to_locale(supported));
       },
       py::arg("desired"), py::arg("supported"), R"doc(
-      Set the maximum acceptable matching distance for desired and supported
-      locales, and returns the builder itself.
+      Set the maximum acceptable matching distance for this builder and return
+      the builder itself.
+
+      *desired* is the desired locale for which to be matched.
+
+      *supported* is the supported locale for which to be matched.
 
       The matcher will return a match for a pair of locales only if they match
       at least as well as the pair given here.
-      For example, ``setMaxDistance(en-US, en-GB)`` limits matches to ones
+      For example, ``set_max_distance(en-US, en-GB)`` limits matches to ones
       where the (desired, support) locales have a distance no greater than a
-      region subtag difference.
+      region subtag difference. This is much stricter than the CLDR default.
+
+      The details of locale matching are subject to changes in CLDR data and in
+      the algorithm. Specifying a maximum distance in relative terms via a
+      sample pair of locales insulates from changes that affect all distance
+      metrics similarly, but some changes will necessarily affect relative
+      distances between different pairs of locales.
       )doc");
 
   lmb.def("set_no_default_locale", &Builder::setNoDefaultLocale, R"doc(
-      Set the no default locale flag and return the builder itself.
+      Set the no default locale flag for this builder and return the builder
+      itself.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 68)
 
@@ -392,7 +434,7 @@ script subtag is most important.
         return self.setSupportedLocales(iter);
       },
       py::arg("locales"), R"doc(
-      Set the supported locales and return the builder itself.
+      Set the supported locales for this builder and return the builder itself.
 
       All previously set or added supported locales will be removed.
       )doc");
@@ -403,8 +445,8 @@ script subtag is most important.
         return self.setSupportedLocalesFromListString(locales);
       },
       py::arg("locales"), R"doc(
-      Set the supported locales using the Accept-Language string and return the
-      builder itself.
+      Parse the Accept-Language string, set the result as the supported locales
+      for this builder, and return the builder itself.
 
       *locales* is an Accept-Language string such as "af, en, fr;q=0.9",
       but does not allow "*". For more information, see
@@ -432,7 +474,8 @@ script subtag is most important.
   // class icu::LocaleMatcher::Result
   //
   lmr.def("get_desired_index", &Result::getDesiredIndex, R"doc(
-      Return the index of the best matching desired locales, or -1 otherwise.
+      Return the index of the best-matching desired locale, or -1 if the list
+      of desired locales is empty or if no matches were found.
 
       .. seealso::
 
@@ -445,12 +488,13 @@ script subtag is most important.
         return self.getDesiredLocale();
       },
       py::return_value_policy::reference, R"doc(
-      Return the best matching desired locale, or ``None`` if no match is
-      found.
+      Return the best-matching desired locale, or ``None`` if the list of
+      desired locales is empty or if no matches were found.
       )doc");
 
   lmr.def("get_supported_index", &Result::getSupportedIndex, R"doc(
-      Return the index of the best matching supported locales, or -1 otherwise.
+      Return the index of the best-matching supported locale, or -1 if the list
+      of supported locales is empty or if no matches were found.
 
       .. seealso::
 
@@ -463,8 +507,8 @@ script subtag is most important.
         return self.getSupportedLocale();
       },
       py::return_value_policy::reference, R"doc(
-      Return the best matching supported locale, or ``None`` if no match is
-      found.
+      Return the best-matching supported locale, or ``None`` if the list of
+      supported locales is empty or if no matches were found.
       )doc");
 
   lmr.def(

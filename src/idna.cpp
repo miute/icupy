@@ -13,7 +13,7 @@ void init_idna(py::module &m) {
       )doc");
 
   info.def(py::init<>(), R"doc(
-      Initialize the ``IDNAInfo`` instance.
+      Initialize an ``IDNAInfo`` instance.
       )doc");
 
   info.def("get_errors", &IDNAInfo::getErrors, R"doc(
@@ -29,7 +29,8 @@ void init_idna(py::module &m) {
   info.def(
       "has_errors",
       [](const IDNAInfo &self) -> py::bool_ { return self.hasErrors(); }, R"doc(
-      Return ``True`` if any :class:`IDNA` processing errors are present.
+      Return ``True`` if there were errors while :class:`IDNA` processing,
+      ``False`` otherwise.
       )doc");
 
   info.def(
@@ -38,17 +39,16 @@ void init_idna(py::module &m) {
         return self.isTransitionalDifferent();
       },
       R"doc(
-      Return ``True`` if the result of processing with nontransitional
-      processing would be different from the result of processing with
-      transitional processing.
+      Return ``True`` if the results of transitional and nontansitional
+      processing differ, ``False`` otherwise.
 
       This is the case when the input label or domain name contains one or more
       deviation characters outside a Punycode label (see UTS #46).
 
       - With nontransitional processing, such characters are copied to the
         destination string.
-      - With transitional processing, such characters are mapped (sharp
-        s/sigma) or removed (joiner/nonjoiner).
+      - With transitional processing, such characters are mapped
+        (sharp s/sigma) or removed (joiner/nonjoiner).
       )doc");
 
   //
@@ -96,10 +96,15 @@ void init_idna(py::module &m) {
       py::arg("options"), R"doc(
       Create a new ``IDNA`` instance which implements UTS #46.
 
-      *options* is a bit set to modify the processing and error checking.
-      It should include
+      *options* is a bit set to modify processing and error checking. It must
+      include either :attr:`~UIDNAOption.UIDNA_DEFAULT` or
       :attr:`~UIDNAOption.UIDNA_NONTRANSITIONAL_TO_ASCII` |
       :attr:`~UIDNAOption.UIDNA_NONTRANSITIONAL_TO_UNICODE`.
+
+      By default, the UTS #46 implementation allows all ASCII characters
+      (as valid or mapped). When the :attr:`~UIDNAOption.UIDNA_USE_STD3_RULES`
+      option is used, ASCII characters other than letters, digits, hyphens
+      (LDH), and dot/full stop are disallowed and mapped to U+FFFD.
 
       .. seealso::
 
@@ -119,13 +124,19 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("label"), py::arg("dest"), py::arg("info"), R"doc(
-      Convert a single domain name label into its ASCII form for DNS lookup,
-      copy the result to *dest*, and return *dest* itself.
+      Convert a single domain name label into its ASCII form for DNS lookup and
+      set the result to *dest*; return *dest* itself.
 
-      If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
-      ``True`` and the result might not be an ASCII string. The label might be
-      modified according to the types of errors. Labels with severe errors will
-      be left in (or turned into) their Unicode form.
+      *label* is the domain name label to convert.
+
+      *dest* is a string object to receive the result of the conversion.
+
+      *info* is a container to output details of IDNA processing.
+
+      If any processing step fails, then ``info.has_errors()`` will be ``True``
+      and the result might not be an ASCII string. The label might be modified
+      according to the types of errors. Labels with severe errors will be left
+      in (or turned into) their Unicode form.
       )doc");
 
   idna.def(
@@ -141,7 +152,12 @@ void init_idna(py::module &m) {
         return py::bytes(dest);
       },
       py::arg("label"), py::arg("info"), R"doc(
-      Convert a single domain name label into its ASCII form for DNS lookup.
+      Convert a single domain name label into its ASCII form for DNS lookup and
+      return the result.
+
+      *label* is the domain name label in UTF-8 format to convert.
+
+      *info* is a container to output details of IDNA processing.
 
       ``bytes`` version of :meth:`.label_to_ascii`, same behavior.
       )doc");
@@ -160,10 +176,16 @@ void init_idna(py::module &m) {
       },
       py::arg("label"), py::arg("dest"), py::arg("info"), R"doc(
       Convert a single domain name label into its Unicode form for
-      human-readable display, copy the result to *dest*, and return *dest*
+      human-readable display and set the result to *dest*; return *dest*
       itself.
 
-      If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
+      *label* is the domain name label to convert.
+
+      *dest* is a string object to receive the result of the conversion.
+
+      *info* is a container to output details of IDNA processing.
+
+      If any processing step fails, then ``info.has_errors()`` will be
       ``True``. The label might be modified according to the types of errors.
       )doc");
 
@@ -181,7 +203,11 @@ void init_idna(py::module &m) {
       },
       py::arg("label"), py::arg("info"), R"doc(
       Convert a single domain name label into its Unicode form for
-      human-readable display.
+      human-readable display and return the result.
+
+      *label* is the domain name label in UTF-8 format to convert.
+
+      *info* is a container to output details of IDNA processing.
 
       ``bytes`` version of :meth:`.label_to_unicode`, same behavior.
       )doc");
@@ -199,13 +225,19 @@ void init_idna(py::module &m) {
         return result;
       },
       py::arg("name"), py::arg("dest"), py::arg("info"), R"doc(
-      Convert a whole domain name into its ASCII form for DNS lookup,
-      copy the result to *dest*, and return *dest* itself.
+      Convert a whole domain name into its ASCII form for DNS lookup and
+      set the result to *dest*; return *dest* itself.
 
-      If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
-      ``True`` and the result might not be an ASCII string. The domain name
-      might be modified according to the types of errors. Labels with severe
-      errors will be left in (or turned into) their Unicode form.
+      *name* is the domain name to convert.
+
+      *dest* is a string object to receive the result of the conversion.
+
+      *info* is a container to output details of IDNA processing.
+
+      If any processing step fails, then ``info.has_errors()`` will be ``True``
+      and the result might not be an ASCII string. The domain name might be
+      modified according to the types of errors. Labels with severe errors will
+      be left in (or turned into) their Unicode form.
       )doc");
 
   idna.def(
@@ -221,7 +253,12 @@ void init_idna(py::module &m) {
         return py::bytes(dest);
       },
       py::arg("name"), py::arg("info"), R"doc(
-      Convert a whole domain name into its ASCII form for DNS lookup.
+      Convert a whole domain name into its ASCII form for DNS lookup and
+      return the result.
+
+      *name* is the domain name in UTF-8 format to convert.
+
+      *info* is a container to output details of IDNA processing.
 
       ``bytes`` version of :meth:`.name_to_ascii`, same behavior.
       )doc");
@@ -240,9 +277,15 @@ void init_idna(py::module &m) {
       },
       py::arg("name"), py::arg("dest"), py::arg("info"), R"doc(
       Convert a whole domain name into its Unicode form for human-readable
-      display, copy the result to *dest*, and return *dest* itself.
+      display and set the result to *dest*; return *dest* itself.
 
-      If any processing step fails, then :meth:`IDNAInfo.has_errors` will be
+      *name* is the domain name to convert.
+
+      *dest* is a string object to receive the result of the conversion.
+
+      *info* is a container to output details of IDNA processing.
+
+      If any processing step fails, then ``info.has_errors()`` will be
       ``True``. The domain name might be modified according to the types of
       errors.
       )doc");
@@ -261,111 +304,134 @@ void init_idna(py::module &m) {
       },
       py::arg("name"), py::arg("info"), R"doc(
       Convert a whole domain name into its Unicode form for human-readable
-      display.
+      display and return the result.
+
+      *name* is the domain name in UTF-8 format to convert.
+
+      *info* is a container to output details of IDNA processing.
 
       ``bytes`` version of :meth:`.name_to_unicode`, same behavior.
       )doc");
 
   idna.def_property_readonly_static(
-      "DEFAULT", [](const py::object &) -> int32_t { return UIDNA_DEFAULT; });
+      "DEFAULT",
+      [](const py::object & /* self */) -> int32_t { return UIDNA_DEFAULT; });
 
   idna.def_property_readonly_static(
-      "ALLOW_UNASSIGNED",
-      [](const py::object &) -> int32_t { return UIDNA_ALLOW_UNASSIGNED; });
+      "ALLOW_UNASSIGNED", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ALLOW_UNASSIGNED;
+      });
 
   idna.def_property_readonly_static(
-      "USE_STD3_RULES",
-      [](const py::object &) -> int32_t { return UIDNA_USE_STD3_RULES; });
+      "USE_STD3_RULES", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_USE_STD3_RULES;
+      });
 
   idna.def_property_readonly_static(
-      "CHECK_BIDI",
-      [](const py::object &) -> int32_t { return UIDNA_CHECK_BIDI; });
+      "CHECK_BIDI", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_CHECK_BIDI;
+      });
 
   idna.def_property_readonly_static(
-      "CHECK_CONTEXTJ",
-      [](const py::object &) -> int32_t { return UIDNA_CHECK_CONTEXTJ; });
+      "CHECK_CONTEXTJ", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_CHECK_CONTEXTJ;
+      });
 
-  idna.def_property_readonly_static("NONTRANSITIONAL_TO_ASCII",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_NONTRANSITIONAL_TO_ASCII;
-                                    });
+  idna.def_property_readonly_static(
+      "NONTRANSITIONAL_TO_ASCII", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_NONTRANSITIONAL_TO_ASCII;
+      });
 
-  idna.def_property_readonly_static("NONTRANSITIONAL_TO_UNICODE",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_NONTRANSITIONAL_TO_UNICODE;
-                                    });
+  idna.def_property_readonly_static(
+      "NONTRANSITIONAL_TO_UNICODE",
+      [](const py::object & /* self */) -> int32_t {
+        return UIDNA_NONTRANSITIONAL_TO_UNICODE;
+      });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   idna.def_property_readonly_static(
-      "CHECK_CONTEXTO",
-      [](const py::object &) -> int32_t { return UIDNA_CHECK_CONTEXTO; });
+      "CHECK_CONTEXTO", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_CHECK_CONTEXTO;
+      });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
   idna.def_property_readonly_static(
-      "ERROR_EMPTY_LABEL",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_EMPTY_LABEL; });
+      "ERROR_EMPTY_LABEL", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_EMPTY_LABEL;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_LABEL_TOO_LONG",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_LABEL_TOO_LONG; });
-
-  idna.def_property_readonly_static("ERROR_DOMAIN_NAME_TOO_LONG",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
-                                    });
+      "ERROR_LABEL_TOO_LONG", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_LABEL_TOO_LONG;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_LEADING_HYPHEN",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_LEADING_HYPHEN; });
-
-  idna.def_property_readonly_static("ERROR_TRAILING_HYPHEN",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_TRAILING_HYPHEN;
-                                    });
+      "ERROR_DOMAIN_NAME_TOO_LONG",
+      [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_HYPHEN_3_4",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_HYPHEN_3_4; });
-
-  idna.def_property_readonly_static("ERROR_LEADING_COMBINING_MARK",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_LEADING_COMBINING_MARK;
-                                    });
+      "ERROR_LEADING_HYPHEN", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_LEADING_HYPHEN;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_DISALLOWED",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_DISALLOWED; });
+      "ERROR_TRAILING_HYPHEN", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_TRAILING_HYPHEN;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_PUNYCODE",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_PUNYCODE; });
+      "ERROR_HYPHEN_3_4", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_HYPHEN_3_4;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_LABEL_HAS_DOT",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_LABEL_HAS_DOT; });
-
-  idna.def_property_readonly_static("ERROR_INVALID_ACE_LABEL",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_INVALID_ACE_LABEL;
-                                    });
+      "ERROR_LEADING_COMBINING_MARK",
+      [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_LEADING_COMBINING_MARK;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_BIDI",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_BIDI; });
+      "ERROR_DISALLOWED", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_DISALLOWED;
+      });
 
   idna.def_property_readonly_static(
-      "ERROR_CONTEXTJ",
-      [](const py::object &) -> int32_t { return UIDNA_ERROR_CONTEXTJ; });
+      "ERROR_PUNYCODE", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_PUNYCODE;
+      });
 
-  idna.def_property_readonly_static("ERROR_CONTEXTO_PUNCTUATION",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_CONTEXTO_PUNCTUATION;
-                                    });
+  idna.def_property_readonly_static(
+      "ERROR_LABEL_HAS_DOT", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_LABEL_HAS_DOT;
+      });
+
+  idna.def_property_readonly_static(
+      "ERROR_INVALID_ACE_LABEL", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_INVALID_ACE_LABEL;
+      });
+
+  idna.def_property_readonly_static(
+      "ERROR_BIDI", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_BIDI;
+      });
+
+  idna.def_property_readonly_static(
+      "ERROR_CONTEXTJ", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_CONTEXTJ;
+      });
+
+  idna.def_property_readonly_static(
+      "ERROR_CONTEXTO_PUNCTUATION",
+      [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_CONTEXTO_PUNCTUATION;
+      });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
-  idna.def_property_readonly_static("ERROR_CONTEXTO_DIGITS",
-                                    [](const py::object &) -> int32_t {
-                                      return UIDNA_ERROR_CONTEXTO_DIGITS;
-                                    });
+  idna.def_property_readonly_static(
+      "ERROR_CONTEXTO_DIGITS", [](const py::object & /* self */) -> int32_t {
+        return UIDNA_ERROR_CONTEXTO_DIGITS;
+      });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 }

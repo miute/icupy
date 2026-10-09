@@ -36,8 +36,11 @@ Bidi Paired Bracket Type constants.
              Close paired bracket.
              )doc")
       .value("U_BPT_COUNT", U_BPT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UBidiPairedBracketType`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -527,8 +530,14 @@ Constants for Unicode blocks, see the Unicode Data file Blocks.txt.
       .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("UBLOCK_COUNT", UBLOCK_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UBlockCode` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_BLOCK`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UBLOCK_INVALID_CODE", UBLOCK_INVALID_CODE, "")
       .export_values()
@@ -728,8 +737,14 @@ Language directional property of a character set.
              PDI.
              )doc")
       .value("U_CHAR_DIRECTION_COUNT", U_CHAR_DIRECTION_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest :class:`UCharDirection` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_BIDI_CLASS`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -749,7 +764,12 @@ or an "extended" name that gives each Unicode code point a unique name.
              Unicode character name (Name property).
              )doc")
       .value("U_UNICODE_10_CHAR_NAME", U_UNICODE_10_CHAR_NAME, R"doc(
-             Deprecated: ICU 49
+             The Unicode_1_Name property value which is of little practical
+             value.
+
+             .. version-deprecated:: ICU49
+                Beginning with ICU 49, ICU APIs return an empty string for this
+                name choice.
              )doc")
       .value("U_EXTENDED_CHAR_NAME", U_EXTENDED_CHAR_NAME, R"doc(
              Standard or synthetic character name.
@@ -758,8 +778,10 @@ or an "extended" name that gives each Unicode code point a unique name.
              Corrected name from NameAliases.txt.
              )doc")
       .value("U_CHAR_NAME_CHOICE_COUNT", U_CHAR_NAME_CHOICE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UCharNameChoice` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -794,8 +816,15 @@ Decomposition Type constants.
       .value("U_DT_VERTICAL", U_DT_VERTICAL, "")
       .value("U_DT_WIDE", U_DT_WIDE, "")
       .value("U_DT_COUNT", U_DT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UDecompositionType`
+             value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_DECOMPOSITION_TYPE`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -817,8 +846,14 @@ East Asian Width constants.
       .value("U_EA_NARROW", U_EA_NARROW, "")
       .value("U_EA_WIDE", U_EA_WIDE, "")
       .value("U_EA_COUNT", U_EA_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UEastAsianWidth` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_EAST_ASIAN_WIDTH`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -857,8 +892,15 @@ Grapheme Cluster Break constants.
       .value("U_GCB_ZWJ", U_GCB_ZWJ, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 58)
       .value("U_GCB_COUNT", U_GCB_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UGraphemeClusterBreak`
+             value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_GRAPHEME_CLUSTER_BREAK`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -881,8 +923,15 @@ Hangul Syllable Type constants.
       .value("U_HST_LV_SYLLABLE", U_HST_LV_SYLLABLE, "")
       .value("U_HST_LVT_SYLLABLE", U_HST_LVT_SYLLABLE, "")
       .value("U_HST_COUNT", U_HST_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UHangulSyllableType`
+             value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_HANGUL_SYLLABLE_TYPE`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -1182,8 +1231,14 @@ Joining Group constants.
       .value("U_JG_THIN_NOON", U_JG_THIN_NOON, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_JG_COUNT", U_JG_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UJoiningGroup` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_JOINING_GROUP`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -1205,8 +1260,14 @@ Joining Type constants.
       .value("U_JT_RIGHT_JOINING", U_JT_RIGHT_JOINING, "")
       .value("U_JT_TRANSPARENT", U_JT_TRANSPARENT, "")
       .value("U_JT_COUNT", U_JT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UJoiningType` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_JOINING_TYPE`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -1286,8 +1347,14 @@ Line Break constants.
       .value("U_LB_UNAMBIGUOUS_HYPHEN", U_LB_UNAMBIGUOUS_HYPHEN, "[HH]")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_LB_COUNT", U_LB_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`ULineBreak` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_LINE_BREAK`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -1307,8 +1374,14 @@ Numeric Type constants.
       .value("U_NT_DIGIT", U_NT_DIGIT, "")
       .value("U_NT_NUMERIC", U_NT_NUMERIC, "")
       .value("U_NT_COUNT", U_NT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UNumericType` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_NUMERIC_TYPE`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -1808,8 +1881,10 @@ For details about the properties see UAX #44: Unicode Character Database
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
       .value("UCHAR_BINARY_LIMIT", UCHAR_BINARY_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for binary Unicode properties.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_BIDI_CLASS", UCHAR_BIDI_CLASS, R"doc(
              Enumerated property Bidi_Class.
@@ -2002,8 +2077,11 @@ For details about the properties see UAX #44: Unicode Character Database
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 76)
       .value("UCHAR_INT_LIMIT", UCHAR_INT_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for enumerated/integer Unicode
+             properties.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_GENERAL_CATEGORY_MASK", UCHAR_GENERAL_CATEGORY_MASK, R"doc(
              Bitmask property General_Category_Mask.
@@ -2038,8 +2116,10 @@ For details about the properties see UAX #44: Unicode Character Database
              first constant for bit-mask Unicode properties.
              )doc")
       .value("UCHAR_MASK_LIMIT", UCHAR_MASK_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for bit-mask Unicode properties.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_NUMERIC_VALUE", UCHAR_NUMERIC_VALUE, R"doc(
              Double property Numeric_Value.
@@ -2057,8 +2137,10 @@ For details about the properties see UAX #44: Unicode Character Database
              first constant for double Unicode properties.
              )doc")
       .value("UCHAR_DOUBLE_LIMIT", UCHAR_DOUBLE_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for double Unicode properties.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_AGE", UCHAR_AGE, R"doc(
              String property Age.
@@ -2086,7 +2168,11 @@ For details about the properties see UAX #44: Unicode Character Database
              Corresponds to :meth:`CaseMap.fold`.
              )doc")
       .value("UCHAR_ISO_COMMENT", UCHAR_ISO_COMMENT, R"doc(
-             Deprecated: ICU 49
+             Deprecated string property ISO_Comment.
+
+             Corresponds to :func:`u_get_iso_comment`.
+
+             .. version-deprecated:: ICU49
              )doc")
       .value("UCHAR_LOWERCASE_MAPPING", UCHAR_LOWERCASE_MAPPING, R"doc(
              String property Lowercase_Mapping.
@@ -2127,7 +2213,14 @@ For details about the properties see UAX #44: Unicode Character Database
              Corresponds to :meth:`CaseMap.to_title`.
              )doc")
       .value("UCHAR_UNICODE_1_NAME", UCHAR_UNICODE_1_NAME, R"doc(
-             Deprecated: ICU 49
+             String property Unicode_1_Name.
+
+             Corresponds to
+             ``u_char_name(U_UNICODE_10_CHAR_NAME)``.
+
+             .. version-deprecated:: ICU49
+                Beginning with ICU 49, ICU APIs return an empty string for this
+                property.
              )doc")
       .value("UCHAR_UPPERCASE_MAPPING", UCHAR_UPPERCASE_MAPPING, R"doc(
              String property Uppercase_Mapping.
@@ -2140,8 +2233,10 @@ For details about the properties see UAX #44: Unicode Character Database
              Corresponds to :func:`u_get_bidi_paired_bracket`.
              )doc")
       .value("UCHAR_STRING_LIMIT", UCHAR_STRING_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for string Unicode properties.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_SCRIPT_EXTENSIONS", UCHAR_SCRIPT_EXTENSIONS, R"doc(
              Miscellaneous property Script_Extensions (new in Unicode 6.0).
@@ -2182,8 +2277,11 @@ For details about the properties see UAX #44: Unicode Character Database
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
       .value("UCHAR_OTHER_PROPERTY_LIMIT", UCHAR_OTHER_PROPERTY_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the last constant for Unicode properties with
+             unusual value types.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE, R"doc(
              Represent a nonexistent or invalid property or property value.
@@ -2210,8 +2308,11 @@ where i=1, 2,...
       .value("U_LONG_PROPERTY_NAME", U_LONG_PROPERTY_NAME, "")
       .value("U_PROPERTY_NAME_CHOICE_COUNT", U_PROPERTY_NAME_CHOICE_COUNT,
              R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UPropertyNameChoice`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -2242,8 +2343,15 @@ Sentence Break constants.
       .value("U_SB_LF", U_SB_LF, "")
       .value("U_SB_SCONTINUE", U_SB_SCONTINUE, "")
       .value("U_SB_COUNT", U_SB_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`USentenceBreak`
+             value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_SENTENCE_BREAK`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -2314,8 +2422,14 @@ status tags.)
       .value("U_WB_WSEGSPACE", U_WB_WSEGSPACE, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 62)
       .value("U_WB_COUNT", U_WB_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UWordBreakValues` value.
+
+             The highest value is available via
+             :func:`u_get_int_property_max_value` with
+             :attr:`~UProperty.UCHAR_WORD_BREAK`.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -2461,10 +2575,11 @@ status tags.)
         return std::make_unique<icupy::UCPMapPtr>(p);
       },
       py::arg("property"), R"doc(
-      Return an integer property map for the specified *property*.
+      Return an immutable :class:`UCPMap` for the property with an enum,
+      catalog, or integer type.
 
-      *property* must be between :attr:`~UProperty.UCHAR_INT_START` and
-      :attr:`~UProperty.UCHAR_INT_LIMIT` - 1.
+      *property* must be [:attr:`~UProperty.UCHAR_INT_START`,
+      :attr:`~UProperty.UCHAR_INT_LIMIT`).
 
       .. seealso::
 
@@ -2474,15 +2589,91 @@ status tags.)
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   m.def("u_get_int_property_max_value", &u_getIntPropertyMaxValue,
-        py::arg("which"));
+        py::arg("which"), R"doc(
+      Return the maximum value of the specified enum, integer, or binary-type
+      Unicode property; 0 or -1 if the property is out of range.
+
+      *which* must be
+      [:attr:`~UProperty.UCHAR_BINARY_START`,
+      :attr:`~UProperty.UCHAR_BINARY_LIMIT`) or
+      [:attr:`~UProperty.UCHAR_INT_START`,
+      :attr:`~UProperty.UCHAR_INT_LIMIT`).
+
+      .. seealso::
+
+         :func:`u_has_binary_property`
+         :func:`u_get_int_property_min_value`
+         :func:`u_get_int_property_value`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> icu.UScriptCode(icu.u_get_int_property_max_value(icu.UCHAR_SCRIPT))
+         <UScriptCode.USCRIPT_TRADITIONAL_HAN_WITH_LATIN: 212>
+         >>> icu.UCharDirection(icu.u_get_int_property_max_value(icu.UCHAR_BIDI_CLASS))
+         <UCharDirection.U_POP_DIRECTIONAL_ISOLATE: 22>
+         >>> icu.u_get_int_property_max_value(icu.UCHAR_IDEOGRAPHIC)
+         1
+      )doc");
 
   m.def("u_get_int_property_min_value", &u_getIntPropertyMinValue,
-        py::arg("which"));
+        py::arg("which"), R"doc(
+      Return the minimum value of the specified enum, integer, or binary-type
+      Unicode property; 0 if the property is out of range.
+
+      *which* must be
+      [:attr:`~UProperty.UCHAR_BINARY_START`,
+      :attr:`~UProperty.UCHAR_BINARY_LIMIT`) or
+      [:attr:`~UProperty.UCHAR_INT_START`,
+      :attr:`~UProperty.UCHAR_INT_LIMIT`).
+
+      .. seealso::
+
+         :func:`u_has_binary_property`
+         :func:`u_get_int_property_max_value`
+         :func:`u_get_int_property_value`
+      )doc");
 
   m.def("u_get_int_property_value", &u_getIntPropertyValue, py::arg("c"),
-        py::arg("which"));
+        py::arg("which"), R"doc(
+      Return the Unicode property value of the specified enum, integer, binary,
+      or mask type for the specified code point.
 
-  m.def("u_get_numeric_value", &u_getNumericValue, py::arg("c"));
+      *c* is the code point to be tested.
+
+      *which* is the selector constant for :class:`UProperty` and specifies the
+      property to be checked. It must be one of the following:
+      [:attr:`~UProperty.UCHAR_BINARY_START`,
+      :attr:`~UProperty.UCHAR_BINARY_LIMIT`),
+      [:attr:`~UProperty.UCHAR_INT_START`,
+      :attr:`~UProperty.UCHAR_INT_LIMIT`), or
+      [:attr:`~UProperty.UCHAR_MASK_START`,
+      :attr:`~UProperty.UCHAR_MASK_LIMIT`).
+
+      For enum properties, it returns the value corresponding to the numeric
+      value of the enumeration constant in the enum type (cast to the enum type
+      if necessary); for binary Unicode properties, it returns 0 or 1
+      (False/True); and for mask properties, it returns a bitmask. If *which*
+      is out of range, or if there is no data for that property in the Unicode
+      version, or if there is no data for this code point, 0 is returned.
+
+      .. seealso::
+
+         :func:`u_has_binary_property`
+         :func:`u_get_int_property_max_value`
+         :func:`u_get_int_property_min_value`
+      )doc");
+
+  m.def("u_get_numeric_value", &u_getNumericValue, py::arg("c"), R"doc(
+      Return the numeric value of the specified code point, or
+      :attr:`U_NO_NUMERIC_VALUE` if no numeric value is defined.
+
+      .. seealso::
+
+         :attr:`U_NO_NUMERIC_VALUE`
+      )doc");
 
   m.def("u_get_property_enum", &u_getPropertyEnum, py::arg("alias"));
 
@@ -2511,7 +2702,23 @@ status tags.)
       [](UChar32 c, UProperty which) -> py::bool_ {
         return u_hasBinaryProperty(c, which);
       },
-      py::arg("c"), py::arg("which"));
+      py::arg("c"), py::arg("which"), R"doc(
+      Return ``True`` if the specified code point exists in the range of the
+      specified binary Unicode property, or ``False`` if *which* is out of
+      range or if no data for that property exists in that Unicode version.
+
+      *c* is the code point to be tested.
+
+      *which* is the selector constant for :class:`UProperty` and specifies the
+      binary property to check. It must be
+      [:attr:`~UProperty.UCHAR_BINARY_START`,
+      :attr:`~UProperty.UCHAR_BINARY_LIMIT`).
+
+      .. seealso::
+
+         :func:`u_get_binary_property_set`
+         :func:`u_get_int_property_value`
+      )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
   m.def("u_has_id_type", &u_hasIDType, py::arg("c"), py::arg("type"));

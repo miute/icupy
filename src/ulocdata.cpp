@@ -43,8 +43,11 @@ The possible types of delimiters.
              Alternate quotation end.
              )doc")
       .value("ULOCDATA_DELIMITER_COUNT", ULOCDATA_DELIMITER_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`ULocaleDataDelimiterType`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -69,8 +72,11 @@ The possible types of exemplar character sets.
              Punctuation set.
              )doc")
       .value("ULOCDATA_ES_COUNT", ULOCDATA_ES_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal
+             :class:`ULocaleDataExemplarSetType` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -93,8 +99,11 @@ Enumeration for representing the measurement systems.
              Mix of metric and imperial units used in Great Britain.
              )doc")
       .value("UMS_LIMIT", UMS_LIMIT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`UMeasurementSystem`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

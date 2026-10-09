@@ -20,8 +20,8 @@ void init_utf(py::module &m) {
   m.def(
       "u_is_bmp", [](uint32_t c) -> py::bool_ { return U_IS_BMP(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a BMP code point (U+0000..U+FFFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code point is a BMP code point
+      (U+0000..U+FFFF), ``False`` otherwise.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
@@ -29,16 +29,16 @@ void init_utf(py::module &m) {
       "u_is_code_point",
       [](uint32_t c) -> py::bool_ { return U_IS_CODE_POINT(c); }, py::arg("c"),
       R"doc(
-      Return ``True`` if this code point is a valid Unicode code point
-      (U+0000..U+10FFFF); ``False`` otherwise.
+      Return ``True`` if the specified code point is a valid Unicode code point
+      (U+0000..U+10FFFF), ``False`` otherwise.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   m.def(
       "u_is_lead", [](uint32_t c) -> py::bool_ { return U_IS_LEAD(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a lead surrogate (U+D800..U+DBFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code point is a lead surrogate
+      (U+D800..U+DBFF), ``False`` otherwise.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
@@ -46,7 +46,7 @@ void init_utf(py::module &m) {
       "u_is_scalar_value",
       [](uint32_t c) -> py::bool_ { return U_IS_SCALAR_VALUE(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a Unicode scalar value;
+      Return ``True`` if the specified code point is a Unicode scalar value,
       ``False`` otherwise.
 
       A Unicode scalar value is a non-surrogate code point.
@@ -59,23 +59,23 @@ void init_utf(py::module &m) {
       "u_is_supplementary",
       [](uint32_t c) -> py::bool_ { return U_IS_SUPPLEMENTARY(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a supplementary code point
-      (U+10000..U+10FFFF); ``False`` otherwise.
+      Return ``True`` if the specified code point is a supplementary code point
+      (U+10000..U+10FFFF), ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_surrogate",
       [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE(c); }, py::arg("c"),
       R"doc(
-      Return ``True`` if this code point is a surrogate (U+D800..U+DFFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code point is a surrogate
+      (U+D800..U+DFFF), ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_surrogate_lead",
       [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE_LEAD(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a lead surrogate;
+      Return ``True`` if the specified code point is a lead surrogate,
       ``False`` otherwise.
       )doc");
 
@@ -83,22 +83,22 @@ void init_utf(py::module &m) {
       "u_is_surrogate_trail",
       [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE_TRAIL(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a trail surrogate;
+      Return ``True`` if the specified code point is a trail surrogate,
       ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_trail", [](uint32_t c) -> py::bool_ { return U_IS_TRAIL(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a trail surrogate (U+DC00..U+DFFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code point is a trail surrogate
+      (U+DC00..U+DFFF), ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_unicode_char",
       [](uint32_t c) -> py::bool_ { return U_IS_UNICODE_CHAR(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a Unicode character;
+      Return ``True`` if the specified code point is a Unicode character,
       ``False`` otherwise.
       )doc");
 
@@ -106,7 +106,7 @@ void init_utf(py::module &m) {
       "u_is_unicode_nonchar",
       [](uint32_t c) -> py::bool_ { return U_IS_UNICODE_NONCHAR(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code point is a Unicode noncharacter;
+      Return ``True`` if the specified code point is a Unicode noncharacter,
       ``False`` otherwise.
       )doc");
 
@@ -132,10 +132,11 @@ void init_utf(py::module &m) {
       Move the string offset from one code point boundary to the previous one,
       and return the new offset.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy *start* < *i*.
 
@@ -165,10 +166,11 @@ void init_utf(py::module &m) {
       Move the string offset from one code point boundary to the n-th one
       before it, and return the new offset.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy *start* < *i*.
 
@@ -205,13 +207,14 @@ void init_utf(py::module &m) {
       Advance the string offset from one code point boundary to the next,
       and return the new offset.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
       *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       .. seealso::
 
@@ -243,13 +246,14 @@ void init_utf(py::module &m) {
       Advance the string offset from one code point boundary to the n-th next
       one, and return the new offset.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
       *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       *n* is the number of code points to skip.
 
@@ -282,23 +286,24 @@ void init_utf(py::module &m) {
         return c;
       },
       py::arg("s"), py::arg("start"), py::arg("i"), py::arg("limit"), R"doc(
-      Return the code point from a string at the specified offset.
+      Return the code point from the specified string at the specified offset.
 
-      If the offset points to the lead or tail surrogate of a supplementary
+      If the offset points to the lead or tail surrogate of the supplementary
       code point, read the adjacent matching surrogate as well. Also, if the
       offset points to a single, unpaired surrogate, return that unpaired
       surrogate.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy
       *start* < *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       .. seealso::
 
@@ -329,22 +334,23 @@ void init_utf(py::module &m) {
         return c;
       },
       py::arg("s"), py::arg("start"), py::arg("i"), py::arg("limit"), R"doc(
-      Return the code point from a string at the specified offset.
+      Return the code point from the specified string at the specified offset.
 
-      If the offset points to the lead or tail surrogate of a supplementary
+      If the offset points to the lead or tail surrogate of the supplementary
       code point, read the adjacent matching surrogate as well. Also, if the
       offset points to a single, unpaired surrogate, return U+FFFD.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy
       *start* < *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       .. seealso::
 
@@ -365,6 +371,10 @@ void init_utf(py::module &m) {
       The result is undefined if the input values are not lead and trail
       surrogates.
 
+      *lead* is a lead surrogate (U+D800..U+DBFF).
+
+      *trail* is a trail surrogate (U+DC00..U+DFFF).
+
       .. seealso::
 
          :func:`u16_lead`
@@ -382,8 +392,8 @@ void init_utf(py::module &m) {
   m.def(
       "u16_is_lead", [](uint32_t c) -> py::bool_ { return U16_IS_LEAD(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code unit is a lead surrogate (U+D800..U+DBFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code unit is a lead surrogate
+      (U+D800..U+DBFF), ``False`` otherwise.
 
       .. seealso::
 
@@ -393,16 +403,16 @@ void init_utf(py::module &m) {
   m.def(
       "u16_is_single", [](uint32_t c) -> py::bool_ { return U16_IS_SINGLE(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code unit is a single code unit (BMP, not a
-      surrogate); ``False`` otherwise.
+      Return ``True`` if the specified code unit is a single code unit
+      (BMP, not a surrogate), ``False`` otherwise.
       )doc");
 
   m.def(
       "u16_is_surrogate",
       [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE(c); }, py::arg("c"),
       R"doc(
-      Return ``True`` if this code unit is a surrogate (U+D800..U+DFFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code unit is a surrogate
+      (U+D800..U+DFFF), ``False`` otherwise.
 
       .. seealso::
 
@@ -414,8 +424,8 @@ void init_utf(py::module &m) {
       "u16_is_surrogate_lead",
       [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE_LEAD(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this surrogate code unit is a lead surrogate;
-      ``False`` otherwise.
+      Return ``True`` if the specified surrogate code point is a lead
+      surrogate, ``False`` otherwise.
 
       .. seealso::
 
@@ -426,8 +436,8 @@ void init_utf(py::module &m) {
       "u16_is_surrogate_trail",
       [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE_TRAIL(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this surrogate code unit is a trail surrogate;
-      ``False`` otherwise.
+      Return ``True`` if the specified surrogate code point is a trail
+      surrogate, ``False`` otherwise.
 
       .. seealso::
 
@@ -437,8 +447,8 @@ void init_utf(py::module &m) {
   m.def(
       "u16_is_trail", [](uint32_t c) -> py::bool_ { return U16_IS_TRAIL(c); },
       py::arg("c"), R"doc(
-      Return ``True`` if this code unit is a trail surrogate (U+DC00..U+DFFF);
-      ``False`` otherwise.
+      Return ``True`` if the specified code unit is a trail surrogate
+      (U+DC00..U+DFFF), ``False`` otherwise.
 
       .. seealso::
 
@@ -451,8 +461,8 @@ void init_utf(py::module &m) {
         return U16_LEAD(supplementary);
       },
       py::arg("supplementary"), R"doc(
-      Return the lead surrogate (U+D800..U+DBFF) for a supplementary code point
-      (U+10000..U+10FFFF).
+      Return the lead surrogate (U+D800..U+DBFF) for the supplementary code
+      point (U+10000..U+10FFFF).
 
       .. seealso::
 
@@ -471,8 +481,11 @@ void init_utf(py::module &m) {
   m.def(
       "u16_length", [](uint32_t c) -> int32_t { return U16_LENGTH(c); },
       py::arg("c"), R"doc(
-      Return the number of 16-bit code units used to encode this Unicode code
-      point.
+      Return the number of 16-bit code units used to encode the specified
+      code point.
+
+      The result is not defined if *c* is not a Unicode code point
+      (U+0000..U+10ffff).
       )doc");
 
   m.def(
@@ -502,13 +515,14 @@ void init_utf(py::module &m) {
       If the offset points to the lead surrogate unit of the supplementary code
       point, the following trail surrogate is also read.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
       *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       .. seealso::
 
@@ -544,13 +558,14 @@ void init_utf(py::module &m) {
       If the offset points to a single, unpaired surrogate, return U+FFFD as
       the code point.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
       *i* is the offset within the string and must satisfy *i* < *limit*.
 
-      *limit* is the string length; for NUL-terminated string, *limit* can be
-      a negative value.
+      *limit* is the string length; can be set to -1 for a NUL-terminated
+      string.
 
       .. seealso::
 
@@ -583,10 +598,11 @@ void init_utf(py::module &m) {
       If the offset is behind a trail surrogate unit for a supplementary code
       point, the preceding lead surrogate is also read.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy *start* < *i*.
 
@@ -621,10 +637,11 @@ void init_utf(py::module &m) {
       If the offset points to a single, unpaired surrogate, return U+FFFD as
       the code point.
 
+      *s* is the string to be checked;
       *s* must support the buffer protocol, and its format must be ``H``
       (unsigned short).
 
-      *start* is the starting offset of the string, which is usually 0.
+      *start* is the start offset of the string, which is usually 0.
 
       *i* is the offset within the string and must satisfy *start* < *i*.
 
@@ -641,8 +658,8 @@ void init_utf(py::module &m) {
         return U16_TRAIL(supplementary);
       },
       py::arg("supplementary"), R"doc(
-      Return the trail surrogate (U+DC00..U+DFFF) for a supplementary code point
-      (U+10000..U+10FFFF).
+      Return the trail surrogate (U+DC00..U+DFFF) for the specified
+      supplementary code point (U+10000..U+10FFFF).
 
       .. seealso::
 

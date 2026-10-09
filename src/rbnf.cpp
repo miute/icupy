@@ -21,7 +21,11 @@ Tags for the predefined rulesets.
              Requests predefined ruleset for the ordinal form of a number.
              )doc")
       .value("URBNF_DURATION", URBNF_DURATION, R"doc(
-             Deprecated: ICU 74 Use :class:`MeasureFormat` instead.
+             Requests predefined ruleset for formatting a value as a duration
+             in hours, minutes, and seconds.
+
+             .. version-deprecated:: ICU74
+                Use :class:`MeasureFormat` instead.
              )doc")
       .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM, R"doc(
              Requests predefined ruleset for various non-place-value numbering

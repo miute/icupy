@@ -24,8 +24,11 @@ Formatting style for :class:`RelativeDateTimeFormatter`.
              Use the shortest possible form.
              )doc")
       .value("UDAT_STYLE_COUNT", UDAT_STYLE_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal
+             :class:`UDateRelativeDateTimeFormatterStyle` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();
@@ -121,8 +124,11 @@ e.g. "in 5 days" or "next year"
              "this Saturday", "next Saturday", "in 5 Saturdays".
              )doc")
       .value("UDAT_REL_UNIT_COUNT", UDAT_REL_UNIT_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`URelativeDateTimeUnit`
+             value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

@@ -45,7 +45,11 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
   // class icu::number::SimpleNumber
   //
   sn.def(py::init<>(), R"doc(
-      Initialize a ``SimpleNumber`` instance as an empty SimpleNumber.
+      Initialize a ``SimpleNumber`` instance as an empty ``SimpleNumber``.
+
+      .. note::
+
+         This number will fail to format. Use :meth:`.for_int64` instead.
       )doc");
 
   sn.def_static(
@@ -59,7 +63,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         return result;
       },
       py::arg("value"), R"doc(
-      Create a new ``SimpleNumber`` instance for an integer.
+      Create a new ``SimpleNumber`` instance from a 64-bit integer.
       )doc");
 
   sn.def(
@@ -72,7 +76,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("power"), R"doc(
-      Change the value of the ``SimpleNumber`` by a power of 10.
+      Change the number by the specified power of 10.
       )doc");
 
   sn.def(
@@ -86,10 +90,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("power"), py::arg("rounding_mode"), R"doc(
-      Round the value currently stored in the ``SimpleNumber`` to the given
-      power of 10, which can be before or after the decimal separator.
+      Round the number to the specified power of 10 before or after the decimal
+      separator.
 
-      This function does not change minimum integer digits.
+      This method does not change the minimum digits of an integer.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 75)
@@ -103,8 +107,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("maximum_integer_digits"), R"doc(
-      Set the number of integer digits to the given amount, truncating if
-      necessary.
+      Set the number of digits in the integer to the specified amount and
+      truncate any extra digits if necessary.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 75)
 
@@ -118,8 +122,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("minimum_fraction_digits"), R"doc(
-      Pad the end of the number with zeros up to the given minimum number of
-      fraction digits.
+      Pad the end of the number with zeros up to the specified minimum number
+      of fractional digits.
       )doc");
 
   sn.def(
@@ -132,8 +136,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("minimum_integer_digits"), R"doc(
-      Pad the beginning of the number with zeros up to the given minimum number
-      of integer digits.
+      Pad the beginning of the number with zeros up to the specified minimum
+      number of integer digits.
       )doc");
 
   sn.def(
@@ -166,7 +170,10 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         }
       },
       py::arg("maximum_integer_digits"), R"doc(
-      Deprecated: ICU 75. Use :meth:`set_maximum_integer_digits` instead.
+      Alias for :meth:`.set_maximum_integer_digits`.
+
+      .. version-deprecated:: ICU75
+         Use :meth:`set_maximum_integer_digits` instead.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM < 76)
 
@@ -174,8 +181,14 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
   // class icu::number::SimpleNumberFormatter
   //
   fmt.def(py::init<>(), R"doc(
-      Initialize a ``SimpleNumberFormatter`` as a non-functional
-      SimpleNumberFormatter.
+      Initialize a ``SimpleNumberFormatter`` instance as a non-functional
+      ``SimpleNumberFormatter``.
+
+      .. note::
+
+         Use :meth:`.for_locale`, :meth:`.for_locale_and_grouping_strategy`, or
+         :meth:`.for_locale_and_symbols_and_grouping_strategy` instead to
+         create a functional ``SimpleNumberFormatter``.
       )doc");
 
   fmt.def_static(
@@ -190,8 +203,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         return result;
       },
       py::arg("locale"), R"doc(
-      Create a new ``SimpleNumberFormatter`` instance with all locale
-      defaults.
+      Create a new ``SimpleNumberFormatter`` instance with the specified
+      locale's defaults.
       )doc");
 
   fmt.def_static(
@@ -207,8 +220,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         return result;
       },
       py::arg("locale"), py::arg("grouping_strategy"), R"doc(
-      Override the grouping strategy to create a new ``SimpleNumberFormatter``
-      instance with all locale defaults.
+      Create a new ``SimpleNumberFormatter`` instance with the specified
+      locale's defaults and the specified grouping strategy.
       )doc");
 
   fmt.def_static(
@@ -228,12 +241,13 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
       },
       py::arg("locale"), py::arg("symbols"), py::arg("grouping_strategy"),
       R"doc(
-      Override the grouping strategy and symbols to create a new
-      ``SimpleNumberFormatter`` instance with all locale defaults.
+      Create a new ``SimpleNumberFormatter`` instance with the specified
+      locale's defaults, the specified symbols, and the specified grouping
+      strategy.
 
       .. important::
 
-         *symbols* must outlive the ``SimpleNumberFormatter`` object.
+         *symbols* must outlive this formatter object.
       )doc");
 
   fmt.def(
@@ -251,9 +265,8 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
 
       .. important::
 
-         The :class:`SimpleNumber` argument is consumed. A new
-         :class:`SimpleNumber` object should be created for every formatting
-         operation.
+         *value* is consumed. A new :class:`SimpleNumber` object should be
+         created for every formatting operation.
       )doc");
 
   fmt.def(
@@ -267,7 +280,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
         return result;
       },
       py::arg("value"), R"doc(
-      Format an integer value using this ``SimpleNumberFormatter``.
+      Format a 64-bit integer value using this ``SimpleNumberFormatter``.
 
       For more control over the formatting, use :class:`SimpleNumber`.
       )doc");

@@ -134,8 +134,10 @@ with each other) and the string that is processed. For a set with strings:
              algorithms, such as ICU converters (:func:`ucnv_get_unicode_set`).
              )doc")
       .value("USET_SPAN_CONDITION_COUNT", USET_SPAN_CONDITION_COUNT, R"doc(
-             Deprecated: ICU 58 The numeric value may change over time,
-             see ICU ticket #12420.
+             One more than the highest normal :class:`USetSpanCondition` value.
+
+             .. version-deprecated:: ICU58
+                The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
       .finalize();

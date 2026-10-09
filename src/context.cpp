@@ -70,7 +70,7 @@ void init_context(py::module &m) {
       )doc");
 
   ctx.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
-      Initialize a ``UserContext`` instance with the specified *value*.
+      Initialize a ``UserContext`` instance with the specified value.
       )doc");
 
   ctx.def("value", &icupy::UserContext::value, R"doc(
@@ -90,7 +90,7 @@ void init_context(py::module &m) {
       )doc");
 
   cvp.def(py::init<const py::object &>(), py::arg("value") = py::none(), R"doc(
-      Initialize a ``ConstVoidPtr`` instance with the specified *value*.
+      Initialize a ``ConstVoidPtr`` instance with the specified value.
       )doc");
 
   cvp.def("to_object", &icupy::ConstVoidPtr::to_object, R"doc(

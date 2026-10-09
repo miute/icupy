@@ -57,11 +57,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
          :meth:`.get_default`
       )doc")
       .def(py::init<const Locale &>(), py::arg("other"), R"doc(
-      Initialize a ``Locale`` instance from another ``Locale``.
+      Initialize a ``Locale`` instance from a copy of *other*.
       )doc");
 
   loc.def("__copy__", &Locale::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this locale.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -70,7 +70,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "__deepcopy__",
       [](const Locale &self, py::dict & /* memo */) { return self.clone(); },
       py::arg("memo"), R"doc(
-      Return a copy of this instance.
+      Return a copy of this locale.
 
       This is equivalent to calling :meth:`.clone`.
       )doc");
@@ -83,7 +83,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("__hash__", &Locale::hashCode, R"doc(
-      Return a hash value of this instance.
+      Return a hash value of this locale.
 
       This is equivalent to calling :meth:`.hash_code`.
       )doc");
@@ -102,7 +102,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   });
 
   loc.def("__str__", &Locale::getName, R"doc(
-      Return a string representation of this instance.
+      Return a string representation of this locale.
 
       This is equivalent to calling :meth:`.get_name`.
       )doc");
@@ -118,7 +118,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         }
       },
       R"doc(
-      Add likely subtags to this instance.
+      Add likely subtags to this locale.
 
       If this ``Locale`` is already in the maximum form, is invalid, or
       there is no data available to maximize it, the ``Locale`` will not be
@@ -140,12 +140,12 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         }
       },
       R"doc(
-      Canonicalize this instance according to CLDR.
+      Canonicalize this locale according to CLDR.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 67)
 
   loc.def("clone", &Locale::clone, R"doc(
-      Return a copy of this instance.
+      Return a copy of this locale.
 
       .. seealso::
 
@@ -159,7 +159,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return Locale::createCanonical(name.data());
       },
       py::arg("name"), R"doc(
-      Create a new ``Locale`` instance using a string canonicalized in
+      Create a new ``Locale`` instance using a canonicalized string in
       accordance with CLDR.
       )doc");
 
@@ -185,7 +185,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       R"doc(
-      Return an enumeration of keywords in this instance, or ``None`` if there
+      Return an enumeration of keywords in this locale, or ``None`` if there
       are no keywords.
 
       .. seealso::
@@ -205,7 +205,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       R"doc(
-      Return an enumeration of Unicode keywords in this instance, or ``None``
+      Return an enumeration of Unicode keywords in this locale, or ``None``
       if there are no keywords.
 
       .. seealso::
@@ -248,7 +248,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_base_name", &Locale::getBaseName, R"doc(
-      Return the programmatic base name of this instance.
+      Return the programmatic base name of this locale.
 
       The base name is the result of :meth:`.get_name` without the keywords.
 
@@ -274,7 +274,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_country", &Locale::getCountry, R"doc(
-      Return the ISO-3166 country code of this instance.
+      Return the ISO-3166 country code of this locale.
       )doc");
 
   loc.def_static("get_default", &Locale::getDefault, R"doc(
@@ -293,17 +293,23 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
                                          disp_country);
          },
          py::arg("display_locale"), py::arg("disp_country"), R"doc(
-      Copy the country name for this locale to *disp_country* in a format
-      suitable for display in the locale specified by *display_locale*, and
-      return *disp_country* itself.
+      Retrieve the country name for this locale in a format suitable for
+      display in the locale specified by *display_locale* and store it in
+      *disp_country*; return *disp_country* itself.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *disp_country* is a string object to receive the country's display name.
       )doc")
       .def("get_display_country",
            py::overload_cast<UnicodeString &>(&Locale::getDisplayCountry,
                                               py::const_),
            py::arg("disp_country"), R"doc(
-      Copy the country name for this locale to *disp_country* in a format
-      suitable for display in the default locale, and return *disp_country*
-      itself.
+      Retrieve the country name for this locale in a format suitable for
+      display in the default locale and store it in *disp_country*; return
+      *disp_country* itself.
+
+      *disp_country* is a string object to receive the country's display name.
       )doc");
 
   loc.def(
@@ -314,17 +320,23 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
                                           disp_lang);
          },
          py::arg("display_locale"), py::arg("disp_lang"), R"doc(
-      Copy the language name for this locale to *disp_lang* in a format
-      suitable for display in the locale specified by *display_locale*, and
-      return *disp_lang* itself.
+      Retrieve the language name for this locale in a format suitable for
+      display in the locale specified by *display_locale* and store it in
+      *disp_lang*; return *disp_lang* itself.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *disp_lang* is a string object to receive the language's display name.
       )doc")
       .def("get_display_language",
            py::overload_cast<UnicodeString &>(&Locale::getDisplayLanguage,
                                               py::const_),
            py::arg("disp_lang"), R"doc(
-      Copy the language name for this locale to *disp_lang* in a format
-      suitable for display in the default locale, and return *disp_lang*
-      itself.
+      Retrieve the language name for this locale in a format suitable for
+      display in the default locale and store it in *disp_lang*; return
+      *disp_lang* itself.
+
+      *disp_lang* is a string object to receive the language's display name.
       )doc");
 
   loc.def(
@@ -334,15 +346,22 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
            return self.getDisplayName(icupy::to_locale(display_locale), name);
          },
          py::arg("display_locale"), py::arg("name"), R"doc(
-      Copy the name for this locale to *name* in a format suitable for display
-      in the locale specified by *display_locale*, and return *name* itself.
+      Retrieve the name for this locale in a format suitable for display in the
+      locale specified by *display_locale* and store it in *name*; return
+      *name* itself.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *name* is a string object to receive the locale's display name.
       )doc")
       .def("get_display_name",
            py::overload_cast<UnicodeString &>(&Locale::getDisplayName,
                                               py::const_),
            py::arg("name"), R"doc(
-      Copy the name for this locale to *name* in a format suitable for display
-      in the default locale, and return *name* itself.
+      Retrieve the name for this locale in a format suitable for display in the
+      default locale and store it in *name*; return *name* itself.
+
+      *name* is a string object to receive the locale's display name.
       )doc");
 
   loc.def(
@@ -353,17 +372,23 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
                                         disp_script);
          },
          py::arg("display_locale"), py::arg("disp_script"), R"doc(
-      Copy the script name for this locale to *disp_script* in a format
-      suitable for display in the locale specified by *display_locale*, and
-      return *disp_script* itself.
+      Retrieve the script name for this locale in a format suitable for
+      display in the locale specified by *display_locale* and store it in
+      *disp_script*; return *disp_script* itself.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *disp_script* is a string object to receive the script's display name.
       )doc")
       .def("get_display_script",
            py::overload_cast<UnicodeString &>(&Locale::getDisplayScript,
                                               py::const_),
            py::arg("disp_script"), R"doc(
-      Copy the script name for this locale to *disp_script* in a format
-      suitable for display in the default locale, and return *disp_script*
-      itself.
+      Retrieve the script name for this locale in a format suitable for
+      display in the default locale and store it in *disp_script*; return
+      *disp_script* itself.
+
+      *disp_script* is a string object to receive the script's display name.
       )doc");
 
   loc.def(
@@ -374,16 +399,23 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
                                          disp_var);
          },
          py::arg("display_locale"), py::arg("disp_var"), R"doc(
-      Copy the variant name for this locale to *disp_var* in a format
-      suitable for display in the locale specified by *display_locale*, and
-      return *disp_var* itself.
+      Retrieve the variant name for this locale in a format suitable for
+      display in the locale specified by *display_locale* and store it in
+      *disp_var*; return *disp_var* itself.
+
+      *display_locale* is the locale to be used to display the name.
+
+      *disp_var* is a string object to receive the variant's display name.
       )doc")
       .def("get_display_variant",
            py::overload_cast<UnicodeString &>(&Locale::getDisplayVariant,
                                               py::const_),
            py::arg("disp_var"), R"doc(
-      Copy the variant name for this locale to *disp_var* in a format
-      suitable for display in the default locale, and return *disp_var* itself.
+      Retrieve the variant name for this locale in a format suitable for
+      display in the default locale and store it in *disp_var*; return
+      *disp_var* itself.
+
+      *disp_var* is a string object to receive the variant's display name.
       )doc");
 
   loc.def_static("get_english", &Locale::getEnglish, R"doc(
@@ -407,11 +439,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_iso3_country", &Locale::getISO3Country, R"doc(
-      Return the three-letter ISO-3166 country code of this instance.
+      Return the three-letter ISO-3166 country code of this locale.
       )doc");
 
   loc.def("get_iso3_language", &Locale::getISO3Language, R"doc(
-      Return the three-letter ISO-639-2 language code of this instance.
+      Return the three-letter ISO-639-2 language code of this locale.
       )doc");
 
   loc.def_static(
@@ -476,7 +508,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       R"doc(
-      Return a set of keywords in this instance.
+      Return a set of keywords in this locale.
 
       .. seealso::
 
@@ -517,7 +549,9 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       py::arg("keyword_name"), R"doc(
-      Return the value of the specified keyword in this instance.
+      Return the value of the specified keyword in this locale.
+
+      *keyword_name* is the name of the keyword. It is case-insensitive.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM < 63)
 
@@ -530,16 +564,16 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_language", &Locale::getLanguage, R"doc(
-      Return the ISO-639 language code of this instance.
+      Return the ISO-639 language code of this locale.
       )doc");
 
   loc.def("get_lcid", &Locale::getLCID, R"doc(
-      Return the Windows LCID value of this instance, or 0 if this instance
+      Return the Windows LCID value of this locale, or 0 if this locale
       does not have a Windows LCID.
       )doc");
 
   loc.def("get_name", &Locale::getName, R"doc(
-      Return the programmatic name of the entire locale of this instance.
+      Return the programmatic name of the entire locale of this locale.
 
       .. seealso::
 
@@ -555,7 +589,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_script", &Locale::getScript, R"doc(
-      Return the ISO-15924 abbreviation script code of this instance.
+      Return the ISO-15924 abbreviation script code of this locale.
       )doc");
 
   loc.def_static("get_simplified_chinese", &Locale::getSimplifiedChinese, R"doc(
@@ -593,7 +627,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       R"doc(
-      Return a set of Unicode keywords in this instance.
+      Return a set of Unicode keywords in this locale.
 
       .. seealso::
 
@@ -622,11 +656,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def("get_variant", &Locale::getVariant, R"doc(
-      Return the variant code of this instance.
+      Return the variant code of this locale.
       )doc");
 
   loc.def("hash_code", &Locale::hashCode, R"doc(
-      Return a hash code for this instance.
+      Return a hash code for this locale.
 
       .. seealso::
 
@@ -636,7 +670,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
   loc.def(
       "is_bogus",
       [](const Locale &self) -> py::bool_ { return self.isBogus(); }, R"doc(
-      Return ``True`` if this instance is invalid; ``False`` otherwise.
+      Return ``True`` if this locale is invalid, ``False`` otherwise.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
@@ -644,10 +678,10 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       "is_right_to_left",
       [](const Locale &self) -> py::bool_ { return self.isRightToLeft(); },
       R"doc(
-      Return ``True`` if this instance's script is right-to-left.
+      Return ``True`` if this locale's script is right-to-left.
 
-      If the script is not specified in this instance, the likely script for
-      this instance is used. If the likely script cannot be determined,
+      If the script is not specified in this locale, the likely script for
+      this locale is used. If the likely script cannot be determined,
       ``False`` is returned.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
@@ -663,7 +697,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         }
       },
       R"doc(
-      Minimize the subtags of this instance using the algorithm described in
+      Minimize the subtags of this locale using the algorithm described in
       the following CLDR technical report:
       https://www.unicode.org/reports/tr35/#likely-subtags.
 
@@ -712,10 +746,13 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         }
       },
       py::arg("keyword_name"), py::arg("keyword_value"), R"doc(
-      Set or remove the value of the specified keyword in this instance.
+      Set or remove the value of the specified keyword in this locale.
 
+      *keyword_name* is the name of the keyword. It is case-insensitive.
+
+      *keyword_value* is the value of the keyword.
       If *keyword_value* is empty or ``None``, the specified keyword is removed
-      from this instance.
+      from this locale.
 
       .. note::
 
@@ -725,7 +762,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
   loc.def("set_to_bogus", &Locale::setToBogus, R"doc(
-      Set this instance to be invalid.
+      Set this locale to be invalid.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 63)
@@ -744,8 +781,11 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       Set or remove the Unicode value of the specified Unicode keyword in this
       instance.
 
+      *keyword_name* is the name of the keyword.
+
+      *keyword_value* is the value of the keyword.
       If *keyword_value* is empty or ``None``, the specified Unicode keyword is
-      removed from this instance.
+      removed from this locale.
 
       .. note::
 
@@ -764,7 +804,7 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
         return result;
       },
       R"doc(
-      Return a BCP 47 language tag for this instance.
+      Return a BCP 47 language tag for this locale.
 
       .. seealso::
 
@@ -773,88 +813,89 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 63)
 
   loc.def_property_readonly_static(
-      "CANADA", [](const py::object &) { return ULOC_CANADA; },
+      "CANADA", [](const py::object & /* self */) { return ULOC_CANADA; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "CANADA_FRENCH", [](const py::object &) { return ULOC_CANADA_FRENCH; },
+      "CANADA_FRENCH",
+      [](const py::object & /* self */) { return ULOC_CANADA_FRENCH; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "CHINA", [](const py::object &) { return ULOC_CHINA; },
+      "CHINA", [](const py::object & /* self */) { return ULOC_CHINA; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "CHINESE", [](const py::object &) { return ULOC_CHINESE; },
+      "CHINESE", [](const py::object & /* self */) { return ULOC_CHINESE; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "ENGLISH", [](const py::object &) { return ULOC_ENGLISH; },
+      "ENGLISH", [](const py::object & /* self */) { return ULOC_ENGLISH; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "FRANCE", [](const py::object &) { return ULOC_FRANCE; },
+      "FRANCE", [](const py::object & /* self */) { return ULOC_FRANCE; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "FRENCH", [](const py::object &) { return ULOC_FRENCH; },
+      "FRENCH", [](const py::object & /* self */) { return ULOC_FRENCH; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "GERMAN", [](const py::object &) { return ULOC_GERMAN; },
+      "GERMAN", [](const py::object & /* self */) { return ULOC_GERMAN; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "GERMANY", [](const py::object &) { return ULOC_GERMANY; },
+      "GERMANY", [](const py::object & /* self */) { return ULOC_GERMANY; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "ITALIAN", [](const py::object &) { return ULOC_ITALIAN; },
+      "ITALIAN", [](const py::object & /* self */) { return ULOC_ITALIAN; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "ITALY", [](const py::object &) { return ULOC_ITALY; },
+      "ITALY", [](const py::object & /* self */) { return ULOC_ITALY; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "JAPAN", [](const py::object &) { return ULOC_JAPAN; },
+      "JAPAN", [](const py::object & /* self */) { return ULOC_JAPAN; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "JAPANESE", [](const py::object &) { return ULOC_JAPANESE; },
+      "JAPANESE", [](const py::object & /* self */) { return ULOC_JAPANESE; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "KOREA", [](const py::object &) { return ULOC_KOREA; },
+      "KOREA", [](const py::object & /* self */) { return ULOC_KOREA; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "KOREAN", [](const py::object &) { return ULOC_KOREAN; },
+      "KOREAN", [](const py::object & /* self */) { return ULOC_KOREAN; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "PRC", [](const py::object &) { return ULOC_PRC; },
+      "PRC", [](const py::object & /* self */) { return ULOC_PRC; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
       "SIMPLIFIED_CHINESE",
-      [](const py::object &) { return ULOC_SIMPLIFIED_CHINESE; },
+      [](const py::object & /* self */) { return ULOC_SIMPLIFIED_CHINESE; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "TAIWAN", [](const py::object &) { return ULOC_TAIWAN; },
+      "TAIWAN", [](const py::object & /* self */) { return ULOC_TAIWAN; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
       "TRADITIONAL_CHINESE",
-      [](const py::object &) { return ULOC_TRADITIONAL_CHINESE; },
+      [](const py::object & /* self */) { return ULOC_TRADITIONAL_CHINESE; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "UK", [](const py::object &) { return ULOC_UK; },
+      "UK", [](const py::object & /* self */) { return ULOC_UK; },
       py::return_value_policy::reference);
 
   loc.def_property_readonly_static(
-      "US", [](const py::object &) { return ULOC_US; },
+      "US", [](const py::object & /* self */) { return ULOC_US; },
       py::return_value_policy::reference);
 }

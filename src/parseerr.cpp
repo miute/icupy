@@ -15,7 +15,7 @@ void init_parseerr(py::module &m) {
       )doc");
 
   pe.def(py::init<>(), R"doc(
-      Initialize a ``UParseError`` instance.
+      Initialize an ``UParseError`` instance.
       )doc");
 
   pe.def("__repr__", [](const UParseError &self) {
@@ -33,7 +33,7 @@ void init_parseerr(py::module &m) {
   });
 
   pe.def_readonly("line", &UParseError::line, R"doc(
-      int: The line on which the error occurred.
+      Return the line on which the error occurred.
 
       If the parser uses this field, it sets it to the line number of the
       source text line on which the error appears, which will be a value >= 1.
@@ -41,7 +41,7 @@ void init_parseerr(py::module &m) {
       )doc");
 
   pe.def_readonly("offset", &UParseError::offset, R"doc(
-      int: The character offset to the error.
+      Return the character offset to the error.
 
       If the line field is >= 1, then this is the offset from the start of the
       line. Otherwise, this is the offset from the start of the text. If the
@@ -50,14 +50,14 @@ void init_parseerr(py::module &m) {
 
   pe.def_readonly("post_context", &UParseError::postContext,
                   py::return_value_policy::reference, R"doc(
-      str: The error itself and/or textual context after the error.
+      Return the error itself and/or textual context after the error.
 
       The empty string if not supported by parser.
       )doc");
 
   pe.def_readonly("pre_context", &UParseError::preContext,
                   py::return_value_policy::reference, R"doc(
-      str: Textual context before the error.
+      Return the textual context before the error.
 
       The empty string if not supported by parser.
       )doc");

@@ -105,12 +105,13 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
   // struct UCPMap
   //
   py::class_<icupy::UCPMapPtr>(m, "UCPMap", R"doc(
-      Abstract map from Unicode code points [U+0000, U+10FFFF] to integer values.
+      Abstract map from Unicode code points [U+0000, U+10FFFF] to integer
+      values.
 
-    .. seealso::
+      .. seealso::
 
-       :func:`u_get_int_property_map`
-    )doc");
+         :func:`u_get_int_property_map`
+      )doc");
 
   //
   // UCPMapValueFilter
@@ -129,13 +130,29 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
                action, context.value_or(nullptr));
          }),
          py::arg("action"), py::arg("context") = std::nullopt, R"doc(
-      Initialize the ``UCPMapValueFilter`` instance with the specified
+      Initialize a ``UCPMapValueFilter`` instance with the specified
       callback function and the user context.
 
       .. important::
 
-         *action* and *context* must outlive the ``UCPMapValueFilter``
-         object.
+         *action* and *context* must outlive this callback container object.
+
+      .. note::
+
+         The callback function must have the following signature:
+
+         .. code-block:: python
+
+            def action(context: object, value: int) -> int:
+                ...
+
+         *context* is the user context passed to the constructor.
+
+         *value* is the original value for the code point in the map.
+
+         The return value is the modified value for the code point in the map.
+         It must be a signed 32-bit integer
+         [:attr:`INT32_MIN`, :attr:`INT32_MAX`].
       )doc");
 
   vf.def(
@@ -160,9 +177,9 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       "ucpmap_get",
       [](const icupy::UCPMapPtr &map, UChar32 c) { return ucpmap_get(map, c); },
       py::arg("ucpmap"), py::arg("c"), R"doc(
-      Return the property value for a code point in a map.
+      Return the value for the specified code point in the map.
 
-      *c* must be between 0 and 0x10FFFF.
+      *c* is a code point and must be [0, 0x10FFFF].
 
       .. seealso::
 
@@ -187,9 +204,19 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       },
       py::arg("ucpmap"), py::arg("start"), py::arg("option"),
       py::arg("surrogate_value"), py::arg("filter") = std::nullopt, R"doc(
-      Return the last code point and property value in the range that has
-      the same property value as the code point starting at *start*
-      as a tuple ``(end, value)``.
+      Return a tuple with the last code point and its property value, where the
+      code points start at *start* and all have the same property value.
+
+      *start* is the start code point in that range.
+
+      *option* is a selector that defines how surrogate characters are handled;
+      typically it is :attr:`~UCPMapRangeOption.UCPMAP_RANGE_NORMAL`.
+
+      *surrogate_value* is the value for the surrogate. It is ignored if
+      *option* is :attr:`~UCPMapRangeOption.UCPMAP_RANGE_NORMAL`.
+
+      *filter* is a callback function that modifies the return value. If
+      ``None`` is specified, the return value remains unchanged.
 
       .. seealso::
 
@@ -203,7 +230,7 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
 
          >>> from icupy import icu
          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
-         >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+         >>> result = []
          >>> start = 0
          >>> while start <= 0x10fff:
          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0)
@@ -224,10 +251,10 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
          ...     return new_map.get(value, value)
 
          >>> ucpmap = icu.u_get_int_property_map(icu.UCHAR_EAST_ASIAN_WIDTH)
-         >>> eaw_map: dict[int, int] = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
+         >>> eaw_map = {int(icu.U_EA_AMBIGUOUS): int(icu.U_EA_FULLWIDTH)}
          >>> context = icu.UserContext(eaw_map)
          >>> action = icu.UCPMapValueFilter(my_filter, context)
-         >>> result: list[tuple[int, int, icu.UEastAsianWidth]] = []
+         >>> result = []
          >>> start = 0
          >>> while start <= 0x10fff:
          ...     end, value = icu.ucpmap_get_range(ucpmap, start, icu.UCPMAP_RANGE_NORMAL, 0, action)
