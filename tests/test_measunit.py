@@ -446,7 +446,10 @@ def test_measure_unit_54() -> None:
 
     assert (fmt.unit(icu.MeasureUnit.create_stone()).format_int(1).to_string()) == "1 st"
 
-    assert (fmt.unit(icu.MeasureUnit.create_tablespoon()).format_int(1).to_string()) == "1 tbsp"
+    assert (fmt.unit(icu.MeasureUnit.create_tablespoon()).format_int(1).to_string()) in (
+        "1 tbsp",  # ICU<79
+        "1 Tbsp",  # ICU>=79
+    )
 
     assert (fmt.unit(icu.MeasureUnit.create_teaspoon()).format_int(1).to_string()) == "1 tsp"
 
@@ -1007,7 +1010,10 @@ def test_measure_unit_64() -> None:
 
     assert (fmt.unit(icu.MeasureUnit.get_stone()).format_int(1).to_string()) == "1 st"
 
-    assert (fmt.unit(icu.MeasureUnit.get_tablespoon()).format_int(1).to_string()) == "1 tbsp"
+    assert (fmt.unit(icu.MeasureUnit.get_tablespoon()).format_int(1).to_string()) in (
+        "1 tbsp",  # ICU<79
+        "1 Tbsp",  # ICU>=79
+    )
 
     assert (fmt.unit(icu.MeasureUnit.get_teaspoon()).format_int(1).to_string()) == "1 tsp"
 
@@ -1652,6 +1658,30 @@ def test_measure_unit_78() -> None:
 
     # static MeasureUnit icu::MeasureUnit::getWeber()
     unit2 = icu.MeasureUnit.get_weber()
+    assert unit1 == unit2
+
+
+@pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 79, reason="ICU4C<79")
+def test_measure_unit_79() -> None:
+    # MeasureUnit* icu::MeasureUnit::createDyne(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_dyne()
+
+    # MeasureUnit icu::MeasureUnit::getDyne()
+    unit2 = icu.MeasureUnit.get_dyne()
+    assert unit1 == unit2
+
+    # MeasureUnit* icu::MeasureUnit::createMilliinch(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_milliinch()
+
+    # MeasureUnit icu::MeasureUnit::getMilliinch()
+    unit2 = icu.MeasureUnit.get_milliinch()
+    assert unit1 == unit2
+
+    # MeasureUnit* icu::MeasureUnit::createPoundal(UErrorCode &status)
+    unit1 = icu.MeasureUnit.create_poundal()
+
+    # MeasureUnit icu::MeasureUnit::getPoundal()
+    unit2 = icu.MeasureUnit.get_poundal()
     assert unit1 == unit2
 
 
