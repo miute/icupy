@@ -751,6 +751,26 @@ cannot set the power or prefix of a compound unit.
     return result;
   });
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static(
+      "create_dyne",
+      []() {
+        ErrorCode error_code;
+        auto result = MeasureUnit::createDyne(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Create the unit of force: dyne.
+
+      .. seealso::
+
+         :meth:`.get_dyne`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
+
   mu.def_static("create_earth_mass", []() {
     ErrorCode error_code;
     auto result = MeasureUnit::createEarthMass(error_code);
@@ -1695,6 +1715,26 @@ cannot set the power or prefix of a compound unit.
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 57)
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static(
+      "create_milliinch",
+      []() {
+        ErrorCode error_code;
+        auto result = MeasureUnit::createMilliinch(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Create the unit of length: milliinch.
+
+      .. seealso::
+
+         :meth:`.get_milliinch`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
+
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   mu.def_static("create_milliliter", []() {
     ErrorCode error_code;
@@ -2147,6 +2187,26 @@ cannot set the power or prefix of a compound unit.
     return result;
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 53)
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static(
+      "create_poundal",
+      []() {
+        ErrorCode error_code;
+        auto result = MeasureUnit::createPoundal(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return result;
+      },
+      R"doc(
+      Create the unit of force: poundal.
+
+      .. seealso::
+
+         :meth:`.get_poundal`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("create_pound_foot", []() {
@@ -2905,6 +2965,16 @@ cannot set the power or prefix of a compound unit.
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_dunam", &MeasureUnit::getDunam);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static("get_dyne", &MeasureUnit::getDyne, R"doc(
+      Return the unit of force: dyne.
+
+      .. seealso::
+
+         :meth:`.create_dyne`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
+
   mu.def_static("get_earth_mass", &MeasureUnit::getEarthMass);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -3163,6 +3233,16 @@ cannot set the power or prefix of a compound unit.
   mu.def_static("get_milligram_per_deciliter",
                 &MeasureUnit::getMilligramPerDeciliter);
 
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static("get_milliinch", &MeasureUnit::getMilliinch, R"doc(
+      Return the unit of length: milliinch.
+
+      .. seealso::
+
+         :meth:`.create_milliinch`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
+
   mu.def_static("get_milliliter", &MeasureUnit::getMilliliter);
 
   mu.def_static("get_millimeter", &MeasureUnit::getMillimeter);
@@ -3278,6 +3358,16 @@ cannot set the power or prefix of a compound unit.
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   mu.def_static("get_pound", &MeasureUnit::getPound);
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+  mu.def_static("get_poundal", &MeasureUnit::getPoundal, R"doc(
+      Return the unit of force: poundal.
+
+      .. seealso::
+
+         :meth:`.create_poundal`
+      )doc");
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
 
   mu.def_static("get_pound_foot", &MeasureUnit::getPoundFoot);
 
@@ -3541,7 +3631,7 @@ cannot set the power or prefix of a compound unit.
 
       For example, the base is 10 for SI prefixes (kilo, micro) and 1024 for
       binary prefixes (kibi, mebi).
-  )doc");
+      )doc");
 
   m.def("umeas_get_prefix_power", &umeas_getPrefixPower, py::arg("unit_prefix"),
         R"doc(
@@ -3550,6 +3640,6 @@ cannot set the power or prefix of a compound unit.
 
       For example, 3 for kilo, -6 for micro, 1 for kibi, 2 for mebi, 3 for
       gibi.
-  )doc");
+      )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 69)
 }

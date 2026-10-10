@@ -750,6 +750,14 @@ subject to separate encoding may be added at any time.
              Hntl
              )doc")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+      .value("USCRIPT_PROTO_CUNEIFORM", USCRIPT_PROTO_CUNEIFORM, R"doc(
+            Pcun
+            )doc")
+      .value("USCRIPT_SEAL", USCRIPT_SEAL, R"doc(
+            Seal
+            )doc")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
       .value("USCRIPT_CODE_LIMIT", USCRIPT_CODE_LIMIT, R"doc(
              One more than the highest normal :class:`UScriptCode` value.
 

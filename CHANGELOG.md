@@ -15,6 +15,7 @@
 ### Added
 
 - Add `icupy.icu.SymbolTable` class; `UnicodeSet.__init__()` and `UnicodeSet.apply_pattern()` now support `SymbolTable` ([#246])
+- Add support for [ICU 79.1 RC] ([#260])
 
 ### Removed
 
@@ -347,6 +348,7 @@ Initial release.
 [ICU 77.1]: https://github.com/unicode-org/icu/releases/tag/release-77-1
 [ICU 78.1]: https://github.com/unicode-org/icu/releases/tag/release-78.1
 [ICU 78.3]: https://github.com/unicode-org/icu/releases/tag/release-78.3
+[ICU 79.1 RC]: https://github.com/unicode-org/icu/releases/tag/release-79.1rc
 
 [0.15.0]: https://github.com/miute/icupy/releases/tag/v0.15.0
 [0.16.0]: https://github.com/miute/icupy/releases/tag/v0.16.0
@@ -423,3 +425,4 @@ Initial release.
 [#250]: https://github.com/miute/icupy/pull/250
 [#258]: https://github.com/miute/icupy/pull/258
 [#259]: https://github.com/miute/icupy/pull/259
+[#260]: https://github.com/miute/icupy/pull/260
