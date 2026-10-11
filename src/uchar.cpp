@@ -529,6 +529,18 @@ Constants for Unicode blocks, see the Unicode Data file Blocks.txt.
              UBLOCK_TANGUT_COMPONENTS_SUPPLEMENT, "")
       .value("UBLOCK_TOLONG_SIKI", UBLOCK_TOLONG_SIKI, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+      .value("UBLOCK_ARCHAIC_CUNEIFORM_NUMERALS",
+             UBLOCK_ARCHAIC_CUNEIFORM_NUMERALS, "")
+      .value("UBLOCK_BENGALI_SUPPLEMENT", UBLOCK_BENGALI_SUPPLEMENT, "")
+      .value("UBLOCK_JURCHEN_RADICALS", UBLOCK_JURCHEN_RADICALS, "")
+      .value("UBLOCK_JURCHEN", UBLOCK_JURCHEN, "")
+      .value("UBLOCK_MISCELLANEOUS_SYMBOLS_AND_ARROWS_EXTENDED",
+             UBLOCK_MISCELLANEOUS_SYMBOLS_AND_ARROWS_EXTENDED, "")
+      .value("UBLOCK_MUSICAL_SYMBOLS_SUPPLEMENT",
+             UBLOCK_MUSICAL_SYMBOLS_SUPPLEMENT, "")
+      .value("UBLOCK_SEAL", UBLOCK_SEAL, "")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
       .value("UBLOCK_COUNT", UBLOCK_COUNT, R"doc(
              One more than the highest normal :class:`UBlockCode` value.
 
@@ -1230,6 +1242,18 @@ Joining Group constants.
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
       .value("U_JG_THIN_NOON", U_JG_THIN_NOON, "")
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
+#if (U_ICU_VERSION_MAJOR_NUM >= 79)
+      .value("U_JG_CROWN_AIN", U_JG_CROWN_AIN, "")
+      .value("U_JG_CROWN_BEH", U_JG_CROWN_BEH, "")
+      .value("U_JG_CROWN_FEH", U_JG_CROWN_FEH, "")
+      .value("U_JG_CROWN_HAH", U_JG_CROWN_HAH, "")
+      .value("U_JG_CROWN_HEH", U_JG_CROWN_HEH, "")
+      .value("U_JG_CROWN_KAF", U_JG_CROWN_KAF, "")
+      .value("U_JG_CROWN_MEEM", U_JG_CROWN_MEEM, "")
+      .value("U_JG_CROWN_SAD", U_JG_CROWN_SAD, "")
+      .value("U_JG_CROWN_SEEN", U_JG_CROWN_SEEN, "")
+      .value("U_JG_CROWN_TAH", U_JG_CROWN_TAH, "")
+#endif // (U_ICU_VERSION_MAJOR_NUM >= 79)
       .value("U_JG_COUNT", U_JG_COUNT, R"doc(
              One more than the highest normal :class:`UJoiningGroup` value.
 
