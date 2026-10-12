@@ -65,8 +65,11 @@ void init_normalizer2(py::module &m) {
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
-  n2.def("get_decomposition", &Normalizer2::getDecomposition, py::arg("c"),
-         py::arg("decomposition"), R"doc(
+  n2.def(
+      "get_decomposition",
+      [](const Normalizer2 &self, UChar32 c, UnicodeString &decomposition)
+          -> bool { return self.getDecomposition(c, decomposition); },
+      py::arg("c"), py::arg("decomposition"), R"doc(
       Set the decomposition mapping for the code point specified by *c* to
       *decomposition*; return ``True`` if *c* has a decomposition, ``False``
       otherwise.
@@ -231,8 +234,11 @@ void init_normalizer2(py::module &m) {
       ``get_instance(None, "nfkc", UNORM2_DECOMPOSE)``.
       )doc");
 
-  n2.def("get_raw_decomposition", &Normalizer2::getRawDecomposition,
-         py::arg("c"), py::arg("decomposition"), R"doc(
+  n2.def(
+      "get_raw_decomposition",
+      [](const Normalizer2 &self, UChar32 c, UnicodeString &decomposition)
+          -> bool { return self.getRawDecomposition(c, decomposition); },
+      py::arg("c"), py::arg("decomposition"), R"doc(
       Set the raw decomposition mapping for the code point specified by *c* to
       *decomposition*; return ``True`` if *c* has a decomposition, ``False``
       otherwise.
@@ -255,8 +261,13 @@ void init_normalizer2(py::module &m) {
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 49)
 
-  n2.def("has_boundary_after", &Normalizer2::hasBoundaryAfter, py::arg("c"),
-         R"doc(
+  n2.def(
+      "has_boundary_after",
+      [](const Normalizer2 &self, UChar32 c) -> bool {
+        return self.hasBoundaryAfter(c);
+      },
+      py::arg("c"),
+      R"doc(
       Return ``True`` if the specified character is always followed by
       a normalizing boundary, regardless of context; ``False`` otherwise.
 
@@ -266,13 +277,24 @@ void init_normalizer2(py::module &m) {
          :meth:`has_boundary_before`.
       )doc");
 
-  n2.def("has_boundary_before", &Normalizer2::hasBoundaryBefore, py::arg("c"),
-         R"doc(
+  n2.def(
+      "has_boundary_before",
+      [](const Normalizer2 &self, UChar32 c) -> bool {
+        return self.hasBoundaryBefore(c);
+      },
+      py::arg("c"),
+      R"doc(
       Return ``True`` if the specified character is always preceded by
       a normalizing boundary, regardless of context; ``False`` otherwise.
       )doc");
 
-  n2.def("is_inert", &Normalizer2::isInert, py::arg("c"), R"doc(
+  n2.def(
+      "is_inert",
+      [](const Normalizer2 &self, UChar32 c) -> bool {
+        return self.isInert(c);
+      },
+      py::arg("c"),
+      R"doc(
       Return ``True`` if the specified character is normalization-inert,
       ``False`` otherwise.
 
@@ -284,7 +306,8 @@ void init_normalizer2(py::module &m) {
 
   n2.def(
       "is_normalized",
-      [](const Normalizer2 &self, const icupy::UnicodeStringVariant &s) {
+      [](const Normalizer2 &self,
+         const icupy::UnicodeStringVariant &s) -> bool {
         ErrorCode error_code;
         auto result = self.isNormalized(icupy::to_unistr(s), error_code);
         if (error_code.isFailure()) {

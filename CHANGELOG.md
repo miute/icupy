@@ -21,6 +21,10 @@
 
 - **Breaking:** drop support for Python 3.10 ([#258])
 
+### Fixed
+
+- Fix some methods of `icupy.icu.Normalizer2` to return `bool` instead of `int`
+
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
 
