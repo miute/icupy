@@ -1363,6 +1363,30 @@ match.
       )doc");
 
   us.def(
+      "span_back_utf8",
+      [](const UnicodeSet &self, const py::bytes &b, int32_t length,
+         USetSpanCondition span_condition) {
+        const auto b_text = b.cast<std::string>();
+        if (length == -1) {
+          length = static_cast<int32_t>(b_text.size());
+        }
+        return self.spanBackUTF8(b_text.data(), length, span_condition);
+      },
+      py::arg("b"), py::arg("length"), py::arg("span_condition"), R"doc(
+      Return the start index of the trailing substring of the specified string
+      that contains (or does not contain) only the characters in this set, or
+      the length of the specified string if such a substring is not found.
+
+      *b* is a UTF-8 string that contains (or does not contain) only the
+      characters to be searched for.
+
+      *length* is the length of *b*; can be set to -1 for a NUL-terminated
+      string.
+
+      *span_condition* specifies the containment condition.
+      )doc");
+
+  us.def(
       "span_utf8",
       [](const UnicodeSet &self, const py::bytes &b, int32_t length,
          USetSpanCondition span_condition) {

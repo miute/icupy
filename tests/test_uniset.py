@@ -1036,6 +1036,17 @@ def test_span_back() -> None:
         == 3
     )
 
+    # int32_t icu::UnicodeSet::spanBackUTF8(
+    #       const char *s,
+    #       int32_t length,
+    #       USetSpanCondition spanCondition
+    # ) const
+    b = b"ABabcde"
+    assert test1.span_back_utf8(b, -1, icu.USetSpanCondition.USET_SPAN_CONTAINED) == len(b)
+    assert test1.span_back_utf8(b, len(b), icu.USetSpanCondition.USET_SPAN_CONTAINED) == len(b)
+    assert test1.span_back_utf8(b, 4, icu.USetSpanCondition.USET_SPAN_CONTAINED) == 2
+    assert test1.span_back_utf8(b, 3, icu.USetSpanCondition.USET_SPAN_CONTAINED) == 3
+
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 76, reason="ICU4C<76")
 def test_strings() -> None:

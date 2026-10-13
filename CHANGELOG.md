@@ -23,7 +23,8 @@
 
 ### Fixed
 
-- Fix some methods of `icupy.icu.Normalizer2` to return `bool` instead of `int`
+- Fix some methods of `icupy.icu.Normalizer2` to return `bool` instead of `int` ([#261])
+- Add the missing method: `UnicodeSet.span_back_utf8()` ([#263])
 
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
@@ -430,3 +431,5 @@ Initial release.
 [#258]: https://github.com/miute/icupy/pull/258
 [#259]: https://github.com/miute/icupy/pull/259
 [#260]: https://github.com/miute/icupy/pull/260
+[#261]: https://github.com/miute/icupy/pull/261
+[#263]: https://github.com/miute/icupy/pull/263
