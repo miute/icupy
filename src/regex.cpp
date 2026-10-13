@@ -68,7 +68,10 @@ void init_regex(py::module &m) {
             }
             return result;
           }),
-          py::arg("regexp"), py::arg("flags"))
+          py::arg("regexp"), py::arg("flags"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc")
       .def(
           // [3] RegexMatcher::RegexMatcher
           py::init([](const icupy::UnicodeStringVariant &regexp,
@@ -94,7 +97,10 @@ void init_regex(py::module &m) {
             }
             return result;
           }),
-          py::arg("regexp"), py::arg("input"), py::arg("flags"));
+          py::arg("regexp"), py::arg("input"), py::arg("flags"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
         "append_replacement",
@@ -121,7 +127,10 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("dest"), py::arg("replacement"));
+          py::arg("dest"), py::arg("replacement"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def("append_tail",
          py::overload_cast<UnicodeString &>(&RegexMatcher::appendTail),
@@ -136,7 +145,10 @@ void init_regex(py::module &m) {
             }
             return std::make_unique<icupy::UTextPtr>(p);
           },
-          py::arg("dest"));
+          py::arg("dest"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
         "end",
@@ -243,7 +255,10 @@ void init_regex(py::module &m) {
         }
         return std::make_unique<icupy::UTextPtr>(p);
       },
-      py::arg("dest") = std::nullopt);
+      py::arg("dest") = std::nullopt, R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
       "get_match_callback",
@@ -299,7 +314,10 @@ void init_regex(py::module &m) {
             return std::make_tuple(std::make_unique<icupy::UTextPtr>(p),
                                    group_len);
           },
-          py::arg("group_num"), py::arg("dest"))
+          py::arg("group_num"), py::arg("dest"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc")
       .def("group",
            [](const RegexMatcher &self) {
              ErrorCode error_code;
@@ -321,7 +339,10 @@ void init_regex(py::module &m) {
             return std::make_tuple(std::make_unique<icupy::UTextPtr>(p),
                                    group_len);
           },
-          py::arg("dest"));
+          py::arg("dest"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def("group_count", &RegexMatcher::groupCount);
 
@@ -338,10 +359,16 @@ void init_regex(py::module &m) {
 
   rm.def("input", &RegexMatcher::input);
 
-  rm.def("input_text", [](const RegexMatcher &self) {
-    auto p = self.inputText();
-    return std::make_unique<icupy::UTextPtr>(p);
-  });
+  rm.def(
+      "input_text",
+      [](const RegexMatcher &self) {
+        auto p = self.inputText();
+        return std::make_unique<icupy::UTextPtr>(p);
+      },
+      R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
         "looking_at",
@@ -447,7 +474,10 @@ void init_regex(py::module &m) {
             }
             return std::make_unique<icupy::UTextPtr>(p);
           },
-          py::arg("replacement"), py::arg("dest"));
+          py::arg("replacement"), py::arg("dest"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
         "replace_first",
@@ -473,7 +503,10 @@ void init_regex(py::module &m) {
             }
             return std::make_unique<icupy::UTextPtr>(p);
           },
-          py::arg("replacement"), py::arg("dest"));
+          py::arg("replacement"), py::arg("dest"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def("require_end",
          [](const RegexMatcher &self) -> bool { return self.requireEnd(); });
@@ -498,7 +531,10 @@ void init_regex(py::module &m) {
           [](RegexMatcher &self, icupy::UTextPtr &input) -> RegexMatcher & {
             return self.reset(input);
           },
-          py::arg("input"));
+          py::arg("input"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
       "set_find_progress_callback",
@@ -662,7 +698,11 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1);
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1,
+          R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rm.def(
         "start",
@@ -795,7 +835,10 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("regex"), py::arg("flags"))
+          py::arg("regex"), py::arg("flags"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc")
       .def_static(
           "compile",
           [](icupy::UTextPtr &regex, uint32_t flags, UParseError &pe) {
@@ -806,7 +849,10 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("regex"), py::arg("flags"), py::arg("pe"))
+          py::arg("regex"), py::arg("flags"), py::arg("pe"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc")
       .def_static(
           "compile",
           [](icupy::UTextPtr &regex, UParseError &pe) {
@@ -817,7 +863,10 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("regex"), py::arg("pe"));
+          py::arg("regex"), py::arg("pe"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rp.def("flags", &RegexPattern::flags);
 
@@ -894,18 +943,27 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("regex"), py::arg("input"), py::arg("pe"));
+          py::arg("regex"), py::arg("input"), py::arg("pe"), R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rp.def("pattern", &RegexPattern::pattern);
 
-  rp.def("pattern_text", [](const RegexPattern &self) {
-    ErrorCode error_code;
-    auto p = self.patternText(error_code);
-    if (error_code.isFailure()) {
-      throw icupy::ICUError(error_code);
-    }
-    return std::make_unique<icupy::UTextPtr>(p);
-  });
+  rp.def(
+      "pattern_text",
+      [](const RegexPattern &self) {
+        ErrorCode error_code;
+        auto p = self.patternText(error_code);
+        if (error_code.isFailure()) {
+          throw icupy::ICUError(error_code);
+        }
+        return std::make_unique<icupy::UTextPtr>(p);
+      },
+      R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 
   rp.def(
         "split",
@@ -941,5 +999,9 @@ void init_regex(py::module &m) {
             }
             return result;
           },
-          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1);
+          py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1,
+          R"doc(
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
+      )doc");
 }

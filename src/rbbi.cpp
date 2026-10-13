@@ -474,6 +474,9 @@ void init_rbbi(py::module &m) {
 
       If *fill_in* is specified, it stores the shallow clone of the
       :class:`UText` used internally by the break iterator implementation.
+
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   bi.def(
@@ -555,6 +558,9 @@ void init_rbbi(py::module &m) {
       Change the text over which this operates.
 
       The text boundary is reset to the start.
+
+      .. version-deprecated:: 0.25
+         Abstract Unicode Text API (UText) is no longer supported. Do not use.
 
       .. important::
 
