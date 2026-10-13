@@ -222,7 +222,7 @@ void init_sortkey(py::module &m) {
 
   ck.def(
       "is_bogus",
-      [](const CollationKey &self) -> py::bool_ { return self.isBogus(); },
+      [](const CollationKey &self) -> bool { return self.isBogus(); },
       R"doc(
       Return ``True`` if the collation key is invalid, ``False`` otherwise.
       )doc");

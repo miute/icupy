@@ -151,8 +151,8 @@ void init_formattedvalue(py::module &m) {
 
   cfp.def(
       "matches_field",
-      [](const ConstrainedFieldPosition &self, int32_t category, int32_t field)
-          -> py::bool_ { return self.matchesField(category, field); },
+      [](const ConstrainedFieldPosition &self, int32_t category,
+         int32_t field) -> bool { return self.matchesField(category, field); },
       py::arg("category"), py::arg("field"), R"doc(
       Return ``True`` if the constraint includes the specified category and
       field, ``False`` otherwise.
@@ -253,8 +253,7 @@ void init_formattedvalue(py::module &m) {
 
   fv.def(
       "next_position",
-      [](const FormattedValue &self,
-         ConstrainedFieldPosition &cfpos) -> py::bool_ {
+      [](const FormattedValue &self, ConstrainedFieldPosition &cfpos) -> bool {
         ErrorCode error_code;
         auto result = self.nextPosition(cfpos, error_code);
         if (error_code.isFailure()) {

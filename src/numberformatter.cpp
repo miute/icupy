@@ -613,7 +613,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   nfs_lnf.def(
       "copy_error_to",
       [](const _LocalizedNumberFormatterSettings &self,
-         ErrorCode &out_error_code) -> py::bool_ {
+         ErrorCode &out_error_code) -> bool {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
@@ -989,7 +989,7 @@ void init_numberformatter(py::module &, py::module &m2) {
   nfs_unf.def(
       "copy_error_to",
       [](const _UnlocalizedNumberFormatterSettings &self,
-         ErrorCode &out_error_code) -> py::bool_ {
+         ErrorCode &out_error_code) -> bool {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(

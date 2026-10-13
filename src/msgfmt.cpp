@@ -381,7 +381,7 @@ void init_msgfmt(py::module &m) {
 
   mf.def("to_pattern", &MessageFormat::toPattern, py::arg("append_to"));
 
-  mf.def("uses_named_arguments", [](const MessageFormat &self) -> py::bool_ {
+  mf.def("uses_named_arguments", [](const MessageFormat &self) -> bool {
     return self.usesNamedArguments();
   });
 }

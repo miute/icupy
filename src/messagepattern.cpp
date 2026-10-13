@@ -289,7 +289,7 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
 
   part.def_static(
       "has_numeric_value",
-      [](UMessagePatternPartType type) -> py::bool_ {
+      [](UMessagePatternPartType type) -> bool {
         return MessagePattern::Part::hasNumericValue(type);
       },
       py::arg("type"));
@@ -386,11 +386,11 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
 
   mp.def("hash_code", &MessagePattern::hashCode);
 
-  mp.def("has_named_arguments", [](const MessagePattern &self) -> py::bool_ {
+  mp.def("has_named_arguments", [](const MessagePattern &self) -> bool {
     return self.hasNamedArguments();
   });
 
-  mp.def("has_numbered_arguments", [](const MessagePattern &self) -> py::bool_ {
+  mp.def("has_numbered_arguments", [](const MessagePattern &self) -> bool {
     return self.hasNumberedArguments();
   });
 
@@ -456,7 +456,7 @@ MSG_LIMIT, with a nesting level one greater than the surrounding message.
   mp.def(
       "part_substring_matches",
       [](const MessagePattern &self, const Part &part,
-         const icupy::UnicodeStringVariant &s) -> py::bool_ {
+         const icupy::UnicodeStringVariant &s) -> bool {
         return self.partSubstringMatches(part, icupy::to_unistr(s));
       },
       py::arg("part"), py::arg("s"));

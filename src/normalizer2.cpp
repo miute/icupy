@@ -323,7 +323,7 @@ void init_normalizer2(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)
   n2.def(
       "is_normalized_utf8",
-      [](const Normalizer2 &self, const py::bytes &b) -> py::bool_ {
+      [](const Normalizer2 &self, const py::bytes &b) -> bool {
         ErrorCode error_code;
         auto result = self.isNormalizedUTF8(StringPiece(b), error_code);
         if (error_code.isFailure()) {

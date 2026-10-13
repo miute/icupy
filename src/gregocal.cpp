@@ -56,7 +56,7 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "after",
-      [](const Calendar &self, const Calendar &when) -> py::bool_ {
+      [](const Calendar &self, const Calendar &when) -> bool {
         ErrorCode error_code;
         auto result = self.after(when, error_code);
         if (error_code.isFailure()) {
@@ -68,7 +68,7 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "before",
-      [](const Calendar &self, const Calendar &when) -> py::bool_ {
+      [](const Calendar &self, const Calendar &when) -> bool {
         ErrorCode error_code;
         auto result = self.before(when, error_code);
         if (error_code.isFailure()) {
@@ -130,7 +130,7 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "equals",
-      [](const Calendar &self, const Calendar &when) -> py::bool_ {
+      [](const Calendar &self, const Calendar &when) -> bool {
         ErrorCode error_code;
         auto result = self.equals(when, error_code);
         if (error_code.isFailure()) {
@@ -230,7 +230,7 @@ void init_gregocal(py::module &m) {
   cal.def_static(
       "get_keyword_values_for_locale",
       [](const std::string &key, const icupy::LocaleVariant &locale,
-         py::bool_ commonly_used) {
+         bool commonly_used) {
         ErrorCode error_code;
         auto result = Calendar::getKeywordValuesForLocale(
             key.data(), icupy::to_locale(locale), commonly_used, error_code);
@@ -329,7 +329,7 @@ void init_gregocal(py::module &m) {
       },
       py::arg("day_of_week"));
 
-  cal.def("in_daylight_time", [](const Calendar &self) -> py::bool_ {
+  cal.def("in_daylight_time", [](const Calendar &self) -> bool {
     ErrorCode error_code;
     auto result = self.inDaylightTime(error_code);
     if (error_code.isFailure()) {
@@ -351,24 +351,24 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "is_equivalent_to",
-      [](const Calendar &self, const Calendar &other) -> py::bool_ {
+      [](const Calendar &self, const Calendar &other) -> bool {
         return self.isEquivalentTo(other);
       },
       py::arg("other"));
 
   cal.def("is_lenient",
-          [](const Calendar &self) -> py::bool_ { return self.isLenient(); });
+          [](const Calendar &self) -> bool { return self.isLenient(); });
 
   cal.def(
       "is_set",
-      [](const Calendar &self, UCalendarDateFields field) -> py::bool_ {
+      [](const Calendar &self, UCalendarDateFields field) -> bool {
         return self.isSet(field);
       },
       py::arg("field"));
 
   cal.def(
          "is_weekend",
-         [](const Calendar &self, UDate date) -> py::bool_ {
+         [](const Calendar &self, UDate date) -> bool {
            ErrorCode error_code;
            auto result = self.isWeekend(date, error_code);
            if (error_code.isFailure()) {
@@ -378,7 +378,7 @@ void init_gregocal(py::module &m) {
          },
          py::arg("date"))
       .def("is_weekend",
-           [](const Calendar &self) -> py::bool_ { return self.isWeekend(); });
+           [](const Calendar &self) -> bool { return self.isWeekend(); });
 
   cal.def("orphan_time_zone",
           [](Calendar &self) -> std::variant<BasicTimeZone *, TimeZone *> {
@@ -423,7 +423,7 @@ void init_gregocal(py::module &m) {
 
   cal.def(
       "set_lenient",
-      [](Calendar &self, py::bool_ lenient) { self.setLenient(lenient); },
+      [](Calendar &self, bool lenient) { self.setLenient(lenient); },
       py::arg("lenient"));
 
   cal.def("set_minimal_days_in_first_week",
@@ -622,7 +622,7 @@ Useful constants for :class:`GregorianCalendar` and :class:`TimeZone`.
 
   gc.def(
       "is_leap_year",
-      [](const GregorianCalendar &self, int32_t year) -> py::bool_ {
+      [](const GregorianCalendar &self, int32_t year) -> bool {
         return self.isLeapYear(year);
       },
       py::arg("year"));

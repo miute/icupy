@@ -212,7 +212,7 @@ Constants for specifying a number format symbol.
   dfs.def(
       "get_pattern_for_currency_spacing",
       [](const DecimalFormatSymbols &self, UCurrencySpacing type,
-         py::bool_ before_currency) -> const UnicodeString & {
+         bool before_currency) -> const UnicodeString & {
         ErrorCode error_code;
         auto &result = self.getPatternForCurrencySpacing(type, before_currency,
                                                          error_code);
@@ -228,8 +228,7 @@ Constants for specifying a number format symbol.
   dfs.def(
       "set_pattern_for_currency_spacing",
       [](DecimalFormatSymbols &self, UCurrencySpacing type,
-         py::bool_ before_currency,
-         const icupy::UnicodeStringVariant &pattern) {
+         bool before_currency, const icupy::UnicodeStringVariant &pattern) {
         self.setPatternForCurrencySpacing(type, before_currency,
                                           icupy::to_unistr(pattern));
       },
@@ -239,8 +238,7 @@ Constants for specifying a number format symbol.
       "set_symbol",
       [](DecimalFormatSymbols &self,
          DecimalFormatSymbols::ENumberFormatSymbol symbol,
-         const icupy::UnicodeStringVariant &value,
-         const py::bool_ propagate_digits) {
+         const icupy::UnicodeStringVariant &value, bool propagate_digits) {
         self.setSymbol(symbol, icupy::to_unistr(value), propagate_digits);
       },
       py::arg("symbol"), py::arg("value"), py::arg("propagate_digits") = true);

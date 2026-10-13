@@ -810,7 +810,7 @@ http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_fr
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def(
       "uscript_breaks_between_letters",
-      [](UScriptCode script) -> py::bool_ {
+      [](UScriptCode script) -> bool {
         return uscript_breaksBetweenLetters(script);
       },
       py::arg("script"));
@@ -897,7 +897,7 @@ http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_fr
 #if (U_ICU_VERSION_MAJOR_NUM >= 49)
   m.def(
       "uscript_has_script",
-      [](UChar32 c, UScriptCode sc) -> py::bool_ {
+      [](UChar32 c, UScriptCode sc) -> bool {
         return uscript_hasScript(c, sc);
       },
       py::arg("c"), py::arg("sc"));
@@ -906,14 +906,12 @@ http://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_fr
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   m.def(
       "uscript_is_cased",
-      [](UScriptCode script) -> py::bool_ { return uscript_isCased(script); },
+      [](UScriptCode script) -> bool { return uscript_isCased(script); },
       py::arg("script"));
 
   m.def(
       "uscript_is_right_to_left",
-      [](UScriptCode script) -> py::bool_ {
-        return uscript_isRightToLeft(script);
-      },
+      [](UScriptCode script) -> bool { return uscript_isRightToLeft(script); },
       py::arg("script"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 51)
 }

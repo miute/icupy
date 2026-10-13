@@ -134,7 +134,7 @@ match.
   umat.def(
       "matches",
       [](UnicodeMatcher &self, const Replaceable &text, int32_t offset,
-         int32_t limit, py::bool_ incremental) {
+         int32_t limit, bool incremental) {
         auto result = self.matches(text, offset, limit, incremental);
         return std::make_tuple(result, offset);
       },
@@ -168,7 +168,7 @@ match.
   umat.def(
       "to_pattern",
       [](const UnicodeMatcher &self, UnicodeString &result,
-         py::bool_ escape_unprintable) -> UnicodeString & {
+         bool escape_unprintable) -> UnicodeString & {
         return self.toPattern(result, escape_unprintable);
       },
       py::arg("result"), py::arg("escape_unprintable") = false, R"doc(
@@ -309,7 +309,7 @@ match.
   us.def(
         "__contains__",
         [](const UnicodeSet &self, const icupy::UnicodeStringVariant &item)
-            -> py::bool_ { return self.contains(icupy::to_unistr(item)); },
+            -> bool { return self.contains(icupy::to_unistr(item)); },
         py::arg("item"), R"doc(
       Return ``True`` if this set contains the specified multi-character
       string, ``False`` otherwise.
@@ -318,7 +318,7 @@ match.
       )doc")
       .def(
           "__contains__",
-          [](const UnicodeSet &self, UChar32 item) -> py::bool_ {
+          [](const UnicodeSet &self, UChar32 item) -> bool {
             return self.contains(item);
           },
           py::arg("item"), R"doc(
@@ -355,7 +355,7 @@ match.
       )doc")
       .def(
           "__eq__",
-          [](const UnicodeSet &self, icupy::ConstUSetPtr &other) -> py::bool_ {
+          [](const UnicodeSet &self, icupy::ConstUSetPtr &other) -> bool {
             return uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"), R"doc(
@@ -363,7 +363,7 @@ match.
       )doc")
       .def(
           "__eq__",
-          [](const UnicodeSet &self, icupy::USetPtr &other) -> py::bool_ {
+          [](const UnicodeSet &self, icupy::USetPtr &other) -> bool {
             return uset_equals(self.toUSet(), other);
           },
           py::is_operator(), py::arg("other"), R"doc(
@@ -822,7 +822,7 @@ match.
   us.def(
         "contains",
         [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s)
-            -> py::bool_ { return self.contains(icupy::to_unistr(s)); },
+            -> bool { return self.contains(icupy::to_unistr(s)); },
         py::arg("s"), R"doc(
       Return ``True`` if this set contains the specified multi-character
       string, ``False`` otherwise.
@@ -833,7 +833,7 @@ match.
       )doc")
       .def(
           "contains",
-          [](const UnicodeSet &self, UChar32 c) -> py::bool_ {
+          [](const UnicodeSet &self, UChar32 c) -> bool {
             return self.contains(c);
           },
           py::arg("c"), R"doc(
@@ -846,7 +846,7 @@ match.
       )doc")
       .def(
           "contains",
-          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ {
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> bool {
             return self.contains(start, end);
           },
           py::arg("start"), py::arg("end"), R"doc(
@@ -860,7 +860,7 @@ match.
 
   us.def(
         "contains_all",
-        [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ {
+        [](const UnicodeSet &self, const UnicodeSet &c) -> bool {
           return self.containsAll(c);
         },
         py::arg("c"), R"doc(
@@ -870,7 +870,7 @@ match.
       .def(
           "contains_all",
           [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s)
-              -> py::bool_ { return self.containsAll(icupy::to_unistr(s)); },
+              -> bool { return self.containsAll(icupy::to_unistr(s)); },
           py::arg("s"), R"doc(
       Return ``True`` if this set contains all characters of the specified
       string, ``False`` otherwise.
@@ -878,7 +878,7 @@ match.
 
   us.def(
         "contains_none",
-        [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ {
+        [](const UnicodeSet &self, const UnicodeSet &c) -> bool {
           return self.containsNone(c);
         },
         py::arg("c"), R"doc(
@@ -889,14 +889,14 @@ match.
       .def(
           "contains_none",
           [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s)
-              -> py::bool_ { return self.containsNone(icupy::to_unistr(s)); },
+              -> bool { return self.containsNone(icupy::to_unistr(s)); },
           py::arg("s"), R"doc(
       Return ``True`` if this set does not contain any characters in the
       specified string, ``False`` otherwise.
       )doc")
       .def(
           "contains_none",
-          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ {
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> bool {
             return self.containsNone(start, end);
           },
           py::arg("start"), py::arg("end"), R"doc(
@@ -910,7 +910,7 @@ match.
 
   us.def(
         "contains_some",
-        [](const UnicodeSet &self, const UnicodeSet &c) -> py::bool_ {
+        [](const UnicodeSet &self, const UnicodeSet &c) -> bool {
           return self.containsSome(c);
         },
         py::arg("c"), R"doc(
@@ -921,14 +921,14 @@ match.
       .def(
           "contains_some",
           [](const UnicodeSet &self, const icupy::UnicodeStringVariant &s)
-              -> py::bool_ { return self.containsSome(icupy::to_unistr(s)); },
+              -> bool { return self.containsSome(icupy::to_unistr(s)); },
           py::arg("s"), R"doc(
       Return ``True`` if this set contains one or more characters in the
       specified string, ``False`` otherwise.
       )doc")
       .def(
           "contains_some",
-          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> py::bool_ {
+          [](const UnicodeSet &self, UChar32 start, UChar32 end) -> bool {
             return self.containsSome(start, end);
           },
           py::arg("start"), py::arg("end"), R"doc(
@@ -1048,7 +1048,7 @@ match.
 #if (U_ICU_VERSION_MAJOR_NUM >= 70)
   us.def(
       "has_strings",
-      [](const UnicodeSet &self) -> py::bool_ { return self.hasStrings(); },
+      [](const UnicodeSet &self) -> bool { return self.hasStrings(); },
       R"doc(
       Return ``True`` if this set has multi-character strings or the empty
       string, ``False`` otherwise.
@@ -1066,8 +1066,8 @@ match.
       )doc");
 
   us.def(
-      "is_bogus",
-      [](const UnicodeSet &self) -> py::bool_ { return self.isBogus(); }, R"doc(
+      "is_bogus", [](const UnicodeSet &self) -> bool { return self.isBogus(); },
+      R"doc(
       Return ``True`` if this set is not valid, ``False`` otherwise.
 
       .. seealso::
@@ -1076,14 +1076,14 @@ match.
       )doc");
 
   us.def(
-      "is_empty",
-      [](const UnicodeSet &self) -> py::bool_ { return self.isEmpty(); }, R"doc(
+      "is_empty", [](const UnicodeSet &self) -> bool { return self.isEmpty(); },
+      R"doc(
       Return ``True`` if this set is empty, ``False`` otherwise.
       )doc");
 
   us.def(
       "is_frozen",
-      [](const UnicodeSet &self) -> py::bool_ { return self.isFrozen(); },
+      [](const UnicodeSet &self) -> bool { return self.isFrozen(); },
       R"doc(
       Return ``True`` if this set is frozen, ``False`` otherwise.
 
@@ -1168,7 +1168,7 @@ match.
 
   us.def_static(
       "resembles_pattern",
-      [](const icupy::UnicodeStringVariant &pattern, int32_t pos) -> py::bool_ {
+      [](const icupy::UnicodeStringVariant &pattern, int32_t pos) -> bool {
         return UnicodeSet::resemblesPattern(icupy::to_unistr(pattern), pos);
       },
       py::arg("pattern"), py::arg("pos"), R"doc(

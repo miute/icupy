@@ -668,15 +668,15 @@ void init_locid(py::module &m, py::class_<Locale, UObject> &loc) {
       )doc");
 
   loc.def(
-      "is_bogus",
-      [](const Locale &self) -> py::bool_ { return self.isBogus(); }, R"doc(
+      "is_bogus", [](const Locale &self) -> bool { return self.isBogus(); },
+      R"doc(
       Return ``True`` if this locale is invalid, ``False`` otherwise.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   loc.def(
       "is_right_to_left",
-      [](const Locale &self) -> py::bool_ { return self.isRightToLeft(); },
+      [](const Locale &self) -> bool { return self.isRightToLeft(); },
       R"doc(
       Return ``True`` if this locale's script is right-to-left.
 

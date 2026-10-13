@@ -101,7 +101,7 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_enable_input_filter",
-      [](icupy::UCharsetDetectorPtr &ucsd, py::bool_ filter) -> py::bool_ {
+      [](icupy::UCharsetDetectorPtr &ucsd, bool filter) -> bool {
         return ucsdet_enableInputFilter(ucsd, filter);
       },
       py::arg("ucsd"), py::arg("filter"));
@@ -171,7 +171,7 @@ void init_ucsdet(py::module &m) {
 
   m.def(
       "ucsdet_is_input_filter_enabled",
-      [](const icupy::UCharsetDetectorPtr &ucsd) -> py::bool_ {
+      [](const icupy::UCharsetDetectorPtr &ucsd) -> bool {
         return ucsdet_isInputFilterEnabled(ucsd);
       },
       py::arg("ucsd"));

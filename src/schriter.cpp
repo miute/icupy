@@ -49,7 +49,7 @@ void init_schriter(py::module &m) {
 
   fci.def("hash_code", &ForwardCharacterIterator::hashCode);
 
-  fci.def("has_next", [](ForwardCharacterIterator &self) -> py::bool_ {
+  fci.def("has_next", [](ForwardCharacterIterator &self) -> bool {
     return self.hasNext();
   });
 
@@ -128,9 +128,8 @@ Origin enumeration for the :meth:`CharacterIterator.move` and
 
   ci.def("get_text", &CharacterIterator::getText, py::arg("result"));
 
-  ci.def("has_previous", [](CharacterIterator &self) -> py::bool_ {
-    return self.hasPrevious();
-  });
+  ci.def("has_previous",
+         [](CharacterIterator &self) -> bool { return self.hasPrevious(); });
 
   ci.def("last",
          [](CharacterIterator &self) -> uint16_t { return self.last(); });

@@ -54,7 +54,7 @@ void init_errorcode(py::module &m) {
 
   ec.def(
       "is_failure",
-      [](const ErrorCode &self) -> py::bool_ { return self.isFailure(); },
+      [](const ErrorCode &self) -> bool { return self.isFailure(); },
       R"doc(
       Return ``True`` if the :class:`UErrorCode` indicates failure, ``False``
       otherwise.
@@ -62,7 +62,7 @@ void init_errorcode(py::module &m) {
 
   ec.def(
       "is_success",
-      [](const ErrorCode &self) -> py::bool_ { return self.isSuccess(); },
+      [](const ErrorCode &self) -> bool { return self.isSuccess(); },
       R"doc(
       Return ``True`` if the :class:`UErrorCode` indicates success, ``False``
       otherwise.

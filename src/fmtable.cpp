@@ -305,9 +305,8 @@ exactly one type.
 
   fmt.def("get_type", &Formattable::getType);
 
-  fmt.def("is_numeric", [](const Formattable &self) -> py::bool_ {
-    return self.isNumeric();
-  });
+  fmt.def("is_numeric",
+          [](const Formattable &self) -> bool { return self.isNumeric(); });
 
   fmt.def(
       "set_array",

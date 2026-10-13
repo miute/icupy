@@ -635,13 +635,13 @@ The error code is used by ICU4C functions to report errors.
       )doc");
 
   m.def(
-      "u_failure", [](UErrorCode code) -> py::bool_ { return U_FAILURE(code); },
+      "u_failure", [](UErrorCode code) -> bool { return U_FAILURE(code); },
       py::arg("code"), R"doc(
       Return ``True`` if the :class:`UErrorCode` indicates failure.
       )doc");
 
   m.def(
-      "u_success", [](UErrorCode code) -> py::bool_ { return U_SUCCESS(code); },
+      "u_success", [](UErrorCode code) -> bool { return U_SUCCESS(code); },
       py::arg("code"), R"doc(
       Return ``True`` if the :class:`UErrorCode` indicates success.
       )doc");

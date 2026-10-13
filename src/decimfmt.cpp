@@ -130,10 +130,9 @@ Pad position.
           },
           py::arg("pattern"), py::arg("parse_error"));
 
-  df.def("are_significant_digits_used",
-         [](const DecimalFormat &self) -> py::bool_ {
-           return self.areSignificantDigitsUsed();
-         });
+  df.def("are_significant_digits_used", [](const DecimalFormat &self) -> bool {
+    return self.areSignificantDigitsUsed();
+  });
 
   df.def("clone", &DecimalFormat::clone);
 
@@ -208,42 +207,42 @@ Pad position.
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   df.def("is_decimal_pattern_match_required",
-         [](const DecimalFormat &self) -> py::bool_ {
+         [](const DecimalFormat &self) -> bool {
            return self.isDecimalPatternMatchRequired();
          });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 54)
 
   df.def("is_decimal_separator_always_shown",
-         [](const DecimalFormat &self) -> py::bool_ {
+         [](const DecimalFormat &self) -> bool {
            return self.isDecimalSeparatorAlwaysShown();
          });
 
   df.def("is_exponent_sign_always_shown",
-         [](const DecimalFormat &self) -> py::bool_ {
+         [](const DecimalFormat &self) -> bool {
            return self.isExponentSignAlwaysShown();
          });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def("is_format_fail_if_more_than_max_digits",
-         [](const DecimalFormat &self) -> py::bool_ {
+         [](const DecimalFormat &self) -> bool {
            return self.isFormatFailIfMoreThanMaxDigits();
          });
 
-  df.def("is_parse_case_sensitive", [](const DecimalFormat &self) -> py::bool_ {
+  df.def("is_parse_case_sensitive", [](const DecimalFormat &self) -> bool {
     return self.isParseCaseSensitive();
   });
 
-  df.def("is_parse_no_exponent", [](const DecimalFormat &self) -> py::bool_ {
+  df.def("is_parse_no_exponent", [](const DecimalFormat &self) -> bool {
     return self.isParseNoExponent();
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
-  df.def("is_scientific_notation", [](const DecimalFormat &self) -> py::bool_ {
+  df.def("is_scientific_notation", [](const DecimalFormat &self) -> bool {
     return self.isScientificNotation();
   });
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
-  df.def("is_sign_always_shown", [](const DecimalFormat &self) -> py::bool_ {
+  df.def("is_sign_always_shown", [](const DecimalFormat &self) -> bool {
     return self.isSignAlwaysShown();
   });
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
@@ -285,7 +284,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 54)
   df.def(
       "set_decimal_pattern_match_required",
-      [](DecimalFormat &self, py::bool_ new_value) {
+      [](DecimalFormat &self, bool new_value) {
         self.setDecimalPatternMatchRequired(new_value);
       },
       py::arg("new_value"));
@@ -293,14 +292,14 @@ Pad position.
 
   df.def(
       "set_decimal_separator_always_shown",
-      [](DecimalFormat &self, py::bool_ new_value) {
+      [](DecimalFormat &self, bool new_value) {
         self.setDecimalSeparatorAlwaysShown(new_value);
       },
       py::arg("new_value"));
 
   df.def(
       "set_exponent_sign_always_shown",
-      [](DecimalFormat &self, py::bool_ new_value) {
+      [](DecimalFormat &self, bool new_value) {
         self.setExponentSignAlwaysShown(new_value);
       },
       py::arg("exp_sign_always"));
@@ -308,7 +307,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def(
       "set_format_fail_if_more_than_max_digits",
-      [](DecimalFormat &self, py::bool_ value) {
+      [](DecimalFormat &self, bool value) {
         self.setFormatFailIfMoreThanMaxDigits(value);
       },
       py::arg("value"));
@@ -322,7 +321,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 53)
   df.def(
       "set_grouping_used",
-      [](DecimalFormat &self, py::bool_ new_value) {
+      [](DecimalFormat &self, bool new_value) {
         self.setGroupingUsed(new_value);
       },
       py::arg("new_value"));
@@ -376,7 +375,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def(
       "set_parse_case_sensitive",
-      [](DecimalFormat &self, py::bool_ value) {
+      [](DecimalFormat &self, bool value) {
         self.setParseCaseSensitive(value);
       },
       py::arg("value"));
@@ -385,9 +384,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def(
       "set_parse_no_exponent",
-      [](DecimalFormat &self, py::bool_ value) {
-        self.setParseNoExponent(value);
-      },
+      [](DecimalFormat &self, bool value) { self.setParseNoExponent(value); },
       py::arg("value"));
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)
 
@@ -410,7 +407,7 @@ Pad position.
 
   df.def(
       "set_scientific_notation",
-      [](DecimalFormat &self, py::bool_ use_scientific) {
+      [](DecimalFormat &self, bool use_scientific) {
         self.setScientificNotation(use_scientific);
       },
       py::arg("use_scientific"));
@@ -421,7 +418,7 @@ Pad position.
 #if (U_ICU_VERSION_MAJOR_NUM >= 64)
   df.def(
       "set_sign_always_shown",
-      [](DecimalFormat &self, py::bool_ new_value) {
+      [](DecimalFormat &self, bool new_value) {
         self.setSignAlwaysShown(new_value);
       },
       py::arg("new_value"));
@@ -429,7 +426,7 @@ Pad position.
 
   df.def(
       "set_significant_digits_used",
-      [](DecimalFormat &self, py::bool_ use_significant_digits) {
+      [](DecimalFormat &self, bool use_significant_digits) {
         self.setSignificantDigitsUsed(use_significant_digits);
       },
       py::arg("use_significant_digits"));

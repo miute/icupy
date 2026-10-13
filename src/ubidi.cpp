@@ -591,12 +591,12 @@ the Bidi algorithm.
 
   m.def(
       "ubidi_is_inverse",
-      [](icupy::UBiDiPtr &bidi) -> py::bool_ { return ubidi_isInverse(bidi); },
+      [](icupy::UBiDiPtr &bidi) -> bool { return ubidi_isInverse(bidi); },
       py::arg("bidi"));
 
   m.def(
       "ubidi_is_order_paragraphs_ltr",
-      [](icupy::UBiDiPtr &bidi) -> py::bool_ {
+      [](icupy::UBiDiPtr &bidi) -> bool {
         return ubidi_isOrderParagraphsLTR(bidi);
       },
       py::arg("bidi"));
@@ -620,7 +620,7 @@ the Bidi algorithm.
 
   m.def(
       "ubidi_order_paragraphs_ltr",
-      [](icupy::UBiDiPtr &bidi, py::bool_ order_paragraphs_ltr) {
+      [](icupy::UBiDiPtr &bidi, bool order_paragraphs_ltr) {
         ubidi_orderParagraphsLTR(bidi, order_paragraphs_ltr);
       },
       py::arg("bidi"), py::arg("order_paragraphs_ltr"));
@@ -743,7 +743,7 @@ the Bidi algorithm.
 
   m.def(
       "ubidi_set_inverse",
-      [](icupy::UBiDiPtr &bidi, py::bool_ is_inverse) {
+      [](icupy::UBiDiPtr &bidi, bool is_inverse) {
         ubidi_setInverse(bidi, is_inverse);
       },
       py::arg("bidi"), py::arg("is_inverse"));

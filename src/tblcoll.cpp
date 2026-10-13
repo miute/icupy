@@ -285,7 +285,7 @@ Enum returned by :meth:`Collator.compare` method.
   coll.def(
       "equals",
       [](const Collator &self, const icupy::UnicodeStringVariant &source,
-         const icupy::UnicodeStringVariant &target) -> py::bool_ {
+         const icupy::UnicodeStringVariant &target) -> bool {
         return self.equals(icupy::to_unistr(source), icupy::to_unistr(target));
       },
       py::arg("source"), py::arg("target"), R"doc(
@@ -495,7 +495,7 @@ Enum returned by :meth:`Collator.compare` method.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_tuple(result, py::bool_(is_available));
+        return std::make_tuple(result, bool(is_available));
       },
       py::arg("keyword"), py::arg("locale"), R"doc(
       Return a tuple of the functionally equivalent locale and the
@@ -544,7 +544,7 @@ Enum returned by :meth:`Collator.compare` method.
   coll.def_static(
       "get_keyword_values_for_locale",
       [](const std::string &keyword, const icupy::LocaleVariant &locale,
-         py::bool_ commonly_used) {
+         bool commonly_used) {
         ErrorCode error_code;
         auto result = Collator::getKeywordValuesForLocale(
             keyword.data(), icupy::to_locale(locale), commonly_used,
@@ -688,7 +688,7 @@ Enum returned by :meth:`Collator.compare` method.
   coll.def(
       "greater",
       [](const Collator &self, const icupy::UnicodeStringVariant &source,
-         const icupy::UnicodeStringVariant &target) -> py::bool_ {
+         const icupy::UnicodeStringVariant &target) -> bool {
         return self.greater(icupy::to_unistr(source), icupy::to_unistr(target));
       },
       py::arg("source"), py::arg("target"), R"doc(
@@ -713,7 +713,7 @@ Enum returned by :meth:`Collator.compare` method.
   coll.def(
       "greater_or_equal",
       [](const Collator &self, const icupy::UnicodeStringVariant &source,
-         const icupy::UnicodeStringVariant &target) -> py::bool_ {
+         const icupy::UnicodeStringVariant &target) -> bool {
         return self.greaterOrEqual(icupy::to_unistr(source),
                                    icupy::to_unistr(target));
       },

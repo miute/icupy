@@ -278,7 +278,7 @@ script subtag is most important.
   lm.def(
       "is_match",
       [](const LocaleMatcher &self, const icupy::LocaleVariant &desired,
-         const icupy::LocaleVariant &supported) -> py::bool_ {
+         const icupy::LocaleVariant &supported) -> bool {
         ErrorCode error_code;
         auto result = self.isMatch(icupy::to_locale(desired),
                                    icupy::to_locale(supported), error_code);
@@ -336,7 +336,7 @@ script subtag is most important.
 
   lmb.def(
       "copy_error_to",
-      [](const Builder &self, ErrorCode &out_error_code) -> py::bool_ {
+      [](const Builder &self, ErrorCode &out_error_code) -> bool {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
