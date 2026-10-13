@@ -64,7 +64,7 @@ void init_filteredbrk(py::module &m) {
   fbib.def(
       "suppress_break_after",
       [](FilteredBreakIteratorBuilder &self,
-         const icupy::UnicodeStringVariant &string) -> py::bool_ {
+         const icupy::UnicodeStringVariant &string) -> bool {
         ErrorCode error_code;
         auto result =
             self.suppressBreakAfter(icupy::to_unistr(string), error_code);
@@ -78,7 +78,7 @@ void init_filteredbrk(py::module &m) {
   fbib.def(
       "unsuppress_break_after",
       [](FilteredBreakIteratorBuilder &self,
-         const icupy::UnicodeStringVariant &string) -> py::bool_ {
+         const icupy::UnicodeStringVariant &string) -> bool {
         ErrorCode error_code;
         auto result =
             self.unsuppressBreakAfter(icupy::to_unistr(string), error_code);

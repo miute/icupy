@@ -253,7 +253,7 @@ Alphabetic Indexes that will also use them.
 
   ai.def("get_underflow_label", &AlphabeticIndex::getUnderflowLabel);
 
-  ai.def("next_bucket", [](AlphabeticIndex &self) -> py::bool_ {
+  ai.def("next_bucket", [](AlphabeticIndex &self) -> bool {
     ErrorCode error_code;
     auto result = self.nextBucket(error_code);
     if (error_code.isFailure()) {
@@ -262,7 +262,7 @@ Alphabetic Indexes that will also use them.
     return result;
   });
 
-  ai.def("next_record", [](AlphabeticIndex &self) -> py::bool_ {
+  ai.def("next_record", [](AlphabeticIndex &self) -> bool {
     ErrorCode error_code;
     auto result = self.nextRecord(error_code);
     if (error_code.isFailure()) {

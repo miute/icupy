@@ -265,7 +265,7 @@ void init_utext(py::module &m) {
   m.def(
       "utext_clone",
       [](std::optional<icupy::UTextPtr> &dest, const icupy::UTextPtr &src,
-         py::bool_ deep, py::bool_ read_only) {
+         bool deep, bool read_only) {
         ErrorCode error_code;
         auto p = utext_clone(dest.value_or(nullptr), src, deep, read_only,
                              error_code);
@@ -290,7 +290,7 @@ void init_utext(py::module &m) {
   m.def(
       "utext_copy",
       [](icupy::UTextPtr &ut, int64_t native_start, int64_t native_limit,
-         int64_t dest_index, py::bool_ move) {
+         int64_t dest_index, bool move) {
         ErrorCode error_code;
         utext_copy(ut, native_start, native_limit, dest_index, move,
                    error_code);
@@ -307,7 +307,7 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_equals",
-      [](icupy::UTextPtr &a, icupy::UTextPtr &b) -> py::bool_ {
+      [](icupy::UTextPtr &a, icupy::UTextPtr &b) -> bool {
         return utext_equals(a, b);
       },
       py::arg("a"), py::arg("b"));
@@ -345,24 +345,22 @@ void init_utext(py::module &m) {
 
   m.def(
       "utext_has_meta_data",
-      [](icupy::UTextPtr &ut) -> py::bool_ { return utext_hasMetaData(ut); },
+      [](icupy::UTextPtr &ut) -> bool { return utext_hasMetaData(ut); },
       py::arg("ut"));
 
   m.def(
       "utext_is_length_expensive",
-      [](icupy::UTextPtr &ut) -> py::bool_ {
-        return utext_isLengthExpensive(ut);
-      },
+      [](icupy::UTextPtr &ut) -> bool { return utext_isLengthExpensive(ut); },
       py::arg("ut"));
 
   m.def(
       "utext_is_writable",
-      [](icupy::UTextPtr &ut) -> py::bool_ { return utext_isWritable(ut); },
+      [](icupy::UTextPtr &ut) -> bool { return utext_isWritable(ut); },
       py::arg("ut"));
 
   m.def(
       "utext_move_index32",
-      [](icupy::UTextPtr &ut, int32_t delta) -> py::bool_ {
+      [](icupy::UTextPtr &ut, int32_t delta) -> bool {
         return utext_moveIndex32(ut, delta);
       },
       py::arg("ut"), py::arg("delta"));

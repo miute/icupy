@@ -28,14 +28,14 @@ void init_idna(py::module &m) {
 
   info.def(
       "has_errors",
-      [](const IDNAInfo &self) -> py::bool_ { return self.hasErrors(); }, R"doc(
+      [](const IDNAInfo &self) -> bool { return self.hasErrors(); }, R"doc(
       Return ``True`` if there were errors while :class:`IDNA` processing,
       ``False`` otherwise.
       )doc");
 
   info.def(
       "is_transitional_different",
-      [](const IDNAInfo &self) -> py::bool_ {
+      [](const IDNAInfo &self) -> bool {
         return self.isTransitionalDifferent();
       },
       R"doc(

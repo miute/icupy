@@ -310,9 +310,9 @@ time type (standard time, daylight time or unknown).
 #if (U_ICU_VERSION_MAJOR_NUM >= 51)
   tzf.def(
       "format_offset_iso8601_basic",
-      [](const TimeZoneFormat &self, int32_t offset,
-         py::bool_ use_utc_indicator, py::bool_ is_short,
-         py::bool_ ignore_seconds, UnicodeString &result) -> UnicodeString & {
+      [](const TimeZoneFormat &self, int32_t offset, bool use_utc_indicator,
+         bool is_short, bool ignore_seconds,
+         UnicodeString &result) -> UnicodeString & {
         ErrorCode error_code;
         auto &value =
             self.formatOffsetISO8601Basic(offset, use_utc_indicator, is_short,
@@ -327,9 +327,9 @@ time type (standard time, daylight time or unknown).
 
   tzf.def(
       "format_offset_iso8601_extended",
-      [](const TimeZoneFormat &self, int32_t offset,
-         py::bool_ use_utc_indicator, py::bool_ is_short,
-         py::bool_ ignore_seconds, UnicodeString &result) -> UnicodeString & {
+      [](const TimeZoneFormat &self, int32_t offset, bool use_utc_indicator,
+         bool is_short, bool ignore_seconds,
+         UnicodeString &result) -> UnicodeString & {
         ErrorCode error_code;
         auto &value = self.formatOffsetISO8601Extended(
             offset, use_utc_indicator, is_short, ignore_seconds, result,

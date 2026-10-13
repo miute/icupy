@@ -63,7 +63,7 @@ void init_edits(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 65)
   ed.def(
       "copy_error_to",
-      [](const Edits &self, ErrorCode &out_error_code) -> py::bool_ {
+      [](const Edits &self, ErrorCode &out_error_code) -> bool {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
@@ -77,7 +77,7 @@ void init_edits(py::module &m) {
 #else
   ed.def(
       "copy_error_to",
-      [](Edits &self, ErrorCode &out_error_code) -> py::bool_ {
+      [](Edits &self, ErrorCode &out_error_code) -> bool {
         return self.copyErrorTo(out_error_code);
       },
       py::arg("out_error_code"), R"doc(
@@ -112,7 +112,7 @@ void init_edits(py::module &m) {
 
   ed.def(
       "has_changes",
-      [](const Edits &self) -> py::bool_ { return self.hasChanges(); }, R"doc(
+      [](const Edits &self) -> bool { return self.hasChanges(); }, R"doc(
       Return ``True`` if there are changes, ``False`` otherwise.
       )doc");
 
@@ -191,7 +191,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "find_destination_index",
-      [](Iterator &self, int32_t i) -> py::bool_ {
+      [](Iterator &self, int32_t i) -> bool {
         ErrorCode error_code;
         auto result = self.findDestinationIndex(i, error_code);
         if (error_code.isFailure()) {
@@ -215,7 +215,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "find_source_index",
-      [](Iterator &self, int32_t i) -> py::bool_ {
+      [](Iterator &self, int32_t i) -> bool {
         ErrorCode error_code;
         auto result = self.findSourceIndex(i, error_code);
         if (error_code.isFailure()) {
@@ -238,7 +238,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "has_change",
-      [](const Iterator &self) -> py::bool_ { return self.hasChange(); }, R"doc(
+      [](const Iterator &self) -> bool { return self.hasChange(); }, R"doc(
       Return ``True`` if the current span has changes, ``False`` otherwise.
       )doc");
 
@@ -248,7 +248,7 @@ void init_edits(py::module &m) {
 
   it.def(
       "next",
-      [](Iterator &self) -> py::bool_ {
+      [](Iterator &self) -> bool {
         ErrorCode error_code;
         auto result = self.next(error_code);
         if (error_code.isFailure()) {

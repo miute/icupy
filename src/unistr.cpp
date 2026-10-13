@@ -1263,7 +1263,7 @@ string.
         //              int32_t srcLength)
         "ends_with",
         [](const UnicodeString &self, const std::u16string &src_chars,
-           int32_t src_start, int32_t src_length) -> py::bool_ {
+           int32_t src_start, int32_t src_length) -> bool {
           return self.endsWith(src_chars.data(), src_start, src_length);
         },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
@@ -1282,7 +1282,7 @@ string.
           //              int32_t srcLength)
           "ends_with",
           [](const UnicodeString &self, const UnicodeString &src_text,
-             int32_t src_start, int32_t src_length) -> py::bool_ {
+             int32_t src_start, int32_t src_length) -> bool {
             return self.endsWith(src_text, src_start, src_length);
           },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
@@ -1300,7 +1300,7 @@ string.
           // [3] endsWith(const UnicodeString &text)
           "ends_with",
           [](const UnicodeString &self,
-             const icupy::UnicodeStringVariant &src_text) -> py::bool_ {
+             const icupy::UnicodeStringVariant &src_text) -> bool {
             return self.endsWith(icupy::to_unistr(src_text));
           },
           py::arg("src_text"), R"doc(
@@ -1311,7 +1311,7 @@ string.
           // [4] endsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "ends_with",
           [](const UnicodeString &self, const std::u16string &src_chars,
-             int32_t src_length) -> py::bool_ {
+             int32_t src_length) -> bool {
             return self.endsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
@@ -1727,7 +1727,7 @@ string.
   us.def(
       "has_more_char32_than",
       [](const UnicodeString &self, int32_t start, int32_t length,
-         int32_t number) -> py::bool_ {
+         int32_t number) -> bool {
         return self.hasMoreChar32Than(start, length, number);
       },
       py::arg("start"), py::arg("length"), py::arg("number"), R"doc(
@@ -2015,7 +2015,7 @@ string.
 
   us.def(
       "is_bogus",
-      [](const UnicodeString &self) -> py::bool_ { return self.isBogus(); },
+      [](const UnicodeString &self) -> bool { return self.isBogus(); },
       R"doc(
       Return ``True`` if this object is not valid, ``False`` otherwise.
 
@@ -2026,7 +2026,7 @@ string.
 
   us.def(
       "is_empty",
-      [](const UnicodeString &self) -> py::bool_ { return self.isEmpty(); },
+      [](const UnicodeString &self) -> bool { return self.isEmpty(); },
       R"doc(
       Return ``True`` if this object is empty, ``False`` otherwise.
       )doc");
@@ -2241,7 +2241,7 @@ string.
   us.def(
       "pad_leading",
       [](UnicodeString &self, int32_t target_length, uint16_t pad_char)
-          -> py::bool_ { return self.padLeading(target_length, pad_char); },
+          -> bool { return self.padLeading(target_length, pad_char); },
       py::arg("target_length"), py::arg("pad_char") = 0x20, R"doc(
       Pad the beginning of this text with the specified character until it
       reaches the specified length;
@@ -2256,7 +2256,7 @@ string.
   us.def(
       "pad_trailing",
       [](UnicodeString &self, int32_t target_length, uint16_t pad_char)
-          -> py::bool_ { return self.padTrailing(target_length, pad_char); },
+          -> bool { return self.padTrailing(target_length, pad_char); },
       py::arg("target_length"), py::arg("pad_char") = 0x20, R"doc(
       Pad the end of this text with the specified character until it
       reaches the specified length;
@@ -2571,7 +2571,7 @@ string.
         //                int32_t srcLength)
         "starts_with",
         [](const UnicodeString &self, const std::u16string &src_chars,
-           int32_t src_start, int32_t src_length) -> py::bool_ {
+           int32_t src_start, int32_t src_length) -> bool {
           return self.startsWith(src_chars.data(), src_start, src_length);
         },
         py::arg("src_chars"), py::arg("src_start"), py::arg("src_length"),
@@ -2590,7 +2590,7 @@ string.
           //                int32_t srcLength)
           "starts_with",
           [](const UnicodeString &self, const UnicodeString &src_text,
-             int32_t src_start, int32_t src_length) -> py::bool_ {
+             int32_t src_start, int32_t src_length) -> bool {
             return self.startsWith(src_text, src_start, src_length);
           },
           py::arg("src_text"), py::arg("src_start"), py::arg("src_length"),
@@ -2608,7 +2608,7 @@ string.
           // [3] startsWith(const UnicodeString &text)
           "starts_with",
           [](const UnicodeString &self, const icupy::UnicodeStringVariant &text)
-              -> py::bool_ { return self.startsWith(icupy::to_unistr(text)); },
+              -> bool { return self.startsWith(icupy::to_unistr(text)); },
           py::arg("text"), R"doc(
       Return ``True`` if this text starts with the specified string, ``False``
       otherwise.
@@ -2617,7 +2617,7 @@ string.
           // [4] startsWith(ConstChar16Ptr srcChars, int32_t srcLength)
           "starts_with",
           [](const UnicodeString &self, const std::u16string &src_chars,
-             int32_t src_length) -> py::bool_ {
+             int32_t src_length) -> bool {
             return self.startsWith(src_chars.data(), src_length);
           },
           py::arg("src_chars"), py::arg("src_length"), R"doc(
@@ -2823,7 +2823,7 @@ string.
 
   us.def(
       "truncate",
-      [](UnicodeString &self, int32_t target_length) -> py::bool_ {
+      [](UnicodeString &self, int32_t target_length) -> bool {
         return self.truncate(target_length);
       },
       py::arg("target_length"), R"doc(

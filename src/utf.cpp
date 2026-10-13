@@ -18,16 +18,16 @@ void init_utf(py::module &m) {
   // utf.h
   //
   m.def(
-      "u_is_bmp", [](uint32_t c) -> py::bool_ { return U_IS_BMP(c); },
-      py::arg("c"), R"doc(
+      "u_is_bmp", [](uint32_t c) -> bool { return U_IS_BMP(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a BMP code point
       (U+0000..U+FFFF), ``False`` otherwise.
       )doc");
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
   m.def(
-      "u_is_code_point",
-      [](uint32_t c) -> py::bool_ { return U_IS_CODE_POINT(c); }, py::arg("c"),
+      "u_is_code_point", [](uint32_t c) -> bool { return U_IS_CODE_POINT(c); },
+      py::arg("c"),
       R"doc(
       Return ``True`` if the specified code point is a valid Unicode code point
       (U+0000..U+10FFFF), ``False`` otherwise.
@@ -35,7 +35,7 @@ void init_utf(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 78)
 
   m.def(
-      "u_is_lead", [](uint32_t c) -> py::bool_ { return U_IS_LEAD(c); },
+      "u_is_lead", [](uint32_t c) -> bool { return U_IS_LEAD(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified code point is a lead surrogate
       (U+D800..U+DBFF), ``False`` otherwise.
@@ -44,8 +44,8 @@ void init_utf(py::module &m) {
 #if (U_ICU_VERSION_MAJOR_NUM >= 78)
   m.def(
       "u_is_scalar_value",
-      [](uint32_t c) -> py::bool_ { return U_IS_SCALAR_VALUE(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_SCALAR_VALUE(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a Unicode scalar value,
       ``False`` otherwise.
 
@@ -57,15 +57,15 @@ void init_utf(py::module &m) {
 
   m.def(
       "u_is_supplementary",
-      [](uint32_t c) -> py::bool_ { return U_IS_SUPPLEMENTARY(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_SUPPLEMENTARY(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a supplementary code point
       (U+10000..U+10FFFF), ``False`` otherwise.
       )doc");
 
   m.def(
-      "u_is_surrogate",
-      [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE(c); }, py::arg("c"),
+      "u_is_surrogate", [](uint32_t c) -> bool { return U_IS_SURROGATE(c); },
+      py::arg("c"),
       R"doc(
       Return ``True`` if the specified code point is a surrogate
       (U+D800..U+DFFF), ``False`` otherwise.
@@ -73,22 +73,22 @@ void init_utf(py::module &m) {
 
   m.def(
       "u_is_surrogate_lead",
-      [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE_LEAD(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_SURROGATE_LEAD(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a lead surrogate,
       ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_surrogate_trail",
-      [](uint32_t c) -> py::bool_ { return U_IS_SURROGATE_TRAIL(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_SURROGATE_TRAIL(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a trail surrogate,
       ``False`` otherwise.
       )doc");
 
   m.def(
-      "u_is_trail", [](uint32_t c) -> py::bool_ { return U_IS_TRAIL(c); },
+      "u_is_trail", [](uint32_t c) -> bool { return U_IS_TRAIL(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified code point is a trail surrogate
       (U+DC00..U+DFFF), ``False`` otherwise.
@@ -96,16 +96,16 @@ void init_utf(py::module &m) {
 
   m.def(
       "u_is_unicode_char",
-      [](uint32_t c) -> py::bool_ { return U_IS_UNICODE_CHAR(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_UNICODE_CHAR(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a Unicode character,
       ``False`` otherwise.
       )doc");
 
   m.def(
       "u_is_unicode_nonchar",
-      [](uint32_t c) -> py::bool_ { return U_IS_UNICODE_NONCHAR(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U_IS_UNICODE_NONCHAR(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified code point is a Unicode noncharacter,
       ``False`` otherwise.
       )doc");
@@ -390,7 +390,7 @@ void init_utf(py::module &m) {
       )doc");
 
   m.def(
-      "u16_is_lead", [](uint32_t c) -> py::bool_ { return U16_IS_LEAD(c); },
+      "u16_is_lead", [](uint32_t c) -> bool { return U16_IS_LEAD(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified code unit is a lead surrogate
       (U+D800..U+DBFF), ``False`` otherwise.
@@ -401,7 +401,7 @@ void init_utf(py::module &m) {
       )doc");
 
   m.def(
-      "u16_is_single", [](uint32_t c) -> py::bool_ { return U16_IS_SINGLE(c); },
+      "u16_is_single", [](uint32_t c) -> bool { return U16_IS_SINGLE(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified code unit is a single code unit
       (BMP, not a surrogate), ``False`` otherwise.
@@ -409,7 +409,7 @@ void init_utf(py::module &m) {
 
   m.def(
       "u16_is_surrogate",
-      [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE(c); }, py::arg("c"),
+      [](uint32_t c) -> bool { return U16_IS_SURROGATE(c); }, py::arg("c"),
       R"doc(
       Return ``True`` if the specified code unit is a surrogate
       (U+D800..U+DFFF), ``False`` otherwise.
@@ -422,8 +422,8 @@ void init_utf(py::module &m) {
 
   m.def(
       "u16_is_surrogate_lead",
-      [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE_LEAD(c); },
-      py::arg("c"), R"doc(
+      [](uint32_t c) -> bool { return U16_IS_SURROGATE_LEAD(c); }, py::arg("c"),
+      R"doc(
       Return ``True`` if the specified surrogate code point is a lead
       surrogate, ``False`` otherwise.
 
@@ -434,7 +434,7 @@ void init_utf(py::module &m) {
 
   m.def(
       "u16_is_surrogate_trail",
-      [](uint32_t c) -> py::bool_ { return U16_IS_SURROGATE_TRAIL(c); },
+      [](uint32_t c) -> bool { return U16_IS_SURROGATE_TRAIL(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified surrogate code point is a trail
       surrogate, ``False`` otherwise.
@@ -445,7 +445,7 @@ void init_utf(py::module &m) {
       )doc");
 
   m.def(
-      "u16_is_trail", [](uint32_t c) -> py::bool_ { return U16_IS_TRAIL(c); },
+      "u16_is_trail", [](uint32_t c) -> bool { return U16_IS_TRAIL(c); },
       py::arg("c"), R"doc(
       Return ``True`` if the specified code unit is a trail surrogate
       (U+DC00..U+DFFF), ``False`` otherwise.

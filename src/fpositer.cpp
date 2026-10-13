@@ -56,7 +56,7 @@ void init_fpositer(py::module &m) {
 
   fpi.def(
       "next",
-      [](FieldPositionIterator &self, FieldPosition &fp) -> py::bool_ {
+      [](FieldPositionIterator &self, FieldPosition &fp) -> bool {
         return self.next(fp);
       },
       py::arg("fp"), R"doc(

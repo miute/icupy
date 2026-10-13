@@ -259,9 +259,8 @@ void init_resbund(py::module &m) {
       Return the version information associated with this ``ResourceBundle``.
       )doc");
 
-  res.def("has_next", [](const ResourceBundle &self) -> py::bool_ {
-    return self.hasNext();
-  });
+  res.def("has_next",
+          [](const ResourceBundle &self) -> bool { return self.hasNext(); });
 
   res.def("reset_iterator", &ResourceBundle::resetIterator);
 }

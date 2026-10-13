@@ -478,7 +478,7 @@ void init_rbbi(py::module &m) {
 
   bi.def(
       "is_boundary",
-      [](BreakIterator &self, int32_t offset) -> py::bool_ {
+      [](BreakIterator &self, int32_t offset) -> bool {
         return self.isBoundary(offset);
       },
       py::arg("offset"), R"doc(

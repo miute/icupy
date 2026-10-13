@@ -575,7 +575,7 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_is_ambiguous",
-      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> bool {
         return ucnv_isAmbiguous(cnv);
       },
       py::arg("cnv"), R"doc(
@@ -585,7 +585,7 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_is_fixed_width",
-      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> bool {
         ErrorCode error_code;
         auto result = ucnv_isFixedWidth(cnv, error_code);
         if (error_code.isFailure()) {
@@ -739,7 +739,7 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_set_fallback",
-      [](icupy::UConverterPtr &cnv, py::bool_ uses_fallback) {
+      [](icupy::UConverterPtr &cnv, bool uses_fallback) {
         ucnv_setFallback(cnv, uses_fallback);
       },
       py::arg("cnv"), py::arg("uses_fallback"), R"doc(
@@ -1049,7 +1049,7 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_uses_fallback",
-      [](const icupy::UConverterPtr &cnv) -> py::bool_ {
+      [](const icupy::UConverterPtr &cnv) -> bool {
         return ucnv_usesFallback(cnv);
       },
       py::arg("cnv"), R"doc(

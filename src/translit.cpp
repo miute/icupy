@@ -31,7 +31,7 @@ public:
                                    UBool incremental) const override {
     PYBIND11_OVERRIDE_PURE_NAME(void, Transliterator, "_handle_transliterate",
                                 handleTransliterate, text, std::ref(pos),
-                                py::bool_(incremental));
+                                bool(incremental));
   }
 
   virtual UClassID getDynamicClassID() const override;
@@ -448,7 +448,7 @@ void init_translit(py::module &m) {
   tl.def(
       "filtered_transliterate",
       [](const Transliterator &self, Replaceable &text, UTransPosition &index,
-         py::bool_ incremental) {
+         bool incremental) {
         self.filteredTransliterate(text, index, incremental);
       },
       py::arg("text"), py::arg("index"), py::arg("incremental"), R"doc(
@@ -728,7 +728,7 @@ void init_translit(py::module &m) {
   tl.def(
       "_handle_transliterate",
       [](const PyTransliterator &self, Replaceable &text, UTransPosition &pos,
-         py::bool_ incremental) {
+         bool incremental) {
         self.handleTransliterate(text, pos, incremental);
       },
       py::arg("text"), py::arg("pos"), py::arg("incremental"), R"doc(
@@ -872,7 +872,7 @@ void init_translit(py::module &m) {
   tl.def(
       "to_rules",
       [](const Transliterator &self, UnicodeString &result,
-         py::bool_ escape_unprintable) -> UnicodeString & {
+         bool escape_unprintable) -> UnicodeString & {
         return self.toRules(result, escape_unprintable);
       },
       py::arg("result"), py::arg("escape_unprintable"), R"doc(

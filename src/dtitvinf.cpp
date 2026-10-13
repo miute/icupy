@@ -54,7 +54,7 @@ void init_dtitvinf(py::module &m) {
 
   dii.def("clone", &DateIntervalInfo::clone);
 
-  dii.def("get_default_order", [](const DateIntervalInfo &self) -> py::bool_ {
+  dii.def("get_default_order", [](const DateIntervalInfo &self) -> bool {
     return self.getDefaultOrder();
   });
 

@@ -20,27 +20,28 @@ void init_appendable(py::module &m) {
   //
   app.def(
       "append_code_point",
-      [](Appendable &self, UChar32 c) -> py::bool_ {
+      [](Appendable &self, UChar32 c) -> bool {
         return self.appendCodePoint(c);
       },
       py::arg("c"));
 
   app.def(
       "append_code_unit",
-      [](Appendable &self, int16_t c) -> py::bool_ {
+      [](Appendable &self, int16_t c) -> bool {
         return self.appendCodeUnit(c);
       },
       py::arg("c"));
 
   app.def(
       "append_string",
-      [](Appendable &self, const std::u16string &s, int32_t length)
-          -> py::bool_ { return self.appendString(s.data(), length); },
+      [](Appendable &self, const std::u16string &s, int32_t length) -> bool {
+        return self.appendString(s.data(), length);
+      },
       py::arg("s"), py::arg("length") = -1);
 
   app.def(
       "reserve_append_capacity",
-      [](Appendable &self, int32_t append_capacity) -> py::bool_ {
+      [](Appendable &self, int32_t append_capacity) -> bool {
         return self.reserveAppendCapacity(append_capacity);
       },
       py::arg("append_capacity"));

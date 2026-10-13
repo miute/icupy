@@ -29,7 +29,7 @@ void init_numsys(py::module &m) {
       .def_static(
           // [2] NumberingSystem::createInstance
           "create_instance",
-          [](int32_t radix, py::bool_ is_algorithmic,
+          [](int32_t radix, bool is_algorithmic,
              const icupy::UnicodeStringVariant &description) {
             ErrorCode error_code;
             auto result = NumberingSystem::createInstance(
@@ -80,7 +80,7 @@ void init_numsys(py::module &m) {
 
   ns.def("get_radix", &NumberingSystem::getRadix);
 
-  ns.def("is_algorithmic", [](const NumberingSystem &self) -> py::bool_ {
+  ns.def("is_algorithmic", [](const NumberingSystem &self) -> bool {
     return self.isAlgorithmic();
   });
 }

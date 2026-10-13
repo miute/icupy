@@ -16,7 +16,7 @@ void init_region(py::module &m) {
 
   reg.def(
       "__contains__",
-      [](const Region &self, const Region &item) -> py::bool_ {
+      [](const Region &self, const Region &item) -> bool {
         return self.contains(item);
       },
       py::arg("item"));
@@ -33,7 +33,7 @@ void init_region(py::module &m) {
 
   reg.def(
       "contains",
-      [](const Region &self, const Region &other) -> py::bool_ {
+      [](const Region &self, const Region &other) -> bool {
         return self.contains(other);
       },
       py::arg("other"));

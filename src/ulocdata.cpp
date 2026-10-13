@@ -221,7 +221,7 @@ Enumeration for representing the measurement systems.
 
   m.def(
       "ulocdata_get_no_substitute",
-      [](icupy::ULocaleDataPtr &uld) -> py::bool_ {
+      [](icupy::ULocaleDataPtr &uld) -> bool {
         return ulocdata_getNoSubstitute(uld);
       },
       py::arg("uld"));
@@ -253,7 +253,7 @@ Enumeration for representing the measurement systems.
 
   m.def(
       "ulocdata_set_no_substitute",
-      [](icupy::ULocaleDataPtr &uld, py::bool_ setting) {
+      [](icupy::ULocaleDataPtr &uld, bool setting) {
         ulocdata_setNoSubstitute(uld, setting);
       },
       py::arg("uld"), py::arg("setting"));

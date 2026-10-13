@@ -394,15 +394,14 @@ For more information, see the
   nf.def("get_rounding_mode", &NumberFormat::getRoundingMode);
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 60)
 
-  nf.def("is_grouping_used", [](const NumberFormat &self) -> py::bool_ {
+  nf.def("is_grouping_used", [](const NumberFormat &self) -> bool {
     return self.isGroupingUsed();
   });
 
-  nf.def("is_lenient", [](const NumberFormat &self) -> py::bool_ {
-    return self.isLenient();
-  });
+  nf.def("is_lenient",
+         [](const NumberFormat &self) -> bool { return self.isLenient(); });
 
-  nf.def("is_parse_integer_only", [](const NumberFormat &self) -> py::bool_ {
+  nf.def("is_parse_integer_only", [](const NumberFormat &self) -> bool {
     return self.isParseIntegerOnly();
   });
 
@@ -461,14 +460,14 @@ For more information, see the
 
   nf.def(
       "set_grouping_used",
-      [](NumberFormat &self, py::bool_ new_value) {
+      [](NumberFormat &self, bool new_value) {
         self.setGroupingUsed(new_value);
       },
       py::arg("new_value"));
 
   nf.def(
       "set_lenient",
-      [](NumberFormat &self, py::bool_ enable) { self.setLenient(enable); },
+      [](NumberFormat &self, bool enable) { self.setLenient(enable); },
       py::arg("enable"));
 
   nf.def("set_maximum_fraction_digits", &NumberFormat::setMaximumFractionDigits,
@@ -485,9 +484,7 @@ For more information, see the
 
   nf.def(
       "set_parse_integer_only",
-      [](NumberFormat &self, py::bool_ value) {
-        self.setParseIntegerOnly(value);
-      },
+      [](NumberFormat &self, bool value) { self.setParseIntegerOnly(value); },
       py::arg("value"));
 
 #if (U_ICU_VERSION_MAJOR_NUM >= 60)

@@ -114,7 +114,7 @@ void init_coleitr(py::module &m) {
 
   cei.def_static(
       "is_ignorable",
-      [](int32_t order) -> py::bool_ {
+      [](int32_t order) -> bool {
         return CollationElementIterator::isIgnorable(order);
       },
       py::arg("order"), R"doc(

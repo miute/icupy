@@ -255,7 +255,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
-        return std::make_tuple(std::ref(result), py::bool_(is_system_id));
+        return std::make_tuple(std::ref(result), bool(is_system_id));
       },
       py::arg("id"), py::arg("canonical_id"));
 
@@ -268,7 +268,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
         py::arg("locale"), py::arg("result"))
       .def(
           "get_display_name",
-          [](const TimeZone &self, py::bool_ in_daylight,
+          [](const TimeZone &self, bool in_daylight,
              TimeZone::EDisplayType style, const icupy::LocaleVariant &locale,
              UnicodeString &result) -> UnicodeString & {
             return self.getDisplayName(in_daylight, style,
@@ -278,7 +278,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
           py::arg("result"))
       .def(
           "get_display_name",
-          [](const TimeZone &self, py::bool_ in_daylight,
+          [](const TimeZone &self, bool in_daylight,
              TimeZone::EDisplayType style,
              UnicodeString &result) -> UnicodeString & {
             return self.getDisplayName(in_daylight, style, result);
@@ -339,7 +339,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
 
   tz.def(
         "get_offset",
-        [](const TimeZone &self, UDate date, py::bool_ local) {
+        [](const TimeZone &self, UDate date, bool local) {
           int32_t raw_offset, dst_offset;
           ErrorCode error_code;
           self.getOffset(date, local, raw_offset, dst_offset, error_code);
@@ -429,7 +429,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
 
   tz.def(
       "has_same_rules",
-      [](const TimeZone &self, const TimeZone &other) -> py::bool_ {
+      [](const TimeZone &self, const TimeZone &other) -> bool {
         return self.hasSameRules(other);
       },
       py::arg("other"));
@@ -445,9 +445,8 @@ Enum for use with :meth:`TimeZone.get_display_name`.
 
   tz.def("set_raw_offset", &TimeZone::setRawOffset, py::arg("offset_millis"));
 
-  tz.def("use_daylight_time", [](const TimeZone &self) -> py::bool_ {
-    return self.useDaylightTime();
-  });
+  tz.def("use_daylight_time",
+         [](const TimeZone &self) -> bool { return self.useDaylightTime(); });
 
   //
   // class icu::BasicTimeZone
@@ -474,8 +473,8 @@ Enum for use with :meth:`TimeZone.get_display_name`.
 
   btz.def(
       "get_next_transition",
-      [](const BasicTimeZone &self, UDate base, py::bool_ inclusive,
-         TimeZoneTransition &result) -> py::bool_ {
+      [](const BasicTimeZone &self, UDate base, bool inclusive,
+         TimeZoneTransition &result) -> bool {
         return self.getNextTransition(base, inclusive, result);
       },
       py::arg("base"), py::arg("inclusive"), py::arg("result"));
@@ -502,8 +501,8 @@ Enum for use with :meth:`TimeZone.get_display_name`.
 
   btz.def(
       "get_previous_transition",
-      [](const BasicTimeZone &self, UDate base, py::bool_ inclusive,
-         TimeZoneTransition &result) -> py::bool_ {
+      [](const BasicTimeZone &self, UDate base, bool inclusive,
+         TimeZoneTransition &result) -> bool {
         return self.getPreviousTransition(base, inclusive, result);
       },
       py::arg("base"), py::arg("inclusive"), py::arg("result"));
@@ -546,7 +545,7 @@ Enum for use with :meth:`TimeZone.get_display_name`.
   btz.def(
       "has_equivalent_transitions",
       [](const BasicTimeZone &self, const BasicTimeZone &tz, UDate start,
-         UDate end, py::bool_ ignore_dst_amount) -> py::bool_ {
+         UDate end, bool ignore_dst_amount) -> bool {
         ErrorCode error_code;
         auto result = self.hasEquivalentTransitions(
             tz, start, end, ignore_dst_amount, error_code);
@@ -732,7 +731,7 @@ this parameter, this is not the case.
 
   stz.def(
          "get_offset",
-         [](const SimpleTimeZone &self, UDate date, py::bool_ local) {
+         [](const SimpleTimeZone &self, UDate date, bool local) {
            int32_t raw_offset, dst_offset;
            ErrorCode error_code;
            self.getOffset(date, local, raw_offset, dst_offset, error_code);
@@ -810,7 +809,7 @@ this parameter, this is not the case.
          "set_end_rule",
          [](SimpleTimeZone &self, int32_t month, int32_t day_of_month,
             int32_t day_of_week, int32_t time, SimpleTimeZone::TimeMode mode,
-            py::bool_ after) {
+            bool after) {
            ErrorCode error_code;
            self.setEndRule(month, day_of_month, day_of_week, time, mode, after,
                            error_code);
@@ -842,7 +841,7 @@ this parameter, this is not the case.
           //                UErrorCode &status)
           "set_end_rule",
           [](SimpleTimeZone &self, int32_t month, int32_t day_of_month,
-             int32_t day_of_week, int32_t time, py::bool_ after) {
+             int32_t day_of_week, int32_t time, bool after) {
             ErrorCode error_code;
             self.setEndRule(month, day_of_month, day_of_week, time, after,
                             error_code);
@@ -903,7 +902,7 @@ this parameter, this is not the case.
          "set_start_rule",
          [](SimpleTimeZone &self, int32_t month, int32_t day_of_month,
             int32_t day_of_week, int32_t time, SimpleTimeZone::TimeMode mode,
-            py::bool_ after) {
+            bool after) {
            ErrorCode error_code;
            self.setStartRule(month, day_of_month, day_of_week, time, mode,
                              after, error_code);
@@ -935,7 +934,7 @@ this parameter, this is not the case.
           //                  UErrorCode &status)
           "set_start_rule",
           [](SimpleTimeZone &self, int32_t month, int32_t day_of_month,
-             int32_t day_of_week, int32_t time, py::bool_ after) {
+             int32_t day_of_week, int32_t time, bool after) {
             ErrorCode error_code;
             self.setStartRule(month, day_of_month, day_of_week, time, after,
                               error_code);
@@ -1041,12 +1040,12 @@ this parameter, this is not the case.
   vtz.def("get_last_modified", [](const VTimeZone &self) {
     UDate last_modified;
     auto result = self.getLastModified(last_modified);
-    return std::make_tuple(py::bool_(result), last_modified);
+    return std::make_tuple(bool(result), last_modified);
   });
 
   vtz.def(
       "get_tzurl",
-      [](const VTimeZone &self, UnicodeString &url) -> py::bool_ {
+      [](const VTimeZone &self, UnicodeString &url) -> bool {
         return self.getTZURL(url);
       },
       py::arg("url"));

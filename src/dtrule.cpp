@@ -69,7 +69,7 @@ Time rule type constants.
                     DateTimeRule::TimeRuleType>(),
            py::arg("month"), py::arg("week_in_month"), py::arg("day_of_week"),
            py::arg("millis_in_day"), py::arg("time_type"))
-      .def(py::init<int32_t, int32_t, int32_t, py::bool_, int32_t,
+      .def(py::init<int32_t, int32_t, int32_t, bool, int32_t,
                     DateTimeRule::TimeRuleType>(),
            py::arg("month"), py::arg("day_of_month"), py::arg("day_of_week"),
            py::arg("after"), py::arg("millis_in_day"), py::arg("time_type"))

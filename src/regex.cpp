@@ -183,7 +183,7 @@ void init_regex(py::module &m) {
 #endif // (U_ICU_VERSION_MAJOR_NUM < 55)
   rm.def(
         "find",
-        [](RegexMatcher &self, int64_t start) -> py::bool_ {
+        [](RegexMatcher &self, int64_t start) -> bool {
           ErrorCode error_code;
           auto result = self.find(start, error_code);
           if (error_code.isFailure()) {
@@ -194,7 +194,7 @@ void init_regex(py::module &m) {
         py::arg("start"))
 #if (U_ICU_VERSION_MAJOR_NUM >= 55)
       .def("find",
-           [](RegexMatcher &self) -> py::bool_ {
+           [](RegexMatcher &self) -> bool {
              ErrorCode error_code;
              auto result = self.find(error_code);
              if (error_code.isFailure()) {
@@ -325,16 +325,16 @@ void init_regex(py::module &m) {
 
   rm.def("group_count", &RegexMatcher::groupCount);
 
-  rm.def("has_anchoring_bounds", [](const RegexMatcher &self) -> py::bool_ {
+  rm.def("has_anchoring_bounds", [](const RegexMatcher &self) -> bool {
     return self.hasAnchoringBounds();
   });
 
-  rm.def("has_transparent_bounds", [](const RegexMatcher &self) -> py::bool_ {
+  rm.def("has_transparent_bounds", [](const RegexMatcher &self) -> bool {
     return self.hasTransparentBounds();
   });
 
   rm.def("hit_end",
-         [](const RegexMatcher &self) -> py::bool_ { return self.hitEnd(); });
+         [](const RegexMatcher &self) -> bool { return self.hitEnd(); });
 
   rm.def("input", &RegexMatcher::input);
 
@@ -345,7 +345,7 @@ void init_regex(py::module &m) {
 
   rm.def(
         "looking_at",
-        [](RegexMatcher &self, int64_t start_index) -> py::bool_ {
+        [](RegexMatcher &self, int64_t start_index) -> bool {
           ErrorCode error_code;
           auto result = self.lookingAt(start_index, error_code);
           if (error_code.isFailure()) {
@@ -354,7 +354,7 @@ void init_regex(py::module &m) {
           return result;
         },
         py::arg("start_index"))
-      .def("looking_at", [](RegexMatcher &self) -> py::bool_ {
+      .def("looking_at", [](RegexMatcher &self) -> bool {
         ErrorCode error_code;
         auto result = self.lookingAt(error_code);
         if (error_code.isFailure()) {
@@ -365,7 +365,7 @@ void init_regex(py::module &m) {
 
   rm.def(
         "matches",
-        [](RegexMatcher &self, int64_t start_index) -> py::bool_ {
+        [](RegexMatcher &self, int64_t start_index) -> bool {
           ErrorCode error_code;
           auto result = self.matches(start_index, error_code);
           if (error_code.isFailure()) {
@@ -374,7 +374,7 @@ void init_regex(py::module &m) {
           return result;
         },
         py::arg("start_index"))
-      .def("matches", [](RegexMatcher &self) -> py::bool_ {
+      .def("matches", [](RegexMatcher &self) -> bool {
         ErrorCode error_code;
         auto result = self.matches(error_code);
         if (error_code.isFailure()) {
@@ -475,9 +475,8 @@ void init_regex(py::module &m) {
           },
           py::arg("replacement"), py::arg("dest"));
 
-  rm.def("require_end", [](const RegexMatcher &self) -> py::bool_ {
-    return self.requireEnd();
-  });
+  rm.def("require_end",
+         [](const RegexMatcher &self) -> bool { return self.requireEnd(); });
 
   rm.def("reset", py::overload_cast<>(&RegexMatcher::reset))
       .def("reset",
@@ -707,14 +706,14 @@ void init_regex(py::module &m) {
 
   rm.def(
       "use_anchoring_bounds",
-      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & {
+      [](RegexMatcher &self, bool b) -> RegexMatcher & {
         return self.useAnchoringBounds(b);
       },
       py::arg("b"));
 
   rm.def(
       "use_transparent_bounds",
-      [](RegexMatcher &self, py::bool_ b) -> RegexMatcher & {
+      [](RegexMatcher &self, bool b) -> RegexMatcher & {
         return self.useTransparentBounds(b);
       },
       py::arg("b"));
@@ -874,7 +873,7 @@ void init_regex(py::module &m) {
   rp.def_static(
         "matches",
         [](const icupy::UnicodeStringVariant &regex, const UnicodeString &input,
-           UParseError &pe) -> py::bool_ {
+           UParseError &pe) -> bool {
           ErrorCode error_code;
           auto result = RegexPattern::matches(icupy::to_unistr(regex), input,
                                               pe, error_code);
@@ -887,7 +886,7 @@ void init_regex(py::module &m) {
       .def_static(
           "matches",
           [](icupy::UTextPtr &regex, icupy::UTextPtr &input,
-             UParseError &pe) -> py::bool_ {
+             UParseError &pe) -> bool {
             ErrorCode error_code;
             auto result = RegexPattern::matches(regex, input, pe, error_code);
             if (error_code.isFailure()) {
