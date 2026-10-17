@@ -406,7 +406,7 @@ Selectors for Unicode sets that can be returned by
           R"doc(
       Return the current From-Unicode callback function.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_get_from_u_call_back` instead.
       )doc");
@@ -540,7 +540,7 @@ Selectors for Unicode sets that can be returned by
           R"doc(
       Return the current To-Unicode callback function.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_get_to_u_call_back` instead.
       )doc");
@@ -864,7 +864,7 @@ Selectors for Unicode sets that can be returned by
       converter finds an illegal or invalid Unicode sequence, and return
       the old callback function.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_set_from_u_call_back` instead.
       )doc");
@@ -1042,7 +1042,7 @@ Selectors for Unicode sets that can be returned by
       converter finds an illegal or invalid codepage sequence, and return
       the old callback function.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_set_to_u_call_back` instead.
       )doc");
