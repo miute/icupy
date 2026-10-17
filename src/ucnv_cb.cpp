@@ -55,7 +55,7 @@ void init_ucnv_cb(py::module &m) {
       Write out the specified output bytes to the target byte buffer or to
       converter internal buffers.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_cb_from_u_write_bytes` instead.
       )doc");
@@ -93,7 +93,7 @@ void init_ucnv_cb(py::module &m) {
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
       Write out the correct substitution character sequence to the target.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_cb_from_u_write_sub` instead.
       )doc");
@@ -131,7 +131,7 @@ void init_ucnv_cb(py::module &m) {
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
       Write out the Unicode substitution character (U+FFFD).
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_cb_to_u_write_sub` instead.
       )doc");
@@ -175,7 +175,7 @@ void init_ucnv_cb(py::module &m) {
           py::arg("offset_index"), R"doc(
       Write out the specified characters to the target ``UChar`` buffer.
 
-      .. note::
+      .. version-deprecated:: 0.25
 
          Use :func:`ucnv_cb_to_u_write_uchars` instead.
       )doc");

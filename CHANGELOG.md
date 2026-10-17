@@ -12,6 +12,7 @@
 - Change the default value of the `locale` parameter in the factory methods of `icupy.icu.DateFormat` and in `icupy.icu.RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
 - Update docstring ([#259])
 - Deprecate Abstract Unicode Text API (UText): support has ended ([#264])
+- Deprecate redundant functions in the Codepage Conversion API (ucnv) ([#265])
 
 ### Added
 
@@ -435,3 +436,4 @@ Initial release.
 [#261]: https://github.com/miute/icupy/pull/261
 [#263]: https://github.com/miute/icupy/pull/263
 [#264]: https://github.com/miute/icupy/pull/264
+[#265]: https://github.com/miute/icupy/pull/265
