@@ -119,12 +119,14 @@ Numeric constants for types of resource items.
              Reserved.
 
              .. version-deprecated:: ICU2.6
+
                 The value is not used.
              )doc")
       .value("URES_LIMIT", URES_LIMIT, R"doc(
              One more than the highest normal :class:`UResType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

@@ -131,6 +131,7 @@ as well as the values specific to each one.
              relations are used to achieve the same Japanese sort order.
 
              .. version-deprecated:: ICU50
+
                 Implementation detail, cannot be set via API, was removed from
                 implementation.
              )doc")
@@ -154,6 +155,7 @@ as well as the values specific to each one.
              One more than the highest normal :class:`UColAttribute` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -235,6 +237,7 @@ value to the predefined value for that locale.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -263,6 +266,7 @@ Underlying code depends on them having these numbers.
              One more than the highest normal :class:`UColBoundMode` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -370,6 +374,7 @@ These reordering codes are to be used in conjunction with the script codes.
              One more than the highest normal :class:`UColReorderCode` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

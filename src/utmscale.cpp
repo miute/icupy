@@ -59,6 +59,7 @@ into or out if the universal time scale.
              One more than the highest normal :class:`UDateTimeScale` value.
 
              .. version-deprecated:: ICU59
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -100,6 +101,7 @@ UTimeScaleValue values are used to specify the time scale values to
                 :func:`utmscale_get_time_scale_value`
 
              .. version-deprecated:: ICU59
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

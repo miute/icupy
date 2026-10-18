@@ -300,6 +300,7 @@ void init_rbbi(py::module &m) {
       please use a word boundary iterator. See :meth:`.create_word_instance`.
 
       .. version-deprecated:: ICU64
+
          Use :meth:`.create_word_instance` instead.
       )doc");
 
@@ -476,6 +477,7 @@ void init_rbbi(py::module &m) {
       :class:`UText` used internally by the break iterator implementation.
 
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -560,6 +562,7 @@ void init_rbbi(py::module &m) {
       The text boundary is reset to the start.
 
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
 
       .. important::

@@ -28,6 +28,7 @@ Formatting style for :class:`RelativeDateTimeFormatter`.
              :class:`UDateRelativeDateTimeFormatterStyle` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -128,6 +129,7 @@ e.g. "in 5 days" or "next year"
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

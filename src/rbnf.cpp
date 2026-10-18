@@ -25,6 +25,7 @@ Tags for the predefined rulesets.
              in hours, minutes, and seconds.
 
              .. version-deprecated:: ICU74
+
                 Use :class:`MeasureFormat` instead.
              )doc")
       .value("URBNF_NUMBERING_SYSTEM", URBNF_NUMBERING_SYSTEM, R"doc(

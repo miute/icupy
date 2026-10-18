@@ -70,6 +70,7 @@ void init_regex(py::module &m) {
           }),
           py::arg("regexp"), py::arg("flags"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def(
@@ -99,6 +100,7 @@ void init_regex(py::module &m) {
           }),
           py::arg("regexp"), py::arg("input"), py::arg("flags"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -129,6 +131,7 @@ void init_regex(py::module &m) {
           },
           py::arg("dest"), py::arg("replacement"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -147,6 +150,7 @@ void init_regex(py::module &m) {
           },
           py::arg("dest"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -257,6 +261,7 @@ void init_regex(py::module &m) {
       },
       py::arg("dest") = std::nullopt, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -316,6 +321,7 @@ void init_regex(py::module &m) {
           },
           py::arg("group_num"), py::arg("dest"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def("group",
@@ -341,6 +347,7 @@ void init_regex(py::module &m) {
           },
           py::arg("dest"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -367,6 +374,7 @@ void init_regex(py::module &m) {
       },
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -476,6 +484,7 @@ void init_regex(py::module &m) {
           },
           py::arg("replacement"), py::arg("dest"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -505,6 +514,7 @@ void init_regex(py::module &m) {
           },
           py::arg("replacement"), py::arg("dest"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -533,6 +543,7 @@ void init_regex(py::module &m) {
           },
           py::arg("input"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -701,6 +712,7 @@ void init_regex(py::module &m) {
           py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1,
           R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -837,6 +849,7 @@ void init_regex(py::module &m) {
           },
           py::arg("regex"), py::arg("flags"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def_static(
@@ -851,6 +864,7 @@ void init_regex(py::module &m) {
           },
           py::arg("regex"), py::arg("flags"), py::arg("pe"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def_static(
@@ -865,6 +879,7 @@ void init_regex(py::module &m) {
           },
           py::arg("regex"), py::arg("pe"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -945,6 +960,7 @@ void init_regex(py::module &m) {
           },
           py::arg("regex"), py::arg("input"), py::arg("pe"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -962,6 +978,7 @@ void init_regex(py::module &m) {
       },
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -1002,6 +1019,7 @@ void init_regex(py::module &m) {
           py::arg("input"), py::arg("dest"), py::arg("dest_capacity") = -1,
           R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 }

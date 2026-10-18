@@ -838,6 +838,7 @@ void init_translit(py::module &m) {
       Register a transliterator object.
 
       .. version-deprecated:: 0.24
+
          Do not use this method. It may be removed in a future release.
       )doc");
 
@@ -1013,6 +1014,7 @@ void init_translit(py::module &m) {
       Unregister a transliterator object.
 
       .. version-deprecated:: 0.24
+
          Do not use this method. It may be removed in a future release.
       )doc");
 }

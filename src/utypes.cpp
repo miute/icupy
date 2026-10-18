@@ -73,6 +73,7 @@ The error code is used by ICU4C functions to report errors.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_ZERO_ERROR", U_ZERO_ERROR, R"doc(
@@ -191,6 +192,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest standard error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_BAD_VARIABLE_DEFINITION", U_BAD_VARIABLE_DEFINITION, R"doc(
@@ -320,6 +322,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest normal Transliterator error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_UNEXPECTED_TOKEN", U_UNEXPECTED_TOKEN, R"doc(
@@ -417,6 +420,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest normal formatting API error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_BRK_INTERNAL_ERROR", U_BRK_INTERNAL_ERROR, R"doc(
@@ -476,6 +480,7 @@ The error code is used by ICU4C functions to report errors.
              code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_REGEX_INTERNAL_ERROR", U_REGEX_INTERNAL_ERROR, R"doc(
@@ -534,6 +539,7 @@ The error code is used by ICU4C functions to report errors.
              Octal character constants must be <= 0377.
 
              .. version-deprecated:: ICU54
+
                 This error cannot occur.
              )doc")
       .value("U_REGEX_MISSING_CLOSE_BRACKET", U_REGEX_MISSING_CLOSE_BRACKET,
@@ -565,6 +571,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest normal regular expression error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_IDNA_PROHIBITED_ERROR", U_IDNA_PROHIBITED_ERROR, "")
@@ -583,6 +590,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest normal IDNA error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_STRINGPREP_PROHIBITED_ERROR", U_STRINGPREP_PROHIBITED_ERROR, "")
@@ -607,6 +615,7 @@ The error code is used by ICU4C functions to report errors.
              One more than the highest normal plug-in error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("U_ERROR_LIMIT", U_ERROR_LIMIT, R"doc(
@@ -616,12 +625,14 @@ The error code is used by ICU4C functions to report errors.
              one more than the highest normal plug-in error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
 
              :attr:`U_ERROR_LIMIT`:
              one more than the highest normal error code.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

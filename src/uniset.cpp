@@ -412,6 +412,7 @@ match.
       Return the character or multi-character string at the specified index.
 
       .. version-changed:: ICU76
+
          Added support for multi-character strings.
       )doc");
 

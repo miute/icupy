@@ -85,6 +85,7 @@ void init_context(py::module &m) {
       Alias of :class:`UserContext` for backward compatibility.
 
       .. version-deprecated:: 0.24
+
          ``ConstVoidPtr`` is deprecated and will be removed in future
          releases. Use :class:`UserContext` instead.
       )doc");
@@ -97,6 +98,7 @@ void init_context(py::module &m) {
       Return the value associated with this object.
 
       .. version-deprecated:: 0.23
+
          Use :meth:`.value` instead.
       )doc");
 }

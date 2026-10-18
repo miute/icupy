@@ -38,6 +38,7 @@ Enum constants for the text searching attributes.
              One more than the highest normal :class:`USearchAttribute` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -111,6 +112,7 @@ Enum constants for the text searching attribute values.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

@@ -22,12 +22,20 @@ void init_ucnv_cb(py::module &m) {
        },
        py::arg("args").none(false), py::arg("source"), py::arg("length"),
        py::arg("offset_index"), R"doc(
-      Write out the specified output bytes to the target byte buffer or to
-      converter internal buffers.
+      Write out the specified output bytes to the converter's internal buffer.
+
+      *args* is the callback fromUnicode arguments.
+
+      *source* is the source bytes to be written.
+
+      *length* is the length of *source*.
+
+      *offset_index* is the relative offset from the position at which the
+      callback will write to the target buffer.
 
       .. important::
 
-         ONLY used by From-Unicode callback functions.
+         ONLY used by from-Unicode callback functions.
 
       .. seealso::
 
@@ -52,8 +60,7 @@ void init_ucnv_cb(py::module &m) {
           },
           py::arg("args").none(false), py::arg("source"), py::arg("length"),
           py::arg("offset_index"), R"doc(
-      Write out the specified output bytes to the target byte buffer or to
-      converter internal buffers.
+      Write out the specified output bytes to the converter's internal buffer.
 
       .. version-deprecated:: 0.25
 
@@ -70,16 +77,25 @@ void init_ucnv_cb(py::module &m) {
          }
        },
        py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Write out the correct substitution character sequence to the target.
+      Write out the correct substitution character sequence to the converter's
+      internal buffer.
+
+      *args* is the callback fromUnicode arguments.
+
+      *offset_index* is the relative offset from the position at which the
+      callback will write to the target buffer.
 
       .. important::
 
-         ONLY used by From-Unicode callback functions.
+         ONLY used by from-Unicode callback functions.
 
       .. seealso::
 
          :class:`UConverterFromUCallback`
          :func:`ucnv_cb_from_u_write_bytes`
+         :func:`ucnv_get_subst_chars`
+         :func:`ucnv_set_subst_chars`
+         :func:`ucnv_set_subst_string`
       )doc")
       .def(
           "ucnv_cb_from_uwrite_sub",
@@ -91,7 +107,8 @@ void init_ucnv_cb(py::module &m) {
             }
           },
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Write out the correct substitution character sequence to the target.
+      Write out the correct substitution character sequence to the converter's
+      internal buffer.
 
       .. version-deprecated:: 0.25
 
@@ -108,11 +125,17 @@ void init_ucnv_cb(py::module &m) {
          }
        },
        py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Write out the Unicode substitution character (U+FFFD).
+      Write out the Unicode substitution character (U+FFFD) to the converter's
+      internal buffer.
+
+      *args* is the callback toUnicode arguments.
+
+      *offset_index* is the relative offset from the position at which the
+      callback will write to the target buffer.
 
       .. important::
 
-         ONLY used by To-Unicode callback functions.
+         ONLY used by to-Unicode callback functions.
 
       .. seealso::
 
@@ -129,7 +152,8 @@ void init_ucnv_cb(py::module &m) {
             }
           },
           py::arg("args").none(false), py::arg("offset_index"), R"doc(
-      Write out the Unicode substitution character (U+FFFD).
+      Write out the Unicode substitution character (U+FFFD) to the converter's
+      internal buffer.
 
       .. version-deprecated:: 0.25
 
@@ -149,11 +173,20 @@ void init_ucnv_cb(py::module &m) {
        },
        py::arg("args").none(false), py::arg("source"), py::arg("length"),
        py::arg("offset_index"), R"doc(
-      Write out the specified characters to the target ``UChar`` buffer.
+      Write out the specified characters to the converter's internal buffer.
+
+      *args* is the callback toUnicode arguments.
+
+      *source* is the source string to be written.
+
+      *length* is the length of *source*.
+
+      *offset_index* is the relative offset from the position at which the
+      callback will write to the target buffer.
 
       .. important::
 
-         ONLY used by To-Unicode callback functions.
+         ONLY used by to-Unicode callback functions.
 
       .. seealso::
 
@@ -173,7 +206,7 @@ void init_ucnv_cb(py::module &m) {
           },
           py::arg("args").none(false), py::arg("source"), py::arg("length"),
           py::arg("offset_index"), R"doc(
-      Write out the specified characters to the target ``UChar`` buffer.
+      Write out the specified characters to the converter's internal buffer.
 
       .. version-deprecated:: 0.25
 

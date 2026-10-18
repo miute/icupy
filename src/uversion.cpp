@@ -8,10 +8,11 @@ void init_uversion(py::module &m) {
   // struct icupy::VersionInfo
   //
   py::class_<icupy::VersionInfo> vi(m, "UVersionInfo", R"doc(
-      Array of four unsigned 8-bit integers for the ICU API version.
+      Array of four unsigned 8-bit integers for the ICU version API.
 
       .. seealso::
 
+         :func:`u_version_from_string`
          :func:`u_version_to_string`
       )doc");
 

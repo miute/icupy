@@ -173,6 +173,7 @@ void init_simplenumberformatter(py::module & /* m */, py::module &m2) {
       Alias for :meth:`.set_maximum_integer_digits`.
 
       .. version-deprecated:: ICU75
+
          Use :meth:`set_maximum_integer_digits` instead.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM < 76)

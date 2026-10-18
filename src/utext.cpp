@@ -119,6 +119,7 @@ void init_utext(py::module &m) {
     UText structure.
 
     .. version-deprecated:: 0.25
+
        Abstract Unicode Text API (UText) is no longer supported. Do not use.
 
     .. seealso::
@@ -141,6 +142,7 @@ void init_utext(py::module &m) {
       },
       py::is_operator(), py::arg("other"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -151,6 +153,7 @@ void init_utext(py::module &m) {
       },
       py::is_operator(), py::arg("other"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -187,26 +190,31 @@ void init_utext(py::module &m) {
       Mutable sequence of :class:`UText` objects.
 
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def(py::init<>(), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def(py::init<std::list<std::reference_wrapper<UnicodeString>>>(),
            py::keep_alive<1, 2>(), py::arg("iterable"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("__del__", &icupy::UTextVector::clear, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("__delitem__", &icupy::UTextVector::remove, py::arg("index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc")
       .def(
@@ -224,6 +232,7 @@ void init_utext(py::module &m) {
           },
           py::arg("index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -243,6 +252,7 @@ void init_utext(py::module &m) {
       },
       py::return_value_policy::reference_internal, py::arg("index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -256,6 +266,7 @@ void init_utext(py::module &m) {
       },
       py::keep_alive<1, 2>(), py::arg("iterable"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -266,6 +277,7 @@ void init_utext(py::module &m) {
       },
       py::keep_alive<0, 1>(), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -276,11 +288,13 @@ void init_utext(py::module &m) {
       ``None``.
 
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("__len__", &icupy::UTextVector::size, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -288,23 +302,27 @@ void init_utext(py::module &m) {
           py::overload_cast<UnicodeString &>(&icupy::UTextVector::append),
           py::keep_alive<1, 2>(), py::arg("src"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("clear", &icupy::UTextVector::clear, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("extend", &icupy::UTextVector::extend, py::keep_alive<1, 2>(),
           py::arg("iterable"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
   utv.def("insert", &icupy::UTextVector::insert, py::keep_alive<1, 3>(),
           py::arg("index"), py::arg("src"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -318,6 +336,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -336,6 +355,7 @@ void init_utext(py::module &m) {
       py::arg("dest"), py::arg("src"), py::arg("deep"), py::arg("read_only"),
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -350,6 +370,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -367,6 +388,7 @@ void init_utext(py::module &m) {
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"),
       py::arg("dest_index"), py::arg("move"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -375,6 +397,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) { return utext_current32(ut); }, py::arg("ut"),
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -385,6 +408,7 @@ void init_utext(py::module &m) {
       },
       py::arg("a"), py::arg("b"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -405,6 +429,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -412,6 +437,7 @@ void init_utext(py::module &m) {
       "utext_freeze", [](icupy::UTextPtr &ut) { utext_freeze(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -420,6 +446,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) { return utext_getNativeIndex(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -428,6 +455,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) { return utext_getPreviousNativeIndex(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -436,6 +464,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) -> bool { return utext_hasMetaData(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -444,6 +473,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) -> bool { return utext_isLengthExpensive(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -452,6 +482,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) -> bool { return utext_isWritable(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -462,6 +493,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("delta"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -470,6 +502,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) { return utext_nativeLength(ut); }, py::arg("ut"),
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -477,6 +510,7 @@ void init_utext(py::module &m) {
       "utext_next32", [](icupy::UTextPtr &ut) { return utext_next32(ut); },
       py::arg("ut"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -487,6 +521,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -503,6 +538,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("ci").none(false), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -519,6 +555,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("s").none(false), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -534,6 +571,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("rep").none(false), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -558,6 +596,7 @@ void init_utext(py::module &m) {
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"),
       py::arg("length") = -1, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -573,6 +612,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("s").none(false), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -597,6 +637,7 @@ void init_utext(py::module &m) {
       py::keep_alive<1, 0>(), py::arg("ut"), py::arg("s"),
       py::arg("length") = -1, R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -605,6 +646,7 @@ void init_utext(py::module &m) {
       [](icupy::UTextPtr &ut) { return utext_previous32(ut); }, py::arg("ut"),
       R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -615,6 +657,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -634,6 +677,7 @@ void init_utext(py::module &m) {
       py::arg("ut"), py::arg("native_start"), py::arg("native_limit"),
       py::arg("replacement_text"), py::arg("replacement_length"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 
@@ -644,6 +688,7 @@ void init_utext(py::module &m) {
       },
       py::arg("ut"), py::arg("native_index"), R"doc(
       .. version-deprecated:: 0.25
+
          Abstract Unicode Text API (UText) is no longer supported. Do not use.
       )doc");
 

@@ -127,7 +127,7 @@ void init_idna(py::module &m) {
       Convert a single domain name label into its ASCII form for DNS lookup and
       set the result to *dest*; return *dest* itself.
 
-      *label* is the domain name label to convert.
+      *label* is the domain name label to be converted.
 
       *dest* is a string object to receive the result of the conversion.
 
@@ -155,7 +155,7 @@ void init_idna(py::module &m) {
       Convert a single domain name label into its ASCII form for DNS lookup and
       return the result.
 
-      *label* is the domain name label in UTF-8 format to convert.
+      *label* is the domain name label in UTF-8 format to be converted.
 
       *info* is a container to output details of IDNA processing.
 
@@ -179,7 +179,7 @@ void init_idna(py::module &m) {
       human-readable display and set the result to *dest*; return *dest*
       itself.
 
-      *label* is the domain name label to convert.
+      *label* is the domain name label to be converted.
 
       *dest* is a string object to receive the result of the conversion.
 
@@ -205,7 +205,7 @@ void init_idna(py::module &m) {
       Convert a single domain name label into its Unicode form for
       human-readable display and return the result.
 
-      *label* is the domain name label in UTF-8 format to convert.
+      *label* is the domain name label in UTF-8 format to be converted.
 
       *info* is a container to output details of IDNA processing.
 
@@ -228,7 +228,7 @@ void init_idna(py::module &m) {
       Convert a whole domain name into its ASCII form for DNS lookup and
       set the result to *dest*; return *dest* itself.
 
-      *name* is the domain name to convert.
+      *name* is the domain name to be converted.
 
       *dest* is a string object to receive the result of the conversion.
 
@@ -256,7 +256,7 @@ void init_idna(py::module &m) {
       Convert a whole domain name into its ASCII form for DNS lookup and
       return the result.
 
-      *name* is the domain name in UTF-8 format to convert.
+      *name* is the domain name in UTF-8 format to be converted.
 
       *info* is a container to output details of IDNA processing.
 
@@ -279,7 +279,7 @@ void init_idna(py::module &m) {
       Convert a whole domain name into its Unicode form for human-readable
       display and set the result to *dest*; return *dest* itself.
 
-      *name* is the domain name to convert.
+      *name* is the domain name to be converted.
 
       *dest* is a string object to receive the result of the conversion.
 
@@ -306,7 +306,7 @@ void init_idna(py::module &m) {
       Convert a whole domain name into its Unicode form for human-readable
       display and return the result.
 
-      *name* is the domain name in UTF-8 format to convert.
+      *name* is the domain name in UTF-8 format to be converted.
 
       *info* is a container to output details of IDNA processing.
 

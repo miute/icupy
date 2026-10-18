@@ -42,6 +42,7 @@ URegionType is an enumeration defining the different types of regions.
              One more than the highest normal :class:`URegionType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

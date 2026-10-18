@@ -45,34 +45,6 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
 ## Examples
 
 - [icu::UnicodeString](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1UnicodeString.html) with
-  [predefined error callback function](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__err_8h.html)
-
-  ```python
-  # from Unicode to codepage
-  from icupy import icu
-
-  cnv = icu.ucnv_open("iso8859-1")
-  context = icu.UserContext(icu.UCNV_ESCAPE_C)  # \uXXXX
-  action = icu.UConverterFromUCallback(icu.UCNV_FROM_U_CALLBACK_ESCAPE, context)
-  old_action = icu.ucnv_set_from_u_call_back(cnv, action)
-  s = icu.UnicodeString("A€B")
-  s.extract(cnv)  # → b'A\\u20ACB'
-  ```
-
-  ```python
-  # from codepage to Unicode
-  from icupy import icu
-
-  cnv = icu.ucnv_open("Shift-JIS")
-  context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)  # &#xXXXX;
-  action = icu.UConverterToUCallback(icu.UCNV_TO_U_CALLBACK_ESCAPE, context)
-  old_action = icu.ucnv_set_to_u_call_back(cnv, action)
-  src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
-  s = icu.UnicodeString(src, -1, cnv)
-  str(s)  # → 'a&#xEB;&#x40;b'
-  ```
-
-- [icu::UnicodeString](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1UnicodeString.html) with
   [custom error callback function](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/ucnv__cb_8h.html)
 
   ```python
@@ -92,7 +64,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ) -> None:
       _ = options, length, code_point  # unused
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
-          error_code.set(icu.U_ZERO_ERROR)
+          error_code.reset()
           source = "".join(f"\\u{ord(c):04x}" for c in code_units)
           icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
 
@@ -120,7 +92,7 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
   ) -> None:
       _ = options, length  # unused
       if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
-          error_code.set(icu.U_ZERO_ERROR)
+          error_code.reset()
           source = "".join(f"%{b:02X}" for b in code_units)
           icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
 
@@ -131,54 +103,6 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
       s = icu.UnicodeString(src, -1, cnv)
       str(s)  # → 'a%EB%40b'
-  ```
-
-- [icu::BreakIterator](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1BreakIterator.html) for word-breaks
-
-  ```python
-  from icupy import icu
-
-  bi = icu.BreakIterator.create_word_instance("en_US")
-  src = icu.UnicodeString(
-      "Alice was beginning to get very tired of sitting by her sister on the bank."
-  )
-  bi.set_text(src)
-  result = []
-  start = bi.first()
-  while (end := bi.next()) != icu.UBRK_DONE:
-      if bi.get_rule_status() != icu.UBRK_WORD_NONE:
-          result.append(src[start:end])
-      start = end
-
-  # result: ['Alice', 'was', 'beginning', 'to', 'get', 'very', 'tired', 'of', 'sitting', 'by', 'her', 'sister', 'on', 'the', 'bank']
-  ```
-
-- Natural sort (human-friendly sorting)
-
-  ```python
-  from icupy import icu
-
-  coll = icu.Collator.create_instance("en_US")
-  coll.set_attribute(icu.UCOL_NUMERIC_COLLATION, icu.UCOL_ON)
-  data = ["file1.txt", "file10.txt", "file2.txt", "file20.txt", "file3.txt"]
-  sorted(data, key=coll.get_sort_key)
-  # ['file1.txt', 'file2.txt', 'file3.txt', 'file10.txt', 'file20.txt']
-  ```
-
-- [icu::IDNA](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1IDNA.html) (UTS #46)
-
-  ```python
-  from icupy import icu
-
-  uts46 = icu.IDNA.create_uts46_instance(
-      icu.UIDNA_DEFAULT | icu.UIDNA_CHECK_BIDI | icu.UIDNA_CHECK_CONTEXTJ
-  )
-  dest = icu.UnicodeString()
-  info = icu.IDNAInfo()
-  # a + ZERO WIDTH NON-JOINER + b.com
-  uts46.name_to_ascii("a\u200cb.com", dest, info)  # → 'xn--ab-j1t.com'
-  bool(info.get_errors() & icu.UIDNA_ERROR_BIDI)  # → False
-  bool(info.get_errors() & icu.UIDNA_ERROR_CONTEXTJ)  # → True
   ```
 
 - [icu::number::NumberFormatter](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1number_1_1NumberFormatter.html) (ICU 60+)
@@ -194,94 +118,6 @@ Python bindings for [ICU4C](https://unicode-org.github.io/icu-docs/apidoc/releas
       .precision(number.Precision.max_significant_digits(2))
   )
   template.locale("en_US").format_int(1234).to_string()  # "€1.2K" in en-US
-  ```
-
-- [icu::RegexMatcher::find](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1RegexMatcher.html) with custom callback function
-
-  ```python
-  from icupy import icu
-
-  src = icu.UnicodeString("aaaaaaaaaaaaaaaaaaab")
-  matcher = icu.RegexMatcher("((.)\\2)x", src, 0)
-
-
-  def progress_callback(options: dict[str, int], match_index: int) -> bool:
-      if not isinstance(options, dict):
-          return False
-      calls = options.get("numCalls", 0) + 1
-      options["numCalls"] = calls
-      options["lastIndex"] = match_index
-      max_calls = options.get("maxCalls", -1)
-      return True if max_calls < 0 else calls < max_calls
-
-
-  info = {}
-  context = icu.UserContext(info)
-  callback = icu.URegexFindProgressCallback(progress_callback, context)
-  matcher.set_find_progress_callback(callback)
-  matcher.find(0)  # → False
-  # info: {'numCalls': 18, 'lastIndex': 18}
-  info.clear()
-  info["maxCalls"] = 5
-  matcher.find(0)  # → ICUError: U_REGEX_STOPPED_BY_CALLER
-  # info: {'maxCalls': 5, 'numCalls': 5, 'lastIndex': 5}
-  ```
-
-- [icu::number::SimpleNumberFormatter](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1number_1_1SimpleNumberFormatter.html) (ICU 73+)
-
-  ```python
-  from icupy import icu
-  from icupy.icu import number
-
-  fmt = number.SimpleNumberFormatter.for_locale_and_grouping_strategy(
-      "de-CH", icu.UNUM_GROUPING_ON_ALIGNED
-  )
-  fmtval = fmt.format_int64(1234567)
-  fmtval.to_string()  # → "1'234'567"
-  ```
-
-- Subclassing [icu::Transliterator](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1Transliterator.html)
-
-  ```python
-  # Uppercase letters while skipping text enclosed in backticks
-  from icupy import icu
-
-
-  class TestTransliterator(icu.Transliterator):
-      def __init__(self, filter_set: icu.UnicodeSet | None = None) -> None:
-          icu.Transliterator.__init__(self, "Any-UpperWithoutCode", filter_set)
-
-      def _handle_transliterate(
-          self,
-          text: icu.Replaceable,
-          pos: icu.UTransPosition,
-          incremental: bool,
-      ) -> None:
-          # Implement the transliteration algorithm here.
-          cursor = pos.start
-          in_backtick = False
-          while cursor < pos.limit:
-              c = text.char32_at(cursor)
-              char_len = icu.u16_length(c)
-              if c == 0x60:
-                  in_backtick = not in_backtick
-                  cursor += char_len
-                  continue
-              if not in_backtick and icu.u_isalpha(c) and icu.u_islower(c):
-                  upper = icu.u_toupper(c)
-                  if upper != c:
-                      text.handle_replace_between(cursor, cursor + char_len, chr(upper))
-                      char_len = icu.u16_length(upper)
-              cursor += char_len
-          pos.start = pos.limit
-
-
-  tl = TestTransliterator()
-  text = icu.UnicodeString(
-      "Subclasses must implement `_handle_transliterate()`, which defines their own transliteration algorithm."
-  )
-  tl.transliterate(text)
-  # text: "SUBCLASSES MUST IMPLEMENT `_handle_transliterate()`, WHICH DEFINES THEIR OWN TRANSLITERATION ALGORITHM."
   ```
 
 ## Installation

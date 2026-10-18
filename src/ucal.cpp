@@ -262,6 +262,7 @@ Possible fields in a UCalendar.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCAL_DAY_OF_MONTH", UCAL_DAY_OF_MONTH, R"doc(

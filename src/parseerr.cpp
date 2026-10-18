@@ -15,7 +15,7 @@ void init_parseerr(py::module &m) {
       )doc");
 
   pe.def(py::init<>(), R"doc(
-      Initialize an ``UParseError`` instance.
+      Initialize a ``UParseError`` instance.
       )doc");
 
   pe.def("__repr__", [](const UParseError &self) {

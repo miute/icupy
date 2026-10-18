@@ -47,6 +47,7 @@ The possible types of delimiters.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -76,6 +77,7 @@ The possible types of exemplar character sets.
              :class:`ULocaleDataExemplarSetType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -103,6 +105,7 @@ Enumeration for representing the measurement systems.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
