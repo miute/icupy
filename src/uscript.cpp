@@ -766,6 +766,7 @@ subject to separate encoding may be added at any time.
              :attr:`~UProperty.UCHAR_SCRIPT`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time,
                 see ICU ticket #12420.
              )doc")

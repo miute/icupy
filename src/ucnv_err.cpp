@@ -249,8 +249,6 @@ any chained callbacks.
          :func:`ucnv_open`
          :func:`ucnv_open_ccsid`
          :func:`ucnv_open_package`
-         :meth:`UnicodeString.__init__`
-         :meth:`UnicodeString.extract`
       )doc");
 
   //
@@ -258,7 +256,7 @@ any chained callbacks.
   //
   py::class_<UConverterFromUnicodeArgs> fua(m, "UConverterFromUnicodeArgs",
                                             R"doc(
-Structure for the From-Unicode callback function parameter.
+Structure for the from-Unicode callback function parameter.
 
 .. seealso::
 
@@ -280,7 +278,7 @@ Structure for the From-Unicode callback function parameter.
   //
   py::class_<UConverterToUnicodeArgs> fta(m, "UConverterToUnicodeArgs",
                                           R"doc(
-Structure for the To-Unicode callback function parameter.
+Structure for the to-Unicode callback function parameter.
 
 .. seealso::
 
@@ -302,8 +300,12 @@ Structure for the To-Unicode callback function parameter.
   //
   py::class_<icupy::UConverterFromUCallbackPtr> fucb(
       m, "UConverterFromUCallback", R"doc(
-      Wrapper class for error callback function in the unicode to codepage
-      direction.
+      Wrapper class for the error callback function used to convert from
+      Unicode to a codepage.
+
+      The specified callback function is called if an error occurs when
+      converting from Unicode to a codepage, or when opening/closing the
+      callback.
 
       .. seealso::
 
@@ -313,6 +315,35 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterFromUCallbackSubstitute`
          :func:`ucnv_get_from_u_call_back`
          :func:`ucnv_set_from_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> def from_unicode_cb(
+         ...     options: object,
+         ...     args: icu.UConverterFromUnicodeArgs,
+         ...     code_units: str,
+         ...     length: int,
+         ...     code_point: int,
+         ...     reason: icu.UConverterCallbackReason,
+         ...     error_code: icu.ErrorCode,
+         ... ) -> None:
+         ...     _ = options, length, code_point  # unused
+         ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+         ...         error_code.reset()
+         ...         source = "".join(f"\\u{ord(c):04x}" for c in code_units)
+         ...         icu.ucnv_cb_from_u_write_bytes(args, source, len(source), 0)
+
+         >>> with gc(icu.ucnv_open("iso8859-1"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterFromUCallback(from_unicode_cb)
+         ...     old_action = icu.ucnv_set_from_u_call_back(cnv, action)
+         ...     s = icu.UnicodeString("A€B")
+         ...     s.extract(cnv)
+         ...
+         b'A\\u20acB'
       )doc");
 
   fucb.def(py::init([](const icupy::FromUCallbackFunction &action,
@@ -324,9 +355,45 @@ Structure for the To-Unicode callback function parameter.
       Initialize a ``UConverterFromUCallback`` instance with the specified
       callback function and the user context.
 
+      *action* is the from-Unicode callback function that is called when the
+      converter detects an illegal or invalid Unicode sequence.
+
+      *context* is the callback's context data.
+
       .. important::
 
          *action* and *context* must outlive this callback container object.
+
+      .. note::
+
+         The callback function must have the following signature:
+
+         .. code-block:: python
+
+            def action(
+                options: object,
+                args: icu.UConverterFromUnicodeArgs,
+                code_units: str,
+                length: int,
+                code_point: int,
+                reason: icu.UConverterCallbackReason,
+                error_code: icu.ErrorCode,
+            ) -> None:
+                ...
+
+         *options* is the callback's context data.
+
+         *args* is the Information about the conversion in progress.
+
+         *code_units* is the concerned Unicode sequence.
+
+         *length* is the length of *code_units* in bytes.
+
+         *code_point* is the concerned Unicode codepoint.
+
+         *reason* is the reason that the callback was invoked.
+
+         *error_code* is the ICU error code.
       )doc");
 
   fucb.def(
@@ -362,8 +429,8 @@ Structure for the To-Unicode callback function parameter.
       fucb_esc(m, "UConverterFromUCallbackEscape", R"doc(
       Wrapper class for :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function.
 
-      Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
-      the illegal codepoints.
+      This from-Unicode callback will substitute the ILLEGAL SEQUENCE with the
+      hexadecimal representation of the illegal codepoints.
 
       .. seealso::
 
@@ -398,13 +465,23 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_FROM_U_CALLBACK_ESCAPE` callback function and the specified
       user context.
 
-      *context* can be
-      :attr:`UCNV_ESCAPE_ICU`,
-      :attr:`UCNV_ESCAPE_JAVA`,
-      :attr:`UCNV_ESCAPE_C`,
-      :attr:`UCNV_ESCAPE_XML_DEC`,
-      :attr:`UCNV_ESCAPE_XML_HEX`,
-      or ``None``.
+      *context* is a callback option with the following values:
+
+      - :attr:`UCNV_ESCAPE_ICU` or ``None``: substitutes the ILLEGAL SEQUENCE
+        with the hexadecimal representation in the format %UXXXX,
+        e.g. "%UFFFE\\xac%UC8FE".
+      - :attr:`UCNV_ESCAPE_JAVA`: substitutes the ILLEGAL SEQUENCE with the
+        hexadecimal representation in the format \\uXXXX,
+        e.g. "\\\\uFFFE\\xac\\\\uC8FE".
+      - :attr:`UCNV_ESCAPE_C`: substitutes the ILLEGAL SEQUENCE with the
+        hexadecimal representation in the format \\uXXXX,
+        e.g. "\\\\uFFFE\\xac\\\\uC8FE".
+      - :attr:`UCNV_ESCAPE_XML_DEC`: substitutes the ILLEGAL SEQUENCE with the
+        decimal representation in the format &#DDDDD;,
+        e.g. "&#65534;\\xac;&#51454;".
+      - :attr:`UCNV_ESCAPE_XML_HEX`: substitutes the ILLEGAL SEQUENCE with the
+        decimal representation in the format &#xXXXX;
+        e.g. "&#xFFFE;\\xac;&#xC8FE;".
 
       .. important::
 
@@ -419,7 +496,8 @@ Structure for the To-Unicode callback function parameter.
       fucb_skip(m, "UConverterFromUCallbackSkip", R"doc(
       Wrapper class for :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function.
 
-      Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
+      This from-Unicode callback will skip any ILLEGAL SEQUENCE, or skip only
+      UNASSIGNED SEQUENCE.
 
       .. seealso::
 
@@ -453,9 +531,11 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_FROM_U_CALLBACK_SKIP` callback function and the specified
       user context.
 
-      *context* can be
-      :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
-      or ``None``.
+      *context* is a callback option with the following values:
+
+      - :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`: stops at ILLEGAL SEQUENCE and throws
+        an :class:`ICUError` exception.
+      - ``None``: skips any ILLEGAL SEQUENCE.
 
       .. important::
 
@@ -470,7 +550,7 @@ Structure for the To-Unicode callback function parameter.
       fucb_stop(m, "UConverterFromUCallbackStop", R"doc(
       Wrapper class for :func:`UCNV_FROM_U_CALLBACK_STOP` callback function.
 
-      Stop at the ILLEGAL SEQUENCE.
+      This from-Unicode callback will stop at the ILLEGAL SEQUENCE.
 
       .. seealso::
 
@@ -504,9 +584,10 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_FROM_U_CALLBACK_STOP` callback function and the specified
       user context.
 
-      .. important::
+      This from-Unicode callback will stop at the ILLEGAL SEQUENCE and throw an
+      :class:`ICUError` exception.
 
-         *context* must outlive this callback container object.
+      *context* is reserved; specify ``None``.
       )doc");
 
   //
@@ -518,8 +599,9 @@ Structure for the To-Unicode callback function parameter.
       Wrapper class for :func:`UCNV_FROM_U_CALLBACK_SUBSTITUTE` callback
       function.
 
-      Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
-      substitution string for the converter.
+      This from-Unicode callback will substitute the ILLEGAL SEQUENCE, or
+      UNASSIGNED SEQUENCE with the current substitution string for the
+      converter.
 
       .. seealso::
 
@@ -557,14 +639,15 @@ Structure for the To-Unicode callback function parameter.
       with :func:`UCNV_FROM_U_CALLBACK_SUBSTITUTE` callback function and
       the specified user context.
 
-      *context* can be
-      :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
-      or ``None``.
+      *context* is a callback option with the following values:
+
+      - :attr:`UCNV_SUB_STOP_ON_ILLEGAL`: stops at ILLEGAL SEQUENCE and throws
+        an :class:`ICUError` exception.
+      - ``None``: substitutes any ILLEGAL SEQUENCE.
 
       .. important::
 
          *context* must outlive this callback container object.
-         object.
       )doc");
 
   //
@@ -572,8 +655,12 @@ Structure for the To-Unicode callback function parameter.
   //
   py::class_<icupy::UConverterToUCallbackPtr> tucb(m, "UConverterToUCallback",
                                                    R"doc(
-      Wrapper class for error callback function in the codepage to unicode
-      direction.
+      Wrapper class for the error callback function used to convert from a
+      codepage to Unicode.
+
+      The specified callback function is called if an error occurs when
+      converting from a codepage to Unicode, or when opening/closing the
+      callback.
 
       .. seealso::
 
@@ -583,6 +670,35 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterToUCallbackSubstitute`
          :func:`ucnv_get_to_u_call_back`
          :func:`ucnv_set_to_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> def to_unicode_cb(
+         ...     options: object,
+         ...     args: icu.UConverterToUnicodeArgs,
+         ...     code_units: bytes,
+         ...     length: int,
+         ...     reason: icu.UConverterCallbackReason,
+         ...     error_code: icu.ErrorCode,
+         ... ) -> None:
+         ...     _ = options, length  # unused
+         ...     if reason in [icu.UCNV_UNASSIGNED, icu.UCNV_ILLEGAL, icu.UCNV_IRREGULAR]:
+         ...         error_code.reset()
+         ...         source = "".join(f"%{b:02X}" for b in code_units)
+         ...         icu.ucnv_cb_to_u_write_uchars(args, source, len(source), 0)
+
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterToUCallback(to_unicode_cb)
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UCNV_UNASSIGNED
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...     str(s)
+         ...
+         'a%EB%40b'
       )doc");
 
   tucb.def(py::init([](const icupy::ToUCallbackFunction &action,
@@ -594,9 +710,42 @@ Structure for the To-Unicode callback function parameter.
       Initialize a ``UConverterToUCallback`` instance with the specified
       callback function and the user context.
 
+      *action* is the to-Unicode callback function that is called when the
+      converter detects an illegal or invalid sequence.
+
+      *context* is the callback's context data.
+
       .. important::
 
          *action* and *context* must outlive this callback container object.
+
+      .. note::
+
+         The callback function must have the following signature:
+
+         .. code-block:: python
+
+            def action(
+                options: object,
+                args: icu.UConverterToUnicodeArgs,
+                code_units: bytes,
+                length: int,
+                reason: icu.UConverterCallbackReason,
+                error_code: icu.ErrorCode,
+            ) -> None:
+                ...
+
+         *options* is the callback's context data.
+
+         *args* is the Information about the conversion in progress.
+
+         *code_units* is the concerned codepage sequence.
+
+         *length* is the length of *code_units* in bytes.
+
+         *reason* is the reason that the callback was invoked.
+
+         *error_code* is the ICU error code.
       )doc");
 
   tucb.def(
@@ -633,8 +782,8 @@ Structure for the To-Unicode callback function parameter.
                R"doc(
       Wrapper class for :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function.
 
-      Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
-      the illegal bytes.
+      This to-Unicode callback will substitute the ILLEGAL SEQUENCE with the
+      hexadecimal representation of the illegal bytes.
 
       .. seealso::
 
@@ -642,6 +791,22 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterToUCallbackStop`
          :class:`UConverterToUCallbackSubstitute`
          :func:`ucnv_set_to_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     context = icu.UserContext(icu.UCNV_ESCAPE_XML_HEX)
+         ...     action = icu.UConverterToUCallbackEscape(context)
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...     str(s)
+         ...
+         'a&#xEB;&#x40;b'
       )doc");
 
   tucb_esc.def(py::init([](std::optional<const icupy::UserContext *> &context) {
@@ -653,14 +818,13 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_TO_U_CALLBACK_ESCAPE` callback function and the specified
       user context.
 
-      *context* can be
-      :attr:`UCNV_ESCAPE_ICU`,
+      *context* is a callback option with the following values:
+      :attr:`UCNV_ESCAPE_ICU` | ``None``,
       :attr:`UCNV_ESCAPE_JAVA`,
       :attr:`UCNV_ESCAPE_C`,
       :attr:`UCNV_ESCAPE_XML_DEC`,
-      :attr:`UCNV_ESCAPE_XML_HEX`,
-      :attr:`UCNV_ESCAPE_UNICODE`,
-      or ``None``.
+      :attr:`UCNV_ESCAPE_XML_HEX`, and
+      :attr:`UCNV_ESCAPE_UNICODE`.
 
       .. important::
 
@@ -675,7 +839,8 @@ Structure for the To-Unicode callback function parameter.
       tucb_skip(m, "UConverterToUCallbackSkip", R"doc(
       Wrapper class for :func:`UCNV_TO_U_CALLBACK_SKIP` callback function.
 
-      Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
+      This to-Unicode callback will skip any ILLEGAL SEQUENCE, or skip only
+      UNASSIGNED SEQUENCE.
 
       .. seealso::
 
@@ -683,6 +848,21 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterToUCallbackStop`
          :class:`UConverterToUCallbackSubstitute`
          :func:`ucnv_set_to_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterToUCallbackSkip()
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...     str(s)
+         ...
+         'ab'
       )doc");
 
   tucb_skip.def(
@@ -695,9 +875,11 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_TO_U_CALLBACK_SKIP` callback function and the specified user
       context.
 
-      *context* can be
-      :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`
-      or ``None``.
+      *context* is a callback option with the following values:
+
+      - :attr:`UCNV_SKIP_STOP_ON_ILLEGAL`: stops at ILLEGAL SEQUENCE and throws
+        an :class:`ICUError` exception.
+      - ``None``: skips any ILLEGAL SEQUENCE.
 
       .. important::
 
@@ -712,7 +894,7 @@ Structure for the To-Unicode callback function parameter.
       tucb_stop(m, "UConverterToUCallbackStop", R"doc(
       Wrapper class for :func:`UCNV_TO_U_CALLBACK_STOP` callback function.
 
-      Stop at the ILLEGAL SEQUENCE.
+      This to-Unicode callback will stop at the ILLEGAL SEQUENCE.
 
       .. seealso::
 
@@ -720,6 +902,20 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterToUCallbackSkip`
          :class:`UConverterToUCallbackSubstitute`
          :func:`ucnv_set_to_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterToUCallbackStop()
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...
+         icupy.icu.ICUError: U_INVALID_CHAR_FOUND
       )doc");
 
   tucb_stop.def(
@@ -732,9 +928,10 @@ Structure for the To-Unicode callback function parameter.
       :func:`UCNV_TO_U_CALLBACK_STOP` callback function and the specified user
       context.
 
-      .. important::
+      This to-Unicode callback will stop at the ILLEGAL SEQUENCE and throw an
+      :class:`ICUError` exception.
 
-         *context* must outlive this callback container object.
+      *context* is reserved; specify ``None``.
       )doc");
 
   //
@@ -746,8 +943,8 @@ Structure for the To-Unicode callback function parameter.
       Wrapper class for :func:`UCNV_TO_U_CALLBACK_SUBSTITUTE` callback
       function.
 
-      Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
-      substitution character, U+FFFD.
+      This to-Unicode callback will substitute the ILLEGAL SEQUENCE, or
+      UNASSIGNED SEQUENCE with the Unicode substitution character, U+FFFD.
 
       .. seealso::
 
@@ -755,6 +952,21 @@ Structure for the To-Unicode callback function parameter.
          :class:`UConverterToUCallbackSkip`
          :class:`UConverterToUCallbackStop`
          :func:`ucnv_set_to_u_call_back`
+
+      .. rubric:: Example
+
+      .. code-block:: python
+
+         >>> from icupy import icu
+         >>> from icupy.utils import gc
+         >>> with gc(icu.ucnv_open("Shift-JIS"), icu.ucnv_close) as cnv:
+         ...     action = icu.UConverterToUCallbackSubstitute()
+         ...     old_action = icu.ucnv_set_to_u_call_back(cnv, action)
+         ...     src = b"\x61\xeb\x40\x62"  # 0xeb 0x40: UNASSIGNED SEQUENCE
+         ...     s = icu.UnicodeString(src, -1, cnv)
+         ...     str(s)
+         ...
+         'a�b'  # "a\uFFFDb"
       )doc");
 
   tucb_sub.def(
@@ -767,9 +979,11 @@ Structure for the To-Unicode callback function parameter.
       with :func:`UCNV_TO_U_CALLBACK_SUBSTITUTE` callback function and
       the specified user context.
 
-      *context* can be
-      :attr:`UCNV_SUB_STOP_ON_ILLEGAL`
-      or ``None``.
+      *context* is a callback option with the following values:
+
+      - :attr:`UCNV_SUB_STOP_ON_ILLEGAL`: stops at ILLEGAL SEQUENCE and throws
+        an :class:`ICUError` exception.
+      - ``None``: substitutes any ILLEGAL SEQUENCE.
 
       .. important::
 
@@ -799,6 +1013,10 @@ Structure for the To-Unicode callback function parameter.
       py::arg("error_code"), R"doc(
       Substitute the ILLEGAL SEQUENCE with the hexadecimal representation of
       the illegal codepoints.
+
+      .. note::
+
+         Do not call this function directly.
 
       .. note::
 
@@ -833,6 +1051,10 @@ Structure for the To-Unicode callback function parameter.
 
       .. note::
 
+         Do not call this function directly.
+
+      .. note::
+
          The Python implementation of this function incurs overhead.
          For improved performance, consider using
          :class:`UConverterFromUCallbackSkip` instead.
@@ -861,6 +1083,10 @@ Structure for the To-Unicode callback function parameter.
       py::arg("length"), py::arg("code_point"), py::arg("reason"),
       py::arg("error_code"), R"doc(
       Stop at the ILLEGAL SEQUENCE.
+
+      .. note::
+
+         Do not call this function directly.
 
       .. note::
 
@@ -893,6 +1119,10 @@ Structure for the To-Unicode callback function parameter.
       py::arg("error_code"), R"doc(
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the current
       substitution string for the converter.
+
+      .. note::
+
+         Do not call this function directly.
 
       .. note::
 
@@ -929,6 +1159,10 @@ Structure for the To-Unicode callback function parameter.
 
       .. note::
 
+         Do not call this function directly.
+
+      .. note::
+
          The Python implementation of this function incurs overhead.
          For improved performance, consider using
          :class:`UConverterToUCallbackEscape` instead.
@@ -955,6 +1189,10 @@ Structure for the To-Unicode callback function parameter.
       py::arg("context"), py::arg("args").none(false), py::arg("code_units"),
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Skip any ILLEGAL SEQUENCE, or skip only UNASSIGNED SEQUENCE.
+
+      .. note::
+
+         Do not call this function directly.
 
       .. note::
 
@@ -987,6 +1225,10 @@ Structure for the To-Unicode callback function parameter.
 
       .. note::
 
+         Do not call this function directly.
+
+      .. note::
+
          The Python implementation of this function incurs overhead.
          For improved performance, consider using
          :class:`UConverterToUCallbackStop` instead.
@@ -1015,6 +1257,10 @@ Structure for the To-Unicode callback function parameter.
       py::arg("length"), py::arg("reason"), py::arg("error_code"), R"doc(
       Substitute the ILLEGAL SEQUENCE, or UNASSIGNED SEQUENCE with the Unicode
       substitution character, U+FFFD.
+
+      .. note::
+
+         Do not call this function directly.
 
       .. note::
 

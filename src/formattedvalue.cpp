@@ -324,6 +324,7 @@ void init_formattedvalue(py::module &m) {
       Return the formatted string as a temporary :class:`UnicodeString`.
 
       .. version-deprecated:: 0.23
+
          Use :meth:`.to_string` instead.
       )doc");
 #endif // (U_ICU_VERSION_MAJOR_NUM >= 64)

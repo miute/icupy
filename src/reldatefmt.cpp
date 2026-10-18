@@ -72,6 +72,7 @@ Represent an absolute unit.
              One more than the highest normal :class:`UDateAbsoluteUnit` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -110,6 +111,7 @@ Represent a direction for an absolute unit e.g., "Next Tuesday" or
              One more than the highest normal :class:`UDateDirection` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -149,6 +151,7 @@ e.g., "in 5 days" or "in 3 months"
              One more than the highest normal :class:`UDateRelativeUnit` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

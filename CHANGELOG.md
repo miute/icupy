@@ -10,7 +10,7 @@
 - Replace anonymous enum members within a class with class attributes ([#243])
 - Change the base class of the enums from `pybind11_object` to `enum.IntEnum` ([#245])
 - Change the default value of the `locale` parameter in the factory methods of `icupy.icu.DateFormat` and in `icupy.icu.RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
-- Update docstring ([#259])
+- Update docstring ([#259], [#266])
 - Deprecate Abstract Unicode Text API (UText): support has ended ([#264])
 - Deprecate redundant functions in the Codepage Conversion API (ucnv) ([#265])
 
@@ -437,3 +437,4 @@ Initial release.
 [#263]: https://github.com/miute/icupy/pull/263
 [#264]: https://github.com/miute/icupy/pull/264
 [#265]: https://github.com/miute/icupy/pull/265
+[#266]: https://github.com/miute/icupy/pull/266

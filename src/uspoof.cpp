@@ -147,6 +147,7 @@ be performed, and to report results from the check function.
              SpoofChecker.
 
              .. version-deprecated:: ICU58
+
                 Any case confusable mappings were removed from UTS 39; the
                 corresponding ICU API was deprecated.
              )doc")

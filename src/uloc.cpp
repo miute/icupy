@@ -106,6 +106,7 @@ that locale (although it may be empty).
              One more than the highest normal :class:`ULocDataLocaleType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

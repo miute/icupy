@@ -40,6 +40,7 @@ Bidi Paired Bracket Type constants.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -549,6 +550,7 @@ Constants for Unicode blocks, see the Unicode Data file Blocks.txt.
              :attr:`~UProperty.UCHAR_BLOCK`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UBLOCK_INVALID_CODE", UBLOCK_INVALID_CODE, "")
@@ -756,6 +758,7 @@ Language directional property of a character set.
              :attr:`~UProperty.UCHAR_BIDI_CLASS`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -780,6 +783,7 @@ or an "extended" name that gives each Unicode code point a unique name.
              value.
 
              .. version-deprecated:: ICU49
+
                 Beginning with ICU 49, ICU APIs return an empty string for this
                 name choice.
              )doc")
@@ -793,6 +797,7 @@ or an "extended" name that gives each Unicode code point a unique name.
              One more than the highest normal :class:`UCharNameChoice` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -836,6 +841,7 @@ Decomposition Type constants.
              :attr:`~UProperty.UCHAR_DECOMPOSITION_TYPE`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -865,6 +871,7 @@ East Asian Width constants.
              :attr:`~UProperty.UCHAR_EAST_ASIAN_WIDTH`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -912,6 +919,7 @@ Grapheme Cluster Break constants.
              :attr:`~UProperty.UCHAR_GRAPHEME_CLUSTER_BREAK`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -943,6 +951,7 @@ Hangul Syllable Type constants.
              :attr:`~UProperty.UCHAR_HANGUL_SYLLABLE_TYPE`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -1262,6 +1271,7 @@ Joining Group constants.
              :attr:`~UProperty.UCHAR_JOINING_GROUP`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -1291,6 +1301,7 @@ Joining Type constants.
              :attr:`~UProperty.UCHAR_JOINING_TYPE`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -1378,6 +1389,7 @@ Line Break constants.
              :attr:`~UProperty.UCHAR_LINE_BREAK`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -1405,6 +1417,7 @@ Numeric Type constants.
              :attr:`~UProperty.UCHAR_NUMERIC_TYPE`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -1908,6 +1921,7 @@ For details about the properties see UAX #44: Unicode Character Database
              One more than the last constant for binary Unicode properties.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_BIDI_CLASS", UCHAR_BIDI_CLASS, R"doc(
@@ -2105,6 +2119,7 @@ For details about the properties see UAX #44: Unicode Character Database
              properties.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_GENERAL_CATEGORY_MASK", UCHAR_GENERAL_CATEGORY_MASK, R"doc(
@@ -2143,6 +2158,7 @@ For details about the properties see UAX #44: Unicode Character Database
              One more than the last constant for bit-mask Unicode properties.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_NUMERIC_VALUE", UCHAR_NUMERIC_VALUE, R"doc(
@@ -2164,6 +2180,7 @@ For details about the properties see UAX #44: Unicode Character Database
              One more than the last constant for double Unicode properties.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_AGE", UCHAR_AGE, R"doc(
@@ -2243,6 +2260,7 @@ For details about the properties see UAX #44: Unicode Character Database
              ``u_char_name(U_UNICODE_10_CHAR_NAME)``.
 
              .. version-deprecated:: ICU49
+
                 Beginning with ICU 49, ICU APIs return an empty string for this
                 property.
              )doc")
@@ -2260,6 +2278,7 @@ For details about the properties see UAX #44: Unicode Character Database
              One more than the last constant for string Unicode properties.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_SCRIPT_EXTENSIONS", UCHAR_SCRIPT_EXTENSIONS, R"doc(
@@ -2305,6 +2324,7 @@ For details about the properties see UAX #44: Unicode Character Database
              unusual value types.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .value("UCHAR_INVALID_CODE", UCHAR_INVALID_CODE, R"doc(
@@ -2336,6 +2356,7 @@ where i=1, 2,...
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -2375,6 +2396,7 @@ Sentence Break constants.
              :attr:`~UProperty.UCHAR_SENTENCE_BREAK`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -2453,6 +2475,7 @@ status tags.)
              :attr:`~UProperty.UCHAR_WORD_BREAK`.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

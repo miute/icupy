@@ -2645,6 +2645,7 @@ string.
          not be modified.
 
       .. version-deprecated:: 0.24
+
          Do not use this method. It may be removed in a future release.
       )doc");
 
@@ -2659,6 +2660,7 @@ string.
          not be modified.
 
       .. version-deprecated:: 0.24
+
          Do not use this method. It may be removed in a future release.
       )doc");
 

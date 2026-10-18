@@ -88,6 +88,7 @@ generated from :class:`Collator` objects.
 Enum returned by :meth:`Collator.compare` method.
 
 .. version-deprecated:: ICU2.6
+
    Use :class:`UCollationResult` instead.
       )doc")
       .value("LESS", Collator::LESS, "")

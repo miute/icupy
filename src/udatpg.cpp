@@ -18,6 +18,7 @@ Status return values from :meth:`DateTimePatternGenerator.add_pattern`.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -58,6 +59,7 @@ overlap because some fields are merged for the date/time pattern generator.
              value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

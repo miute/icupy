@@ -137,6 +137,7 @@ with each other) and the string that is processed. For a set with strings:
              One more than the highest normal :class:`USetSpanCondition` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -163,7 +164,7 @@ with each other) and the string that is processed. For a set with strings:
   // struct USet
   //
   py::class_<icupy::USetPtr>(m, "USet", R"doc(
-    USet structure.
+    Mutable USet structure.
 
     .. seealso::
 

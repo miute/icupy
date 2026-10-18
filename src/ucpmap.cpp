@@ -133,6 +133,10 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       Initialize a ``UCPMapValueFilter`` instance with the specified
       callback function and the user context.
 
+      *action* is a callback function that modifies the value of the map.
+
+      *context* is the callback's context data.
+
       .. important::
 
          *action* and *context* must outlive this callback container object.
@@ -179,6 +183,9 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       py::arg("ucpmap"), py::arg("c"), R"doc(
       Return the value for the specified code point in the map.
 
+      *ucpmap* is a map that associates Unicode code points with integer
+      values.
+
       *c* is a code point and must be [0, 0x10FFFF].
 
       .. seealso::
@@ -206,6 +213,11 @@ should use :attr:`UCPMAP_RANGE_NORMAL`.
       py::arg("surrogate_value"), py::arg("filter") = std::nullopt, R"doc(
       Return a tuple with the last code point and its property value, where the
       code points start at *start* and all have the same property value.
+      If *start* is an invalid code point, the returned code point will be
+      :attr:`U_SENTINEL`.
+
+      *ucpmap* is a map that associates Unicode code points with integer
+      values.
 
       *start* is the start code point in that range.
 

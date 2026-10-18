@@ -34,6 +34,7 @@ Selector for date formatting context.
              One more than the highest normal :class:`DtContextType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()
@@ -59,6 +60,7 @@ Selector for date formatting width.
              One more than the highest normal :class:`DtWidthType` value.
 
              .. version-deprecated:: ICU58
+
                 The numeric value may change over time, see ICU ticket #12420.
              )doc")
       .export_values()

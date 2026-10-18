@@ -37,6 +37,7 @@ Bit set to modify the :class:`IDNA` processing and error checking.
              disallows unassigned code points.)
 
              .. version-deprecated:: ICU55
+
                 Use UTS #46 instead via class :class:`IDNA`.
              )doc")
       .value("UIDNA_USE_STD3_RULES", UIDNA_USE_STD3_RULES, R"doc(
