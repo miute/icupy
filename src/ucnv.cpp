@@ -675,15 +675,16 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_open",
-      [](const std::string &converter_name) {
+      [](const std::optional<std::string> &converter_name) {
         ErrorCode error_code;
-        auto p = ucnv_open(converter_name.data(), error_code);
+        auto p = ucnv_open(converter_name ? converter_name->data() : nullptr,
+                           error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
         }
         return std::make_unique<icupy::UConverterPtr>(p);
       },
-      py::arg("converter_name"), R"doc(
+      py::arg("converter_name") = std::nullopt, R"doc(
       Create a new ``UConverter`` object with the name of a coded character
       set.
 
@@ -693,12 +694,14 @@ Selectors for Unicode sets that can be returned by
       "windows-" are frequently used for this parameter.
       See :func:`ucnv_get_available_name` and :func:`ucnv_get_alias` for a
       complete list that is available.
+      If *converter_name* is ``None``, the default converter name will be used.
 
       .. seealso::
 
          :func:`ucnv_close`
          :func:`ucnv_get_alias`
          :func:`ucnv_get_available_name`
+         :func:`ucnv_get_default_name`
          :func:`ucnv_open_ccsid`
       )doc");
 
