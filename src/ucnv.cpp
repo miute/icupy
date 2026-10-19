@@ -794,12 +794,15 @@ Selectors for Unicode sets that can be returned by
 
   m.def(
       "ucnv_open_standard_names",
-      [](const std::string &conv_name, const std::string &standard) {
+      [](const std::string &conv_name, const std::string &standard)
+          -> std::optional<std::unique_ptr<icupy::UEnumerationPtr>> {
         ErrorCode error_code;
         auto p = ucnv_openStandardNames(conv_name.data(), standard.data(),
                                         error_code);
         if (error_code.isFailure()) {
           throw icupy::ICUError(error_code);
+        } else if (p == nullptr) {
+          return std::nullopt;
         }
         return std::make_unique<icupy::UEnumerationPtr>(p);
       },

@@ -143,6 +143,8 @@ def test_api() -> None:
     assert "Shift_JIS" in standards2
     icu.uenum_close(en)
 
+    assert icu.ucnv_open_standard_names("cp932", "UNKNOWN") is None
+
     with gc(
         icu.ucnv_open_ccsid(943, icu.UConverterPlatform.UCNV_IBM),
         icu.ucnv_close,
