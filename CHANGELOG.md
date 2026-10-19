@@ -9,9 +9,9 @@
 - **Breaking:** rename `icupy.icu.UnicodeStringVector` to `icupy.icu.UnicodeStringList` ([#249], [#250])
 - Replace anonymous enum members within a class with class attributes ([#243])
 - Change the base class of the enums from `pybind11_object` to `enum.IntEnum` ([#245])
-- Change the default value of the `locale` parameter in the factory methods of `icupy.icu.DateFormat` and in `icupy.icu.RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
+- Change the default value of the `locale` parameter in the factory methods of `DateFormat` and in `RuleBasedNumberFormat.get_rule_set_display_name()` from `Locale.get_default()` to `None` ([#247])
 - Update docstring ([#259], [#266])
-- Deprecate Abstract Unicode Text API (UText): support has ended ([#264])
+- Deprecate the Abstract Unicode Text API (UText): support has ended ([#264])
 - Deprecate redundant functions in the Codepage Conversion API (ucnv) ([#265])
 
 ### Added
@@ -25,8 +25,9 @@
 
 ### Fixed
 
-- Fix some methods of `icupy.icu.Normalizer2` to return `bool` instead of `int` ([#261])
+- Fix some methods of `Normalizer2` to return `bool` instead of `int` ([#261])
 - Add the missing method: `UnicodeSet.span_back_utf8()` ([#263])
+- Fix the return value of `ucnv_open_standard_names()` to return `None` if the target is not found ([#267])
 
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
@@ -438,3 +439,4 @@ Initial release.
 [#264]: https://github.com/miute/icupy/pull/264
 [#265]: https://github.com/miute/icupy/pull/265
 [#266]: https://github.com/miute/icupy/pull/266
+[#267]: https://github.com/miute/icupy/pull/267
