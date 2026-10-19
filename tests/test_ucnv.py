@@ -131,6 +131,12 @@ def test_api() -> None:
         icu.ucnv_reset_from_unicode(cnv)
         icu.ucnv_reset_to_unicode(cnv)
 
+    with gc(icu.ucnv_open(), icu.ucnv_close) as cnv:
+        assert icu.ucnv_get_name(cnv) == icu.ucnv_get_default_name()
+
+    with gc(icu.ucnv_open(None), icu.ucnv_close) as cnv:
+        assert icu.ucnv_get_name(cnv) == icu.ucnv_get_default_name()
+
     en = icu.ucnv_open_all_names()
     assert icu.uenum_count(en) > 0
     names2 = iter(partial(icu.uenum_next, en), None)

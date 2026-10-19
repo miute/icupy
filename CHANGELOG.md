@@ -28,6 +28,7 @@
 - Fix some methods of `Normalizer2` to return `bool` instead of `int` ([#261])
 - Add the missing method: `UnicodeSet.span_back_utf8()` ([#263])
 - Fix the return value of `ucnv_open_standard_names()` to return `None` if the target is not found ([#267])
+- Fix `ucnv_open()` to allow the converter name to be optional ([#268])
 
 <!-- 2026-03-27/2026-05-28 -->
 ## [0.24.0] - 2026-05-28
@@ -440,3 +441,4 @@ Initial release.
 [#265]: https://github.com/miute/icupy/pull/265
 [#266]: https://github.com/miute/icupy/pull/266
 [#267]: https://github.com/miute/icupy/pull/267
+[#268]: https://github.com/miute/icupy/pull/268
