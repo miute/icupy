@@ -1,7 +1,20 @@
 import pytest
 
 from icupy import icu
-from icupy.utils import gc
+from icupy.utils import Enumeration, gc
+
+
+def test_enumeration() -> None:
+    strings = ["abc", "\uff11\uff12", "\U0001f338\U0001f339"]
+    en = icu.uenum_open_char_strings_enumeration(strings, len(strings))
+    it = Enumeration(en)
+    assert len(it) == 3
+    assert next(it) == strings[0]
+    assert next(it) == strings[1]
+    assert next(it) == strings[2]
+    with pytest.raises(StopIteration):
+        next(it)
+    assert list(it) == strings
 
 
 @pytest.mark.skipif(icu.U_ICU_VERSION_MAJOR_NUM < 50, reason="ICU4C<50")

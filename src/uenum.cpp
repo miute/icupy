@@ -28,15 +28,16 @@ void init_uenum(py::module &m) {
   // struct UEnumeration
   //
   py::class_<icupy::UEnumerationPtr>(m, "UEnumeration", R"doc(
-    UEnumeration structure representing an enumeration.
+      UEnumeration structure representing an enumeration.
 
-    .. seealso::
+      .. seealso::
 
-       :func:`uenum_close`
-       :func:`uenum_open_char_strings_enumeration`
-       :func:`uenum_open_from_string_enumeration`
-       :func:`uenum_open_uchar_strings_enumeration`
-    )doc");
+         :class:`~icupy.utils.Enumeration`
+         :func:`uenum_close`
+         :func:`uenum_open_char_strings_enumeration`
+         :func:`uenum_open_from_string_enumeration`
+         :func:`uenum_open_uchar_strings_enumeration`
+      )doc");
 
   //
   // Functions
