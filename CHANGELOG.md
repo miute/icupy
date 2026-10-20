@@ -13,6 +13,7 @@
 - Update docstring ([#259], [#266])
 - Deprecate the Abstract Unicode Text API (UText): support has ended ([#264])
 - Deprecate redundant functions in the Codepage Conversion API (ucnv) ([#265])
+- Add support for slicing to `UVersionInfo` ([#270])
 
 ### Added
 
@@ -444,3 +445,4 @@ Initial release.
 [#267]: https://github.com/miute/icupy/pull/267
 [#268]: https://github.com/miute/icupy/pull/268
 [#269]: https://github.com/miute/icupy/pull/269
+[#270]: https://github.com/miute/icupy/pull/270

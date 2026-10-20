@@ -90,20 +90,45 @@ void init_uversion(py::module &m) {
       )doc");
 
   vi.def(
-      "__getitem__",
-      [](const icupy::VersionInfo &self, int32_t index) {
-        auto actual_index = index;
-        if (actual_index < 0) {
-          actual_index += U_MAX_VERSION_LENGTH;
-        }
-        if (actual_index < 0 || actual_index >= U_MAX_VERSION_LENGTH) {
-          throw py::index_error("array index out of range: " +
-                                std::to_string(index));
-        }
-        return self.data[actual_index];
-      },
-      py::arg("index"), R"doc(
+        "__getitem__",
+        [](const icupy::VersionInfo &self, int32_t index) {
+          auto actual_index = index;
+          if (actual_index < 0) {
+            actual_index += U_MAX_VERSION_LENGTH;
+          }
+          if (actual_index < 0 || actual_index >= U_MAX_VERSION_LENGTH) {
+            throw py::index_error("array index out of range: " +
+                                  std::to_string(index));
+          }
+          return self.data[actual_index];
+        },
+        py::arg("index"), R"doc(
       Return the version number for the specified index.
+
+      .. seealso::
+
+         :attr:`.buildlevel`
+         :attr:`.major`
+         :attr:`.minor`
+         :attr:`.patchlevel`
+      )doc")
+      .def(
+          "__getitem__",
+          [](const icupy::VersionInfo &self, const py::slice &slice) {
+            py::ssize_t start, stop, step, slice_length;
+            if (!slice.compute(U_MAX_VERSION_LENGTH, &start, &stop, &step,
+                               &slice_length)) {
+              throw py::error_already_set();
+            }
+            std::vector<uint8_t> result;
+            result.reserve(slice_length);
+            for (py::ssize_t i = 0; i < slice_length; ++i) {
+              result.push_back(self.data[start + i * step]);
+            }
+            return result;
+          },
+          py::arg("slice"), R"doc(
+      Return the version numbers for the specified range.
 
       .. seealso::
 
