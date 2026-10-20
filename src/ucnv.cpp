@@ -719,6 +719,13 @@ Selectors for Unicode sets that can be returned by
       Create a new :class:`UEnumeration` object to enumerate all of the
       canonical converter names, as per the alias file, regardless of the
       ability to open each converter.
+
+      .. seealso::
+
+         :class:`~icupy.utils.Enumeration`
+         :func:`ucnv_get_available_name`
+         :func:`uenum_close`
+         :func:`uenum_next`
       )doc");
 
   m.def(
@@ -820,7 +827,10 @@ Selectors for Unicode sets that can be returned by
 
       .. seealso::
 
+         :class:`~icupy.utils.Enumeration`
          :func:`ucnv_get_standard_name`
+         :func:`uenum_close`
+         :func:`uenum_next`
       )doc");
 
   m.def(

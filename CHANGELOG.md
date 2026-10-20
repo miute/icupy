@@ -18,6 +18,7 @@
 
 - Add `icupy.icu.SymbolTable` class; `UnicodeSet.__init__()` and `UnicodeSet.apply_pattern()` now support `SymbolTable` ([#246])
 - Add support for [ICU 79.1 RC] ([#260])
+- Add `icupy.utils.Enumeration` wrapper class that provides a Pythonic interface for `UEnumeration` ([#269])
 
 ### Removed
 
@@ -442,3 +443,4 @@ Initial release.
 [#266]: https://github.com/miute/icupy/pull/266
 [#267]: https://github.com/miute/icupy/pull/267
 [#268]: https://github.com/miute/icupy/pull/268
+[#269]: https://github.com/miute/icupy/pull/269
