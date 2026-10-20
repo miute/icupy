@@ -478,6 +478,15 @@ def test_uversion_info() -> None:
     assert vi.patchlevel == 3
     assert vi.buildlevel == 4
 
+    # __getitem__(self, slice) -> list[int]
+    vi = icu.UVersionInfo(1, 2, 3, 4)
+    assert vi[:2] == [1, 2]
+    assert vi[1:3] == [2, 3]
+    assert vi[2:4] == [3, 4]
+    assert vi[0:4:2] == [1, 3]
+    with pytest.raises(ValueError):
+        _ = vi[::0]
+
     # __setitem__(self, index, value) -> None
     vi = icu.UVersionInfo()
     vi[0] = 1
