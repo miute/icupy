@@ -1,6 +1,13 @@
 {
-  "latest": "79.1rc",
+  "latest": "79.1",
   "versions": [
+    {
+      "version": "79.1",
+      "url": "https://github.com/unicode-org/icu/releases/download/release-79.1",
+      "icu4c_ubuntu_x64_tgz": "icu4c-79.1-Ubuntu24.04-x64.tgz",
+      "strip-components": 1,
+      "icu4c_win64_zip": "icu4c-79.1-Win64-MSVC2026.zip"
+    },
     {
       "version": "79.1rc",
       "url": "https://github.com/unicode-org/icu/releases/download/release-79.1rc",
