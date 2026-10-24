@@ -201,7 +201,7 @@ wheels = [
 
 [[package]]
 name = "icupy"
-version = "0.25.0.dev1"
+version = "0.25.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
